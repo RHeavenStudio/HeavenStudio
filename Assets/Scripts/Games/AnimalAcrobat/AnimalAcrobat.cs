@@ -133,6 +133,28 @@ namespace HeavenStudio.Games
             _playerMonkey.gameObject.SetActive(active);
         }
 
+        public void PlayerJump(double beat, bool giraffe)
+        {
+            float startPoint = GetDistanceAtBeat(beat) - (giraffe ? _jumpDistanceGiraffe : _jumpDistance);
+
+            PlayerSetActive(true);
+            if (giraffe) _playerMonkey.JumpBetweenGiraffe(beat, startPoint);
+            else _playerMonkey.JumpBetweenAnimals(beat, startPoint);
+        }
+
+        private float GetDistanceAtBeat(double beat)
+        {
+            var animals = _queuedAnimals.FindAll(x => x.startBeat <= beat);
+
+            float result = (animals.Count == 0) ? 0 : _jumpStartCameraDistance;
+            for (int i = 0; i < animals.Count; i++)
+            {
+                result += animals[i].rotationDistance;
+                result += (animals[i].type == AnimalType.Giraffe) ? _jumpDistanceGiraffe : _jumpDistance;
+            }
+            return result;
+        }
+
         public void Bop(double beat, float length)
         {
             List<BeatAction.Action> actions = new();
@@ -173,7 +195,7 @@ namespace HeavenStudio.Games
                 {
                     if (normalizedTravel < 0.5)
                     {
-                        float normalizedOut = cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime, 0.5);
+                        float normalizedOut = cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime, 1);
                         newZ = _funcEaseOut(0, _giraffeCameraZoom, Mathf.Clamp01(normalizedOut));
                     }
                     else

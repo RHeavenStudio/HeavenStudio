@@ -11,10 +11,13 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         [SerializeField] private float _jumpDistanceStart = 6f;
         [SerializeField] private float _jumpDistance = 8f;
         [SerializeField] private float _jumpHeight = 4f;
+        [SerializeField] private float _jumpHeightInitial = 2f;
         [SerializeField] private float _jumpDistanceGiraffe = 32f;
         [SerializeField] private float _jumpHeightGiraffe = 8f;
+        [SerializeField] private float _jumpStartAngle = 120f;
         private Animator _anim;
         private Path _path;
+        private float _restY;
 
         private void Awake()
         {
@@ -23,6 +26,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             {
                 positions = new PathPos[2]
             };
+            _restY = transform.localPosition.y;
         }
 
         private void OnDisable()
@@ -35,6 +39,20 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             _anim.DoScaledAnimationAsync("PlayerBop", 0.5f);
         }
 
+        public void JumpBetweenAnimals(double beat, float startPoint)
+        {
+            _anim.Play("PlayerAir", 0, 0);
+            Jump(beat, 2, startPoint, _jumpDistance, _jumpHeight, _restY);
+            RotateJump(beat, 2);
+        }
+        
+        public void JumpBetweenGiraffe(double beat, float startPoint)
+        {
+            _anim.Play("PlayerAir", 0, 0);
+            Jump(beat, 4, startPoint, _jumpDistanceGiraffe, _jumpHeightGiraffe, _restY);
+            RotateJump(beat, 4);
+        }
+
         public void InitialJump(double beat)
         {
             StartCoroutine(InitialJumpCo(beat));
@@ -45,7 +63,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             var cond = Conductor.instance;
             yield return new WaitUntil(() => cond.songPositionInBeatsAsDouble >= beat);
             _anim.DoScaledAnimationAsync("PlayerJump", 0.5f);
-            Jump(beat, 1, transform.localPosition.x, _jumpDistanceStart, _jumpHeight, transform.localPosition.y);
+            Jump(beat, 1, transform.localPosition.x, _jumpDistanceStart, _jumpHeightInitial, _restY);
         }
 
         private void Jump(double beat, float length, float startPoint, float distance, float height, float restY)
@@ -69,6 +87,35 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             while (true)
             {
                 transform.localPosition = GetPathPositionFromBeat(_path, cond.songPositionInBeatsAsDouble, beat);
+                yield return null;
+            }
+        }
+
+        private void RotateJump(double beat, double length)
+        {
+            StartCoroutine(RotateJumpCo(beat, length));
+        }
+
+        private IEnumerator RotateJumpCo(double beat, double length)
+        {
+            var cond = Conductor.instance;
+            float normalized = 0;
+            while (normalized <= 1)
+            {
+                normalized = cond.GetPositionFromBeat(beat, length - 1);
+                float newAngle = Mathf.Lerp(_jumpStartAngle, 360, normalized);
+
+                transform.localEulerAngles = new Vector3(0, 0, newAngle);
+                yield return null;
+            }
+
+            normalized = 0;
+            while (normalized <= 1)
+            {
+                normalized = cond.GetPositionFromBeat(beat + length - 1, 0.5);
+                float newAngle = Mathf.Lerp(0, 720, normalized);
+
+                transform.localEulerAngles = new Vector3(0, 0, newAngle);
                 yield return null;
             }
         }

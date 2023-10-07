@@ -73,6 +73,8 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             SoundByte.PlayOneShotGame("animalAcrobat/turn", caller.startBeat + caller.timer + 1);
 
             _monkey.gameObject.SetActive(false);
+
+            _game.PlayerJump(caller.startBeat + caller.timer, false);
         }
 
         private void Empty(PlayerActionEvent caller) { }

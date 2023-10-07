@@ -570,6 +570,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6038557817912069913}
     m_Modifications:
+    - target: {fileID: 1357014866786755007, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4065495025444683954, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4482739629151873282, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
       propertyPath: m_Name
       value: PlayerMonkey
@@ -596,15 +604,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6171382744519440479, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6171382744519440479, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6171382744519440479, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6171382744519440479, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -616,6 +624,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6171382744519440479, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7892337920641056061, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -642,7 +654,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9018ffa2d40d7b841a140a5eb406d5e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpDistance: 8
-  _jumpHeight: 2
-  _jumpDistanceGiraffe: 32
-  _jumpHeightGiraffe: 8
+  offset: {x: 0, y: 0, z: 0}
+  _jumpDistanceStart: 6
+  _jumpDistance: 4
+  _jumpHeight: 4
+  _jumpHeightInitial: 2
+  _jumpDistanceGiraffe: 28
+  _jumpHeightGiraffe: 7
+  _jumpStartAngle: 120

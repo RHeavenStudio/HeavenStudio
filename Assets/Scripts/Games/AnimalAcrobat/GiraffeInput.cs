@@ -75,6 +75,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         {
             SoundByte.PlayOneShotGame("animalAcrobat/giraffeJump");
             _monkey.gameObject.SetActive(false);
+            _game.PlayerJump(caller.startBeat + caller.timer, true);
 
             double beat = caller.startBeat + caller.timer;
 
