@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Threading;
+
 using HeavenStudio.Util;
 using Jukebox;
 using Jukebox.Legacy;
@@ -101,7 +103,7 @@ namespace HeavenStudio.Games
         public static ClappyTrio instance { get; set; }
 
         MultiSound clapSounds = null;
-        BeatAction clapAction = null;
+        CancellationTokenSource clapAction = null;
 
         private void Awake()
         {
@@ -188,7 +190,10 @@ namespace HeavenStudio.Games
                 clapSounds.Delete();
 
             if (clapAction != null)
-                clapAction.Delete();
+            {
+                clapAction.Cancel();
+                clapAction.Dispose();
+            }
         }
 
         public void Clap(double beat, float length, double gameSwitchBeat)

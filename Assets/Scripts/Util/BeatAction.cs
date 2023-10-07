@@ -1,16 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace HeavenStudio.Util
 {
     public class BeatAction
     {
-        private int index;
-        private List<Action> actions = new List<Action>();
-        private Coroutine coroutine;
-        private MonoBehaviour behaviour;
-
         public delegate void EventCallback();
 
         public class Action
@@ -25,43 +22,44 @@ namespace HeavenStudio.Util
             }
         }
 
-        public static BeatAction New(MonoBehaviour behaviour, List<Action> actions)
+        public static CancellationTokenSource New(MonoBehaviour behaviour, List<Action> actions)
         {
             if (behaviour == null)
             {
                 Debug.LogWarning("Starting a BeatAction with no assigned behaviour. The Conductor will be used instead.");
                 behaviour = Conductor.instance;
             }
-            BeatAction beatAction = new BeatAction();
-            beatAction.actions = actions;
-            beatAction.behaviour = behaviour;
-            beatAction.coroutine = behaviour.StartCoroutine(beatAction.BeatActionRoutine());
+            CancellationTokenSource cancelToken = new CancellationTokenSource();
+            RunAsync(behaviour, actions, cancelToken.Token).Forget();
 
-            return beatAction;
+            return cancelToken;
         }
 
-        IEnumerator BeatActionRoutine()
+        static async UniTask RunAsync(MonoBehaviour behaviour, List<Action> actions, CancellationToken token)
+        {
+            try
+            {
+                await BeatActionAsync(behaviour, actions, token);
+            }
+            catch (System.OperationCanceledException)
+            {
+                Debug.Log("BeatAction cancelled.");
+            }
+        }
+
+        static async UniTask BeatActionAsync(MonoBehaviour behaviour, List<Action> actions, CancellationToken token)
         {
             int idx = 0;
-            WaitUntil waitUntil = new WaitUntil(() => Conductor.instance.songPositionInBeatsAsDouble >= actions[idx].beat || !Conductor.instance.isPlaying);
             while (idx < actions.Count)
             {
-                yield return waitUntil;
+                await UniTask.WaitUntil(() => Conductor.instance.songPositionInBeatsAsDouble >= actions[idx].beat || (!Conductor.instance.isPlaying) || behaviour == null, cancellationToken: token);
 
-                if (!Conductor.instance.isPlaying)
-                    yield break;
+                if (behaviour == null || !Conductor.instance.isPlaying)
+                    break;
 
                 actions[idx].function.Invoke();
                 idx++;
             }
-            this.actions = null;
-            yield break;
-        }
-
-        public void Delete()
-        {
-            behaviour.StopCoroutine(coroutine);
-            this.actions = null;
         }
     }
 }
