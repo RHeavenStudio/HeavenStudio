@@ -492,6 +492,7 @@ namespace HeavenStudio.Editor
                 GameManager.instance.OverlayCamera.rect = new Rect(0, 0, 1, 1);
                 EditorCamera.rect = new Rect(0, 0, 1, 1);
             }
+            GameManager.instance.CircleCursor.LockCursor(fullscreen);
             Timeline.AutoBtnUpdate();
         }
 

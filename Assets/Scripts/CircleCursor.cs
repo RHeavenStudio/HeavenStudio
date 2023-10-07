@@ -97,5 +97,10 @@ namespace HeavenStudio
                 }
             }
         }
+
+        public void LockCursor(bool toggle)
+        {
+            PlayerInput.GetInputController(1).TogglePointerLock(toggle);
+        }
     }
 }

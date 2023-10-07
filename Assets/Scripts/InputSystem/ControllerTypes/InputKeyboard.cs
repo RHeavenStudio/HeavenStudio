@@ -58,6 +58,7 @@ namespace HeavenStudio.InputSystem
                         (int)KeyCode.U,
                         (int)KeyCode.Escape,
                     },
+                    PointerSensitivity = 3,
                 };
             }
         }
@@ -308,6 +309,14 @@ namespace HeavenStudio.InputSystem
         public override bool GetSqueeze()
         {
             return false;
+        }
+
+        public override void TogglePointerLock(bool locked)
+        {
+        }
+
+        public override void RecentrePointer()
+        {
         }
     }
 }

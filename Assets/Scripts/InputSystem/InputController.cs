@@ -127,7 +127,8 @@ namespace HeavenStudio.InputSystem
             Right = 2,    // also maps to tap, but with directionality (tap the right side of the panel). internally, maps to Pointer 2
             ButtonL = 3,
             ButtonR = 4,
-            Pause = 5,
+            PointerReset = 5,
+            Pause = 6,
         }
 
         //buttons used in Heaven Studio gameplay (Move Style)
@@ -144,6 +145,7 @@ namespace HeavenStudio.InputSystem
             public int[] Baton;
             public int[] Touch;
             public int[] Move;
+            public float PointerSensitivity;
         }
 
         // FUTURE: Move Style needs to be implemented per-game (maybe implement checks for common actions?)
@@ -273,6 +275,8 @@ namespace HeavenStudio.InputSystem
         /// </summary>
         /// <returns></returns>
         public abstract Vector2 GetPointer();
+        public abstract void TogglePointerLock(bool locked);
+        public abstract void RecentrePointer();
 
         /// <summary>
         /// True if the current direction is active

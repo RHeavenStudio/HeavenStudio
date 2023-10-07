@@ -597,6 +597,7 @@ namespace HeavenStudio.InputSystem
                     binds.Pad = defaultMappings;
                     break;
             }
+            binds.PointerSensitivity = 3;
             return binds;
         }
 
@@ -1046,6 +1047,14 @@ namespace HeavenStudio.InputSystem
         public override bool GetSqueeze()
         {
             return false;
+        }
+
+        public override void TogglePointerLock(bool locked)
+        {
+        }
+
+        public override void RecentrePointer()
+        {
         }
     }
 }

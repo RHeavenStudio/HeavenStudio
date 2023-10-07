@@ -176,6 +176,7 @@ namespace HeavenStudio
             if (playOnStart)
             {
                 StartCoroutine(WaitReadyAndPlayCo(startBeat));
+                CircleCursor.LockCursor(true);
             }
         }
 

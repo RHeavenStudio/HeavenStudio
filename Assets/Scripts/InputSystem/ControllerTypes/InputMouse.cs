@@ -58,8 +58,10 @@ namespace HeavenStudio.InputSystem
                         (int)KeyCode.Mouse1,
                         (int)KeyCode.Z,
                         (int)KeyCode.X,
+                        (int)KeyCode.Mouse2,
                         (int)KeyCode.Escape
                     },
+                    PointerSensitivity = 3,
                 };
             }
         }
@@ -98,9 +100,16 @@ namespace HeavenStudio.InputSystem
             lastRealPos = realPos;
             lastDeltaPointerPos = deltaPointerPos;
 
-            rawPointerPos = Input.mousePosition;
+            rawPointerPos += new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0) * currentBindings.PointerSensitivity;
             rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
             realPos = cam.ScreenToWorldPoint(rawPointerPos);
+
+            if (GetActionDown(ControlStyles.Touch, (int)ActionsTouch.PointerReset, out _))
+            {
+                RecentrePointer();
+                lastRawPointerPos = rawPointerPos;
+                lastRealPos = realPos;
+            }
             deltaPointerPos = realPos - lastRealPos;
 
             float speed = deltaPointerPos.magnitude;
@@ -411,6 +420,17 @@ namespace HeavenStudio.InputSystem
         public override bool GetSqueeze()
         {
             return false;
+        }
+
+        public override void TogglePointerLock(bool locked)
+        {
+            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+            RecentrePointer();
+        }
+
+        public override void RecentrePointer()
+        {
+            rawPointerPos = ScreenBounds * 0.5f;
         }
     }
 }
