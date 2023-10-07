@@ -68,6 +68,7 @@ namespace HeavenStudio.Games
         [SerializeField] private float _jumpDistance = 8;
         [SerializeField] private float _jumpDistanceGiraffe = 16;
         [SerializeField] private float _jumpStartCameraDistance = 4;
+        [SerializeField] private float _jumpStartDistance = -1;
         [SerializeField] private float _giraffeCameraZoom = 5;
 
         private List<AcrobatObstacle> _pooledElephants = new(), _pooledGiraffes = new(), _pooledMonkeysLong = new(), _pooledMonkeysShort = new();
@@ -250,7 +251,7 @@ namespace HeavenStudio.Games
             };
 
             var animal = pooledObstacles.Find(x => x.IsAvailableAtBeat(currentAnimal.startBeat));
-            if (_animalPoolIndex == 0) _animalSummatedDistance = animal.SpawnOffset;
+            if (_animalPoolIndex == 0) _animalSummatedDistance = _jumpStartDistance;
             animal.gameObject.SetActive(true);
 
             double expBeat = currentAnimal.startBeat + currentAnimal.length;
