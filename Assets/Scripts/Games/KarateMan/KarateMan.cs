@@ -647,9 +647,8 @@ namespace HeavenStudio.Games
             List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split(0) == "karateman");
 
             RiqEntity voice = prevEntities.FindLast(c => c.beat < beat && c.datamodel == "karateman/warnings");
-            if (wordClearTime > beat && voice != null) {
-                var type = voice["whichWarning"];
-                Word.Play($"Word0{(type < (int)HitThree.HitThreeAlt ? type : type - 1)}");
+            if (wordClearTime > beat && wordStartTime < beat && voice != null) {
+                DoWord(voice.beat, voice.length, voice["whichWarning"], false, 1, voice["customLength"], false);
             }
 
             // init colors
@@ -688,34 +687,36 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
+            var songPos = cond.songPositionInBeatsAsDouble;
+            Debug.Log("songPos : " + songPos);
 
             if (!cond.isPlaying) {
-                EntityPreCheck(cond.songPositionInBeatsAsDouble);
+                EntityPreCheck(songPos);
             }
             
             switch (currentBgEffect)
             {
                 case (int) BackgroundFXType.Sunburst:
-                    bgEffectAnimator.DoNormalizedAnimation("Sunburst", (cond.songPositionInBeats * 0.5f) % 1f);
+                    bgEffectAnimator.DoNormalizedAnimation("Sunburst", (float)(songPos * 0.5) % 1f);
                     break;
                 case (int) BackgroundFXType.Rings:
-                    bgEffectAnimator.DoNormalizedAnimation("Rings", (cond.songPositionInBeats * 0.5f) % 1f);
+                    bgEffectAnimator.DoNormalizedAnimation("Rings", (float)(songPos * 0.5) % 1f);
                     break;
                 default:
                     bgEffectAnimator.Play("NoPose", -1, 0);
                     break;
             }
 
-            if (cond.songPositionInBeatsAsDouble >= wordClearTime) {
+            if (songPos >= wordClearTime && songPos < wordStartTime) {
                 Word.Play("NoPose");
             }
 
-            if (cond.songPositionInBeatsAsDouble >= startCamSpecial && cond.songPositionInBeatsAsDouble <= wantsReturn)
+            if (songPos >= startCamSpecial && songPos <= wantsReturn)
             {
                 float camX = 0f;
                 float camY = 0f;
                 float camZ = 0f;
-                if (cond.songPositionInBeatsAsDouble <= startCamSpecial + cameraReturnLength)
+                if (songPos <= startCamSpecial + cameraReturnLength)
                 {
                     float prog = cond.GetPositionFromBeat(startCamSpecial, cameraReturnLength);
                     camX = Util.EasingFunction.EaseOutCubic(CameraPosition[0].position.x, CameraPosition[1].position.x, prog);
@@ -723,7 +724,7 @@ namespace HeavenStudio.Games
                     camZ = Util.EasingFunction.EaseOutCubic(CameraPosition[0].position.z, CameraPosition[1].position.z, prog);
                     cameraPosition = new Vector3(camX, camY, camZ);
                 }
-                else if (cond.songPositionInBeatsAsDouble >= wantsReturn - cameraReturnLength)
+                else if (songPos >= wantsReturn - cameraReturnLength)
                 {
                     float prog = cond.GetPositionFromBeat(wantsReturn - cameraReturnLength, cameraReturnLength);
                     camX = Util.EasingFunction.EaseOutQuad(CameraPosition[1].position.x, CameraPosition[0].position.x, prog);
@@ -808,6 +809,7 @@ namespace HeavenStudio.Games
             var songPos = Conductor.instance.songPositionInBeatsAsDouble;
             if (songPos <= clear && songPos >= beat) {
                 wordClearTime = customLength ? (beat + length) : clear;
+                wordStartTime = beat;
             }
             return $"Word0{(type < (int)HitThree.HitThreeAlt ? type : type - 1)}";
         }
