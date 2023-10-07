@@ -1394,7 +1394,7 @@ TextureImporter:
         width: 300
         height: 292
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1415,7 +1415,7 @@ TextureImporter:
         width: 503
         height: 480
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1423,6 +1423,27 @@ TextureImporter:
       bones: []
       spriteID: 93aef14c2bdc5ec4b88dd1e70c85d031
       internalID: -1767079008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: blancoacrobat_63
+      rect:
+        serializedVersion: 2
+        x: 3412
+        y: 1194
+        width: 535
+        height: 514
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 033ee80c6c29ce5449266cc5cdfc9853
+      internalID: -740966018
       vertices: []
       indices: 
       edges: []
@@ -1498,6 +1519,7 @@ TextureImporter:
       blancoacrobat_60: -186779109
       blancoacrobat_61: -1359015531
       blancoacrobat_62: -1767079008
+      blancoacrobat_63: -740966018
       blancoacrobat_7: -390589390
       blancoacrobat_8: 52247554
       blancoacrobat_9: -1390932415
