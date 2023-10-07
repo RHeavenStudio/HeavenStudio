@@ -335,12 +335,12 @@ namespace HeavenStudio.Games
 
             if (_queuedAnimals.Count > 0) 
             {
-                for (int i = 0; i < POOL_NUMBER; i++)
+                for (int i = 0; i < POOL_NUMBER - 1; i++)
                 {
                     BakeNextAvailableAnimal();
                 }
 
-                SoundByte.PlayOneShotGame("animalAcrobat/start", _queuedAnimals[0].startBeat - 1);
+                if (_queuedAnimals[0].startBeat - 1 > beat) SoundByte.PlayOneShotGame("animalAcrobat/start", _queuedAnimals[0].startBeat - 1);
             }
         }
     }
