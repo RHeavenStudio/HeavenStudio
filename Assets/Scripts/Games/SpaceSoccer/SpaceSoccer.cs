@@ -530,7 +530,7 @@ namespace HeavenStudio.Games
             colorLength = length;
             colorStart = colorStartSet;
             colorEnd = colorEndSet;
-            colorStartDot = colorEndDotSet;
+            colorStartDot = colorStartDotSet;
             colorEndDot = colorEndDotSet;
             colorEase = (Util.EasingFunction.Ease)ease;
         }
@@ -538,7 +538,7 @@ namespace HeavenStudio.Games
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)
         private void PersistColor(double beat)
         {
-            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("kitties", new string[] { "bgcolor" }).FindAll(x => x.beat < beat);
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("spaceSoccer", new string[] { "changeBG" }).FindAll(x => x.beat < beat);
             if (allEventsBeforeBeat.Count > 0)
             {
                 allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case

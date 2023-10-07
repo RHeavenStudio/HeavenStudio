@@ -222,6 +222,7 @@ namespace HeavenStudio
             Beatmap.AddNewVolumeChange(0, 100f);
             Beatmap.data.offset = 0f;
             Conductor.instance.musicSource.clip = null;
+            RiqFileHandler.UnlockCache();
             RiqFileHandler.WriteRiq(Beatmap);
             AudioLoadDone = true;
         }
@@ -683,7 +684,7 @@ namespace HeavenStudio
             GoForAPerfect.instance.Disable();
             SectionMedalsManager.instance?.OnRemixEnd();
 
-            GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"], false, true);
+            GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"].ToString(), false, true);
 
             Play(beat, 1f);
             yield break;

@@ -1,210 +1,386 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Jukebox;
-using Jukebox.Legacy;
 
 using HeavenStudio.Editor.Track;
+using Newtonsoft.Json;
+using UnityEditor;
+using UnityEngine.Timeline;
 
 namespace HeavenStudio.Editor.Commands
 {
-    public class Selection : IAction
+    public class Delete : ICommand
     {
-        List<TimelineEventObj> eventObjs;
-        List<TimelineEventObj> lastEventObjs;
+        private List<Guid> toDeleteIds;
+        private List<RiqEntityMore> deletedEntities = new();
 
-        public Selection(List<TimelineEventObj> eventObjs)
+        struct RiqEntityMore
         {
-            this.eventObjs = eventObjs;
+            public RiqEntity riqEntity;
+            public bool selected;
+        }
+
+        public Delete(List<Guid> ids)
+        {
+            toDeleteIds = ids;
         }
 
         public void Execute()
         {
-        }
-
-        public void Redo()
-        {
-            for (int i = 0; i < lastEventObjs.Count; i++)
+            for (var i = 0; i < toDeleteIds.Count; i++)
             {
-                Selections.instance.ShiftClickSelect(lastEventObjs[i]);
+                var entity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == toDeleteIds[i]);
+                if (entity != null)
+                {
+                    var marker = TimelineBlockManager.Instance.EntityMarkers[entity.guid];
+
+                    var clonedEntity = entity.DeepCopy();
+                    clonedEntity.guid = entity.guid; // We have to do this because entities (as of when I'm typing this), do not have Guids.
+
+                    deletedEntities.Add(new() { riqEntity = clonedEntity, selected =  marker.selected });
+
+
+                    Selections.instance.Deselect(marker);
+
+                    GameManager.instance.Beatmap.Entities.Remove(entity);
+
+                    TimelineBlockManager.Instance.EntityMarkers.Remove(entity.guid);
+                    GameObject.Destroy(marker.gameObject);
+                }
             }
+
+            GameManager.instance.SortEventsList();
         }
 
         public void Undo()
         {
-            lastEventObjs = eventObjs;
-            for (int i = 0; i < eventObjs.Count; i++)
+            for (var i = 0; i < deletedEntities.Count; i++)
             {
-                Selections.instance.ShiftClickSelect(eventObjs[i]);
+                var deletedEntity = deletedEntities[i];
+                GameManager.instance.Beatmap.Entities.Add(deletedEntity.riqEntity);
+                var marker = TimelineBlockManager.Instance.CreateEntity(deletedEntity.riqEntity);
+
+                /*if (deletedEntities[i].selected)
+                    Selections.instance.ShiftClickSelect(marker);*/
+            }
+            GameManager.instance.SortEventsList();
+            deletedEntities.Clear();
+        }
+    }
+
+    public class Place : ICommand
+    {
+        private RiqEntity placedEntityData;
+        private Guid placedEventID;
+
+        // Redo times basically
+        private int placeTimes = 0;
+
+        public Place(RiqEntity entity, Guid placedEventID)
+        {
+            this.placedEntityData = entity.DeepCopy();
+            this.placedEventID = placedEventID;
+        }
+
+        public void Execute()
+        {
+            if (placeTimes > 0)
+            {
+                var entity = placedEntityData.DeepCopy();
+                entity.guid = placedEventID;
+
+                GameManager.instance.Beatmap.Entities.Add(entity);
+
+                var marker = TimelineBlockManager.Instance.CreateEntity(entity);
+
+                GameManager.instance.SortEventsList();
+            }
+            placeTimes++;
+        }
+
+        public void Undo()
+        {
+            var createdEntity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == placedEventID);
+            if (createdEntity != null)
+            {
+                placedEntityData = createdEntity.DeepCopy();
+
+                var marker = TimelineBlockManager.Instance.EntityMarkers[createdEntity.guid];
+
+                Selections.instance.Deselect(marker);
+
+                GameManager.instance.Beatmap.Entities.Remove(createdEntity);
+
+                TimelineBlockManager.Instance.EntityMarkers.Remove(createdEntity.guid);
+                GameObject.Destroy(marker.gameObject);
+
+                GameManager.instance.SortEventsList();
             }
         }
     }
 
-    // I spent 7 hours trying to fix this instead of sleeping, which would've probably worked better.
-    // I'll go fuck myself later I'm just glad it works
-    // I give massive props to people who code undo/redo systems
-    // -- Starpelly
-
-    public class Move : IAction
+    public class Duplicate : ICommand
     {
-        public List<Pos> pos = new List<Pos>();
+        public List<RiqEntity> dupEntityData = new();
+        private readonly List<Guid> placedEntityIDs = new();
 
-        public class Pos
+        public Duplicate(List<TimelineEventObj> original)
         {
-            public TimelineEventObj eventObj;
+            var entities = original.Select(c => c.entity).ToList();
 
-            public Vector2 lastPos_;
-            public Vector3 previousPos;
-        }
-
-        public Move(List<TimelineEventObj> eventObjs)
-        {
-            pos.Clear();
-
-            for (int i = 0; i < eventObjs.Count; i++)
+            foreach (var entity in entities)
             {
-                Pos p = new Pos();
-                p.eventObj = eventObjs[i];
-                p.lastPos_ = eventObjs[i].moveStartPos;
-                p.previousPos = eventObjs[i].transform.localPosition;
-                this.pos.Add(p);
+                dupEntityData.Add(entity.DeepCopy());
+            }
+
+            for (var i = 0; i < original.Count; i++)
+            {
+                placedEntityIDs.Add(Guid.NewGuid());
             }
         }
 
         public void Execute()
         {
-        }
-
-        public void Redo()
-        {
-            for (int i = 0; i < pos.Count; i++)
+            var entities = new List<RiqEntity>();
+            foreach (var entity in dupEntityData)
             {
-                EnsureEventObj(i);
-                pos[i].eventObj.transform.localPosition = pos[i].previousPos;
-                pos[i].eventObj.entity.beat = pos[i].eventObj.transform.localPosition.x;
+                entities.Add(entity.DeepCopy());
             }
+
+            Selections.instance.DeselectAll();
+
+            for (var i = 0; i < entities.Count; i++)
+            {
+                var entity = entities[i];
+                entity.guid = placedEntityIDs[i];
+
+                GameManager.instance.Beatmap.Entities.Add(entity);
+                var marker = TimelineBlockManager.Instance.CreateEntity(entity);
+                Selections.instance.DragSelect(marker);
+
+                if (i == entities.Count - 1)
+                    marker.BeginMoving(false);
+            }
+            GameManager.instance.SortEventsList();
         }
 
         public void Undo()
         {
-            for (int i = 0; i < pos.Count; i++)
+            var deletedEntities = new List<RiqEntity>();
+            for (var i = 0; i < placedEntityIDs.Count; i++)
             {
-                EnsureEventObj(i);
-                pos[i].eventObj.transform.localPosition = pos[i].lastPos_;
-                pos[i].eventObj.entity.beat = pos[i].eventObj.transform.localPosition.x;
-            }
-        }
+                var placedEntityID = placedEntityIDs[i];
+                var createdEntity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == placedEntityID);
 
-        private void EnsureEventObj(int id)
-        {
-            if (pos[id].eventObj == null)
+                if (createdEntity != null)
+                {
+                    deletedEntities.Add(createdEntity);
+
+                    if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(placedEntityID))
+                    {
+                        var marker = TimelineBlockManager.Instance.EntityMarkers[placedEntityID];
+                        Selections.instance.Deselect(marker);
+
+                        TimelineBlockManager.Instance.EntityMarkers.Remove(placedEntityID);
+                        GameObject.Destroy(marker.gameObject);
+                    }
+
+                    GameManager.instance.Beatmap.Entities.Remove(createdEntity);
+                }
+            }
+            GameManager.instance.SortEventsList();
+            dupEntityData.Clear();
+            foreach (var entity in deletedEntities)
             {
-                pos[id].eventObj = Timeline.instance.eventObjs.Find(c => c.eventObjID == pos[id].eventObj.eventObjID);
+                dupEntityData.Add(entity.DeepCopy());
             }
         }
     }
 
-    public class Place : IAction
+    public class Paste : ICommand
     {
-        TimelineEventObj eventObj;
-        TimelineEventObj deletedObj;
+        private List<RiqEntity> pasteEntityData = new();
+        private readonly List<Guid> entityIds = new();
 
-        public Place(TimelineEventObj eventObj)
+        public Paste(List<RiqEntity> original)
         {
-            this.eventObj = eventObj;
+            original.Sort((x, y) => x.beat.CompareTo(y.beat));
+            var firstEntityBeat = original[0].beat;
+            for (var i = 0; i < original.Count; i++)
+            {
+                var entity = original[i].DeepCopy();
+                entity.beat = Conductor.instance.songPositionInBeatsAsDouble + (entity.beat - firstEntityBeat);
+                entityIds.Add(Guid.NewGuid());
+
+                pasteEntityData.Add(entity);
+            }
         }
 
         public void Execute()
         {
-        }
+            var entities = new List<RiqEntity>();
+            foreach (var entity in pasteEntityData)
+            {
+                entities.Add(entity.DeepCopy());
+            }
 
-        public void Redo()
-        {
-            deletedObj = Timeline.instance.AddEventObject(deletedObj.entity.datamodel, false, new Vector3((float) deletedObj.entity.beat, -deletedObj.entity["track"] * Timeline.instance.LayerHeight()), deletedObj.entity, true);
+            Selections.instance.DeselectAll();
+            for (var i = 0; i < entities.Count; i++)
+            {
+                var entity = entities[i];
+                entity.guid = entityIds[i];
+
+                GameManager.instance.Beatmap.Entities.Add(entity);
+                var marker = TimelineBlockManager.Instance.CreateEntity(entity);
+
+                Selections.instance.DragSelect(marker);
+            }
+
+            GameManager.instance.SortEventsList();
         }
 
         public void Undo()
         {
-            deletedObj = eventObj;
-            Selections.instance.Deselect(eventObj);
-            Timeline.instance.DestroyEventObject(eventObj.entity);
-            // RiqEntity e = deletedObjs[i].entity;
-            // Timeline.instance.AddEventObject(e.datamodel, false, new Vector3(e.beat, -e.track * Timeline.instance.LayerHeight()), e, true, e.eventObj.eventObjID);
+            var deletedEntities = new List<RiqEntity>();
+            for (var i = 0; i < entityIds.Count; i++)
+            {
+                var pastedEntityID = entityIds[i];
+                var pastedEntity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == pastedEntityID);
+
+                if (pastedEntity != null)
+                {
+                    deletedEntities.Add(pastedEntity);
+
+                    if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(pastedEntityID))
+                    {
+                        var marker = TimelineBlockManager.Instance.EntityMarkers[pastedEntityID];
+                        Selections.instance.Deselect(marker);
+
+                        TimelineBlockManager.Instance.EntityMarkers.Remove(pastedEntityID);
+                        GameObject.Destroy(marker.gameObject);
+                    }
+
+                    GameManager.instance.Beatmap.Entities.Remove(pastedEntity);
+                }
+            }
+            GameManager.instance.SortEventsList();
+            pasteEntityData.Clear();
+            foreach (var entity in deletedEntities)
+            {
+                pasteEntityData.Add(entity.DeepCopy());
+            }
         }
     }
 
-    public class Deletion : IAction
+    public class Move : ICommand
     {
-        List<TimelineEventObj> eventObjs;
-        List<TimelineEventObj> deletedObjs;
+        private readonly List<Guid> entityIDs = new();
+        private EntityMove newMove;
+        private EntityMove lastMove;
 
-        public Deletion(List<TimelineEventObj> eventObjs)
+        private struct EntityMove
         {
-            this.eventObjs = eventObjs;
+            public List<double> beat;
+            public List<int> layer;
+
+            public EntityMove(List<double> beat, List<int> layer)
+            {
+                this.beat = beat;
+                this.layer = layer;
+            }
+        }
+
+        public Move(List<RiqEntity> originalEntities, List<double> newBeat, List<int> newLayer)
+        {
+            entityIDs = originalEntities.Select(c => c.guid).ToList();
+            newMove = new EntityMove(newBeat, newLayer);
         }
 
         public void Execute()
         {
-            deletedObjs = eventObjs;
-            for (int i = 0; i < eventObjs.Count; i++)
-            {
-                Selections.instance.Deselect(eventObjs[i]);
-                Timeline.instance.DestroyEventObject(eventObjs[i].entity);
-            }
-        }
+            lastMove = new EntityMove();
+            lastMove.beat = new();
+            lastMove.layer = new();
 
-        public void Redo()
-        {
-            deletedObjs = eventObjs;
-            for (int i = 0; i < eventObjs.Count; i++)
+            for (var i = 0; i < entityIDs.Count; i++)
             {
-                Selections.instance.Deselect(eventObjs[i]);
-                Timeline.instance.DestroyEventObject(eventObjs[i].entity);
+                var entity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == entityIDs[i]);
+
+                lastMove.beat.Add(entity.beat);
+                lastMove.layer.Add((int)entity["track"]);
+
+                entity.beat = newMove.beat[i];
+                entity["track"] = newMove.layer[i];
+
+                if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(entity.guid))
+                    TimelineBlockManager.Instance.EntityMarkers[entity.guid].SetColor((int)entity["track"]);
             }
         }
 
         public void Undo()
         {
-            for (int i = 0; i < deletedObjs.Count; i++)
+            for (var i = 0; i < entityIDs.Count; i++)
             {
-                RiqEntity e = deletedObjs[i].entity;
-                eventObjs[i] = Timeline.instance.AddEventObject(e.datamodel, false, new Vector3((float)e.beat, -e["track"] * Timeline.instance.LayerHeight()), e, true);
+                var entity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == entityIDs[i]);
+
+                entity.beat = lastMove.beat[i];
+                entity["track"] = lastMove.layer[i];
+
+                if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(entity.guid))
+                    TimelineBlockManager.Instance.EntityMarkers[entity.guid].SetColor((int)entity["track"]);
             }
         }
     }
 
-    public class Duplicate : IAction
+    public class Resize : ICommand
     {
-        List<TimelineEventObj> eventObjs;
-        List<TimelineEventObj> copiedObjs;
+        public Guid entityId;
+        private EntityResize newResize;
+        private EntityResize lastResize;
 
-        public Duplicate(List<TimelineEventObj> eventObjs)
+        public struct EntityResize
         {
-            this.eventObjs = eventObjs;
+            public double beat;
+            public float length;
+
+            public EntityResize(double beat, float length)
+            {
+                this.beat = beat;
+                this.length = length;
+            }
+        }
+
+        public Resize(Guid entityId, double newBeat, float newLength)
+        {
+            this.entityId = entityId;
+            newResize = new EntityResize(newBeat, newLength);
+
         }
 
         public void Execute()
         {
-        }
+            var entity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == entityId);
 
-        public void Redo()
-        {
-            for (int i = 0; i < copiedObjs.Count; i++)
-            {
-                RiqEntity e = copiedObjs[i].entity;
-                eventObjs[i] = Timeline.instance.AddEventObject(e.datamodel, false, new Vector3((float)e.beat, -e["track"] * Timeline.instance.LayerHeight()), e, true);
-            }
+            lastResize = new EntityResize(entity.beat, entity.length);
+
+            entity.beat = newResize.beat;
+            entity.length = newResize.length;
+
+            if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(entityId))
+                TimelineBlockManager.Instance.EntityMarkers[entityId].SetWidthHeight();
         }
 
         public void Undo()
         {
-            copiedObjs = eventObjs;
-            for (int i = 0; i < eventObjs.Count; i++)
-            {
-                Selections.instance.Deselect(eventObjs[i]);
-                Timeline.instance.DestroyEventObject(eventObjs[i].entity);
-            }
+            var entity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == entityId);
+
+            entity.beat = lastResize.beat;
+            entity.length = lastResize.length;
+
+            if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(entityId))
+                TimelineBlockManager.Instance.EntityMarkers[entityId].SetWidthHeight();
         }
     }
 }
