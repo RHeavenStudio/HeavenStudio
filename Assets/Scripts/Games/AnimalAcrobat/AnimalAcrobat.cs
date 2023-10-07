@@ -112,6 +112,8 @@ namespace HeavenStudio.Games
 
         private double _jumpBeat = double.MaxValue;
 
+        public bool MonkeyMissed = false;
+
         public static AnimalAcrobat instance;
 
         private void Awake()

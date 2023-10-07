@@ -14,6 +14,8 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 
         private Sound _drumRollSound;
 
+        private PlayerActionEvent _releaseAction;
+
         private void Awake()
         {
             _game = AnimalAcrobat.instance;
@@ -28,8 +30,8 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 
         public void Init(double beat, bool beforeGiraffe)
         {
-            _game.ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, beforeGiraffe ? JustHoldGiraffe : JustHold, Empty, Empty);
-            _game.ScheduleInput(beat, 4, InputType.STANDARD_UP, JustRelease, Empty, Empty);
+            _game.ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, beforeGiraffe ? JustHoldGiraffe : JustHold, Miss, Empty);
+            _releaseAction = _game.ScheduleInput(beat, 4, InputType.STANDARD_UP, JustRelease, Miss, Empty);
             _monkey.gameObject.SetActive(false);
 
             MultiSound.Play(new MultiSound.Sound[]
@@ -105,6 +107,15 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
                     _drumRollSound.KillLoop(0.587);
                 })
             });
+        }
+
+        private void Miss(PlayerActionEvent caller)
+        {
+            if (_game.MonkeyMissed) return;
+            SoundByte.PlayOneShotGame("animalAcrobat/miss");
+            _releaseAction?.Disable();
+            _releaseAction?.QueueDeletion();
+            _game.MonkeyMissed = true;
         }
 
         private void Empty(PlayerActionEvent caller) { }
