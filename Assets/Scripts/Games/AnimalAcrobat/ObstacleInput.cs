@@ -38,14 +38,14 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         {
             SoundByte.PlayOneShotGame("animalAcrobat/catch");
             _monkey.gameObject.SetActive(true);
-            _monkey.DoScaledAnimationAsync("PlayerHang", 0.75f);
+            _monkey.DoScaledAnimationAsync("PlayerHang", 1f, 0.4f);
             _game.PlayerSetActive(false);
             BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(0, delegate {}),
                 new BeatAction.Action(caller.startBeat + caller.timer + (_holdLength * 0.5), delegate
                 {
-                    _monkey.DoScaledAnimationAsync("PlayerHanging", 0.5f);
+                    _monkey.DoScaledAnimationAsync("PlayerHanging", 0.5f / ((float)_holdLength * 0.5f));
                 })
             });
         }
@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         {
             SoundByte.PlayOneShotGame("animalAcrobat/giraffeCatch");
             _monkey.gameObject.SetActive(true);
-            _monkey.DoScaledAnimationAsync("PlayerHang", 0.75f);
+            _monkey.DoScaledAnimationAsync("PlayerHang", 1f, 0.4f);
             _game.PlayerSetActive(false);
             BeatAction.New(this, new List<BeatAction.Action>()
             {

@@ -8,6 +8,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
     public class AcrobatPlayer : SuperCurveObject
     {
         [Header("Values")]
+        [SerializeField] private float _jumpDistanceStart = 6f;
         [SerializeField] private float _jumpDistance = 8f;
         [SerializeField] private float _jumpHeight = 4f;
         [SerializeField] private float _jumpDistanceGiraffe = 32f;
@@ -44,7 +45,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             var cond = Conductor.instance;
             yield return new WaitUntil(() => cond.songPositionInBeatsAsDouble >= beat);
             _anim.DoScaledAnimationAsync("PlayerJump", 0.5f);
-            Jump(beat, 1, transform.localPosition.x, _jumpDistance, _jumpHeight, transform.localPosition.y);
+            Jump(beat, 1, transform.localPosition.x, _jumpDistanceStart, _jumpHeight, transform.localPosition.y);
         }
 
         private void Jump(double beat, float length, float startPoint, float distance, float height, float restY)
