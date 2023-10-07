@@ -13,7 +13,6 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 
         [Header("Values")]
         [SerializeField] private float _fullRotRange;
-        [SerializeField] private float _spawnOffset;
         [SerializeField] private double _holdLength;
         [SerializeField] private EasingFunction.Ease _ease = EasingFunction.Ease.EaseInOutQuad;
 
@@ -21,8 +20,6 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         private double _expirationBeat = -1;
         private float _halfRotRange;
         private EasingFunction.Function _func;
-
-        public float SpawnOffset => _spawnOffset;
 
         [Header("Components")]
         [SerializeField] private Transform _rotateRoot;
