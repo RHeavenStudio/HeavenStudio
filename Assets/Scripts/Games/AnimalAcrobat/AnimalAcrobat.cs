@@ -162,19 +162,11 @@ namespace HeavenStudio.Games
             if (normalizedHold >= 0 && normalizedHold <= 1)
             {
                 float newX = _funcEaseInOut(_lastCameraX + distance, _lastCameraX + distance + currentAnimal.rotationDistance, normalizedHold);
-                float newY = 0;
-                if (normalizedHold <= 0.5)
-                {
-                    float normalizedHoldIn = cond.GetPositionFromBeat(currentAnimal.startBeat, currentAnimal.GetHoldLengthFromType() * 0.5);
-                    newY = _funcEaseIn(0, -currentAnimal.rotationHeight, Mathf.Clamp01(normalizedHoldIn));
-                }
-                else
-                {
-                    float normalizedHoldOut = cond.GetPositionFromBeat(currentAnimal.startBeat + (currentAnimal.GetHoldLengthFromType() * 0.5), currentAnimal.GetHoldLengthFromType() * 0.5);
-                    newY = _funcEaseOut(-currentAnimal.rotationHeight, 0, Mathf.Clamp01(normalizedHoldOut));
-                }
 
-                _scroll.localPosition = new Vector3(-newX, newY, 0);
+                float angle = _funcEaseInOut(0, 180, normalizedHold);
+                float newY = Mathf.Sin(angle * Mathf.Deg2Rad) * currentAnimal.rotationHeight;
+
+                _scroll.localPosition = new Vector3(-newX, -newY, 0);
                 return;
             }
             _cameraHoldTime = (currentAnimal.type == AnimalType.Giraffe) ? 4 : 2;
