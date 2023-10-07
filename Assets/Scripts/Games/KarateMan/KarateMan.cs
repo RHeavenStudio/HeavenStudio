@@ -56,6 +56,7 @@ namespace HeavenStudio.Games.Loaders
                     e.CreateProperty("endTexture",   e["colorC"]);
                     e.CreateProperty("endColor",     fade ? e["colorD"] : e["colorA"]);
                     e.CreateProperty("ease",         fade ? (int)Util.EasingFunction.Ease.Linear : (int)Util.EasingFunction.Ease.Instant);
+                    e.CreateProperty("fxType",       !fade ? (int)e["type3"] : 3);
 
                     foreach (var remove in toRemove) {
                         e.dynamicData.Remove(remove);
@@ -68,7 +69,6 @@ namespace HeavenStudio.Games.Loaders
                 return null;
             }
             RiqBeatmap.OnUpdateEntity += BackgroundUpdater;
-
 
             // RiqEntity GameCapitalizer(string datamodel, RiqEntity entity)
             // {
@@ -231,7 +231,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        KarateMan.QueueWord(e.beat, e.length, e["whichWarning"], e["pitchVoice"], e["forcePitch"], e["customLength"]);
+                        KarateMan.DoWordSound(e.beat, e.length, e["whichWarning"], e["pitchVoice"], e["forcePitch"], e["customLength"]);
                     }
                 },
                 new GameAction("special camera", "Special Camera")
@@ -276,6 +276,8 @@ namespace HeavenStudio.Games.Loaders
                             e["shadowType"], e["shadowStart"], e["shadowEnd"],
                             e["textureType"], e["autoColor"], e["startTexture"], e["endTexture"]
                         );
+                        // backwards compatibility
+                        if (e["fxType"] != 3) KarateMan.instance.currentBgEffect = e["fxType"];
                     },
                     defaultLength = 0.5f,
                     resizable = true,
@@ -308,6 +310,10 @@ namespace HeavenStudio.Games.Loaders
                         }),
                         new Param("startTexture", new Color(), "Start Texture Color", "The texture color to start with"),
                         new Param("endTexture", new Color(), "End Texture Color", "The texture color to end with"),
+                        new Param("fxType", new EntityTypes.Integer(0, 3, 3), "Check Tooltip", "Ping @AstrlJelly on discord if you see this; it should be hidden.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => false, new string[] { "fxType" })
+                        }),
                     },
                 },
                 // new GameAction("set background effects", "Background Appearance (OLD)")
@@ -554,6 +560,7 @@ namespace HeavenStudio.Games
 
         [Header("Word")]
         public Animator Word;
+        static double wordStartTime = double.MinValue;
         static double wordClearTime = double.MinValue;
 
         [Header("Backgrounds")]
@@ -606,10 +613,10 @@ namespace HeavenStudio.Games
             Update();
         }
 
-        private void Start() => Update();
-
-        public override void OnStop(double beat) => OnGameSwitch(beat);
-        public override void OnPlay(double beat) => OnGameSwitch(beat);
+        private void Start() 
+        {
+            Update();
+        }
 
         public override void OnGameSwitch(double beat)
         {
@@ -627,6 +634,16 @@ namespace HeavenStudio.Games
                 queuedCues.Clear();
             }
 
+            EntityPreCheck(beat);
+        }
+
+        public override void OnPlay(double beat) 
+        {
+            EntityPreCheck(beat);
+        }
+
+        void EntityPreCheck(double beat)
+        {
             List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split(0) == "karateman");
 
             RiqEntity voice = prevEntities.FindLast(c => c.beat < beat && c.datamodel == "karateman/warnings");
@@ -646,6 +663,7 @@ namespace HeavenStudio.Games
                     bg["shadowType"], bg["shadowStart"], bg["shadowEnd"],
                     bg["textureType"], bg["autoColor"], bg["startTexture"], bg["endTexture"]
                 );
+                if (bg["fxType"] != 3) currentBgEffect = bg["fxType"];
             } else {
                 var c = new Color();
                 BackgroundColor(0, 0, 0, c, c, (int)Util.EasingFunction.Ease.Instant, 0, c, c, 0, true, c, c);
@@ -672,7 +690,7 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
 
             if (!cond.isPlaying) {
-                OnGameSwitch(cond.songPositionInBeatsAsDouble);
+                EntityPreCheck(cond.songPositionInBeatsAsDouble);
             }
             
             switch (currentBgEffect)
@@ -735,6 +753,9 @@ namespace HeavenStudio.Games
 
         private void OnDestroy()
         {
+            foreach (var evt in scheduledInputs) {
+                evt.Disable();
+            }
             if (!Conductor.instance.NotStopped()) {
                 if (queuedCues.Count > 0) queuedCues.Clear();
                 startCamSpecial = double.MinValue;
@@ -759,15 +780,10 @@ namespace HeavenStudio.Games
 
         public void DoWord(double beat, double length, int type, bool pitchVoice, float forcePitch, bool customLength, bool doSound = true)
         {
-            Word.Play(DoWordSound(beat, length, type, pitchVoice, forcePitch, customLength, doSound));
+            Word.Play(DoWordSound(beat, length, type, customLength, pitchVoice, forcePitch, doSound));
         }
 
-        public static void QueueWord(double beat, double length, int type, bool pitchVoice, float forcePitch, bool customLength, bool doSound = true)
-        {
-            DoWordSound(beat, length, type, pitchVoice, forcePitch, customLength, doSound);
-        }
-
-        public static string DoWordSound(double beat, double length, int type, bool pitchVoice, float forcePitch, bool customLength, bool doSound = true)
+        public static string DoWordSound(double beat, double length, int type, bool customLength, bool pitchVoice = false, float forcePitch = 1, bool doSound = true)
         {
             double clear = type switch {
                 <= (int)HitThree.HitFour => beat + 4f,
@@ -775,7 +791,7 @@ namespace HeavenStudio.Games
                 _ => beat + 3f,
             };
 
-            if (type <= (int)HitThree.HitFour)
+            if (type <= (int)HitThree.HitFour && doSound)
             {
                 string number = ((HitThree)type).ToString()[3..];
                 number = char.ToLower(number[0]).ToString() + number[1..];
@@ -1004,7 +1020,7 @@ namespace HeavenStudio.Games
         private void BackgroundColorUpdate()
         {
             SpriteRenderer[][] spriteRenderers = new[] {
-                new[] {BGPlane},
+                new[] { BGPlane },
                 Joe.Shadows,
                 BGTextures,
             };
@@ -1012,7 +1028,7 @@ namespace HeavenStudio.Games
             for (int i = 0; i < spriteRenderers.Length; i++)
             {
                 float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeats[i], colorLengths[i]));
-                if (double.IsNaN(normalizedBeat)) normalizedBeat = 0; // happens if the game is stopped, then put onto the first beat
+                if (double.IsNaN(normalizedBeat)) normalizedBeat = 0; // happens if the game is stopped onto the first beat
                 var func = Util.EasingFunction.GetEasingFunction(colorEases[i]);
                 float[] color = new float[3] {
                     func(colorStarts[i].r, colorEnds[i].r, normalizedBeat),
@@ -1033,7 +1049,6 @@ namespace HeavenStudio.Games
             currentBgEffect = fxType;
             IsComboEnable = combo;
         }
-
 
         public void UpdateMaterialColour(Color mainCol, Color highlightCol, Color objectCol)
         {
