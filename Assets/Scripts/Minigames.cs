@@ -597,7 +597,7 @@ namespace HeavenStudio
                         function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); },
                         parameters: new List<Param>()
                             {
-                            new Param("toggle", true, "Black Flash", "Enable or disable the black screen for this Game Switch")
+                                new Param("toggle", true, "Black Flash", "Enable or disable the black screen for this Game Switch")
                             },
                         inactiveFunction: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }
                     ),
@@ -605,7 +605,7 @@ namespace HeavenStudio
                         function: delegate {
                             Debug.Log("end");
                             if (Timeline.instance != null)
-                                Timeline.instance?.Stop(0);
+                                Timeline.instance?.Stop(Timeline.instance.PlaybackBeat);
                             else
                                 GameManager.instance.Stop(0);
                         }
@@ -615,12 +615,7 @@ namespace HeavenStudio
                         //temp for testing
                         function = delegate {
                             var e = eventCaller.currentEntity;
-                            HeavenStudio.Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
-                            // BeatAction.New(HeavenStudio.Common.SkillStarManager.instance.gameObject, new List<BeatAction.Action>(){
-                            //     new BeatAction.Action(e.beat + e.length, delegate {
-                            //         HeavenStudio.Common.SkillStarManager.instance.DoStarJust();
-                            //     })
-                            // });
+                            Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
                         }
                     },
                     new GameAction("toggle inputs", "Toggle Inputs", 0.5f, true,
