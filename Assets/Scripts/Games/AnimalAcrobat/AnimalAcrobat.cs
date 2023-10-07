@@ -62,7 +62,7 @@ namespace HeavenStudio.Games
 
         [Header("Components")]
         [SerializeField] private Transform _scroll;
-        [SerializeField] private Animator _playerMonkeyAnim;
+        [SerializeField] private AcrobatPlayer _playerMonkey;
 
         [Header("Values")]
         [SerializeField] private float _jumpDistance = 8;
@@ -110,6 +110,8 @@ namespace HeavenStudio.Games
         private Util.EasingFunction.Function _funcEaseOut;
         private Util.EasingFunction.Function _funcSharp;
 
+        private double _jumpBeat = double.MaxValue;
+
         public static AnimalAcrobat instance;
 
         private void Awake()
@@ -128,20 +130,24 @@ namespace HeavenStudio.Games
             CameraUpdate(cond);
         }
 
+        public void PlayerSetActive(bool active)
+        {
+            _playerMonkey.gameObject.SetActive(active);
+        }
+
         public void Bop(double beat, float length)
         {
-            if (!_playerMonkeyAnim.gameObject.activeSelf) return;
-
             List<BeatAction.Action> actions = new();
             for (int i = 0; i < length; i++)
             {
+                if (beat + i >= _jumpBeat) break;
                 actions.Add(new BeatAction.Action(beat + i, delegate
                 {
-                    _playerMonkeyAnim.DoScaledAnimationAsync("PlayerBop", 0.5f);
+                    _playerMonkey.Bop();
                 }));
             }
 
-            BeatAction.New(this, actions);
+            if (actions.Count > 0) BeatAction.New(this, actions);
         }
 
         private int _animalCameraIndex = 0;
@@ -356,7 +362,9 @@ namespace HeavenStudio.Games
                     BakeNextAvailableAnimal();
                 }
 
-                if (_queuedAnimals[0].startBeat - 1 > beat) SoundByte.PlayOneShotGame("animalAcrobat/start", _queuedAnimals[0].startBeat - 1);
+                _jumpBeat = _queuedAnimals[0].startBeat - 1;
+                if (_queuedAnimals[0].startBeat - 1 > beat) SoundByte.PlayOneShotGame("animalAcrobat/start", _jumpBeat);
+                _playerMonkey.InitialJump(_jumpBeat);
             }
         }
     }
