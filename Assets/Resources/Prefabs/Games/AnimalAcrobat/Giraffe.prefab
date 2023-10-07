@@ -264,6 +264,7 @@ GameObject:
   - component: {fileID: 1701002327333926128}
   - component: {fileID: 5248028064811562821}
   - component: {fileID: 3253363150451868373}
+  - component: {fileID: 5165305002464474939}
   m_Layer: 0
   m_Name: Giraffe
   m_TagString: Untagged
@@ -320,6 +321,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monkey: {fileID: 7559970804447045551}
+--- !u!114 &5165305002464474939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2939598505969617365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3924ec15f56dc74290292826f4e9649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 7772794942310833959}
+  _animName: GiraffeEar
+  _holdLength: 4
 --- !u!1 &3911272779464478738
 GameObject:
   m_ObjectHideFlags: 0

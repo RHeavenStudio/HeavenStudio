@@ -501,6 +501,7 @@ GameObject:
   - component: {fileID: 6198430257364661693}
   - component: {fileID: -5564384145903586768}
   - component: {fileID: -4645702950898394595}
+  - component: {fileID: 5550233630878919113}
   m_Layer: 0
   m_Name: Elephant
   m_TagString: Untagged
@@ -579,6 +580,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monkey: {fileID: 4283362470282314707}
+  _holdLength: 2
+--- !u!114 &5550233630878919113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7540716611123628191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3924ec15f56dc74290292826f4e9649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 6198430257364661693}
+  _animName: ElephantEar
   _holdLength: 2
 --- !u!1 &7805847212563886084
 GameObject:
