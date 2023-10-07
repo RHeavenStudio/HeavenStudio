@@ -688,7 +688,6 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
             var songPos = cond.songPositionInBeatsAsDouble;
-            Debug.Log("songPos : " + songPos);
 
             if (!cond.isPlaying) {
                 EntityPreCheck(songPos);
