@@ -22,6 +22,10 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         {
             BeatAction.New(this, new()
             {
+                new(0, delegate
+                {
+                    //nasty hack, why does beataction do this?
+                }),
                 new(beat + _holdLength - 2, delegate
                 {
                     _anim.DoScaledAnimationAsync(_animName, 0.5f);
