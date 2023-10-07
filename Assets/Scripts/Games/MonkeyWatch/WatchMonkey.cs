@@ -64,7 +64,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         {
             anim.DoScaledAnimationAsync(isPink ? "PinkPrepare" + direction : "Prepare" + direction, 0);
             inputEvent = game.ScheduleInput(prepareBeat, inputBeat - prepareBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
-            BeatAction.New(gameObject, new List<BeatAction.Action>() 
+            BeatAction.New(this, new List<BeatAction.Action>() 
             {
                 new BeatAction.Action(prepareBeat - 0.25, delegate
                 {
@@ -88,7 +88,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             game.PlayerMonkeyClap(isPink, barely);
             
             anim.DoScaledAnimationAsync(isPink ? "PinkClap" + direction : "Clap" + direction, 0.4f);
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 1, delegate
                 {

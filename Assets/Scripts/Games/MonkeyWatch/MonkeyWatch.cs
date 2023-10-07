@@ -340,7 +340,7 @@ namespace HeavenStudio.Games
             }
 
             actions.Sort((x, y) => x.beat.CompareTo(y.beat));
-            BeatAction.New(instance.gameObject, actions);
+            BeatAction.New(instance, actions);
         }
 
         #region clapping
@@ -404,7 +404,7 @@ namespace HeavenStudio.Games
 
             void NormalClap()
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - 4, delegate
                     {
@@ -444,7 +444,7 @@ namespace HeavenStudio.Games
                     });
                 }
                 actions.Sort((x, y) => x.beat.CompareTo(y.beat));
-                BeatAction.New(instance.gameObject, actions);
+                BeatAction.New(instance, actions);
             }
 
             void PinkClapCustom(float length)
@@ -476,7 +476,7 @@ namespace HeavenStudio.Games
                     });
                 }
                 actions.Sort((x, y) => x.beat.CompareTo(y.beat));
-                BeatAction.New(instance.gameObject, actions);
+                BeatAction.New(instance, actions);
             }
         }
         #endregion
