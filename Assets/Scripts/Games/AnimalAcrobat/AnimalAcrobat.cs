@@ -108,7 +108,6 @@ namespace HeavenStudio.Games
 
         private Util.EasingFunction.Function _funcEaseInOut;
         private Util.EasingFunction.Function _funcEaseOut;
-        private Util.EasingFunction.Function _funcSharp;
 
         private double _jumpBeat = double.MaxValue;
 
@@ -119,7 +118,6 @@ namespace HeavenStudio.Games
             instance = this;
             _funcEaseInOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuad);
             _funcEaseOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
-            _funcSharp = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuart);
         }
 
         private void Update()
@@ -175,8 +173,8 @@ namespace HeavenStudio.Games
                 {
                     if (normalizedTravel < 0.5)
                     {
-                        float normalizedOut = cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime, 1);
-                        newZ = _funcSharp(0, _giraffeCameraZoom, Mathf.Clamp01(normalizedOut));
+                        float normalizedOut = cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime, 0.5);
+                        newZ = _funcEaseOut(0, _giraffeCameraZoom, Mathf.Clamp01(normalizedOut));
                     }
                     else
                     {
