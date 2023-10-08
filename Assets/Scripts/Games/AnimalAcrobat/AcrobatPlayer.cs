@@ -7,6 +7,9 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 {
     public class AcrobatPlayer : SuperCurveObject
     {
+        [Header("Components")]
+        [SerializeField] private Transform _scroll;
+        [SerializeField] private ParticleSystem _releaseParticle, _trailParticle;
         [Header("Values")]
         [SerializeField] private float _jumpDistanceStart = 6f;
         [SerializeField] private float _jumpDistance = 8f;
@@ -29,9 +32,15 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             _restY = transform.localPosition.y;
         }
 
+        private void LateUpdate()
+        {
+            _trailParticle.transform.eulerAngles = Vector3.zero;
+        }
+
         private void OnDisable()
         {
             StopAllCoroutines();
+            _trailParticle.Stop();
         }
 
         public void Bop()
@@ -42,15 +51,29 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         public void JumpBetweenAnimals(double beat, float startPoint)
         {
             _anim.Play("PlayerAir", 0, 0);
+
             Jump(beat, 2, startPoint, _jumpDistance, _jumpHeight, _restY);
             RotateJump(beat, 2);
+
+            SpawnReleaseParticle();
         }
         
         public void JumpBetweenGiraffe(double beat, float startPoint)
         {
             _anim.Play("PlayerAir", 0, 0);
+
+            _trailParticle.Play();
             Jump(beat, 4, startPoint, _jumpDistanceGiraffe, _jumpHeightGiraffe, _restY);
             RotateJump(beat, 4);
+
+            SpawnReleaseParticle();
+        }
+
+        private void SpawnReleaseParticle()
+        {
+            ParticleSystem spawnedParticle = Instantiate(_releaseParticle, _scroll);
+            spawnedParticle.transform.position = transform.position;
+            spawnedParticle.Play();
         }
 
         public void InitialJump(double beat)

@@ -322,6 +322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monkey: {fileID: 7559970804447045551}
+  _holdParticle: {fileID: 1807658667361072620}
 --- !u!114 &5165305002464474939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -740,6 +741,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
+--- !u!198 &1807658667361072620 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1269725258759199493, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
+  m_PrefabInstance: {fileID: 615004812187578089}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6714243032395732662 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6171382744519440479, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}

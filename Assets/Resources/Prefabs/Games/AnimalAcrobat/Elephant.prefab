@@ -565,6 +565,7 @@ MonoBehaviour:
   _holdLength: 2
   _ease: 4
   _holdPadding: 1
+  _holdPaddingStart: 0
   _rotateRoot: {fileID: 2616646720197201304}
   _gripPoint: {fileID: 2131794628642567477}
 --- !u!114 &-4645702950898394595
@@ -581,6 +582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _monkey: {fileID: 4283362470282314707}
   _holdLength: 2
+  _holdParticle: {fileID: 5372215907466563984}
 --- !u!114 &5550233630878919113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -917,5 +919,10 @@ Transform:
 --- !u!95 &4283362470282314707 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 6945261984245565766, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
+  m_PrefabInstance: {fileID: 6562599539575982741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5372215907466563984 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1269725258759199493, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
   m_PrefabInstance: {fileID: 6562599539575982741}
   m_PrefabAsset: {fileID: 0}

@@ -9,6 +9,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
     {
         [SerializeField] private Animator _monkey;
         [SerializeField] private double _holdLength;
+        [SerializeField] private ParticleSystem _holdParticle;
 
         private AcrobatObstacle _mainScript;
 
@@ -42,6 +43,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             _monkey.gameObject.SetActive(true);
             _monkey.DoScaledAnimationAsync("PlayerHang", 1f, 0.4f);
             _game.PlayerSetActive(false);
+            SpawnParticle();
             BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(0, delegate {}),
@@ -58,6 +60,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             _monkey.gameObject.SetActive(true);
             _monkey.DoScaledAnimationAsync("PlayerHang", 1f, 0.4f);
             _game.PlayerSetActive(false);
+            SpawnParticle();
             BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(0, delegate {}),
@@ -66,6 +69,13 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
                     _monkey.DoScaledAnimationAsync("PlayerHanging", 0.5f);
                 })
             });
+        }
+
+        private void SpawnParticle()
+        {
+            ParticleSystem spawnedParticle = Instantiate(_holdParticle, transform);
+            spawnedParticle.transform.position = _holdParticle.transform.position;
+            spawnedParticle.Play();
         }
 
         private void JustRelease(PlayerActionEvent caller, float state)
