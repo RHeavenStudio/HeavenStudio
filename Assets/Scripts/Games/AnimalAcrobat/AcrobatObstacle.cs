@@ -21,6 +21,8 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         private float _halfRotRange;
         private EasingFunction.Function _func;
 
+        public EasingFunction.Ease Ease => _ease;
+
         [Header("Components")]
         [SerializeField] private Transform _rotateRoot;
         [SerializeField] private Transform _gripPoint;

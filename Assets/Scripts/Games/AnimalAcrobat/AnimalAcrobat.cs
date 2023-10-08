@@ -88,6 +88,7 @@ namespace HeavenStudio.Games
             public double length;
             public float rotationDistance;
             public float rotationHeight;
+            public Util.EasingFunction.Ease ease;
 
             public double GetHoldLengthFromType()
             {
@@ -106,8 +107,6 @@ namespace HeavenStudio.Games
         private int _animalPoolIndex = 0;
         private float _animalSummatedDistance = 0;
         private bool _lastAnimalWasGiraffe = false;
-
-        private Util.EasingFunction.Function _funcEaseInOut;
         private Util.EasingFunction.Function _funcEaseOut;
 
         private double _jumpBeat = double.MaxValue;
@@ -119,7 +118,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            _funcEaseInOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuad);
             _funcEaseOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
         }
 
@@ -214,9 +212,11 @@ namespace HeavenStudio.Games
             }
             if (normalizedHold >= 0 && normalizedHold <= 1)
             {
-                float newX = _funcEaseInOut(_lastCameraX + distance, _lastCameraX + distance + currentAnimal.rotationDistance, normalizedHold);
+                var func = Util.EasingFunction.GetEasingFunction(currentAnimal.ease);
 
-                float angle = _funcEaseInOut(0, 180, normalizedHold);
+                float newX = func(_lastCameraX + distance, _lastCameraX + distance + currentAnimal.rotationDistance, normalizedHold);
+
+                float angle = func(0, 180, normalizedHold);
                 float newY = Mathf.Sin(angle * Mathf.Deg2Rad) * currentAnimal.rotationHeight;
 
                 _scroll.localPosition = new Vector3(-newX, -newY, 0);
@@ -328,7 +328,8 @@ namespace HeavenStudio.Games
                         length = 5,
                         type = AnimalType.MonkeysLong,
                         rotationDistance = _monkeysLong.GetRotationDistance(),
-                        rotationHeight = _monkeysLong.GetRotationHeight()
+                        rotationHeight = _monkeysLong.GetRotationHeight(),
+                        ease = _monkeysLong.Ease
                     });
                     _queuedAnimals.Add(new QueuedAnimal()
                     {
@@ -336,7 +337,8 @@ namespace HeavenStudio.Games
                         length = 3,
                         type = AnimalType.MonkeysShort,
                         rotationDistance = _monkeysShort.GetRotationDistance(),
-                        rotationHeight = _monkeysShort.GetRotationHeight()
+                        rotationHeight = _monkeysShort.GetRotationHeight(),
+                        ease = _monkeysShort.Ease
                     });
                     continue;
                 }
@@ -373,6 +375,14 @@ namespace HeavenStudio.Games
                         "animalAcrobat/giraffe" => _giraffe.GetRotationHeight(),
                         "animalAcrobat/monkeyLong" => _monkeysLong.GetRotationHeight(),
                         "animalAcrobat/monkeyShort" => _monkeysShort.GetRotationHeight(),
+                        _ => throw new System.NotImplementedException()
+                    },
+                    ease = animal.datamodel switch
+                    {
+                        "animalAcrobat/elephant" => _elephant.Ease,
+                        "animalAcrobat/giraffe" => _giraffe.Ease,
+                        "animalAcrobat/monkeyLong" => _monkeysLong.Ease,
+                        "animalAcrobat/monkeyShort" => _monkeysShort.Ease,
                         _ => throw new System.NotImplementedException()
                     }
                 });
