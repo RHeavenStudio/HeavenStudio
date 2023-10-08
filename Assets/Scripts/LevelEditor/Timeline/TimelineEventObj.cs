@@ -500,7 +500,7 @@ namespace HeavenStudio.Editor.Track
 
         public void SetColor(int type)
         {
-            var c = EditorTheme.theme.LayersGradient.Evaluate(type / (float)(Timeline.instance.LayerCount - 1));
+            var c = EditorTheme.theme.LayerGradientIndex(type);
             transform.GetChild(0).GetComponent<Image>().color = c;
 
             if (resizable)
