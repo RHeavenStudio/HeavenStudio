@@ -396,7 +396,7 @@ namespace HeavenStudio.Games
                 }
 
                 _jumpBeat = _queuedAnimals[0].startBeat - 1;
-                if (_queuedAnimals[0].startBeat - 1 > beat) SoundByte.PlayOneShotGame("animalAcrobat/start", _jumpBeat);
+                if (_queuedAnimals[0].startBeat - 1 >= beat) SoundByte.PlayOneShotGame("animalAcrobat/start", _jumpBeat);
                 _playerMonkey.InitialJump(_jumpBeat);
             }
         }
