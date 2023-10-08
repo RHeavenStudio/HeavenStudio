@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 using UnityEngine;
 using DG.Tweening;
@@ -293,9 +295,9 @@ namespace HeavenStudio
             public List<string> supportedLocales;
             public bool inferred;
 
-            public bool usesAssetBundle => (wantAssetBundle != "");
-            public bool hasLocales => (supportedLocales.Count > 0);
-            public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded);
+            public bool usesAssetBundle => wantAssetBundle != "";
+            public bool hasLocales => supportedLocales.Count > 0;
+            public bool AssetsLoaded => ((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded;
             public bool SequencesPreloaded => soundSequences != null;
             public string LoadableName => inferred ? "noGame" : name;
             public GameObject LoadedPrefab => loadedPrefab;
@@ -308,6 +310,8 @@ namespace HeavenStudio
             private bool localeLoaded = false;
             private bool localePreloaded = false;
             private GameObject loadedPrefab = null;
+            private Dictionary<string, AudioClip> commonAudioClips;
+            private Dictionary<string, AudioClip> localeAudioClips;
 
             private SoundSequence.SequenceKeyValue[] soundSequences = null;
 
@@ -316,6 +320,8 @@ namespace HeavenStudio
                 get => soundSequences;
                 set => soundSequences = value;
             }
+            public Dictionary<string, AudioClip> CommonAudioClips => commonAudioClips;
+            public Dictionary<string, AudioClip> LocaleAudioClips => localeAudioClips;
 
             public Minigame(string name, string displayName, string color, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
             {
@@ -361,64 +367,52 @@ namespace HeavenStudio
                 return bundleCommon;
             }
 
-            AssetBundleCreateRequest commonBundleRequest;
-            public IEnumerator LoadCommonAssetBundleAsync(MonoBehaviour runner)
+            public async UniTask LoadAssetsAsync()
             {
-                if (commonPreloaded || commonLoaded) yield break;
-                commonPreloaded = true;
-                if (!usesAssetBundle) yield break;
-                if (bundleCommon != null) yield break;
-
-                if (commonBundleRequest == null)
-                    commonBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common"));
-                if (bundleCommon != null) yield break;
-                yield return commonBundleRequest;
-
-                bundleCommon = commonBundleRequest.assetBundle;
-                commonLoaded = true;
-                commonBundleRequest = null;
-
-                runner.StartCoroutine(LoadGamePrefabAsync());
-                // runner.StartCoroutine(LoadCommonAudioClipsAsync());
+                if (AssetsLoaded || !usesAssetBundle) return;
+                await UniTask.WhenAll(LoadCommonAssetBundleAsync(), LoadLocalizedAssetBundleAsync());
+                await UniTask.WhenAll(LoadGamePrefabAsync());
+                await UniTask.WhenAll(LoadCommonAudioClips());
+                await UniTask.WhenAll(LoadLocalizedAudioClips());
             }
 
-            AssetBundleCreateRequest localeBundleRequest;
-            public IEnumerator LoadLocalizedAssetBundleAsync(MonoBehaviour runner)
+            public async UniTask LoadCommonAssetBundleAsync()
             {
-                if (localePreloaded) yield break;
+                if (commonPreloaded || commonLoaded) return;
+                commonPreloaded = true;
+                if (!usesAssetBundle) return;
+                if (bundleCommon != null) return;
+
+                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common")).ToUniTask();
+
+                bundleCommon = bundle;
+                commonLoaded = true;
+            }
+
+            public async UniTask LoadLocalizedAssetBundleAsync()
+            {
+                if (!hasLocales) return;
+                if (localePreloaded) return;
                 localePreloaded = true;
-                if (!hasLocales) yield break;
-                if (!usesAssetBundle) yield break;
-                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
+                if (!usesAssetBundle) return;
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) return;
 
-                if (localeBundleRequest == null)
-                    localeBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale));
-                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
-                yield return localeBundleRequest;
+                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale)).ToUniTask();
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) return;
 
-                bundleLocalized = localeBundleRequest.assetBundle;
+                bundleLocalized = bundle;
                 currentLoadedLocale = defaultLocale;
                 localeLoaded = true;
-                localeBundleRequest = null;
-
-                // runner.StartCoroutine(LoadLocalizedAudioClipsAsync());
             }
 
-            AssetBundleRequest prefabRequest;
-            public IEnumerator LoadGamePrefabAsync()
+            public async UniTask LoadGamePrefabAsync()
             {
-                if (!usesAssetBundle) yield break;
-                if (!commonLoaded) yield break;
-                if (bundleCommon == null) yield break;
+                if (!usesAssetBundle) return;
+                if (!commonLoaded) return;
+                if (bundleCommon == null) return;
 
-                if (prefabRequest == null)
-                {
-                    prefabRequest = bundleCommon.LoadAssetAsync<GameObject>(name);
-                    prefabRequest.priority = 0;
-                }
-                yield return prefabRequest;
-                loadedPrefab = prefabRequest.asset as GameObject;
-                prefabRequest = null;
+                UnityEngine.Object asset = await bundleCommon.LoadAssetAsync<GameObject>(name).ToUniTask();
+                loadedPrefab = asset as GameObject;
 
                 // load sound sequences here for now
                 // this is taxing and is still done synchronously
@@ -429,36 +423,67 @@ namespace HeavenStudio
                 }
             }
 
-            AssetBundleRequest audioCommonRequest;
-            public IEnumerator LoadCommonAudioClipsAsync()
+            public async UniTask LoadCommonAudioClips()
             {
-                if (!usesAssetBundle) yield break;
-                if (!commonLoaded) yield break;
-                if (bundleCommon == null) yield break;
+                if (!commonLoaded) return;
+                if (bundleCommon == null) return;
 
-                if (audioCommonRequest == null)
-                {
-                    audioCommonRequest = bundleCommon.LoadAllAssetsAsync<AudioClip>();
-                    audioCommonRequest.priority = 1;
-                }
-                yield return audioCommonRequest;
-                audioCommonRequest = null;
+                commonAudioClips = new();
+
+                var assets = bundleCommon.LoadAllAssetsAsync();
+                await assets;
+
+                // await UniTask.SwitchToThreadPool();
+                // foreach (var asset in assets.allAssets)
+                // {
+                //     AudioClip clip = asset as AudioClip;
+                //     commonAudioClips.Add(clip.name, clip);
+                // }
+                // await UniTask.SwitchToMainThread();
             }
 
-            AssetBundleRequest audioLocaleRequest;
-            public IEnumerator LoadLocalizedAudioClipsAsync()
+            public async UniTask LoadLocalizedAudioClips()
             {
-                if (!usesAssetBundle) yield break;
-                if (!localeLoaded) yield break;
-                if (bundleLocalized == null) yield break;
+                if (!localeLoaded) return;
+                if (bundleLocalized == null) return;
 
-                if (audioLocaleRequest == null)
+                localeAudioClips = new();
+
+                var assets = bundleLocalized.LoadAllAssetsAsync();
+                await assets;
+
+                // await UniTask.SwitchToThreadPool();
+                // foreach (var asset in assets.allAssets)
+                // {
+                //     AudioClip clip = asset as AudioClip;
+                //     localeAudioClips.Add(clip.name, clip);
+                // }
+                // await UniTask.SwitchToMainThread();
+            }
+
+            public async UniTask UnloadAllAssets()
+            {
+                if (!usesAssetBundle) return;
+                commonAudioClips.Clear();
+                localeAudioClips.Clear();
+                if (loadedPrefab != null)
                 {
-                    audioLocaleRequest = bundleLocalized.LoadAllAssetsAsync<AudioClip>();
-                    audioLocaleRequest.priority = 1;
+                    loadedPrefab = null;
                 }
-                yield return audioLocaleRequest;
-                audioLocaleRequest = null;
+                if (bundleCommon != null)
+                {
+                    await bundleCommon.UnloadAsync(true);
+                    bundleCommon = null;
+                    commonLoaded = false;
+                    commonPreloaded = false;
+                }
+                if (bundleLocalized != null)
+                {
+                    await bundleLocalized.UnloadAsync(true);
+                    bundleLocalized = null;
+                    localeLoaded = false;
+                    localePreloaded = false;
+                }
             }
         }
 

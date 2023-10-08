@@ -10,6 +10,7 @@ using Jukebox;
 using HeavenStudio.Util;
 using HeavenStudio.Games;
 using HeavenStudio.Common;
+using Cysharp.Threading.Tasks;
 
 namespace HeavenStudio
 {
@@ -339,15 +340,15 @@ namespace HeavenStudio
         {
             int aLen = a.Length;
             int bLen = b.Length;
-        
+
             int ap = 0; int bp = 0;
-        
-            while (ap < aLen && bp < bLen && a [ap] == b [bp])
+
+            while (ap < aLen && bp < bLen && a[ap] == b[bp])
             {
                 ap++;
                 bp++;
             }
-        
+
             return (bp == bLen);
         }
 
@@ -366,8 +367,7 @@ namespace HeavenStudio
                     if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                     {
                         Debug.Log($"ASYNC loading assetbundles for game {gameName}");
-                        StartCoroutine(inf.LoadCommonAssetBundleAsync(this));
-                        StartCoroutine(inf.LoadLocalizedAssetBundleAsync(this));
+                        inf.LoadAssetsAsync().Forget();
                     }
                     currentPreSwitch++;
                 }
@@ -392,8 +392,7 @@ namespace HeavenStudio
                         if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                         {
                             Debug.Log($"ASYNC loading assetbundles for game {gameName}");
-                            StartCoroutine(inf.LoadCommonAssetBundleAsync(this));
-                            StartCoroutine(inf.LoadLocalizedAssetBundleAsync(this));
+                            inf.LoadAssetsAsync().Forget();
                         }
                         currentPreEvent++;
                     }
@@ -620,7 +619,8 @@ namespace HeavenStudio
                 if (miniGame != null)
                     miniGame.OnPlay(beat);
             }
-            
+
+            Application.backgroundLoadingPriority = ThreadPriority.Low;
             Conductor.instance.Play(beat);
         }
 
@@ -663,6 +663,10 @@ namespace HeavenStudio
             if (playOnStart || restart)
             {
                 Play(0, restartDelay);
+            }
+            else
+            {
+                Application.backgroundLoadingPriority = ThreadPriority.Normal;
             }
             // when rating screen gets added playOnStart will instead move to that scene
         }

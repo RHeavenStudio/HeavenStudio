@@ -140,6 +140,7 @@ namespace HeavenStudio
 
         IEnumerator LoadSceneAsync(string scene, float fadeOut)
         {
+            Application.backgroundLoadingPriority = ThreadPriority.Normal;
             //TODO: create flow mem loading icon
             asyncLoad = SceneManager.LoadSceneAsync(scene);
             while (!asyncLoad.isDone)

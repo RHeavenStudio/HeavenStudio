@@ -55,7 +55,7 @@ namespace HeavenStudio.Util
                 await UniTask.WaitUntil(() => Conductor.instance.songPositionInBeatsAsDouble >= actions[idx].beat || (!Conductor.instance.isPlaying) || behaviour == null, cancellationToken: token);
 
                 if (behaviour == null || !Conductor.instance.isPlaying)
-                    break;
+                    return;
 
                 actions[idx].function.Invoke();
                 idx++;
