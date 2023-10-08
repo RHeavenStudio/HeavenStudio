@@ -15,6 +15,8 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         [SerializeField] private float _fullRotRange;
         [SerializeField] private double _holdLength;
         [SerializeField] private EasingFunction.Ease _ease = EasingFunction.Ease.EaseInOutQuad;
+        [SerializeField] private double _holdPadding = 0.5;
+        [SerializeField] private double _holdPaddingStart = 0;
 
         private double _startBeat;
         private double _expirationBeat = -1;
@@ -57,7 +59,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             var cond = Conductor.instance;
             if (!cond.isPlaying) return;
 
-            float normalNoMod = Mathf.Abs(cond.GetPositionFromBeat(_startBeat, _holdLength));
+            float normalNoMod = Mathf.Abs(cond.GetPositionFromBeat(_startBeat - _holdPaddingStart, _holdLength + _holdPadding + _holdPaddingStart));
 
             float normalizedBeat = normalNoMod % 1;
             
@@ -68,11 +70,6 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 
             float newAngleZ = _func(-_halfRotRange, _halfRotRange, normalizedBeat);
             _rotateRoot.localEulerAngles = new Vector3(0, 0, newAngleZ);
-
-            if (cond.songPositionInBeatsAsDouble >= _expirationBeat)
-            {
-                gameObject.SetActive(false);
-            }
         }
 
         public bool IsAvailableAtBeat(double beat)

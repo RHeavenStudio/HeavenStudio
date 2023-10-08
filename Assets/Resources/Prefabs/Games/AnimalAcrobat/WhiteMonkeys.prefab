@@ -649,7 +649,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3530077400513613063}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.649568, y: 0.44255477, z: 0.13394769}
+  m_LocalPosition: {x: 2.599568, y: 0.44255477, z: 0.13394769}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1116,7 +1116,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5202088941643817628}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.65, y: 0.53, z: 0.13394769}
+  m_LocalPosition: {x: 2.6, y: 0.53, z: 0.13394769}
   m_LocalScale: {x: 0.75091, y: 0.75091, z: 0.75091}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1932,9 +1932,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9ee457016acdc4eb5dbfdc03be0d6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fullRotRange: 160
+  _fullRotRange: 170
   _holdLength: 3
-  _ease: 22
+  _ease: 10
+  _holdPadding: 0.5
+  _holdPaddingStart: 0.5
   _rotateRoot: {fileID: 3903953954711634507}
   _gripPoint: {fileID: 3800820123473635694}
 --- !u!114 &3068772248330600904
@@ -1965,8 +1967,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _anim: {fileID: 8483464683545527156}
   _animLength: 0.6785714
-  _beatLength: 3
-  _ease: 22
+  _beatLength: 2.5
+  _ease: 0
 --- !u!1 &8302616130811808557
 GameObject:
   m_ObjectHideFlags: 0
@@ -1992,7 +1994,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8302616130811808557}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.914, y: 1.959, z: 0.13394769}
+  m_LocalPosition: {x: 2.864, y: 1.959, z: 0.13394769}
   m_LocalScale: {x: 0.75091, y: 0.75091, z: 0.75091}
   m_ConstrainProportionsScale: 0
   m_Children: []

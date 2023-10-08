@@ -163,7 +163,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fullRotRange: 160
   _holdLength: 1
-  _ease: 22
+  _ease: 10
+  _holdPadding: 0.25
   _rotateRoot: {fileID: 2068126119450832752}
   _gripPoint: {fileID: 8286548847234487440}
 --- !u!114 &3772265357728581139
