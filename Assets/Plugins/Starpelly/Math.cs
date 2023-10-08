@@ -74,6 +74,14 @@ namespace Starpelly
         }
 
         /// <summary>
+        /// Returns true if a value is within a certain range.
+        /// </summary>
+        public static bool IsWithin(this Vector2 val, Vector2 min, Vector2 max)
+        {
+            return val.x.IsWithin(min.x, max.x) && val.y.IsWithin(min.y, max.y);
+        }
+
+        /// <summary>
         /// Returns true if value is between two numbers.
         /// </summary>
         public static bool IsBetween<T>(this T item, T start, T end)
