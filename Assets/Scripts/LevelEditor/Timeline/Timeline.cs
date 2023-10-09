@@ -182,8 +182,13 @@ namespace HeavenStudio.Editor.Track
 
         public Vector3[] LayerCorners = new Vector3[4];
 
+        // Beats
         public float leftSide => (RealTimelineContent.anchoredPosition.x / PixelsPerBeat) * -1;
         public float rightSide => (TimelineScroll.viewport.rect.width / PixelsPerBeat) + leftSide;
+
+        // Layer Height
+        public float topSide => RealTimelineContent.anchoredPosition.y / LayerHeight();
+        public float bottomSide => topSide + (TimelineScroll.viewport.rect.height / LayerHeight());
 
         private Vector2 lastScreenSize;
 

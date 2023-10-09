@@ -37,10 +37,11 @@ namespace HeavenStudio.Editor.Commands
                     var marker = TimelineBlockManager.Instance.EntityMarkers[entity.guid];
 
                     var clonedEntity = entity.DeepCopy();
-                    clonedEntity.guid = entity.guid; // We have to do this because entities (as of when I'm typing this), do not have Guids.
+                    clonedEntity.guid = entity.guid;
 
                     deletedEntities.Add(new() { riqEntity = clonedEntity, selected =  marker.selected });
 
+                    TimelineBlockManager.Instance.CreateDestroyFX(entity);
 
                     Selections.instance.Deselect(marker);
 
@@ -107,15 +108,16 @@ namespace HeavenStudio.Editor.Commands
             {
                 placedEntityData = createdEntity.DeepCopy();
 
-                var marker = TimelineBlockManager.Instance.EntityMarkers[createdEntity.guid];
+                if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(createdEntity.guid))
+                {
+                    var marker = TimelineBlockManager.Instance.EntityMarkers[createdEntity.guid];
+                    Selections.instance.Deselect(marker);
 
-                Selections.instance.Deselect(marker);
+                    TimelineBlockManager.Instance.EntityMarkers.Remove(createdEntity.guid);
+                    GameObject.Destroy(marker.gameObject);
+                }
 
                 GameManager.instance.Beatmap.Entities.Remove(createdEntity);
-
-                TimelineBlockManager.Instance.EntityMarkers.Remove(createdEntity.guid);
-                GameObject.Destroy(marker.gameObject);
-
                 GameManager.instance.SortEventsList();
             }
         }

@@ -5,6 +5,7 @@ using UnityEngine.Pool;
 
 using Jukebox;
 using System.Linq;
+using static Jukebox.Legacy.Beatmap;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -13,6 +14,7 @@ namespace HeavenStudio.Editor.Track
         public static TimelineBlockManager Instance { get; private set; }
 
         public TimelineEventObj EntityTemplate;
+        public BlockDeleteFX BlockDeleteFXTemplate;
         public Dictionary<Guid, TimelineEventObj> EntityMarkers = new();
         public ObjectPool<TimelineEventObj> Pool { get; private set; }
 
@@ -185,6 +187,23 @@ namespace HeavenStudio.Editor.Track
         private void OnDestroyMarker(TimelineEventObj marker)
         {
             Destroy(marker.gameObject);
+        }
+
+        // NOTE (PELLY): This should probably be pooled in the future.
+        public void CreateDestroyFX(RiqEntity entity)
+        {
+            var deleteFX = Instantiate(BlockDeleteFXTemplate, BlockDeleteFXTemplate.transform.parent);
+            deleteFX.gameObject.SetActive(true);
+
+            bool selected = false;
+            if (EntityMarkers.ContainsKey(entity.guid))
+            {
+                if (Selections.instance.eventsSelected.Contains(EntityMarkers[entity.guid]))
+                {
+                    selected = true;
+                }
+            }
+            deleteFX.Create(entity.beat, entity.length, (int)entity["track"], selected);
         }
     }
 }
