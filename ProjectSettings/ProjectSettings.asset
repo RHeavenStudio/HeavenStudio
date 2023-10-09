@@ -87,7 +87,7 @@ PlayerSettings:
   usePlayerLog: 1
   bakeCollisionMeshes: 0
   forceSingleInstance: 0
-  useFlipModelSwapchain: 1
+  useFlipModelSwapchain: 0
   resizableWindow: 1
   useMacAppStoreValidation: 0
   macAppStoreCategory: public.app-category.games
@@ -98,7 +98,7 @@ PlayerSettings:
   xboxEnableKinectAutoTracking: 0
   xboxEnableFitness: 0
   visibleInBackground: 1
-  allowFullscreenSwitch: 1
+  allowFullscreenSwitch: 0
   fullscreenMode: 3
   xboxSpeechDB: 0
   xboxEnableHeadOrientation: 0
@@ -134,7 +134,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.0.1049
+  bundleVersion: 0.0.1051
   preloadedAssets:
   - {fileID: 102900000, guid: 5348c08b82446e0478cee8bda6c02cfc, type: 3}
   metroInputSource: 0
@@ -158,11 +158,11 @@ PlayerSettings:
   applicationIdentifier:
     Standalone: com.RHeavenStudio.Heaven-Studio
   buildNumber:
-    Standalone: 1049
+    Standalone: 1051
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 0
-  AndroidBundleVersionCode: 1049
+  AndroidBundleVersionCode: 1051
   AndroidMinSdkVersion: 22
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

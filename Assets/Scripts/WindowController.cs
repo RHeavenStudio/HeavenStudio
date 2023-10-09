@@ -9,16 +9,13 @@ using HeavenStudio.Editor;
 using Jukebox;
 using Jukebox.Legacy;
 using System;
-
-
-using System.Runtime.InteropServices;
-
-
+using Kirurobo;
 
 namespace HeavenStudio
 {
     public class WindowController : MonoBehaviour
     {
+        [SerializeField] UniWindowController UniController;
         public static WindowController instance { get; private set; }
 
         public enum ViewAxis
@@ -46,85 +43,24 @@ namespace HeavenStudio
         private static Vector3 panLast;
         private static Vector3 scaleLast;
 
-        /*For anyone with a mac who knows how to code this stuff:
-        here's a google doc with helpful sites(i think) for getting this working on mac
-        https://docs.google.com/document/d/1mvHNNsXC6mo7PV6yZitpKam1fYnud7CXP73YLsebEo8/edit?usp=sharing
-        good luck i cant figure this out
-
-        update: just some default values for nscontroller or whatever it is:
-
-        windowstyle is closable; resizable; tilted
-        nsbackthingy's default is buffer
-        */
-
-        //Credit to Grizmu on the unity forums for this
-        //DLL Stuff for windows
-        #region WinDLLstuff
-        #if UNITY_STANDALONE_WIN
-        const int SWP_HIDEWINDOW = 0x80; //idk why you would want this but here you go
-        const int SWP_SHOWWINDOW = 0x40; //show window flag.
-        const int SWP_NOMOVE = 0x0002; //don't move the window flag. idk why this either
-        const int SWP_NOSIZE = 0x0001; //don't resize the window flag. or this
-        const uint WS_SIZEBOX = 0x00040000;
-        const int GWL_STYLE = -16;
-        const int WS_BORDER = 0x00800000; //window with border
-        const int WS_DLGFRAME = 0x00400000; //window with double border but no title what does this do
-        const int WS_CAPTION = WS_BORDER | WS_DLGFRAME; //window with a title bar
-        const int WS_SYSMENU = 0x00080000;      //window with no borders etc.
-        const int WS_MAXIMIZEBOX = 0x00010000;
-        const int WS_MINIMIZEBOX = 0x00020000;  //window with minimizebox
-        [DllImport("user32.dll")]
-        static extern System.IntPtr GetActiveWindow();
-
-        [DllImport("user32.dll")]
-        static extern int FindWindow(string lpClassName, string lpWindowName);
-
-        [DllImport("user32.dll")]
-        static extern bool SetWindowPos(
-            System.IntPtr hWnd,
-            System.IntPtr hWndInsertAfter,
-            short X,
-            short Y,
-            short cx,
-            short cy,
-            uint uFlags
-        );
-
-        System.IntPtr hWnd;
-        System.IntPtr HWND_TOP = new System.IntPtr(0);
-        System.IntPtr HWND_TOPMOST = new System.IntPtr(-1);
-        System.IntPtr HWND_NOTOPMOST = new System.IntPtr(-2);
-
-        #endif
-
-
-        public void SetPosition(System.IntPtr ptr, short x, short y, short resX, short resY)
+        public void SetPosition(short x, short y, short resX, short resY)
         {
-            if(!Application.isEditor && !Editor.Editor.instance.fullscreen && (pan != defaultPan | scale != defaultScale)) Reset();
-            if(Application.isEditor || !Editor.Editor.instance.fullscreen) return;
-            if(PersistentDataManager.gameSettings.windowDanceEnable)
-            {
-                #if UNITY_STANDALONE_WIN
-                SetWindowPos(ptr, HWND_NOTOPMOST, x, y, resX, resY, SWP_SHOWWINDOW);
-                #endif
-            }
+            #if UNITY_EDITOR
+            return;
+            #else
+            UniController.windowSize = (new Vector2(resX, resY));
+            UniController.windowPosition = (new Vector2(x, y));
+            #endif
         }
         
         private void Awake()
         {
-            #if UNITY_STANDALONE_WIN
-            hWnd = GetActiveWindow();
-            #endif
             AspectRatioWidth = Screen.mainWindowDisplayInfo.width;
             AspectRatioHeight = Screen.mainWindowDisplayInfo.height;
             defaultScale = new Vector3(Screen.width, Screen.height, 0);
             defaultPan = new Vector3(Screen.mainWindowPosition.x, Screen.mainWindowPosition.y, 0);
             instance = this;
         }
-        
-        
-
-        #endregion
 
         // Start is called before the first frame update
         void Start()
@@ -167,9 +103,7 @@ namespace HeavenStudio
             //SetShakeIntensity();
             if(PersistentDataManager.gameSettings.windowDanceEnable)
             {
-                #if UNITY_STANDALONE_WIN
-                SetPosition(hWnd, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
-                #endif
+                SetPosition(Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
             }
         }
 
@@ -282,9 +216,7 @@ namespace HeavenStudio
             if(Application.isEditor) return;
             if(PersistentDataManager.gameSettings.windowDanceEnable)
             {
-                #if UNITY_STANDALONE_WIN
-                SetWindowPos(hWnd, HWND_NOTOPMOST, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y), SWP_SHOWWINDOW);
-                #endif
+                SetPosition(Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
             }
         }
     }
