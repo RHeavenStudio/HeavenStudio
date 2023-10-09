@@ -6,6 +6,7 @@ using Jukebox;
 using TMPro;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.Timeline;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -148,8 +149,11 @@ namespace HeavenStudio.Editor.Track
 
             if (selected)
             {
-                if (moving)
+                if (TimelineBlockManager.Instance.MovingAnyEvents)
+                {
                     outline.color = Color.magenta;
+                    SetColor((int)entity["track"]);
+                }
                 else
                     outline.color = Color.cyan;
             }
@@ -200,6 +204,7 @@ namespace HeavenStudio.Editor.Track
 
                         if (!isCreating && movedEntity)
                         {
+                            // NOTE (PELLY): Replace with arrays soon
                             List<double> lastBeats = new();
                             List<int> lastLayers = new();
                             foreach (var marker in Selections.instance.eventsSelected)
@@ -318,7 +323,8 @@ namespace HeavenStudio.Editor.Track
 
             if (Input.GetMouseButton(1) || Input.GetMouseButton(2)) return;
             if (!moving)
-                altWhenClicked = Input.GetKey(KeyCode.LeftAlt);
+                if (!altWhenClicked)
+                    altWhenClicked = Input.GetKey(KeyCode.LeftAlt);
 
             if (!altWhenClicked)
             {
