@@ -48,8 +48,12 @@ namespace HeavenStudio
             #if UNITY_EDITOR
             return;
             #else
-            UniController.windowSize = (new Vector2(resX, resY));
-            UniController.windowPosition = (new Vector2(x, y));
+            if(Application.isEditor || !Editor.Editor.instance.fullscreen || !Conductor.instance.isPlaying) return;
+            if(PersistentDataManager.gameSettings.windowDanceEnable)
+            {
+                UniController.windowSize = (new Vector2(resX, resY));
+                UniController.windowPosition = (new Vector2(x, y));
+            }
             #endif
         }
         
@@ -101,10 +105,7 @@ namespace HeavenStudio
             UpdateScale();
             UpdatePan();
             //SetShakeIntensity();
-            if(PersistentDataManager.gameSettings.windowDanceEnable)
-            {
-                SetPosition(Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
-            }
+            SetPosition(Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
         }
 
         private void UpdatePan()
@@ -213,11 +214,7 @@ namespace HeavenStudio
             pan = defaultPan;
             scale = defaultScale;
             shakeResult = defaultShake;
-            if(Application.isEditor) return;
-            if(PersistentDataManager.gameSettings.windowDanceEnable)
-            {
-                SetPosition(Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
-            }
+            SetPosition(Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
         }
     }
 }
