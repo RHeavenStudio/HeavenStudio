@@ -5,7 +5,6 @@ using UnityEngine.Pool;
 
 using Jukebox;
 using System.Linq;
-using static Jukebox.Legacy.Beatmap;
 
 namespace HeavenStudio.Editor.Track
 {
