@@ -19,6 +19,8 @@ namespace HeavenStudio.Editor
         public TMP_Dropdown dropdown;
         private Array enumVals;
 
+        private int _defaultValue;
+
         private bool openedDropdown = false;
 
         new public void SetProperties(string propertyName, object type, string caption)
@@ -28,6 +30,7 @@ namespace HeavenStudio.Editor
             var enumType = type.GetType();
             enumVals = Enum.GetValues(enumType);
             var enumNames = Enum.GetNames(enumType).ToList();
+            _defaultValue = (int)type;
 
             // Can we assume non-holey enum?
             // If we can we can simplify to dropdown.value = (int) parameterManager.entity[propertyName]
@@ -40,8 +43,18 @@ namespace HeavenStudio.Editor
             dropdown.AddOptions(enumNames);
             dropdown.value = selected;
 
-            dropdown.onValueChanged.AddListener(_ =>
-                parameterManager.entity[propertyName] = (int) enumVals.GetValue(dropdown.value)
+            dropdown.onValueChanged.AddListener(_ => 
+            {
+                parameterManager.entity[propertyName] = (int)enumVals.GetValue(dropdown.value);
+                if ((int)enumVals.GetValue(dropdown.value) != _defaultValue)
+                {
+                    this.caption.text = _captionText + "*";
+                }
+                else
+                {
+                    this.caption.text = _captionText;
+                }
+            }
             );
         }
 

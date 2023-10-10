@@ -105,11 +105,8 @@ namespace HeavenStudio.Editor
                     ePrefabs.Add(propertyName, AddParam(propertyName, param, caption, tooltip));
                 }
 
-                Debug.Log(action.parameters);
-
                 foreach (var p in action.parameters)
                 {
-                    Debug.Log(p.collapseParams);
                     if (p.collapseParams == null || p.collapseParams.Count == 0) continue;
                     EventPropertyPrefab input = ePrefabs[p.propertyName].GetComponent<EventPropertyPrefab>();
                     foreach (var c in p.collapseParams)
