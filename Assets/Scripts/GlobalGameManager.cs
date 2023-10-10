@@ -8,6 +8,7 @@ using DG.Tweening;
 using TMPro;
 
 using HeavenStudio.Common;
+using System.Runtime.InteropServices;
 
 namespace HeavenStudio
 {
@@ -76,6 +77,8 @@ namespace HeavenStudio
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init()
         {
+            Application.wantsToQuit += WantsToQuit;
+
             BasicCheck();
 
             Minigames.InitPreprocessor();
@@ -383,6 +386,19 @@ namespace HeavenStudio
             PlayerInput.CleanUp();
             Debug.Log("Clearing RIQ Cache...");
             Jukebox.RiqFileHandler.ClearCache();
+        }
+
+        public static bool ShowQuitPopUp = true;
+
+        private static bool WantsToQuit()
+        {
+            if (ShowQuitPopUp)
+            {
+                if (SceneManager.GetActiveScene().name != "Editor") return true;
+
+
+            }
+            return true;
         }
     }
 }
