@@ -15,8 +15,9 @@ namespace HeavenStudio
 {
     public class WindowController : MonoBehaviour
     {
-        [SerializeField] UniWindowController UniController;
         public static WindowController instance { get; private set; }
+
+        private UniWindowController controls;
 
         public enum ViewAxis
         {
@@ -51,8 +52,8 @@ namespace HeavenStudio
             if(Application.isEditor || !Editor.Editor.instance.fullscreen || !Conductor.instance.isPlaying) return;
             if(PersistentDataManager.gameSettings.windowDanceEnable)
             {
-                UniController.windowSize = (new Vector2(resX, resY));
-                UniController.windowPosition = (new Vector2(x, y));
+                controls.windowSize = (new Vector2(resX, resY));
+                controls.windowPosition = (new Vector2(x, y));
             }
             #endif
         }
@@ -69,6 +70,7 @@ namespace HeavenStudio
         // Start is called before the first frame update
         void Start()
         {
+            controls = GetComponent<UniWindowController>();
             GameManager.instance.onBeatChanged += OnBeatChanged;
 
             Reset();
