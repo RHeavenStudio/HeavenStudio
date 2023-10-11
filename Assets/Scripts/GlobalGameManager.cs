@@ -388,17 +388,11 @@ namespace HeavenStudio
             Jukebox.RiqFileHandler.ClearCache();
         }
 
-        public static bool ShowQuitPopUp = true;
-
         private static bool WantsToQuit()
         {
-            if (ShowQuitPopUp)
-            {
-                if (SceneManager.GetActiveScene().name != "Editor") return true;
-
-
-            }
-            return true;
+            if (SceneManager.GetActiveScene().name != "Editor") return true;
+            Editor.Editor.instance.ShowQuitPopUp(true);
+            return false;
         }
     }
 }
