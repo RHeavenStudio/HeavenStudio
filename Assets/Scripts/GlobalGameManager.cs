@@ -391,7 +391,7 @@ namespace HeavenStudio
         {
             if (SceneManager.GetActiveScene().name != "Editor") return true;
             Editor.Editor.instance.ShowQuitPopUp(true);
-            return false;
+            return Editor.Editor.instance.ShouldQuit;
         }
     }
 }

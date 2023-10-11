@@ -154,8 +154,11 @@ namespace HeavenStudio.Editor
             _confirmQuitMain.SetActive(show);
         }
 
+        public bool ShouldQuit = false;
+
         public void QuitGame()
         {
+            ShouldQuit = true;
             Application.Quit();
         }
 
