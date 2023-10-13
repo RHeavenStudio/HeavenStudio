@@ -114,7 +114,7 @@ namespace HeavenStudio.Editor
                             Editor.instance.editingInputField = false;
                             if (slider.value != _defaultValue)
                             {
-                                this.caption.text = "*" + _captionText;
+                                this.caption.text = _captionText + "*";
                             }
                             else
                             {

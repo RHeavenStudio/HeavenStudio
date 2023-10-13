@@ -24,7 +24,7 @@ namespace HeavenStudio.Games.Loaders
                         {
                             new Param.CollapseParam(x => (bool)x, new string[] { "endSmile" })
                         }),
-                        new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
+                        new Param("endSmile", new EntityTypes.Float(2, 100, 2), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
                     preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], false, e["endSmile"]); },
                 },
@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Loaders
                         {
                             new Param.CollapseParam(x => (bool)x, new string[] { "endSmile" })
                         }),
-                        new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
+                        new Param("endSmile", new EntityTypes.Float(2, 100, 2), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
                     preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], true, e["endSmile"]); },
                 },
