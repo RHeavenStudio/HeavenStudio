@@ -57,7 +57,7 @@ namespace HeavenStudio.Common
                 spawnedButton.onClick.AddListener(new UnityAction(() => 
                 { 
                     e.action.Invoke();
-                    Destroy(_currentDropDown.gameObject);
+                    if (_currentDropDown != null) Destroy(_currentDropDown.gameObject);
                 }));
                 spawnedButton.transform.GetChild(0).GetComponent<TMP_Text>().text = e.name;
                 spawnedButton.gameObject.SetActive(true);

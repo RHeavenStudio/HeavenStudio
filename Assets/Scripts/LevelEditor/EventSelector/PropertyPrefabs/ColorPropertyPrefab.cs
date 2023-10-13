@@ -57,6 +57,11 @@ namespace HeavenStudio.Editor
             ColorTable.gameObject.SetActive(false);
         }
 
+        public void ResetValue()
+        {
+            colorPreview.ChangeColor(_defaultColor);
+        }
+
         public override void SetCollapses(object type)
         {
             colorPreview.colorPicker.onColorChanged += _ => UpdateCollapse(colorPreview.colorPicker.color);
