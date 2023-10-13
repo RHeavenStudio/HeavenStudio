@@ -4871,7 +4871,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 459.58514, y: -145}
+  m_AnchoredPosition: {x: 459.58514, y: -25}
   m_SizeDelta: {x: 879.1703, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &184838089
@@ -4889,7 +4889,7 @@ MonoBehaviour:
   caption: {fileID: 44496736}
   parameterManager: {fileID: 0}
   propertyName: 
-  dropdown: {fileID: 9172948791891367920}
+  dropdown: {fileID: 9172948791891367936}
 --- !u!1 &191459085
 GameObject:
   m_ObjectHideFlags: 0
@@ -17807,6 +17807,7 @@ GameObject:
   - component: {fileID: 735918248}
   - component: {fileID: 735918247}
   - component: {fileID: 735918245}
+  - component: {fileID: 735918249}
   m_Layer: 5
   m_Name: InputField (TMP)
   m_TagString: Untagged
@@ -17976,6 +17977,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 735918244}
   m_CullTransparentMesh: 1
+--- !u!114 &735918249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735918244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4972b7ea15fb7943ad12ed39e229140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _events:
+  - name: Reset
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 345301790}
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.NumberPropertyPrefab, Assembly-CSharp
+          m_MethodName: ResetValue
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _masterTrans: {fileID: 1791483803}
+  _dropDown: {fileID: 8384641343036272350, guid: 56a45ac5cd0da2a4ab398d1a63e18d9f, type: 3}
 --- !u!1 &738028139
 GameObject:
   m_ObjectHideFlags: 0
@@ -18348,6 +18380,7 @@ GameObject:
   m_Component:
   - component: {fileID: 749529047}
   - component: {fileID: 749529046}
+  - component: {fileID: 749529048}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -18429,6 +18462,37 @@ RectTransform:
   m_AnchoredPosition: {x: 134.5, y: 0.0000097752}
   m_SizeDelta: {x: -269, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &749529048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749529045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4972b7ea15fb7943ad12ed39e229140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _events:
+  - name: Reset
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 345301790}
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.NumberPropertyPrefab, Assembly-CSharp
+          m_MethodName: ResetValue
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _masterTrans: {fileID: 1791483803}
+  _dropDown: {fileID: 8384641343036272350, guid: 56a45ac5cd0da2a4ab398d1a63e18d9f, type: 3}
 --- !u!1 &755586977
 GameObject:
   m_ObjectHideFlags: 0
@@ -26537,6 +26601,7 @@ GameObject:
   - component: {fileID: 1182082597}
   - component: {fileID: 1182082596}
   - component: {fileID: 1182082595}
+  - component: {fileID: 1182082598}
   m_Layer: 5
   m_Name: InputField (TMP)
   m_TagString: Untagged
@@ -26706,6 +26771,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1182082593}
   m_CullTransparentMesh: 1
+--- !u!114 &1182082598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182082593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4972b7ea15fb7943ad12ed39e229140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _events:
+  - name: Reset
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 396879234}
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.NumberPropertyPrefab, Assembly-CSharp
+          m_MethodName: ResetValue
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _masterTrans: {fileID: 1791483803}
+  _dropDown: {fileID: 8384641343036272350, guid: 56a45ac5cd0da2a4ab398d1a63e18d9f, type: 3}
 --- !u!1 &1183003085
 GameObject:
   m_ObjectHideFlags: 0
@@ -43282,6 +43378,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2067224778}
   - component: {fileID: 2067224779}
+  - component: {fileID: 2067224780}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -43363,6 +43460,37 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2067224780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2067224777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4972b7ea15fb7943ad12ed39e229140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _events:
+  - name: Reset
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 396879234}
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.NumberPropertyPrefab, Assembly-CSharp
+          m_MethodName: ResetValue
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _masterTrans: {fileID: 1791483803}
+  _dropDown: {fileID: 8384641343036272350, guid: 56a45ac5cd0da2a4ab398d1a63e18d9f, type: 3}
 --- !u!1 &2067805742
 GameObject:
   m_ObjectHideFlags: 0
@@ -46082,61 +46210,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 28}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &9172948791891367920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9172948791891367934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 0
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 9172948791891367923}
-  m_Template: {fileID: 9172948790492497235}
-  m_CaptionText: {fileID: 9172948791664681353}
-  m_CaptionImage: {fileID: 0}
-  m_Placeholder: {fileID: 0}
-  m_ItemText: {fileID: 9172948790358451334}
-  m_ItemImage: {fileID: 0}
-  m_Value: 0
-  m_MultiSelect: 0
-  m_Options:
-    m_Options: []
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_AlphaFadeSpeed: 0
 --- !u!224 &9172948791891367921
 RectTransform:
   m_ObjectHideFlags: 0
@@ -46209,7 +46282,8 @@ GameObject:
   - component: {fileID: 9172948791891367921}
   - component: {fileID: 9172948791891367922}
   - component: {fileID: 9172948791891367923}
-  - component: {fileID: 9172948791891367920}
+  - component: {fileID: 9172948791891367936}
+  - component: {fileID: 9172948791891367935}
   m_Layer: 5
   m_Name: Dropdown
   m_TagString: Untagged
@@ -46217,6 +46291,92 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &9172948791891367935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9172948791891367934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4972b7ea15fb7943ad12ed39e229140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _events:
+  - name: Reset
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 184838089}
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.EnumPropertyPrefab, Assembly-CSharp
+          m_MethodName: ResetValue
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  _masterTrans: {fileID: 1791483803}
+  _dropDown: {fileID: 8384641343036272350, guid: 56a45ac5cd0da2a4ab398d1a63e18d9f, type: 3}
+--- !u!114 &9172948791891367936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9172948791891367934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c3bece73b33f2f4b9c68a0c2413e42b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 0
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 9172948791891367923}
+  m_Template: {fileID: 9172948790492497235}
+  m_CaptionText: {fileID: 9172948791664681353}
+  m_CaptionImage: {fileID: 0}
+  m_Placeholder: {fileID: 0}
+  m_ItemText: {fileID: 9172948790358451334}
+  m_ItemImage: {fileID: 0}
+  m_Value: 0
+  m_MultiSelect: 0
+  m_Options:
+    m_Options: []
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_AlphaFadeSpeed: 0
 --- !u!1 &9172948792157168128
 GameObject:
   m_ObjectHideFlags: 0

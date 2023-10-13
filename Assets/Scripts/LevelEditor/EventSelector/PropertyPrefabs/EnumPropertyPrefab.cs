@@ -9,6 +9,7 @@ using Starpelly;
 
 using HeavenStudio.Util;
 using HeavenStudio.Editor;
+using HeavenStudio.Common;
 
 namespace HeavenStudio.Editor
 {
@@ -16,7 +17,7 @@ namespace HeavenStudio.Editor
     {
         [Header("Dropdown")]
         [Space(10)]
-        public TMP_Dropdown dropdown;
+        public LeftClickTMP_Dropdown dropdown;
         private Array enumVals;
 
         private int _defaultValue;
@@ -56,6 +57,11 @@ namespace HeavenStudio.Editor
                 }
             }
             );
+        }
+
+        public void ResetValue()
+        {
+            dropdown.value = _defaultValue;
         }
 
         public override void SetCollapses(object type)

@@ -92,7 +92,7 @@ namespace HeavenStudio.Editor
                             parameterManager.entity[propertyName] = newValue;
                             if (newValue != _defaultValue)
                             {
-                                this.caption.text = "*" + _captionText;
+                                this.caption.text = _captionText + "*";
                             }
                             else
                             {
@@ -129,6 +129,11 @@ namespace HeavenStudio.Editor
                         nameof(type), type, "I don't know how to make a property of this type!"
                     );
             }
+        }
+
+        public void ResetValue()
+        {
+            slider.value = _defaultValue;
         }
 
         public override void SetCollapses(object type)
