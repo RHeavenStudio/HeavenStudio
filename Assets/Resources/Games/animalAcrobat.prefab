@@ -524,7 +524,7 @@ MonoBehaviour:
   _monkeysLong: {fileID: -3114631264593203074, guid: f52ef60e472be3047bb77f54d5a3229d, type: 3}
   _monkeysShort: {fileID: 7370747047491091311, guid: 0dfca7cb5fedf0d40aa26ffd9b4595ae, type: 3}
   _scroll: {fileID: 6038557817912069913}
-  _playerMonkey: {fileID: 9203508234464389557}
+  _playerMonkey: {fileID: 6378184308468988927}
   _jumpDistance: 8
   _jumpDistanceGiraffe: 32
   _jumpStartCameraDistance: 3
@@ -731,19 +731,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6171382744519440479, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
   m_PrefabInstance: {fileID: 8166682498639938566}
   m_PrefabAsset: {fileID: 0}
---- !u!198 &8603791554516011657 stripped
+--- !u!198 &3975180264645336726 stripped
 ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 446749867381591695, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5079865856385702544, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
   m_PrefabInstance: {fileID: 8166682498639938566}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9203508234464389557 stripped
+--- !u!1 &5719573208726547716 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4482739629151873282, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
+  m_PrefabInstance: {fileID: 8166682498639938566}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6378184308468988927
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1075392245553999283, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
-  m_PrefabInstance: {fileID: 8166682498639938566}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5719573208726547716}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9018ffa2d40d7b841a140a5eb406d5e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
+  _scroll: {fileID: 6038557817912069913}
+  _releaseParticle: {fileID: 3975180264645336726}
+  _trailParticle: {fileID: 8603791554516011657}
+  _jumpDistanceStart: 6
+  _jumpDistance: 4
+  _jumpHeight: 4
+  _jumpHeightInitial: 2
+  _jumpDistanceGiraffe: 30
+  _jumpHeightGiraffe: 7
+  _jumpStartAngle: 120
+--- !u!198 &8603791554516011657 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 446749867381591695, guid: 8c681a700cd16784580f97e7f10a53e6, type: 3}
+  m_PrefabInstance: {fileID: 8166682498639938566}
+  m_PrefabAsset: {fileID: 0}

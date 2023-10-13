@@ -5300,7 +5300,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6171382744519440479}
   - component: {fileID: 6945261984245565766}
-  - component: {fileID: 1075392245553999283}
   m_Layer: 0
   m_Name: PlayerMonkey
   m_TagString: Untagged
@@ -5353,29 +5352,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1075392245553999283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4482739629151873282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9018ffa2d40d7b841a140a5eb406d5e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offset: {x: 0, y: 0, z: 0}
-  _scroll: {fileID: 0}
-  _releaseParticle: {fileID: 5079865856385702544}
-  _trailParticle: {fileID: 0}
-  _jumpDistanceStart: 6
-  _jumpDistance: 4
-  _jumpHeight: 4
-  _jumpHeightInitial: 2
-  _jumpDistanceGiraffe: 28
-  _jumpHeightGiraffe: 7
-  _jumpStartAngle: 120
 --- !u!1 &5057807536545058967
 GameObject:
   m_ObjectHideFlags: 0
