@@ -56,6 +56,11 @@ namespace HeavenStudio.Editor
             );
         }
 
+        public void ResetValue()
+        {
+            inputFieldString.text = _defaultValue;
+        }
+
         public override void SetCollapses(object type)
         {
             inputFieldString.onValueChanged.AddListener(
