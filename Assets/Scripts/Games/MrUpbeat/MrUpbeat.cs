@@ -99,7 +99,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("countOffbeat", "Count")
                 {
-                    function = delegate { MrUpbeat.Count(eventCaller.currentEntity["number"]); },
+                    inactiveFunction = delegate { MrUpbeat.Count(eventCaller.currentEntity["number"]); },
                     parameters = new List<Param>()
                     {
                         new Param("number", MrUpbeat.Counts.One, "Number", "The sound to play"),

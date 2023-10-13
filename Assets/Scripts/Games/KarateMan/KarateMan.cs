@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                 return null;
             }
             RiqBeatmap.OnUpdateEntity += WarningUpdater;
-            
+
             RiqEntity BackgroundUpdater(string datamodel, RiqEntity e)
             {
                 if (e.datamodel == "karateman/set background effects")
