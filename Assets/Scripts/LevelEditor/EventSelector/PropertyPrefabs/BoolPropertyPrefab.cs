@@ -43,6 +43,11 @@ namespace HeavenStudio.Editor
             );
         }
 
+        public void ResetValue()
+        {
+            toggle.isOn = _defaultValue;
+        }
+
         public override void SetCollapses(object type)
         {
             toggle.onValueChanged.AddListener(
