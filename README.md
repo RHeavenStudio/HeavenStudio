@@ -11,11 +11,8 @@
 
 [Documentation](https://rheavenstudio.github.io/)
 
-![prCapture](https://i.imgur.com/6oKjIo7.png)
-Starkiller - Bear Ghost (Remix by NoelColoon)
+![prCapture](https://i.imgur.com/N7Q6ubY.png)
 
-![image](https://i.imgur.com/iYUjROb.png)
-Hidden in the Sand - Tally Hall [Chonny Jash Cover] (Remix by Jaydakin)
 
 
 ## Prebuilt Binaries & Downloads
