@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Loaders
                 return null;
             }
             RiqBeatmap.OnUpdateEntity += WarningUpdater;
-            
+
             RiqEntity BackgroundUpdater(string datamodel, RiqEntity e)
             {
                 if (e.datamodel == "karateman/set background effects")
@@ -804,7 +804,7 @@ namespace HeavenStudio.Games
                     break;
             }
 
-            if (songPos >= wordClearTime && songPos < wordStartTime) {
+            if (songPos >= wordClearTime || songPos < wordStartTime) {
                 Word.Play("NoPose");
             }
 
@@ -878,10 +878,10 @@ namespace HeavenStudio.Games
 
         public void DoWord(double beat, double length, int type, bool pitchVoice, float forcePitch, bool customLength, bool doSound = true)
         {
-            Word.Play(DoWordSound(beat, length, type, customLength, pitchVoice, forcePitch, doSound));
+            Word.Play(DoWordSound(beat, length, type, pitchVoice, forcePitch, customLength, doSound));
         }
 
-        public static string DoWordSound(double beat, double length, int type, bool customLength, bool pitchVoice = false, float forcePitch = 1, bool doSound = true)
+        public static string DoWordSound(double beat, double length, int type, bool pitchVoice = false, float forcePitch = 1, bool customLength = false, bool doSound = true)
         {
             double clear = type switch {
                 <= (int)HitThree.HitFour => beat + 4f,

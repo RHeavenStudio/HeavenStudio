@@ -21,12 +21,26 @@ namespace HeavenStudio.Editor
         public bool colorTableActive;
         public ColorPreview colorPreview;
 
+        private Color _defaultColor;
+
         new public void SetProperties(string propertyName, object type, string caption)
         {
             InitProperties(propertyName, caption);
 
-            colorPreview.colorPicker.onColorChanged += _ =>
+            colorPreview.colorPicker.onColorChanged += _ => 
+            {
                 parameterManager.entity[propertyName] = colorPreview.colorPicker.color;
+                if (colorPreview.colorPicker.color != _defaultColor)
+                {
+                    this.caption.text = _captionText + "*";
+                }
+                else
+                {
+                    this.caption.text = _captionText;
+                }
+            };
+
+            _defaultColor = (Color)type;
 
             Color paramCol = parameterManager.entity[propertyName];
 
@@ -41,6 +55,11 @@ namespace HeavenStudio.Editor
 
             colorPreview.ChangeColor(paramCol);
             ColorTable.gameObject.SetActive(false);
+        }
+
+        public void ResetValue()
+        {
+            colorPreview.ChangeColor(_defaultColor);
         }
 
         public override void SetCollapses(object type)

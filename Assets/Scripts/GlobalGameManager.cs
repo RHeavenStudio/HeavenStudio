@@ -76,6 +76,8 @@ namespace HeavenStudio
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init()
         {
+            Application.wantsToQuit += WantsToQuit;
+
             BasicCheck();
 
             Minigames.InitPreprocessor();
@@ -384,6 +386,13 @@ namespace HeavenStudio
             PlayerInput.CleanUp();
             Debug.Log("Clearing RIQ Cache...");
             Jukebox.RiqFileHandler.ClearCache();
+        }
+
+        private static bool WantsToQuit()
+        {
+            if (SceneManager.GetActiveScene().name != "Editor") return true;
+            Editor.Editor.instance.ShowQuitPopUp(true);
+            return Editor.Editor.instance.ShouldQuit;
         }
     }
 }

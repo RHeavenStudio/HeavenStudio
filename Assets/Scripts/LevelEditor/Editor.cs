@@ -55,6 +55,11 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button SortChronologicBTN;
         [SerializeField] private TMP_InputField SearchBar;
 
+        [Header("Confirm Quit")]
+        [SerializeField] private GameObject _confirmQuitMain;
+        [SerializeField] private Button _quitYes;
+        [SerializeField] private Button _quitNo;
+
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
 
@@ -142,6 +147,19 @@ namespace HeavenStudio.Editor
 
             var ggs = GridGameSelectorRect.GetComponent<GridGameSelector>();
             (minigame.fxOnly ? ggs.fxActive : ggs.mgsActive).Add(GameIcon_.GetComponent<RectTransform>());
+        }
+
+        public void ShowQuitPopUp(bool show)
+        {
+            _confirmQuitMain.SetActive(show);
+        }
+
+        public bool ShouldQuit = false;
+
+        public void QuitGame()
+        {
+            ShouldQuit = true;
+            Application.Quit();
         }
 
         public void LateUpdate()
