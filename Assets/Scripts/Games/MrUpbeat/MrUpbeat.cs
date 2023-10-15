@@ -28,9 +28,9 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ding", "Ding!")
                 {
-                    preFunction = delegate {
-                        var e = eventCaller.currentEntity;
-                        MrUpbeat.Ding(e.beat, e["toggle"], e["stopBlipping"], e["playDing"]);
+                    preFunction = delegate { 
+                        var e = eventCaller.currentEntity; 
+                        MrUpbeat.Ding(e.beat, e["toggle"], e["stopBlipping"], e["playDing"]); 
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MrUpbeat.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]);
+                        MrUpbeat.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); 
                     },
                     resizable = true,
                     parameters = new List<Param>()
@@ -58,8 +58,8 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("upbeatColors", "Upbeat Colors")
                 {
                     function = delegate {
-                        var e = eventCaller.currentEntity;
-                        MrUpbeat.instance.UpbeatColors(e["blipColor"], e["setShadow"], e["shadowColor"]);
+                        var e = eventCaller.currentEntity; 
+                        MrUpbeat.instance.UpbeatColors(e["blipColor"], e["setShadow"], e["shadowColor"]); 
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -72,8 +72,8 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("blipEvents", "Blip Events")
                 {
                     function = delegate {
-                        var e = eventCaller.currentEntity;
-                        MrUpbeat.instance.BlipEvents(e["letter"], e["shouldGrow"], e["resetBlip"], e["shouldBlip"]);
+                        var e = eventCaller.currentEntity; 
+                        MrUpbeat.instance.BlipEvents(e["letter"], e["shouldGrow"], e["resetBlip"], e["shouldBlip"]); 
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -99,7 +99,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("countOffbeat", "Count")
                 {
-                    inactiveFunction = delegate { MrUpbeat.Count(eventCaller.currentEntity["number"]); },
+                    function = delegate { MrUpbeat.Count(eventCaller.currentEntity["number"]); },
                     parameters = new List<Param>()
                     {
                         new Param("number", MrUpbeat.Counts.One, "Number", "The sound to play"),
@@ -129,7 +129,7 @@ namespace HeavenStudio.Games
     using Jukebox;
     public class MrUpbeat : Minigame
     {
-        public enum Counts
+        public enum Counts 
         {
             One,
             Two,
@@ -175,7 +175,7 @@ namespace HeavenStudio.Games
         {
             if (beat >= startBlippingBeat) {
                 double tempBeat = ((beat % 1 == 0.5) ? Mathf.Floor((float)beat) : Mathf.Round((float)beat)) + (startBlippingBeat % 1);
-                BeatAction.New(instance, new List<BeatAction.Action>() {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
                     new BeatAction.Action(tempBeat, delegate { man.RecursiveBlipping(tempBeat); })
                 });
                 startBlippingBeat = double.MaxValue;
@@ -219,17 +219,16 @@ namespace HeavenStudio.Games
 
         public static void Ding(double beat, bool applause, bool stopBlipping, bool playDing)
         {
-            BeatAction.New(instance, new List<BeatAction.Action>() {
-                new BeatAction.Action(beat - 0.5, delegate {
-                    instance.stopStepping = true;
-                    if (stopBlipping) instance.stopBlipping = true;
-                }),
-                new BeatAction.Action(beat + 0.5, delegate {
-                    instance.stopStepping = false;
-                }),
-            });
+            instance.stopStepping = true;
+            if (stopBlipping) instance.stopBlipping = true;
             if (playDing) SoundByte.PlayOneShotGame("mrUpbeat/ding", beat: beat, forcePlay: true);
             if (applause) SoundByte.PlayOneShot("applause", beat: beat);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat + 0.5, delegate { 
+                    instance.stopStepping = false;
+                    instance.stopBlipping = false; 
+                })
+            });
         }
 
         public static void PrePrepare(double beat, float length, bool forceOffbeat)
@@ -256,8 +255,8 @@ namespace HeavenStudio.Games
             metronomeAnim.DoScaledAnimationAsync("MetronomeGo" + dir, 0.5f);
             SoundByte.PlayOneShotGame("mrUpbeat/metronome" + dir);
             ScheduleInput(beat, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
-            BeatAction.New(this, new List<BeatAction.Action>() {
-                new(beat + 1, delegate { RecursiveStepping(beat + 1); })
+            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat + 1, delegate { RecursiveStepping(beat + 1); })
             });
             stepIterate++;
         }
@@ -275,7 +274,7 @@ namespace HeavenStudio.Games
                     stepIterate++;
                 }));
             }
-            BeatAction.New(this, actions);
+            BeatAction.New(gameObject, actions);
         }
 
         public static void Blipping(double beat, float length)
@@ -342,7 +341,7 @@ namespace HeavenStudio.Games
 
         public static void Count(int number)
         {
-            SoundByte.PlayOneShotGame("mrUpbeat/" + (number < 4 ? number + 1 : "a"), forcePlay: true);
+            SoundByte.PlayOneShotGame("mrUpbeat/"+ (number < 4 ? number + 1 : "a"), forcePlay: true);
         }
 
         public static void CountIn(double beat, float length, bool a)
@@ -350,12 +349,12 @@ namespace HeavenStudio.Games
             var sound = new List<MultiSound.Sound>();
             if (a) sound.Add(new MultiSound.Sound("mrUpbeat/a", beat - (0.5f * (length/4))));
             for (int i = 0; i < 4; i++) {
-                sound.Add(new MultiSound.Sound("mrUpbeat/" + (i + 1), beat + (i * (length / 4)), offset: (i == 3) ? 0.05 : 0));
+                sound.Add(new MultiSound.Sound("mrUpbeat/" + (i + 1), beat + (i * (length/4)), offset: (i == 3 ? 0.05 : 0)));
             }
             
             MultiSound.Play(sound.ToArray(), forcePlay: true);
         }
 
-        public void Nothing(PlayerActionEvent caller) { }
+        public void Nothing(PlayerActionEvent caller) {}
     }
 }

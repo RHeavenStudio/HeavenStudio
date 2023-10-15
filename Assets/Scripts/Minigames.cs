@@ -17,16 +17,16 @@ using System.IO;
 
 namespace HeavenStudio
 {
-
+    
     public class Minigames
     {
-
+        
         public static void InitPreprocessor()
         {
             RiqBeatmap.OnUpdateBeatmap += PreProcessBeatmap;
         }
 
-        public static Dictionary<string, object> propertiesModel = new()
+        public static Dictionary<string, object> propertiesModel = new() 
             {
                 // mapper set properties? (future: use this to flash the button)
                 {"propertiesmodified", false},
@@ -165,7 +165,7 @@ namespace HeavenStudio
                         Debug.Log($"k: {item.Key}, v: {item.Value}");
                         if (item.Key == "track")
                             continue;
-                        if (item.Value == null)
+                        if (item.Value == null) 
                             continue;
                         var value = item.Value;
                         if (value.GetType() == typeof(long))
@@ -271,7 +271,7 @@ namespace HeavenStudio
 
         public class Minigame
         {
-
+            
             public string name;
             public string displayName;
             public string color;
@@ -467,7 +467,6 @@ namespace HeavenStudio
             public object parameter;
             public string propertyCaption;
             public string tooltip;
-            public List<CollapseParam> collapseParams;
 
             /// <summary>
             /// A parameter that changes the function of a GameAction.
@@ -475,40 +474,13 @@ namespace HeavenStudio
             /// <param name="propertyName">The name of the variable that's being changed.</param>
             /// <param name="parameter">The value of the parameter</param>
             /// <param name="propertyCaption">The name shown in the editor. Can be anything you want.</param>
-            public Param(string propertyName, object parameter, string propertyCaption, string tooltip = "", List<CollapseParam> collapseParams = null)
+            public Param(string propertyName, object parameter, string propertyCaption, string tooltip = "")
             {
                 this.propertyName = propertyName;
                 this.parameter = parameter;
                 this.propertyCaption = propertyCaption;
                 this.tooltip = tooltip;
-                this.collapseParams = collapseParams;
             }
-
-            public class CollapseParam
-            {
-                public Func<object, bool> CollapseOn;
-                public string[] collapseables;
-                /// <summary>
-                /// Class that decides how other parameters will be collapsed
-                /// </summary>
-                /// <param name="collapseOn">What values should make it collapse/uncollapse?</param>
-                /// <param name="collapseables">IDs of the parameters to collapse</param>
-                public CollapseParam(Func<object, bool> collapseOn, string[] collapseables)
-                {
-                    CollapseOn = collapseOn;
-                    this.collapseables = collapseables;
-                }
-            }
-        }
-
-        public class InputAction
-        {
-            public string name;
-            public List<InputActionEntry> mappings;
-        }
-
-        public class InputActionEntry
-        {
         }
 
         public delegate void EventCallback();
@@ -517,19 +489,18 @@ namespace HeavenStudio
         // overengineered af but it's a modified version of
         // https://stackoverflow.com/a/19877141
         static List<Func<EventCaller, Minigame>> loadRunners;
-        static void BuildLoadRunnerList()
-        {
+        static void BuildLoadRunnerList() {
             loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(x => x.Namespace == "HeavenStudio.Games.Loaders" && x.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static) != null)
-            .Select(t => (Func<EventCaller, Minigame>)Delegate.CreateDelegate(
-                typeof(Func<EventCaller, Minigame>),
-                null,
+            .Select(t => (Func<EventCaller, Minigame>) Delegate.CreateDelegate(
+                typeof(Func<EventCaller, Minigame>), 
+                null, 
                 t.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static),
                 false
                 ))
             .ToList();
-
+                
         }
 
         public static void Init(EventCaller eventCaller)
@@ -538,8 +509,8 @@ namespace HeavenStudio
             {
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
-                    new GameAction("switchGame", "Switch Game", 0.5f, false,
-                        function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); },
+                    new GameAction("switchGame", "Switch Game", 0.5f, false, 
+                        function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }, 
                         parameters: new List<Param>()
                             {
                             new Param("toggle", true, "Black Flash", "Enable or disable the black screen for this Game Switch")
@@ -547,8 +518,8 @@ namespace HeavenStudio
                         inactiveFunction: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }
                     ),
                     new GameAction("end", "End Remix",
-                        function: delegate {
-                            Debug.Log("end");
+                        function: delegate { 
+                            Debug.Log("end"); 
                             if (Timeline.instance != null)
                                 Timeline.instance?.Stop(0);
                             else
@@ -580,7 +551,7 @@ namespace HeavenStudio
                     ),
 
                     // These are still here for backwards-compatibility but are hidden in the editor
-                    new GameAction("flash", "", 1f, true,
+                    new GameAction("flash", "", 1f, true, 
                         new List<Param>()
                         {
                             new Param("colorA", Color.white, "Start Color"),
@@ -591,7 +562,7 @@ namespace HeavenStudio
                         },
                         hidden: true
                     ),
-                    new GameAction("move camera", "", 1f, true, new List<Param>()
+                    new GameAction("move camera", "", 1f, true, new List<Param>() 
                     {
                         new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
                         new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
@@ -599,7 +570,7 @@ namespace HeavenStudio
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
                     },
                     hidden: true ),
-                    new GameAction("rotate camera", "", 1f, true, new List<Param>()
+                    new GameAction("rotate camera", "", 1f, true, new List<Param>() 
                     {
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
                         new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
@@ -642,7 +613,7 @@ namespace HeavenStudio
                     new GameAction("and", "And", 0.5f,
                         function: delegate { SoundEffects.And(); }
                     ),
-                    new GameAction("go!", "Go!", 1f, false,
+                    new GameAction("go!", "Go!", 1f, false, 
                         new List<Param>()
                         {
                             new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
@@ -669,7 +640,7 @@ namespace HeavenStudio
 
                 new Minigame("vfx", "Visual Effects", "", false, true, new List<GameAction>()
                 {
-                    new GameAction("flash", "Flash", 1f, true,
+                    new GameAction("flash", "Flash", 1f, true, 
                         new List<Param>()
                         {
                             new Param("colorA", Color.white, "Start Color"),
@@ -688,7 +659,7 @@ namespace HeavenStudio
                             new Param("fadeout", new EntityTypes.Float(0, 100, 0), "Fade Out")
                         }
                     ),
-                    new GameAction("move camera", "Move Camera", 1f, true, new List<Param>()
+                    new GameAction("move camera", "Move Camera", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
                             new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
@@ -697,14 +668,14 @@ namespace HeavenStudio
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         }
                     ),
-                    new GameAction("rotate camera", "Rotate Camera", 1f, true, new List<Param>()
+                    new GameAction("rotate camera", "Rotate Camera", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch", "Next rotation on the X axis"),
                             new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw", "Next rotation on the Y axis"),
                             new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll", "Next rotation on the Z axis"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
-                        }
+                        } 
                     ),
                     new GameAction("camera background color", "Camera Background Color", 1, true, new List<Param>()
                         {
@@ -713,7 +684,7 @@ namespace HeavenStudio
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
                         }
                     ),
-                    new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>()
+                    new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
                             new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
@@ -721,13 +692,13 @@ namespace HeavenStudio
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in" )
                         }
                     ),
-                    new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>()
+                    new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(-360, 360, 0), "Rotation", "Next viewport rotation"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                         }
                     ),
-                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>()
+                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
                             new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
@@ -777,24 +748,24 @@ namespace HeavenStudio
                             new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Textbox Height", "Textbox height multiplier")
                         }
                     ),
-                    new GameAction("display open captions", "Display Open Captions", 1f, true,
-                        new List<Param>()
+                    new GameAction("display open captions", "Display Open Captions", 1f, true, 
+                        new List<Param>() 
                         {
                             new Param("text1", "", "Text", "The text to display in the captions (Rich Text is supported!)"),
                             new Param("type", Games.Global.Textbox.TextboxAnchor.BottomMiddle, "Anchor", "Where to anchor the captions"),
                             new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Captions Width", "Captions width multiplier"),
                             new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Captions Height", "Captions height multiplier")
-                        }
+                        } 
                     ),
-                    new GameAction("display closed captions", "Display Closed Captions", 1f, true,
-                        new List<Param>()
+                    new GameAction("display closed captions", "Display Closed Captions", 1f, true, 
+                        new List<Param>() 
                         {
                             new Param("text1", "", "Text", "The text to display in the captions (Rich Text is supported!)"),
                             new Param("type", Games.Global.Textbox.ClosedCaptionsAnchor.Top, "Anchor", "Where to anchor the captions"),
                             new Param("valA", new EntityTypes.Float(0.5f, 4, 1), "Captions Height", "Captions height multiplier")
                         }
                     ),
-                    new GameAction("display song artist", "Display Song Info", 1f, true,
+                    new GameAction("display song artist", "Display Song Info", 1f, true, 
                         new List<Param>()
                         {
                             new Param("text1", "", "Title", "Text to display in the upper label (Rich Text is supported!)"),
@@ -805,7 +776,7 @@ namespace HeavenStudio
             };
 
             BuildLoadRunnerList();
-            foreach (var load in loadRunners)
+            foreach(var load in loadRunners)
             {
                 Debug.Log("Running game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name);
                 eventCaller.minigames.Add(load(eventCaller));

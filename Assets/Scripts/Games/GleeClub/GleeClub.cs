@@ -29,10 +29,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("semiTones1", new EntityTypes.Integer(-24, 24, -1), "Semitones (Next)", "The number of semitones up or down this note should be pitched"),
                         new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 2), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
                         new Param("close", GleeClub.MouthOpenClose.Both, "Close/Open Mouth", "Should the chorus kids close/open their mouth?"),
-                        new Param("repeat", false, "Repeating", "Should the left and middle chorus kid repeat this singing cue?", new List<Param.CollapseParam>()
-                        {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "semiTonesLeft2", "semiTonesLeft3", "semiTonesMiddle2" })
-                        }),
+                        new Param("repeat", false, "Repeating", "Should the left and middle chorus kid repeat this singing cue?"),
                         new Param("semiTonesLeft2", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Left First)", "The number of semitones up or down this note should be pitched"),
                         new Param("semiTonesLeft3", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Left Last)", "The number of semitones up or down this note should be pitched"),
                         new Param("semiTonesMiddle2", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Middle)", "The number of semitones up or down this note should be pitched"),
@@ -284,7 +281,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("gleeClub/togetherEN-04", beat + 2f, conductorPitch, 1, false, 0.02f),
             });
 
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f, delegate
                 {
@@ -336,7 +333,7 @@ namespace HeavenStudio.Games
             {
                 StartInterval(beat, length);
             }
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { if (closeMouth != (int)MouthOpenClose.OnlyClose) leftChorusKid.currentPitch = pitch; leftChorusKid.StartSinging(); }),
                 new BeatAction.Action(beat + length, delegate { if (closeMouth != (int)MouthOpenClose.OnlyOpen) leftChorusKid.StopSinging(); }),
@@ -374,7 +371,7 @@ namespace HeavenStudio.Games
                 float pitchLeft2 = SoundByte.GetPitchFromSemiTones(sing.semiTonesLeft2, true);
                 float pitchLeft3 = SoundByte.GetPitchFromSemiTones(sing.semiTonesLeft3, true);
                 float pitchMiddle2 = SoundByte.GetPitchFromSemiTones(sing.semiTonesMiddle2, true);
-                BeatAction.New(instance, new List<BeatAction.Action>()
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length + sing.startBeat, delegate
                     {
@@ -441,7 +438,7 @@ namespace HeavenStudio.Games
         {
             missed = false;
             if (!playerChorusKid.disappeared) ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustBaton, MissBaton, Out);
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -476,7 +473,7 @@ namespace HeavenStudio.Games
         public void ShowHeart(double beat)
         {
 
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {

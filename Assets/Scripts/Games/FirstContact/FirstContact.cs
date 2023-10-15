@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "The line to use when messing up the translation"),
                         new Param("auto", true, "Auto Pass Turn")
                     },
-                    defaultLength = 3f,
+                    defaultLength = 4f,
                     resizable = true,
                     priority = 2,
                 },
@@ -43,7 +43,6 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("alien turnover", "Pass Turn")
                 {
                     function = delegate { FirstContact.instance.PassTurnStandalone(eventCaller.currentEntity.beat);  },
-                    resizable = true,
                 },
                 new GameAction("alien success", "Success")
                 {
@@ -251,7 +250,7 @@ namespace HeavenStudio.Games
                     translateFailTextbox.SetActive(false);
                     if (autoPassTurn)
                     {
-                        AlienTurnOver(beat + interval, beat, beat + interval, 1);
+                        AlienTurnOver(beat + interval, beat, beat + interval);
                     }
                 })
             };
@@ -270,7 +269,7 @@ namespace HeavenStudio.Games
                     AlienSpeakInactive(speakEventToCheck["spaceNum"]);
                 }
             }
-            BeatAction.New(this, queuedSpeaks);
+            BeatAction.New(gameObject, queuedSpeaks);
         }
 
         public override void OnGameSwitch(double beat)
@@ -388,12 +387,11 @@ namespace HeavenStudio.Games
         public void PassTurnStandalone(double beat)
         {
             RiqEntity lastInterval = GetLastIntervalBeforeBeat(beat);
-            float length = EventCaller.GetAllInGameManagerList("firstContact", new string[] { "alien turnover" }).Find(x => x.beat == beat).length;
             if (lastInterval == null) return;
-            AlienTurnOver(beat, lastInterval.beat, lastInterval.beat + lastInterval.length, length);
+            AlienTurnOver(beat, lastInterval.beat, lastInterval.beat + lastInterval.length);
         }
 
-        private void AlienTurnOver(double beat, double intervalBeat, double endBeat, float length)
+        private void AlienTurnOver(double beat, double intervalBeat, double endBeat)
         {
             var inputs = GetAllSpeaksInBetweenBeat(intervalBeat, endBeat);
             inputs.Sort((x, y) => x.beat.CompareTo(y.beat));
@@ -401,10 +399,10 @@ namespace HeavenStudio.Games
             {
                 var input = inputs[i];
                 double relativeBeat = input.beat - intervalBeat;
-                ScheduleInput(beat, length + relativeBeat, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, AlienTapping, AlienOnMiss, AlienEmpty);
+                ScheduleInput(beat, 1 + relativeBeat, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, AlienTapping, AlienOnMiss, AlienEmpty);
                 callDiagList.Add(input["dialogue"]);
             }
-            BeatAction.New(this, new List<BeatAction.Action>()
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -413,7 +411,7 @@ namespace HeavenStudio.Games
                     alienTextbox.SetActive(false);
                     alien.Play("alien_point", 0, 0);
                 }),
-                new BeatAction.Action(beat + (length / 2), delegate 
+                new BeatAction.Action(beat + 0.5f, delegate 
                 { 
                     alien.Play("alien_idle", 0, 0); 
                 })
@@ -450,7 +448,7 @@ namespace HeavenStudio.Games
 
             MultiSound.Play(sound.ToArray());
 
-            BeatAction.New(this, new List<BeatAction.Action>()
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { alien.Play(animString, 0, 0); }),
                 new BeatAction.Action(beat + .5f, delegate { alien.Play(animString, 0, 0); }),
@@ -512,7 +510,7 @@ namespace HeavenStudio.Games
 
             if (!stay)
             {
-                BeatAction.New(instance, new List<BeatAction.Action>()
+                BeatAction.New(missionControl, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length, delegate { missionControl.SetActive(false); }),
                     });

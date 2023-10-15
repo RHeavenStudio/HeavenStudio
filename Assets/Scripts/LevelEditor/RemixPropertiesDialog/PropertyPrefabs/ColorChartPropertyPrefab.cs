@@ -28,7 +28,7 @@ namespace HeavenStudio.Editor
             colorPreview.colorPicker.onColorChanged += _ =>
                 parameterManager.chart[propertyName] = colorPreview.colorPicker.color;
 
-            Color paramCol = (Color)parameterManager.chart[propertyName];
+            Color paramCol = parameterManager.chart[propertyName];
 
             ColorBTN.onClick.AddListener(
                 () =>

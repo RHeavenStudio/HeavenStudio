@@ -9,22 +9,11 @@ namespace HeavenStudio.Util
     {
         static GameObject oneShotAudioSourceObject;
         static AudioSource oneShotAudioSource;
-        static int soundIdx = 0;
 
         public enum AudioType
         {
             OGG,
             WAV
-        }
-
-        public static Sound GetAvailableScheduledSound()
-        {
-            // soundIdx++;
-            // soundIdx %= GameManager.instance.SoundObjects.Count;
-            // GameManager.instance.SoundObjects[soundIdx].Stop();
-            // return GameManager.instance.SoundObjects[soundIdx];
-
-            return GameManager.instance.SoundObjects.Get();
         }
 
         /// <summary>
@@ -38,7 +27,7 @@ namespace HeavenStudio.Util
                 Jukebox.AddComponent<AudioSource>();
                 Jukebox.tag = "Jukebox";
 
-
+                
             }
             if (oneShotAudioSourceObject == null)
             {
@@ -173,7 +162,13 @@ namespace HeavenStudio.Util
 
             if (looping || beat != -1 || pitch != 1f)
             {
-                Sound snd = GetAvailableScheduledSound();
+                GameObject oneShot = new GameObject("oneShot");
+
+                AudioSource audioSource = oneShot.AddComponent<AudioSource>();
+                //audioSource.outputAudioMixerGroup = Settings.GetSFXMixer();
+                audioSource.playOnAwake = false;
+
+                Sound snd = oneShot.AddComponent<Sound>();
 
                 snd.clip = clip;
                 snd.beat = beat;
@@ -181,7 +176,9 @@ namespace HeavenStudio.Util
                 snd.volume = volume;
                 snd.looping = looping;
                 snd.offset = offset;
-                snd.Play();
+                // snd.pitch = (clip.length / Conductor.instance.secPerBeat);
+
+                GameManager.instance.SoundObjects.Add(oneShot);
 
                 return snd;
             }
@@ -204,8 +201,12 @@ namespace HeavenStudio.Util
         /// </summary>
         public static Sound PlayOneShotScheduled(string name, double targetTime, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
         {
-            Sound snd = GetAvailableScheduledSound();
+            GameObject oneShot = new GameObject("oneShotScheduled");
 
+            var audioSource = oneShot.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+
+            var snd = oneShot.AddComponent<Sound>();
             AudioClip clip = null;
             if (game != null)
             {
@@ -226,16 +227,16 @@ namespace HeavenStudio.Util
             if (clip == null)
                 clip = Resources.Load<AudioClip>($"Sfx/{name}");
 
-            // abort if no clip found
-
+            audioSource.clip = clip;
             snd.clip = clip;
             snd.pitch = pitch;
             snd.volume = volume;
             snd.looping = looping;
-
+            
             snd.scheduled = true;
             snd.scheduledTime = targetTime;
-            snd.Play();
+            
+            GameManager.instance.SoundObjects.Add(oneShot);
 
             return snd;
         }

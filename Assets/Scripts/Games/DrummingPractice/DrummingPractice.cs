@@ -39,13 +39,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f, 
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Set All to Player", "Sets all Miis to the Player's Mii", new List<Param.CollapseParam>()
-                        {
-                            new Param.CollapseParam(x => !(bool)x, new string[] { "type", "type2", "type3" })
-                        }),
                         new Param("type", DrummingPractice.MiiType.Random, "Player Mii", "The Mii that the player will control"),
                         new Param("type2", DrummingPractice.MiiType.Random, "Left Mii", "The Mii on the left"),
                         new Param("type3", DrummingPractice.MiiType.Random, "Right Mii", "The Mii on the right"),
+                        new Param("toggle", false, "Set All to Player", "Sets all Miis to the Player's Mii")
                     }
                 },
                 new GameAction("move npc drummers", "NPC Drummers Enter or Exit")
@@ -182,7 +179,7 @@ namespace HeavenStudio.Games
             moveAnim = exit ? "NPCDrummersExit" : "NPCDrummersEnter";
             isMoving = true;
             lastEase = (EasingFunction.Ease)ease;
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.01f, delegate { isMoving = false; })
             });
@@ -195,7 +192,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate { Bop(); })
                     });

@@ -17,14 +17,11 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; QuizShow.PreInterval(e.beat, e.length, 
                         e["auto"], e["sound"], e["con"], e["visual"], e["audio"]); },
-                    defaultLength = 7f,
+                    defaultLength = 8f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn", "", new List<Param.CollapseParam>()
-                        {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "sound", "con", "visual", "audio" })
-                        }),
+                        new Param("auto", true, "Auto Pass Turn"),
                         new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
                         new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),
                         new Param("visual", true, "Stopwatch (Visual)", "Should the stopwatch visually appear?"),
@@ -63,8 +60,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),
                         new Param("visual", true, "Stopwatch (Visual)", "Should the stopwatch visually appear?"),
                         new Param("audio", QuizShow.ClockAudio.Both, "Stopwatch (Audio)", "Should the sounds of the stopwatch play?")
-                    },
-                    resizable = true
+                    }
                 },
                 new GameAction("revealAnswer", "Reveal Answer")
                 {
@@ -471,11 +467,11 @@ namespace HeavenStudio.Games
                     HostPressButton(inputBeat, isDpad);
                 }));
             }
-            BeatAction.New(this, actions);
+            BeatAction.New(gameObject, actions);
 
             if (autoPassTurn)
             {
-                PassTurn(beat + interval, beat, interval, timeUpSound, consecutive, visualClock, audioClock, 1);
+                PassTurn(beat + interval, beat, interval, timeUpSound, consecutive, visualClock, audioClock);
             }
         }
 
@@ -512,17 +508,16 @@ namespace HeavenStudio.Games
         private void PassTurnStandalone(double beat, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
         {
             var lastInterval = GetLastIntervalBeforeBeat(beat);
-            float length = EventCaller.GetAllInGameManagerList("quizShow", new string[] { "passTurn" }).Find(x => x.beat == beat).length;
             if (lastInterval != null)
             {
-                PassTurn(beat, lastInterval.beat, lastInterval.length, timeUpSound, consecutive, visualClock, audioClock, length);
+                PassTurn(beat, lastInterval.beat, lastInterval.length, timeUpSound, consecutive, visualClock, audioClock);
             }
         }
 
-        private void PassTurn(double beat, double intervalBeat, float intervalLength, bool timeUpSound, bool consecutive, bool visualClock, int audioClock, float length)
+        private void PassTurn(double beat, double intervalBeat, float intervalLength, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
         {
-            playerStartBeat = beat + length - Conductor.instance.SecsToBeats(ngEarlyTime, Conductor.instance.GetBpmAtBeat(beat + length));
-            playerLength = intervalLength + (float)Conductor.instance.SecsToBeats(ngEarlyTime, Conductor.instance.GetBpmAtBeat(beat + length));
+            playerStartBeat = beat + 1;
+            playerLength = intervalLength;
             var relevantInputs = GetInputsBetweenBeat(intervalBeat, intervalBeat + intervalLength);
             relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
 
@@ -532,11 +527,11 @@ namespace HeavenStudio.Games
                 bool isDpad = relevantInputs[i].datamodel == "quizShow/dPad";
                 if (isDpad)
                 {
-                    ScheduleAutoplayInput(beat, length + inputBeat, InputType.DIRECTION_DOWN, AutoplayDPad, Nothing, Nothing);
+                    ScheduleAutoplayInput(beat, 1 + inputBeat, InputType.DIRECTION_DOWN, AutoplayDPad, Nothing, Nothing);
                 }
                 else
                 {
-                    ScheduleAutoplayInput(beat, length + inputBeat, InputType.STANDARD_DOWN, AutoplayAButton, Nothing, Nothing);
+                    ScheduleAutoplayInput(beat, 1 + inputBeat, InputType.STANDARD_DOWN, AutoplayAButton, Nothing, Nothing);
                 }
             }
 
@@ -578,10 +573,10 @@ namespace HeavenStudio.Games
                     if (visualClock)
                     {
                         spawnedTimer.gameObject.SetActive(true);
-                        spawnedTimer.Init(beat + length, intervalLength);
+                        spawnedTimer.Init(beat + 1, intervalLength);
                     }
                 }),
-                new BeatAction.Action(beat + length + intervalLength, delegate
+                new BeatAction.Action(beat + 1 + intervalLength, delegate
                 {
                     if (!consecutive)
                     {
@@ -593,9 +588,9 @@ namespace HeavenStudio.Games
                     if (visualClock) Destroy(spawnedTimer.gameObject);
                 }
             ),
-                new BeatAction.Action(beat + length + intervalLength + timeUpBeat, delegate { if (timeUpSound && !consecutive) SoundByte.PlayOneShotGame("quizShow/timeUp"); }),
+                new BeatAction.Action(beat + 1 + intervalLength + timeUpBeat, delegate { if (timeUpSound && !consecutive) SoundByte.PlayOneShotGame("quizShow/timeUp"); }),
             };
-            BeatAction.New(instance, actions);
+            BeatAction.New(instance.gameObject, actions);
         }
 
         void ContesteePressButton(bool dpad)
@@ -677,7 +672,7 @@ namespace HeavenStudio.Games
         public void RevealAnswer(double beat, float length)
         {
             blackOut.SetActive(true);
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate 
                 { 

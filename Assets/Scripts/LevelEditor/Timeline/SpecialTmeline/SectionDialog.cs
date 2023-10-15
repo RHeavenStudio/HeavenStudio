@@ -30,8 +30,8 @@ public class SectionDialog : Dialog
     public void SetSectionObj(SectionTimelineObj sectionObj)
     {
         this.sectionObj = sectionObj;
-        sectionName.text = sectionObj.chartEntity["sectionName"];
-        challengeEnable.isOn = sectionObj.chartEntity["startPerfect"];
+        sectionName.text = sectionObj.chartSection["sectionName"];
+        challengeEnable.isOn = sectionObj.chartSection["startPerfect"];
     }
 
     public void DeleteSection()
@@ -41,19 +41,20 @@ public class SectionDialog : Dialog
             Editor.instance.inAuthorativeMenu = false;
         }
         if (sectionObj == null) return;
+        GameManager.instance.Beatmap.SectionMarkers.Remove(sectionObj.chartSection);
         sectionObj.DeleteObj();
     }
 
     public void ChangeSectionName(string name)
     {
         if (sectionObj == null) return;
-        sectionObj.chartEntity["sectionName"] = name;
+        sectionObj.chartSection["sectionName"] = name;
         sectionObj.UpdateLabel();
     }
 
     public void SetSectionChallenge()
     {
         if (sectionObj == null) return;
-        sectionObj.chartEntity["startPerfect"] = challengeEnable.isOn;
+        sectionObj.chartSection["startPerfect"] = challengeEnable.isOn;
     }
 }

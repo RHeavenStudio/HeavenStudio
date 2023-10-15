@@ -4,12 +4,10 @@ using UnityEngine;
 
 namespace HeavenStudio.Util
 {
-    public class BeatAction
+    public class BeatAction : MonoBehaviour
     {
         private int index;
         private List<Action> actions = new List<Action>();
-        private Coroutine coroutine;
-        private MonoBehaviour behaviour;
 
         public delegate void EventCallback();
 
@@ -25,43 +23,32 @@ namespace HeavenStudio.Util
             }
         }
 
-        public static BeatAction New(MonoBehaviour behaviour, List<Action> actions)
+        public static BeatAction New(GameObject prefab, List<Action> actions)
         {
-            if (behaviour == null)
-            {
-                Debug.LogWarning("Starting a BeatAction with no assigned behaviour. The Conductor will be used instead.");
-                behaviour = Conductor.instance;
-            }
-            BeatAction beatAction = new BeatAction();
+            BeatAction beatAction = prefab.AddComponent<BeatAction>();
             beatAction.actions = actions;
-            beatAction.behaviour = behaviour;
-            beatAction.coroutine = behaviour.StartCoroutine(beatAction.BeatActionRoutine());
 
             return beatAction;
         }
 
-        IEnumerator BeatActionRoutine()
+        private void Update()
         {
-            int idx = 0;
-            WaitUntil waitUntil = new WaitUntil(() => Conductor.instance.songPositionInBeatsAsDouble >= actions[idx].beat || !Conductor.instance.isPlaying);
-            while (idx < actions.Count)
+            double songPositionInBeats = Conductor.instance.songPositionInBeatsAsDouble;
+
+            for (int i = 0; i < actions.Count; i++)
             {
-                yield return waitUntil;
-
-                if (!Conductor.instance.isPlaying)
-                    yield break;
-
-                actions[idx].function.Invoke();
-                idx++;
+                if (songPositionInBeats >= actions[i].beat && index == i)
+                {
+                    actions[i].function.Invoke();
+                    index++;
+                }
             }
-            this.actions = null;
-            yield break;
         }
 
         public void Delete()
         {
-            behaviour.StopCoroutine(coroutine);
-            this.actions = null;
+            Destroy(this);
         }
     }
+
 }

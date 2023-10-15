@@ -16,6 +16,8 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text tempoTXT;
         [SerializeField] private GameObject tempoLine;
 
+        public RiqEntity tempoChange;
+
         new private void Update()
         {
             base.Update();
@@ -29,18 +31,16 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftShift))
                         newTempo *= 5f;
                     if (Input.GetKey(KeyCode.LeftControl))
-                        newTempo *= 0.01f;
+                        newTempo /= 100f;
 
-                    chartEntity["tempo"] += newTempo;
+                    tempoChange["tempo"] += newTempo;
 
                     //make sure tempo is positive
-                    if (chartEntity["tempo"] < 1)
-                        chartEntity["tempo"] = 1;
+                    if (tempoChange["tempo"] < 1)
+                        tempoChange["tempo"] = 1;
                     
                     if (first && newTempo != 0)
                         Timeline.instance.UpdateStartingBPMText();
-
-                    Timeline.instance.FitToSong();
                 }
             }
 
@@ -49,9 +49,8 @@ namespace HeavenStudio.Editor.Track
 
         private void UpdateTempo()
         {
-            tempoTXT.text = chartEntity["tempo"].ToString("F") + $" BPM";
-            if (!moving)
-                SetX(chartEntity);
+            tempoTXT.text = $"{tempoChange["tempo"]} BPM";
+            Timeline.instance.FitToSong();
         }
 
         public override void Init()
@@ -70,23 +69,21 @@ namespace HeavenStudio.Editor.Track
             if (first) return;
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
             {
+                GameManager.instance.Beatmap.TempoChanges.Remove(tempoChange);
                 DeleteObj();
             }
         }
 
-        public override bool OnMove(float beat, bool final = false)
+        public override bool OnMove(float beat)
         {
             foreach (var tempoChange in GameManager.instance.Beatmap.TempoChanges)
             {
-                if (this.chartEntity == tempoChange)
+                if (this.tempoChange == tempoChange)
                     continue;
                 if (beat > tempoChange.beat - Timeline.instance.snapInterval && beat < tempoChange.beat + Timeline.instance.snapInterval)
                     return false;
             }
-            if (final)
-                CommandManager.Instance.AddCommand(new Commands.MoveMarker(chartEntity.guid, beat, type));
-            else
-                SetX(beat);
+            this.tempoChange.beat = beat;
             return true;
         }
 

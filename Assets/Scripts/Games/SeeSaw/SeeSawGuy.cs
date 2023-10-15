@@ -142,7 +142,6 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         break;
                 }
-                float newCamY = 0f;
                 if (!see && game.cameraMove)
                 {
                     switch (currentState)
@@ -153,11 +152,11 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         case JumpState.HighOutIn:
                         case JumpState.HighInOut:
                         case JumpState.HighInIn:
-                            newCamY = Math.Max(GetPathPositionFromBeat(cameraPath, Math.Max(startBeat, currentBeat), startBeat).y, 0);
+                            float newCamY = Math.Max(GetPathPositionFromBeat(cameraPath, Math.Max(startBeat, currentBeat), startBeat).y, 0);
+                            gameTrans.localPosition = new Vector3(0, -newCamY, 0);
                             break;
                     }
                 }
-                gameTrans.localPosition = new Vector3(0, -newCamY, 0);
             }
         }
 
@@ -172,7 +171,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             dead = true;
             anim.DoScaledAnimationAsync("Choke_" + (see ? "See" : "Saw") + "_Intro", 0.5f);
             SoundByte.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
-            BeatAction.New(this, new List<BeatAction.Action>()
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 1, delegate { invertAnim.DoScaledAnimationAsync("Invert", 0.5f); }),
                 new BeatAction.Action(beat + length, delegate { anim.DoScaledAnimationAsync("Explode", 0.5f); deathParticle.Play();})
@@ -244,7 +243,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             if (landType is not LandType.Barely)
             {
                 string getUpAnim = "GetUp_" + landOut + typeOfLanding;
-                BeatAction.New(this, new List<BeatAction.Action>()
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + (getUpOut ? 1f : 0.5f), delegate { anim.DoScaledAnimationAsync(getUpAnim, 0.5f); })
                 });
@@ -316,7 +315,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     cameraPath.positions[0].duration = 2f;
                     anim.DoScaledAnimationAsync(miss ? "BadOut_SeeReact" : "Jump_OutOut_Start", 0.5f);
                     if (see) return;
-                    BeatAction.New(this, new List<BeatAction.Action>()
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + 1, delegate { anim.DoScaledAnimationAsync("Jump_OutOut_Transform", 0.5f); })
                     });
@@ -328,7 +327,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     cameraPath.positions[0].duration = 2f;
                     anim.DoScaledAnimationAsync(miss ? "BadOut_SeeReact" : "Jump_OutIn_Start", 0.5f);
                     if (see) return;
-                    BeatAction.New(this, new List<BeatAction.Action>()
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + 1, delegate { anim.DoScaledAnimationAsync("Jump_OutIn_Transform", 0.5f); })
                     });
@@ -340,7 +339,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     cameraPath.positions[0].duration = 1f;
                     anim.DoScaledAnimationAsync(miss ? "BadIn_SeeReact" : "Jump_InIn_Start", 0.5f);
                     if (see) return;
-                    BeatAction.New(this, new List<BeatAction.Action>()
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + 0.5f, delegate { anim.DoScaledAnimationAsync("Jump_OutOut_Transform", 0.5f); })
                     });
@@ -352,7 +351,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     cameraPath.positions[0].duration = 1f;
                     anim.DoScaledAnimationAsync(miss ? "BadIn_SeeReact" : "Jump_InIn_Start", 0.5f);
                     if (see) return;
-                    BeatAction.New(this, new List<BeatAction.Action>()
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + 0.5f, delegate { anim.DoScaledAnimationAsync("Jump_OutIn_Transform", 0.5f); })
                     });

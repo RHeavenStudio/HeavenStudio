@@ -84,7 +84,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: -4, y: 1, z: 0}
+        value: {x: -5.8, y: 1.5, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -116,14 +116,14 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 7844610654334982216, guid: 57ea36e082ce7e44581fa6fdb2cd7a49, type: 3}
+      value: {fileID: 0}
     attribute: m_Sprite
     path: Exclaim
     classID: 212
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: -5610626859485252548, guid: 57ea36e082ce7e44581fa6fdb2cd7a49, type: 3}
+      value: {fileID: -8701253081129557890, guid: 57ea36e082ce7e44581fa6fdb2cd7a49, type: 3}
     attribute: m_Sprite
     path: Main
     classID: 212
@@ -206,8 +206,8 @@ AnimationClip:
       customType: 4
       isPPtrCurve: 0
     pptrCurveMapping:
-    - {fileID: 7844610654334982216, guid: 57ea36e082ce7e44581fa6fdb2cd7a49, type: 3}
-    - {fileID: -5610626859485252548, guid: 57ea36e082ce7e44581fa6fdb2cd7a49, type: 3}
+    - {fileID: 0}
+    - {fileID: -8701253081129557890, guid: 57ea36e082ce7e44581fa6fdb2cd7a49, type: 3}
     - {fileID: 0}
   m_AnimationClipSettings:
     serializedVersion: 2
@@ -349,7 +349,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -4
+        value: -5.8
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -368,7 +368,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 1.5
         inSlope: 0
         outSlope: 0
         tangentMode: 136

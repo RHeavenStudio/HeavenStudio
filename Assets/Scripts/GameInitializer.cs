@@ -88,7 +88,6 @@ namespace HeavenStudio
             AudioSource source = Conductor.AddComponent<AudioSource>();
             Conductor.AddComponent<Conductor>();
             Conductor.GetComponent<Conductor>().musicSource = source;
-            source.priority = 255;
             source.outputAudioMixerGroup = Settings.GetMusicMixer();
             // Conductor.AddComponent<AudioDspTimeKeeper>();
 

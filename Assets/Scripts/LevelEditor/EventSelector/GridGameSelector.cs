@@ -10,11 +10,9 @@ using DG.Tweening;
 using Starpelly;
 
 using HeavenStudio.Editor.Track;
-using System.Text;
 
 namespace HeavenStudio.Editor
 {
-    // I hate the antichrist.
     public class GridGameSelector : MonoBehaviour
     {
         public Minigames.Minigame SelectedMinigame;
@@ -41,7 +39,6 @@ namespace HeavenStudio.Editor
         private bool gameOpen;
         private float selectorHeight;
         private float eventSize;
-        private float timeSinceUpdateIndex = 0.0f;
 
         public static GridGameSelector instance;
 
@@ -96,7 +93,6 @@ namespace HeavenStudio.Editor
                 currentEventIndex = 0;
 
             CurrentSelected.transform.DOLocalMoveY(eventsParent.transform.GetChild(currentEventIndex).localPosition.y + eventsParent.transform.localPosition.y, 0.35f).SetEase(Ease.OutExpo);
-            timeSinceUpdateIndex = 0;
         }
 
         private void UpdateScrollPosition()
@@ -119,13 +115,6 @@ namespace HeavenStudio.Editor
                 Mathf.Lerp(lastPos.y, end, 12 * Time.deltaTime),
                 lastPos.z
             );
-
-            timeSinceUpdateIndex += Time.deltaTime;
-
-            CurrentSelected.GetComponent<RectTransform>().anchoredPosition =
-                new Vector2(
-                    (Mathf.Cos(timeSinceUpdateIndex * 2.65f) * 12) + 12,
-                    CurrentSelected.GetComponent<RectTransform>().anchoredPosition.y);
             SetColors();
         }
 
@@ -167,31 +156,21 @@ namespace HeavenStudio.Editor
             if (!EventCaller.FXOnlyGames().Contains(SelectedMinigame))
             {
                 GameObject sg = Instantiate(EventRef, eventsParent);
-                sg.GetComponentInChildren<TMP_Text>().text = "Switch Game";
+                sg.GetComponent<TMP_Text>().text = "Switch Game";
                 sg.SetActive(true);
-                if (index == 0) sg.GetComponentInChildren<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+                if (index == 0) sg.GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
             } else {
                 index++;
                 if (SelectedMinigame.name == "gameManager") index++;
             }
 
-            for (var i = 0; i < SelectedMinigame.actions.Count; i++)
+            for (int i = 0; i < SelectedMinigame.actions.Count; i++)
             {
-                var action = SelectedMinigame.actions[i];
-                if (action.actionName == "switchGame" || action.hidden) continue;
-
-                var g = Instantiate(EventRef, eventsParent);
-                var label = g.GetComponentInChildren<TMP_Text>();
-
-                label.text = action.displayName;
-                if (action.parameters != null && action.parameters.Count > 0)
-                    g.transform.GetChild(1).gameObject.SetActive(true);
-
-                if (index - 1 == i)
-                    label.color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
-
+                if (SelectedMinigame.actions[i].actionName == "switchGame" || SelectedMinigame.actions[i].hidden) continue;
+                GameObject g = Instantiate(EventRef, eventsParent);
+                g.GetComponent<TMP_Text>().text = SelectedMinigame.actions[i].displayName;
                 g.SetActive(true);
-
+                if (index - 1 == i) g.GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
             }
         }
 
@@ -213,23 +192,9 @@ namespace HeavenStudio.Editor
             //CurrentSelected.GetComponent<Image>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
 
             for (int i = 0; i < eventsParent.transform.childCount; i++)
-            {
-                var eventTxt = eventsParent.GetChild(i).GetChild(0).GetComponent<TMP_Text>();
-                var goalX = -25;
-                if (i == currentEventIndex)
-                {
-                    eventTxt.color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
-                    goalX = 16;
-                }
-                else
-                {
-                    eventTxt.color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
-                }
-                eventTxt.rectTransform.anchoredPosition =
-                    new Vector2(
-                        Mathf.Lerp(eventTxt.rectTransform.anchoredPosition.x, goalX, Time.deltaTime * 12f),
-                        eventTxt.rectTransform.anchoredPosition.y);
-            }
+                            eventsParent.GetChild(i).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
+
+            eventsParent.GetChild(currentEventIndex).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
         }
 
         // TODO: find the equation to get the sizes automatically, nobody's been able to figure one out yet (might have to be manual?)
@@ -388,7 +353,7 @@ namespace HeavenStudio.Editor
         {
             if (Conductor.instance.NotStopped() || Editor.instance.inAuthorativeMenu) return;
             
-            if (Timeline.instance.MouseInTimeline && dragTimes < 1)
+            if (Timeline.instance.CheckIfMouseInTimeline() && dragTimes < 1)
             {
                 Timeline.instance.timelineState.SetState(Timeline.CurrentTimelineState.State.Selection);
                 dragTimes++;

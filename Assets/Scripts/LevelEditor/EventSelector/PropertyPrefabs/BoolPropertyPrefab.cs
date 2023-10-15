@@ -18,42 +18,20 @@ namespace HeavenStudio.Editor
         [Space(10)]
         public Toggle toggle;
 
-        private bool _defaultValue;
-
         new public void SetProperties(string propertyName, object type, string caption)
         {
             InitProperties(propertyName, caption);
 
-            _defaultValue = (bool)type;
+            // ' (bool)type ' always results in false
             toggle.isOn = Convert.ToBoolean(parameterManager.entity[propertyName]);
 
             toggle.onValueChanged.AddListener(
-                _ =>
-                {
-                    parameterManager.entity[propertyName] = toggle.isOn;
-                    if (toggle.isOn != _defaultValue)
-                    {
-                        this.caption.text = _captionText + "*";
-                    }
-                    else
-                    {
-                        this.caption.text = _captionText;
-                    }
-                }
+                _ => parameterManager.entity[propertyName] = toggle.isOn
             );
         }
 
-        public void ResetValue()
+        private void Update()
         {
-            toggle.isOn = _defaultValue;
-        }
-
-        public override void SetCollapses(object type)
-        {
-            toggle.onValueChanged.AddListener(
-             _ => UpdateCollapse(toggle.isOn)
-            );
-            UpdateCollapse(toggle.isOn);
         }
     }
 }

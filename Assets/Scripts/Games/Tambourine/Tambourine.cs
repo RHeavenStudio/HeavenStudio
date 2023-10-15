@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("beat intervals", "Start Interval")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; Tambourine.PreInterval(e.beat, e.length, e["auto"]); },
-                    defaultLength = 7f,
+                    defaultLength = 8f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         Tambourine.PrePassTurn(eventCaller.currentEntity.beat);
                     },
-                    resizable = true,
+                    defaultLength = 1f,
                     preFunctionLength = 1f
                 },
                 new GameAction("bop", "Bop")
@@ -256,11 +256,11 @@ namespace HeavenStudio.Games
                 }
             }
 
-            BeatAction.New(this, actions);
+            BeatAction.New(gameObject, actions);
 
             if (autoPassTurn)
             {
-                PassTurn(beat + interval, beat, interval, 1);
+                PassTurn(beat + interval, beat, interval);
             }
         }
 
@@ -300,11 +300,10 @@ namespace HeavenStudio.Games
         private void PassTurnStandalone(double beat)
         {
             var lastInterval = GetLastIntervalBeforeBeat(beat);
-            float length = EventCaller.GetAllInGameManagerList("tambourine", new string[] { "pass turn" }).Find(x => x.beat == beat).length;
-            if (lastInterval != null) PassTurn(beat, lastInterval.beat, lastInterval.length, length);
+            if (lastInterval != null) PassTurn(beat, lastInterval.beat, lastInterval.length);
         }
 
-        private void PassTurn(double beat, double intervalBeat, float intervalLength, float length)
+        private void PassTurn(double beat, double intervalBeat, float intervalLength)
         {
             SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}", beat);
             List<BeatAction.Action> actions = new()
@@ -324,12 +323,12 @@ namespace HeavenStudio.Games
                 double inputBeat = relevantInputs[i].beat - intervalBeat;
                 actions.Add(new BeatAction.Action(inputBeat, delegate
                 {
-                    if (isHit) ScheduleInput(beat + length, inputBeat, InputType.STANDARD_ALT_DOWN, JustHit, Miss, Nothing);
-                    else ScheduleInput(beat + length, inputBeat, InputType.STANDARD_DOWN, JustShake, Miss, Nothing);
-                    Bop(beat + length + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
+                    if (isHit) ScheduleInput(beat + 1, inputBeat, InputType.STANDARD_ALT_DOWN, JustHit, Miss, Nothing);
+                    else ScheduleInput(beat + 1, inputBeat, InputType.STANDARD_DOWN, JustShake, Miss, Nothing);
+                    Bop(beat + 1 + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
                 }));
             }
-            BeatAction.New(this, actions);
+            BeatAction.New(gameObject, actions);
         }
 
         public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
@@ -338,7 +337,7 @@ namespace HeavenStudio.Games
             handsGoBop = whoBopsAuto == (int)WhoBops.Player || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance, new List<BeatAction.Action>()
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
                     {
@@ -377,7 +376,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tambourine/player/turnPass/note3", beat + 0.3f),
             }, forcePlay: true);
             happyFace.SetActive(true);
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1, delegate { happyFace.SetActive(false); }),
             });
