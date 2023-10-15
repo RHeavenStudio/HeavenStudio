@@ -216,7 +216,11 @@ namespace HeavenStudio
             pan = defaultPan;
             scale = defaultScale;
             shakeResult = defaultShake;
+            #if UNITY_EDITOR
+            return;
+            #else
             SetPosition(Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
+            #endif
         }
     }
 }
