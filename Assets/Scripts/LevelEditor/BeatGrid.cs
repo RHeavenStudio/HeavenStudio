@@ -23,8 +23,7 @@ namespace HeavenStudio.Editor.Track
         private float lastPosX;
         private float lastContentScale;
         private float lastTimelineSize;
-
-        private float contentPosX => Mathf.Abs(scrollRect.content.localPosition.x / scrollRect.content.localScale.x);
+        private float lastZoom;
 
         private List<GameObject> Lines = new List<GameObject>();
 
@@ -50,10 +49,12 @@ namespace HeavenStudio.Editor.Track
         {
             if (Editor.instance.fullscreen) return;
 
-            var x = Mathf.FloorToInt(contentPosX);
+            // var x = Mathp.Round2Nearest(contentPosX, Timeline.instance.PixelsPerBeat);
+            var x = Mathp.Round2Nearest(-scrollRect.content.anchoredPosition.x, Timeline.instance.PixelsPerBeat);
             var pos = new Vector3(x, transform.localPosition.y, transform.localPosition.z);
             transform.localPosition = pos;
-            GetComponent<RectTransform>().anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0);
+            rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0);
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, transform.parent.parent.parent.GetComponent<RectTransform>().rect.height);
 
             UpdateCount();
         }
@@ -62,28 +63,27 @@ namespace HeavenStudio.Editor.Track
 
         private void UpdateCount()
         {
-            var changeScale = (scrollRect.viewport.rect.size.x != lastTimelineSize || scrollRect.content.localScale.x != lastContentScale);
+            var changeScale = (scrollRect.viewport.rect.size.x != lastTimelineSize || scrollRect.content.localScale.x != lastContentScale) || 
+                (Timeline.instance.Zoom != lastZoom);
             if (changeScale)
             {
-                var rightSide = (scrollRect.viewport.GetComponent<RectTransform>().rect.width / scrollRect.content.localScale.x) + contentPosX;
-
                 for (int i = 0; i < Lines.Count; i++)
                     Destroy(Lines[i].gameObject);
                 Lines.Clear();
 
-                count = Mathf.RoundToInt(rightSide - contentPosX) + 2;
+                count = Mathf.RoundToInt(scrollRect.viewport.GetComponent<RectTransform>().rect.width / Timeline.instance.PixelsPerBeat) + 2;
 
                 for (int i = 0; i < count; i++)
                 {
-                    var line = Instantiate(transform.GetChild(0).gameObject, transform);
-                    line.transform.localPosition = new Vector3(i, line.transform.localPosition.y, line.transform.localPosition.z);
+                    var line = Instantiate(transform.GetChild(0).gameObject.GetComponent<RectTransform>(), transform);
+                    line.anchoredPosition = new Vector3(i * Timeline.instance.PixelsPerBeat, line.transform.localPosition.y, line.transform.localPosition.z);
 
                     var halfBeatRect = line.transform.GetChild(2).GetComponent<RectTransform>();
-                    halfBeatRect.anchoredPosition = new Vector3(scrollRect.content.localScale.x * 0.5f, halfBeatRect.anchoredPosition.y);
+                    halfBeatRect.anchoredPosition = new Vector3(Timeline.instance.PixelsPerBeat * 0.5f, halfBeatRect.anchoredPosition.y);
                     
-                    line.SetActive(true);
+                    line.gameObject.SetActive(true);
 
-                    Lines.Add(line);
+                    Lines.Add(line.gameObject);
                 }
                 UpdateGridNum();
 
@@ -96,6 +96,7 @@ namespace HeavenStudio.Editor.Track
 
             lastContentScale = scrollRect.content.localScale.x;
             lastTimelineSize = scrollRect.viewport.rect.size.x;
+            lastZoom = Timeline.instance.Zoom;
             lastPosX = rectTransform.anchoredPosition.x;
         }
 
@@ -106,7 +107,7 @@ namespace HeavenStudio.Editor.Track
                 var line = Lines[i];
                 if (line.transform.childCount == 0) continue;
 
-                var newNum = Mathf.RoundToInt(rectTransform.anchoredPosition.x + ((i) / snap));
+                var newNum = Mathf.RoundToInt((rectTransform.anchoredPosition.x / Timeline.instance.PixelsPerBeat) + ((i) / snap));
                 line.transform.GetChild(0).GetComponent<TMP_Text>().text = newNum.ToString(CultureInfo.CurrentCulture);
             }
         }

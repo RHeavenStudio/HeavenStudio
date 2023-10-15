@@ -178,7 +178,7 @@ namespace HeavenStudio.Games
                 player.JumpIntoWater(beat + length - 1);
             }));
             SoundByte.PlayOneShotGame("splashdown/start", beat + length - 0.25);
-            BeatAction.New(instance.gameObject, actions);
+            BeatAction.New(instance, actions);
         }
 
         public void GoDown(double beat, float length)
@@ -196,7 +196,7 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("splashdown/whistle", diveBeat);
                 SoundByte.PlayOneShotGame("splashdown/downOthers", diveBeat);
             }
-            BeatAction.New(instance.gameObject, actions);
+            BeatAction.New(instance, actions);
             SoundByte.PlayOneShotGame("splashdown/whistle", beat + (currentSynchrettes.Count * length));
             ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_DOWN, JustDown, Out, Out);
         }
@@ -216,7 +216,7 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("splashdown/whistle", diveBeat);
                 SoundByte.PlayOneShotGame("splashdown/upOthers", diveBeat);
             }
-            BeatAction.New(instance.gameObject, actions);
+            BeatAction.New(instance, actions);
             SoundByte.PlayOneShotGame("splashdown/whistle", beat + (currentSynchrettes.Count * length));
             switch (appearType)
             {
@@ -249,7 +249,7 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("splashdown/rollOthers", diveBeat + 1);
                 SoundByte.PlayOneShotGame("splashdown/splashOthers", diveBeat + 1.75);
             }
-            BeatAction.New(instance.gameObject, actions);
+            BeatAction.New(instance, actions);
             SoundByte.PlayOneShotGame("splashdown/yeah", beat + (currentSynchrettes.Count * length));
             ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, dolphin ? JustJump : JustJumpNoDolphin, Out, Out);
         }
@@ -258,7 +258,7 @@ namespace HeavenStudio.Games
         {
             if (IsIntroing()) return;
             SoundByte.PlayOneShotGame("splashdown/together");
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2, delegate
                 {
@@ -295,7 +295,7 @@ namespace HeavenStudio.Games
         {
             if (IsIntroing()) return;
             SoundByte.PlayOneShotGame("splashdown/togetherRemix9");
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1, delegate
                 {
@@ -386,7 +386,7 @@ namespace HeavenStudio.Games
             }
             SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
             player.Jump(diveBeat);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(diveBeat + 1.75, delegate { crowdAnim.DoScaledAnimationAsync("CrowdCheer", 0.5f); }),
                 new BeatAction.Action(diveBeat + 4, delegate { crowdAnim.Play("CrowdIdle", 0, 0); })
@@ -405,7 +405,7 @@ namespace HeavenStudio.Games
             }
             SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
             player.Jump(diveBeat, false, true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(diveBeat + 1.75, delegate { crowdAnim.DoScaledAnimationAsync("CrowdCheer", 0.5f); }),
                 new BeatAction.Action(diveBeat + 4, delegate { crowdAnim.Play("CrowdIdle", 0, 0); })
@@ -423,7 +423,7 @@ namespace HeavenStudio.Games
                 return;
             }
             player.Jump(diveBeat, false, true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(diveBeat + 1.75, delegate { crowdAnim.DoScaledAnimationAsync("CrowdCheer", 0.5f); }),
                 new BeatAction.Action(diveBeat + 4, delegate { crowdAnim.Play("CrowdIdle", 0, 0); })

@@ -279,7 +279,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             if (!isMole)
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(pickedBeat + 0.5f, delegate { veggieSprite.sortingOrder = -1; }),
                     new BeatAction.Action(pickedBeat + pickTime, delegate { GameObject.Destroy(gameObject); })
@@ -291,7 +291,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             }
             else
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(pickedBeat + pickTime, delegate { GameObject.Destroy(gameObject); })
                 });

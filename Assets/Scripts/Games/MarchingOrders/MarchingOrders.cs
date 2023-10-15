@@ -277,7 +277,7 @@ namespace HeavenStudio.Games
             if (Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 if (queuedMarches.Count > 0) {
                     foreach (var march in queuedMarches) {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                        BeatAction.New(instance, new List<BeatAction.Action>() {
                             new BeatAction.Action(march, delegate {
                                 ScheduleInput(march, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, Empty);
                             }),
@@ -388,7 +388,7 @@ namespace HeavenStudio.Games
             shouldClap = clap;
             if (shouldBop) {
                 for (int i = 0; i < length; i++) {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                    BeatAction.New(instance, new List<BeatAction.Action>() {
                         new BeatAction.Action(beat + i, delegate {
                             foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
                             CadetPlayer.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
@@ -400,7 +400,7 @@ namespace HeavenStudio.Games
 
         public void SargeAttention(double beat)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 0.25f, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
             });
         }
@@ -420,7 +420,7 @@ namespace HeavenStudio.Games
         {
             for (int i = 0; i < length; i++) {
                 ScheduleInput(beat + i - 0.2f, 0.2f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, Empty);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                BeatAction.New(instance, new List<BeatAction.Action>() {
                     new BeatAction.Action(beat + i, delegate {
                         marchOtherCount++;
                         foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
@@ -432,7 +432,7 @@ namespace HeavenStudio.Games
 
         public void PreMarch(double beat)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1f, delegate { 
                     foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync("MarchL", 0.5f);
@@ -447,7 +447,7 @@ namespace HeavenStudio.Games
             HaltSound(beat);            
 
             ScheduleInput(beat, 1f, InputType.STANDARD_ALT_DOWN, HaltHit, GenericMiss, Empty);
-            BeatAction.New(gameObject, new List<BeatAction.Action>() 
+            BeatAction.New(this, new List<BeatAction.Action>() 
             {
                 new BeatAction.Action(beat, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 new BeatAction.Action(beat + 1f, delegate { foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync("Halt", 0.5f);}),
@@ -468,14 +468,14 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
             }, forcePlay: true);
             
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + turnLength + 2f,delegate {
                     if (shouldPoint) foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync($"Point{(x ? "R" : "L")}", 0.5f);
                     foreach (var head in CadetHeads) head.DoScaledAnimationAsync($"Face{(x ? "R" : "L")}", 0.5f);
                 })
             });
             
-            BeatAction.New(gameObject, new List<BeatAction.Action>() 
+            BeatAction.New(this, new List<BeatAction.Action>() 
             {
                 new BeatAction.Action(beat, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 new BeatAction.Action(beat + turnLength + 1f, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),

@@ -423,7 +423,7 @@ namespace HeavenStudio.Games
 
         public void OneGoCue(double beat, Color firstColor)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat, delegate { 
                     OneGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f);
                     // dumpling
@@ -453,7 +453,7 @@ namespace HeavenStudio.Games
 
         public void TwoTwoCue(double beat, Color firstColor, Color secondColor)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat-0.5f, delegate { 
                     TwoGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); 
                     // first dumpling
@@ -492,7 +492,7 @@ namespace HeavenStudio.Games
 
         public void ThreeGoCue(double beat, Color firstColor, Color secondColor, Color thirdColor)
         {
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(instance, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat, delegate { 
                     // first in
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); 

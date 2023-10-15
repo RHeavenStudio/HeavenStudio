@@ -16,8 +16,6 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private GameObject chartLine;
         [SerializeField] private SectionDialog sectionDialog;
 
-        public RiqEntity chartSection;
-
         new private void Update()
         {
             base.Update();
@@ -31,7 +29,9 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateLabel()
         {
-            sectionLabel.text = chartSection["sectionName"];
+            sectionLabel.text = chartEntity["sectionName"];
+            if (!moving)
+                SetX(chartEntity);
         }
 
         public override void Init()
@@ -54,16 +54,19 @@ namespace HeavenStudio.Editor.Track
             }
         }
 
-        public override bool OnMove(float beat)
+        public override bool OnMove(float beat, bool final = false)
         {
             foreach (RiqEntity sectionChange in GameManager.instance.Beatmap.SectionMarkers)
             {
-                if (this.chartSection == sectionChange)
+                if (this.chartEntity == sectionChange)
                     continue;
                 if (beat > sectionChange.beat - Timeline.instance.snapInterval && beat < sectionChange.beat + Timeline.instance.snapInterval)
                     return false;
             }
-            this.chartSection.beat = beat;
+            if (final)
+                CommandManager.Instance.AddCommand(new Commands.MoveMarker(chartEntity.guid, beat, type));
+            else
+                SetX(beat);
             return true;
         }
 

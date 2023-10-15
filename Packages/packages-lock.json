@@ -6,6 +6,12 @@
       "source": "git",
       "dependencies": {},
       "hash": "05c2177703266162eb91efa7e359d4b8207ff4ed"
+    "com.nobi.roundedcorners": {
+      "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "88623988179d35ce2da93b7740d6e7be59fcc971"
     },
     "com.rheavenstudio.jukebox": {
       "version": "https://github.com/RHeavenStudio/Jukebox.git?path=/Assets/Scripts/Jukebox",
@@ -15,7 +21,14 @@
         "com.unity.nuget.newtonsoft-json": "3.2.1",
         "jillejr.newtonsoft.json-for-unity.converters": "1.5.1"
       },
-      "hash": "ac56f4d95417af5dbedf20f3b8d79b9f67c72659"
+      "hash": "33fa051b5a6954a365df23038085caca9a844cab"
+    },
+    "com.tayx.graphy": {
+      "version": "https://github.com/Tayx94/graphy.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "7b634c383ae631e7f4efaf08235c2d829a7d3ecc"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -54,19 +67,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.17",
+      "version": "2.0.21",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.9"
       },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.ide.vscode": {
-      "version": "1.2.5",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
@@ -97,7 +103,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.2.0-pre.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {

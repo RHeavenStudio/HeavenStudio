@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Jukebox;
 
 using HeavenStudio.Util;
 
@@ -53,10 +54,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             float scaleFactor = 0f;
             //clear all children of the holder
-            if (NoriHolder != null)
-            {
-                foreach (Transform child in NoriHolder)
-                {
+            if (NoriHolder != null) {
+                foreach (Transform child in NoriHolder) {
                     Destroy(child.gameObject);
                 }
             }
@@ -81,9 +80,20 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     NoriManiaInk01.SetActive(false);
                     playedJust = false;
 
-                    inputsToSwitch = KarateMan.CountHitsToEnd(fromBeat);
+                    inputsToSwitch = CountHitsToEnd(fromBeat);
                     break;
-                default:
+                case (int) KarateMan.NoriMode.ManiaHorizontal:
+                    MaxNori = 10;
+                    Nori = Mathf.Clamp(startingNori, 0, MaxNori);
+                    scaleFactor = ScaleFactorMania;
+                    NoriHolder = NoriHolderMania01;
+                    NoriManiaInk00.SetActive(true);
+                    NoriManiaInk01.SetActive(true);
+                    playedJust = false;
+
+                    inputsToSwitch = CountHitsToEnd(fromBeat);
+                    break;
+                default: //KarateMan.NoriMode.None
                     MaxNori = 0;
                     Nori = 0;
                     NoriManiaInk00.SetActive(false);
@@ -238,21 +248,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 Material mat = NoriHeartMaterials[i];
                 if (noriMode == (int) KarateMan.NoriMode.Tengoku)
                 {
-                    if (Nori == MaxNori)
-                    {
+                    if (Nori == MaxNori) {
                         mat.SetColor("_ColorAlpha", NoriColorsTengoku[3]);
-                    }
-                    else
-                    {
-                        if (KarateMan.instance.NoriPerformance < 0.6)
-                            mat.SetColor("_ColorAlpha", NoriColorsTengoku[0]);
-                        else
-                        {
-                            if (i < 2)
-                                mat.SetColor("_ColorAlpha", NoriColorsTengoku[1]);
-                            else
-                                mat.SetColor("_ColorAlpha", NoriColorsTengoku[2]);
-                        }
+                    } else if (KarateMan.instance.NoriPerformance < 0.6) {
+                        mat.SetColor("_ColorAlpha", NoriColorsTengoku[0]);
+                    } else if (i < 2) {
+                        mat.SetColor("_ColorAlpha", NoriColorsTengoku[1]);
+                    } else {
+                        mat.SetColor("_ColorAlpha", NoriColorsTengoku[2]);
                     }
                 }
                 else
@@ -270,12 +273,10 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         flashPeriod = Mathf.Sin(cond.songPositionInBeats * Mathf.PI);
                         if (KarateMan.instance.NoriPerformance < 0.6)
                             c = NoriColorsMania[0];
-                        else
-                        {
-                            if (i < MaxNori - 2)
-                                c = NoriColorsMania[1];
-                            else
-                                c = NoriColorsMania[2];
+                        else if (i < MaxNori - 2) {
+                            c = NoriColorsMania[1];
+                        } else {
+                            c = NoriColorsMania[2];
                         }
                         c *= (flashPeriod * 0.5f) + 1f;
                     }
@@ -289,15 +290,51 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             Transform target = GameCamera.instance.transform;
 
-            Vector3 displacement = target.forward * CameraOffset; 
+            Vector3 displacement = target.forward * CameraOffset;
             transform.position = target.position + displacement;
             transform.rotation = target.rotation;
 
             UpdateHeartColours();
 
-            float inkRot = (Conductor.instance.songPositionInBeats/ 8f) % 1f;
+            float inkRot = (Conductor.instance.songPositionInBeats / 8f) % 1f;
             NoriManiaInk00.transform.localRotation = Quaternion.Euler(0, 0, inkRot * 360);
             NoriManiaInk01.transform.localRotation = Quaternion.Euler(0, 0, inkRot * 360);
+        }
+        public int CountHitsToEnd(double fromBeat)
+        {
+            List<RiqEntity> allHits = EventCaller.GetAllInGameManagerList("karateman", new string[] { "hit", "bulb", "kick", "combo" });
+            List<RiqEntity> allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" });
+
+            allHits.Sort((x, y) => x.beat.CompareTo(y.beat));
+            allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
+            double endBeat = double.MaxValue;
+
+            //get the beat of the closest end event
+            foreach (var end in allEnds) {
+                if (end.beat > fromBeat) {
+                    endBeat = end.beat;
+                    break;
+                }
+            }
+
+            //count each hit event beginning from our current beat to the beat of the closest game switch or end
+            int count = 0;
+            string type;
+            for (int i = 0; i < allHits.Count; i++)
+            {
+                RiqEntity h = allHits[i];
+                if (h.beat >= fromBeat)
+                {
+                    if (h.beat < endBeat) {
+                        //kicks and combos count for 2 hits
+                        type = h.datamodel.Split('/')[1];
+                        count += (type is "kick" or "combo") ? 2 : 1;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            return count;
         }
     }
 }

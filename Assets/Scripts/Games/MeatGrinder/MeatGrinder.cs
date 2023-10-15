@@ -155,7 +155,7 @@ namespace HeavenStudio.Games
             bossBop = autoBop;
             if (doesBop) {
                 for (int i = 0; i < length; i++) {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                    BeatAction.New(instance, new List<BeatAction.Action>() {
                         new BeatAction.Action(beat + i, delegate {
                             if (!BossAnim.IsPlayingAnimationName("BossCall") && !BossAnim.IsPlayingAnimationName("BossSignal")) {
                                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
@@ -178,7 +178,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("meatGrinder/startSignal", beat - 1, forcePlay: true);
 
             if (GameManager.instance.currentGame == "meatGrinder") {
-                BeatAction.New(MeatGrinder.instance.gameObject, new List<BeatAction.Action>() {
+                BeatAction.New(MeatGrinder.instance, new List<BeatAction.Action>() {
                     new BeatAction.Action(beat - 1, delegate { 
                         MeatGrinder.instance.BossAnim.DoScaledAnimationAsync("BossSignal", 0.5f);
                     }),
@@ -194,7 +194,7 @@ namespace HeavenStudio.Games
             intervalStarted = true;
             beatInterval = length;
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + length - 0.33f, delegate { PassTurn(beat); }),
             });
         }
@@ -225,7 +225,7 @@ namespace HeavenStudio.Games
             intervalStarted = false;
             foreach (var input in queuedInputs)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(input + beatInterval , delegate { 
                         MeatToss Meat = Instantiate(MeatBase, gameObject.transform).GetComponent<MeatToss>();

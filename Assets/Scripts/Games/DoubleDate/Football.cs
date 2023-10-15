@@ -63,7 +63,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
                 SoundByte.PlayOneShot("miss");
                 game.Kick(false);
                 GetComponent<SpriteRenderer>().sortingOrder = 8;
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 4f, delegate
                     {
@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
                 return;
             }
             Hit();
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 1f, delegate
                 {
@@ -115,7 +115,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
                 }
             }
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 5f, delegate
                 {

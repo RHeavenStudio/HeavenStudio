@@ -1,27 +1,20 @@
 using System;
 using System.IO;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
-
-using Newtonsoft.Json;
 using TMPro;
-using Starpelly;
 using SFB;
 
 using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
-using HeavenStudio.Util;
 using HeavenStudio.StudioDance;
 
 using Jukebox;
-
-using System.IO.Compression;
-using System.Text;
+using UnityEditor;
+using System.Linq;
 
 namespace HeavenStudio.Editor
 {
@@ -50,6 +43,8 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button SaveBTN;
         [SerializeField] private Button UndoBTN;
         [SerializeField] private Button RedoBTN;
+        [SerializeField] private Button CopyBTN;
+        [SerializeField] private Button PasteBTN;
         [SerializeField] private Button MusicSelectBTN;
         [SerializeField] private Button FullScreenBTN;
         [SerializeField] private Button TempoFinderBTN;
@@ -60,8 +55,15 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button SortChronologicBTN;
         [SerializeField] private TMP_InputField SearchBar;
 
+        [Header("Confirm Quit")]
+        [SerializeField] private GameObject _confirmQuitMain;
+        [SerializeField] private Button _quitYes;
+        [SerializeField] private Button _quitNo;
+
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
+
+        [SerializeField] private GameObject DebugHolder;
 
         [Header("Dialogs")]
         [SerializeField] private Dialog[] Dialogs;
@@ -83,6 +85,8 @@ namespace HeavenStudio.Editor
         public bool isDiscordEnabled = true;
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
+
+        private Vector2 lastScreenSize = Vector2.zero;
 
         public static Editor instance { get; private set; }
 
@@ -110,6 +114,8 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(SaveBTN.gameObject, "Save Project <color=#adadad>[Ctrl+S]</color>\nSave Project As <color=#adadad>[Ctrl+Alt+S]</color>");
             Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
             Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
+            Tooltip.AddTooltip(CopyBTN.gameObject, "Copy <color=#adadad>[Ctrl+C]</color>");
+            Tooltip.AddTooltip(PasteBTN.gameObject, "Paste <color=#adadad>[Ctrl+V]</color>");
             Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
             Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
@@ -124,7 +130,7 @@ namespace HeavenStudio.Editor
             UpdateEditorStatus(true);
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
-            isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
+            isCursorEnabled = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
             GameManager.instance.CursorCam.enabled = isCursorEnabled;
         }
@@ -143,8 +149,27 @@ namespace HeavenStudio.Editor
             (minigame.fxOnly ? ggs.fxActive : ggs.mgsActive).Add(GameIcon_.GetComponent<RectTransform>());
         }
 
+        public void ShowQuitPopUp(bool show)
+        {
+            _confirmQuitMain.SetActive(show);
+        }
+
+        public bool ShouldQuit = false;
+
+        public void QuitGame()
+        {
+            ShouldQuit = true;
+            Application.Quit();
+        }
+
         public void LateUpdate()
         {
+            if (lastScreenSize != new Vector2(UnityEngine.Screen.width, UnityEngine.Screen.height))
+            {
+                // Timeline.OnScreenResize();
+            }
+            lastScreenSize = new Vector2(UnityEngine.Screen.width, UnityEngine.Screen.height);
+
             #region Keyboard Shortcuts
             if (isShortcutsEnabled)
             {
@@ -155,9 +180,7 @@ namespace HeavenStudio.Editor
 
                 if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
                 {
-                    List<TimelineEventObj> ev = new List<TimelineEventObj>();
-                    for (int i = 0; i < Selections.instance.eventsSelected.Count; i++) ev.Add(Selections.instance.eventsSelected[i]);
-                    CommandManager.instance.Execute(new Commands.Deletion(ev));
+                    CommandManager.Instance.AddCommand(new Commands.Delete(Selections.instance.eventsSelected.Select(c => c.entity.guid).ToList()));
                 }
 
                 if (Input.GetKey(KeyCode.LeftControl))
@@ -165,13 +188,21 @@ namespace HeavenStudio.Editor
                     if (Input.GetKeyDown(KeyCode.Z))
                     {
                         if (Input.GetKey(KeyCode.LeftShift))
-                            CommandManager.instance.Redo();
+                            CommandManager.Instance.RedoCommand();
                         else
-                            CommandManager.instance.Undo();
+                            CommandManager.Instance.UndoCommand();
                     }
                     else if (Input.GetKeyDown(KeyCode.Y))
                     {
-                        CommandManager.instance.Redo();
+                        CommandManager.Instance.RedoCommand();
+                    }
+                    else if (Input.GetKeyDown(KeyCode.C))
+                    {
+                        Timeline.instance.CopySelected();
+                    }
+                    else if (Input.GetKeyDown(KeyCode.V))
+                    {
+                        Timeline.instance.Paste();
                     }
 
                     if (Input.GetKey(KeyCode.LeftShift))
@@ -205,21 +236,38 @@ namespace HeavenStudio.Editor
                         SaveRemix(false);
                     }
                 }
+
+                if (Input.GetKeyDown(KeyCode.F12))
+                {
+                    DebugHolder.gameObject.SetActive(!DebugHolder.activeInHierarchy);
+                }
             }
             #endregion
 
-            if (CommandManager.instance.canUndo())
+            // Undo+Redo
+            if (CommandManager.Instance.CanUndo())
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
-
-            if (CommandManager.instance.canRedo())
+            if (CommandManager.Instance.CanRedo())
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
+            // Copy+Paste
+            if (Selections.instance.eventsSelected.Count > 0)
+                CopyBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            else
+                CopyBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+            if (Timeline.instance.CopiedEntities.Count > 0)
+                PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            else
+                PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+
+
             if (Timeline.instance.timelineState.selected && Editor.instance.canSelect)
             {
+                /*
                 if (Input.GetMouseButtonUp(0))
                 {
                     List<TimelineEventObj> selectedEvents = Timeline.instance.eventObjs.FindAll(c => c.selected == true && c.eligibleToMove == true);
@@ -240,6 +288,7 @@ namespace HeavenStudio.Editor
                         CommandManager.instance.Execute(new Commands.Move(result));
                     }
                 }
+                */
             }
         }
 
@@ -262,7 +311,7 @@ namespace HeavenStudio.Editor
                 new ExtensionFilter("Music Files", "mp3", "ogg", "wav", "aiff", "aif", "aifc")
             };
 
-            #if UNITY_STANDALONE_WINDOWS
+#if UNITY_STANDALONE_WINDOWS
             StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) => 
             {
                 if (paths.Length > 0)
@@ -285,7 +334,7 @@ namespace HeavenStudio.Editor
                 await Task.Yield();
             } 
             );
-            #else
+#else
             StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) =>
             {
                 if (paths.Length > 0)
@@ -308,7 +357,7 @@ namespace HeavenStudio.Editor
                 await Task.Yield();
             }
             );
-            #endif
+#endif
         }
 
         IEnumerator LoadMusic()
@@ -343,7 +392,7 @@ namespace HeavenStudio.Editor
             {
                 new ExtensionFilter("Heaven Studio Remix File", "riq")
             };
-            
+
             StandaloneFileBrowser.SaveFilePanelAsync("Save Remix As", "", "remix_level", extensions, (string path) =>
             {
                 if (path != String.Empty)
@@ -357,6 +406,7 @@ namespace HeavenStudio.Editor
         {
             try
             {
+                RiqFileHandler.UnlockCache();
                 RiqFileHandler.WriteRiq(GameManager.instance.Beatmap);
                 RiqFileHandler.PackRiq(path, true);
                 Debug.Log("Packed RIQ successfully!");
@@ -404,9 +454,10 @@ namespace HeavenStudio.Editor
             {
                 var path = Path.Combine(paths);
                 if (path == string.Empty) return;
-                
+
                 try
                 {
+                    RiqFileHandler.UnlockCache();
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
                     Debug.Log("Imported RIQ successfully!");
                     LoadRemix();
@@ -424,7 +475,7 @@ namespace HeavenStudio.Editor
                 currentRemixPath = path;
                 remixName = Path.GetFileName(path);
                 UpdateEditorStatus(false);
-                CommandManager.instance.Clear();
+                CommandManager.Instance.Clear();
             });
         }
 
@@ -479,7 +530,7 @@ namespace HeavenStudio.Editor
 
             if (game != null)
             {
-                foreach(FreeCam c in game.GetComponentsInChildren<FreeCam>(true))
+                foreach (FreeCam c in game.GetComponentsInChildren<FreeCam>(true))
                 {
                     c.enabled = !c.enabled;
                 }
