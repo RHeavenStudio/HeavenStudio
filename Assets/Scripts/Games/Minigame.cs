@@ -437,6 +437,11 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void ToggleSplitColoursDisplay(bool on)
+        {
+            
+        }
+
         private void OnDestroy()
         {
             foreach (var evt in scheduledInputs)

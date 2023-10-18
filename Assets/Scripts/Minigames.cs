@@ -284,7 +284,8 @@ namespace HeavenStudio
             public string name;
             public string displayName;
             public string color;
-            public GameObject holder;
+            public string splitColorL;
+            public string splitColorR;
             public bool hidden;
             public bool fxOnly;
             public List<GameAction> actions = new List<GameAction>();
@@ -337,6 +338,28 @@ namespace HeavenStudio
                 this.defaultLocale = defaultLocale;
                 this.supportedLocales = supportedLocales ?? new List<string>();
                 this.inferred = inferred;
+
+                this.splitColorL = null;
+                this.splitColorR = null;
+            }
+
+            public Minigame(string name, string displayName, string color, string splitColorL, string splitColorR, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
+            {
+                this.name = name;
+                this.displayName = displayName;
+                this.color = color;
+                this.actions = actions;
+                this.hidden = hidden;
+                this.fxOnly = fxOnly;
+
+                this.tags = tags ?? new List<string>();
+                this.wantAssetBundle = assetBundle;
+                this.defaultLocale = defaultLocale;
+                this.supportedLocales = supportedLocales ?? new List<string>();
+                this.inferred = inferred;
+
+                this.splitColorL = splitColorL;
+                this.splitColorR = splitColorR;
             }
 
             public AssetBundle GetLocalizedAssetBundle()

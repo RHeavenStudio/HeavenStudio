@@ -432,5 +432,10 @@ namespace HeavenStudio.InputSystem
         {
             rawPointerPos = ScreenBounds * 0.5f;
         }
+
+        public override bool GetPointerLeftRight()
+        {
+            return rawPointerPos.x > ScreenBounds.x * 0.5f;
+        }
     }
 }

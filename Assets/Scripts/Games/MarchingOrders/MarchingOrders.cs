@@ -51,7 +51,7 @@ namespace HeavenStudio.Games.Loaders
             }
             RiqBeatmap.OnUpdateEntity += MarchUpdater;
 
-            return new Minigame("marchingOrders", "Marching Orders", "ffb108", false, false, new List<GameAction>()
+            return new Minigame("marchingOrders", "Marching Orders", "ffb108", "ccc001", "f20016", false, false, new List<GameAction>()
                 {
                     new GameAction("bop", "Bop")
                     {

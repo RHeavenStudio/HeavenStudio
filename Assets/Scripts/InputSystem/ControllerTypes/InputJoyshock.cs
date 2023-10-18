@@ -1056,5 +1056,10 @@ namespace HeavenStudio.InputSystem
         public override void RecentrePointer()
         {
         }
+
+        public override bool GetPointerLeftRight()
+        {
+            return false;
+        }
     }
 }

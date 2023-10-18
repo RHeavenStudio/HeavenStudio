@@ -275,6 +275,7 @@ namespace HeavenStudio.InputSystem
         /// </summary>
         /// <returns></returns>
         public abstract Vector2 GetPointer();
+        public abstract bool GetPointerLeftRight();
         public abstract void TogglePointerLock(bool locked);
         public abstract void RecentrePointer();
 
