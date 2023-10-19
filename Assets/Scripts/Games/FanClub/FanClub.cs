@@ -25,25 +25,23 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("yeah, yeah, yeah", "Yeah, Yeah, Yeah!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e["toggle"], e["toggle2"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e["toggle"]); }, 
                         defaultLength = 8,
                         parameters = new List<Param>()
                         {
-                            new Param("toggle", false, "Disable call", "Disable the idol's call"),
-                            new Param("toggle2", false, "Disable response SFX", "Disable the monkeys's response")
+                            new Param("toggle", false, "Disable call", "Disable the idol's call")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e["toggle"]);},
                         preFunction = delegate { var e = eventCaller.currentEntity; FanClub.HaiSound(e.beat, e["toggle"]); }
                     },
                     new GameAction("I suppose", "I Suppose!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], e["toggle2"], 0, e["type"], e["alt"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]); }, 
                         defaultLength = 6, 
                         parameters = new List<Param>()
                         {
                             new Param("type", FanClub.KamoneResponseType.Through, "Response type", "Type of response to use"),
                             new Param("toggle", false, "Disable call", "Disable the idol's call"),
-                            new Param("toggle2", false, "Disable response SFX", "Disable the monkeys's response"),
                             new Param("alt", false, "Alternate cue", "Use an alternate cue")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]);},
@@ -116,7 +114,6 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    using System.Windows.Forms.VisualStyles;
     using Scripts_FanClub;
     
     public class FanClub : Minigame
@@ -634,7 +631,7 @@ namespace HeavenStudio.Games
         }
 
         const float HAIS_LENGTH = 4.5f;
-        public void CallHai(double beat, bool noSound = false, bool noResponse = false, int type = 0)
+        public void CallHai(double beat, bool noSound = false, int type = 0)
         {
             responseToggle = false;
             DisableBop(beat, 8f);
@@ -658,7 +655,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 7f,    delegate { PlayOneClap(beat + 7f); DoIdolClaps();}),
             });
 
-            if (!noResponse) PlaySoundSequence("fanClub", "crowd_hai", beat + 4f);
+            PlaySoundSequence("fanClub", "crowd_hai", beat + 4f);
         }
 
         public static void WarnHai(double beat, bool noSound = false, int type = 0)
@@ -675,11 +672,11 @@ namespace HeavenStudio.Games
 
         public void ContinueHais(double beat, int type = 0)
         {
-            CallHai(beat, true, true, type);
+            CallHai(beat, true, type);
         }
 
         const float CALL_LENGTH = 2.5f;
-        public void CallKamone(double beat, bool noSound = false, bool noResponse = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
+        public void CallKamone(double beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             bool doJump = (responseType == (int) KamoneResponseType.Jump || responseType == (int) KamoneResponseType.JumpFast);
             bool isBig = (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast);
@@ -719,8 +716,7 @@ namespace HeavenStudio.Games
                 }),
             });
 
-
-            if (!noResponse) PlaySoundSequence("fanClub", alt ? "crowd_iina" : "crowd_kamone", beat + 2f);
+            PlaySoundSequence("fanClub", alt ? "crowd_iina" : "crowd_kamone", beat + 2f);
         }
 
         public static void WarnKamone(double beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
@@ -745,7 +741,7 @@ namespace HeavenStudio.Games
 
         public void ContinueKamone(double beat, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
-            CallKamone(beat, true, true, type, responseType, alt);
+            CallKamone(beat, true, type, responseType, alt);
         }
 
         const float BIGCALL_LENGTH = 2.75f;
