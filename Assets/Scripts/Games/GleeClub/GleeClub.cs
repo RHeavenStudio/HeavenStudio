@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("close", GleeClub.MouthOpenClose.Both, "Close/Open Mouth", "Should the chorus kids close/open their mouth?"),
                         new Param("repeat", false, "Repeating", "Should the left and middle chorus kid repeat this singing cue?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "semiTonesLeft2", "semiTonesLeft3", "semiTonesMiddle2" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "semiTonesLeft2", "semiTonesLeft3", "semiTonesMiddle2" })
                         }),
                         new Param("semiTonesLeft2", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Left First)", "The number of semitones up or down this note should be pitched"),
                         new Param("semiTonesLeft3", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Left Last)", "The number of semitones up or down this note should be pitched"),

@@ -21,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("high", false, "High", "Will they perform high jumps?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "height", "camMove" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "height", "camMove" })
                         }),
                         new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
                         new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("high", false, "High", "Will they perform high jumps?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "height", "camMove" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "height", "camMove" })
                         }),
                         new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
                         new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
@@ -49,7 +49,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("high", false, "High", "Will they perform high jumps?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "height", "camMove" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "height", "camMove" })
                         }),
                         new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
                         new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
@@ -63,7 +63,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("high", false, "High", "Will they perform high jumps?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "height", "camMove" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "height", "camMove" })
                         }),
                         new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
                         new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")

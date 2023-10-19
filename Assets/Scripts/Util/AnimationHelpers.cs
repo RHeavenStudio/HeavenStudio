@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace HeavenStudio.Util
 {
@@ -14,7 +15,7 @@ namespace HeavenStudio.Util
         /// </summary>
         /// <param name="anim">Animator to check</param>
         /// <param name="animName">name of animation to look out for</param>
-        public static bool IsPlayingAnimationName(this Animator anim, string animName) 
+        public static bool IsPlayingAnimationName(this Animator anim, string animName)
         {
             var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
             return (stateInfo.normalizedTime < stateInfo.speed || stateInfo.loop) && stateInfo.IsName(animName);
@@ -52,7 +53,27 @@ namespace HeavenStudio.Util
 
         /// <summary>
         /// Plays animation on animator, scaling speed to song BPM
-        /// call this funtion once, when playing an animation
+        /// call this function once, when playing an animation
+        /// </summary>
+        /// <param name="anim">Animator to play animation on</param>
+        /// <param name="animName">name of animation to play</param>
+        /// <param name="timeScale">multiplier for animation speed</param>
+        /// <param name="startBeat">beat that this animation would start on</param>
+        /// <param name="currentBeat">how many beats after startBeat that the animation actually starts playing</param>
+        /// <param name="animLayer">animator layer to play animation on</param>
+        public static void DoScaledAnimationFromBeatAsync(this Animator anim, string animName, float timeScale = 1f, double startBeat = 0, double currentBeat = 0, int animLayer = -1)
+        {
+            var cond = Conductor.instance;
+            var animClip = Array.Find(anim.runtimeAnimatorController.animationClips, x => x.name == animName);
+            var animLength = cond.GetBeatFromSongPos(cond.GetSongPosFromBeat(startBeat) + animClip.length);
+            var pos = cond.GetPositionFromBeat(startBeat + currentBeat, animLength) * timeScale;
+            anim.Play(animName, animLayer, pos);
+            anim.speed = 1f / (cond.pitchedSecPerBeat * timeScale);
+        }
+
+        /// <summary>
+        /// Plays animation on animator, scaling speed to song BPM
+        /// call this function once, when playing an animation
         /// </summary>
         /// <param name="anim">Animator to play animation on</param>
         /// <param name="animName">name of animation to play</param>

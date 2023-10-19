@@ -59,12 +59,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("uh", new EntityTypes.Integer(0, 3, 0), "Uh Count", "How many Uhs should Captain Tuck say after the flippers roll?"),
                         new Param("appreciation", FlipperFlop.AppreciationType.None, "Appreciation", "Which appreciation line should Captain Tuck say?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (int)x != (int)FlipperFlop.AppreciationType.None, new string[] { "heart" })
+                            new Param.CollapseParam((x, _) => (int)x != (int)FlipperFlop.AppreciationType.None, new string[] { "heart" })
                         }),
                         new Param("heart", false, "Hearts", "Should Captain Tuck blush and make hearts appear when he expresses his appreciation?"),
                         new Param("thatsIt", false, "That's it!", "Whether or not Captain Tuck should say -That's it!- on the final flipper roll.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "barber" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "barber" })
                         }),
                         new Param("barber", false, "Barbershop that's it variant", "Should captain tuck use the Barbershop remix variant of that's it?")
                     },

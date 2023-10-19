@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("auto", true, "Auto Pass Turn", "", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "sound", "con", "visual", "audio" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "sound", "con", "visual", "audio" })
                         }),
                         new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
                         new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),

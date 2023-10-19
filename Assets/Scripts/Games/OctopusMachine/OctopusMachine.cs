@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>() {
                         new Param("shouldPrep", true, "Prepare?", "Plays a prepare animation before the cue.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "prepBeats" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "prepBeats" })
                         }),
                         new Param("prepBeats", new EntityTypes.Float(0, 4, 1), "Prepare Beats", "How many beats before the cue does the octopus prepare?"),
                     },
@@ -84,7 +84,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("autoBop", true, "Hit/Miss Bop", "Plays a bop depending on if you hit or missed the cues."),
                         new Param("autoText", true, "Display Text", "Displays text depending on if you hit or missed the cues.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "hitText", "missText" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "hitText", "missText" })
                         }),
                         new Param("hitText", "Good!", "Hit Text", "The text to display if you hit the cues."),
                         new Param("missText", "Wrong! Try again!", "Miss Text", "The text to display if you missed the cues."),
@@ -109,7 +109,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("isInstant", true, "Instant", "Will the bubbles disappear appear?"),
                         new Param("setActive", OctopusMachine.Actives.Activate, "Activate or Deactivate", "Will the bubbles disappear or appear?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (int)x == (int)OctopusMachine.Actives.Activate, new string[] { "particleStrength" })
+                            new Param.CollapseParam((x, _) => (int)x == (int)OctopusMachine.Actives.Activate, new string[] { "particleStrength" })
                         }),
                         new Param("particleStrength", new EntityTypes.Float(0, 25, 3), "Bubble Intensity", "The amount of bubbles"),
                         new Param("particleSpeed", new EntityTypes.Float(0, 25, 5), "Bubble Speed", "The speed of the bubbles"),
@@ -150,19 +150,19 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>() {
                         new Param("oct1", true, "Show Octopus 1", "Should the first octopus be enabled?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "oct1x", "oct1y" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "oct1x", "oct1y" })
                         }),
                         new Param("oct1x", new EntityTypes.Float(-10, 10, -4.64f), "X Octopus 1", "Change Octopus 1's X"),
                         new Param("oct1y", new EntityTypes.Float(-10, 10, 2.5f), "Y Octopus 1", "Change Octopus 1's Y"),
                         new Param("oct2", true, "Show Octopus 2", "Should the second octopus be enabled?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "oct2x", "oct2y" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "oct2x", "oct2y" })
                         }),
                         new Param("oct2x", new EntityTypes.Float(-10, 10, -0.637f), "X Octopus 2", "Change Octopus 2's X"),
                         new Param("oct2y", new EntityTypes.Float(-10, 10, 0f), "Y Octopus 2", "Change Octopus 2's Y"),
                         new Param("oct3", true, "Show Octopus 3", "Should the third octopus be enabled?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "oct3x", "oct3y" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "oct3x", "oct3y" })
                         }),
                         new Param("oct3x", new EntityTypes.Float(-10, 10, 3.363f), "X Octopus 3", "Change Octopus 3's X"),
                         new Param("oct3y", new EntityTypes.Float(-10, 10, -2.5f), "Y Octopus 3", "Change Octopus 3's Y"),
@@ -312,7 +312,7 @@ namespace HeavenStudio.Games
 
                 var main = bubble.main;
                 main.prewarm = isInstant;
-                main.simulationSpeed = particleSpeed/10;
+                main.simulationSpeed = particleSpeed / 10;
 
                 var emm = bubble.emission;
                 emm.rateOverTime = particleStrength;
@@ -379,12 +379,9 @@ namespace HeavenStudio.Games
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)
         private void PersistColor(double beat)
         {
-            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("octopusMachine", new string[] { "changeColor" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
-            {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["color1"], lastEvent["color2"], lastEvent["octoColor"], lastEvent["squeezedColor"], lastEvent["ease"]);
+            var bgColor = GameManager.instance.Beatmap.Entities.FindLast(c => c.datamodel == "octopusMachine/changeColor" && c.beat < beat);
+            if (bgColor != null) {
+                BackgroundColor(bgColor.beat, bgColor.length, bgColor["color1"], bgColor["color2"], bgColor["octoColor"], bgColor["squeezedColor"], bgColor["ease"]);
             }
         }
 

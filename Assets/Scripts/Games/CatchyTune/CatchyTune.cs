@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the orange falls down"),
                         new Param("smile", false, "Smile", "If the characters smile with the heart message after catching", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "endSmile" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "endSmile" })
                         }),
                         new Param("endSmile", new EntityTypes.Float(2, 100, 2), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the pineapple falls down"),
                         new Param("smile", false, "Smile", "If the characters smile with the heart message after catching", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "endSmile" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "endSmile" })
                         }),
                         new Param("endSmile", new EntityTypes.Float(2, 100, 2), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },

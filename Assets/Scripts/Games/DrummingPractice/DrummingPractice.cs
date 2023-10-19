@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("toggle", false, "Set All to Player", "Sets all Miis to the Player's Mii", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => !(bool)x, new string[] { "type", "type2", "type3" })
+                            new Param.CollapseParam((x, _) => !(bool)x, new string[] { "type", "type2", "type3" })
                         }),
                         new Param("type", DrummingPractice.MiiType.Random, "Player Mii", "The Mii that the player will control"),
                         new Param("type2", DrummingPractice.MiiType.Random, "Left Mii", "The Mii on the left"),

@@ -24,7 +24,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("silent", false, "Mute Audio", "Whether the piano notes should be muted or not.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => !(bool)x, new string[] { "note1", "note2", "note3", "note4", "note5", "note6"})
+                            new Param.CollapseParam((x, _) => !(bool)x, new string[] { "note1", "note2", "note3", "note4", "note5", "note6"})
                         }),
                         new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st note", "The number of semitones up or down this note should be pitched"),
                         new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd note", "The number of semitones up or down this note should be pitched"),

@@ -486,14 +486,14 @@ namespace HeavenStudio
 
             public class CollapseParam
             {
-                public Func<object, bool> CollapseOn;
+                public Func<object, RiqEntity, bool> CollapseOn;
                 public string[] collapseables;
                 /// <summary>
                 /// Class that decides how other parameters will be collapsed
                 /// </summary>
                 /// <param name="collapseOn">What values should make it collapse/uncollapse?</param>
                 /// <param name="collapseables">IDs of the parameters to collapse</param>
-                public CollapseParam(Func<object, bool> collapseOn, string[] collapseables)
+                public CollapseParam(Func<object, RiqEntity, bool> collapseOn, string[] collapseables)
                 {
                     CollapseOn = collapseOn;
                     this.collapseables = collapseables;

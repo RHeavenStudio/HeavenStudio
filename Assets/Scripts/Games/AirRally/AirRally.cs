@@ -190,7 +190,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("enable", true, "Enable", "", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "main", "side", "speed", "endSpeed", "ease" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "main", "side", "speed", "endSpeed", "ease" })
                         }),
                         new Param("main", new EntityTypes.Integer(0, 300, 50), "Main Trees", "How many trees per second?"),
                         new Param("side", new EntityTypes.Integer(0, 100, 30), "Side Trees", "How many trees per second?"),

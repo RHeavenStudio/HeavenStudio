@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("preset", SpaceSoccer.EnterExitPresets.FiveKickers, "Preset", "Which preset should be used?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (int)x == (int)SpaceSoccer.EnterExitPresets.Custom, new string[] { "amount", "x", "y", "z" })
+                            new Param.CollapseParam((x, _) => (int)x == (int)SpaceSoccer.EnterExitPresets.Custom, new string[] { "amount", "x", "y", "z" })
                         }),
                         
                         
@@ -78,7 +78,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("preset", SpaceSoccer.PlayerPresets.LaunchStart, "Preset", "Which preset should be used?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (int)x == (int)SpaceSoccer.PlayerPresets.Custom, new string[] { "x", "y", "z", "ease", "sound" })
+                            new Param.CollapseParam((x, _) => (int)x == (int)SpaceSoccer.PlayerPresets.Custom, new string[] { "x", "y", "z", "ease", "sound" })
                         }),
                         new Param("x", new EntityTypes.Float(-30, 30, 0f), "X Pos", "Which position should the player move to on the x axis?"),
                         new Param("y", new EntityTypes.Float(-30, 30, 0f), "Y Pos", "Which position should the player move to on the y axis?"),

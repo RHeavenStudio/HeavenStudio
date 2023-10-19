@@ -123,7 +123,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("toggle", true, "Stars Enabled", "Starfall Or No?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "valA", "valB", "valC"})
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "valA", "valB", "valC"})
                         }),
                         new Param("valA", new EntityTypes.Float(0.1f, 10f, 1f), "Star Density", "How many stars are on the screen"),
                         new Param("valB", new EntityTypes.Float(0.01f, 5f, 0.1f), "Front Star Fall Speed", "How fast the front stars fall to the edge of the screen"),

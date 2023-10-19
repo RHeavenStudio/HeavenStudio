@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("toggle", true, "Scroll FX", "Will scroll", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "flash", "m"})
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "flash", "m"})
                         }),
                         new Param("flash", true, "Flash FX", "Will flash to white"),
                         new Param("m", new EntityTypes.Float(0, 10, 1), "Speed Multiplier")

@@ -57,8 +57,13 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && shouldBop) 
             {
-                anim.DoScaledAnimationAsync("Player_Bop", 0.5f);
+                SingleBop();
             }
+        }
+
+        public void SingleBop()
+        {
+            anim.DoScaledAnimationAsync("Player_Bop", 0.5f);
         }
 
         public void Eat()

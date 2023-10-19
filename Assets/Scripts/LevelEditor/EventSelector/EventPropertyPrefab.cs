@@ -8,6 +8,7 @@ using TMPro;
 using Starpelly;
 
 using HeavenStudio.Util;
+using Jukebox;
 
 namespace HeavenStudio.Editor
 {
@@ -38,7 +39,7 @@ namespace HeavenStudio.Editor
             {
                 foreach (var c in p.collapseables)
                 {
-                    if (c != null) c.SetActive(p.collapseOn(type) && gameObject.activeSelf);
+                    if (c != null) c.SetActive(p.collapseOn(type, p.entity) && gameObject.activeSelf);
                 }
             }
         }
@@ -46,12 +47,14 @@ namespace HeavenStudio.Editor
         public class PropertyCollapse
         {
             public List<GameObject> collapseables;
-            public Func<object, bool> collapseOn;
+            public Func<object, RiqEntity, bool> collapseOn;
+            public RiqEntity entity;
 
-            public PropertyCollapse(List<GameObject> collapseables, Func<object, bool> collapseOn)
+            public PropertyCollapse(List<GameObject> collapseables, Func<object, RiqEntity, bool> collapseOn, RiqEntity entity)
             {
                 this.collapseables = collapseables;
                 this.collapseOn = collapseOn;
+                this.entity = entity;
             }
         }
     }

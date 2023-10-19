@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "amount" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "amount" })
                         }),
                         new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
                         new Param("visual", true, "Background Visual")
@@ -106,7 +106,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "amount" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "amount" })
                         }),
                         new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
                         new Param("visual", true, "Background Visual")
