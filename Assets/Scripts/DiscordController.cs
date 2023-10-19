@@ -16,24 +16,27 @@ namespace HeavenStudio.DiscordRPC
 
         private long lastStartTime;
 
+        private bool disconnected;
+
         private void Awake()
         {
-            // instance = this;
         }
 
         private void Start()
         {
             DontDestroyOnLoad(this.gameObject);
+            instance = this;
         }
 
-        private void OnApplicationQuit()
-        {
-            Disconnect();
-        }
+        // private void OnApplicationQuit()
+        // {
+        //     Disconnect();
+        // }
 
         public void Connect()
         {
             discord = new Discord.Discord(DiscordRPC.clientID, (System.UInt64)Discord.CreateFlags.NoRequireDiscord);
+            disconnected = false;
         }
 
         public void Disconnect()
@@ -41,6 +44,7 @@ namespace HeavenStudio.DiscordRPC
             if (discord != null)
             {
                 discord.Dispose();
+                disconnected = true;
             }
         }
 
@@ -101,7 +105,7 @@ namespace HeavenStudio.DiscordRPC
 
         void Update()
         {
-            if (discord != null)
+            if (discord != null && !disconnected)
             {
                 discord.RunCallbacks();
             }

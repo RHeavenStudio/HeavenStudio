@@ -39,8 +39,14 @@ namespace HeavenStudio
         private void Start()
         {
             // Cursor.visible = false;
-            splitTouchSnapEffect.emitting = false;
-            innerCircleRenderer = InnerCircle.GetComponent<SpriteRenderer>();
+            if (splitTouchSnapEffect != null)
+            {
+                splitTouchSnapEffect.emitting = false;
+            }
+            if (InnerCircle != null)
+            {
+                innerCircleRenderer = InnerCircle.GetComponent<SpriteRenderer>();
+            }
         }
 
         private void Open()
@@ -81,7 +87,7 @@ namespace HeavenStudio
             else
             {
                 bool lrState = PlayerInput.GetInputController(1).GetPointerLeftRight();
-                if (PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch && (GameManager.instance?.GameHasSplitColours ?? false))
+                if (splitTouchSnapEffect != null && PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch && (GameManager.instance?.GameHasSplitColours ?? false))
                 {
                     if (lrState != lastLeftRightState)
                     {
@@ -103,7 +109,7 @@ namespace HeavenStudio
                         trailEnableTime -= Time.deltaTime;
                     }
                 }
-                else if (splitTouchSnapEffect.emitting)
+                else if (splitTouchSnapEffect != null && splitTouchSnapEffect.emitting)
                 {
                     ClearTrail();
                 }
@@ -140,7 +146,10 @@ namespace HeavenStudio
                 {
                     Close();
                     ClearTrail();
-                    splitTouchSnapEffect.emitting = false;
+                    if (splitTouchSnapEffect != null)
+                    {
+                        splitTouchSnapEffect.emitting = false;
+                    }
                 }
             }
         }
@@ -153,8 +162,11 @@ namespace HeavenStudio
 
         public void ClearTrail()
         {
-            splitTouchSnapEffect.Clear();
             trailEnableTime = 0;
+            if (splitTouchSnapEffect != null)
+            {
+                splitTouchSnapEffect.Clear();
+            }
         }
 
         public void SetCursorColors(Color main, Color left, Color right)

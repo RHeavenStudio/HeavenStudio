@@ -22,7 +22,7 @@ namespace UnityBuilderAction
             string appName = PlayerSettings.productName;
             // Get filename.
             string path = EditorUtility.SaveFilePanel("Build out WINDOWS to...", "", appName, "exe");
-            Build( BuildTarget.StandaloneWindows, 0, path);
+            Build( BuildTarget.StandaloneWindows64, 0, path);
         }
 
         [MenuItem("File/Build Linux")]

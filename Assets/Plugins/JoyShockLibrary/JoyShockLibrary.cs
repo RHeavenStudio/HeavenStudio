@@ -130,13 +130,13 @@ public static class JSL
     public delegate void ConnectionCallback(int handle);
     public delegate void DeconnectionCallback(int handle, bool isConnected);
 
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern int JslConnectDevices();
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern int JslGetConnectedDeviceHandles(int[] deviceHandleArray, int size);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslDisconnectAndDisposeAll();
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern bool JslStillConnected(int deviceId);
 
     [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
@@ -148,72 +148,72 @@ public static class JSL
     [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern TOUCH_STATE JslGetTouchState(int deviceId);
 
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslSetGyroSpace(int deviceId, int gyroSpace);
 
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern float JslGetStickStep(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern float JslGetTriggerStep(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern float JslGetPollRate(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern float JslGetTimeSinceLastUpdate(int deviceId);
 
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern float JslGetTouchId(int deviceId, bool secondTouch = false);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern float JslGetTouchDown(int deviceId, bool secondTouch = false);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern float JslGetTouchX(int deviceId, bool secondTouch = false);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern float JslGetTouchY(int deviceId, bool secondTouch = false);
 
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslResetContinuousCalibration(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslStartContinuousCalibration(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslPauseContinuousCalibration(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslGetCalibrationOffset(int deviceId, ref float xOffset, ref float yOffset, ref float zOffset);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslGetCalibrationOffset(int deviceId, float xOffset, float yOffset, float zOffset);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern JSL_AUTO_CALIBRATION JslGetAutoCalibrationStatus(int deviceId);
 
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslSetCallback(EventCallback callback);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslSetTouchCallback(TouchCallback callback);
     // this function will get called for each device when it is newly connected
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslSetConnectCallback(ConnectionCallback callback);
     // this function will get called for each device when it is disconnected
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslSetDisconnectCallback(DeconnectionCallback callback);
     
     // super-getter for reading a whole lot of state at once
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern JSL_SETTINGS JslGetControllerInfoAndSettings(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern int JslGetControllerType(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern int JslGetControllerSplitType(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern int JslGetControllerColour(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern int JslGetControllerButtonColour(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern int JslGetControllerLeftGripColour(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern int JslGetControllerRightGripColour(int deviceId);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslSetLightColour(int deviceId, int colour);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslSetRumble(int deviceId, int smallRumble, int bigRumble);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslSetRumbleFrequency(int deviceId, float smallRumble, float bigRumble, float smallFrequency, float bigFrequency);
-    [DllImport("JoyShockLibrary")]
+    [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern void JslSetPlayerNumber(int deviceId, int number);
 }

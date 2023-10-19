@@ -386,6 +386,8 @@ namespace HeavenStudio
             PlayerInput.CleanUp();
             Debug.Log("Clearing RIQ Cache...");
             Jukebox.RiqFileHandler.ClearCache();
+            Debug.Log("Closing Discord GameSDK...");
+            DiscordRPC.DiscordController.instance?.Disconnect();
         }
 
         private static bool WantsToQuit()
