@@ -100,7 +100,9 @@ namespace HeavenStudio.InputSystem
             lastRealPos = realPos;
             lastDeltaPointerPos = deltaPointerPos;
 
-            rawPointerPos += new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0) * currentBindings.PointerSensitivity;
+            float pointerXmove = Input.GetAxis("Mouse X");
+            float pointerYmove = Input.GetAxis("Mouse Y");
+            rawPointerPos += new Vector3(pointerXmove, pointerYmove, 0) * currentBindings.PointerSensitivity;
             rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
             realPos = cam.ScreenToWorldPoint(rawPointerPos);
 
@@ -111,6 +113,36 @@ namespace HeavenStudio.InputSystem
                 lastRealPos = realPos;
             }
             deltaPointerPos = realPos - lastRealPos;
+
+            bool forcedToBounds = false
+            if (pointerXmove > 0 && rawPointerPos.x < 0)
+            {
+                rawPointerPos.x = 0;
+                forcedToBounds = true;
+            }
+            else if (pointerXmove < 0 && rawPointerPos.x > ScreenBounds.x)
+            {
+                rawPointerPos.x = ScreenBounds.x;
+                forcedToBounds = true;
+            }
+            if (pointerYmove > 0 && rawPointerPos.y < 0)
+            {
+                rawPointerPos.y = 0;
+                forcedToBounds = true;
+            }
+            else if (pointerYmove < 0 && rawPointerPos.y > ScreenBounds.y)
+            {
+                rawPointerPos.y = ScreenBounds.y;
+                forcedToBounds = true;
+            }
+
+            if (forcedToBounds)
+            {
+                lastRawPointerPos = rawPointerPos;
+                realPos = cam.ScreenToWorldPoint(rawPointerPos);
+                startPointerPos = realPos;
+                lastRealPos = realPos;
+            }
 
             float speed = deltaPointerPos.magnitude;
             if (GetAction(ControlStyles.Touch, 0))
