@@ -872,6 +872,8 @@ namespace HeavenStudio
                         {
                             new Param("text1", "", "Title", "Text to display in the upper label (Rich Text is supported!)"),
                             new Param("text2", "", "Artist", "Text to display in the lower label (Rich Text is supported!)"),
+                            new Param("instantOn", false, "Instant Show", "Skip the show animation?"),
+                            new Param("instantOff", false, "Instant Hide", "Skip the hide animation?"),
                         }
                     ),
                 }),

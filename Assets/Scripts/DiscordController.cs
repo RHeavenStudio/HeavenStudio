@@ -16,7 +16,7 @@ namespace HeavenStudio.DiscordRPC
 
         private long lastStartTime;
 
-        private bool disconnected;
+        private bool quitting;
 
         private void Awake()
         {
@@ -30,13 +30,13 @@ namespace HeavenStudio.DiscordRPC
 
         // private void OnApplicationQuit()
         // {
-        //     Disconnect();
+        //     quitting = true;
         // }
 
         public void Connect()
         {
             discord = new Discord.Discord(DiscordRPC.clientID, (System.UInt64)Discord.CreateFlags.NoRequireDiscord);
-            disconnected = false;
+            quitting = false;
         }
 
         public void Disconnect()
@@ -44,7 +44,7 @@ namespace HeavenStudio.DiscordRPC
             if (discord != null)
             {
                 discord.Dispose();
-                disconnected = true;
+                quitting = true;
             }
         }
 
@@ -105,7 +105,7 @@ namespace HeavenStudio.DiscordRPC
 
         void Update()
         {
-            if (discord != null && !disconnected)
+            if ((!quitting) && discord != null)
             {
                 discord.RunCallbacks();
             }
