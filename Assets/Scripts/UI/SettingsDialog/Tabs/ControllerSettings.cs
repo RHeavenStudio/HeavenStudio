@@ -38,6 +38,8 @@ namespace HeavenStudio.Editor
         [SerializeField] private List<TMP_Text> BatonBindingsTxt;
         [SerializeField] private List<TMP_Text> TouchBindingsTxt;
 
+        [SerializeField] private Slider cursorSensitivitySlider;
+
         private bool isAutoSearching = false;
         private bool isPairSearching = false;
         private bool pairSelectLR = false;  //true = left, false = right
@@ -388,6 +390,15 @@ namespace HeavenStudio.Editor
                     TouchBindingsMenus.ForEach(x => x.SetActive(false));
                     break;
             }
+
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+            {
+                cursorSensitivitySlider.gameObject.SetActive(true);
+            }
+            else
+            {
+                cursorSensitivitySlider.gameObject.SetActive(false);
+            }
         }
 
         public void ShowControllerBinds(InputController controller)
@@ -395,20 +406,21 @@ namespace HeavenStudio.Editor
             string[] buttons = controller.GetButtonNames();
             List<TMP_Text> bindsTxt;
             int[] binds;
+            InputController.ControlBindings ctrlBinds = controller.GetCurrentBindings();
 
             switch (PlayerInput.CurrentControlStyle)
             {
                 case InputController.ControlStyles.Touch:
                     bindsTxt = TouchBindingsTxt;
-                    binds = controller.GetCurrentBindings().Touch;
+                    binds = ctrlBinds.Touch;
                     break;
                 case InputController.ControlStyles.Baton:
                     bindsTxt = BatonBindingsTxt;
-                    binds = controller.GetCurrentBindings().Baton;
+                    binds = ctrlBinds.Baton;
                     break;
                 default:
                     bindsTxt = PadBindingsTxt;
-                    binds = controller.GetCurrentBindings().Pad;
+                    binds = ctrlBinds.Pad;
                     break;
             }
 
@@ -437,6 +449,8 @@ namespace HeavenStudio.Editor
                 }
                 ac++;
             }
+
+            cursorSensitivitySlider.value = ctrlBinds.PointerSensitivity;
         }
 
         public void ShowControllerIcon(InputController controller)
@@ -458,6 +472,14 @@ namespace HeavenStudio.Editor
 
             //setup material
             controller.SetMaterialProperties(controllerMat);
+        }
+
+        public void SetCursorSensitivity()
+        {
+            var currentController = PlayerInput.GetInputController(1);
+            InputController.ControlBindings binds = currentController.GetCurrentBindings();
+            binds.PointerSensitivity = cursorSensitivitySlider.value;
+            currentController.SetCurrentBindings(binds);
         }
 
         public override void OnOpenTab()
