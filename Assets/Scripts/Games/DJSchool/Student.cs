@@ -206,7 +206,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 FlashFX(false);
                 swiping = true;
 
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { anim.Play("Swipe", 0, 0); }),
                     new BeatAction.Action(beat + 4f, delegate { swiping = false; }),
@@ -226,7 +226,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             {
                 OnMissSwipeForPlayerInput(caller.timer + caller.startBeat + 1f);
                 SoundByte.PlayOneShotGame("djSchool/recordSwipe");
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { anim.Play("Swipe", 0, 0); }),
                     new BeatAction.Action(beat + 4f, delegate { swiping = false; }),
@@ -254,7 +254,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 canBoo = false;
                 Invoke("EnableBoo", booSound.clip.length);
             }
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
                 {
@@ -276,7 +276,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             //swiping = false;
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
 
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {

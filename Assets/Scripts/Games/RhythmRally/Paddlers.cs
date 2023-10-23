@@ -90,7 +90,7 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
 
         public void BounceFX(double bounceBeat)
         {
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(bounceBeat, delegate
                 {

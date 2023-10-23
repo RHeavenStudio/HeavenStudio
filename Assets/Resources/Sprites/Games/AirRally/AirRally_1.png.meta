@@ -154,7 +154,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -767,7 +767,7 @@ TextureImporter:
         width: 722
         height: 754
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -788,7 +788,7 @@ TextureImporter:
         width: 338
         height: 338
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -796,6 +796,90 @@ TextureImporter:
       bones: []
       spriteID: cef38f935d61cb830800000000000000
       internalID: 4088167666801983468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forthbackhead
+      rect:
+        serializedVersion: 2
+        x: 1478
+        y: 2854
+        width: 404
+        height: 404
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6812f60aa40ac6645a84dc066764ccad
+      internalID: 1491782699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: forthbackbody
+      rect:
+        serializedVersion: 2
+        x: 2998
+        y: 3528
+        width: 186
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f69b9daf39f0e84dbc9c8cb99836cfa
+      internalID: 991706921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: baxterbackbody
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 3537
+        width: 194
+        height: 173
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c56c76c462f30ba41b2dccbb7acc025e
+      internalID: 1671320624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: baxterbackarm
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 2324
+        width: 159
+        height: 168
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5456e2c42243af84da42eb7b47b3134a
+      internalID: -1648511082
       vertices: []
       indices: 
       edges: []
@@ -840,6 +924,10 @@ TextureImporter:
       Plane_Seat: -8163542358712491115
       Shuttlecock: -8553487051856794945
       Swing: -5045374907246990888
+      baxterbackarm: -1648511082
+      baxterbackbody: 1671320624
+      forthbackbody: 991706921
+      forthbackhead: 1491782699
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

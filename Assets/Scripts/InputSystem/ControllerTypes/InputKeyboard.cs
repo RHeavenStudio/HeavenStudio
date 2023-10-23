@@ -1,43 +1,84 @@
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 using static JSL;
 
+namespace HeavenStudio.InputSystem.Loaders
+{
+    public static class InputKeyboardInitializer
+    {
+        [LoadOrder(0)]
+        public static InputController[] Initialize()
+        {
+            PlayerInput.PlayerInputRefresh.Add(Refresh);
+
+            InputKeyboard keyboard = new InputKeyboard();
+            keyboard.SetPlayer(1);
+            keyboard.InitializeController();
+            return new InputController[] { keyboard };
+        }
+
+        public static InputController[] Refresh()
+        {
+            InputKeyboard keyboard = new InputKeyboard();
+            keyboard.SetPlayer(1);
+            keyboard.InitializeController();
+            return new InputController[] { keyboard };
+        }
+    }
+}
+
 namespace HeavenStudio.InputSystem
 {
     public class InputKeyboard : InputController
     {
-        static KeyCode[] keyCodes = (KeyCode[]) System.Enum.GetValues(typeof(UnityEngine.KeyCode));
+        private static readonly KeyCode[] keyCodes = Enum.GetValues(typeof(KeyCode))
+        .Cast<KeyCode>()
+        .Where(k => ((int)k < (int)KeyCode.Mouse0))
+        .ToArray();
 
-        //FUTURE: remappable controls
-        //KeyCode[] mappings = new KeyCode[Enum.GetNames(typeof(ButtonsPad)).Length];
-        KeyCode[] mappings = new KeyCode[]
-        {
-            KeyCode.W,              // dpad up
-            KeyCode.S,              // dpad down
-            KeyCode.A,              // dpad left  
-            KeyCode.D,              // dpad right
-            KeyCode.K,              // south face button
-            KeyCode.J,              // east face button
-            KeyCode.I,              // west face button
-            KeyCode.U,              // north face button
-            KeyCode.C,              // left shoulder button
-            KeyCode.N,              // right shoulder button
-            KeyCode.Escape,         // start button
-        };
+        static ControlBindings defaultBindings {
+            get
+            {
+                return new ControlBindings()
+                {
+                    Pad = new int[]
+                    {
+                        (int)KeyCode.W,
+                        (int)KeyCode.S,
+                        (int)KeyCode.A,
+                        (int)KeyCode.D,
+                        (int)KeyCode.J,
+                        (int)KeyCode.K,
+                        (int)KeyCode.I,
+                        (int)KeyCode.U,
+                        (int)KeyCode.E,
+                        (int)KeyCode.U,
+                        (int)KeyCode.Escape,
+                    },
+                };
+            }
+        }
 
         InputDirection hatDirectionCurrent;
         InputDirection hatDirectionLast;
 
         public override void InitializeController()
         {
-            //FUTURE: remappable controls
+            LoadBindings();
         }
 
         public override void UpdateState()
         {
             // Update the state of the controller
+        }
+
+        public override void OnSelected()
+        { 
+
         }
         
         public override string GetDeviceName()
@@ -45,38 +86,94 @@ namespace HeavenStudio.InputSystem
             return "Keyboard";
         }
 
+        public override string[] GetButtonNames()
+        {
+            string[] names = new string[(int)KeyCode.Mouse0];
+            for (int i = 0; i < keyCodes.Length; i++)
+            {
+                names[(int)keyCodes[i]] = keyCodes[i].ToString();
+            }
+            return names;
+        }
+
         public override InputFeatures GetFeatures()
         {
             return InputFeatures.Readable_StringInput | InputFeatures.Style_Pad | InputFeatures.Style_Baton;
         }
 
+        public override bool GetIsConnected()
+        {
+            return true;
+        }
+
+        public override bool GetIsPoorConnection()
+        {
+            return false;
+        }
+
+        public override ControlBindings GetDefaultBindings()
+        {
+            return defaultBindings;
+        }
+
+        public override void ResetBindings()
+        {
+            currentBindings = GetDefaultBindings();
+        }
+
+        public override ControlBindings GetCurrentBindings()
+        {
+            return currentBindings;
+        }
+
+        public override void SetCurrentBindings(ControlBindings newBinds)
+        {
+            currentBindings = newBinds;
+        }
+
+        public override bool GetIsActionUnbindable(int action, ControlStyles style)
+        {
+            return false;
+        }
+
         public override int GetLastButtonDown()
         {
-            return 0;
+            if (Input.anyKeyDown)
+            {
+                for (KeyCode i = keyCodes[1]; i <= KeyCode.Menu; i++)
+                {
+                    if (Input.GetKeyDown(i))
+                        return (int)i;
+                }
+            }
+            return (int)KeyCode.None;
         }
 
-        public override KeyCode GetLastKeyDown()
+        public override int GetLastActionDown()
         {
-            for(KeyCode i = keyCodes[1]; i <= KeyCode.Menu; i++) {
-                if (Input.GetKeyDown(i))
+            for (int i = 0; i < BINDS_MAX; i++)
+            {
+                if (Input.GetKeyDown((KeyCode)currentBindings.Pad[i]))
                     return i;
             }
-            return KeyCode.None;
+            return -1;
         }
 
-        public override bool GetButton(int button)
+        public override bool GetAction(int button)
         {
-            return Input.GetKey(mappings[button]);
+            return Input.GetKey((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetButtonDown(int button)
+        public override bool GetActionDown(int button, out double dt)
         {
-            return Input.GetKeyDown(mappings[button]);
+            dt = 0;
+            return Input.GetKeyDown((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetButtonUp(int button)
+        public override bool GetActionUp(int button, out double dt)
         {
-            return Input.GetKeyUp(mappings[button]);
+            dt = 0;
+            return Input.GetKeyUp((KeyCode)currentBindings.Pad[button]);
         }
 
         public override float GetAxis(InputAxis axis)
@@ -90,47 +187,49 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKey(mappings[0]);
+                    return Input.GetKey((KeyCode)currentBindings.Pad[0]);
                 case InputDirection.Down:
-                    return Input.GetKey(mappings[1]);
+                    return Input.GetKey((KeyCode)currentBindings.Pad[1]);
                 case InputDirection.Left:
-                    return Input.GetKey(mappings[2]);
+                    return Input.GetKey((KeyCode)currentBindings.Pad[2]);
                 case InputDirection.Right:
-                    return Input.GetKey(mappings[3]);
+                    return Input.GetKey((KeyCode)currentBindings.Pad[3]);
                 default:
                     return false;
             }
         }
 
-        public override bool GetHatDirectionDown(InputDirection direction)
+        public override bool GetHatDirectionDown(InputDirection direction, out double dt)
         {
+            dt = 0;
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKeyDown(mappings[0]);
+                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[0]);
                 case InputDirection.Down:
-                    return Input.GetKeyDown(mappings[1]);
+                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[1]);
                 case InputDirection.Left:
-                    return Input.GetKeyDown(mappings[2]);
+                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[2]);
                 case InputDirection.Right:
-                    return Input.GetKeyDown(mappings[3]);
+                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[3]);
                 default:
                     return false;
             }
         }
 
-        public override bool GetHatDirectionUp(InputDirection direction)
+        public override bool GetHatDirectionUp(InputDirection direction, out double dt)
         {
+            dt = 0;
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKeyUp(mappings[0]);
+                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[0]);
                 case InputDirection.Down:
-                    return Input.GetKeyUp(mappings[1]);
+                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[1]);
                 case InputDirection.Left:
-                    return Input.GetKeyUp(mappings[2]);
+                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[2]);
                 case InputDirection.Right:
-                    return Input.GetKeyUp(mappings[3]);
+                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[3]);
                 default:
                     return false;
             }

@@ -25,23 +25,25 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("yeah, yeah, yeah", "Yeah, Yeah, Yeah!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e["toggle"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e["toggle"], e["toggle2"]); }, 
                         defaultLength = 8,
                         parameters = new List<Param>()
                         {
-                            new Param("toggle", false, "Disable call", "Disable the idol's call")
+                            new Param("toggle", false, "Disable call", "Disable the idol's call"),
+                            new Param("toggle2", false, "Disable response SFX", "Disable the monkeys's response")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e["toggle"]);},
                         preFunction = delegate { var e = eventCaller.currentEntity; FanClub.HaiSound(e.beat, e["toggle"]); }
                     },
                     new GameAction("I suppose", "I Suppose!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], e["toggle2"], 0, e["type"], e["alt"]); }, 
                         defaultLength = 6, 
                         parameters = new List<Param>()
                         {
                             new Param("type", FanClub.KamoneResponseType.Through, "Response type", "Type of response to use"),
                             new Param("toggle", false, "Disable call", "Disable the idol's call"),
+                            new Param("toggle2", false, "Disable response SFX", "Disable the monkeys's response"),
                             new Param("alt", false, "Alternate cue", "Use an alternate cue")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]);},
@@ -114,6 +116,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using System.Windows.Forms.VisualStyles;
     using Scripts_FanClub;
     
     public class FanClub : Minigame
@@ -400,7 +403,7 @@ namespace HeavenStudio.Games
             goBopSpec = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Spectators;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate { BopSingle(target); })
                 });
@@ -494,7 +497,7 @@ namespace HeavenStudio.Games
                         idolAnimator.Play("IdolCrap" + GetPerformanceSuffix(), -1, 0);
                         break;
                     case (int)IdolAnimations.Call:
-                        BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolCall0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + 0.75f,     delegate { Arisa.GetComponent<Animator>().Play("IdolCall1" + GetPerformanceSuffix(), -1, 0); }),
@@ -507,21 +510,21 @@ namespace HeavenStudio.Games
                         DoIdolJump(beat, length);
                         break;
                     case (int)IdolAnimations.BigCall:
-                        BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolBigCall0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { Arisa.GetComponent<Animator>().Play("IdolBigCall1" + GetPerformanceSuffix(), -1, 0); }),
                     });
                         break;
                     case (int)IdolAnimations.Squat:
-                        BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolSquat0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { Arisa.GetComponent<Animator>().Play("IdolSquat1" + GetPerformanceSuffix(), -1, 0); }),
                     });
                         break;
                     case (int)IdolAnimations.Wink:
-                        BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolWink0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { Arisa.GetComponent<Animator>().Play("IdolWink1" + GetPerformanceSuffix(), -1, 0); }),
@@ -573,7 +576,7 @@ namespace HeavenStudio.Games
             idolJumpStartTime = beat;
 
             //play anim
-            BeatAction.New(Arisa, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat,                     delegate { Arisa.GetComponent<Animator>().Play("IdolJump" + GetPerformanceSuffix(), -1, 0); }),
                 new BeatAction.Action(beat + 1f,                delegate { Arisa.GetComponent<Animator>().Play("IdolLand" + GetPerformanceSuffix(), -1, 0); }),
@@ -631,7 +634,7 @@ namespace HeavenStudio.Games
         }
 
         const float HAIS_LENGTH = 4.5f;
-        public void CallHai(double beat, bool noSound = false, int type = 0)
+        public void CallHai(double beat, bool noSound = false, bool noResponse = false, int type = 0)
         {
             responseToggle = false;
             DisableBop(beat, 8f);
@@ -641,7 +644,7 @@ namespace HeavenStudio.Games
             Prepare(beat + 5f); 
             Prepare(beat + 6f); 
 
-            BeatAction.New(Arisa, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat,         delegate { DoIdolPeace();}),
                 new BeatAction.Action(beat + 1f,    delegate { DoIdolPeace();}),
@@ -655,7 +658,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 7f,    delegate { PlayOneClap(beat + 7f); DoIdolClaps();}),
             });
 
-            PlaySoundSequence("fanClub", "crowd_hai", beat + 4f);
+            if (!noResponse) PlaySoundSequence("fanClub", "crowd_hai", beat + 4f);
         }
 
         public static void WarnHai(double beat, bool noSound = false, int type = 0)
@@ -672,11 +675,11 @@ namespace HeavenStudio.Games
 
         public void ContinueHais(double beat, int type = 0)
         {
-            CallHai(beat, true, type);
+            CallHai(beat, true, true, type);
         }
 
         const float CALL_LENGTH = 2.5f;
-        public void CallKamone(double beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
+        public void CallKamone(double beat, bool noSound = false, bool noResponse = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             bool doJump = (responseType == (int) KamoneResponseType.Jump || responseType == (int) KamoneResponseType.JumpFast);
             bool isBig = (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast);
@@ -691,7 +694,7 @@ namespace HeavenStudio.Games
             Prepare(beat + 3f, 2);
             Prepare(beat + 4f, 1);
 
-            BeatAction.New(Arisa, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat,                         delegate { DoIdolCall(0, isBig); Blue.PlayAnimState("Beat"); Orange.PlayAnimState("Beat"); }),
                 new BeatAction.Action(beat + (isBig ? 1f : 0.75f),  delegate { DoIdolCall(1, isBig); }),
@@ -716,7 +719,8 @@ namespace HeavenStudio.Games
                 }),
             });
 
-            PlaySoundSequence("fanClub", alt ? "crowd_iina" : "crowd_kamone", beat + 2f);
+
+            if (!noResponse) PlaySoundSequence("fanClub", alt ? "crowd_iina" : "crowd_kamone", beat + 2f);
         }
 
         public static void WarnKamone(double beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
@@ -741,7 +745,7 @@ namespace HeavenStudio.Games
 
         public void ContinueKamone(double beat, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
-            CallKamone(beat, true, type, responseType, alt);
+            CallKamone(beat, true, true, type, responseType, alt);
         }
 
         const float BIGCALL_LENGTH = 2.75f;
@@ -753,7 +757,7 @@ namespace HeavenStudio.Games
             DisableSpecBop(beat, 3.75f);
 
             PlayAnimationAll("FanBigReady", onlyOverrideBop: true);
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f,   delegate { PlayAnimationAll("FanBigReady", onlyOverrideBop: true); }),
                 new BeatAction.Action(beat + 2f,    delegate { PlayAnimationAll("FanBigReady", onlyOverrideBop: true); }),
@@ -846,7 +850,7 @@ namespace HeavenStudio.Games
                 }
                 // Jukebox.PlayOneShotGame("fanClub/play_clap", volume: 0.08f);
                 SoundByte.PlayOneShotGame("fanClub/crap_impact", pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 0.1f);
-                BeatAction.New(Spectators[who], new List<BeatAction.Action>()
+                BeatAction.New(Spectators[who].GetComponent<NtrIdolFan>(), new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { Spectators[who].GetComponent<Animator>().Play("FanClap", -1, 0); }),
                     new BeatAction.Action(beat + 0.1f, delegate { Spectators[who].GetComponent<Animator>().Play("FanFree", -1, 0); }),
@@ -855,7 +859,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
                     new BeatAction.Action(beat + 0.1f, delegate { PlayAnimationAll("FanFree", true, true);}),
@@ -865,7 +869,7 @@ namespace HeavenStudio.Games
 
         private void PlayLongClap(double beat)
         {
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
                 new BeatAction.Action(beat + 1f, delegate { PlayAnimationAll("FanFree", true, true);}),
@@ -874,7 +878,7 @@ namespace HeavenStudio.Games
 
         private void PlayChargeClap(double beat)
         {
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
                 new BeatAction.Action(beat + 0.1f, delegate { PlayAnimationAll("FanClapCharge", true, true);}),
@@ -884,7 +888,7 @@ namespace HeavenStudio.Games
         private void StartJump(int idx, double beat)
         {
             Spectators[idx].GetComponent<NtrIdolFan>().jumpStartTime = beat;
-            BeatAction.New(Spectators[idx], new List<BeatAction.Action>()
+            BeatAction.New(Spectators[idx].GetComponent<NtrIdolFan>(), new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { Spectators[idx].GetComponent<Animator>().Play("FanJump", -1, 0);}),
                 new BeatAction.Action(beat + 1f, delegate { Spectators[idx].GetComponent<Animator>().Play("FanPrepare", -1, 0);}),
@@ -934,7 +938,7 @@ namespace HeavenStudio.Games
             goBopSpec = false;
 
             // recreation of sub61
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { StartClapLoop(beat, 1);}),
                 
@@ -972,7 +976,7 @@ namespace HeavenStudio.Games
 
         void StartClapLoop(double beat, int who)
         {
-            BeatAction.New(Spectators[who], new List<BeatAction.Action>()
+            BeatAction.New(Spectators[who].GetComponent<NtrIdolFan>(), new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayOneClap(beat, who); }),
                 new BeatAction.Action(beat + 0.5f, delegate { StartClapLoop(beat + 0.5f, who); }),

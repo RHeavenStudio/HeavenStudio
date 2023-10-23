@@ -16,8 +16,6 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text volumeTXT;
         [SerializeField] private GameObject volumeLine;
 
-        public RiqEntity volumeChange;
-
         new private void Update()
         {
             base.Update();
@@ -31,12 +29,12 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftShift))
                         newVolume *= 5f;
                     if (Input.GetKey(KeyCode.LeftControl))
-                        newVolume /= 100f;
+                        newVolume *= 0.01f;
 
-                    volumeChange["volume"] += newVolume;
+                    chartEntity["volume"] += newVolume;
 
                     //make sure volume is positive
-                    volumeChange["volume"] = Mathf.Clamp(volumeChange["volume"], 0, 100);
+                    chartEntity["volume"] = Mathf.Clamp(chartEntity["volume"], 0, 100);
 
                     if (first && newVolume != 0)
                         Timeline.instance.UpdateStartingVolText();
@@ -47,7 +45,9 @@ namespace HeavenStudio.Editor.Track
 
         private void UpdateVolume()
         {
-            volumeTXT.text = $"{volumeChange["volume"]}%";
+            volumeTXT.text = $"{chartEntity["volume"].ToString("F")}%";
+            if (!moving)
+                SetX(chartEntity);
         }
 
         public override void Init()
@@ -66,21 +66,23 @@ namespace HeavenStudio.Editor.Track
             if (first) return;
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
             {
-                GameManager.instance.Beatmap.VolumeChanges.Remove(volumeChange);
                 DeleteObj();
             }
         }
 
-        public override bool OnMove(float beat)
+        public override bool OnMove(float beat, bool final = false)
         {
             foreach (var volumeChange in GameManager.instance.Beatmap.VolumeChanges)
             {
-                if (this.volumeChange == volumeChange)
+                if (this.chartEntity == volumeChange)
                     continue;
                 if (beat > volumeChange.beat - Timeline.instance.snapInterval && beat < volumeChange.beat + Timeline.instance.snapInterval)
                     return false;
             }
-            this.volumeChange.beat = beat;
+            if (final)
+                CommandManager.Instance.AddCommand(new Commands.MoveMarker(chartEntity.guid, beat, type));
+            else
+                SetX(beat);
             return true;
         }
 

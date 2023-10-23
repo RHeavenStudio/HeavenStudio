@@ -215,7 +215,7 @@ namespace HeavenStudio.Games
             }
             if (GameManager.instance.currentGame == "fireworks")
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate
                     {
@@ -280,7 +280,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("fireworks/practiceHai", beat + 2),
                 }, forcePlay: true);
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1, delegate
                 {

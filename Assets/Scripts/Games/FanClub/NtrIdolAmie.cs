@@ -163,7 +163,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
             startJumpTime = beat;
 
             //play anim
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 // new BeatAction.Action(beat,                     delegate { anim.Play("Jump", -1, 0); }),
                 new BeatAction.Action(beat + 1f,                delegate { anim.Play("Land", -1, 0); }),
@@ -197,14 +197,14 @@ namespace HeavenStudio.Games.Scripts_FanClub
                     DoIdolJump(beat);
                     break;
                 case (int) IdolAnimations.Squat:
-                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { anim.Play("Squat0", -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { anim.Play("Squat1", -1, 0); }),
                     });
                     break;
                 case (int) IdolAnimations.Wink:
-                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { anim.Play("Wink0", -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { anim.Play("Wink1", -1, 0); }),

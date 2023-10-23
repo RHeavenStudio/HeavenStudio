@@ -68,8 +68,9 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
                 rollLoop.KillLoop(0);
                 rollLoop = null;
             }
+            game.StopChairLoopSoundIfLastToStop();
 
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1.5f, delegate { canBop = true; })
             });

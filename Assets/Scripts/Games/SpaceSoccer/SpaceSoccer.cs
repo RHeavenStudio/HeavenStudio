@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Loaders
@@ -21,7 +20,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Disable Sound", "Disables the dispense sound"),
                         new Param("down", false, "Down Sound", "Will the Down sound be played?")
                     },
-                    inactiveFunction = delegate 
+                    inactiveFunction = delegate
                     {
                         if (!eventCaller.currentEntity["toggle"]) { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat, eventCaller.currentEntity["down"]);}
                     }
@@ -40,13 +39,19 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("preset", SpaceSoccer.EnterExitPresets.FiveKickers, "Preset", "Which preset should be used?"),
-                        new Param("choice", SpaceSoccer.AnimationToPlay.Enter, "Enter Or Exit", "Whether the kickers should exit or enter."),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The Ease of the entering or exiting."),
+                        new Param("preset", SpaceSoccer.EnterExitPresets.FiveKickers, "Preset", "Which preset should be used?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => (int)x == (int)SpaceSoccer.EnterExitPresets.Custom, new string[] { "amount", "x", "y", "z" })
+                        }),
+                        
+                        
                         new Param("amount", new EntityTypes.Integer(2, 30, 5), "Amount", "Amount of Space Kickers."),
                         new Param("x", new EntityTypes.Float(-30, 30, 2f), "X Distance", "How much distance should there be between the space kickers on the x axis?"),
                         new Param("y", new EntityTypes.Float(-30, 30, -0.5f), "Y Distance", "How much distance should there be between the space kickers on the y axis?"),
                         new Param("z", new EntityTypes.Float(-30, 30, 1.25f), "Z Distance", "How much distance should there be between the space kickers on the z axis?"),
+
+                        new Param("choice", SpaceSoccer.AnimationToPlay.Enter, "Enter Or Exit", "Whether the kickers should exit or enter."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The Ease of the entering or exiting."),
                         new Param("override", true, "Override Easing", "Should this block override the easing of the space kickers' positions?")
                     },
                     resizable = true
@@ -71,7 +76,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("preset", SpaceSoccer.PlayerPresets.LaunchStart, "Preset", "Which preset should be used?"),
+                        new Param("preset", SpaceSoccer.PlayerPresets.LaunchStart, "Preset", "Which preset should be used?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => (int)x == (int)SpaceSoccer.PlayerPresets.Custom, new string[] { "x", "y", "z", "ease", "sound" })
+                        }),
                         new Param("x", new EntityTypes.Float(-30, 30, 0f), "X Pos", "Which position should the player move to on the x axis?"),
                         new Param("y", new EntityTypes.Float(-30, 30, 0f), "Y Pos", "Which position should the player move to on the y axis?"),
                         new Param("z", new EntityTypes.Float(-30, 30, 0f), "Z Pos", "Which position should the player move to on the z axis?"),
@@ -81,7 +89,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("changeBG", "Change Background Color")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.FadeBackgroundColor(e["start"], e["end"], e["startDots"], e["endDots"], e.length, e["toggle"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["startDots"], e["endDots"], e["ease"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -90,16 +98,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("end", SpaceSoccer.defaultBGColor, "End Color", "The end color for the fade."),
                         new Param("startDots", Color.white, "Start Color (Dots)", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
                         new Param("endDots", Color.white, "End Color (Dots)", "The end color for the fade."),
-                        new Param("toggle", false, "Instant", "Should the background instantly change color?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     }
                 },
-                new GameAction("scroll", "Scrolling Background") 
+                new GameAction("scroll", "Scrolling Background")
                 {
                     function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UpdateScrollSpeed(e["x"], e["y"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>() {
-                        new Param("x", new EntityTypes.Float(-5f, 5f, 0.09f), "Horizontal", "How fast does the background move horizontally?"),
-                        new Param("y", new EntityTypes.Float(-5f, 5f, 0.32f), "Vertical", "How fast does the background move vertically?"),
+                        new Param("x", new EntityTypes.Float(-10f, 10, 0.1f), "Horizontal", "How fast does the background move horizontally?"),
+                        new Param("y", new EntityTypes.Float(-10, 10f, 0.3f), "Vertical", "How fast does the background move vertically?"),
                     }
                 },
                 new GameAction("stopBall", "Stop Ball")
@@ -119,8 +127,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("npc kickers instant enter or exit", "NPC Kickers Instant Enter or Exit")
                 {
-                    function = delegate 
-                    { 
+                    function = delegate
+                    {
                         var e = eventCaller.currentEntity;
                         int choice;
                         if (e["toggle"])
@@ -141,9 +149,9 @@ namespace HeavenStudio.Games.Loaders
                     hidden = true
                 },
             },
-            new List<string>() {"ntr", "keep"},
+            new List<string>() { "ntr", "keep" },
             "ntrsoccer", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
@@ -202,13 +210,10 @@ namespace HeavenStudio.Games
         [SerializeField] SuperCurveObject.Path[] ballPaths;
         public bool ballDispensed;
         double lastDispensedBeat;
-        float scrollBeat;
-        float scrollOffsetX;
-        float scrollOffsetY;
-        float currentScrollLengthX = 0.09f;
-        float currentScrollLengthY = 0.32f;
-        Tween bgColorTween;
-        Tween dotColorTween;
+        float xScrollMultiplier = 0.1f;
+        float yScrollMultiplier = 0.3f;
+        [SerializeField] private float xBaseSpeed = 1;
+        [SerializeField] private float yBaseSpeed = 1;
         #region Space Kicker Position Easing
         float easeBeat;
         float easeLength;
@@ -227,6 +232,8 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            colorStart = defaultBGColor;
+            colorEnd = defaultBGColor;
         }
 
         new void OnDrawGizmos()
@@ -244,10 +251,9 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
-            float normalizedX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
-            float normalizedY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
-            backgroundSprite.NormalizedX = -scrollOffsetX - normalizedX;
-            backgroundSprite.NormalizedY = scrollOffsetY + normalizedY;
+            BackgroundColorUpdate();
+            backgroundSprite.NormalizedX -= xBaseSpeed * xScrollMultiplier * Time.deltaTime;
+            backgroundSprite.NormalizedY += yBaseSpeed * yScrollMultiplier * Time.deltaTime;
 
             float normalizedEaseBeat = cond.GetPositionFromBeat(easeBeat, easeLength);
             if (normalizedEaseBeat <= 1 && normalizedEaseBeat > 0)
@@ -322,9 +328,13 @@ namespace HeavenStudio.Games
                 {
                     continue;
                 }
-                Dispense(entity.beat, false);
+                bool isOnGameSwitchBeat = entity.beat == beat;
+                Debug.Log(isOnGameSwitchBeat);
+                Dispense(entity.beat, isOnGameSwitchBeat && !entity["toggle"], false, isOnGameSwitchBeat && entity["down"]);
                 break;
             }
+
+            PersistColor(beat);
         }
 
         public SuperCurveObject.Path GetPath(string name)
@@ -341,11 +351,8 @@ namespace HeavenStudio.Games
 
         public void UpdateScrollSpeed(float scrollSpeedX, float scrollSpeedY) 
         {
-            scrollOffsetX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
-            scrollOffsetY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
-            currentScrollLengthX = scrollSpeedX;
-            currentScrollLengthY = scrollSpeedY;
-            scrollBeat = Time.realtimeSinceStartup;
+            xScrollMultiplier = scrollSpeedX;
+            yScrollMultiplier = scrollSpeedY;
         }
 
         public void EaseSpaceKickersPositions(double beat, float length, int ease, float xDistance, float yDistance, float zDistance)
@@ -455,9 +462,8 @@ namespace HeavenStudio.Games
             for (int i = 0; i < kickers.Count; i++)
             {
                 Kicker kicker = kickers[i];
-                if (i == 0) kicker.player = true;
-
-                if (kicker.ball != null || (ignorePlayer && i == 0)) continue;
+                kicker.player = i == 0;
+                if (kicker.ball != null || (ignorePlayer && kicker.player)) continue;
 
                 GameObject ball = Instantiate(ballRef, kicker.transform.GetChild(0));
                 ball.SetActive(true);
@@ -490,32 +496,60 @@ namespace HeavenStudio.Games
                 }, forcePlay:true);
         }
 
-        public void ChangeBackgroundColor(Color color, Color dotColor, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart; //obviously put to the default color of the game
+        private Color colorEnd;
+        private Color colorStartDot = Color.white; //obviously put to the default color of the game
+        private Color colorEndDot = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
-            if (dotColorTween != null)
-                dotColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+
+            float newRDot = func(colorStartDot.r, colorEndDot.r, normalizedBeat);
+            float newGDot = func(colorStartDot.g, colorEndDot.g, normalizedBeat);
+            float newBDot = func(colorStartDot.b, colorEndDot.b, normalizedBeat);
+
+            bgImage.color = new Color(newRDot, newGDot, newBDot);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color colorStartDotSet, Color colorEndDotSet, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorStartDot = colorStartDotSet;
+            colorEndDot = colorEndDotSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("spaceSoccer", new string[] { "changeBG" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
             {
-                bg.color = color;
-                bgImage.color = dotColor;
-            }
-            else
-            {
-                bgColorTween = bg.DOColor(color, seconds);
-                dotColorTween = bgImage.DOColor(dotColor, seconds);
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["start"], lastEvent["end"], lastEvent["startDots"], lastEvent["endDots"], lastEvent["ease"]);
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, Color startDot, Color endDot, float beats, bool instant)
+        public override void OnPlay(double beat)
         {
-            ChangeBackgroundColor(start, startDot, 0f);
-            if (!instant) ChangeBackgroundColor(end, endDot, beats);
+            PersistColor(beat);
         }
     }
-
 }

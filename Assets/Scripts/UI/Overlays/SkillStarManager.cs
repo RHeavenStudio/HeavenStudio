@@ -41,13 +41,13 @@ namespace HeavenStudio.Common
         {
             if (cond.songPositionInBeatsAsDouble > starStart && state == StarState.In)
             {
-                double offset = cond.SecsToBeats(Minigame.AceStartTime()-1, cond.GetBpmAtBeat(StarTargetTime));
+                double offset = cond.SecsToBeats(Minigame.AceEarlyTime()-1, cond.GetBpmAtBeat(StarTargetTime));
                 if (cond.songPositionInBeatsAsDouble <= starStart + starLength + offset)
                     starAnim.DoScaledAnimation("StarIn", starStart, starLength + (float)offset);
                 else
                     starAnim.Play("StarIn", -1, 1f);
                 
-                offset = cond.SecsToBeats(Minigame.AceEndTime()-1, cond.GetBpmAtBeat(StarTargetTime));
+                offset = cond.SecsToBeats(Minigame.AceLateTime()-1, cond.GetBpmAtBeat(StarTargetTime));
                 if (cond.songPositionInBeatsAsDouble > starStart + starLength + offset)
                     KillStar();
             }
@@ -94,8 +94,8 @@ namespace HeavenStudio.Common
         public bool DoStarJust()
         {
             if (state == StarState.In && 
-                cond.songPositionInBeatsAsDouble >= StarTargetTime + cond.SecsToBeats(Minigame.AceStartTime()-1, cond.GetBpmAtBeat(StarTargetTime)) &&
-                cond.songPositionInBeatsAsDouble <= StarTargetTime + cond.SecsToBeats(Minigame.AceEndTime()-1, cond.GetBpmAtBeat(StarTargetTime))
+                cond.songPositionInBeatsAsDouble >= StarTargetTime + cond.SecsToBeats(Minigame.AceEarlyTime()-1, cond.GetBpmAtBeat(StarTargetTime)) &&
+                cond.songPositionInBeatsAsDouble <= StarTargetTime + cond.SecsToBeats(Minigame.AceLateTime()-1, cond.GetBpmAtBeat(StarTargetTime))
             )
             {
                 state = StarState.Collected;
