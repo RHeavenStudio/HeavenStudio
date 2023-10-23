@@ -51,13 +51,15 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MannequinFactory.instance.BackgroundColor(e["start"], e["end"], e.length, e["instant"]);
+                        MannequinFactory.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["ease"]);
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("start", new Color(0.97f, 0.94f, 0.51f, 1f), "Start Color", "The color to start fading from."),
-                        new Param("end",   new Color(0.97f, 0.94f, 0.51f, 1f), "End Color", "The color to end the fade."),
-                        new Param("instant", false, "Instant", "If checked, the background color will instantly change to the start color.")
+                        new Param("colorStart", new Color(0.97f, 0.94f, 0.51f, 1f), "Start Color", "The color to start fading from."),
+                        new Param("colorEnd",   new Color(0.97f, 0.94f, 0.51f, 1f), "End Color", "The color to end the fade."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "The ease to use for color fade", new() {
+                            new Param.CollapseParam(x => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "colorEnd" }),
+                        }),
                     },
                     resizable = true
                 },
@@ -83,14 +85,6 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer bg;
         public TMP_Text SignText;
         public GameObject MannequinHeadObject;
-        Tween bgColorTween;
-
-        public enum HeadOutTypes
-        {
-            Random,
-            NoClap,
-            Clap,
-        }
 
         public static MannequinFactory instance;
         
@@ -110,6 +104,8 @@ namespace HeavenStudio.Games
             {
                 HandAnim.DoScaledAnimationAsync("SlapEmpty");
             }
+
+            BackgroundColorUpdate();
         }
 
         public void HeadOut(double beat, int cueType)
@@ -123,27 +119,66 @@ namespace HeavenStudio.Games
             };
             if (cueType == 1) {
                 for (int i = 0; i < 7; i++) {
-                    sfx.Add(new MultiSound.Sound($"mannequinFactory/drumroll{i + 1}", beat + 3 + (i * 0.1667)));
+                    sfx.Add(new($"mannequinFactory/drumroll{i + 1}", beat + 3 + (i * 0.1667)));
                 }
             } else {
                 sfx.AddRange(new MultiSound.Sound[] {
-                    new MultiSound.Sound("mannequinFactory/drum", beat + 0.75),
-                    new MultiSound.Sound("mannequinFactory/drum", beat + 1   ),
+                    new("mannequinFactory/drum", beat + 0.75),
+                    new("mannequinFactory/drum", beat + 1   ),
                 });
             }
-            MultiSound.Play(sfx.ToArray());
+            MultiSound.Play(sfx.ToArray(), forcePlay: true);
 
-            MannequinHead head = Instantiate(MannequinHeadObject, gameObject.transform).GetComponent<MannequinHead>();
+            MannequinHead head = Instantiate(MannequinHeadObject, transform).GetComponent<MannequinHead>();
             head.startBeat = beat;
-            head.needClap = (cueType == 2);
+            head.needClap = cueType == 2;
         }
 
-        public void BackgroundColor(Color start, Color end, float beats, bool instant)
-        {
-            if (bgColorTween != null) bgColorTween.Kill(true);
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart, colorEnd = new Color(0.97f, 0.94f, 0.51f, 1f); // obviously put to the default colour of the game
+        private Util.EasingFunction.Ease colorEase; // putting Util in case this game is using Jukebox
 
-            bg.color = instant ? end : start;
-            if (!instant) bgColorTween = bg.DOColor(end, Conductor.instance.secPerBeat * beats);
+        //call this in update
+        private void BackgroundColorUpdate()
+        {
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
+
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
+
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var bg = GameManager.instance.Beatmap.Entities.FindLast(c => c.beat < beat && c.datamodel == "mannequinFactory/bgColor");
+            if (bg != null) {
+                BackgroundColor(bg.beat, bg.length, bg["colorStart"], bg["colorEnd"], bg["ease"]);
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistColor(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColor(beat);
         }
     }
 }

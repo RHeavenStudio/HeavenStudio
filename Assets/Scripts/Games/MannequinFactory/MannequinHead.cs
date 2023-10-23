@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
             turnStatus = needClap ? 0 : 1;
             headSr.sprite = heads[turnStatus];
 
-            BeatAction.New(gameObject, new List<BeatAction.Action> {
+            BeatAction.New(game, new List<BeatAction.Action> {
                 new BeatAction.Action(startBeat + 1, delegate { headAnim.DoScaledAnimationAsync("Move1", 0.3f); }),
                 new BeatAction.Action(startBeat + 3, delegate { headAnim.DoScaledAnimationAsync("Move2", 0.3f); }),
                 new BeatAction.Action(startBeat + 4, delegate {
@@ -88,7 +88,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
                 new MultiSound.Sound("mannequinFactory/claw1", startBeat + 6),
                 new MultiSound.Sound("mannequinFactory/claw2", startBeat + 6.5),
             });
-            BeatAction.New(gameObject, new List<BeatAction.Action> {
+            BeatAction.New(game, new List<BeatAction.Action> {
                 new BeatAction.Action(startBeat + 5.75, delegate { headAnim.DoScaledAnimationAsync("Grabbed1", 0.3f); }),
                 new BeatAction.Action(startBeat + 6   , delegate { headAnim.DoScaledAnimationAsync("Grabbed2", 0.3f); }),
             });
@@ -99,7 +99,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
             StampHit(state);
             eyesSr.sprite = eyes[1];
 
-            BeatAction.New(gameObject, new List<BeatAction.Action> {
+            BeatAction.New(game, new List<BeatAction.Action> {
                 new BeatAction.Action(startBeat + 6, delegate {
                     SoundByte.PlayOneShotGame("mannequinFactory/miss");
                     headAnim.DoScaledAnimationAsync("StampMiss", 0.3f);
@@ -110,7 +110,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
         void StampMiss(PlayerActionEvent caller)
         {
             headAnim.DoScaledAnimationAsync("Move3", 0.3f);
-            BeatAction.New(gameObject, new List<BeatAction.Action> {
+            BeatAction.New(game, new List<BeatAction.Action> {
                 new BeatAction.Action(startBeat + 6.5, delegate {
                     SoundByte.PlayOneShotGame("mannequinFactory/miss");
                     headAnim.DoScaledAnimationAsync("Miss", 0.3f);
@@ -123,7 +123,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
         // animation event
         public void DestroySelf()
         {
-            Destroy(gameObject);
+            Destroy(this);
         }
     }
 }
