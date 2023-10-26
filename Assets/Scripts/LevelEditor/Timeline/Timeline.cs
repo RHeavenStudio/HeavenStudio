@@ -38,6 +38,7 @@ namespace HeavenStudio.Editor.Track
         public float WidthPerBeat { get; private set; } = 100.0f;
         public float PixelsPerBeat => WidthPerBeat * Zoom;
         public float Zoom { get; private set; } = 1.0f;
+        public float VerticalZoom { get; private set; } = 1.0f;
         public float MousePos2Beat { get; private set; }
         public float MousePos2Layer { get; private set; }
         public float MousePos2BeatSnap => Mathp.Round2Nearest(MousePos2Beat + (SnapInterval() * 0.5f), SnapInterval());
@@ -294,11 +295,11 @@ namespace HeavenStudio.Editor.Track
 
             ZoomInBTN.onClick.AddListener(delegate
             {
-                zoomComponent.Zoom(0.25f * zoomComponent.Scale.x, Vector2.zero);
+                zoomComponent.Zoom(0.25f * zoomComponent.Scale.x, Vector2.zero, true);
             });
             ZoomOutBTN.onClick.AddListener(delegate
             {
-                zoomComponent.Zoom(-0.2f * zoomComponent.Scale.x, Vector2.zero);
+                zoomComponent.Zoom(-0.2f * zoomComponent.Scale.x, Vector2.zero, true);
             });
             ZoomResetBTN.onClick.AddListener(delegate
             {
@@ -355,7 +356,7 @@ namespace HeavenStudio.Editor.Track
             if (songBeats == 0) songBeats = 320;
             else songBeats += 10;
 
-            TimelineContent.sizeDelta = new Vector2(songBeats * PixelsPerBeat, currentSizeDelta.y);
+            TimelineContent.sizeDelta = new Vector2(songBeats * PixelsPerBeat, currentSizeDelta.y * RealTimelineContent.localScale.y);
             // TimelineEventGrid.sizeDelta = new Vector2(songBeats * PixelsPerBeat, currentSizeDelta.y);
             RealTimelineContent.sizeDelta = new Vector2(TimelineContent.sizeDelta.x / Zoom, RealTimelineContent.sizeDelta.y);
         }
@@ -417,7 +418,9 @@ namespace HeavenStudio.Editor.Track
             RectTransformUtility.ScreenPointToLocalPointInRectangle(EventContent, Input.mousePosition, Editor.instance.EditorCamera, out relativeMousePos);
 
             MouseInTimeline = this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(EventContent, Input.mousePosition, Editor.instance.EditorCamera);
-
+            if (MouseInTimeline)
+                MouseInTimeline = RectTransformUtility.RectangleContainsScreenPoint(TimelineScroll.viewport,
+                    Input.mousePosition, Editor.instance.EditorCamera);
 
             /*
             if (MouseInTimeline)
@@ -607,7 +610,7 @@ namespace HeavenStudio.Editor.Track
                 layerRect.sizeDelta = new Vector2(layerRect.sizeDelta.x, LayerHeight());
             }
 
-            RealTimelineContent.sizeDelta = new Vector2(RealTimelineContent.sizeDelta.x, LayerHeight() * LayerCount);
+            RealTimelineContent.sizeDelta = new Vector2(RealTimelineContent.sizeDelta.x, (LayerHeight() * LayerCount) / VerticalZoom);
         }
 
         public void LateUpdate()
@@ -1109,8 +1112,8 @@ namespace HeavenStudio.Editor.Track
 
         public float LayerHeight()
         {
-            var defaultHeight = 32;
-            return Mathf.Max(defaultHeight, (LayersRect.rect.height / LayerCount));
+            var defaultHeight = 32 * VerticalZoom;
+            return Mathf.Max(defaultHeight, (LayersRect.rect.height / LayerCount) * VerticalZoom);
             // return LayersRect.rect.height / LayerCount;
         }
 
@@ -1143,6 +1146,14 @@ namespace HeavenStudio.Editor.Track
             Zoom = zoom;
 
             TimelineSlider.localPosition = new Vector3(Conductor.instance.songPositionInBeats * PixelsPerBeat, TimelineSlider.transform.localPosition.y);
+
+            FitToSong();
+            TimelineBlockManager.Instance.OnZoom();
+        }
+
+        public void OnZoomVertical(float zoom)
+        {
+            VerticalZoom = zoom;
 
             FitToSong();
             TimelineBlockManager.Instance.OnZoom();

@@ -162,6 +162,14 @@ namespace HeavenStudio.Editor
             Application.Quit();
         }
 
+        public void Update()
+        {
+            if (!PersistentDataManager.gameSettings.scaleWScreenSize)
+                MainCanvas.scaleFactor = 1.0f + (0.25f * PersistentDataManager.gameSettings.editorScale);
+
+            MainCanvas.GetComponent<CanvasScaler>().uiScaleMode = (PersistentDataManager.gameSettings.scaleWScreenSize) ? CanvasScaler.ScaleMode.ScaleWithScreenSize : CanvasScaler.ScaleMode.ConstantPixelSize;
+        }
+
         public void LateUpdate()
         {
             if (lastScreenSize != new Vector2(UnityEngine.Screen.width, UnityEngine.Screen.height))
