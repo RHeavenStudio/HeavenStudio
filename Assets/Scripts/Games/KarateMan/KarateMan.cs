@@ -285,21 +285,11 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("presetBg", KarateMan.BackgroundType.Yellow, "Preset BG Color", "The preset background type (will by default fade from the existing background color)", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam((x, y) => {
-                                Debug.Log(y["endColor"]);
-                                RiqEntity bg = GameManager.instance.Beatmap.Entities.FindLast(c => c.beat <= y.beat && c.datamodel == "karateman/background appearance");
-                                y["startColor"] = bg["endColor"];
-                                y["endColor"] = KarateMan.BackgroundColors[(int)x];
-                                Debug.Log(y["endColor"]);
-                                return true;
-                            }, new string[] { /* "startColor", "endColor" */ "presetBg" })
+                            new Param.CollapseParam((x, _) => (int)x == (int)KarateMan.BackgroundType.Custom, new string[] { "startColor", "endColor" }),
                         }),
                         new Param("startColor", new Color(0.985f, 0.79f, 0.243f), "Start BG Color", "The background color to start with"),
                         new Param("endColor", new Color(0.985f, 0.79f, 0.243f), "End BG Color", "The background color to end with"),
-                        new Param("ease", Util.EasingFunction.Ease.Instant, "BG Color Ease", "Ease to use when fading color", new List<Param.CollapseParam>()
-                        {
-                            new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new string[] { "startColor" })
-                        }),
+                        new Param("ease", Util.EasingFunction.Ease.Instant, "BG Color Ease", "Ease to use when fading color"),
                         new Param("shadowType", KarateMan.ShadowType.Tinted, "Shadow Type", "The shadow type. If Tinted doesn't work with your background color try Custom", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (int)x == (int)KarateMan.ShadowType.Custom, new string[] { "shadowStart", "shadowEnd" }),
@@ -539,7 +529,7 @@ namespace HeavenStudio.Games
         public float NoriPerformance { get { if (IsNoriActive) return Nori.Nori / Nori.MaxNori; else return 1f; } }
 
         public Color[] LightBulbColors;
-        public static Color[] BackgroundColors;
+        public Color[] BackgroundColors;
 
         //camera positions (normal, special)
         [Header("Camera Positions")]
@@ -614,13 +604,13 @@ namespace HeavenStudio.Games
             colorStarts = new Color[] {
                 BackgroundColors[0],
                 TintColor(BackgroundColors[0]),
-                new(),
+                new Color(),
             };
 
             Update();
         }
 
-        private void Start() 
+        private void Start()
         {
             Update();
         }
@@ -644,7 +634,7 @@ namespace HeavenStudio.Games
             EntityPreCheck(beat);
         }
 
-        public override void OnPlay(double beat) 
+        public override void OnPlay(double beat)
         {
             EntityPreCheck(beat);
         }
@@ -753,9 +743,6 @@ namespace HeavenStudio.Games
             BackgroundColorUpdate();
             GameCamera.additionalPosition = cameraPosition - GameCamera.defaultPosition;
             BGEffect.transform.position = new Vector3(GameCamera.instance.transform.position.x, GameCamera.instance.transform.position.y, 0);
-
-            Debug.Log("GameCamera.additionalPosition : " + GameCamera.additionalPosition);
-            Debug.Log("cameraPosition : " + cameraPosition);
         }
 
         private void OnDestroy()
@@ -996,15 +983,17 @@ namespace HeavenStudio.Games
                 colorEases[i] = (Util.EasingFunction.Ease)colorEaseSet;
             }
 
+            bool preset = presetBG != (int)BackgroundType.Custom;
             bool tinted = shadowType == (int)ShadowType.Tinted;
-            Color bgColorStart = colorStart;
+
+            Color bgColorStart = preset ? BGPlane.color : colorStart;
             colorStarts = new Color[] {
                 bgColorStart,
                 tinted ? TintColor(bgColorStart) : shadowStart,
                 autoColor ? TintColor(bgColorStart): filterStart,
             };
 
-            Color bgColorEnd = colorEnd;
+            Color bgColorEnd = preset ? BackgroundColors[presetBG] : colorEnd;
             colorEnds = new Color[] {
                 bgColorEnd,
                 tinted ? TintColor(bgColorEnd) : shadowEnd,

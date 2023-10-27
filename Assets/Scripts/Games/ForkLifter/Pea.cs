@@ -24,9 +24,6 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             player = ForkLifterPlayer.instance;
             anim = GetComponent<Animator>();
 
-            var offset = SoundByte.GetClipLengthGame("forkLifter/zoomFast") - 0.03;
-            SoundByte.PlayOneShotGame("forkLifter/zoomFast", startBeat + 2, offset: offset);
-
             GetComponentInChildren<SpriteRenderer>().sprite = game.peaSprites[type];
 
             for (int i = 0; i < transform.GetChild(0).childCount; i++)

@@ -52,23 +52,26 @@ namespace HeavenStudio.Util
         }
 
         /// <summary>
-        /// Plays animation on animator, scaling speed to song BPM
+        /// Plays animation on animator, scaling speed to song BPM 
         /// call this function once, when playing an animation
         /// </summary>
         /// <param name="anim">Animator to play animation on</param>
         /// <param name="animName">name of animation to play</param>
         /// <param name="timeScale">multiplier for animation speed</param>
         /// <param name="startBeat">beat that this animation would start on</param>
-        /// <param name="currentBeat">how many beats after startBeat that the animation actually starts playing</param>
         /// <param name="animLayer">animator layer to play animation on</param>
-        public static void DoScaledAnimationFromBeatAsync(this Animator anim, string animName, float timeScale = 1f, double startBeat = 0, double currentBeat = 0, int animLayer = -1)
+        public static void DoScaledAnimationFromBeatAsync(this Animator anim, string animName, float timeScale = 1f, double startBeat = 0, int animLayer = -1)
         {
-            var cond = Conductor.instance;
-            var animClip = Array.Find(anim.runtimeAnimatorController.animationClips, x => x.name == animName);
-            var animLength = cond.GetBeatFromSongPos(cond.GetSongPosFromBeat(startBeat) + animClip.length);
-            var pos = cond.GetPositionFromBeat(startBeat + currentBeat, animLength) * timeScale;
-            anim.Play(animName, animLayer, pos);
-            anim.speed = 1f / (cond.pitchedSecPerBeat * timeScale);
+            float pos = 0;
+            if (!double.IsNaN(startBeat)) {
+                var cond = Conductor.instance;
+                var animClip = Array.Find(anim.runtimeAnimatorController.animationClips, x => x.name == animName);
+                double animLength = cond.GetBeatFromSongPos(cond.GetSongPosFromBeat(startBeat) + animClip.length);
+                pos = cond.GetPositionFromBeat(startBeat, animLength - startBeat) * timeScale;
+            } else {
+                Debug.LogWarning("DoScaledAnimationFromBeatAsync()'s startBeat was NaN; using DoScaledAnimationAsync() instead.");
+            }
+            anim.DoScaledAnimationAsync(animName, timeScale, pos, animLayer);
         }
 
         /// <summary>

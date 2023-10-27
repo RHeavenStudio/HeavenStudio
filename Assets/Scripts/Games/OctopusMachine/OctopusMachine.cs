@@ -51,7 +51,7 @@ namespace HeavenStudio.Games.Loaders
                     preFunctionLength = 4f,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        if (e["shouldPrep"]) OctopusMachine.Prepare(e.beat, e["prepBeats"]);
+                        if (e["shouldPrep"]) OctopusMachine.queuePrepare = e.beat - e["prepBeats"];
                     },
                     priority = 1,
                 },
@@ -96,7 +96,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("prepare", "Prepare")
                 {
-                    function = delegate { OctopusMachine.queuePrepare = true; },
+                    function = delegate { OctopusMachine.queuePrepare = eventCaller.currentEntity.beat; },
                     defaultLength = 0.5f,
                 },
                 new GameAction("bubbles", "Bubbles")
@@ -196,7 +196,7 @@ namespace HeavenStudio.Games
         static Color backgroundColor = new Color(1, 0.87f, 0.24f);
         public static Color octopodesColor = new Color(0.97f, 0.235f, 0.54f);
         public static Color octopodesSqueezedColor = new Color(1f, 0f, 0f);
-        public static bool queuePrepare;
+        public static double queuePrepare = double.MaxValue;
 
         [Header("Variables")]
         public bool hasMissed;
@@ -243,6 +243,7 @@ namespace HeavenStudio.Games
             if (queuedSqueezes.Count > 0) queuedSqueezes.Clear();
             if (queuedReleases.Count > 0) queuedReleases.Clear();
             if (queuedPops.Count > 0) queuedPops.Clear();
+            queuePrepare = double.MaxValue;
             
             mat.SetColor("_ColorAlpha", new Color(0.97f, 0.235f, 0.54f));
 
@@ -255,10 +256,10 @@ namespace HeavenStudio.Games
         private void Update() 
         {
             BackgroundColorUpdate();
-            if (queuePrepare) {
-                foreach (var octo in octopodes) octo.queuePrepare = true;
+            if (queuePrepare <= Conductor.instance.songPositionInBeatsAsDouble) {
+                foreach (var octo in octopodes) octo.queuePrepare = queuePrepare;
                 if (Text.text is "Wrong! Try Again!" or "Good!") Text.text = "";
-                queuePrepare = false;
+                queuePrepare = double.MaxValue;
             }
 
             if (Conductor.instance.ReportBeat(ref lastReportedBeat))
@@ -270,19 +271,6 @@ namespace HeavenStudio.Games
                 }
                 
                 if (autoAction) bopIterate++;
-            }
-        }
-
-        public static void Prepare(double beat, float prepBeats)
-        {
-            if (GameManager.instance.currentGame != "octopusMachine") {
-                OctopusMachine.queuePrepare = true;
-            } else {
-                BeatAction.New(instance, new List<BeatAction.Action>() {
-                    new BeatAction.Action(beat - prepBeats, delegate { 
-                        OctopusMachine.queuePrepare = true;
-                    })
-                });
             }
         }
 
@@ -328,9 +316,15 @@ namespace HeavenStudio.Games
             if (!intervalStarted) StartInterval(beat, length);
             octopodes[0].OctoAction(action);
 
-            var queuedList = queuedSqueezes;
-            if (action == "Release") queuedList = queuedReleases;
-            else if (action == "Pop") queuedList = queuedPops;
+            // var queuedList = queuedSqueezes;
+            // if (action == "Release") queuedList = queuedReleases;
+            // else if (action == "Pop") queuedList = queuedPops;
+
+            var queuedList = action switch {
+                "Release" => queuedReleases,
+                "Pop" => queuedPops,
+                _ => queuedSqueezes,
+            };
 
             queuedList.Add(beat - intervalStartBeat);
         }

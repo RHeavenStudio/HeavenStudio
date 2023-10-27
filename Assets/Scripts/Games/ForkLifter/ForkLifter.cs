@@ -16,7 +16,8 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        ForkLifter.instance.Flick(e.beat, e["type"]);
+                        ForkLifter.Flick(e.beat);
+                        ForkLifter.instance.FlickActive(e.beat, e["type"]);
                     },
                     defaultLength = 3,
                     parameters = new List<Param>()
@@ -25,8 +26,8 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity;
+                        ForkLifter.Flick(e.beat);
                         ForkLifter.queuedFlicks.Add(e);
-                        ForkLifter.instance.Flick(e.beat, e["type"]);
                     },
                 },
                 new GameAction("prepare", "Prepare Hand")
@@ -137,7 +138,7 @@ namespace HeavenStudio.Games
         {
             base.OnGameSwitch(beat);
             if (queuedFlicks.Count > 0) {
-                foreach (var flick in queuedFlicks) { FlickActive(flick.beat, flick["type"], beat - flick.beat); }
+                foreach (var flick in queuedFlicks) { FlickActive(flick.beat, flick["type"]); }
                 queuedFlicks.Clear();
             }
 
@@ -159,23 +160,18 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Flick(double beat, int type, double currentBeat = 0)
+        public static void Flick(double beat)
         {
-            SoundByte.PlayOneShotGame("forkLifter/flick");
-            handAnim.DoScaledAnimationFromBeatAsync("Hand_Flick", 0.5f, beat, currentBeat);
-            ForkLifterHand.currentFlickIndex++;
-            GameObject fo = Instantiate(flickedObject);
-            fo.transform.parent = flickedObject.transform.parent;
-            Pea pea = fo.GetComponent<Pea>();
-            pea.startBeat = beat;
-            pea.type = type;
-            fo.SetActive(true);
+            var offset = SoundByte.GetClipLengthGame("forkLifter/zoomFast") - 0.03;
+            SoundByte.PlayOneShotGame("forkLifter/zoomFast", beat + 2, offset: offset, forcePlay: true);
+
+            SoundByte.PlayOneShotGame("forkLifter/flick", forcePlay: true);
         }
 
-        public void FlickActive(double beat, int type, double currentBeat = 0)
+        public void FlickActive(double beat, int type)
         {
-            SoundByte.PlayOneShotGame("forkLifter/flick");
-            handAnim.DoScaledAnimationFromBeatAsync("Hand_Flick", 0.5f, beat, currentBeat);
+
+            handAnim.DoScaledAnimationFromBeatAsync("Hand_Flick", 0.5f, beat);
             ForkLifterHand.currentFlickIndex++;
             GameObject fo = Instantiate(flickedObject);
             fo.transform.parent = flickedObject.transform.parent;
