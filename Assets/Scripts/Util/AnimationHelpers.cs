@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace HeavenStudio.Util
 {
@@ -14,7 +15,7 @@ namespace HeavenStudio.Util
         /// </summary>
         /// <param name="anim">Animator to check</param>
         /// <param name="animName">name of animation to look out for</param>
-        public static bool IsPlayingAnimationName(this Animator anim, string animName) 
+        public static bool IsPlayingAnimationName(this Animator anim, string animName)
         {
             var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
             return (stateInfo.normalizedTime < stateInfo.speed || stateInfo.loop) && stateInfo.IsName(animName);
@@ -52,8 +53,31 @@ namespace HeavenStudio.Util
         }
 
         /// <summary>
+        /// Plays animation on animator, scaling speed to song BPM 
+        /// call this function once, when playing an animation
+        /// </summary>
+        /// <param name="anim">Animator to play animation on</param>
+        /// <param name="animName">name of animation to play</param>
+        /// <param name="timeScale">multiplier for animation speed</param>
+        /// <param name="startBeat">beat that this animation would start on</param>
+        /// <param name="animLayer">animator layer to play animation on</param>
+        public static void DoScaledAnimationFromBeatAsync(this Animator anim, string animName, float timeScale = 1f, double startBeat = 0, int animLayer = -1)
+        {
+            float pos = 0;
+            if (!double.IsNaN(startBeat)) {
+                var cond = Conductor.instance;
+                var animClip = Array.Find(anim.runtimeAnimatorController.animationClips, x => x.name == animName);
+                double animLength = cond.SecsToBeats(animClip.length, cond.GetBpmAtBeat(startBeat));
+                pos = cond.GetPositionFromBeat(startBeat, animLength) * timeScale;
+            } else {
+                Debug.LogWarning("DoScaledAnimationFromBeatAsync()'s startBeat was NaN; using DoScaledAnimationAsync() instead.");
+            }
+            anim.DoScaledAnimationAsync(animName, timeScale, pos, animLayer);
+        }
+
+        /// <summary>
         /// Plays animation on animator, scaling speed to song BPM
-        /// call this funtion once, when playing an animation
+        /// call this function once, when playing an animation
         /// </summary>
         /// <param name="anim">Animator to play animation on</param>
         /// <param name="animName">name of animation to play</param>

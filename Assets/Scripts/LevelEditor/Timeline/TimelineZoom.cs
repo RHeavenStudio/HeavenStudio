@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace HeavenStudio.Editor.Track
 {
-    public class TimelineZoom : MonoBehaviour, IScrollHandler
+    public class TimelineZoom : MonoBehaviour
     {
         public Vector3 Scale => _scale;
 
@@ -25,7 +25,17 @@ namespace HeavenStudio.Editor.Track
             rectTransform.localScale = _scale;
         }
 
-        public void OnScroll(PointerEventData eventData)
+        private void Update()
+        {
+            var scrollDeltaY = Input.mouseScrollDelta.y;
+            if (scrollDeltaY != 0)
+            {
+                if (Timeline.instance.MouseInTimeline)
+                    OnScroll(scrollDeltaY);
+            }
+        }
+
+        public void OnScroll(float scrollDeltaY)
         {
             if (Conductor.instance.NotStopped()) return;
 
@@ -37,37 +47,70 @@ namespace HeavenStudio.Editor.Track
             if (cam == null) Debug.LogError("Camera not set!");
             RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, cam, out relativeMousePosition);
 
-            float delta = eventData.scrollDelta.y;
-
-            if (delta > 0)
+            if (scrollDeltaY > 0)
             {
-                Zoom(0.25f * _scale.x, relativeMousePosition);
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    Zoom(0.25f * _scale.y, relativeMousePosition, false);
+                }
+                else
+                {
+                    Zoom(0.25f * _scale.x, relativeMousePosition, true);
+                }
             }
-            else if (delta < 0)
+            else if (scrollDeltaY < 0)
             {
-                var incre = -0.2f * _scale.x;
-                if (_scale.x + incre > minScale - 0.1f)
-                    Zoom(-0.2f * _scale.x, relativeMousePosition);
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    var incre = -0.2f * _scale.y;
+                    if (_scale.y + incre > minScale - 0.1f)
+                        Zoom(-0.2f * _scale.y, relativeMousePosition, false);
+                }
+                else
+                {
+                    var incre = -0.2f * _scale.x;
+                    if (_scale.x + incre > minScale - 0.1f)
+                        Zoom(-0.2f * _scale.x, relativeMousePosition, true);
+                }
             }
         }
 
-        public void Zoom(float incre, Vector2 relativeMousePosition)
+        public void Zoom(float incre, Vector2 relativeMousePosition, bool horiz)
         {
             if (!(_scale.x < maxScale)) return;
 
-            var newScale = Mathf.Clamp(_scale.x + incre, minScale, maxScale);
-            _scale.Set(newScale, 1, 1);
-            relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
-            relMousePos -= (relativeMousePosition * incre);
+            if (horiz)
+            {
+                var newScale = Mathf.Clamp(_scale.x + incre, minScale, maxScale);
+                _scale.Set(newScale, _scale.y, 1);
+                relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
+                relMousePos -= (relativeMousePosition * incre);
 
-            rectTransform.localScale = _scale;
-            rectTransform.anchoredPosition = relMousePos;
+                rectTransform.localScale = _scale;
+                rectTransform.anchoredPosition = relMousePos;
 
-            rectTransform.localScale =
-                new Vector3(Mathf.Clamp(rectTransform.localScale.x, minScale, Mathf.Infinity),
-                    rectTransform.localScale.y);
+                rectTransform.localScale =
+                    new Vector3(Mathf.Clamp(rectTransform.localScale.x, minScale, Mathf.Infinity),
+                        rectTransform.localScale.y);
 
-            Timeline.instance.OnZoom(newScale);
+                Timeline.instance.OnZoom(newScale);
+            }
+            else
+            {
+                var newScale = Mathf.Clamp(_scale.y + incre, 1.0f, maxScale);
+                _scale.Set(_scale.x, newScale, 1);
+                relativeMousePosition = new Vector2(0, relativeMousePosition.y);
+                relMousePos -= (relativeMousePosition * incre);
+
+                rectTransform.localScale = _scale;
+                rectTransform.anchoredPosition = relMousePos;
+
+                rectTransform.localScale =
+                    new Vector3(rectTransform.localScale.x, 
+                    Mathf.Clamp(rectTransform.localScale.y, 1.0f, Mathf.Infinity));
+
+                Timeline.instance.OnZoomVertical(newScale);
+            }
         }
 
         public void SetNewPos(float newX)

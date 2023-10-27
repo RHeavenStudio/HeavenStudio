@@ -5,6 +5,7 @@ using UnityEngine;
 using HeavenStudio.Editor.Track;
 using Jukebox;
 using Jukebox.Legacy;
+using System.Linq;
 
 namespace HeavenStudio.Editor
 {
@@ -111,12 +112,8 @@ namespace HeavenStudio.Editor
                     EventPropertyPrefab input = ePrefabs[p.propertyName].GetComponent<EventPropertyPrefab>();
                     foreach (var c in p.collapseParams)
                     {
-                        List<GameObject> collapseables = new();
-                        foreach (var s in c.collapseables)
-                        {
-                            collapseables.Add(ePrefabs[s]);
-                        }
-                        input.propertyCollapses.Add(new EventPropertyPrefab.PropertyCollapse(collapseables, c.CollapseOn));
+                        List<GameObject> collapseables = c.collapseables.Select(x => ePrefabs[x]).ToList();
+                        input.propertyCollapses.Add(new EventPropertyPrefab.PropertyCollapse(collapseables, c.CollapseOn, entity));
                     }
                     input.SetCollapses(p.parameter);
                 }

@@ -116,7 +116,6 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    using System.Windows.Forms.VisualStyles;
     using Scripts_FanClub;
     
     public class FanClub : Minigame

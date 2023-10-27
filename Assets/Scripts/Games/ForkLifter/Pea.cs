@@ -10,23 +10,19 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 {
     public class Pea : MonoBehaviour
     {
+        public double startBeat;
+        public int type;
+
         ForkLifter game;
+        ForkLifterPlayer player;
         private Animator anim;
 
-        public double startBeat;
-
-        public int type;
 
         private void Awake()
         {
             game = ForkLifter.instance;
+            player = ForkLifterPlayer.instance;
             anim = GetComponent<Animator>();
-
-            // SCHEDULING zoom sound so it lines up with when it meets the fork.
-            var currentDspTime = AudioSettings.dspTime;
-            var cond = Conductor.instance;
-            var zoomStartTime = currentDspTime + (cond.pitchedSecPerBeatAsDouble * 2) - 0.317;
-            SoundByte.PlayOneShotScheduledGame("forkLifter/zoomFast", zoomStartTime);
 
             GetComponentInChildren<SpriteRenderer>().sprite = game.peaSprites[type];
 
@@ -40,13 +36,13 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         public void Hit()
         {
-            ForkLifterPlayer.instance.Stab(this);
+            player.Stab(this);
 
-            if (ForkLifterPlayer.instance.currentPerfectPeasOnFork < 4)
+            if (player.currentPerfectPeasOnFork < 4)
             {
                 GameObject pea = new GameObject();
 
-                pea.transform.parent = ForkLifterPlayer.instance.perfect.transform;
+                pea.transform.parent = player.perfect.transform;
                 pea.transform.localScale = Vector2.one;
                 pea.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
@@ -54,59 +50,42 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
                 float peaOffset = 0;
 
-                if (ForkLifterPlayer.instance.currentPerfectPeasOnFork == 3) peaOffset = -0.15724f;
+                if (player.currentPerfectPeasOnFork == 3) peaOffset = -0.15724f;
 
-                for (int i = 0; i < ForkLifterPlayer.instance.perfect.transform.childCount; i++)
+                for (int i = 0; i < player.perfect.transform.childCount; i++)
                 {
-                    ForkLifterPlayer.instance.perfect.transform.GetChild(i).transform.localPosition = new Vector3(0, (-1.67f - (0.15724f * i)) + 0.15724f * ForkLifterPlayer.instance.currentPerfectPeasOnFork + peaOffset);
+                    player.perfect.transform.GetChild(i).transform.localPosition = new Vector3(0, (-1.67f - (0.15724f * i)) + 0.15724f * player.currentPerfectPeasOnFork + peaOffset);
                 }
 
                 SpriteRenderer psprite = pea.AddComponent<SpriteRenderer>();
+
                 psprite.sprite = game.peaHitSprites[type];
-                psprite.sortingOrder = 20;
-                switch (type)
-                {
-                    case 0:
-                        psprite.sortingOrder = 101;
-                        break;
-                    case 1:
-                        psprite.sortingOrder = 104;
-                        break;
-                    case 2:
-                        psprite.sortingOrder = 103;
-                        break;
-                    case 3:
-                        psprite.sortingOrder = 102;
-                        break;
-                }
+                psprite.sortingOrder = type switch {
+                    0 => 101,
+                    1 => 104,
+                    2 => 103,
+                    3 => 102,
+                    _ => 20,
+                };
             }
 
             GameObject hitFXo = new GameObject();
             hitFXo.transform.localPosition = new Vector3(1.9969f, -3.7026f);
             hitFXo.transform.localScale = new Vector3(3.142196f, 3.142196f);
             SpriteRenderer hfxs = hitFXo.AddComponent<SpriteRenderer>();
-            hfxs.sprite = ForkLifterPlayer.instance.hitFX;
+            hfxs.sprite = player.hitFX;
             hfxs.sortingOrder = 100;
             hfxs.DOColor(new Color(1, 1, 1, 0), 0.05f).OnComplete(delegate { Destroy(hitFXo); });
 
-            ForkLifterPlayer.instance.FastEffectHit(type);
+            player.FastEffectHit(type);
 
             SoundByte.PlayOneShotGame("forkLifter/stab");
 
-            ForkLifterPlayer.instance.currentPerfectPeasOnFork++;
+            player.currentPerfectPeasOnFork++;
 
-            if (type == 1)
-            {
-                ForkLifterPlayer.instance.topbun = true;
-            }
-            else if (type == 2)
-            {
-                ForkLifterPlayer.instance.middleburger = true;
-            }
-            else if (type == 3)
-            {
-                ForkLifterPlayer.instance.bottombun = true;
-            }
+            player.topbun = type == 1;
+            player.middleburger = type == 2;
+            player.bottombun = type == 3;
 
             Destroy(this.gameObject);
         }
@@ -115,30 +94,30 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         {
             GameObject pea = new GameObject();
 
-            pea.transform.parent = ForkLifterPlayer.instance.early.transform;
+            pea.transform.parent = player.early.transform;
             pea.transform.localScale = Vector2.one;
 
             pea.transform.localPosition = Vector3.zero;
             pea.transform.localRotation = Quaternion.Euler(0, 0, 90);
 
-            for (int i = 0; i < ForkLifterPlayer.instance.early.transform.childCount; i++)
+            for (int i = 0; i < player.early.transform.childCount; i++)
             {
-                ForkLifterPlayer.instance.early.transform.GetChild(i).transform.localPosition = new Vector3(0, (-1.67f - (0.15724f * i)) + 0.15724f * ForkLifterPlayer.instance.currentEarlyPeasOnFork);
+                player.early.transform.GetChild(i).transform.localPosition = new Vector3(0, (-1.67f - (0.15724f * i)) + 0.15724f * player.currentEarlyPeasOnFork);
             }
 
             SpriteRenderer psprite = pea.AddComponent<SpriteRenderer>();
             psprite.sprite = game.peaHitSprites[type];
             psprite.sortingOrder = 20;
-            ForkLifterPlayer.instance.HitFXMiss(new Vector2(1.0424f, -4.032f), new Vector2(1.129612f, 1.129612f));
-            ForkLifterPlayer.instance.HitFXMiss(new Vector2(0.771f, -3.016f), new Vector2(1.71701f, 1.71701f));
-            ForkLifterPlayer.instance.HitFXMiss(new Vector2(2.598f, -2.956f), new Vector2(1.576043f, 1.576043f));
-            ForkLifterPlayer.instance.HitFXMiss(new Vector2(2.551f, -3.609f), new Vector2(1.200788f, 1.200788f));
+            player.HitFXMiss(new Vector2(1.0424f, -4.032f), new Vector2(1.129612f, 1.129612f));
+            player.HitFXMiss(new Vector2(0.771f, -3.016f), new Vector2(1.71701f, 1.71701f));
+            player.HitFXMiss(new Vector2(2.598f, -2.956f), new Vector2(1.576043f, 1.576043f));
+            player.HitFXMiss(new Vector2(2.551f, -3.609f), new Vector2(1.200788f, 1.200788f));
 
-            ForkLifterPlayer.instance.FastEffectHit(type);
+            player.FastEffectHit(type);
 
             SoundByte.PlayOneShot("miss");
 
-            ForkLifterPlayer.instance.currentEarlyPeasOnFork++;
+            player.currentEarlyPeasOnFork++;
 
             Destroy(this.gameObject);
         }
@@ -146,30 +125,30 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         public void Late()
         {
             GameObject pea = new GameObject();
-            pea.transform.parent = ForkLifterPlayer.instance.late.transform;
+            pea.transform.parent = player.late.transform;
             pea.transform.localScale = Vector2.one;
 
             pea.transform.localPosition = Vector3.zero;
             pea.transform.localRotation = Quaternion.Euler(0, 0, 90);
 
-            for (int i = 0; i < ForkLifterPlayer.instance.late.transform.childCount; i++)
+            for (int i = 0; i < player.late.transform.childCount; i++)
             {
-                ForkLifterPlayer.instance.late.transform.GetChild(i).transform.localPosition = new Vector3(0, (-1.67f - (0.15724f * i)) + 0.15724f * ForkLifterPlayer.instance.currentLatePeasOnFork);
+                player.late.transform.GetChild(i).transform.localPosition = new Vector3(0, (-1.67f - (0.15724f * i)) + 0.15724f * player.currentLatePeasOnFork);
             }
 
             SpriteRenderer psprite = pea.AddComponent<SpriteRenderer>();
             psprite.sprite = game.peaHitSprites[type];
             psprite.sortingOrder = 20;
-            ForkLifterPlayer.instance.HitFXMiss(new Vector2(1.0424f, -4.032f), new Vector2(1.129612f, 1.129612f));
-            ForkLifterPlayer.instance.HitFXMiss(new Vector2(0.771f, -3.016f), new Vector2(1.71701f, 1.71701f));
-            ForkLifterPlayer.instance.HitFXMiss(new Vector2(2.598f, -2.956f), new Vector2(1.576043f, 1.576043f));
-            ForkLifterPlayer.instance.HitFXMiss(new Vector2(2.551f, -3.609f), new Vector2(1.200788f, 1.200788f));
+            player.HitFXMiss(new Vector2(1.0424f, -4.032f), new Vector2(1.129612f, 1.129612f));
+            player.HitFXMiss(new Vector2(0.771f, -3.016f), new Vector2(1.71701f, 1.71701f));
+            player.HitFXMiss(new Vector2(2.598f, -2.956f), new Vector2(1.576043f, 1.576043f));
+            player.HitFXMiss(new Vector2(2.551f, -3.609f), new Vector2(1.200788f, 1.200788f));
 
-            ForkLifterPlayer.instance.FastEffectHit(type);
+            player.FastEffectHit(type);
 
             SoundByte.PlayOneShot("miss");
 
-            ForkLifterPlayer.instance.currentLatePeasOnFork++;
+            player.currentLatePeasOnFork++;
             Destroy(this.gameObject);
         }
 
@@ -182,16 +161,11 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void Just(PlayerActionEvent caller, float state)
         {
-            if (state >= 1f)
-            {
+            if (state >= 1f) {
                 Late();
-            } 
-            else if (state <= -1f) 
-            {
+            }  else if (state <= -1f) {
                 Early();
-            }
-            else
-            {
+            } else {
                 Hit();
             }
         }

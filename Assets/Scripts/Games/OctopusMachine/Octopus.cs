@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         public bool cantBop;
         public bool isSqueezed;
         public bool isPreparing;
-        public bool queuePrepare;
+        public double queuePrepare;
         public double lastReportedBeat = 0f;
         double lastSqueezeBeat;
         bool isActive = true;
@@ -26,17 +26,17 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         void Awake()
         {
             game = OctopusMachine.instance;
+            queuePrepare = double.MaxValue;
         }
 
         void Update()
         {
-            if (queuePrepare && Conductor.instance.NotStopped())
-            {
-                if (!(isPreparing || isSqueezed || anim.IsPlayingAnimationName("Release") || anim.IsPlayingAnimationName("Pop")))
+            if (queuePrepare <= Conductor.instance.songPositionInBeatsAsDouble && Conductor.instance.NotStopped()) {
+                if (!(isPreparing || isSqueezed || anim.IsPlayingAnimationName("Release") || anim.IsPlayingAnimationName("Pop"))) 
                 {
-                    anim.DoScaledAnimationAsync("Prepare", 0.5f);
+                    anim.DoScaledAnimationFromBeatAsync("Prepare", 0.5f, queuePrepare);
                     isPreparing = true;
-                    queuePrepare = false;
+                    queuePrepare = double.MaxValue;
                 }
             }
 
@@ -116,9 +116,9 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
             if (action == "Squeeze") lastSqueezeBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
             anim.DoScaledAnimationAsync(action, 0.5f);
-            isSqueezed = (action == "Squeeze");
-            isPreparing =
-            queuePrepare = false;
+            isSqueezed = action == "Squeeze";
+            isPreparing = false;
+            queuePrepare = double.MaxValue;
         }
 
         public void AnimationColor(int poppingColor)
