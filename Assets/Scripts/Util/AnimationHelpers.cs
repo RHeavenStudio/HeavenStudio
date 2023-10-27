@@ -66,8 +66,8 @@ namespace HeavenStudio.Util
             if (!double.IsNaN(startBeat)) {
                 var cond = Conductor.instance;
                 var animClip = Array.Find(anim.runtimeAnimatorController.animationClips, x => x.name == animName);
-                double animLength = cond.GetBeatFromSongPos(cond.GetSongPosFromBeat(startBeat) + animClip.length);
-                pos = cond.GetPositionFromBeat(startBeat, animLength - startBeat) * timeScale;
+                double animLength = cond.SecsToBeats(animClip.length, cond.GetBpmAtBeat(startBeat));
+                pos = cond.GetPositionFromBeat(startBeat, animLength) * timeScale;
             } else {
                 Debug.LogWarning("DoScaledAnimationFromBeatAsync()'s startBeat was NaN; using DoScaledAnimationAsync() instead.");
             }
