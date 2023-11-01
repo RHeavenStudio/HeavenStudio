@@ -145,8 +145,7 @@ namespace HeavenStudio.Games
 
             if (passedTurns.Count > 0)
             {
-                foreach (var pass in passedTurns)
-                {
+                foreach (var pass in passedTurns) {
                     PassTurnStandalone(pass);
                 }
                 passedTurns.Clear();
@@ -199,22 +198,18 @@ namespace HeavenStudio.Games
                         }
                     }));
                 }
-                BeatAction.New(gameObject, bops);
+                BeatAction.New(this, bops);
             }
         }
 
         public static void PreInterval(double beat, float length, bool autoPassTurn)
         {
-            SoundByte.PlayOneShot("games/meatGrinder/startSignal", beat - 1);
+            SoundByte.PlayOneShotGame(sfxName + "startSignal", beat - 1, forcePlay: true);
 
-            if (GameManager.instance.currentGame == "meatGrinder") 
-            {
+            if (GameManager.instance.currentGame == "meatGrinder")  {
                 instance.StartInterval(beat, length, beat, autoPassTurn);
-            }
-            else
-            {
-                queuedIntervals.Add(new QueuedInterval()
-                {
+            } else {
+                queuedIntervals.Add(new QueuedInterval() {
                     beat = beat,
                     length = length,
                     autoPassTurn = autoPassTurn
@@ -247,7 +242,7 @@ namespace HeavenStudio.Games
                 }
             }
 
-            BeatAction.New(gameObject, actions);
+            BeatAction.New(this, actions);
 
             if (autoPassTurn)
             {
@@ -269,17 +264,14 @@ namespace HeavenStudio.Games
         public void MeatCall() 
         {
             BossAnim.DoScaledAnimationAsync("BossCall", 0.5f);
-            SoundByte.PlayOneShotGame(sfxName+"signal");
+            SoundByte.PlayOneShotGame(sfxName + "signal");
         }
 
         public static void PrePassTurn(double beat)
         {
-            if (GameManager.instance.currentGame == "meatGrinder")
-            {
+            if (GameManager.instance.currentGame == "meatGrinder") {
                 instance.PassTurnStandalone(beat);
-            }
-            else
-            {
+            } else {
                 passedTurns.Add(beat);
             }
         }
@@ -300,16 +292,15 @@ namespace HeavenStudio.Games
             for (int i = 0; i < allCallEvents.Count; i++)
             {
                 double relativeBeat = allCallEvents[i].beat - intervalBeat;
-                meatCalls.Add(new BeatAction.Action(beat + relativeBeat - 1, delegate
-                {
-                    MeatToss Meat = Instantiate(MeatBase, gameObject.transform).GetComponent<MeatToss>();
+                meatCalls.Add(new BeatAction.Action(beat + relativeBeat - 1, delegate {
+                    MeatToss Meat = Instantiate(MeatBase, transform).GetComponent<MeatToss>();
                     Meat.startBeat = beat;
                     Meat.cueLength = relativeBeat;
                     Meat.cueBased = false;
                     Meat.meatType = "LightMeat";
                 }));
             }
-            BeatAction.New(gameObject, meatCalls);
+            BeatAction.New(this, meatCalls);
         }
     }
 }
