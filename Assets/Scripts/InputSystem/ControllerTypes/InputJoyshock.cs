@@ -11,7 +11,7 @@ namespace HeavenStudio.InputSystem.Loaders
 {
     public static class InputJoyshockInitializer
     {
-        [LoadOrder(1)]
+        [LoadOrder(2)]
         public static InputController[] Initialize()
         {
             InputJoyshock.joyshocks = new();
@@ -120,7 +120,8 @@ namespace HeavenStudio.InputSystem
             0x888888
         };
 
-        static int[] defaultMappings {
+        static int[] defaultMappings
+        {
             get
             {
                 return new[]
@@ -140,7 +141,8 @@ namespace HeavenStudio.InputSystem
                 };
             }
         }
-        static int[] defaultMappingsL {
+        static int[] defaultMappingsL
+        {
             get
             {
                 return new[]
@@ -161,7 +163,8 @@ namespace HeavenStudio.InputSystem
             }
         }
 
-        static int[] defaultMappingsR {
+        static int[] defaultMappingsR
+        {
             get
             {
                 return new[]
@@ -277,7 +280,7 @@ namespace HeavenStudio.InputSystem
             "Mic",
         };
 
-        static readonly float debounceTime = 1f/90f;
+        static readonly float debounceTime = 1f / 90f;
 
         public static Dictionary<int, InputJoyshock> joyshocks;
 
@@ -335,7 +338,7 @@ namespace HeavenStudio.InputSystem
             if (action < 0 || action >= BINDS_MAX) return -1;
             ControlBindings actionMap = currentBindings;
             if (actionMap.Pad[action] > ButtonMaskSR) return -1;
-            
+
             return actionMap.Pad[action];
         }
 
@@ -362,6 +365,10 @@ namespace HeavenStudio.InputSystem
                 timestamp = (DateTime.Now - js.startTime).TotalSeconds,
                 input = state
             });
+
+
+            js.joyImuStateCurrent = imuState;
+            js.joyImuStateLast = lastImuState;
         }
 
         public override void InitializeController()
@@ -417,7 +424,7 @@ namespace HeavenStudio.InputSystem
                 buttonStates[i].isDelta = false;
             }
 
-            foreach(TimestampedState state in lastInputStack)
+            foreach (TimestampedState state in lastInputStack)
             {
                 joyBtStateCurrent = state.input;
 
@@ -480,30 +487,28 @@ namespace HeavenStudio.InputSystem
                 xAxis = joyBtStateCurrent.stickLX;
                 yAxis = joyBtStateCurrent.stickLY;
             }
-            
+
             directionStateLast = directionStateCurrent;
             directionStateCurrent = 0;
-            directionStateCurrent |= ((yAxis >= stickDeadzone) ? (1 << ((int) InputDirection.Up)) : 0);
-            directionStateCurrent |= ((yAxis <= -stickDeadzone) ? (1 << ((int) InputDirection.Down)) : 0);
-            directionStateCurrent |= ((xAxis >= stickDeadzone) ? (1 << ((int) InputDirection.Right)) : 0);
-            directionStateCurrent |= ((xAxis <= -stickDeadzone) ? (1 << ((int) InputDirection.Left)) : 0);
+            directionStateCurrent |= ((yAxis >= stickDeadzone) ? (1 << ((int)InputDirection.Up)) : 0);
+            directionStateCurrent |= ((yAxis <= -stickDeadzone) ? (1 << ((int)InputDirection.Down)) : 0);
+            directionStateCurrent |= ((xAxis >= stickDeadzone) ? (1 << ((int)InputDirection.Right)) : 0);
+            directionStateCurrent |= ((xAxis <= -stickDeadzone) ? (1 << ((int)InputDirection.Left)) : 0);
             //Debug.Log("stick direction: " + directionStateCurrent + "| x axis: " + xAxis + " y axis: " + yAxis);
 
             lastInputStack.Clear();
         }
 
         public override void OnSelected()
-        { 
+        {
             Task.Run(() => SelectionVibrate());
         }
 
         async void SelectionVibrate()
         {
             JslSetRumbleFrequency(GetHandle(), 0.5f, 0.5f, 80f, 160f);
-            await Task.Delay(50);
-            JslSetRumbleFrequency(GetHandle(), 0.75f, 0.75f, 160f, 320f);
-            await Task.Delay(50);
-            JslSetRumbleFrequency(GetHandle(), 0f, 0f, 0f, 0f);
+            await Task.Delay(100);
+            JslSetRumbleFrequency(GetHandle(), 0f, 0f, 160f, 320f);
         }
 
         public override string GetDeviceName()
@@ -592,6 +597,7 @@ namespace HeavenStudio.InputSystem
                     binds.Pad = defaultMappings;
                     break;
             }
+            binds.PointerSensitivity = 3;
             return binds;
         }
 
@@ -651,15 +657,15 @@ namespace HeavenStudio.InputSystem
                 }
             }
             if (otherHalf != null)
-            { 
+            {
                 return otherHalf.GetLastActionDown();
             }
             return -1;
         }
 
-        public override bool GetAction(int button)
+        public override bool GetAction(ControlStyles style, int button)
         {
-            if (button == -1) {return false;}
+            if (button == -1) { return false; }
             if (otherHalf != null)
             {
                 return actionStates[button].pressed || otherHalf.actionStates[button].pressed;
@@ -667,10 +673,10 @@ namespace HeavenStudio.InputSystem
             return actionStates[button].pressed;
         }
 
-        public override bool GetActionDown(int button, out double dt)
+        public override bool GetActionDown(ControlStyles style, int button, out double dt)
         {
-            if (button == -1) {dt = 0; return false;}
-            if (otherHalf != null && otherHalf.GetActionDown(button, out dt))
+            if (button == -1) { dt = 0; return false; }
+            if (otherHalf != null && otherHalf.GetActionDown(style, button, out dt))
             {
                 return true;
             }
@@ -678,10 +684,10 @@ namespace HeavenStudio.InputSystem
             return actionStates[button].pressed && actionStates[button].isDelta;
         }
 
-        public override bool GetActionUp(int button, out double dt)
+        public override bool GetActionUp(ControlStyles style, int button, out double dt)
         {
-            if (button == -1) {dt = 0; return false;}
-            if (otherHalf != null && otherHalf.GetActionUp(button, out dt))
+            if (button == -1) { dt = 0; return false; }
+            if (otherHalf != null && otherHalf.GetActionUp(style, button, out dt))
             {
                 return true;
             }
@@ -705,13 +711,39 @@ namespace HeavenStudio.InputSystem
                     return joyBtStateCurrent.stickRX;
                 case InputAxis.AxisRStickY:
                     return joyBtStateCurrent.stickRY;
-                case InputAxis.TouchpadX:   //isn't updated for now, so always returns 0f
-                    //return joyTouchStateCurrent.t0X;
-                case InputAxis.TouchpadY:
-                    //return joyTouchStateCurrent.t0Y;
+                case InputAxis.PointerX:   //isn't updated for now, so always returns 0f
+                                            //return joyTouchStateCurrent.t0X;
+                case InputAxis.PointerY:
+                //return joyTouchStateCurrent.t0Y;
                 default:
                     return 0f;
             }
+        }
+
+        public override Vector3 GetVector(InputVector vec)
+        {
+            switch (vec)
+            {
+                case InputVector.LStick:
+                    return new Vector3(joyBtStateCurrent.stickLX, joyBtStateCurrent.stickLY, 0f);
+                case InputVector.RStick:
+                    return new Vector3(joyBtStateCurrent.stickRX, joyBtStateCurrent.stickRY, 0f);
+                case InputVector.Pointer:
+                    return new Vector3(joyTouchStateCurrent.t0X, joyTouchStateCurrent.t0Y, 0f);
+                case InputVector.Accelerometer:
+                    return new Vector3(joyImuStateCurrent.accelX, joyImuStateCurrent.accelY, joyImuStateCurrent.accelZ);
+                case InputVector.Gyroscope:
+                    return new Vector3(joyImuStateCurrent.gyroX, joyImuStateCurrent.gyroY, joyImuStateCurrent.gyroZ);
+            }
+            return Vector3.zero;
+        }
+
+        public override Vector2 GetPointer()
+        {
+            Camera cam = GameManager.instance.CursorCam;
+            Vector3 rawPointerPos = Input.mousePosition;
+            rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
+            return cam.ScreenToWorldPoint(rawPointerPos);
         }
 
         public override bool GetHatDirection(InputDirection direction)
@@ -736,9 +768,9 @@ namespace HeavenStudio.InputSystem
             }
             if (otherHalf != null)
             {
-                return GetAction(bt) || BitwiseUtils.WantCurrent(otherHalf.directionStateCurrent, 1 << (int) direction) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int) direction);
+                return GetAction(ControlStyles.Pad, bt) || BitwiseUtils.WantCurrent(otherHalf.directionStateCurrent, 1 << (int)direction) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int)direction);
             }
-            return GetAction(bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int) direction);
+            return GetAction(ControlStyles.Pad, bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int)direction);
         }
 
         public override bool GetHatDirectionDown(InputDirection direction, out double dt)
@@ -762,13 +794,13 @@ namespace HeavenStudio.InputSystem
                     dt = 0;
                     return false;
             }
-            bool btbool = GetActionDown(bt, out dt);
+            bool btbool = GetActionDown(ControlStyles.Pad, bt, out dt);
             if (!btbool) dt = 0;
             if (otherHalf != null)
             {
                 return btbool || BitwiseUtils.WantCurrentAndNotLast(otherHalf.directionStateCurrent, otherHalf.directionStateLast, 1 << (int)direction) || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
             }
-            return btbool || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
+            return btbool || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
         }
 
         public override bool GetHatDirectionUp(InputDirection direction, out double dt)
@@ -792,13 +824,13 @@ namespace HeavenStudio.InputSystem
                     dt = 0;
                     return false;
             }
-            bool btbool = GetActionUp(bt, out dt);
+            bool btbool = GetActionUp(ControlStyles.Pad, bt, out dt);
             if (!btbool) dt = 0;
             if (otherHalf != null)
             {
-                return btbool || BitwiseUtils.WantNotCurrentAndLast(otherHalf.directionStateCurrent, otherHalf.directionStateLast, 1 << (int) direction) || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
+                return btbool || BitwiseUtils.WantNotCurrentAndLast(otherHalf.directionStateCurrent, otherHalf.directionStateLast, 1 << (int)direction) || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
             }
-            return btbool || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
+            return btbool || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
         }
 
         public override void SetPlayer(int? playerNum)
@@ -812,16 +844,16 @@ namespace HeavenStudio.InputSystem
                 return;
             }
             this.playerNum = playerNum;
-            int ledMask = (int) this.playerNum;
+            int ledMask = (int)this.playerNum;
             if (type == TypeDualSense)
             {
                 if (playerNum <= 5)
                 {
-                    ledMask = DualSensePlayerMask[Math.Max((int) this.playerNum + 1, 1)];
+                    ledMask = DualSensePlayerMask[Math.Max((int)this.playerNum + 1, 1)];
                 }
             }
             JslSetPlayerNumber(joyshockHandle, ledMask);
-            lightbarColour = GetLightbarColourForPlayer((int) this.playerNum);
+            lightbarColour = GetLightbarColourForPlayer((int)this.playerNum);
             JslSetLightColour(joyshockHandle, lightbarColour);
         }
 
@@ -937,6 +969,97 @@ namespace HeavenStudio.InputSystem
         public InputJoyshock GetOtherHalf()
         {
             return otherHalf;
+        }
+
+        public override bool GetFlick(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSlide(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override void SetMaterialProperties(Material m)
+        {
+            Color colour;
+            switch (GetDeviceName())
+            {
+                case "Joy-Con (L)":
+                case "Joy-Con (R)":
+                    m.SetColor("_BodyColor", GetBodyColor());
+                    m.SetColor("_BtnColor", GetButtonColor());
+                    m.SetColor("_LGripColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
+                    m.SetColor("_RGripColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
+                    break;
+                case "Joy-Con Pair":
+                    m.SetColor("_BodyColor", splitType == SplitRight ? GetButtonColor() : GetOtherHalf().GetButtonColor());
+                    m.SetColor("_BtnColor", splitType == SplitLeft ? GetButtonColor() : GetOtherHalf().GetButtonColor());
+                    m.SetColor("_LGripColor", GetLeftGripColor());
+                    m.SetColor("_RGripColor", GetRightGripColor());
+                    break;
+                case "DualShock 4":
+                    m.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#E1E2E4", out colour) ? colour : Color.white);
+                    m.SetColor("_BtnColor", ColorUtility.TryParseHtmlString("#414246", out colour) ? colour : Color.white);
+                    m.SetColor("_LGripColor", GetLightbarColour());
+                    m.SetColor("_RGripColor", GetLightbarColour());
+                    break;
+                case "DualSense":
+                    m.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#DEE0EB", out colour) ? colour : Color.white);
+                    m.SetColor("_BtnColor", ColorUtility.TryParseHtmlString("#272D39", out colour) ? colour : Color.white);
+                    m.SetColor("_LGripColor", GetLightbarColour());
+                    m.SetColor("_RGripColor", GetLightbarColour());
+                    break;
+                default:
+                    m.SetColor("_BodyColor", GetBodyColor());
+                    m.SetColor("_BtnColor", GetButtonColor());
+                    m.SetColor("_LGripColor", GetLeftGripColor());
+                    m.SetColor("_RGripColor", GetRightGripColor());
+                    break;
+            }
+        }
+
+        public override bool GetCurrentStyleSupported()
+        {
+            return PlayerInput.CurrentControlStyle is ControlStyles.Pad; // or ControlStyles.Baton
+        }
+
+        public override ControlStyles GetDefaultStyle()
+        {
+            return ControlStyles.Pad;
+        }
+
+        public override bool GetSqueezeDown(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueezeUp(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueeze()
+        {
+            return false;
+        }
+
+        public override void TogglePointerLock(bool locked)
+        {
+        }
+
+        public override void RecentrePointer()
+        {
+        }
+
+        public override bool GetPointerLeftRight()
+        {
+            return false;
         }
     }
 }

@@ -60,20 +60,15 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                     Destroy(gameObject);
                 }
             }
+            if (PlayerInput.GetIsAction(RhythmTweezers.InputAction_Press) && !game.IsExpectingInputNow(RhythmTweezers.InputAction_Press))
+            {
+                DropHeldHair();
+                anim.Play("Tweezers_Pluck", 0, 0);
+            }
         }
 
         private void LateUpdate()
         {
-            if (PlayerInput.Pressed(true))
-            {
-                if (!pluckingThisFrame) // Did you do a successful pluck earlier in the frame?
-                {
-                    DropHeldHair();
-                    anim.Play("Tweezers_Pluck", 0, 0);
-                }
-            }
-
-            pluckingThisFrame = false;
         }
 
         public void Pluck(bool ace, Hair hair)
@@ -110,7 +105,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 anim.Play("Tweezers_Pluck_Fail", 0, 0);
             }
 
-            pluckingThisFrame = true; // Prevents standard pluck from playing in LateUpdate().
+            // pluckingThisFrame = true; // Prevents standard pluck from playing in LateUpdate().
             holdingHair = true;
         }
 
@@ -138,7 +133,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 anim.Play("Tweezers_Pluck_Success", 0, 0);
             }
 
-            pluckingThisFrame = true;
+            // pluckingThisFrame = true;
             holdingHair = true;
         }
 

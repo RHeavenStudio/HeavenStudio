@@ -14,6 +14,7 @@ namespace HeavenStudio
         [SerializeField] Animator openingAnim;
         [SerializeField] TMP_Text buildText;
         [SerializeField] TMP_Text versionDisclaimer;
+        [SerializeField] bool enableSecondDisclaimer;
 
         public static string OnOpenFile;
         bool fastBoot = false;
@@ -43,10 +44,10 @@ namespace HeavenStudio
                 buildText.text = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
             #endif
 
-            // if (Application.platform is RuntimePlatform.OSXPlayer or RuntimePlatform.OSXEditor)
-            // {
+            if ((Application.platform is RuntimePlatform.OSXPlayer or RuntimePlatform.OSXEditor) || !enableSecondDisclaimer)
+            {
                 versionDisclaimer.text = "";
-            // }
+            }
             // else
             // {
             //     string ver = "<color=#FFFFCC>If you're coming from an older Heaven Studio build, copy your settings configs over from\n<color=#FFFF00>";

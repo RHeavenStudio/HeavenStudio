@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -207,6 +208,34 @@ namespace HeavenStudio.Games
 
         public static WorkingDough instance;
 
+        const int IA_AltPress = IAMAXCAT;
+        protected static bool IA_TouchNrmPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Nrm =
+            new("RvlDoughAlt", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchNrmPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlDoughAlt", new int[] { IA_AltPress, IA_AltPress, IA_AltPress },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+
         void Awake()
         {
             instance = this;
@@ -274,7 +303,7 @@ namespace HeavenStudio.Games
             {
                 PassTurn(beat + interval, interval, beat);
             }
-            BeatAction.New(ballTransporterLeftNPC, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1, delegate
                 {
@@ -314,7 +343,7 @@ namespace HeavenStudio.Games
 
         private void PassTurn(double beat, double length, double startBeat)
         {
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1, delegate
                 {
@@ -374,7 +403,7 @@ namespace HeavenStudio.Games
             var ballComponent = spawnedBall.GetComponent<NPCDoughBall>();
             spawnedBall.SetActive(true);
             ballComponent.Init(beat, hasGandw);
-            BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 //Jump and play sound
                 new BeatAction.Action(beat, delegate { arrowSRLeftNPC.sprite = redArrowSprite; }),
@@ -402,7 +431,7 @@ namespace HeavenStudio.Games
             spawnedBall.SetActive(true);
             ballComponent.Init(beat, isBig, hasGandw);
 
-            BeatAction.New(doughDudesPlayer, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { arrowSRLeftPlayer.sprite = redArrowSprite; }),
                 new BeatAction.Action(beat + 0.1f, delegate { arrowSRLeftPlayer.sprite = whiteArrowSprite; }),
@@ -463,12 +492,12 @@ namespace HeavenStudio.Games
                 }
                 passedTurns.Clear();
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Nrm) && !IsExpectingInputNow(InputAction_Nrm))
             {
                 doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("SmallDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/smallPlayer");
             }
-            else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+            else if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt))
             {
                 doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("BigDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/bigPlayer");
@@ -483,7 +512,7 @@ namespace HeavenStudio.Games
             var ballComponent = spawnedBall.GetComponent<BGBall>();
             spawnedBall.SetActive(true);
             ballComponent.Init(beat, hasGandw);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 9f, delegate { if (!spaceshipRisen && !bgDisabled) spaceshipAnimator.Play("AbsorbBall", 0, 0); }),
             });
@@ -501,7 +530,7 @@ namespace HeavenStudio.Games
             liftingLength = length;
             liftingDoughDudes = true;
             doughDudesHolderAnim.DoScaledAnimation(liftingAnimName, liftingStartBeat, liftingLength);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.1f, delegate { liftingDoughDudes = false; }),
             });
@@ -517,7 +546,7 @@ namespace HeavenStudio.Games
                 spaceshipLights.GetComponent<Animator>().Play("SpaceshipLights", 0, 0);
             }
             spaceshipAnimator.Play("SpaceshipShake", 0, 0);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate { spaceshipAnimator.Play("SpaceshipLaunch", 0, 0); }),
                 new BeatAction.Action(beat + length, delegate { SoundByte.PlayOneShotGame("workingDough/LaunchRobot"); }),
@@ -537,7 +566,7 @@ namespace HeavenStudio.Games
                 spaceshipLights.GetComponent<Animator>().Play("SpaceshipLights", 0, 0);
             }
             spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.1f, delegate { spaceshipRising = false; }),
             });
@@ -552,7 +581,7 @@ namespace HeavenStudio.Games
             gandMovingStartBeat = beat;
             gandwMovingAnimName = shouldExit ? "GANDWLeave" : "GANDWEnter";
             gandwAnim.DoScaledAnimation(gandwMovingAnimName, gandMovingStartBeat, gandMovingLength);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.1f, delegate { gandwMoving = false; }),
                 new BeatAction.Action(beat + length, delegate { gandwHasEntered = shouldExit ? false : true; }),

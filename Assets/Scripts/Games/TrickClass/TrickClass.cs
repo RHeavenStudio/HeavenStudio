@@ -96,7 +96,11 @@ namespace HeavenStudio.Games
         double playerBopStart = double.MinValue;
         double girlBopStart = double.MinValue;
         bool showBubble = true;
+        bool playerReady;
 
+        public static PlayerInput.InputAction InputAction_TouchPressing =
+            new("PcoTrickTouching", new int[] { IAEmptyCat, IAPressingCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicPressing, IA_Empty);
 
         void OnDestroy()
         {
@@ -117,7 +121,7 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && goBop)
             {
-                if (cond.songPositionInBeatsAsDouble > playerBopStart)
+                if ((!playerReady) && cond.songPositionInBeatsAsDouble > playerBopStart)
                     playerAnim.DoScaledAnimationAsync("Bop");
 
                 if (cond.songPositionInBeatsAsDouble > girlBopStart)
@@ -130,7 +134,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var input in queuedInputs)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(input.beat - 1f, delegate
                             {
@@ -155,7 +159,18 @@ namespace HeavenStudio.Games
                 }
             }
 
-            if (PlayerInput.Pressed() && !IsExpectingInputNow() && (playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble))
+            if (PlayerInput.GetIsAction(InputAction_TouchPressing) && (!playerReady) && (playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble))
+            {
+                playerAnim.DoScaledAnimationAsync("Prepare");
+                playerReady = true;
+            }
+            if ((!PlayerInput.GetIsAction(InputAction_TouchPressing)) && playerReady && (playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble))
+            {
+                playerAnim.DoScaledAnimationAsync("UnPrepare");
+                playerReady = false;
+            }
+
+            if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress) && (playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble))
             {
                 PlayerDodge(true);
                 playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.6f;
@@ -170,11 +185,11 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
-                            if (cond.songPositionInBeatsAsDouble > playerBopStart)
+                            if ((!playerReady) && cond.songPositionInBeatsAsDouble > playerBopStart)
                                 playerAnim.DoScaledAnimationAsync("Bop");
 
                             if (cond.songPositionInBeatsAsDouble > girlBopStart)
@@ -194,7 +209,7 @@ namespace HeavenStudio.Games
         {
             if (GameManager.instance.currentGame == "trickClass")
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - 1, delegate 
                 {
@@ -281,12 +296,14 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("trickClass/player_dodge");
             playerAnim.DoScaledAnimationAsync("Dodge", slow ? 0.6f : 1f);
             playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
+            playerReady = false;
             
         }
 
         public void PlayerDodgeNg()
         {
             playerAnim.DoScaledAnimationAsync("DodgeNg");
+            playerReady = false;
             playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
             playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.15f;
         }
@@ -294,6 +311,7 @@ namespace HeavenStudio.Games
         public void PlayerThrough()
         {
             playerAnim.DoScaledAnimationAsync("Through");
+            playerReady = false;
             playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
             playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.15f;
         }

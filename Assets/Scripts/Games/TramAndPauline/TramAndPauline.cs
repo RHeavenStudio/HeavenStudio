@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("tramAndPauline", "Tram & Pauline", "adb5e7", false, false, new List<GameAction>()
+            return new Minigame("tramAndPauline", "Tram & Pauline", "adb5e7", "ca8b17", "c14fae", false, false, new List<GameAction>()
             {
                 new GameAction("prepare", "Prepare")
                 {
@@ -96,6 +97,61 @@ namespace HeavenStudio.Games
         private float curtainLength = 0;
         private bool goingUp = true;
         private Util.EasingFunction.Ease curtainEase = Util.EasingFunction.Ease.Linear;
+
+        const int IALeft = 0;
+        const int IARight = 1;
+        protected static bool IA_PadLeft(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_BatonLeft(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.West, out dt);
+        }
+        protected static bool IA_TouchLeft(out double dt)
+        {
+            bool want = PlayerInput.GetTouchDown(InputController.ActionsTouch.Left, out dt);
+            bool simul = false;
+            if (!want)
+            {
+                simul = PlayerInput.GetTouchDown(InputController.ActionsTouch.Right, out dt)
+                            && instance.IsExpectingInputNow(InputAction_Left)
+                            && instance.IsExpectingInputNow(InputAction_Right);
+            }
+            return want || simul;
+        }
+
+        protected static bool IA_PadRight(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt);
+        }
+        protected static bool IA_BatonRight(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.East, out dt);
+        }
+        protected static bool IA_TouchRight(out double dt)
+        {
+            bool want = PlayerInput.GetTouchDown(InputController.ActionsTouch.Right, out dt);
+            bool simul = false;
+            if (!want)
+            {
+                simul = PlayerInput.GetTouchDown(InputController.ActionsTouch.Left, out dt)
+                            && instance.IsExpectingInputNow(InputAction_Left)
+                            && instance.IsExpectingInputNow(InputAction_Right);
+            }
+            return want || simul;
+        }
+
+        public static PlayerInput.InputAction InputAction_Left =
+            new("AgbTramLeft", new int[] { IALeft, IALeft, IALeft },
+            IA_PadLeft, IA_TouchLeft, IA_BatonLeft);
+
+        public static PlayerInput.InputAction InputAction_Right =
+            new("AgbTramRight", new int[] { IARight, IARight, IARight },
+            IA_PadRight, IA_TouchRight, IA_BatonRight);
 
         private void Awake()
         {
@@ -226,14 +282,14 @@ namespace HeavenStudio.Games
         {
             SoundByte.PlayOneShotGame("tramAndPauline/jump" + UnityEngine.Random.Range(1, 3));
             tram.Jump(beat);
-            ScheduleInput(beat, 1, InputType.DIRECTION_DOWN, audienceReact ? TramJustAudience : TramJust, Empty, Empty);
+            ScheduleInput(beat, 1, InputAction_Left, audienceReact ? TramJustAudience : TramJust, Empty, Empty);
         }
 
         private void PaulineJump(double beat, bool audienceReact)
         {
             SoundByte.PlayOneShotGame("tramAndPauline/jump" + UnityEngine.Random.Range(1, 3));
             pauline.Jump(beat);
-            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, audienceReact ? PaulineJustAudience : PaulineJust, Empty, Empty);
+            ScheduleInput(beat, 1, InputAction_Right, audienceReact ? PaulineJustAudience : PaulineJust, Empty, Empty);
         }
 
         private void TramJust(PlayerActionEvent caller, float state)
@@ -267,7 +323,7 @@ namespace HeavenStudio.Games
                 return;
             }
             SoundByte.PlayOneShotGame("tramAndPauline/transformTram");
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1, delegate
                 {
@@ -286,7 +342,7 @@ namespace HeavenStudio.Games
                 return;
             }
             SoundByte.PlayOneShotGame("tramAndPauline/transformPauline");
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1, delegate
                 {

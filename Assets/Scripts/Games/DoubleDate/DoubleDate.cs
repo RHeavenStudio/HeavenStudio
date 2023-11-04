@@ -96,6 +96,13 @@ namespace HeavenStudio.Games
             public BallType type;
         }
 
+        public static PlayerInput.InputAction InputAction_TouchPress =
+            new("RvlDateTouchPress", new int[] { IAEmptyCat, IAPressCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicPress, IA_Empty);
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("RvlDateTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
+
         // Editor gizmo to draw trajectories
         new void OnDrawGizmos()
         {
@@ -167,7 +174,15 @@ namespace HeavenStudio.Games
                     queuedBalls.Clear();
                 }
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_TouchPress))
+            {
+                boyAnim.DoScaledAnimationAsync("Ready", 1f);
+            }
+            if (PlayerInput.GetIsAction(InputAction_TouchRelease) && !IsExpectingInputNow(InputAction_FlickPress))
+            {
+                boyAnim.DoScaledAnimationAsync("UnReady", 1f);
+            }
+            if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress))
             {
                 SoundByte.PlayOneShotGame("doubleDate/kick_whiff");
                 Kick(true, true, false);
@@ -187,7 +202,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate { SingleBop(); })
                     });
@@ -220,7 +235,7 @@ namespace HeavenStudio.Games
                 else if (weaselsHappy) weasels.Happy();
                 if (!forceNoLeaves)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1f, delegate
                         {
@@ -321,7 +336,7 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 lastHitWeasel = Conductor.instance.songPositionInBeatsAsDouble;
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - (0.25f/3f), delegate { weasels.Hit(beat); }),
                 });
@@ -329,7 +344,7 @@ namespace HeavenStudio.Games
             else
             {
                 lastHitWeasel = Conductor.instance.songPositionInBeatsAsDouble;
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 0.25, delegate { weasels.Hide(beat + 0.25f); }),
                 });

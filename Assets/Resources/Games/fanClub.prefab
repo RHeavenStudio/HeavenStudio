@@ -27064,7 +27064,7 @@ MonoBehaviour:
         pitch: 1
         volume: 1
         looping: 0
-        offset: 0.055
+        offset: 0.02
         parameters: []
   - name: arisa_iina_fast
     sequence:
@@ -27083,7 +27083,7 @@ MonoBehaviour:
         pitch: 1
         volume: 1
         looping: 0
-        offset: 0.055
+        offset: 0.025
         parameters: []
   - name: crowd_big_ready
     sequence:
@@ -27165,7 +27165,6 @@ MonoBehaviour:
         parameters: []
   EligibleHits: []
   scheduledInputs: []
-  firstEnable: 0
   StageAnimator: {fileID: 22498285944424125}
   Arisa: {fileID: 3728697055337045071}
   ArisaRootMotion: {fileID: 2223479141072930853}

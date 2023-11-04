@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             anim = GetComponent<Animator>();
             tweezers = tweezer;
             inputBeat = beat + length;
-            game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, StartJust, StartMiss, Out);
+            game.ScheduleInput(beat, length, RhythmTweezers.InputAction_Press, StartJust, StartMiss, Out);
         }
 
         private void Update()
@@ -46,7 +46,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(inputBeat, 0.5f);
                 anim.Play("LoopPull", 0, normalizedBeat);
                 tweezers.anim.Play("Tweezers_LongPluck", 0, normalizedBeat);
-                if (!game.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP) && PlayerInput.PressedUp(true) && normalizedBeat < 1f)
+                if (!game.IsExpectingInputNow(RhythmTweezers.InputAction_Release) && PlayerInput.GetIsAction(RhythmTweezers.InputAction_Release) && normalizedBeat < 1f)
                 {
                     EndEarly();
                     endEvent.Disable();
@@ -92,7 +92,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             }
             pullSound = SoundByte.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
             pluckState = 1;
-            endEvent = game.ScheduleInput(inputBeat, 0.5f, InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP, EndJust, Out, Out);
+            endEvent = game.ScheduleInput(inputBeat, 0.5f, RhythmTweezers.InputAction_Release, EndJust, Out, Out);
         }
 
         private void StartMiss(PlayerActionEvent caller) 

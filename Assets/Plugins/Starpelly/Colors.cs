@@ -16,6 +16,7 @@ namespace Starpelly
         /// </summary>
         public static Color Hex2RGB(this string hex)
         {
+            if (hex is null or "") return Color.black;
             try
             {
                 hex = hex.Replace("0x", "");//in case the string is formatted 0xFFFFFF
@@ -25,7 +26,7 @@ namespace Starpelly
                 byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
                 byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
                 //Only use alpha if the string has enough characters
-                if (hex.Length == 8)
+                if (hex.Length >= 8)
                 {
                     a = byte.Parse(hex.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
                 }

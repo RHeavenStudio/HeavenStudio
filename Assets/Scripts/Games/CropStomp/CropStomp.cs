@@ -55,7 +55,10 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("threshold", new EntityTypes.Integer(1, 80, 8), "Threshold", "For each time the threshold is met a new plant will appear in the veggie bag."),
                         new Param("limit", new EntityTypes.Integer(1, 1000, 80), "Limit", "What is the limit for plants collected?"),
-                        new Param("force", false, "Force Amount of Collected Plants"),
+                        new Param("force", false, "Force Amount of Collected Plants", "", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "forceAmount" })
+                        }),
                         new Param("forceAmount", new EntityTypes.Integer(0, 1000, 0), "Force Amount")
                     }
                 }
@@ -116,6 +119,10 @@ namespace HeavenStudio.Games
 
         public static CropStomp instance;
 
+        public static PlayerInput.InputAction InputAction_Flick =
+            new("NtrStompFlick", new int[] { IAEmptyCat, IAFlickCat, IAEmptyCat },
+            IA_Empty, IA_TouchFlick, IA_Empty);
+
         private void Awake()
         {
             instance = this;// Finding grass sprite width for grass scrolling.
@@ -168,7 +175,7 @@ namespace HeavenStudio.Games
                 startBeat = inactiveStart + (stepsPassed * 2f);
 
                 // Cue the marching proper to begin when applicable.
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat - 0.25f, delegate { StartMarching(startBeat); })
                 });
@@ -299,6 +306,15 @@ namespace HeavenStudio.Games
                 }
             }
 
+            if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !IsExpectingInputNow(InputAction_BasicRelease))
+            {
+                bodyAnim.Play("Raise");
+            }
+            if (PlayerInput.GetIsAction(InputAction_Flick) && !IsExpectingInputNow(InputAction_FlickRelease))
+            {
+                bodyAnim.Play("Pick");
+            }
+
             if (cameraLocked) return;
 
             // Object scroll.
@@ -327,13 +343,6 @@ namespace HeavenStudio.Games
         {
             if (!isMarching)
                 return;
-
-            if (PlayerInput.PressedUp())
-            {
-                // Don't play raise animation if successfully flicked.
-                if (!isFlicking)
-                    bodyAnim.Play("Raise");
-            }
 
             isFlicking = false;
         }

@@ -45,20 +45,20 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void LateUpdate()
         {
-            if (PlayerInput.Pressed() && !ForkLifter.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(ForkLifter.InputAction_BasicPress, out _) && !ForkLifter.instance.IsExpectingInputNow(ForkLifter.InputAction_BasicPress.inputLockCategory))
             {
                 Stab(null);
             }
 
-            if (ForkLifter.instance.EligibleHits.Count == 0)
-            {
-                currentHitInList = 0;
-            }
-
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && shouldBop) 
             {
-                anim.DoScaledAnimationAsync("Player_Bop", 0.5f);
+                SingleBop();
             }
+        }
+
+        public void SingleBop()
+        {
+            anim.DoScaledAnimationAsync("Player_Bop", 0.5f);
         }
 
         public void Eat()

@@ -6,6 +6,7 @@ using System;
 using Starpelly;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -70,6 +71,18 @@ namespace HeavenStudio.Games
         public static WizardsWaltz instance;
 
         private static CallAndResponseHandler crHandlerInstance;
+
+        protected static bool IA_PadAnyDown(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        public static PlayerInput.InputAction InputAction_Press =
+            new("AgbWizardPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadAnyDown, IA_TouchBasicPress, IA_BatonBasicPress);
 
         private void Awake()
         {
@@ -199,7 +212,7 @@ namespace HeavenStudio.Games
 
         private void PassTurn(double beat, CallAndResponseHandler crHandler)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 0.25, delegate
                 {
@@ -262,7 +275,7 @@ namespace HeavenStudio.Games
 
             plant.createBeat = beat;
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {

@@ -5,6 +5,7 @@ using System;
 using Starpelly;
 using DG.Tweening;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -208,6 +209,35 @@ namespace HeavenStudio.Games
         }
         private static List<QueuedInterval> queuedIntervals = new List<QueuedInterval>();
 
+        protected static bool IA_PadAnyDown(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_PadAnyUp(out double dt)
+        {
+            bool face = PlayerInput.GetPadUp(InputController.ActionsPad.East, out dt)
+                && !(PlayerInput.GetPad(InputController.ActionsPad.Up)
+                    || PlayerInput.GetPad(InputController.ActionsPad.Down)
+                    || PlayerInput.GetPad(InputController.ActionsPad.Left)
+                    || PlayerInput.GetPad(InputController.ActionsPad.Right));
+            bool pad = (PlayerInput.GetPadUp(InputController.ActionsPad.Up)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Down)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Left)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Right))
+                && !PlayerInput.GetPad(InputController.ActionsPad.East);
+            return face || pad;
+        }
+        public static PlayerInput.InputAction InputAction_Press =
+            new("AgbHairPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadAnyDown, IA_TouchBasicPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_Release =
+            new("AgbHairRelease", new int[] { IAReleaseCat, IAReleaseCat, IAReleaseCat },
+            IA_PadAnyUp, IA_TouchBasicRelease, IA_BatonBasicRelease);
+
         private void Awake()
         {
             instance = this;
@@ -297,7 +327,7 @@ namespace HeavenStudio.Games
             Hair hair = Instantiate(hairBase, transform).GetComponent<Hair>();
             spawnedHairs.Add(hair);
 
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -322,7 +352,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("rhythmTweezers/longAppear", beat);
             LongHair hair = Instantiate(longHairBase, transform).GetComponent<LongHair>();
             spawnedLongs.Add(hair);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -417,7 +447,7 @@ namespace HeavenStudio.Games
             Tweezers spawnedTweezers = Instantiate(Tweezers, transform);
             spawnedTweezers.gameObject.SetActive(true);
             spawnedTweezers.Init(beat, beat + length);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 0.25, delegate
                 {

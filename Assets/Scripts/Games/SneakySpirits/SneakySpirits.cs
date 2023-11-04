@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -83,6 +84,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject slowTree;
 
         private bool hasArrowLoaded;
+        private bool hasArrowDrawn;
         float movingLength;
         double movingStartBeat;
         bool isMoving;
@@ -133,9 +135,23 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && hasArrowLoaded)
+                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                {
+                    if (PlayerInput.GetIsAction(InputAction_BasicPress) && hasArrowLoaded && !hasArrowDrawn)
+                    {
+                        hasArrowDrawn = true;
+                        bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f);
+                    }
+                    if (PlayerInput.GetIsAction(InputAction_BasicRelease) && hasArrowLoaded && hasArrowDrawn)
+                    {
+                        hasArrowDrawn = false;
+                        bowAnim.DoScaledAnimationAsync("BowRelease", 0.5f);
+                    }
+                }
+                if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress) && hasArrowLoaded)
                 {
                     WhiffArrow(cond.songPositionInBeatsAsDouble);
+                    hasArrowDrawn = false;
                 }
                 if (isMoving)
                 {
@@ -158,8 +174,16 @@ namespace HeavenStudio.Games
         public void ForceReload()
         {
             if (hasArrowLoaded) return;
-            bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f); 
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !GameManager.instance.autoplay)
+            {
+                bowAnim.DoScaledAnimationAsync("BowIdle", 1f);
+            }
+            else
+            {
+                bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f);
+            }
             hasArrowLoaded = true;
+            hasArrowDrawn = false;
         }
 
         public void MoveBow(double beat, float length, bool enter, int ease)
@@ -189,16 +213,26 @@ namespace HeavenStudio.Games
         {
             if (slowDown)
             {
-                ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, Just, Miss, Out);
+                ScheduleInput(beat, length * 7, InputAction_FlickPress, Just, Miss, Out);
             }
             else
             {
-                ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, JustNoSlowDown, Miss, Out);
+                ScheduleInput(beat, length * 7, InputAction_FlickPress, JustNoSlowDown, Miss, Out);
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !GameManager.instance.autoplay)
             {
-                new BeatAction.Action(beat + length * 3, delegate { ForceReload(); })
-            });
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { ForceReload(); })
+                });
+            }
+            else
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + length * 3, delegate { ForceReload(); })
+                });
+            }
 
             List<BeatAction.Action> ghostSpawns = new List<BeatAction.Action>();
             for(int i = 0; i < 7; i++)
@@ -221,7 +255,7 @@ namespace HeavenStudio.Games
             bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
             hasArrowLoaded = false;
             SoundByte.PlayOneShotGame("sneakySpirits/arrowMiss", -1, 2);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 3f, delegate { 
                     if (GameManager.instance.currentGame == "sneakySpirits") 
@@ -242,7 +276,7 @@ namespace HeavenStudio.Games
                 GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
                 spawnedGhost.SetActive(true);
                 spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostBarely", 0.5f);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 2f, delegate {
                         if (GameManager.instance.currentGame == "sneakySpirits")
@@ -266,7 +300,7 @@ namespace HeavenStudio.Games
                 GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
                 spawnedGhost.SetActive(true);
                 spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostBarely", 0.5f);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 2f, delegate {
                         if (GameManager.instance.currentGame == "sneakySpirits")
@@ -313,14 +347,14 @@ namespace HeavenStudio.Games
                 slowTree.SetActive(true);
                 normalTree.SetActive(false);
                 Conductor.instance.SetMinigamePitch(0.25f);
+                Conductor.instance.SetMinigamePitch(1f, caller.startBeat + caller.timer + 1f); 
             }
 
             doorAnim.DoScaledAnimationAsync("DoorOpen", 0.5f);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate 
                 { 
-                    if (slowDown) Conductor.instance.SetMinigamePitch(1f); 
                     doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);
                     slowRain.SetActive(false);
                     normalRain.SetActive(true);
@@ -336,7 +370,7 @@ namespace HeavenStudio.Games
             GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
             spawnedGhost.SetActive(true);
             spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostMiss", 0.5f);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate {
                     if (GameManager.instance.currentGame == "sneakySpirits")

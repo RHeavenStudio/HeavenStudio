@@ -4,30 +4,169 @@ using UnityEngine;
 
 using HeavenStudio.Util;
 using HeavenStudio.Common;
+using HeavenStudio.InputSystem;
+using System;
 
 namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double ngEarlyTime = 0.075f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.075f;
+        public static double ngEarlyTime = 0.085f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.085f;
         public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
-        public List<Minigame.Eligible> EligibleHits = new List<Minigame.Eligible>();
+        #region Premade Input Actions
+        protected const int IAEmptyCat = -1;
+        protected const int IAPressCat = 0;
+        protected const int IAReleaseCat = 1;
+        protected const int IAPressingCat = 2;
+        protected const int IAFlickCat = 3;
+        protected const int IAMAXCAT = 4;
 
-        [System.Serializable]
-        public class Eligible
+        protected static bool IA_Empty(out double dt)
         {
-            public GameObject gameObject;
-            public bool early;
-            public bool perfect;
-            public bool late;
-            public bool notPerfect() { return early || late; }
-            public bool eligible() { return early || perfect || late; }
-            public float createBeat;
+            dt = 0;
+            return false;
         }
 
+        protected static bool IA_PadBasicPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt);
+        }
+        protected static bool IA_TouchBasicPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt);
+        }
+        protected static bool IA_BatonBasicPress(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt);
+        }
+
+        protected static bool IA_PadBasicRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.East, out dt);
+        }
+        protected static bool IA_TouchBasicRelease(out double dt)
+        {
+            return PlayerInput.GetTouchUp(InputController.ActionsTouch.Tap, out dt) && !PlayerInput.GetFlick(out _);
+        }
+        protected static bool IA_BatonBasicRelease(out double dt)
+        {
+            return PlayerInput.GetBatonUp(InputController.ActionsBaton.Face, out dt);
+        }
+
+        protected static bool IA_PadBasicPressing(out double dt)
+        {
+            dt = 0;
+            return PlayerInput.GetPad(InputController.ActionsPad.East);
+        }
+        protected static bool IA_TouchBasicPressing(out double dt)
+        {
+            dt = 0;
+            return PlayerInput.GetTouch(InputController.ActionsTouch.Tap);
+        }
+        protected static bool IA_BatonBasicPressing(out double dt)
+        {
+            dt = 0;
+            return PlayerInput.GetBaton(InputController.ActionsBaton.Face);
+        }
+
+        protected static bool IA_TouchFlick(out double dt)
+        {
+            return PlayerInput.GetFlick(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_BasicPress =
+            new("BasicPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchBasicPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_BasicRelease =
+            new("BasicRelease", new int[] { IAReleaseCat, IAReleaseCat, IAReleaseCat },
+            IA_PadBasicRelease, IA_TouchBasicRelease, IA_BatonBasicRelease);
+        public static PlayerInput.InputAction InputAction_BasicPressing =
+            new("BasicRelease", new int[] { IAReleaseCat, IAReleaseCat, IAReleaseCat },
+            IA_PadBasicPressing, IA_TouchBasicPressing, IA_BatonBasicPressing);
+
+        public static PlayerInput.InputAction InputAction_FlickPress =
+            new("FlickPress", new int[] { IAPressCat, IAFlickCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchFlick, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_FlickRelease =
+            new("FlickRelease", new int[] { IAReleaseCat, IAFlickCat, IAReleaseCat },
+            IA_PadBasicRelease, IA_TouchFlick, IA_BatonBasicRelease);
+        #endregion
+
         public List<PlayerActionEvent> scheduledInputs = new List<PlayerActionEvent>();
+
+        /// <summary>
+        /// Schedule an Input for a later time in the minigame. Executes the methods put in parameters
+        /// </summary>
+        /// <param name="startBeat">When the scheduling started (in beats)</param>
+        /// <param name="timer">How many beats later should the input be expected</param>
+        /// <param name="inputAction">The input action that's expected</param>
+        /// <param name="OnHit">Method to run if the Input has been Hit</param>
+        /// <param name="OnMiss">Method to run if the Input has been Missed</param>
+        /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
+        /// <returns></returns>
+        public PlayerActionEvent ScheduleInput(
+            double startBeat,
+            double timer,
+            PlayerInput.InputAction inputAction,
+            PlayerActionEvent.ActionEventCallbackState OnHit,
+            PlayerActionEvent.ActionEventCallback OnMiss,
+            PlayerActionEvent.ActionEventCallback OnBlank,
+            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null
+            )
+        {
+
+            GameObject evtObj = new("ActionEvent" + (startBeat + timer));
+
+            PlayerActionEvent evt = evtObj.AddComponent<PlayerActionEvent>();
+
+            evt.startBeat = startBeat;
+            evt.timer = timer;
+            evt.InputAction = inputAction;
+            evt.OnHit = OnHit;
+            evt.OnMiss = OnMiss;
+            evt.OnBlank = OnBlank;
+            evt.IsHittable = HittableQuery;
+
+            evt.OnDestroy = RemoveScheduledInput;
+
+            evt.canHit = true;
+            evt.enabled = true;
+
+            evt.transform.parent = this.transform.parent;
+
+            evtObj.SetActive(true);
+
+            scheduledInputs.Add(evt);
+
+            return evt;
+        }
+
+        public PlayerActionEvent ScheduleAutoplayInput(double startBeat,
+            double timer,
+            PlayerInput.InputAction inputAction,
+            PlayerActionEvent.ActionEventCallbackState OnHit,
+            PlayerActionEvent.ActionEventCallback OnMiss,
+            PlayerActionEvent.ActionEventCallback OnBlank)
+        {
+            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank);
+            evt.autoplayOnly = true;
+            return evt;
+        }
+
+        public PlayerActionEvent ScheduleUserInput(double startBeat,
+            double timer,
+            PlayerInput.InputAction inputAction,
+            PlayerActionEvent.ActionEventCallbackState OnHit,
+            PlayerActionEvent.ActionEventCallback OnMiss,
+            PlayerActionEvent.ActionEventCallback OnBlank,
+            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null)
+        {
+            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank, HittableQuery);
+            evt.noAutoplay = true;
+            return evt;
+        }
 
         /// <summary>
         /// Schedule an Input for a later time in the minigame. Executes the methods put in parameters
@@ -39,6 +178,7 @@ namespace HeavenStudio.Games
         /// <param name="OnMiss">Method to run if the Input has been Missed</param>
         /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
         /// <returns></returns>
+        [Obsolete("Use Input Action ScheduleInput instead")]
         public PlayerActionEvent ScheduleInput(
             double startBeat,
             double timer,
@@ -50,7 +190,7 @@ namespace HeavenStudio.Games
             )
         {
 
-            GameObject evtObj = new GameObject("ActionEvent" + (startBeat+timer));
+            GameObject evtObj = new GameObject("ActionEvent" + (startBeat + timer));
             evtObj.AddComponent<PlayerActionEvent>();
 
             PlayerActionEvent evt = evtObj.GetComponent<PlayerActionEvent>();
@@ -77,6 +217,7 @@ namespace HeavenStudio.Games
             return evt;
         }
 
+        [Obsolete("Use Input Action ScheduleInput instead")]
         public PlayerActionEvent ScheduleAutoplayInput(double startBeat,
             double timer,
             InputType inputType,
@@ -89,6 +230,7 @@ namespace HeavenStudio.Games
             return evt;
         }
 
+        [Obsolete("Use Input Action ScheduleInput instead")]
         public PlayerActionEvent ScheduleUserInput(double startBeat,
             double timer,
             InputType inputType,
@@ -111,20 +253,22 @@ namespace HeavenStudio.Games
         //Get the scheduled input that should happen the **Soonest**
         //Can return null if there's no scheduled inputs
         // remark: need a check for specific button(s)
+        [Obsolete("Use GetClosestScheduledInput InputAction or InputAction category instead")]
         public PlayerActionEvent GetClosestScheduledInput(InputType input = InputType.ANY)
         {
             PlayerActionEvent closest = null;
 
-            foreach(PlayerActionEvent toCompare in scheduledInputs)
+            foreach (PlayerActionEvent toCompare in scheduledInputs)
             {
                 // ignore inputs that are for sequencing in autoplay
                 if (toCompare.autoplayOnly) continue;
 
-                if(closest == null)
+                if (closest == null)
                 {
                     if (input == InputType.ANY || (toCompare.inputType & input) != 0)
                         closest = toCompare;
-                } else
+                }
+                else
                 {
                     double t1 = closest.startBeat + closest.timer;
                     double t2 = toCompare.startBeat + toCompare.timer;
@@ -142,14 +286,65 @@ namespace HeavenStudio.Games
             return closest;
         }
 
+        public PlayerActionEvent GetClosestScheduledInput(int[] actionCats)
+        {
+            int catIdx = (int)PlayerInput.CurrentControlStyle;
+            int cat = actionCats[catIdx];
+            PlayerActionEvent closest = null;
+
+            foreach (PlayerActionEvent toCompare in scheduledInputs)
+            {
+                // ignore inputs that are for sequencing in autoplay
+                if (toCompare.autoplayOnly) continue;
+                if (toCompare.InputAction == null) continue;
+
+                if (closest == null)
+                {
+                    if (toCompare.InputAction.inputLockCategory[catIdx] == cat)
+                        closest = toCompare;
+                }
+                else
+                {
+                    double t1 = closest.startBeat + closest.timer;
+                    double t2 = toCompare.startBeat + toCompare.timer;
+
+                    if (t2 < t1)
+                    {
+                        if (toCompare.InputAction.inputLockCategory[catIdx] == cat)
+                            closest = toCompare;
+                    }
+                }
+            }
+
+            return closest;
+        }
+
+        public PlayerActionEvent GetClosestScheduledInput(PlayerInput.InputAction action)
+        {
+            return GetClosestScheduledInput(action.inputLockCategory);
+        }
+
         //Hasn't been tested yet. *Should* work.
         //Can be used to detect if the user is expected to input something now or not
         //Useful for strict call and responses games like Tambourine
+        [Obsolete("Use IsExpectingInputNow InputAction or InputAction category instead")]
         public bool IsExpectingInputNow(InputType wantInput = InputType.ANY)
         {
             PlayerActionEvent input = GetClosestScheduledInput(wantInput);
             if (input == null) return false;
             return input.IsExpectingInputNow();
+        }
+
+        public bool IsExpectingInputNow(int[] wantActionCategory)
+        {
+            PlayerActionEvent input = GetClosestScheduledInput(wantActionCategory);
+            if (input == null) return false;
+            return input.IsExpectingInputNow();
+        }
+
+        public bool IsExpectingInputNow(PlayerInput.InputAction wantAction)
+        {
+            return IsExpectingInputNow(wantAction.inputLockCategory);
         }
 
         // now should fix the fast bpm problem
@@ -217,24 +412,6 @@ namespace HeavenStudio.Games
             }
         }
 
-        public int MultipleEventsAtOnce()
-        {
-            int sameTime = 0;
-            for (int i = 0; i < EligibleHits.Count; i++)
-            {
-                float createBeat = EligibleHits[i].createBeat;
-                if (EligibleHits.FindAll(c => c.createBeat == createBeat).Count > 0)
-                {
-                    sameTime += 1;
-                }
-            }
-
-            if (sameTime == 0 && EligibleHits.Count > 0)
-                sameTime = 1;
-
-            return sameTime;
-        }
-
         public static MultiSound PlaySoundSequence(string game, string name, double startBeat, params SoundSequence.SequenceParams[] args)
         {
             Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);
@@ -260,14 +437,21 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void OnDestroy() {
+        public void ToggleSplitColoursDisplay(bool on)
+        {
+            
+        }
+
+        private void OnDestroy()
+        {
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
             }
         }
 
-        protected void OnDrawGizmos() {
+        protected void OnDrawGizmos()
+        {
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireCube(Vector3.zero, new Vector3(17.77695f, 10, 0));
         }

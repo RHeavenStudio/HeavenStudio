@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         {
             blipText.transform.localScale = Vector3.one;
             
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN)) {
+            if (PlayerInput.GetIsAction(MrUpbeat.InputAction_BasicPress) && !game.IsExpectingInputNow(MrUpbeat.InputAction_BasicPress)) {
                 Step(true);
             }
         }
@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
             if (shouldBlip) {
                 Blipping(beat);
             }
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 1, delegate { RecursiveBlipping(beat + 1); })
             });
         }

@@ -3,6 +3,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -12,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
         // minigame menu items
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("catchyTune", "Catchy Tune", "f2f2f2", false, false, new List<GameAction>()
+            return new Minigame("catchyTune", "Catchy Tune", "f2f2f2", "ff376c", "f2f2f2", false, false, new List<GameAction>()
             {
                 new GameAction("orange", "Orange")
                 {
@@ -20,8 +21,11 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the orange falls down"),
-                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching"),
-                        new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
+                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "endSmile" })
+                        }),
+                        new Param("endSmile", new EntityTypes.Float(2, 100, 2), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
                     preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], false, e["endSmile"]); },
                 },
@@ -32,8 +36,11 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the pineapple falls down"),
-                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching"),
-                        new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
+                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "endSmile" })
+                        }),
+                        new Param("endSmile", new EntityTypes.Float(2, 100, 2), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
                     preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], true, e["endSmile"]); },
                 },
@@ -49,10 +56,10 @@ namespace HeavenStudio.Games.Loaders
                     },
                 }
             },
-            new List<string>() {"ctr", "normal"},
+            new List<string>() { "ctr", "normal" },
             "ctrcatchy",
             "en",
-            new List<string>(){}
+            new List<string>() { }
             );
         }
     }
@@ -118,6 +125,61 @@ namespace HeavenStudio.Games
             public bool isPineapple;
             public float endSmile;
         }
+
+        const int IALeft = 0;
+        const int IARight = 1;
+        protected static bool IA_PadLeft(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_BatonLeft(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.West, out dt);
+        }
+        protected static bool IA_TouchLeft(out double dt)
+        {
+            bool want = PlayerInput.GetTouchDown(InputController.ActionsTouch.Left, out dt);
+            bool simul = false;
+            if (!want)
+            {
+                simul = PlayerInput.GetTouchDown(InputController.ActionsTouch.Right, out dt)
+                            && instance.IsExpectingInputNow(InputAction_Left)
+                            && instance.IsExpectingInputNow(InputAction_Right);
+            }
+            return want || simul;
+        }
+
+        protected static bool IA_PadRight(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt);
+        }
+        protected static bool IA_BatonRight(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.East, out dt);
+        }
+        protected static bool IA_TouchRight(out double dt)
+        {
+            bool want = PlayerInput.GetTouchDown(InputController.ActionsTouch.Right, out dt);
+            bool simul = false;
+            if (!want)
+            {
+                simul = PlayerInput.GetTouchDown(InputController.ActionsTouch.Left, out dt)
+                            && instance.IsExpectingInputNow(InputAction_Left)
+                            && instance.IsExpectingInputNow(InputAction_Right);
+            }
+            return want || simul;
+        }
+
+        public static PlayerInput.InputAction InputAction_Left =
+            new("CtrStepLeft", new int[] { IALeft, IALeft, IALeft },
+            IA_PadLeft, IA_TouchLeft, IA_BatonLeft);
+
+        public static PlayerInput.InputAction InputAction_Right =
+            new("CtrStepRight", new int[] { IARight, IARight, IARight },
+            IA_PadRight, IA_TouchRight, IA_BatonRight);
 
         private void Awake()
         {
@@ -187,16 +249,13 @@ namespace HeavenStudio.Games
                     }
                 }
 
-                if (!IsExpectingInputNow())
+                if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
                 {
-                    if (PlayerInput.GetAnyDirectionDown())
-                    {
-                        catchWhiff(false);
-                    }
-                    if (PlayerInput.Pressed())
-                    {
-                        catchWhiff(true);
-                    }
+                    catchWhiff(false);
+                }
+                if (PlayerInput.GetIsAction(InputAction_Right) && !IsExpectingInputNow(InputAction_Right.inputLockCategory))
+                {
+                    catchWhiff(true);
                 }
             }
         }
@@ -223,7 +282,7 @@ namespace HeavenStudio.Games
             beat = beat - (isPineapple ? 2f : 1f);
             if (GameManager.instance.currentGame == "catchyTune")
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(spawnBeat, delegate { if (instance != null) instance.DropFruit(beat, side, smile, isPineapple, endSmile); }),
                 });
@@ -268,7 +327,7 @@ namespace HeavenStudio.Games
             bopRight = whoBopsAuto == (int)WhoBops.Alalin || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
                     {
@@ -340,7 +399,7 @@ namespace HeavenStudio.Games
             double beat = Conductor.instance.songPositionInBeatsAsDouble;
 
             string fruitType = isPineapple ? "Pineapple" : "Orange";
-            
+
             if (side)
             {
                 alalinAnim.Play("miss" + fruitType, 0, 0);
@@ -376,7 +435,7 @@ namespace HeavenStudio.Games
         public void whiffAnim(bool side)
         {
             double beat = Conductor.instance.songPositionInBeatsAsDouble;
-            
+
             if (side)
             {
                 alalinAnim.Play("whiff", 0, 0);

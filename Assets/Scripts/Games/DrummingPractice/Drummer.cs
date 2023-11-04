@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
         private void Update()
         {
-            if (player && PlayerInput.Pressed() && !DrummingPractice.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (player && PlayerInput.GetIsAction(DrummingPractice.InputAction_BasicPress) && !DrummingPractice.instance.IsExpectingInputNow(DrummingPractice.InputAction_BasicPress))
             {
                 Hit(false, false);
             }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyBezierCurves;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Scripts_WorkingDough
 {
@@ -51,8 +52,11 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             barelyPath = game.GetPath("PlayerBarely");
             missPath = game.GetPath("PlayerMiss");
             weakPath = game.GetPath("PlayerWeak");
-            rightInput = game.ScheduleInput(beat, 1, isBig ? InputType.STANDARD_ALT_DOWN : InputType.STANDARD_DOWN, Just, Miss, Empty);
-            wrongInput = game.ScheduleUserInput(beat, 1, isBig ? InputType.STANDARD_DOWN : InputType.STANDARD_ALT_DOWN, WrongInput, Empty, Empty);
+            rightInput = game.ScheduleInput(beat, 1, isBig ? WorkingDough.InputAction_Alt : WorkingDough.InputAction_Nrm, Just, Miss, Empty);
+
+            if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                wrongInput = game.ScheduleUserInput(beat, 1, isBig ? WorkingDough.InputAction_Nrm : WorkingDough.InputAction_Alt, WrongInput, Empty, Empty);
+
             currentState = State.Entering;
             if (gandw != null) gandw.SetActive(hasGandw);
             Update();
@@ -112,11 +116,12 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
 
         private void Just(PlayerActionEvent caller, float state)
         {
-            wrongInput.Disable();
+            if (wrongInput != null)
+                wrongInput.Disable();
             double beat = Conductor.instance.songPositionInBeats;
             startBeat = beat;
             game.playerImpact.SetActive(true);
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.1f, delegate { game.playerImpact.SetActive(false); }),
             });
@@ -153,7 +158,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             }
             bool hasGandw = false;
             if (gandw != null) hasGandw = gandw.activeSelf;
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.9f, delegate { game.arrowSRRightPlayer.sprite = game.redArrowSprite; }),
                 new BeatAction.Action(beat + 1f, delegate { game.arrowSRRightPlayer.sprite = game.whiteArrowSprite; }),
@@ -167,7 +172,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             double beat = Conductor.instance.songPositionInBeats;
             rightInput.Disable();
             game.playerImpact.SetActive(true);
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.1f, delegate { game.playerImpact.SetActive(false); }),
             });
@@ -196,7 +201,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             currentState = State.Miss;
             startBeat = beat;
             Update();
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.25f, delegate { game.missImpact.SetActive(true); }),
                 new BeatAction.Action(beat + 0.25f, delegate { SoundByte.PlayOneShotGame("workingDough/BallMiss"); }),

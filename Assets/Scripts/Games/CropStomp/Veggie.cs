@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             game = CropStomp.instance;
 
             if (Conductor.instance.isPlaying)
-                game.ScheduleInput(targetBeat - 1, 1f, InputType.STANDARD_DOWN, StompJust, StompMiss, Out);
+                game.ScheduleInput(targetBeat - 1, 1f, CropStomp.InputAction_BasicPress, StompJust, StompMiss, Out);
 
             if (!isMole)
             {
@@ -84,7 +84,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 float airPosition = cond.GetPositionFromBeat(stompedBeat, landBeat - stompedBeat);
                 veggieTrans.position = curve.GetPoint(Mathf.Clamp(airPosition, 0, 1));
 
-                if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP))
+                if (PlayerInput.GetIsAction(CropStomp.InputAction_FlickRelease) && !game.IsExpectingInputNow(CropStomp.InputAction_FlickRelease))
                 {
                     pickEligible = false;
                 }
@@ -230,7 +230,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             spawnedHit.Play();
 
             veggieState = 1;
-            game.ScheduleInput(targetBeat, isMole ? 0.5f : 1f, InputType.STANDARD_UP, PickJust, PickMiss, Out);
+            game.ScheduleInput(targetBeat, isMole ? 0.5f : 1f, CropStomp.InputAction_FlickRelease, PickJust, PickMiss, Out);
             targetBeat = targetBeat + (isMole ? 0.5f : 1f);
 
             stompedBeat = cond.songPositionInBeatsAsDouble;
@@ -279,7 +279,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             if (!isMole)
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(pickedBeat + 0.5f, delegate { veggieSprite.sortingOrder = -1; }),
                     new BeatAction.Action(pickedBeat + pickTime, delegate { GameObject.Destroy(gameObject); })
@@ -291,7 +291,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             }
             else
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(pickedBeat + pickTime, delegate { GameObject.Destroy(gameObject); })
                 });

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 using UnityEngine;
 using DG.Tweening;
@@ -8,7 +10,6 @@ using HeavenStudio.Util;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Games;
 using Jukebox;
-using Jukebox.Legacy;
 
 using System;
 using System.Linq;
@@ -17,16 +18,23 @@ using System.IO;
 
 namespace HeavenStudio
 {
-    
+
     public class Minigames
     {
-        
+        public enum RecommendedControlStyle
+        {
+            Any,
+            Pad,
+            Touch,
+            Baton,
+        }
+
         public static void InitPreprocessor()
         {
             RiqBeatmap.OnUpdateBeatmap += PreProcessBeatmap;
         }
 
-        public static Dictionary<string, object> propertiesModel = new() 
+        public static Dictionary<string, object> propertiesModel = new()
             {
                 // mapper set properties? (future: use this to flash the button)
                 {"propertiesmodified", false},
@@ -42,6 +50,7 @@ namespace HeavenStudio
                 {"icontype", 0},                    // chart icon (presets, custom - future)
                 {"iconurl", ""},                    // custom icon location (future)
                 {"challengetype", 0},               // perfect challenge type
+                {"playstyle", RecommendedControlStyle.Any},                   // recommended control style
 
                 // chart song info
                 {"idolgenre", "Song Genre"},        // song genre
@@ -165,7 +174,7 @@ namespace HeavenStudio
                         Debug.Log($"k: {item.Key}, v: {item.Value}");
                         if (item.Key == "track")
                             continue;
-                        if (item.Value == null) 
+                        if (item.Value == null)
                             continue;
                         var value = item.Value;
                         if (value.GetType() == typeof(long))
@@ -271,11 +280,12 @@ namespace HeavenStudio
 
         public class Minigame
         {
-            
+
             public string name;
             public string displayName;
             public string color;
-            public GameObject holder;
+            public string splitColorL;
+            public string splitColorR;
             public bool hidden;
             public bool fxOnly;
             public List<GameAction> actions = new List<GameAction>();
@@ -286,11 +296,12 @@ namespace HeavenStudio
             public List<string> supportedLocales;
             public bool inferred;
 
-            public bool usesAssetBundle => (wantAssetBundle != "");
-            public bool hasLocales => (supportedLocales.Count > 0);
-            public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded);
+            public bool usesAssetBundle => wantAssetBundle != "";
+            public bool hasLocales => supportedLocales.Count > 0;
+            public bool AssetsLoaded => ((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded;
             public bool SequencesPreloaded => soundSequences != null;
             public string LoadableName => inferred ? "noGame" : name;
+            public GameObject LoadedPrefab => loadedPrefab;
 
             private AssetBundle bundleCommon = null;
             private bool commonLoaded = false;
@@ -299,6 +310,9 @@ namespace HeavenStudio
             private AssetBundle bundleLocalized = null;
             private bool localeLoaded = false;
             private bool localePreloaded = false;
+            private GameObject loadedPrefab = null;
+            private Dictionary<string, AudioClip> commonAudioClips;
+            private Dictionary<string, AudioClip> localeAudioClips;
 
             private SoundSequence.SequenceKeyValue[] soundSequences = null;
 
@@ -307,6 +321,8 @@ namespace HeavenStudio
                 get => soundSequences;
                 set => soundSequences = value;
             }
+            public Dictionary<string, AudioClip> CommonAudioClips => commonAudioClips;
+            public Dictionary<string, AudioClip> LocaleAudioClips => localeAudioClips;
 
             public Minigame(string name, string displayName, string color, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
             {
@@ -322,6 +338,28 @@ namespace HeavenStudio
                 this.defaultLocale = defaultLocale;
                 this.supportedLocales = supportedLocales ?? new List<string>();
                 this.inferred = inferred;
+
+                this.splitColorL = null;
+                this.splitColorR = null;
+            }
+
+            public Minigame(string name, string displayName, string color, string splitColorL, string splitColorR, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
+            {
+                this.name = name;
+                this.displayName = displayName;
+                this.color = color;
+                this.actions = actions;
+                this.hidden = hidden;
+                this.fxOnly = fxOnly;
+
+                this.tags = tags ?? new List<string>();
+                this.wantAssetBundle = assetBundle;
+                this.defaultLocale = defaultLocale;
+                this.supportedLocales = supportedLocales ?? new List<string>();
+                this.inferred = inferred;
+
+                this.splitColorL = splitColorL;
+                this.splitColorR = splitColorR;
             }
 
             public AssetBundle GetLocalizedAssetBundle()
@@ -352,48 +390,123 @@ namespace HeavenStudio
                 return bundleCommon;
             }
 
-            public IEnumerator LoadCommonAssetBundleAsync()
+            public async UniTask LoadAssetsAsync()
             {
-                if (commonPreloaded || commonLoaded) yield break;
+                if (AssetsLoaded || !usesAssetBundle) return;
+                await UniTask.WhenAll(LoadCommonAssetBundleAsync(), LoadLocalizedAssetBundleAsync());
+                await UniTask.WhenAll(LoadGamePrefabAsync());
+                await UniTask.WhenAll(LoadCommonAudioClips());
+                await UniTask.WhenAll(LoadLocalizedAudioClips());
+            }
+
+            public async UniTask LoadCommonAssetBundleAsync()
+            {
+                if (commonPreloaded || commonLoaded) return;
                 commonPreloaded = true;
-                if (!usesAssetBundle) yield break;
-                if (bundleCommon != null) yield break;
+                if (!usesAssetBundle) return;
+                if (bundleCommon != null) return;
 
-                AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common"));
-                if (bundleCommon != null) yield break;
-                yield return asyncBundleRequest;
+                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common")).ToUniTask();
 
-                AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
-                if (bundleCommon != null) yield break;
-                yield return localAssetBundle;
-
-                if (localAssetBundle == null) yield break;
-
-                bundleCommon = localAssetBundle;
+                bundleCommon = bundle;
                 commonLoaded = true;
             }
 
-            public IEnumerator LoadLocalizedAssetBundleAsync()
+            public async UniTask LoadLocalizedAssetBundleAsync()
             {
-                if (localePreloaded) yield break;
+                if (!hasLocales) return;
+                if (localePreloaded) return;
                 localePreloaded = true;
-                if (!hasLocales) yield break;
-                if (!usesAssetBundle) yield break;
-                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
+                if (!usesAssetBundle) return;
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) return;
 
-                AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale));
-                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
-                yield return asyncBundleRequest;
+                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale)).ToUniTask();
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) return;
 
-                AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
-                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
-                yield return localAssetBundle;
-
-                if (localAssetBundle == null) yield break;
-
-                bundleLocalized = localAssetBundle;
+                bundleLocalized = bundle;
                 currentLoadedLocale = defaultLocale;
                 localeLoaded = true;
+            }
+
+            public async UniTask LoadGamePrefabAsync()
+            {
+                if (!usesAssetBundle) return;
+                if (!commonLoaded) return;
+                if (bundleCommon == null) return;
+
+                UnityEngine.Object asset = await bundleCommon.LoadAssetAsync<GameObject>(name).ToUniTask();
+                loadedPrefab = asset as GameObject;
+
+                // load sound sequences here for now
+                // this is taxing and is still done synchronously
+                // move sequences to their own assets so that we don't have to look up a component
+                if (loadedPrefab.TryGetComponent<Games.Minigame>(out Games.Minigame minigame))
+                {
+                    soundSequences = minigame.SoundSequences;
+                }
+            }
+
+            public async UniTask LoadCommonAudioClips()
+            {
+                if (!commonLoaded) return;
+                if (bundleCommon == null) return;
+
+                commonAudioClips = new();
+
+                var assets = bundleCommon.LoadAllAssetsAsync();
+                await assets;
+
+                // await UniTask.SwitchToThreadPool();
+                // foreach (var asset in assets.allAssets)
+                // {
+                //     AudioClip clip = asset as AudioClip;
+                //     commonAudioClips.Add(clip.name, clip);
+                // }
+                // await UniTask.SwitchToMainThread();
+            }
+
+            public async UniTask LoadLocalizedAudioClips()
+            {
+                if (!localeLoaded) return;
+                if (bundleLocalized == null) return;
+
+                localeAudioClips = new();
+
+                var assets = bundleLocalized.LoadAllAssetsAsync();
+                await assets;
+
+                // await UniTask.SwitchToThreadPool();
+                // foreach (var asset in assets.allAssets)
+                // {
+                //     AudioClip clip = asset as AudioClip;
+                //     localeAudioClips.Add(clip.name, clip);
+                // }
+                // await UniTask.SwitchToMainThread();
+            }
+
+            public async UniTask UnloadAllAssets()
+            {
+                if (!usesAssetBundle) return;
+                commonAudioClips.Clear();
+                localeAudioClips.Clear();
+                if (loadedPrefab != null)
+                {
+                    loadedPrefab = null;
+                }
+                if (bundleCommon != null)
+                {
+                    await bundleCommon.UnloadAsync(true);
+                    bundleCommon = null;
+                    commonLoaded = false;
+                    commonPreloaded = false;
+                }
+                if (bundleLocalized != null)
+                {
+                    await bundleLocalized.UnloadAsync(true);
+                    bundleLocalized = null;
+                    localeLoaded = false;
+                    localePreloaded = false;
+                }
             }
         }
 
@@ -467,6 +580,7 @@ namespace HeavenStudio
             public object parameter;
             public string propertyCaption;
             public string tooltip;
+            public List<CollapseParam> collapseParams;
 
             /// <summary>
             /// A parameter that changes the function of a GameAction.
@@ -474,12 +588,29 @@ namespace HeavenStudio
             /// <param name="propertyName">The name of the variable that's being changed.</param>
             /// <param name="parameter">The value of the parameter</param>
             /// <param name="propertyCaption">The name shown in the editor. Can be anything you want.</param>
-            public Param(string propertyName, object parameter, string propertyCaption, string tooltip = "")
+            public Param(string propertyName, object parameter, string propertyCaption, string tooltip = "", List<CollapseParam> collapseParams = null)
             {
                 this.propertyName = propertyName;
                 this.parameter = parameter;
                 this.propertyCaption = propertyCaption;
                 this.tooltip = tooltip;
+                this.collapseParams = collapseParams;
+            }
+
+            public class CollapseParam
+            {
+                public Func<object, RiqEntity, bool> CollapseOn;
+                public string[] collapseables;
+                /// <summary>
+                /// Class that decides how other parameters will be collapsed
+                /// </summary>
+                /// <param name="collapseOn">What values should make it collapse/uncollapse?</param>
+                /// <param name="collapseables">IDs of the parameters to collapse</param>
+                public CollapseParam(Func<object, RiqEntity, bool> collapseOn, string[] collapseables)
+                {
+                    CollapseOn = collapseOn;
+                    this.collapseables = collapseables;
+                }
             }
         }
 
@@ -489,18 +620,19 @@ namespace HeavenStudio
         // overengineered af but it's a modified version of
         // https://stackoverflow.com/a/19877141
         static List<Func<EventCaller, Minigame>> loadRunners;
-        static void BuildLoadRunnerList() {
+        static void BuildLoadRunnerList()
+        {
             loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(x => x.Namespace == "HeavenStudio.Games.Loaders" && x.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static) != null)
-            .Select(t => (Func<EventCaller, Minigame>) Delegate.CreateDelegate(
-                typeof(Func<EventCaller, Minigame>), 
-                null, 
+            .Select(t => (Func<EventCaller, Minigame>)Delegate.CreateDelegate(
+                typeof(Func<EventCaller, Minigame>),
+                null,
                 t.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static),
                 false
                 ))
             .ToList();
-                
+
         }
 
         public static void Init(EventCaller eventCaller)
@@ -509,19 +641,19 @@ namespace HeavenStudio
             {
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
-                    new GameAction("switchGame", "Switch Game", 0.5f, false, 
-                        function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }, 
+                    new GameAction("switchGame", "Switch Game", 0.5f, false,
+                        function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); },
                         parameters: new List<Param>()
                             {
-                            new Param("toggle", true, "Black Flash", "Enable or disable the black screen for this Game Switch")
+                                new Param("toggle", true, "Black Flash", "Enable or disable the black screen for this Game Switch")
                             },
                         inactiveFunction: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }
                     ),
                     new GameAction("end", "End Remix",
-                        function: delegate { 
-                            Debug.Log("end"); 
+                        function: delegate {
+                            Debug.Log("end");
                             if (Timeline.instance != null)
-                                Timeline.instance?.Stop(0);
+                                Timeline.instance?.Stop(Timeline.instance.PlaybackBeat);
                             else
                                 GameManager.instance.Stop(0);
                         }
@@ -531,12 +663,7 @@ namespace HeavenStudio
                         //temp for testing
                         function = delegate {
                             var e = eventCaller.currentEntity;
-                            HeavenStudio.Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
-                            // BeatAction.New(HeavenStudio.Common.SkillStarManager.instance.gameObject, new List<BeatAction.Action>(){
-                            //     new BeatAction.Action(e.beat + e.length, delegate {
-                            //         HeavenStudio.Common.SkillStarManager.instance.DoStarJust();
-                            //     })
-                            // });
+                            Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
                         }
                     },
                     new GameAction("toggle inputs", "Toggle Inputs", 0.5f, true,
@@ -551,7 +678,7 @@ namespace HeavenStudio
                     ),
 
                     // These are still here for backwards-compatibility but are hidden in the editor
-                    new GameAction("flash", "", 1f, true, 
+                    new GameAction("flash", "", 1f, true,
                         new List<Param>()
                         {
                             new Param("colorA", Color.white, "Start Color"),
@@ -562,7 +689,7 @@ namespace HeavenStudio
                         },
                         hidden: true
                     ),
-                    new GameAction("move camera", "", 1f, true, new List<Param>() 
+                    new GameAction("move camera", "", 1f, true, new List<Param>()
                     {
                         new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
                         new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
@@ -570,7 +697,7 @@ namespace HeavenStudio
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
                     },
                     hidden: true ),
-                    new GameAction("rotate camera", "", 1f, true, new List<Param>() 
+                    new GameAction("rotate camera", "", 1f, true, new List<Param>()
                     {
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
                         new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
@@ -613,7 +740,7 @@ namespace HeavenStudio
                     new GameAction("and", "And", 0.5f,
                         function: delegate { SoundEffects.And(); }
                     ),
-                    new GameAction("go!", "Go!", 1f, false, 
+                    new GameAction("go!", "Go!", 1f, false,
                         new List<Param>()
                         {
                             new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
@@ -640,7 +767,7 @@ namespace HeavenStudio
 
                 new Minigame("vfx", "Visual Effects", "", false, true, new List<GameAction>()
                 {
-                    new GameAction("flash", "Flash", 1f, true, 
+                    new GameAction("flash", "Flash", 1f, true,
                         new List<Param>()
                         {
                             new Param("colorA", Color.white, "Start Color"),
@@ -659,7 +786,7 @@ namespace HeavenStudio
                             new Param("fadeout", new EntityTypes.Float(0, 100, 0), "Fade Out")
                         }
                     ),
-                    new GameAction("move camera", "Move Camera", 1f, true, new List<Param>() 
+                    new GameAction("move camera", "Move Camera", 1f, true, new List<Param>()
                         {
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
                             new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
@@ -668,14 +795,14 @@ namespace HeavenStudio
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         }
                     ),
-                    new GameAction("rotate camera", "Rotate Camera", 1f, true, new List<Param>() 
+                    new GameAction("rotate camera", "Rotate Camera", 1f, true, new List<Param>()
                         {
                             new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch", "Next rotation on the X axis"),
                             new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw", "Next rotation on the Y axis"),
                             new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll", "Next rotation on the Z axis"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
-                        } 
+                        }
                     ),
                     new GameAction("camera background color", "Camera Background Color", 1, true, new List<Param>()
                         {
@@ -684,7 +811,7 @@ namespace HeavenStudio
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
                         }
                     ),
-                    new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>() 
+                    new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>()
                         {
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
                             new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
@@ -692,13 +819,13 @@ namespace HeavenStudio
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in" )
                         }
                     ),
-                    new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>() 
+                    new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>()
                         {
                             new Param("valA", new EntityTypes.Float(-360, 360, 0), "Rotation", "Next viewport rotation"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                         }
                     ),
-                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>() 
+                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>()
                         {
                             new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
                             new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
@@ -715,7 +842,7 @@ namespace HeavenStudio
                         }
                     ),
 
-                    new GameAction("display textbox", "Display Textbox", 1f, true, new List<Param>() 
+                    new GameAction("display textbox", "Display Textbox", 1f, true, new List<Param>()
                         {
                             new Param("text1", "", "Text", "The text to display in the textbox (Rich Text is supported!)"),
                             new Param("type", Games.Global.Textbox.TextboxAnchor.TopMiddle, "Anchor", "Where to anchor the textbox"),
@@ -723,35 +850,37 @@ namespace HeavenStudio
                             new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Textbox Height", "Textbox height multiplier")
                         }
                     ),
-                    new GameAction("display open captions", "Display Open Captions", 1f, true, 
-                        new List<Param>() 
+                    new GameAction("display open captions", "Display Open Captions", 1f, true,
+                        new List<Param>()
                         {
                             new Param("text1", "", "Text", "The text to display in the captions (Rich Text is supported!)"),
                             new Param("type", Games.Global.Textbox.TextboxAnchor.BottomMiddle, "Anchor", "Where to anchor the captions"),
                             new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Captions Width", "Captions width multiplier"),
                             new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Captions Height", "Captions height multiplier")
-                        } 
+                        }
                     ),
-                    new GameAction("display closed captions", "Display Closed Captions", 1f, true, 
-                        new List<Param>() 
+                    new GameAction("display closed captions", "Display Closed Captions", 1f, true,
+                        new List<Param>()
                         {
                             new Param("text1", "", "Text", "The text to display in the captions (Rich Text is supported!)"),
                             new Param("type", Games.Global.Textbox.ClosedCaptionsAnchor.Top, "Anchor", "Where to anchor the captions"),
                             new Param("valA", new EntityTypes.Float(0.5f, 4, 1), "Captions Height", "Captions height multiplier")
                         }
                     ),
-                    new GameAction("display song artist", "Display Song Info", 1f, true, 
+                    new GameAction("display song artist", "Display Song Info", 1f, true,
                         new List<Param>()
                         {
                             new Param("text1", "", "Title", "Text to display in the upper label (Rich Text is supported!)"),
                             new Param("text2", "", "Artist", "Text to display in the lower label (Rich Text is supported!)"),
+                            new Param("instantOn", false, "Instant Show", "Skip the show animation?"),
+                            new Param("instantOff", false, "Instant Hide", "Skip the hide animation?"),
                         }
                     ),
                 }),
             };
 
             BuildLoadRunnerList();
-            foreach(var load in loadRunners)
+            foreach (var load in loadRunners)
             {
                 Debug.Log("Running game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name);
                 eventCaller.minigames.Add(load(eventCaller));

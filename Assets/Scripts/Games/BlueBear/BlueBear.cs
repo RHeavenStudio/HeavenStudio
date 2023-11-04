@@ -1,6 +1,7 @@
 using DG.Tweening;
 using NaughtyBezierCurves;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,17 +11,18 @@ namespace HeavenStudio.Games.Loaders
     using static Minigames;
     public static class CtrBearLoader
     {
-        public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("blueBear", "Blue Bear", "b4e6f6", false, false, new List<GameAction>()
+        public static Minigame AddGame(EventCaller eventCaller)
+        {
+            return new Minigame("blueBear", "Blue Bear", "b4e6f6", "e7e7e7", "bf9d34", false, false, new List<GameAction>()
             {
                 new GameAction("donut", "Donut")
                 {
-                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false); }, 
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false); },
                     defaultLength = 3,
                 },
                 new GameAction("cake", "Cake")
                 {
-                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); }, 
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); },
                     defaultLength = 4,
                 },
                 new GameAction("setEmotion", "Set Emotion")
@@ -49,9 +51,9 @@ namespace HeavenStudio.Games.Loaders
                     }
                 }
             },
-            new List<string>() {"ctr", "normal"},
+            new List<string>() { "ctr", "normal" },
             "ctrbear", "en",
-            new List<string>() {}
+            new List<string>() { }
             );
         }
     }
@@ -110,6 +112,61 @@ namespace HeavenStudio.Games
 
         public static BlueBear instance;
 
+        const int IALeft = 0;
+        const int IARight = 1;
+        protected static bool IA_PadLeft(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_BatonLeft(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.West, out dt);
+        }
+        protected static bool IA_TouchLeft(out double dt)
+        {
+            bool want = PlayerInput.GetTouchDown(InputController.ActionsTouch.Left, out dt);
+            bool simul = false;
+            // if (!want)
+            // {
+            //     simul = PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+            //                 && instance.IsExpectingInputNow(InputAction_Left.inputLockCategory)
+            //                 && instance.IsExpectingInputNow(InputAction_Right.inputLockCategory);
+            // }
+            return want || simul;
+        }
+
+        protected static bool IA_PadRight(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt);
+        }
+        protected static bool IA_BatonRight(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.East, out dt);
+        }
+        protected static bool IA_TouchRight(out double dt)
+        {
+            bool want = PlayerInput.GetTouchDown(InputController.ActionsTouch.Right, out dt);
+            bool simul = false;
+            // if (!want)
+            // {
+            //     simul = PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+            //                 && instance.IsExpectingInputNow(InputAction_Right.inputLockCategory)
+            //                 && instance.IsExpectingInputNow(InputAction_Left.inputLockCategory);
+            // }
+            return want || simul;
+        }
+
+        public static PlayerInput.InputAction InputAction_Left =
+            new("CtrBearLeft", new int[] { IALeft, IALeft, IALeft },
+            IA_PadLeft, IA_TouchLeft, IA_BatonLeft);
+
+        public static PlayerInput.InputAction InputAction_Right =
+            new("CtrBearRight", new int[] { IARight, IARight, IARight },
+            IA_PadRight, IA_TouchRight, IA_BatonRight);
+
         void OnDestroy()
         {
             if (Conductor.instance.isPlaying || Conductor.instance.isPaused) return;
@@ -132,16 +189,16 @@ namespace HeavenStudio.Games
         {
             headAndBodyAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
 
-            if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
             {
                 Bite(true);
             }
-            else if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            else if (PlayerInput.GetIsAction(InputAction_Right) && !IsExpectingInputNow(InputAction_Right.inputLockCategory))
             {
                 Bite(false);
             }
 
-            var cond = Conductor.instance;
+            Conductor cond = Conductor.instance;
 
             if (cond.isPlaying && !cond.isPaused)
             {
@@ -274,7 +331,7 @@ namespace HeavenStudio.Games
         {
             var objectToSpawn = isCake ? cakeBase : donutBase;
             var newTreat = GameObject.Instantiate(objectToSpawn, foodHolder);
-            
+
             var treatComp = newTreat.GetComponent<Treat>();
             treatComp.startBeat = beat;
             treatComp.curve = isCake ? cakeCurve : donutCurve;

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,10 +12,12 @@ using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
 using static JSL;
 
-namespace HeavenStudio.Editor 
+namespace HeavenStudio.Editor
 {
     public class ControllerSettings : TabsContent
     {
+        [SerializeField] private TMP_Dropdown stylesDropdown;
+
         [SerializeField] private TMP_Text numConnectedLabel;
         [SerializeField] private TMP_Text currentControllerLabel;
         [SerializeField] private TMP_Dropdown controllersDropdown;
@@ -35,6 +38,8 @@ namespace HeavenStudio.Editor
         [SerializeField] private List<TMP_Text> BatonBindingsTxt;
         [SerializeField] private List<TMP_Text> TouchBindingsTxt;
 
+        [SerializeField] private Slider cursorSensitivitySlider;
+
         private bool isAutoSearching = false;
         private bool isPairSearching = false;
         private bool pairSelectLR = false;  //true = left, false = right
@@ -42,18 +47,29 @@ namespace HeavenStudio.Editor
         private bool bindAllMode;
         private int currentBindingBt;
 
-        private void Start() {
+        private void Start()
+        {
             numConnectedLabel.text = "Connected: " + PlayerInput.GetNumControllersConnected();
             currentControllerLabel.text = "Current Controller: " + PlayerInput.GetInputController(1).GetDeviceName();
             PopulateControllersDropdown();
-            
+            PopulateStylesDropdown();
+
             pairSearchItem.SetActive(false);
 
-            ShowControllerBinds(PlayerInput.GetInputController(1));
-            ShowControllerIcon(PlayerInput.GetInputController(1));
+            InputController initController = PlayerInput.GetInputController(1);
+            if (!initController.GetCurrentStyleSupported())
+            {
+                PlayerInput.CurrentControlStyle = initController.GetDefaultStyle();
+                stylesDropdown.value = (int)PlayerInput.CurrentControlStyle;
+            }
+
+            UpdateControlStyleMapping();
+            ShowControllerBinds(initController);
+            ShowControllerIcon(initController);
         }
 
-        private void Update() {
+        private void Update()
+        {
             InputController currentController = PlayerInput.GetInputController(1);
             if (currentBindingBt >= 0)
             {
@@ -61,7 +77,18 @@ namespace HeavenStudio.Editor
                 if (bt > 0)
                 {
                     InputController.ControlBindings binds = currentController.GetCurrentBindings();
-                    binds.Pad[currentBindingBt] = bt;
+                    switch (PlayerInput.CurrentControlStyle)
+                    {
+                        case InputController.ControlStyles.Touch:
+                            binds.Touch[currentBindingBt] = bt;
+                            break;
+                        case InputController.ControlStyles.Baton:
+                            binds.Baton[currentBindingBt] = bt;
+                            break;
+                        default:
+                            binds.Pad[currentBindingBt] = bt;
+                            break;
+                    }
                     currentController.SetCurrentBindings(binds);
                     currentControllerLabel.text = "Current Controller: " + currentController.GetDeviceName();
                     ShowControllerBinds(currentController);
@@ -71,10 +98,12 @@ namespace HeavenStudio.Editor
             }
             else
             {
-                if (isAutoSearching) {
+                if (isAutoSearching)
+                {
                     var controllers = PlayerInput.GetInputControllers();
-                    foreach (var newController in controllers) {
-                        if (newController.GetLastButtonDown() > 0) 
+                    foreach (var newController in controllers)
+                    {
+                        if (newController.GetLastButtonDown() > 0)
                         {
                             isAutoSearching = false;
                             autoSearchLabel.SetActive(false);
@@ -84,18 +113,20 @@ namespace HeavenStudio.Editor
                         }
                     }
                 }
-                else if (isPairSearching) {
+                else if (isPairSearching)
+                {
                     var controllers = PlayerInput.GetInputControllers();
                     InputController.InputFeatures lrFlag = pairSelectLR ? InputController.InputFeatures.Extra_SplitControllerLeft : InputController.InputFeatures.Extra_SplitControllerRight;
-                    foreach (var pairController in controllers) {
+                    foreach (var pairController in controllers)
+                    {
                         if (pairController == currentController) continue;
 
                         InputController.InputFeatures features = pairController.GetFeatures();
                         if (!features.HasFlag(lrFlag)) continue;
 
-                        if (pairController.GetLastButtonDown() > 0) 
+                        if (pairController.GetLastButtonDown() > 0)
                         {
-                            (PlayerInput.GetInputController(1) as InputJoyshock)?.AssignOtherHalf((InputJoyshock) pairController);
+                            (PlayerInput.GetInputController(1) as InputJoyshock)?.AssignOtherHalf((InputJoyshock)pairController);
                             isPairSearching = false;
                             pairSearchLabel.SetActive(false);
                             currentControllerLabel.text = "Current Controller: " + pairController.GetDeviceName();
@@ -112,23 +143,41 @@ namespace HeavenStudio.Editor
 
         void AdvanceAutoBind(InputController currentController)
         {
+            int pauseVal;
+            Type enumType;
+            switch (PlayerInput.CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Touch:
+                    enumType = typeof(InputController.ActionsTouch);
+                    pauseVal = (int)InputController.ActionsTouch.Pause;
+                    break;
+                case InputController.ControlStyles.Baton:
+                    enumType = typeof(InputController.ActionsBaton);
+                    pauseVal = (int)InputController.ActionsBaton.Pause;
+                    break;
+                default:
+                    enumType = typeof(InputController.ActionsPad);
+                    pauseVal = (int)InputController.ActionsPad.Pause;
+                    break;
+            }
+
             if (bindAllMode)
             {
                 currentBindingBt++;
                 Debug.Log("Binding: " + currentBindingBt);
-                while (currentController.GetIsActionUnbindable(currentBindingBt, InputController.ControlStyles.Pad) && currentBindingBt < (int)InputController.ActionsPad.Pause) 
+                while (currentController.GetIsActionUnbindable(currentBindingBt, PlayerInput.CurrentControlStyle) && currentBindingBt < pauseVal)
                 {
                     currentBindingBt++;
                     Debug.Log("Unbindable, binding: " + currentBindingBt);
                 }
-                if (currentBindingBt > (int)InputController.ActionsPad.Pause)
+                if (currentBindingBt > pauseVal)
                 {
                     currentController.SaveBindings();
                     CancelBind();
                     return;
                 }
-                
-                currentControllerLabel.text = $"Now Binding: {(InputController.ActionsPad) currentBindingBt}";
+
+                currentControllerLabel.text = $"Now Binding: {enumType.GetEnumName(currentBindingBt)}";
             }
             else
             {
@@ -141,41 +190,51 @@ namespace HeavenStudio.Editor
         {
             Debug.Log("Assigning controller: " + newController.GetDeviceName());
 
-            lastController.SetPlayer(-1);
+            lastController.SetPlayer(null);
             newController.SetPlayer(1);
 
-            if ((lastController as InputJoyshock) != null) 
+            if ((lastController as InputJoyshock) != null)
             {
                 (lastController as InputJoyshock)?.UnAssignOtherHalf();
             }
 
-            if ((newController as InputJoyshock) != null) 
+            if ((newController as InputJoyshock) != null)
             {
                 newController.OnSelected();
                 (newController as InputJoyshock)?.UnAssignOtherHalf();
             }
 
             currentControllerLabel.text = "Current Controller: " + newController.GetDeviceName();
-            
+
+            if (!newController.GetCurrentStyleSupported())
+            {
+                PlayerInput.CurrentControlStyle = newController.GetDefaultStyle();
+                stylesDropdown.value = (int)PlayerInput.CurrentControlStyle;
+            }
+
+            UpdateControlStyleMapping();
             ShowControllerBinds(newController);
             ShowControllerIcon(newController);
 
             InputController.InputFeatures features = newController.GetFeatures();
-            if (features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft)) {
+            if (features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft))
+            {
                 pairingLabel.text = "Joy-Con (L) Selected\nPress any button on Joy-Con (R) to pair.";
 
                 pairSelectLR = !features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft);
                 pairSearchItem.SetActive(true);
                 StartPairSearch();
             }
-            else if (features.HasFlag(InputController.InputFeatures.Extra_SplitControllerRight)) {
+            else if (features.HasFlag(InputController.InputFeatures.Extra_SplitControllerRight))
+            {
                 pairingLabel.text = "Joy-Con (R) Selected\nPress any button on Joy-Con (L) to pair.";
 
                 pairSelectLR = !features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft);
                 pairSearchItem.SetActive(true);
                 StartPairSearch();
             }
-            else {
+            else
+            {
                 CancelPairSearch();
                 pairSearchItem.SetActive(false);
             }
@@ -194,12 +253,24 @@ namespace HeavenStudio.Editor
         public void StartBindSingle(int bt)
         {
             CancelBind();
-            if (PlayerInput.GetInputController(1).GetIsActionUnbindable(bt, InputController.ControlStyles.Pad)) 
+            if (PlayerInput.GetInputController(1).GetIsActionUnbindable(bt, PlayerInput.CurrentControlStyle))
             {
                 return;
             }
             currentBindingBt = bt;
-            currentControllerLabel.text = $"Now Binding: {(InputController.ActionsPad) bt}";
+
+            switch (PlayerInput.CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Touch:
+                    currentControllerLabel.text = $"Now Binding: {(InputController.ActionsTouch)bt}";
+                    break;
+                case InputController.ControlStyles.Baton:
+                    currentControllerLabel.text = $"Now Binding: {(InputController.ActionsBaton)bt}";
+                    break;
+                default:
+                    currentControllerLabel.text = $"Now Binding: {(InputController.ActionsPad)bt}";
+                    break;
+            }
         }
 
         public void StartBindAll()
@@ -226,7 +297,8 @@ namespace HeavenStudio.Editor
             controller.SaveBindings();
         }
 
-        public void StartAutoSearch() {
+        public void StartAutoSearch()
+        {
             CancelBind();
             if (!isPairSearching)
             {
@@ -235,18 +307,22 @@ namespace HeavenStudio.Editor
             }
         }
 
-        public void StartPairSearch() {
+        public void StartPairSearch()
+        {
             CancelBind();
-            if (!isAutoSearching) {
+            if (!isAutoSearching)
+            {
                 pairSearchLabel.SetActive(true);
                 pairSearchCancelBt.SetActive(true);
                 isPairSearching = true;
             }
         }
 
-        public void CancelPairSearch() {
+        public void CancelPairSearch()
+        {
             CancelBind();
-            if (isPairSearching) {
+            if (isPairSearching)
+            {
                 pairSearchLabel.SetActive(false);
                 pairSearchCancelBt.SetActive(false);
                 isPairSearching = false;
@@ -260,6 +336,17 @@ namespace HeavenStudio.Editor
             numConnectedLabel.text = "Connected: " + connected;
             currentControllerLabel.text = "Current Controller: " + PlayerInput.GetInputController(1).GetDeviceName();
             PopulateControllersDropdown();
+        }
+
+        public void PopulateStylesDropdown()
+        {
+            List<TMP_Dropdown.OptionData> dropDownData = new List<TMP_Dropdown.OptionData>();
+
+            var enumNames = Enum.GetNames(typeof(InputController.ControlStyles)).ToList();
+
+            stylesDropdown.ClearOptions();
+            stylesDropdown.AddOptions(enumNames);
+            stylesDropdown.value = (int)PlayerInput.CurrentControlStyle;
         }
 
         public void PopulateControllersDropdown()
@@ -277,30 +364,93 @@ namespace HeavenStudio.Editor
             controllersDropdown.value = PlayerInput.GetInputControllerId(1);
         }
 
+        public void ChangeControlStyle()
+        {
+            CancelBind();
+            PlayerInput.CurrentControlStyle = (InputController.ControlStyles)stylesDropdown.value;
+        }
+
+        public void UpdateControlStyleMapping()
+        {
+            switch (PlayerInput.CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Touch:
+                    PadBindingsMenus.ForEach(x => x.SetActive(false));
+                    BatonBindingsMenus.ForEach(x => x.SetActive(false));
+                    TouchBindingsMenus.ForEach(x => x.SetActive(true));
+                    break;
+                case InputController.ControlStyles.Baton:
+                    PadBindingsMenus.ForEach(x => x.SetActive(false));
+                    BatonBindingsMenus.ForEach(x => x.SetActive(true));
+                    TouchBindingsMenus.ForEach(x => x.SetActive(false));
+                    break;
+                default:
+                    PadBindingsMenus.ForEach(x => x.SetActive(true));
+                    BatonBindingsMenus.ForEach(x => x.SetActive(false));
+                    TouchBindingsMenus.ForEach(x => x.SetActive(false));
+                    break;
+            }
+
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+            {
+                cursorSensitivitySlider.gameObject.SetActive(true);
+            }
+            else
+            {
+                cursorSensitivitySlider.gameObject.SetActive(false);
+            }
+        }
+
         public void ShowControllerBinds(InputController controller)
         {
             string[] buttons = controller.GetButtonNames();
+            List<TMP_Text> bindsTxt;
+            int[] binds;
+            InputController.ControlBindings ctrlBinds = controller.GetCurrentBindings();
+
+            switch (PlayerInput.CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Touch:
+                    bindsTxt = TouchBindingsTxt;
+                    binds = ctrlBinds.Touch;
+                    break;
+                case InputController.ControlStyles.Baton:
+                    bindsTxt = BatonBindingsTxt;
+                    binds = ctrlBinds.Baton;
+                    break;
+                default:
+                    bindsTxt = PadBindingsTxt;
+                    binds = ctrlBinds.Pad;
+                    break;
+            }
 
             //show binds
             int ac = 0;
-            foreach (int i in controller.GetCurrentBindings().Pad)
+            foreach (int i in binds)
             {
-                if (ac >= PadBindingsTxt.Count) break;
-                
+                if (ac >= bindsTxt.Count) break;
+                if (bindsTxt[ac] == null)
+                {
+                    ac++;
+                    continue;
+                }
+
                 if (i == -1)
                 {
-                    PadBindingsTxt[ac].text = "NOT BOUND";
+                    bindsTxt[ac].text = "NOT BOUND";
                 }
                 else if (buttons[i] == null)
                 {
-                    PadBindingsTxt[ac].text = "UNKNOWN";
+                    bindsTxt[ac].text = "UNKNOWN";
                 }
                 else
                 {
-                    PadBindingsTxt[ac].text = buttons[i];
+                    bindsTxt[ac].text = buttons[i];
                 }
                 ac++;
             }
+
+            cursorSensitivitySlider.value = ctrlBinds.PointerSensitivity;
         }
 
         public void ShowControllerIcon(InputController controller)
@@ -321,56 +471,15 @@ namespace HeavenStudio.Editor
             }
 
             //setup material
-            Color colour;
-            switch (name)
-            {
-                case "Keyboard":
-                    controllerMat.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#F4F4F4", out colour) ? colour : Color.white);
-                    break;
-                case "Joy-Con (L)":
-                case "Joy-Con (R)":
-                    InputJoyshock joy = (InputJoyshock) controller;
-                    controllerMat.SetColor("_BodyColor", joy.GetBodyColor());
-                    controllerMat.SetColor("_BtnColor", joy.GetButtonColor());
-                    controllerMat.SetColor("_LGripColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
-                    controllerMat.SetColor("_RGripColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
-                    break;
-                case "Joy-Con Pair":
-                    joy = (InputJoyshock) controller;
-                    int joySide = JslGetControllerSplitType(joy.GetHandle());
-                    controllerMat.SetColor("_BodyColor",  joySide == SplitRight ? joy.GetButtonColor() : joy.GetOtherHalf().GetButtonColor());
-                    controllerMat.SetColor("_BtnColor",   joySide == SplitLeft ? joy.GetButtonColor() : joy.GetOtherHalf().GetButtonColor());
-                    controllerMat.SetColor("_LGripColor", joy.GetLeftGripColor());
-                    controllerMat.SetColor("_RGripColor", joy.GetRightGripColor());
-                    break;
-                case "Pro Controller":
-                    joy = (InputJoyshock) controller;
-                    controllerMat.SetColor("_BodyColor", joy.GetBodyColor());
-                    controllerMat.SetColor("_BtnColor", joy.GetButtonColor());
-                    controllerMat.SetColor("_LGripColor", joy.GetLeftGripColor());
-                    controllerMat.SetColor("_RGripColor", joy.GetRightGripColor());
-                    break;
-                case "DualShock 4":
-                    joy = (InputJoyshock) controller;
-                    controllerMat.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#E1E2E4", out colour) ? colour : Color.white);
-                    controllerMat.SetColor("_BtnColor", ColorUtility.TryParseHtmlString("#414246", out colour) ? colour : Color.white);
-                    controllerMat.SetColor("_LGripColor", joy.GetLightbarColour());
-                    controllerMat.SetColor("_RGripColor", joy.GetLightbarColour());
-                    break;
-                case "DualSense":
-                    joy = (InputJoyshock) controller;
-                    controllerMat.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#DEE0EB", out colour) ? colour : Color.white);
-                    controllerMat.SetColor("_BtnColor", ColorUtility.TryParseHtmlString("#272D39", out colour) ? colour : Color.white);
-                    controllerMat.SetColor("_LGripColor", joy.GetLightbarColour());
-                    controllerMat.SetColor("_RGripColor", joy.GetLightbarColour());
-                    break;
-                default:
-                    controllerMat.SetColor("_BodyColor", Color.white);
-                    controllerMat.SetColor("_BtnColor", Color.white);
-                    controllerMat.SetColor("_LGripColor", Color.white);
-                    controllerMat.SetColor("_RGripColor", Color.white);
-                    break;
-            }
+            controller.SetMaterialProperties(controllerMat);
+        }
+
+        public void SetCursorSensitivity()
+        {
+            var currentController = PlayerInput.GetInputController(1);
+            InputController.ControlBindings binds = currentController.GetCurrentBindings();
+            binds.PointerSensitivity = cursorSensitivitySlider.value;
+            currentController.SetCurrentBindings(binds);
         }
 
         public override void OnOpenTab()

@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using TMPro;
 using Jukebox;
 using UnityEngine.Assertions.Must;
@@ -25,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "The line to use when messing up the translation"),
                         new Param("auto", true, "Auto Pass Turn")
                     },
-                    defaultLength = 4f,
+                    defaultLength = 3f,
                     resizable = true,
                     priority = 2,
                 },
@@ -43,6 +44,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("alien turnover", "Pass Turn")
                 {
                     function = delegate { FirstContact.instance.PassTurnStandalone(eventCaller.currentEntity.beat);  },
+                    resizable = true,
                 },
                 new GameAction("alien success", "Success")
                 {
@@ -158,6 +160,19 @@ namespace HeavenStudio.Games
             idle
         }
 
+        protected static bool IA_PadAny(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Press =
+            new("CtrInterpreterPress", new int[] { IAPressCat, IAFlickCat, IAPressCat },
+            IA_PadAny, IA_TouchBasicPress, IA_BatonBasicPress);
+
         void OnDestroy()
         {
             foreach (var evt in scheduledInputs)
@@ -250,7 +265,7 @@ namespace HeavenStudio.Games
                     translateFailTextbox.SetActive(false);
                     if (autoPassTurn)
                     {
-                        AlienTurnOver(beat + interval, beat, beat + interval);
+                        AlienTurnOver(beat + interval, beat, beat + interval, 1);
                     }
                 })
             };
@@ -269,7 +284,7 @@ namespace HeavenStudio.Games
                     AlienSpeakInactive(speakEventToCheck["spaceNum"]);
                 }
             }
-            BeatAction.New(gameObject, queuedSpeaks);
+            BeatAction.New(this, queuedSpeaks);
         }
 
         public override void OnGameSwitch(double beat)
@@ -298,7 +313,7 @@ namespace HeavenStudio.Games
                 lastReportedBeat = Math.Round(Conductor.instance.songPositionInBeatsAsDouble);
             }
 
-            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Press) && !IsExpectingInputNow(InputAction_Press))
             {
                 translator.DoScaledAnimationAsync("translator_eh", 0.5f);
                 if (isSpeaking)
@@ -387,11 +402,12 @@ namespace HeavenStudio.Games
         public void PassTurnStandalone(double beat)
         {
             RiqEntity lastInterval = GetLastIntervalBeforeBeat(beat);
+            float length = EventCaller.GetAllInGameManagerList("firstContact", new string[] { "alien turnover" }).Find(x => x.beat == beat).length;
             if (lastInterval == null) return;
-            AlienTurnOver(beat, lastInterval.beat, lastInterval.beat + lastInterval.length);
+            AlienTurnOver(beat, lastInterval.beat, lastInterval.beat + lastInterval.length, length);
         }
 
-        private void AlienTurnOver(double beat, double intervalBeat, double endBeat)
+        private void AlienTurnOver(double beat, double intervalBeat, double endBeat, float length)
         {
             var inputs = GetAllSpeaksInBetweenBeat(intervalBeat, endBeat);
             inputs.Sort((x, y) => x.beat.CompareTo(y.beat));
@@ -399,10 +415,10 @@ namespace HeavenStudio.Games
             {
                 var input = inputs[i];
                 double relativeBeat = input.beat - intervalBeat;
-                ScheduleInput(beat, 1 + relativeBeat, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, AlienTapping, AlienOnMiss, AlienEmpty);
+                ScheduleInput(beat, length + relativeBeat, InputAction_Press, AlienTapping, AlienOnMiss, AlienEmpty);
                 callDiagList.Add(input["dialogue"]);
             }
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -411,7 +427,7 @@ namespace HeavenStudio.Games
                     alienTextbox.SetActive(false);
                     alien.Play("alien_point", 0, 0);
                 }),
-                new BeatAction.Action(beat + 0.5f, delegate 
+                new BeatAction.Action(beat + (length / 2), delegate 
                 { 
                     alien.Play("alien_idle", 0, 0); 
                 })
@@ -448,7 +464,7 @@ namespace HeavenStudio.Games
 
             MultiSound.Play(sound.ToArray());
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { alien.Play(animString, 0, 0); }),
                 new BeatAction.Action(beat + .5f, delegate { alien.Play(animString, 0, 0); }),
@@ -510,7 +526,7 @@ namespace HeavenStudio.Games
 
             if (!stay)
             {
-                BeatAction.New(missionControl, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length, delegate { missionControl.SetActive(false); }),
                     });

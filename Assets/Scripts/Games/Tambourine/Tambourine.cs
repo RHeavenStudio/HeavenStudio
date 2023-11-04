@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("beat intervals", "Start Interval")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; Tambourine.PreInterval(e.beat, e.length, e["auto"]); },
-                    defaultLength = 8f,
+                    defaultLength = 7f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -37,7 +38,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         Tambourine.PrePassTurn(eventCaller.currentEntity.beat);
                     },
-                    defaultLength = 1f,
+                    resizable = true,
                     preFunctionLength = 1f
                 },
                 new GameAction("bop", "Bop")
@@ -119,6 +120,34 @@ namespace HeavenStudio.Games
 
         public static Tambourine instance;
 
+        const int IA_AltPress = IAMAXCAT;
+        protected static bool IA_TouchNrmPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Nrm =
+            new("RvlDrumAlt", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchNrmPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlDrumAlt", new int[] { IA_AltPress, IA_AltPress, IA_AltPress },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+
         void Awake()
         {
             instance = this;
@@ -144,7 +173,7 @@ namespace HeavenStudio.Games
                     handsAnimator.Play("Bop", 0, 0);
                 }
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Nrm) && !IsExpectingInputNow(InputAction_Nrm))
             {
                 handsAnimator.Play("Shake", 0, 0);
                 SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
@@ -156,7 +185,7 @@ namespace HeavenStudio.Games
                     sadFace.SetActive(true);
                 }
             }
-            else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+            else if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt))
             {
                 handsAnimator.Play("Smack", 0, 0);
                 SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
@@ -256,11 +285,11 @@ namespace HeavenStudio.Games
                 }
             }
 
-            BeatAction.New(gameObject, actions);
+            BeatAction.New(this, actions);
 
             if (autoPassTurn)
             {
-                PassTurn(beat + interval, beat, interval);
+                PassTurn(beat + interval, beat, interval, 1);
             }
         }
 
@@ -300,10 +329,11 @@ namespace HeavenStudio.Games
         private void PassTurnStandalone(double beat)
         {
             var lastInterval = GetLastIntervalBeforeBeat(beat);
-            if (lastInterval != null) PassTurn(beat, lastInterval.beat, lastInterval.length);
+            float length = EventCaller.GetAllInGameManagerList("tambourine", new string[] { "pass turn" }).Find(x => x.beat == beat).length;
+            if (lastInterval != null) PassTurn(beat, lastInterval.beat, lastInterval.length, length);
         }
 
-        private void PassTurn(double beat, double intervalBeat, float intervalLength)
+        private void PassTurn(double beat, double intervalBeat, float intervalLength, float length)
         {
             SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}", beat);
             List<BeatAction.Action> actions = new()
@@ -323,12 +353,12 @@ namespace HeavenStudio.Games
                 double inputBeat = relevantInputs[i].beat - intervalBeat;
                 actions.Add(new BeatAction.Action(inputBeat, delegate
                 {
-                    if (isHit) ScheduleInput(beat + 1, inputBeat, InputType.STANDARD_ALT_DOWN, JustHit, Miss, Nothing);
-                    else ScheduleInput(beat + 1, inputBeat, InputType.STANDARD_DOWN, JustShake, Miss, Nothing);
-                    Bop(beat + 1 + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
+                    if (isHit) ScheduleInput(beat + length, inputBeat, InputAction_Alt, JustHit, Miss, Nothing);
+                    else ScheduleInput(beat + length, inputBeat, InputAction_Nrm, JustShake, Miss, Nothing);
+                    Bop(beat + length + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
                 }));
             }
-            BeatAction.New(gameObject, actions);
+            BeatAction.New(this, actions);
         }
 
         public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
@@ -337,7 +367,7 @@ namespace HeavenStudio.Games
             handsGoBop = whoBopsAuto == (int)WhoBops.Player || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
                     {
@@ -376,7 +406,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tambourine/player/turnPass/note3", beat + 0.3f),
             }, forcePlay: true);
             happyFace.SetActive(true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1, delegate { happyFace.SetActive(false); }),
             });

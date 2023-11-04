@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using static JSL;
-
 namespace HeavenStudio.InputSystem.Loaders
 {
     public static class InputKeyboardInitializer
@@ -40,7 +38,8 @@ namespace HeavenStudio.InputSystem
         .Where(k => ((int)k < (int)KeyCode.Mouse0))
         .ToArray();
 
-        static ControlBindings defaultBindings {
+        static ControlBindings defaultBindings
+        {
             get
             {
                 return new ControlBindings()
@@ -59,6 +58,7 @@ namespace HeavenStudio.InputSystem
                         (int)KeyCode.U,
                         (int)KeyCode.Escape,
                     },
+                    PointerSensitivity = 3,
                 };
             }
         }
@@ -77,10 +77,10 @@ namespace HeavenStudio.InputSystem
         }
 
         public override void OnSelected()
-        { 
+        {
 
         }
-        
+
         public override string GetDeviceName()
         {
             return "Keyboard";
@@ -159,20 +159,23 @@ namespace HeavenStudio.InputSystem
             return -1;
         }
 
-        public override bool GetAction(int button)
+        public override bool GetAction(ControlStyles style, int button)
         {
+            if (button < 0) return false;
             return Input.GetKey((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetActionDown(int button, out double dt)
+        public override bool GetActionDown(ControlStyles style, int button, out double dt)
         {
             dt = 0;
+            if (button < 0) return false;
             return Input.GetKeyDown((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetActionUp(int button, out double dt)
+        public override bool GetActionUp(ControlStyles style, int button, out double dt)
         {
             dt = 0;
+            if (button < 0) return false;
             return Input.GetKeyUp((KeyCode)currentBindings.Pad[button]);
         }
 
@@ -180,7 +183,20 @@ namespace HeavenStudio.InputSystem
         {
             return 0;
         }
-        
+
+        public override Vector3 GetVector(InputVector vec)
+        {
+            return Vector3.zero;
+        }
+
+        public override Vector2 GetPointer()
+        {
+            Camera cam = GameManager.instance.CursorCam;
+            Vector3 rawPointerPos = Input.mousePosition;
+            rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
+            return cam.ScreenToWorldPoint(rawPointerPos);
+        }
+
         //todo: directionals
         public override bool GetHatDirection(InputDirection direction)
         {
@@ -242,12 +258,70 @@ namespace HeavenStudio.InputSystem
                 this.playerNum = null;
                 return;
             }
-            this.playerNum = (int) playerNum;
+            this.playerNum = (int)playerNum;
         }
 
         public override int? GetPlayer()
         {
             return playerNum;
+        }
+
+        public override bool GetFlick(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSlide(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override void SetMaterialProperties(Material m)
+        {
+            bool b = ColorUtility.TryParseHtmlString("#F4F4F4", out Color colour);
+            m.SetColor("_BodyColor", b ? colour : Color.white);
+        }
+
+        public override bool GetCurrentStyleSupported()
+        {
+            return PlayerInput.CurrentControlStyle is ControlStyles.Pad; // or ControlStyles.Baton
+        }
+
+        public override ControlStyles GetDefaultStyle()
+        {
+            return ControlStyles.Pad;
+        }
+
+        public override bool GetSqueezeDown(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueezeUp(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueeze()
+        {
+            return false;
+        }
+
+        public override void TogglePointerLock(bool locked)
+        {
+        }
+
+        public override void RecentrePointer()
+        {
+        }
+
+        public override bool GetPointerLeftRight()
+        {
+            return false;
         }
     }
 }

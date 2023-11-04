@@ -34,7 +34,10 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e["sound"], e["amount"], e["visual"]);},
                     parameters = new List<Param>()
                     {
-                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat."),
+                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "amount" })
+                        }),
                         new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
                         new Param("visual", true, "Background Visual")
                     },
@@ -61,6 +64,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("hai", new EntityTypes.Integer(0, 100, 1), "Hai Amount"),
                         new Param("visual", true, "Background Visual")
                     }
+                },
+                new GameAction("hai", "Hai")
+                {
+                    preFunction = delegate { Lockstep.HaiSound(eventCaller.currentEntity.beat); }
+                },
+                new GameAction("ho", "Ho")
+                {
+                    preFunction = delegate { Lockstep.HoSound(eventCaller.currentEntity.beat); }
                 },
                 new GameAction("set colours", "Set Colours")
                 {
@@ -93,7 +104,10 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e["sound"], e["amount"], e["visual"], true, e.length);},
                     parameters = new List<Param>()
                     {
-                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat."),
+                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "amount" })
+                        }),
                         new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
                         new Param("visual", true, "Background Visual")
                     },
@@ -231,6 +245,11 @@ namespace HeavenStudio.Games
             bachEvents = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "bach" });
         }
 
+        private static bool ForceStepOnBeat(double beat)
+        {
+            return EventCaller.GetAllInGameManagerList("lockstep", new string[] { "marching" }).Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
+        }
+
         private void PersistColors(double beat)
         {
             var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "" }).FindAll(x => x.beat < beat);
@@ -344,7 +363,7 @@ namespace HeavenStudio.Games
                     }
                     queuedInputs.Clear();
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
                     currentMissStage = HowMissed.NotMissed;
                     double beatAnimCheck = cond.songPositionInBeatsAsDouble - 0.25;
@@ -391,7 +410,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -400,6 +419,16 @@ namespace HeavenStudio.Games
                     });
                 }
             }
+        }
+
+        public static void HaiSound(double beat)
+        {
+            SoundByte.PlayOneShot("games/lockstep/hai", beat, 1, 1, false, null, 0.02314814814f);
+        }
+        
+        public static void HoSound(double beat)
+        {
+            SoundByte.PlayOneShot("games/lockstep/ho", beat, 1, 1, false, null, 0.03086419753);
         }
 
         public static void OnbeatSwitchSound(double beat, int hais, bool sound)
@@ -456,7 +485,7 @@ namespace HeavenStudio.Games
                 {
                     if (visual) ChangeBeatBackGroundColour(true);
                 }),
-                new BeatAction.Action(beat + 1.75f, delegate { if (!marchRecursing) MarchRecursive(beat + 2f); }),
+                new BeatAction.Action(beat + 1.75f, delegate { if (!marchRecursing && !ForceStepOnBeat(beat + 2f)) MarchRecursive(beat + 2f); }),
                 new BeatAction.Action(beat + 2f, delegate { if (visual) ChangeBeatBackGroundColour(false); }),
             };
             List<BeatAction.Action> actions = new();
@@ -464,7 +493,7 @@ namespace HeavenStudio.Games
             {
                 if (action.beat >= gameswitchBeat) actions.Add(action);
             }
-            if (actions.Count > 0) BeatAction.New(instance.gameObject, actions);
+            if (actions.Count > 0) BeatAction.New(instance, actions);
         }
 
         public static void OffbeatSwitchSound(double beat, bool hoSound, bool sound)
@@ -519,7 +548,7 @@ namespace HeavenStudio.Games
                 {
                     if (visual) ChangeBeatBackGroundColour(false);
                 }),
-                new BeatAction.Action(beat + 3.25f, delegate { if (!marchRecursing) MarchRecursive(beat + 3.5f); }),
+                new BeatAction.Action(beat + 3.25f, delegate { if (!marchRecursing && !ForceStepOnBeat(beat + 3.5)) MarchRecursive(beat + 3.5f); }),
                 new BeatAction.Action(beat + 3.5f, delegate { if (visual) ChangeBeatBackGroundColour(true); }),
             };
             List<BeatAction.Action> actions = new();
@@ -527,7 +556,7 @@ namespace HeavenStudio.Games
             {
                 if (action.beat >= gameswitchBeat) actions.Add(action);
             }
-            if (actions.Count > 0) BeatAction.New(instance.gameObject, actions);
+            if (actions.Count > 0) BeatAction.New(instance, actions);
         }
 
         private struct QueuedMarch
@@ -587,7 +616,7 @@ namespace HeavenStudio.Games
                     EvaluateMarch(offBeat);
                 })
             };
-            ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            ScheduleInput(beat - 1, 1, InputAction_BasicPress, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             for (int i = 1; i < length; i++)
             {
                 double stepBeat = beat + i;
@@ -596,9 +625,9 @@ namespace HeavenStudio.Games
                     if (BachOnBeat(stepBeat)) bach.DoScaledAnimationAsync(offBeat ? "BachOff" : "BachOn", 0.5f);
                     EvaluateMarch(offBeat);
                 }));
-                ScheduleInput(stepBeat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+                ScheduleInput(stepBeat - 1, 1, InputAction_BasicPress, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             }
-            BeatAction.New(gameObject, steps);
+            BeatAction.New(this, steps);
         }
 
         private void StartMarching(double beat, bool sound, int amount, bool visual)
@@ -607,7 +636,7 @@ namespace HeavenStudio.Games
             bool offBeat = beat % 1 != 0;
             if (visual)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { ChangeBeatBackGroundColour(offBeat); })
                 });
@@ -631,8 +660,8 @@ namespace HeavenStudio.Games
             if (NextStepIsSwitch(beat)) beat -= 0.5;
             bool offBeat = beat % 1 != 0;
             bool bachOnBeat = BachOnBeat(beat);
-            ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            ScheduleInput(beat - 1, 1, InputAction_BasicPress, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate 
                 { 

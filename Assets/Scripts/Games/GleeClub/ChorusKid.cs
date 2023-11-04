@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
         [SerializeField] SpriteRenderer sr;
         [SerializeField] bool player;
         Sound currentSound;
-        
+
         public float currentPitch = 1f;
 
         public float gameSwitchFadeOutTime = 0f;
@@ -47,12 +47,12 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             {
                 disappeared = disappear;
                 sr.color = new Color(1, 1, 1, 1);
-                if (player && !PlayerInput.Pressing() && !GameManager.instance.autoplay) 
+                if (player && !PlayerInput.GetIsAction(GleeClub.InputAction_BasicPressing) && !GameManager.instance.autoplay)
                 {
                     StartSinging();
                     game.leftChorusKid.MissPose();
                     game.middleChorusKid.MissPose();
-                } 
+                }
             }
         }
 
@@ -77,7 +77,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             if (currentSound != null) SoundByte.KillLoop(currentSound, 0f);
             SoundByte.PlayOneShotGame("gleeClub/LoudWailStart");
             currentSound = SoundByte.PlayOneShotGame("gleeClub/LoudWailLoop", -1, currentPitch, 1f, true);
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1f, delegate { UnYell(); })
             });

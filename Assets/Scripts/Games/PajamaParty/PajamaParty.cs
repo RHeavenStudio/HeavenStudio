@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -111,6 +112,42 @@ namespace HeavenStudio.Games
             NoAwake,
         }
 
+        const int IAAltDownCat = IAMAXCAT;
+        const int IAAltUpCat = IAMAXCAT + 1;
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_AltStart);
+        }
+
+        protected static bool IA_PadAltRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltRelease(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_AltStart =
+            new("CtrPillowAltStart", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_AltFinish =
+            new("CtrPillowAltFinish", new int[] { IAAltUpCat, IAFlickCat, IAAltUpCat },
+            IA_PadAltRelease, IA_TouchFlick, IA_BatonAltRelease);
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("CtrPillowTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
+
         void Awake()
         {
             instance = this;
@@ -204,7 +241,7 @@ namespace HeavenStudio.Games
                         }
                     }));
                 }
-                BeatAction.New(gameObject, actions);
+                BeatAction.New(this, actions);
             }
         }
 
@@ -218,7 +255,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("pajamaParty/three3", beat + 2f),
                 });
 
-            BeatAction.New(Bed, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(
                     beat,
@@ -265,7 +302,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("pajamaParty/five5", beat + 2f)
                 });
 
-            BeatAction.New(Bed, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action( beat,        delegate { JumpRow(4, beat); }),
                 new BeatAction.Action( beat + 0.5f, delegate { JumpRow(3, beat + 0.5f, 2); }),
@@ -293,7 +330,7 @@ namespace HeavenStudio.Games
             if (doSound)
                 PlayThrowSequenceSound(beat);
 
-            BeatAction.New(Mako.Player, new List<BeatAction.Action>()
+            BeatAction.New(Mako, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2f, delegate { MonkeyCharge(beat + 2f); } ),
                 new BeatAction.Action(beat + 3f, delegate { MonkeyThrow(beat + 3f); } ),
@@ -358,7 +395,7 @@ namespace HeavenStudio.Games
             }
 
             if (action == 1) return;
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(deslumber, delegate { 
                     Mako.anim.DoScaledAnimationAsync("MakoAwake", 0.5f);
                     SoundByte.PlayOneShotGame("pajamaParty/siestaDone"); 

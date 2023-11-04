@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         public void Init(double beat)
         {
-            game.ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, Just, Miss, Empty);
+            game.ScheduleInput(beat, 1.5f, DoubleDate.InputAction_FlickPress, Just, Miss, Empty);
             path = game.GetPath("FootBallInNoHit");  // there's a second path for footballs that hit the weasels, use that if the weasels haven't been hit recently
             UpdateLastRealPos();
             pathStartBeat = beat - 1f;
@@ -63,7 +63,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
                 SoundByte.PlayOneShot("miss");
                 game.Kick(false);
                 GetComponent<SpriteRenderer>().sortingOrder = 8;
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 4f, delegate
                     {
@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
                 return;
             }
             Hit();
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 1f, delegate
                 {
@@ -115,7 +115,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
                 }
             }
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 5f, delegate
                 {

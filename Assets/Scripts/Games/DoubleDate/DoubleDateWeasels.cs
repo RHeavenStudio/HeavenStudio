@@ -48,7 +48,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             {
                 notHit = false;
                 anim.DoScaledAnimationAsync("WeaselsHide", 0.5f);
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 1.45f, delegate
                     {
@@ -75,7 +75,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             {
                 notHit = false;
                 anim.DoScaledAnimationAsync("WeaselsHit", 0.5f);
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 2f, delegate
                     {

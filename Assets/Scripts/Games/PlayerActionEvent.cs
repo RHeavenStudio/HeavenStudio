@@ -1,11 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using DG.Tweening;
-using HeavenStudio.Util;
-using Starpelly;
 
 using HeavenStudio.Common;
 
@@ -27,11 +22,13 @@ namespace HeavenStudio.Games
 
         public ActionEventCallback OnDestroy; //Function to trigger whenever this event gets destroyed. /!\ Shouldn't be used for a minigame! Use OnMiss instead /!\
 
+        public PlayerInput.InputAction InputAction;
+
         public double startBeat;
         public double timer;
 
         public bool isEligible = true;
-        public bool canHit  = true; //Indicates if you can still hit the cue or not. If set to false, it'll guarantee a miss
+        public bool canHit = true; //Indicates if you can still hit the cue or not. If set to false, it'll guarantee a miss
         public bool enabled = true; //Indicates if the PlayerActionEvent is enabled. If set to false, it'll not trigger any events and destroy itself AFTER it's not relevant anymore
         public bool triggersAutoplay = true;
         bool lockedByEvent = false;
@@ -44,11 +41,11 @@ namespace HeavenStudio.Games
         public InputType inputType; //The type of input. Check the InputType class to see a list of all of them
 
         public bool perfectOnly = false; //Indicates that the input only recognize perfect inputs.
-        
+
         public bool countsForAccuracy = true; //Indicates if the input counts for the accuracy or not. If set to false, it'll not be counted in the accuracy calculation
 
         public void setHitCallback(ActionEventCallbackState OnHit)
-        { 
+        {
             this.OnHit = OnHit;
         }
 
@@ -62,13 +59,17 @@ namespace HeavenStudio.Games
             this.IsHittable = IsHittable;
         }
 
-        public void Enable()  { enabled = true; }
+        public void Enable() { enabled = true; }
         public void Disable() { enabled = false; }
         public void QueueDeletion() { markForDeletion = true; }
 
         public bool IsCorrectInput(out double dt)
         {
             dt = 0;
+            if (InputAction != null)
+            {
+                return PlayerInput.GetIsAction(InputAction, out dt);
+            }
             return (
                 //General inputs, both down and up
                 (PlayerInput.Pressed(out dt) && inputType.HasFlag(InputType.STANDARD_DOWN)) ||
@@ -103,7 +104,7 @@ namespace HeavenStudio.Games
         public void Update()
         {
             if (markForDeletion) CleanUp();
-            if(!Conductor.instance.NotStopped()) CleanUp(); // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
+            if (!Conductor.instance.NotStopped()) CleanUp(); // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
 
             if (noAutoplay && autoplayOnly) autoplayOnly = false;
             if (noAutoplay && triggersAutoplay) triggersAutoplay = false;
@@ -127,12 +128,16 @@ namespace HeavenStudio.Games
             {
                 return;
             }
-            
+
             if (!autoplayOnly && (IsHittable == null || IsHittable != null && IsHittable()) && IsCorrectInput(out double dt))
             {
                 normalizedTime -= dt;
                 if (IsExpectingInputNow())
                 {
+                    // if (InputAction != null)
+                    // {
+                    //     Debug.Log("Hit " + InputAction.name);
+                    // }
                     double stateProg = ((normalizedTime - Minigame.JustEarlyTime()) / (Minigame.JustLateTime() - Minigame.JustEarlyTime()) - 0.5f) * 2;
                     Hit(stateProg, normalizedTime);
                 }
@@ -143,9 +148,12 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void LateUpdate() {
-            if (markForDeletion) {
-                CleanUp();
+        public void LateUpdate()
+        {
+            if (markForDeletion)
+            {
+                allEvents.Remove(this);
+                OnDestroy(this);
                 Destroy(this.gameObject);
             }
             foreach (PlayerActionEvent evt in allEvents)
@@ -156,12 +164,22 @@ namespace HeavenStudio.Games
 
         private bool CheckEventLock()
         {
-            foreach(PlayerActionEvent toCompare in allEvents)
+            foreach (PlayerActionEvent toCompare in allEvents)
             {
                 if (toCompare == this) continue;
                 if (toCompare.autoplayOnly) continue;
-                if ((toCompare.inputType & this.inputType) == 0) continue;
-                if (!toCompare.IsExpectingInputNow()) continue;
+                if (InputAction != null)
+                {
+                    if (toCompare.InputAction == null) continue;
+                    int catIdx = (int)PlayerInput.CurrentControlStyle;
+                    if (toCompare.InputAction != null
+                        && toCompare.InputAction.inputLockCategory[catIdx] != InputAction.inputLockCategory[catIdx]) continue;
+                }
+                else
+                {
+                    if ((toCompare.inputType & this.inputType) == 0) continue;
+                    if (!toCompare.IsExpectingInputNow()) continue;
+                }
 
                 double t1 = this.startBeat + this.timer;
                 double t2 = toCompare.startBeat + toCompare.timer;
@@ -169,7 +187,7 @@ namespace HeavenStudio.Games
 
                 // compare distance between current time and the events
                 // events that happen at the exact same time with the exact same inputs will return true
-                if (Math.Abs(t1 - songPos) > Math.Abs(t2 - songPos)) 
+                if (Math.Abs(t1 - songPos) > Math.Abs(t2 - songPos))
                     return false;
                 else if (t1 != t2)  // if they are the same time, we don't want to lock the event
                     toCompare.lockedByEvent = true;
@@ -179,7 +197,7 @@ namespace HeavenStudio.Games
 
         private void AutoplayInput(double normalizedTime, bool autoPlay = false)
         {
-            if (triggersAutoplay && (GameManager.instance.autoplay || autoPlay) && GameManager.instance.canInput && normalizedTime >= 1f - (Time.deltaTime*0.5f))
+            if (triggersAutoplay && (GameManager.instance.autoplay || autoPlay) && GameManager.instance.canInput && normalizedTime >= 1f - (Time.deltaTime * 0.5f))
             {
                 AutoplayEvent();
                 if (!autoPlay)
@@ -205,7 +223,6 @@ namespace HeavenStudio.Games
             }
             if (!enabled) return false;
             if (!isEligible) return false;
-            if (markForDeletion) return false;
 
             double normalizedBeat = GetNormalizedTime();
             return normalizedBeat > Minigame.NgEarlyTime() && normalizedBeat < Minigame.NgLateTime();
@@ -237,7 +254,7 @@ namespace HeavenStudio.Games
         }
 
         //The state parameter is either -1 -> Early, 0 -> Perfect, 1 -> Late
-        public void Hit(double state, double time) 
+        public void Hit(double state, double time)
         {
             if (OnHit != null && enabled)
             {
@@ -247,7 +264,7 @@ namespace HeavenStudio.Games
                     int offset = Mathf.CeilToInt((float)normalized * 1000);
                     GameManager.instance.AvgInputOffset = offset;
                     state = System.Math.Max(-1.0, System.Math.Min(1.0, state));
-                    OnHit(this, (float) state);
+                    OnHit(this, (float)state);
 
                     CleanUp();
                     if (countsForAccuracy && !(noAutoplay || autoplayOnly) && isEligible)
@@ -263,9 +280,10 @@ namespace HeavenStudio.Games
                             GoForAPerfect.instance.Hit();
                         }
                     }
-                } else
+                }
+                else
                 {
-                   Blank();
+                    Blank();
                 }
             }
         }
@@ -333,7 +351,7 @@ namespace HeavenStudio.Games
 
         public void Blank()
         {
-            if(OnBlank != null && enabled && !autoplayOnly)
+            if (OnBlank != null && enabled && !autoplayOnly)
             {
                 OnBlank(this);
             }
@@ -342,8 +360,6 @@ namespace HeavenStudio.Games
         public void CleanUp()
         {
             if (markForDeletion) return;
-            allEvents.Remove(this);
-            OnDestroy(this);
             markForDeletion = true;
         }
     }

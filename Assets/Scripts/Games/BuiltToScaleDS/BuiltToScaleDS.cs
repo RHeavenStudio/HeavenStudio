@@ -22,7 +22,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("silent", false, "Mute Audio", "Whether the piano notes should be muted or not."),
+                        new Param("silent", false, "Mute Audio", "Whether the piano notes should be muted or not.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => !(bool)x, new string[] { "note1", "note2", "note3", "note4", "note5", "note6"})
+                        }),
                         new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st note", "The number of semitones up or down this note should be pitched"),
                         new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd note", "The number of semitones up or down this note should be pitched"),
                         new Param("note3", new EntityTypes.Integer(-24, 24, 4), "3rd note", "The number of semitones up or down this note should be pitched"),
@@ -255,6 +258,7 @@ namespace HeavenStudio.Games
         List<RiqEntity> spawnedBlockEvents = new List<RiqEntity>();
         void Update()
         {
+            shootingThisFrame = false;
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
                 return;
 
@@ -280,21 +284,13 @@ namespace HeavenStudio.Games
                 HandleLights();
             }
 
-            currentBeltOffset = (currentBeltOffset + Time.deltaTime * -beltSpeed) % 1f;
-            beltMaterial.mainTextureOffset = new Vector2(0f, currentBeltOffset);
-            environmentRenderer.materials = environmentMaterials;
-            elevatorRenderer.materials = elevatorMaterials;
-        }
-
-        void LateUpdate()
-        {
             var shooterState = shooterAnim.GetCurrentAnimatorStateInfo(0);
             bool canShoot = (!shooterState.IsName("Shoot") || shooterAnim.IsAnimationNotPlaying()) && !shootingThisFrame;
 
             if (canShoot && lastShotOut)
                 lastShotOut = false;
 
-            if (canShoot && !lastShotOut && PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (canShoot && !lastShotOut && PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress.inputLockCategory))
             {
                 lastShotOut = true;
                 shootingThisFrame = true;
@@ -303,15 +299,36 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("builtToScaleDS/Boing");
             }
 
-            if (!shootingThisFrame)
+            currentBeltOffset = (currentBeltOffset + Time.deltaTime * -beltSpeed) % 1f;
+            beltMaterial.mainTextureOffset = new Vector2(0f, currentBeltOffset);
+            environmentRenderer.materials = environmentMaterials;
+            elevatorRenderer.materials = elevatorMaterials;
+
+            if (PlayerInput.PlayerHasControl() && PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Touch)
             {
-                if (blocksHolder.childCount == 0 && shooterState.IsName("Windup") && shooterAnim.IsAnimationNotPlaying())
+                if (PlayerInput.GetIsAction(InputAction_BasicPress))
                 {
-                    shooterAnim.Play("WindDown", 0, 0);
+                    shooterAnim.Play("Windup", 0, 0);
+                }
+                if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !shootingThisFrame)
+                {
+                    shooterAnim.Play("WindDown", 0, 23 / 28f);
                 }
             }
+            else
+            {
+                if (!shootingThisFrame)
+                {
+                    if (blocksHolder.childCount == 0 && shooterState.IsName("Windup") && shooterAnim.IsAnimationNotPlaying())
+                    {
+                        shooterAnim.Play("WindDown", 0, 0);
+                    }
+                }
+            }
+        }
 
-            shootingThisFrame = false;
+        void LateUpdate()
+        {
         }
 
         public void Lights(double beat, float length, bool autoLights, bool shouldLights)
@@ -340,7 +357,7 @@ namespace HeavenStudio.Games
                         }
                     }));
                 }
-                BeatAction.New(instance.gameObject, actions);
+                BeatAction.New(instance, actions);
             }
             if (!autoLights && !shouldLights)
             {
@@ -467,7 +484,7 @@ namespace HeavenStudio.Games
         public void MultiplePiano(double beat, float length, bool silent, int note1, int note2, int note3, int note4, int note5, int note6)
         {
             if (silent) return;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayPiano(beat, length, note1); }),
                 new BeatAction.Action(beat + length, delegate { PlayPiano(beat + length, length, note2); }),
