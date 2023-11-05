@@ -1,3 +1,4 @@
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -6,6 +7,10 @@ using HeavenStudio.Util;
 using HeavenStudio.Common;
 using Starpelly;
 using System.Linq;
+
+using SFB;
+using Jukebox;
+using TMPro;
 
 namespace HeavenStudio
 {
@@ -31,6 +36,9 @@ namespace HeavenStudio
 
         [SerializeField] private SettingsDialog settingsPanel;
 
+        [SerializeField] private GameObject snsPanel;
+        [SerializeField] private TMP_Text snsVersionText;
+
         private AudioSource musicSource;
 
         private double songPosBeat;
@@ -47,7 +55,7 @@ namespace HeavenStudio
 
         private bool logoRevealed;
 
-        private bool menuMode;
+        private bool menuMode, snsRevealed;
 
         private Animator menuAnim;
 
@@ -79,11 +87,19 @@ namespace HeavenStudio
             songPos = time + offset;
 
             songPosBeat = SecsToBeats(songPos);
-            if (logoRevealed && !menuMode && Input.anyKeyDown)
+            if (Input.anyKeyDown)
             {
-                menuMode = true;
-                menuAnim.Play("Revealed", 0, 0);
-                pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
+                if (logoRevealed && !menuMode)
+                {
+                    menuMode = true;
+                    menuAnim.Play("Revealed", 0, 0);
+                    pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
+                }
+                // else if (snsRevealed)
+                // {
+                //     snsRevealed = false;
+                //     snsPanel.SetActive(false);
+                // }
             }
             if (loops == 0 && !logoRevealed)
             {
@@ -120,16 +136,16 @@ namespace HeavenStudio
                         star.Play("StarBop", 0, 0);
                     }
                 }
-                if (targetBopBeat > 3 || loops > 0) 
+                if (targetBopBeat > 3 || loops > 0)
                 {
                     logoAnim.Play(altBop ? "LogoBop2" : "LogoBop", 0, 0);
                     altBop = !altBop;
                 }
                 targetBopBeat += 1;
-                if ((!settingsPanel.IsOpen) && logoRevealed && logoHoverCollider.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
-                {
-                    SoundByte.PlayOneShot("metronome");
-                }
+                // if ((!settingsPanel.IsOpen) && logoRevealed && logoHoverCollider.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
+                // {
+                //     SoundByte.PlayOneShot("metronome");
+                // }
             }
         }
 
@@ -151,23 +167,74 @@ namespace HeavenStudio
 
         public void CreatePressed()
         {
+            GlobalGameManager.PlayOpenFile = null;
             GlobalGameManager.LoadScene("Editor");
             SoundByte.PlayOneShot("ui/UIEnter");
         }
 
         public void PlayPressed()
         {
+            SoundByte.PlayOneShot("ui/UISelect");
+            // temp: open file browser then go into quickplay
+            OpenQuickplayFileDialog();
             // go into the play mode menu
+        }
+
+        void OpenQuickplayFileDialog()
+        {
+            var extensions = new[]
+            {
+                new ExtensionFilter("Heaven Studio Remix File ", new string[] { "riq" }),
+            };
+
+            StandaloneFileBrowser.OpenFilePanelAsync("Open Remix", "", extensions, false, (string[] paths) =>
+            {
+                var path = Path.Combine(paths);
+                if (path == string.Empty)
+                {
+                    SoundByte.PlayOneShot("ui/UICancel");
+                    return;
+                }
+
+                try
+                {
+                    RiqFileHandler.UnlockCache();
+                    string tmpDir = RiqFileHandler.ExtractRiq(path);
+                    Debug.Log("Imported RIQ successfully!");
+                    GlobalGameManager.PlayOpenFile = path;
+                    SoundByte.PlayOneShot("ui/UIEnter");
+                    GlobalGameManager.LoadScene("Game", 0.35f, 0.5f);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.Log($"Error importing RIQ: {e.Message}");
+                    Debug.LogException(e);
+                    GlobalGameManager.ShowErrorMessage("Error Loading RIQ", e.Message + "\n\n" + e.StackTrace);
+                    return;
+                }
+            });
         }
 
         public void SocialsPressed()
         {
+            snsRevealed = true;
+            snsVersionText.text = GlobalGameManager.buildTime;
+            snsPanel.SetActive(true);
+            SoundByte.PlayOneShot("ui/UISelect");
             // show a panel with our SNS links
+        }
+
+        public void SocialsClose()
+        {
+            snsRevealed = false;
+            snsPanel.SetActive(false);
+            SoundByte.PlayOneShot("ui/UICancel");
         }
 
         public void SettingsPressed()
         {
             settingsPanel.SwitchSettingsDialog();
+            SoundByte.PlayOneShot("ui/UISelect");
             // notes:
             //  gameplay settings currently don't work due to the overlay pereview requiring the screen composition setup from a gameplay prefab
             //  adding the attract screen will fix this since we'd need to add that prefab for it anyways
@@ -175,6 +242,7 @@ namespace HeavenStudio
 
         public void QuitPressed()
         {
+            SoundByte.PlayOneShot("ui/PauseQuit");
             Application.Quit();
         }
     }

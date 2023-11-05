@@ -271,7 +271,7 @@ namespace HeavenStudio.InputSystem
         public abstract Vector3 GetVector(InputVector vector);
 
         /// <summary>
-        /// Get the value of a pointer mapped to screen coordinates
+        /// Get the value of a pointer mapped to world coordinates
         /// </summary>
         /// <returns></returns>
         public abstract Vector2 GetPointer();

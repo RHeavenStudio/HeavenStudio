@@ -16,7 +16,6 @@ namespace HeavenStudio
         [SerializeField] TMP_Text versionDisclaimer;
         [SerializeField] bool enableSecondDisclaimer;
 
-        public static string OnOpenFile;
         bool fastBoot = false;
         void Start()
         {
@@ -29,7 +28,7 @@ namespace HeavenStudio
                 {
                     if (File.Exists(args[i]) && (args[i].EndsWith(".riq") || args[i].EndsWith(".tengoku")))
                     {
-                        OnOpenFile = args[i];
+                        GlobalGameManager.PlayOpenFile = args[i];
                     }
                 }
                 if (args[i] == "--nosplash")
@@ -90,7 +89,7 @@ namespace HeavenStudio
 
         void OnFinishDisclaimer(float fadeDuration = 0)
         {
-            if (OnOpenFile is not null or "")
+            if (GlobalGameManager.PlayOpenFile is not null or "")
             {
                 GlobalGameManager.LoadScene("Game", fadeDuration, 0.5f);
             }

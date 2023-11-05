@@ -467,7 +467,10 @@ namespace HeavenStudio.InputSystem
         public override void TogglePointerLock(bool locked)
         {
             Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
-            RecentrePointer();
+            if (locked)
+            {
+                RecentrePointer();
+            }
         }
 
         public override void RecentrePointer()

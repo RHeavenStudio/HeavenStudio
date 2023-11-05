@@ -28,6 +28,7 @@ namespace HeavenStudio
         [SerializeField] Button errorLogButton;
         [SerializeField] Slider dialogProgress;
         public static bool IsShowingDialog;
+        public static string PlayOpenFile = null;
 
         public static string buildTime = "00/00/0000 00:00:00";
 
@@ -46,7 +47,7 @@ namespace HeavenStudio
         public static int CustomScreenWidth = 1280;
         public static int CustomScreenHeight = 720;
 
-        public static readonly (int width, int height)[] DEFAULT_SCREEN_SIZES = new[] { (1280, 720), (1920, 1080), (2560, 1440), (3840, 2160)};
+        public static readonly (int width, int height)[] DEFAULT_SCREEN_SIZES = new[] { (1280, 720), (1920, 1080), (2560, 1440), (3840, 2160) };
         public static readonly string[] DEFAULT_SCREEN_SIZES_STRING = new[] { "1280x720", "1920x1080", "2560x1440", "3840x2160", "Custom" };
         public static int ScreenSizeIndex = 0;
 
@@ -92,7 +93,7 @@ namespace HeavenStudio
             CustomScreenHeight = PersistentDataManager.gameSettings.resolutionHeight;
 
             ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
-            
+
             if (PersistentDataManager.gameSettings.dspSize == 0)
                 PersistentDataManager.gameSettings.dspSize = 512;
             if (PersistentDataManager.gameSettings.sampleRate == 0)
@@ -117,13 +118,13 @@ namespace HeavenStudio
                 ChangeScreenSize();
             }
             PlayerInput.InitInputControllers();
-            #if UNITY_EDITOR
-                Starpelly.OS.ChangeWindowTitle("Heaven Studio UNITYEDITOR ");
-                buildTime = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
-            #else
+#if UNITY_EDITOR
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio UNITYEDITOR ");
+            buildTime = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
+#else
                 Starpelly.OS.ChangeWindowTitle("Heaven Studio (INDEV) " + Application.buildGUID.Substring(0, 8));
                 buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
-            #endif          
+#endif
         }
 
         public void Awake()
@@ -137,7 +138,7 @@ namespace HeavenStudio
             IsShowingDialog = false;
         }
 
-        private void Update() 
+        private void Update()
         {
             PlayerInput.UpdateInputControllers();
         }
@@ -211,12 +212,23 @@ namespace HeavenStudio
 
             instance.fadeImage.DOKill();
             instance.fadeImage.gameObject.SetActive(true);
-            instance.fadeImage.color = new Color(0, 0, 0, 0);
-            instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+            if (fadeIn <= 0)
             {
-                instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
+                instance.fadeImage.color = new Color(0, 0, 0, 1);
                 instance.loadingText.enabled = true;
-            });
+                AssetBundle.UnloadAllAssetBundles(true);
+                instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
+            }
+            else
+            {
+                instance.fadeImage.color = new Color(0, 0, 0, 0);
+                instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+                {
+                    AssetBundle.UnloadAllAssetBundles(true);
+                    instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
+                    instance.loadingText.enabled = true;
+                });
+            }
         }
 
         public static void ForceFade(float fadeIn, float hold, float fadeOut)
@@ -244,11 +256,11 @@ namespace HeavenStudio
             instance.dialogProgress.gameObject.SetActive(false);
 
             instance.errorBuild.gameObject.SetActive(true);
-            #if UNITY_EDITOR
-                instance.errorBuild.text = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
-            #else
+#if UNITY_EDITOR
+            instance.errorBuild.text = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
+#else
                 instance.errorBuild.text = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
-            #endif
+#endif
 
             instance.messagePanel.SetActive(true);
         }
@@ -375,7 +387,7 @@ namespace HeavenStudio
             if (discordDuringTesting || !Application.isEditor)
             {
                 if (PersistentDataManager.gameSettings.discordRPCEnable)
-                {   
+                {
                     DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
                     Debug.Log("Discord status updated");
                 }

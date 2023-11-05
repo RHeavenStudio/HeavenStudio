@@ -46,6 +46,7 @@ namespace HeavenStudio.Common
         {
             if (GlobalGameManager.IsShowingDialog) return;
             if (!Conductor.instance.isPlaying) return;
+            GameManager.instance.CircleCursor.LockCursor(true);
             Conductor.instance.Pause();
             pauseBeat = Conductor.instance.songPositionInBeatsAsDouble;
             chartTitleText.text = GameManager.instance.Beatmap["remixtitle"].ToString();
@@ -61,6 +62,7 @@ namespace HeavenStudio.Common
         void UnPause(bool instant = false)
         {
             if ((!instant) && (!Conductor.instance.isPaused)) return;
+            // GameManager.instance.CircleCursor.LockCursor(true);
             Conductor.instance.Play(pauseBeat);
             if (instant)
             {
@@ -110,7 +112,7 @@ namespace HeavenStudio.Common
 
             if (isQuitting) return;
 
-            if (PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btPause, out _))
+            if (PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btPause, out _) && !settingsDialog.IsOpen)
             {
                 if (isPaused)
                 {
@@ -123,6 +125,19 @@ namespace HeavenStudio.Common
             }
             else if (isPaused && canPick && !settingsDialog.IsOpen)
             {
+                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                {
+                    foreach (Transform t in optionHolder.transform)
+                    {
+                        if (t.GetComponent<Collider2D>().OverlapPoint(PlayerInput.GetInputController(1).GetPointer()))
+                        {
+                            int idx = t.GetSiblingIndex();
+                            ChooseOption((Options)idx, idx != optionSelected);
+                            optionSelected = idx;
+                            break;
+                        }
+                    }
+                }
                 if (Input.GetKeyDown(KeyCode.UpArrow) || PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btUp, out _))
                 {
                     optionSelected--;
@@ -209,11 +224,13 @@ namespace HeavenStudio.Common
         {
             isQuitting = true;
             SoundByte.PlayOneShot("ui/PauseQuit");
-            GlobalGameManager.LoadScene("Editor", 0, 0.1f);
+            GameManager.instance.CircleCursor.LockCursor(false);
+            GlobalGameManager.LoadScene("Title", 0, 0.35f);
         }
 
         void OnSettings()
         {
+            GameManager.instance.CircleCursor.LockCursor(false);
             settingsDialog.SwitchSettingsDialog();
         }
     }

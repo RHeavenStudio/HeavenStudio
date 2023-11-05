@@ -187,7 +187,6 @@ namespace HeavenStudio
             if (playOnStart)
             {
                 StartCoroutine(WaitReadyAndPlayCo(startBeat));
-                CircleCursor.LockCursor(true);
             }
         }
 
@@ -630,6 +629,10 @@ namespace HeavenStudio
                     miniGame.OnPlay(beat);
             }
 
+            if (playOnStart)
+            {
+                CircleCursor.LockCursor(true);
+            }
             Application.backgroundLoadingPriority = ThreadPriority.Low;
             Conductor.instance.Play(beat);
         }
@@ -670,15 +673,17 @@ namespace HeavenStudio
                 Debug.Log($"Perfect Clear!");
 
             KillAllSounds();
-            if (playOnStart || restart)
+            if (restart)
             {
                 Play(0, restartDelay);
             }
-            else
+            else if (playOnStart)
             {
-                Application.backgroundLoadingPriority = ThreadPriority.Normal;
+                // when rating screen gets added playOnStart will instead move to that scene
+                GlobalGameManager.LoadScene("Title", 0.35f, 0.5f);
+                CircleCursor.LockCursor(false);
             }
-            // when rating screen gets added playOnStart will instead move to that scene
+            Application.backgroundLoadingPriority = ThreadPriority.Normal;
         }
 
         private IEnumerator WaitReadyAndPlayCo(double beat)
