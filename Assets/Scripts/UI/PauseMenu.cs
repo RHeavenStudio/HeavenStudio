@@ -158,7 +158,17 @@ namespace HeavenStudio.Common
                 }
                 else if (Input.GetKeyDown(KeyCode.Return) || PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btConfirm, out _))
                 {
-                    UseOption((Options)optionSelected);
+                    if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                    {
+                        if (optionHolder.transform.GetChild(optionSelected).GetComponent<Collider2D>().OverlapPoint(PlayerInput.GetInputController(1).GetPointer()))
+                        {
+                            UseOption((Options)optionSelected);
+                        }
+                    }
+                    else
+                    {
+                        UseOption((Options)optionSelected);
+                    }
                 }
             }
 
