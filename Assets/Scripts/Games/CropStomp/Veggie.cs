@@ -59,35 +59,21 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             if (!game.isMarching)
                 return;
 
-            // Veggie missed. Handle missed state.
-            if (veggieState == -1)
+            switch (veggieState)
             {
-                MissedUpdate();
-                return;
-            }
+                case -1: MissedUpdate(); return;
+                // case 0:
+                case 2: PickedUpdate(); return;
+                case 1:
+                    float airPosition = Conductor.instance.GetPositionFromBeat(stompedBeat, landBeat - stompedBeat);
+                    veggieTrans.position = curve.GetPoint(Mathf.Clamp(airPosition, 0, 1));
 
-            // Veggie picked. Handle picked state.
-            if (veggieState == 2)
-            {
-                PickedUpdate();
-                return;
-            }
-
-            var cond = Conductor.instance;
-            // In ground.
-            if (veggieState == 0)
-            {
-            }
-            // In air.
-            else if (veggieState == 1)
-            {
-                float airPosition = cond.GetPositionFromBeat(stompedBeat, landBeat - stompedBeat);
-                veggieTrans.position = curve.GetPoint(Mathf.Clamp(airPosition, 0, 1));
-
-                if (PlayerInput.GetIsAction(CropStomp.InputAction_FlickRelease) && !game.IsExpectingInputNow(CropStomp.InputAction_FlickRelease))
-                {
-                    pickEligible = false;
-                }
+                    if (PlayerInput.GetIsAction(CropStomp.InputAction_FlickRelease) && !game.IsExpectingInputNow(CropStomp.InputAction_FlickRelease))
+                    {
+                        pickEligible = false;
+                    }
+                    break;
+                // default:
             }
         }
 
@@ -105,13 +91,13 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 StompVeggie(false);
         }
 
-        private void StompMiss(PlayerActionEvent caller) 
+        private void StompMiss(PlayerActionEvent caller)
         {
             veggieState = -1;
             caller.Disable();
         }
 
-        private void Out(PlayerActionEvent caller) {}
+        private void Out(PlayerActionEvent caller) { }
 
         private void PickJust(PlayerActionEvent caller, float state)
         {
@@ -131,13 +117,20 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
                 curve.transform.localScale = Vector3.one; // Return curve to normal size in the case of mole curves.
 
-                var key1 = curve.KeyPoints[0];
-                var key1Pos = key1.Position;
-                key1.Position = new Vector3(key1Pos.x, veggieTrans.position.y, key1Pos.z);
+                for (int i = 0; i < 2; i++)
+                {
+                    var key = curve.KeyPoints[i];
+                    var keyPos = key.Position;
+                    key.Position = new Vector3(keyPos.x, veggieTrans.position.y + (i * 2), keyPos.z);
+                }
 
-                var key2 = curve.KeyPoints[1];
-                var key2Pos = key2.Position;
-                key2.Position = new Vector3(key2Pos.x, veggieTrans.position.y + 2f, key2Pos.z);
+                // var key1 = curve.KeyPoints[0];
+                // var key1Pos = key1.Position;
+                // key1.Position = new Vector3(key1Pos.x, veggieTrans.position.y, key1Pos.z);
+
+                // var key2 = curve.KeyPoints[1];
+                // var key2Pos = key2.Position;
+                // key2.Position = new Vector3(key2Pos.x, veggieTrans.position.y + 2f, key2Pos.z);
 
                 pickedBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
@@ -154,9 +147,8 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         private void PickMiss(PlayerActionEvent caller) 
         {
             veggieState = -1;
-                    
-            if (!isMole)
-                SoundByte.PlayOneShotGame("cropStomp/veggieMiss");
+            
+            if (!isMole) SoundByte.PlayOneShotGame("cropStomp/veggieMiss");
             caller.Disable();
         }
 
@@ -223,6 +215,8 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             }
             gotStomped = true;
 
+            Debug.Log("Stomped!");
+
             var cond = Conductor.instance;
 
             ParticleSystem spawnedHit = Instantiate(game.hitParticle, game.hitParticle.transform.parent);
@@ -235,7 +229,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             stompedBeat = cond.songPositionInBeatsAsDouble;
 
-            landBeat = targetBeat + (float)cond.SecsToBeats(Minigame.NgLateTime()-1, cond.GetBpmAtBeat(targetBeat));
+            landBeat = targetBeat + (float)cond.SecsToBeats(Minigame.NgLateTime() - 1, cond.GetBpmAtBeat(targetBeat));
 
             if (autoTriggered)
             {
