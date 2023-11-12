@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         {
             game = CropStomp.instance;
 
-            if (Conductor.instance.isPlaying)
+            // if (Conductor.instance.isPlaying)
                 game.ScheduleInput(targetBeat - 1, 1f, CropStomp.InputAction_BasicPress, StompJust, StompMiss, Out);
 
             if (!isMole)
@@ -56,8 +56,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         private bool gotStomped; // Safeguard in case nested Update() call breaks.
         private void Update()
         {
-            if (!game.isMarching)
-                return;
+            if (!game.isMarching) return;
 
             switch (veggieState)
             {

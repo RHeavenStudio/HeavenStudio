@@ -135,9 +135,9 @@ namespace HeavenStudio.Games
 
             legsAnim.Play("LiftFront", 0, 1); // Start with leg up.
 
-            if (!Conductor.instance.isPlaying) {
-                OnGameSwitch(Conductor.instance.songPositionInBeatsAsDouble);
-            }
+            // if (!Conductor.instance.isPlaying) {
+            //     OnGameSwitch(Conductor.instance.songPositionInBeatsAsDouble);
+            // }
 
             // Initialize vegetables.
             // var cond = Conductor.instance;
@@ -243,8 +243,6 @@ namespace HeavenStudio.Games
             //     }
             // }
         }
-
-        List<RiqEntity> cuedMoleSounds = new List<RiqEntity>();
 
         public override void OnGameSwitch(double beat)
         {
@@ -394,7 +392,7 @@ namespace HeavenStudio.Games
             var grassPos = grassTrans.localPosition;
 
             var newGrassX = grassPos.x + (scrollRate * Time.deltaTime);
-            newGrassX = (newGrassX % (grassWidth * 4.5f));
+            newGrassX %= grassWidth * 4.5f;
 
             grassTrans.localPosition = new Vector3(newGrassX, grassPos.y, grassPos.z);
 
@@ -402,7 +400,7 @@ namespace HeavenStudio.Games
             var dotsPos = dotsTrans.localPosition;
 
             var newDotsX = dotsPos.x + (scrollRate * Time.deltaTime);
-            newDotsX = (newDotsX % dotsWidth);
+            newDotsX %= dotsWidth;
 
             dotsTrans.localPosition = new Vector3(newDotsX, dotsPos.y, dotsPos.z);
         }
