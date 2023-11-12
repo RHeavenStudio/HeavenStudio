@@ -101,7 +101,12 @@ namespace HeavenStudio
             currentDspSize = PersistentDataManager.gameSettings.dspSize;
             currentSampleRate = PersistentDataManager.gameSettings.sampleRate;
 
-            ChangeAudioSettings(currentDspSize, currentSampleRate);
+            // ChangeAudioSettings(currentDspSize, currentSampleRate);
+            AudioConfiguration config = AudioSettings.GetConfiguration();
+            if (currentDspSize == config.dspBufferSize && currentSampleRate == config.sampleRate) return;
+            config.dspBufferSize = currentDspSize;
+            config.sampleRate = currentSampleRate;
+            AudioSettings.Reset(config);
 
             Application.targetFrameRate = -1;
             QualitySettings.vSyncCount = 0;
@@ -368,18 +373,9 @@ namespace HeavenStudio
 
         public static void ChangeAudioSettings(int dspSize, int sampleRate)
         {
-            // don't reset audio if no changes are done
-            AudioConfiguration config = AudioSettings.GetConfiguration();
-            if (dspSize == config.dspBufferSize && sampleRate == config.sampleRate) return;
-            currentDspSize = dspSize;
-            currentSampleRate = sampleRate;
-
-            config.dspBufferSize = currentDspSize;
-            config.sampleRate = currentSampleRate;
-            AudioSettings.Reset(config);
-
-            PersistentDataManager.gameSettings.dspSize = currentDspSize;
-            PersistentDataManager.gameSettings.sampleRate = currentSampleRate;
+            // this will apply on next boot
+            PersistentDataManager.gameSettings.dspSize = dspSize;
+            PersistentDataManager.gameSettings.sampleRate = sampleRate;
         }
 
         public static void UpdateDiscordStatus(string details, bool editor = false, bool updateTime = false)

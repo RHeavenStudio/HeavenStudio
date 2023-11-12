@@ -230,6 +230,18 @@ PrefabInstance:
       propertyPath: m_UiScaleMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5125839188526540939, guid: 75ce9c0b59ff27f46a011e0cafc17fb3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125839188526540939, guid: 75ce9c0b59ff27f46a011e0cafc17fb3, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125839188526540939, guid: 75ce9c0b59ff27f46a011e0cafc17fb3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6143951404584343211, guid: 75ce9c0b59ff27f46a011e0cafc17fb3, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -301,6 +313,14 @@ PrefabInstance:
     - target: {fileID: 6234653029009288367, guid: 75ce9c0b59ff27f46a011e0cafc17fb3, type: 3}
       propertyPath: m_Name
       value: CamerasGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 7541290482140586805, guid: 75ce9c0b59ff27f46a011e0cafc17fb3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7541290482140586805, guid: 75ce9c0b59ff27f46a011e0cafc17fb3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.99999976
       objectReference: {fileID: 0}
     - target: {fileID: 8853263250163465671, guid: 75ce9c0b59ff27f46a011e0cafc17fb3, type: 3}
       propertyPath: m_AnchorMax.y

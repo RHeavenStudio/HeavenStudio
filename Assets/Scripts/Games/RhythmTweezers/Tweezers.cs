@@ -74,6 +74,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         public void Pluck(bool ace, Hair hair)
         {
             DropHeldHair();
+            if (hair == null) return;
 
             if (ace)
             {
@@ -112,6 +113,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         public void LongPluck(bool ace, LongHair hair)
         {
             DropHeldHair();
+            if (hair == null) return;
 
             if (ace)
             {

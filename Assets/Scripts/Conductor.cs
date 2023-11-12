@@ -117,7 +117,7 @@ namespace HeavenStudio
 
         public void SetMinigamePitch(float pitch, double beat)
         {
-            BeatAction.New( this,
+            BeatAction.New(this,
                 new List<BeatAction.Action> {
                     new BeatAction.Action(beat, delegate {
                         SetMinigamePitch(pitch);
@@ -162,7 +162,11 @@ namespace HeavenStudio
         {
             if (isPlaying) return;
 
-            if (!isPaused)
+            if (isPaused)
+            {
+                Util.SoundByte.UnpauseOneShots();
+            }
+            else
             {
                 AudioConfiguration config = AudioSettings.GetConfiguration();
                 dspSizeSeconds = config.dspBufferSize / (double)config.sampleRate;
@@ -172,7 +176,7 @@ namespace HeavenStudio
                 addedPitchChanges.Add(new AddedPitchChange { time = 0, pitch = SongPitch });
             }
 
-            var chart = GameManager.instance.Beatmap;
+            RiqBeatmap chart = GameManager.instance.Beatmap;
             double offset = chart.data.offset;
             double dspTime = AudioSettings.dspTime;
 
@@ -186,13 +190,13 @@ namespace HeavenStudio
                 double musicStartDelay = -offset - startPos;
                 if (musicStartDelay > 0)
                 {
-                    musicScheduledTime = dspTime + musicStartDelay / SongPitch;
+                    musicScheduledTime = dspTime + (musicStartDelay / SongPitch);
                     dspStart = dspTime;
                 }
                 else
                 {
-                    musicScheduledTime = dspTime + dspMargin;
-                    dspStart = dspTime + dspMargin;
+                    musicScheduledTime = dspTime + (dspMargin * 2);
+                    dspStart = dspTime + (dspMargin * 2);
                 }
                 musicScheduledPitch = SongPitch;
                 musicSource.PlayScheduled(musicScheduledTime);
@@ -218,7 +222,8 @@ namespace HeavenStudio
             isPlaying = false;
             isPaused = true;
 
-            musicSource.Pause();
+            musicSource.Stop();
+            Util.SoundByte.PauseOneShots();
         }
 
         public void Stop(double time)

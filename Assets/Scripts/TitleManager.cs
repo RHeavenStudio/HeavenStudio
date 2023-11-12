@@ -16,6 +16,7 @@ namespace HeavenStudio
 {
     public class TitleManager : MonoBehaviour
     {
+        [SerializeField] private TMP_Text versionText;
         [SerializeField] private Button createButton;
 
         [SerializeField] private Animator logoAnim;
@@ -67,6 +68,12 @@ namespace HeavenStudio
             startTime = Time.realtimeSinceStartupAsDouble;
             var _rand = new System.Random();
             starAnims = starAnims.OrderBy(_ => _rand.Next()).ToList();
+
+#if UNITY_EDITOR
+            versionText.text = "EDITOR";
+#else
+            versionText.text = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+#endif
         }
 
         private void Update()

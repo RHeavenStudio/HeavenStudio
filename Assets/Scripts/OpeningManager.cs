@@ -11,6 +11,7 @@ namespace HeavenStudio
 {
     public class OpeningManager : MonoBehaviour
     {
+        [SerializeField] AudioSource openingAudio;
         [SerializeField] Animator openingAnim;
         [SerializeField] TMP_Text buildText;
         [SerializeField] TMP_Text versionDisclaimer;
@@ -37,11 +38,11 @@ namespace HeavenStudio
                 }
             }
 
-            #if UNITY_EDITOR
-                buildText.text = "EDITOR";
-            #else
-                buildText.text = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
-            #endif
+#if UNITY_EDITOR
+            buildText.text = "EDITOR";
+#else
+            buildText.text = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+#endif
 
             if ((Application.platform is RuntimePlatform.OSXPlayer or RuntimePlatform.OSXEditor) || !enableSecondDisclaimer)
             {
@@ -69,7 +70,7 @@ namespace HeavenStudio
             {
                 fastBoot = true;
             }
-            
+
             if (fastBoot)
             {
                 OnFinishDisclaimer(0.1f);
@@ -77,18 +78,21 @@ namespace HeavenStudio
             else
             {
                 openingAnim.Play("FirstOpening", -1, 0);
+                openingAudio.PlayScheduled(AudioSettings.dspTime + 0.5);
                 StartCoroutine(WaitAndFinishOpening());
             }
         }
 
         IEnumerator WaitAndFinishOpening()
         {
-            yield return new WaitForSeconds(8f);
+            WaitUntil wait = new WaitUntil(() => Input.anyKeyDown);
+            yield return wait;
             OnFinishDisclaimer(0.35f);
         }
 
         void OnFinishDisclaimer(float fadeDuration = 0)
         {
+            openingAudio.Stop();
             if (GlobalGameManager.PlayOpenFile is not null or "")
             {
                 GlobalGameManager.LoadScene("Game", fadeDuration, 0.5f);

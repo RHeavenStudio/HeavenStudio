@@ -260,13 +260,13 @@ namespace HeavenStudio.Games
             {
                 if (canHit)
                 {
+                    CleanUp();
                     double normalized = time - 1f;
                     int offset = Mathf.CeilToInt((float)normalized * 1000);
                     GameManager.instance.AvgInputOffset = offset;
                     state = System.Math.Max(-1.0, System.Math.Min(1.0, state));
                     OnHit(this, (float)state);
 
-                    CleanUp();
                     if (countsForAccuracy && !(noAutoplay || autoplayOnly) && isEligible)
                     {
                         GameManager.instance.ScoreInputAccuracy(TimeToAccuracy(time), time > 1.0, time);
@@ -335,12 +335,12 @@ namespace HeavenStudio.Games
 
         public void Miss()
         {
+            CleanUp();
             if (OnMiss != null && enabled && !autoplayOnly)
             {
                 OnMiss(this);
             }
 
-            CleanUp();
             if (countsForAccuracy && !(noAutoplay || autoplayOnly))
             {
                 GameManager.instance.ScoreInputAccuracy(0, true, 2.0, 1.0, false);

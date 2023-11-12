@@ -609,14 +609,13 @@ namespace HeavenStudio
 
         private IEnumerator PlayCo(double beat, float delay = 0f)
         {
-            yield return new WaitForSeconds(delay);
+            if (delay > 0)
+            {
+                yield return new WaitForSeconds(delay);
+            }
             bool paused = Conductor.instance.isPaused;
 
-            if (paused)
-            {
-                Util.SoundByte.UnpauseOneShots();
-            }
-            else
+            if (!paused)
             {
                 Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
                 Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
@@ -640,7 +639,7 @@ namespace HeavenStudio
         public void Pause()
         {
             Conductor.instance.Pause();
-            Util.SoundByte.PauseOneShots();
+            // Util.SoundByte.PauseOneShots();
             canInput = false;
         }
 
