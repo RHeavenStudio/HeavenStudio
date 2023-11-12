@@ -100,7 +100,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
         private void PickJust(PlayerActionEvent caller, float state)
         {
-            game.bodyAnim.Play("Pick", 0, 0);
+            game.bodyAnim.DoScaledAnimationAsync("Pick", 0.5f);
             game.isFlicking = true;
             if (!pickEligible) return;
             if (GameManager.instance.autoplay)
@@ -177,7 +177,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                     var distDiff = transform.position.x - game.farmerTrans.position.x;
                     if (distDiff > 1.5f)
                     {
-                        moleAnim.Play("Chuckle", 0, 0);
+                        moleAnim.DoScaledAnimationAsync("Chuckle", 0.5f);
                         moleLaughing = true;
                     }
                 }
@@ -233,7 +233,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             if (autoTriggered)
             {
                 game.Stomp();
-                game.bodyAnim.Play("Stomp", 0, 0);
+                game.bodyAnim.DoScaledAnimationAsync("Stomp", 0.5f);
             }
 
             if (!isMole)
@@ -244,7 +244,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             }
             else
             {
-                moleAnim.Play("Idle", 0, 0);
+                moleAnim.DoScaledAnimationAsync("Idle", 0.5f);
             }
 
             var veggieScale = veggieTrans.localScale;
@@ -260,7 +260,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             if (autoTriggered)
             {
-                game.bodyAnim.Play("Pick", 0, 0);
+                game.bodyAnim.DoScaledAnimationAsync("Pick", 0.5f);
                 game.isFlicking = true;
             }
             

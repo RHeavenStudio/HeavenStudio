@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             if (PlayerInput.GetIsAction(CropStomp.InputAction_BasicPress) && !game.IsExpectingInputNow(CropStomp.InputAction_BasicPress))
             {
-                game.bodyAnim.Play("Crouch", 0, 0);
+                game.bodyAnim.DoScaledAnimationAsync("Crouch", 0.5f);
             }
         }
 
@@ -134,10 +134,10 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         {
             if (GameManager.instance.currentGame != "cropStomp" || !game.isMarching) return;
             if (ng) {
-                game.bodyAnim.Play("Crouch", 0, 0);
+                game.bodyAnim.DoScaledAnimationAsync("Crouch", 0.5f);
             } else {
                 game.Stomp();
-                game.bodyAnim.Play("Stomp", 0, 0);
+                game.bodyAnim.DoScaledAnimationAsync("Stomp", 0.5f);
             }
             nextStompBeat += 2f;
             stomp?.Disable();

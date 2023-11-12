@@ -134,114 +134,6 @@ namespace HeavenStudio.Games
             grassWidth = borderWidthPixels / sprite.pixelsPerUnit;
 
             legsAnim.Play("LiftFront", 0, 1); // Start with leg up.
-
-            // if (!Conductor.instance.isPlaying) {
-            //     OnGameSwitch(Conductor.instance.songPositionInBeatsAsDouble);
-            // }
-
-            // Initialize vegetables.
-            // var cond = Conductor.instance;
-            // var entities = GameManager.instance.Beatmap.Entities;
-
-            // double startBeat = cond.songPositionInBeatsAsDouble;
-            // double endBeat = double.MaxValue;
-
-            // if (inactiveStart == -1f)
-            // {
-            //     // Find the beat of the closest "start marching" event.
-            //     var marchStarts = entities.FindAll(m => m.datamodel == "cropStomp/start marching");
-            //     for (int i = 0; i < marchStarts.Count; i++)
-            //     {
-            //         var sampleBeat = marchStarts[i].beat;
-            //         if (cond.songPositionInBeatsAsDouble <= sampleBeat + 0.25f) // 0.25-beat buffer in case the start marching event is directly next to the game switch event.
-            //         {
-            //             startBeat = sampleBeat;
-            //             break;
-            //         }
-            //     }
-            // }
-            // else
-            // {
-            //     // Find the beat of the next step, assuming marching started at inactiveStart.
-            //     int stepsPassed = 0;
-
-            //     while (inactiveStart + (stepsPassed * 2f) < cond.songPositionInBeatsAsDouble)
-            //     {
-            //         stepsPassed++;
-
-            //         if (stepsPassed > 1000)
-            //         {
-            //             Debug.Log("Loop broke!");
-            //             return;
-            //         }
-            //     }
-
-            //     startBeat = inactiveStart + (stepsPassed * 2f);
-
-            //     // Cue the marching proper to begin when applicable.
-            //     BeatAction.New(this, new() { new(startBeat - 0.25f, delegate { StartMarching(startBeat); }) });
-
-            //     inactiveStart = -1f;
-            // }
-
-            // // find out when the next game switch (or remix end) happens
-            // var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" });
-            // if (allEnds.Count == 0)
-            // {
-            //     endBeat = double.MaxValue;
-            // }
-            // else
-            // {
-            //     allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
-
-            //     //get the beat of the closest end event
-            //     foreach (var end in allEnds)
-            //     {
-            //         if (end.datamodel != "gameManager/end" && end.datamodel.Split(2) == "cropStomp") continue;
-            //         if (end.beat > startBeat)
-            //         {
-            //             endBeat = end.beat;
-            //             break;
-            //         }
-            //     }
-            // }
-
-            // // Veggie and mole events.
-            // var vegEvents = entities.FindAll(v => v.datamodel == "cropStomp/veggies");
-            // var moleEvents = entities.FindAll(m => m.datamodel == "cropStomp/mole");
-
-            // // Spawn veggies.
-            // for (int i = 0; i < vegEvents.Count; i++)
-            // {
-            //     var vegBeat = vegEvents[i].beat;
-            //     var vegLength = vegEvents[i].length;
-
-            //     // Only consider veggie events that aren't past the start point.
-            //     if (startBeat <= vegBeat + vegLength)
-            //     {
-            //         int veggiesInEvent = Mathf.CeilToInt(vegLength + 1) / 2;
-
-            //         for (int b = 0; b < veggiesInEvent; b++)
-            //         {
-            //             var targetVeggieBeat = vegBeat + 2f * b;
-            //             if (startBeat <= targetVeggieBeat && targetVeggieBeat < endBeat)
-            //             {
-            //                 SpawnVeggie(targetVeggieBeat, startBeat, false);
-            //             }
-            //         }
-            //     }
-            // }
-
-            // // Spawn moles.
-            // for (int i = 0; i < moleEvents.Count; i++)
-            // {
-            //     var moleBeat = moleEvents[i].beat;
-
-            //     if (startBeat <= moleBeat && moleBeat < endBeat)
-            //     {
-            //         SpawnVeggie(moleBeat, startBeat, true);
-            //     }
-            // }
         }
 
         public override void OnGameSwitch(double beat)
@@ -374,11 +266,11 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !IsExpectingInputNow(InputAction_BasicRelease))
             {
-                bodyAnim.Play("Raise");
+                bodyAnim.DoScaledAnimationAsync("Raise", 0.5f);
             }
             if (PlayerInput.GetIsAction(InputAction_Flick) && !IsExpectingInputNow(InputAction_FlickRelease))
             {
-                bodyAnim.Play("Pick");
+                bodyAnim.DoScaledAnimationAsync("Pick", 0.5f);
             }
 
             if (cameraLocked) return;
@@ -444,7 +336,7 @@ namespace HeavenStudio.Games
                     stepCount += 1;
 
                     var stepAnim = (stepCount % 2 != 0) ? "StepFront" : "StepBack";
-                    legsAnim.Play(stepAnim, 0, 0);
+                    legsAnim.DoScaledAnimationAsync(stepAnim, 0.5f);
 
                     isStepping = true;
                 }
@@ -453,7 +345,7 @@ namespace HeavenStudio.Games
             else
             {
                 var liftAnim = (stepCount % 2 != 0) ? "LiftBack" : "LiftFront";
-                legsAnim.Play(liftAnim, 0, 0);
+                legsAnim.DoScaledAnimationAsync(liftAnim, 0.5f);
 
                 var farmerPos = farmerTrans.localPosition;
                 farmerTrans.localPosition = new Vector3(farmerPos.x - stepDistance, farmerPos.y, farmerPos.z);
@@ -479,7 +371,7 @@ namespace HeavenStudio.Games
 
             var stompAnim = (stepCount % 2 != 0) ? "StompFront" : "StompBack";
             
-            legsAnim.Play(stompAnim, 0, 0);
+            legsAnim.DoScaledAnimationAsync(stompAnim, 0.5f);
 
             SoundByte.PlayOneShotGame("cropStomp/stomp");
 
