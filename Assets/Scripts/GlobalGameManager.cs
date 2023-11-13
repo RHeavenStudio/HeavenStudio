@@ -92,7 +92,6 @@ namespace HeavenStudio
             CustomScreenWidth = PersistentDataManager.gameSettings.resolutionWidth;
             CustomScreenHeight = PersistentDataManager.gameSettings.resolutionHeight;
 
-            ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
 
             if (PersistentDataManager.gameSettings.dspSize == 0)
                 PersistentDataManager.gameSettings.dspSize = 512;
@@ -122,6 +121,7 @@ namespace HeavenStudio
                 Screen.fullScreen = false;
                 ChangeScreenSize();
             }
+            ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
             PlayerInput.InitInputControllers();
 #if UNITY_EDITOR
             Starpelly.OS.ChangeWindowTitle("Heaven Studio UNITYEDITOR ");
