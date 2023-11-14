@@ -18,6 +18,8 @@ namespace HeavenStudio
         [Header("Loading Screen")]
         [SerializeField] Image fadeImage;
         [SerializeField] TMP_Text loadingText;
+        [SerializeField] GameObject memPanel;
+        [SerializeField] MemRenderer memRenderer;
 
         [Header("Dialog Box")]
         [SerializeField] GameObject messagePanel;
@@ -138,6 +140,7 @@ namespace HeavenStudio
             instance = this;
             fadeImage.gameObject.SetActive(false);
             loadingText.enabled = false;
+            memPanel.SetActive(false);
 
             messagePanel.SetActive(false);
             IsShowingDialog = false;
@@ -161,6 +164,7 @@ namespace HeavenStudio
             //TODO: fade out flow mem loading icon
             instance.fadeImage.DOKill();
             instance.loadingText.enabled = false;
+            memPanel.SetActive(false);
             instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
             {
                 instance.fadeImage.gameObject.SetActive(false);
@@ -172,6 +176,7 @@ namespace HeavenStudio
             yield return new WaitForSeconds(hold);
             instance.fadeImage.DOKill();
             instance.loadingText.enabled = false;
+            memPanel.SetActive(false);
             instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
             {
                 instance.fadeImage.gameObject.SetActive(false);
@@ -217,10 +222,12 @@ namespace HeavenStudio
 
             instance.fadeImage.DOKill();
             instance.fadeImage.gameObject.SetActive(true);
+            instance.loadingText.enabled = true;
+            instance.memPanel.SetActive(true);
+            instance.memRenderer.ChangeMem();
             if (fadeIn <= 0)
             {
                 instance.fadeImage.color = new Color(0, 0, 0, 1);
-                instance.loadingText.enabled = true;
                 AssetBundle.UnloadAllAssetBundles(true);
                 instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
             }
@@ -231,7 +238,6 @@ namespace HeavenStudio
                 {
                     AssetBundle.UnloadAllAssetBundles(true);
                     instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
-                    instance.loadingText.enabled = true;
                 });
             }
         }
@@ -242,6 +248,7 @@ namespace HeavenStudio
             instance.fadeImage.gameObject.SetActive(true);
             instance.fadeImage.color = new Color(0, 0, 0, 0);
             instance.loadingText.enabled = false;
+            instance.memPanel.SetActive(false);
             instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
             {
                 instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
