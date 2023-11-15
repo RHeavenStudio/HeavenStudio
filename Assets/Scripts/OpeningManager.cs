@@ -18,6 +18,8 @@ namespace HeavenStudio
         [SerializeField] bool enableSecondDisclaimer;
 
         bool fastBoot = false;
+        float timer = 0;
+
         void Start()
         {
             string[] args = System.Environment.GetCommandLineArgs();
@@ -77,15 +79,24 @@ namespace HeavenStudio
             }
             else
             {
+                timer = 0;
                 openingAnim.Play("FirstOpening", -1, 0);
                 openingAudio.PlayScheduled(AudioSettings.dspTime + 0.5);
                 StartCoroutine(WaitAndFinishOpening());
             }
         }
 
+        void Update()
+        {
+            if (!fastBoot)
+            {
+                timer += Time.deltaTime;
+            }
+        }
+
         IEnumerator WaitAndFinishOpening()
         {
-            WaitUntil wait = new WaitUntil(() => Input.anyKeyDown);
+            WaitUntil wait = new WaitUntil(() => Input.anyKeyDown || (timer >= 8));
             yield return wait;
             OnFinishDisclaimer(0.35f);
         }
