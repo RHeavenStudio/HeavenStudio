@@ -1,6 +1,6 @@
 using DG.Tweening;
 using NaughtyBezierCurves;
-using  HeavenStudio.Util;
+using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,16 +21,22 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
 
                 },
+                new GameAction("tunnel", "Start Tunnel")
+                {
+                    function = delegate { if (Tunnel.instance != null) { Tunnel.instance.StartTunnel(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); } },
+                    defaultLength = 4f,
+                    resizable = true,
+                },
                 new GameAction("countin", "Count In")
                 {
-                    preFunction = delegate { Tunnel.CountIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
-                    defaultLength = 4f, 
+                    preFunction = delegate { Tunnel.CountIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
+                    defaultLength = 4f,
                     resizable = true,
                 }
             },
-            new List<string>() {"ntr", "keep"},
+            new List<string>() { "ntr", "keep" },
             "ntrtunnel", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
@@ -43,33 +49,40 @@ namespace HeavenStudio.Games
         public static Tunnel instance { get; set; }
 
         [Header("Backgrounds")]
-        public SpriteRenderer fg;
-        public SpriteRenderer bg;
+        [SerializeField] Transform bg;
+        [SerializeField] float bgScrollTime;
+
+        [SerializeField] GameObject tunnelWall;
+        [SerializeField] SpriteRenderer tunnelWallRenderer;
+        [SerializeField] float tunnelChunksPerSec;
+        [SerializeField] float tunnelWallChunkSize;
 
         Tween bgColorTween;
         Tween fgColorTween;
 
 
         [Header("References")]
-        public GameObject frontHand;
+        [SerializeField] GameObject frontHand;
 
 
         [Header("Animators")]
-        public Animator cowbellAnimator;
-        public Animator driverAnimator;
+        [SerializeField] Animator cowbellAnimator;
+        [SerializeField] Animator driverAnimator;
 
         [Header("Curves")]
-        public BezierCurve3D handCurve;
+        [SerializeField] BezierCurve3D handCurve;
 
 
-        public GameEvent cowbell = new GameEvent();
+        GameEvent cowbell = new GameEvent();
 
 
-        public int driverState;
+        int driverState;
 
-        public float handStart;
-        public float handProgress;
-        public bool started;
+        float bgStartX;
+
+        float handStart;
+        float handProgress;
+        bool started;
         public struct QueuedCowbell
         {
             public double beat;
@@ -95,15 +108,14 @@ namespace HeavenStudio.Games
         {
             driverState = 0;
             handStart = -1f;
+            tunnelWall.SetActive(false);
         }
 
         private void Update()
         {
-
             var cond = Conductor.instance;
             //update hand position
             handProgress = Math.Min(Conductor.instance.songPositionInBeats - handStart, 1);
-
 
             frontHand.transform.position = handCurve.GetPoint(EasingFunction.EaseOutQuad(0, 1, handProgress));
             if (!cond.isPlaying || cond.isPaused)
@@ -125,6 +137,8 @@ namespace HeavenStudio.Games
                 queuedInputs.Clear();
             }
 
+            bg.position = new Vector3(bgStartX - (2 * bgStartX * (((float)Time.realtimeSinceStartupAsDouble % bgScrollTime) / bgScrollTime)), 0, 0);
+            tunnelWall.transform.position -= new Vector3(tunnelChunksPerSec * tunnelWallChunkSize * Time.deltaTime * cond.SongPitch, 0, 0);
         }
 
 
@@ -133,8 +147,8 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShot("count-ins/cowbell");
 
             handStart = Conductor.instance.songPositionInBeats;
-            
-            cowbellAnimator.Play("Shake",-1,0);
+
+            cowbellAnimator.Play("Shake", -1, 0);
         }
 
         public static void PreStartCowbell(double beat, float length)
@@ -152,7 +166,7 @@ namespace HeavenStudio.Games
         public void StartCowbell(double beat, float length)
         {
             started = true;
-            for(int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
                 ScheduleInput(beat, i, InputAction_BasicPress, CowbellSuccess, CowbellMiss, CowbellEmpty);
             }
@@ -162,7 +176,7 @@ namespace HeavenStudio.Games
         {
             HitCowbell();
             //print(state);
-            if(Math.Abs(state) >= 1f)
+            if (Math.Abs(state) >= 1f)
             {
                 driverAnimator.Play("Disturbed", -1, 0);
 
@@ -188,16 +202,16 @@ namespace HeavenStudio.Games
         }
 
 
-        
+
         public static void CountIn(double beat, float length)
         {
 
             List<MultiSound.Sound> cuelist = new List<MultiSound.Sound>();
-            
+
 
             for (int i = 0; i < length; i++)
             {
-                if(i % 2 == 0)
+                if (i % 2 == 0)
                 {
                     //Jukebox.PlayOneShotGame("tunnel/en/one", beat+i);
                     //print("cueing one at " + (beat + i));
@@ -209,13 +223,24 @@ namespace HeavenStudio.Games
                     //print("cueing two at " + (beat + i));
                     cuelist.Add(new MultiSound.Sound("tunnel/en/two", beat + i));
                 }
-                
+
             }
             MultiSound.Play(cuelist.ToArray(), forcePlay: true);
 
         }
 
 
+        public void StartTunnel(double beat, double length)
+        {
+            double targetBeat = beat + length;
+            double startTimeSec = Conductor.instance.GetSongPosFromBeat(beat);
+            double targetTimeSec = Conductor.instance.GetSongPosFromBeat(targetBeat);
+            // tunnel chunks can be divided into quarters
+            double durationSec = Math.Ceiling((targetTimeSec - startTimeSec) * 4) * 0.25;
 
+            tunnelWallRenderer.size = new Vector2((float)durationSec * tunnelWallChunkSize * tunnelChunksPerSec, 13.7f);
+            tunnelWall.transform.position = new Vector3(tunnelWallChunkSize, 0, 0);
+            tunnelWall.SetActive(true);
+        }
     }
 }
