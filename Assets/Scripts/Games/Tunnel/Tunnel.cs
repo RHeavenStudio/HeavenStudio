@@ -14,18 +14,26 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("tunnel", "Tunnel \n<color=#eb5454>[WIP]</color>", "c00000", false, false, new List<GameAction>()
             {
-                new GameAction("cowbell", "Cowbell")
+                new GameAction("cowbell", "Start Cowbell")
                 {
                     preFunction = delegate { Tunnel.PreStartCowbell(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
-                    defaultLength = 4f,
-                    resizable = true,
+                    defaultLength = 1f,
+                    resizable = false,
 
                 },
-                new GameAction("tunnel", "Start Tunnel")
+                new GameAction("tunnel", "Tunnel")
                 {
-                    function = delegate { if (Tunnel.instance != null) { Tunnel.instance.StartTunnel(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); } },
+                    function = delegate { if (Tunnel.instance != null) {
+                        var e = eventCaller.currentEntity;
+                        Tunnel.instance.StartTunnel(e.beat, e.length, e["volume"] / 100f, e["duration"]);
+                    } },
                     defaultLength = 4f,
                     resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("duration", new EntityTypes.Float(0, 8, 2), "Fade Duration", "The duration of the volume fade in beats"),
+                        new Param("volume", new EntityTypes.Float(0, 200, 10), "Volume", "The volume to fade to"),
+                    }
                 },
                 new GameAction("countin", "Count In")
                 {
@@ -46,6 +54,7 @@ namespace HeavenStudio.Games
 {
     public class Tunnel : Minigame
     {
+        const double PostTunnelScrnTime = 0.25;
         public static Tunnel instance { get; set; }
 
         [Header("Backgrounds")]
@@ -59,6 +68,7 @@ namespace HeavenStudio.Games
 
         Tween bgColorTween;
         Tween fgColorTween;
+        Vector3 tunnelStartPos;
 
 
         [Header("References")]
@@ -79,10 +89,15 @@ namespace HeavenStudio.Games
         int driverState;
 
         float bgStartX;
+        float fadeDuration = 2f;
+        double tunnelStartTime = double.MinValue;
+        double tunnelEndTime = double.MinValue;
+        double lastCowbell = double.MaxValue;
 
         float handStart;
         float handProgress;
         bool started;
+
         public struct QueuedCowbell
         {
             public double beat;
@@ -93,6 +108,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            tunnelStartPos = new Vector3(tunnelWallChunkSize, 0, 0);
         }
 
         void OnDestroy()
@@ -101,6 +117,10 @@ namespace HeavenStudio.Games
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
+            }
+            if (Conductor.instance != null && Conductor.instance.NotStopped())
+            {
+                Conductor.instance.FadeMinigameVolume(Conductor.instance.songPositionInBeatsAsDouble, 0, 1);
             }
         }
 
@@ -137,8 +157,21 @@ namespace HeavenStudio.Games
                 queuedInputs.Clear();
             }
 
+            if (lastCowbell + 1 <= cond.songPositionInBeatsAsDouble)
+            {
+                lastCowbell++;
+                ScheduleInput(lastCowbell, 1, InputAction_BasicPress, CowbellSuccess, CowbellMiss, CowbellEmpty);
+            }
+
             bg.position = new Vector3(bgStartX - (2 * bgStartX * (((float)Time.realtimeSinceStartupAsDouble % bgScrollTime) / bgScrollTime)), 0, 0);
-            tunnelWall.transform.position -= new Vector3(tunnelChunksPerSec * tunnelWallChunkSize * Time.deltaTime * cond.SongPitch, 0, 0);
+            if (tunnelWall.activeSelf)
+            {
+                tunnelWall.transform.position = tunnelStartPos - new Vector3(tunnelChunksPerSec * tunnelWallChunkSize * (float)(cond.songPositionAsDouble - tunnelStartTime), 0, 0);
+            }
+            if (cond.songPositionAsDouble >= tunnelEndTime + PostTunnelScrnTime)
+            {
+                cond.FadeMinigameVolume(cond.GetBeatFromSongPos(tunnelEndTime + PostTunnelScrnTime), fadeDuration, 1);
+            }
         }
 
 
@@ -166,10 +199,8 @@ namespace HeavenStudio.Games
         public void StartCowbell(double beat, float length)
         {
             started = true;
-            for (int i = 0; i < length; i++)
-            {
-                ScheduleInput(beat, i, InputAction_BasicPress, CowbellSuccess, CowbellMiss, CowbellEmpty);
-            }
+            lastCowbell = beat - 1;
+            ScheduleInput(lastCowbell, 1, InputAction_BasicPress, CowbellSuccess, CowbellMiss, CowbellEmpty);
         }
 
         public void CowbellSuccess(PlayerActionEvent caller, float state)
@@ -230,17 +261,24 @@ namespace HeavenStudio.Games
         }
 
 
-        public void StartTunnel(double beat, double length)
+        public void StartTunnel(double beat, double length, float volume = 0.1f, float fadeDuration = 2f)
         {
+            Conductor cond = Conductor.instance;
+            if (cond.songPositionAsDouble < tunnelEndTime + PostTunnelScrnTime)
+            {
+                return;
+            }
             double targetBeat = beat + length;
-            double startTimeSec = Conductor.instance.GetSongPosFromBeat(beat);
-            double targetTimeSec = Conductor.instance.GetSongPosFromBeat(targetBeat);
+            tunnelStartTime = cond.GetSongPosFromBeat(beat);
+            tunnelEndTime = cond.GetSongPosFromBeat(targetBeat);
             // tunnel chunks can be divided into quarters
-            double durationSec = Math.Ceiling((targetTimeSec - startTimeSec) * 4) * 0.25;
+            double durationSec = Math.Ceiling((tunnelEndTime - tunnelStartTime) * 4 * tunnelChunksPerSec) * 0.25 / tunnelChunksPerSec;
 
             tunnelWallRenderer.size = new Vector2((float)durationSec * tunnelWallChunkSize * tunnelChunksPerSec, 13.7f);
-            tunnelWall.transform.position = new Vector3(tunnelWallChunkSize, 0, 0);
+            tunnelWall.transform.position = tunnelStartPos;
             tunnelWall.SetActive(true);
+            this.fadeDuration = fadeDuration;
+            cond.FadeMinigameVolume(beat, fadeDuration, volume);
         }
     }
 }
