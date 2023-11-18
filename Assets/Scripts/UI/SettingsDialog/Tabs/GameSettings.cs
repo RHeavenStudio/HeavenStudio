@@ -22,6 +22,7 @@ namespace HeavenStudio.Editor
         [SerializeField] Toggle timingDispMinModeToggle;
         [SerializeField] Toggle letterboxBgEnable;
         [SerializeField] Toggle letterboxFxEnable;
+        [SerializeField] Toggle windowDanceEnable;
 
         [SerializeField] Image LytEditBg;
         [SerializeField] Image LytEditBgAmbi;
@@ -128,6 +129,11 @@ namespace HeavenStudio.Editor
             LytEditBgAmbiGO.SetActive(PersistentDataManager.gameSettings.letterboxFxEnable);
         }
 
+        public void OnWindowDanceToggleChanged()
+        {
+            PersistentDataManager.gameSettings.windowDanceEnable = windowDanceEnable.isOn;
+        }
+
         public override void OnOpenTab()
         {
             TimingDispTypeDropdown.ClearOptions();
@@ -139,6 +145,7 @@ namespace HeavenStudio.Editor
             timingDispMinModeToggle.isOn = PersistentDataManager.gameSettings.timingDisplayMinMode;
             letterboxBgEnable.isOn = PersistentDataManager.gameSettings.letterboxBgEnable;
             letterboxFxEnable.isOn = PersistentDataManager.gameSettings.letterboxFxEnable;
+            windowDanceEnable.isOn = PersistentDataManager.gameSettings.windowDanceEnable;
 
             if (PersistentDataManager.gameSettings.timingDisplayComponents.Count == 0 &&
                 PersistentDataManager.gameSettings.skillStarComponents.Count == 0 &&

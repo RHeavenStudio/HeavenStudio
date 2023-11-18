@@ -227,9 +227,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 1168123228960484818}
   overlayView: {fileID: 2814421364062256314}
+  parentView: {fileID: 0}
+  parent: {fileID: 0}
   ambientBg: {fileID: 4779885053979786433}
   ambientBgGO: {fileID: 487891016983371717}
   letterboxBgGO: {fileID: 3931965693507761463}
+  letterboxMask: {fileID: 0}
+  viewportTexture: {fileID: 0}
+  gameRenderTexture: {fileID: 0}
   camera: {fileID: 16338400879174842}
 --- !u!1 &487891016983371717
 GameObject:

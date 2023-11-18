@@ -25,7 +25,7 @@ namespace HeavenStudio
         [NonSerialized] public ObjectPool<Sound> SoundObjects;
 
         [Header("Components")]
-        [NonSerialized] public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
+        [NonSerialized] public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera, WindowController;
         [NonSerialized] public CircleCursor CircleCursor;
         [NonSerialized] public GameObject GamesHolder;
         [NonSerialized] public Games.Global.Flash fade;

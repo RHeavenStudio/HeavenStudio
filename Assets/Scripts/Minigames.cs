@@ -833,7 +833,6 @@ namespace HeavenStudio
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
                         }
                     ),
-
                     new GameAction("screen shake", "Screen Shake", 1f, true,
                         new List<Param>()
                         {
@@ -841,6 +840,64 @@ namespace HeavenStudio
                             new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity")
                         }
                     ),
+                    /* kinda broken idk if its useful but its here
+                    new GameAction("scale letterbox", "Scale Letterbox", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Integer(0, 200, 100), "Scale Letterbox X"),
+                            new Param("valB", new EntityTypes.Integer(0, 200, 100), "Scale Letterbox Y"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the letterbox in")
+                        }
+                    ),*/
+                    new GameAction("fit to screen", "Fit Game To Screen", 0.5f, false, new List<Param>()
+                        {
+                            new Param("toggle", false, "Toggle", "Toggle the game fitting to the screen.")
+                        },
+                        delegate
+                        {
+                            StaticCamera.instance.UpdateFitToScreen(eventCaller.currentEntity["toggle"]);
+                        }
+                    ),
+                    new GameAction("tile screen", "Tile Screen", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(1, 50, 1), "Tile Screen X"),
+                            new Param("valB", new EntityTypes.Float(1, 50, 1), "Tile Screen Y"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to tile the screen in")
+                        }
+                    ),
+                    new GameAction("pan tiles", "Pan Tiles", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Pan Tiles X"),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Pan Tiles Y"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the tiles in")
+                        }
+                    ),
+                    new GameAction("pan window", "Move Window", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(-100, 200, 0), "Window X", "The Window's destination X coordinate. Can go off screen. Measured in percent from bottom left of screen."),
+                            new Param("valB", new EntityTypes.Float(-100, 200, 0), "Window Y", "The Window's destination Y coordinate. Can go off screen. Measured in percent from bottom left of screen."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", WindowController.ViewAxis.All, "Axis")
+                        }
+                    ),
+
+                    new GameAction("scale window", "Scale Window", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 200, 100), "Scale X", "How much the window is scaled on the X axis, measured in percent."),
+                            new Param("valB", new EntityTypes.Float(0, 200, 100), "Scale Y", "How much the window is scaled on the Y axis, measured in percent."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", WindowController.ViewAxis.All, "Axis", "AAAAAAA")
+                        }
+                    ),
+                    //Non functional until further notice
+                    /*new GameAction("shake window", "Shake Window", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 10, 0), "Horizontal Intensity"),
+                            new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity")
+                        }
+                    ),*/
 
                     new GameAction("display textbox", "Display Textbox", 1f, true, new List<Param>()
                         {
