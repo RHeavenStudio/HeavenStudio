@@ -290,39 +290,39 @@ namespace HeavenStudio.Games
                     {
                         if (normalizedZoomOutAgainBeat > 1)
                         {
-                            GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, 0);
                         }
                         else
                         {
                             Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuint);
                             float newZoom = func(shouldDoSuccessZoom ? 4f : 1.5f, 0, normalizedZoomOutAgainBeat);
-                            GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, newZoom);
                         }
                     }
                     else if (normalizedZoomInBeat >= 0)
                     {
                         if (normalizedZoomInBeat > 1)
                         {
-                            GameCamera.additionalPosition = new Vector3(0, 0, shouldDoSuccessZoom ? 4f : 1.5f);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, shouldDoSuccessZoom ? 4f : 1.5f);
                         }
                         else
                         {
                             Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuint);
                             float newZoom = func(-1, shouldDoSuccessZoom ? 4f : 1.5f, normalizedZoomInBeat);
-                            GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, newZoom);
                         }
                     }
                     else if (normalizedZoomOutBeat >= 0)
                     {
                         if (normalizedZoomOutBeat > 1)
                         {
-                            GameCamera.additionalPosition = new Vector3(0, 0, -1);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, -1);
                         }
                         else
                         {
                             Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuint);
                             float newZoom = func(0f, 1f, normalizedZoomOutBeat);
-                            GameCamera.additionalPosition = new Vector3(0, 0, newZoom * -1);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, newZoom * -1);
                         }
                     }
                 }

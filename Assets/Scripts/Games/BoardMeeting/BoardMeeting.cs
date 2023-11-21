@@ -431,7 +431,7 @@ namespace HeavenStudio.Games
             if (shakeTween != null)
                 shakeTween.Kill(true);
 
-            DOTween.Punch(() => GameCamera.additionalPosition, x => GameCamera.additionalPosition = x, new Vector3(shakeIntensity, 0, 0),
+            DOTween.Punch(() => GameCamera.AdditionalPosition, x => GameCamera.AdditionalPosition = x, new Vector3(shakeIntensity, 0, 0),
                 Conductor.instance.pitchedSecPerBeat * 0.5f, 18, 1f);
             executives[executiveCount - 1].Stop();
             assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);
