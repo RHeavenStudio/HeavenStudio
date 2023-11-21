@@ -315,7 +315,7 @@ TextureImporter:
       name: BossFace_Barely
       rect:
         serializedVersion: 2
-        x: 509
+        x: 510
         y: 1872
         width: 379
         height: 315
@@ -731,6 +731,69 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: BossFace_Stare
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 1852
+        width: 379
+        height: 315
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b726d22f1b2cf44f8a7bf22d5ee419e
+      internalID: -530374426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossFace_Scared
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 2283
+        width: 379
+        height: 315
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 471da762be2e7ea4b87419a94be5df25
+      internalID: -426132836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BossEyebrow
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 1231
+        width: 97
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70463ffd6fccdb948a627ddf437763f5
+      internalID: -2097333159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -749,9 +812,12 @@ TextureImporter:
       BossArmRight_Idle: 3179123281887650707
       BossBody_Idle: 8200600838365625350
       BossBody_Sway: 8969925656131713453
+      BossEyebrow: -2097333159
       BossFace_Barely: 4269903952847196576
       BossFace_Call: 3108801417681170918
       BossFace_Idle: 6274637579206421234
+      BossFace_Scared: -426132836
+      BossFace_Stare: -530374426
       BossFace_Start: 2524607193796689285
       BossLeg_Call: -4011833703415356042
       BossLeg_Idle: -6832404233960673140
