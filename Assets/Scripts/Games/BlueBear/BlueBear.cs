@@ -39,6 +39,16 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { BlueBear.instance.Wind(); },
                     defaultLength = 0.5f
                 },
+                new GameAction("story", "Story")
+                {
+                    defaultLength = 4,
+                    parameters = new List<Param>()
+                    {
+                        new Param("story", BlueBear.StoryType.Date, "Story"),
+                        new Param("enter", true, "Enter")
+                    },
+                    resizable = true
+                },
                 new GameAction("crumb", "Set Crumb Threshold")
                 {
                     function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetCrumbThreshold(e["right"], e["left"], e["reset"]); },
@@ -61,6 +71,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Jukebox;
     using Scripts_BlueBear;
     public class BlueBear : Minigame
     {
@@ -74,6 +85,14 @@ namespace HeavenStudio.Games
             InstaSad,
             Sigh
         }
+        public enum StoryType
+        {
+            Date,
+            Gift,
+            Girl,
+            Eat,
+            BreakUp
+        }
         [Header("Animators")]
         public Animator headAndBodyAnim; // Head and body
         public Animator bagsAnim; // Both bags sprite
@@ -84,6 +103,7 @@ namespace HeavenStudio.Games
         [Header("References")]
         [SerializeField] GameObject leftCrumb;
         [SerializeField] GameObject rightCrumb;
+        [SerializeField] private Animator _storyAnim;
         public GameObject donutBase;
         public GameObject cakeBase;
         public GameObject crumbsBase;
@@ -99,6 +119,7 @@ namespace HeavenStudio.Games
         float emotionLength;
         string emotionAnimName;
         bool crying;
+        private List<RiqEntity> _allStoryEvents = new();
 
         [Header("Curves")]
         public BezierCurve3D donutCurve;
@@ -183,6 +204,49 @@ namespace HeavenStudio.Games
         {
             instance = this;
             if (Conductor.instance.isPlaying || Conductor.instance.isPaused) EatTreat(true);
+            _allStoryEvents = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "story" });
+            UpdateStory();
+        }
+
+        private int _storyIndex = 0;
+
+        private void UpdateStory()
+        {
+            var cond = Conductor.instance;
+
+            if (_storyIndex >= _allStoryEvents.Count) return;
+
+            var currentStory = _allStoryEvents[_storyIndex];
+
+            if (cond.songPositionInBeatsAsDouble >= currentStory.beat + currentStory.length && _storyIndex + 1 != _allStoryEvents.Count)
+            {
+                _storyIndex++;
+                UpdateStory();
+                return;
+            }
+
+            float normalizedBeat = Mathf.Clamp01(cond.GetPositionFromBeat(currentStory.beat, currentStory.length));
+
+            bool enter = currentStory["enter"];
+
+            switch (currentStory["story"])
+            {
+                case (int)StoryType.Date:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Flashback0" : "Flashback0Exit", normalizedBeat);
+                    break;
+                case (int)StoryType.Gift:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Flashback1" : "Flashback1Exit", normalizedBeat);
+                    break;
+                case (int)StoryType.Girl:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Flashback2" : "Flashback2Exit", normalizedBeat);
+                    break;
+                case (int)StoryType.Eat:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Flashback3" : "Flashback3Exit", normalizedBeat);
+                    break;
+                default:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Breakup" : "BreakupExit", normalizedBeat);
+                    break;
+            }
         }
 
         private void Update()
@@ -208,6 +272,7 @@ namespace HeavenStudio.Games
                     //headAndBodyAnim.DoNormalizedAnimation(emotionAnimName, normalizedBeat);
                 }
             }
+            UpdateStory();
         }
 
         public void Wind()
