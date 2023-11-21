@@ -292,10 +292,12 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
             {
+                SoundByte.PlayOneShotGame("blueBear/whiff");
                 Bite(true);
             }
             else if (PlayerInput.GetIsAction(InputAction_Right) && !IsExpectingInputNow(InputAction_Right.inputLockCategory))
             {
+                SoundByte.PlayOneShotGame("blueBear/whiff");
                 Bite(false);
             }
 
