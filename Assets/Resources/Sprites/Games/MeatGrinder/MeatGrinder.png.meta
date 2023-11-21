@@ -782,7 +782,7 @@ TextureImporter:
         width: 97
         height: 87
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -790,6 +790,216 @@ TextureImporter:
       bones: []
       spriteID: 70463ffd6fccdb948a627ddf437763f5
       internalID: -2097333159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HammerSmear
+      rect:
+        serializedVersion: 2
+        x: 2076
+        y: 64
+        width: 286
+        height: 329
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45ef770611cd74540b5b438414ee591c
+      internalID: 1427664428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TackOverFace_Content
+      rect:
+        serializedVersion: 2
+        x: 4781
+        y: 1607
+        width: 443
+        height: 342
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39f42e812b0af3f4d84e1955d10bd662
+      internalID: 1659232769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TackOverFace_Wonder
+      rect:
+        serializedVersion: 2
+        x: 5374
+        y: 1567
+        width: 378
+        height: 367
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0b03d22ef8f49e4bae28d8cb5e8f3dd
+      internalID: -2038200507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TackOverFace_Empty
+      rect:
+        serializedVersion: 2
+        x: 4772
+        y: 1241
+        width: 434
+        height: 291
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9629a2a25718dd429e1e12e4dc8985a
+      internalID: 1990076493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HammerImpact
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 1440
+        width: 296
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d72bb3f50b0996f43adb4d641d3f65d8
+      internalID: 711389487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TackWonderSymbol
+      rect:
+        serializedVersion: 2
+        x: 5823
+        y: 1649
+        width: 194
+        height: 254
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3af9887e22c179439940c3f882d8850
+      internalID: 178044266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TackOverFace_Smug
+      rect:
+        serializedVersion: 2
+        x: 5394
+        y: 1222
+        width: 406
+        height: 275
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 426cf1c9843dbc34db7a85983570b700
+      internalID: 1107002062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bacon_Smear
+      rect:
+        serializedVersion: 2
+        x: 2554
+        y: 685
+        width: 865
+        height: 310
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4c9cf756ac745a489b34d2931a9e6a9
+      internalID: -936998580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bacon_Ball
+      rect:
+        serializedVersion: 2
+        x: 2292
+        y: 1055
+        width: 350
+        height: 368
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 3, z: 0, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fde37b1d4f0565c4eb043280113a441f
+      internalID: -2042091632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bacon_Smack
+      rect:
+        serializedVersion: 2
+        x: 4324
+        y: 1257
+        width: 370
+        height: 597
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa4fca644aa119543b36fd39238fc6c4
+      internalID: -2132715462
       vertices: []
       indices: 
       edges: []
@@ -806,6 +1016,9 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       Background: 2504170125896549414
+      Bacon_Ball: -2042091632
+      Bacon_Smack: -2132715462
+      Bacon_Smear: -936998580
       BossArmLeft_Call: 3980019249115040852
       BossArmLeft_Idle: 4482730663707846085
       BossArmRight_Call: -5596940865122316592
@@ -825,6 +1038,8 @@ TextureImporter:
       DarkMeat_Ball: 3852543032336476745
       DarkMeat_Smack: 3011316499841328870
       DarkMeat_Smear: -9124615959790710355
+      HammerImpact: 711389487
+      HammerSmear: 1427664428
       Hammer_Smear: -488197822107945266
       LightMeat_Ball: -2845034143530582451
       LightMeat_Smack: -8867440539974192047
@@ -839,7 +1054,12 @@ TextureImporter:
       TackFace_Happy: -8982151751036727888
       TackFace_Idle: 3895518177905609093
       TackFace_Relieved: 3503572046705877592
+      TackOverFace_Content: 1659232769
+      TackOverFace_Empty: 1990076493
+      TackOverFace_Smug: 1107002062
+      TackOverFace_Wonder: -2038200507
       TackStand: -8520836041160705636
+      TackWonderSymbol: 178044266
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
