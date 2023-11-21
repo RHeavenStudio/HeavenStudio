@@ -91,8 +91,6 @@ namespace HeavenStudio.Games.Scripts_BlueBear
             EatFood();
         }
 
-        private void Miss(PlayerActionEvent caller) { }
-
         private void Out(PlayerActionEvent caller) { }
 
         void SpawnCrumbs()
