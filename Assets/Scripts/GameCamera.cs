@@ -202,7 +202,7 @@ namespace HeavenStudio
             cam.transform.localPosition = userPos + _additionalPosition + _shakeResult;
             cam.transform.eulerAngles = _rotEuler + _additionalRotEuler;
             cam.fieldOfView = _additionalFoV;
-            Debug.Log("Camera Pos: " + _additionalPosition);
+            //Debug.Log("Camera Pos: " + _additionalPosition);
         }
 
         private void UpdateCameraColor()
