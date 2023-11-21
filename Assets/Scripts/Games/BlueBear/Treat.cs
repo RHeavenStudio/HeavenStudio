@@ -78,7 +78,7 @@ namespace HeavenStudio.Games.Scripts_BlueBear
 
         private void Just(PlayerActionEvent caller, float state)
         {
-            if (state >= 1f || state <= -1f || true)
+            if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("miss");
                 if (isCake)

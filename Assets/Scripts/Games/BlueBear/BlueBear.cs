@@ -32,14 +32,16 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e["type"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("type", BlueBear.EmotionType.ClosedEyes, "Type", "Which emotion should the blue bear use?")
+                        new Param("type", BlueBear.EmotionType.ClosedEyes, "Emotion", "Which emotion should the blue bear use?")
                     }
                 },
                 new GameAction("stretchEmotion", "Long Emotion")
                 {   
+                    defaultLength = 4,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("type", BlueBear.EmotionStretchType.StartCrying, "Type", "Which emotion should the blue bear use?")
+                        new Param("type", BlueBear.EmotionStretchType.LookUp, "Emotion", "Which emotion should the blue bear use?")
                     }
                 },
                 new GameAction("wind", "Wind")
@@ -86,16 +88,16 @@ namespace HeavenStudio.Games
     {
         public enum EmotionType
         {
-            Neutral,
-            ClosedEyes,
-            Cry,
-            Sigh
+            Neutral = 0,
+            ClosedEyes = 1,
+            Cry = 2,
+            Sigh = 3
         }
         public enum EmotionStretchType
         {
-            LookUp,
-            Smile, 
-            StartCrying,
+            LookUp = 0,
+            Smile = 1, 
+            StartCrying = 2,
         }
         public enum StoryType
         {
@@ -237,8 +239,6 @@ namespace HeavenStudio.Games
             if (Conductor.instance.isPlaying || Conductor.instance.isPaused) EatTreat(true);
             _allStoryEvents = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "story" });
             UpdateStory();
-            headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
-            bagsAnim.DoScaledAnimationAsync("Idle", 0.5f);
         }
 
         private int _storyIndex = 0;
@@ -285,6 +285,10 @@ namespace HeavenStudio.Games
         private void Update()
         {
             headAndBodyAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
+            if (headAndBodyAnim.GetBool("ShouldOpenMouth"))
+            {
+                _emotionCancelled = true;
+            }
 
             if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
             {
@@ -295,6 +299,8 @@ namespace HeavenStudio.Games
                 Bite(false);
             }
 
+            UpdateEmotions();
+
             UpdateStory();
             headAndBodyAnim.SetScaledAnimationSpeed();
             bagsAnim.SetScaledAnimationSpeed();
@@ -303,14 +309,74 @@ namespace HeavenStudio.Games
             windAnim.SetScaledAnimationSpeed();
         }
 
+        private bool _emotionCancelled = false;
+        private int _emotionIndex = 0;
+        private List<RiqEntity> _allEmotionsStretch = new();
+        private EmotionStretchType _lastEmotion = EmotionStretchType.LookUp;
+
+        private void UpdateEmotions()
+        {
+            var cond = Conductor.instance;
+            if (_allEmotionsStretch.Count == 0 || _emotionIndex >= _allEmotionsStretch.Count) return;
+
+            var beat = cond.songPositionInBeatsAsDouble;
+
+            var e = _allEmotionsStretch[_emotionIndex];
+
+            if (beat > e.beat + e.length)
+            {
+                _emotionIndex++;
+                _lastEmotion = (EmotionStretchType)_allEmotionsStretch[_emotionIndex - 1]["type"];
+                crying = _lastEmotion == EmotionStretchType.StartCrying;
+                _emotionCancelled = false;
+                UpdateEmotions();
+                return;
+            }
+
+            if (beat >= e.beat && beat < e.beat + e.length && !_emotionCancelled)
+            {
+                _lastEmotion = (EmotionStretchType)e["type"];
+                crying = _lastEmotion == EmotionStretchType.StartCrying;
+                float normalizedBeat = cond.GetPositionFromBeat(e.beat, e.length);
+
+                string animName = (EmotionStretchType)e["type"] switch
+                {
+                    EmotionStretchType.LookUp => "OpenEyes",
+                    EmotionStretchType.Smile => "Smile",
+                    EmotionStretchType.StartCrying => "Sad",
+                    _ => throw new NotImplementedException(),
+                };
+                headAndBodyAnim.DoNormalizedAnimation(animName, normalizedBeat);
+            }
+        }
+
+        private void HandleEmotions(double beat)
+        {
+            _allEmotionsStretch = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" });
+            if (_allEmotionsStretch.Count == 0) return;
+            UpdateEmotions();
+            var allEmosBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => x.beat < beat);
+
+            if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.StartCrying)
+            {
+                headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
+            }
+            else if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.Smile)
+            {
+                headAndBodyAnim.DoScaledAnimationAsync("SmileIdle", 0.5f);
+            }
+        }
+
         public override void OnPlay(double beat)
         {
             HandleTreatsOnStart(beat);
+            HandleEmotions(beat);
         }
 
         public override void OnGameSwitch(double beat)
         {
             HandleTreatsOnStart(beat);
+            HandleEmotions(beat);
         }
 
         private void HandleTreatsOnStart(double gameswitchBeat)
@@ -333,6 +399,7 @@ namespace HeavenStudio.Games
 
         public void Bite(bool left)
         {
+            _emotionCancelled = true;
             if (crying)
             {
                 headAndBodyAnim.DoScaledAnimationAsync(left ? "CryBiteL" : "CryBiteR", 0.5f);
@@ -391,6 +458,7 @@ namespace HeavenStudio.Games
 
         public void SetEmotion(int emotion)
         {
+            _emotionCancelled = true;
             switch (emotion)
             {
                 case (int)EmotionType.Neutral:
@@ -402,29 +470,6 @@ namespace HeavenStudio.Games
                     headAndBodyAnim.DoScaledAnimationAsync("EyesClosed", 0.5f);
                     crying = false;
                     break;
-                /*
-                case (int)EmotionType.LookUp:
-                    emotionStartBeat = beat;
-                    emotionLength = length;
-                    emotionAnimName = "OpenEyes";
-                    headAndBodyAnim.DoScaledAnimationAsync(emotionAnimName, 0.5f);
-                    crying = false;
-                    break;
-                case (int)EmotionType.Smile:
-                    emotionStartBeat = beat;
-                    emotionLength = length;
-                    emotionAnimName = "Smile";
-                    headAndBodyAnim.DoScaledAnimationAsync(emotionAnimName, 0.5f);
-                    crying = false;
-                    break;
-                case (int)EmotionType.Sad:
-                    emotionStartBeat = beat;
-                    emotionLength = length;
-                    emotionAnimName = "Sad";
-                    headAndBodyAnim.DoScaledAnimationAsync(emotionAnimName, 0.5f);
-                    crying = true;
-                    break;
-                */
                 case (int)EmotionType.Cry:
                     headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
                     crying = true;
