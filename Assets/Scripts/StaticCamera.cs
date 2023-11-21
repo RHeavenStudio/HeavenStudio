@@ -86,6 +86,10 @@ namespace HeavenStudio
             UpdatePan();
             UpdateRotation();
             UpdateScale();
+
+            canvas.localPosition = pan;
+            canvas.eulerAngles = new Vector3(0, 0, rotation);
+            canvas.localScale = scale;
         }
 
         // Update is called once per frame
