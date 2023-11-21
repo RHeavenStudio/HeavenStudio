@@ -27,13 +27,19 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true, eventCaller.currentEntity.beat); },
                     defaultLength = 4,
                 },
-                new GameAction("setEmotion", "Set Emotion")
+                new GameAction("setEmotion", "Emotion")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e.beat, e.length, e["type"]); },
-                    defaultLength = 0.5f,
+                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e["type"]); },
                     parameters = new List<Param>()
                     {
                         new Param("type", BlueBear.EmotionType.ClosedEyes, "Type", "Which emotion should the blue bear use?")
+                    }
+                },
+                new GameAction("stretchEmotion", "Long Emotion")
+                {   
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", BlueBear.EmotionStretchType.StartCrying, "Type", "Which emotion should the blue bear use?")
                     }
                 },
                 new GameAction("wind", "Wind")
@@ -75,17 +81,21 @@ namespace HeavenStudio.Games
 {
     using Jukebox;
     using Scripts_BlueBear;
+
     public class BlueBear : Minigame
     {
         public enum EmotionType
         {
             Neutral,
             ClosedEyes,
-            LookUp,
-            Smile,
-            Sad,
-            InstaSad,
+            Cry,
             Sigh
+        }
+        public enum EmotionStretchType
+        {
+            LookUp,
+            Smile, 
+            StartCrying,
         }
         public enum StoryType
         {
@@ -117,15 +127,9 @@ namespace HeavenStudio.Games
         static int rightCrumbAppearThreshold = 15;
         static int leftCrumbAppearThreshold = 30;
         static int eatenTreats = 0;
-        double emotionStartBeat;
-        float emotionLength;
-        string emotionAnimName;
         bool crying;
         private List<RiqEntity> _allStoryEvents = new();
-
-        [Header("Curves")]
-        public BezierCurve3D donutCurve;
-        public BezierCurve3D cakeCurve;
+        [SerializeField] private SuperCurveObject.Path[] _treatCurves;
 
         [Header("Gradients")]
         public Gradient donutGradient;
@@ -190,6 +194,31 @@ namespace HeavenStudio.Games
             new("CtrBearRight", new int[] { IARight, IARight, IARight },
             IA_PadRight, IA_TouchRight, IA_BatonRight);
 
+        // Editor gizmo to draw trajectories
+        new void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            foreach (SuperCurveObject.Path path in _treatCurves)
+            {
+                if (path.preview)
+                {
+                    donutBase.GetComponent<SuperCurveObject>().DrawEditorGizmo(path);
+                }
+            }
+        }
+
+        public SuperCurveObject.Path GetPath(string name)
+        {
+            foreach (SuperCurveObject.Path path in _treatCurves)
+            {
+                if (path.name == name)
+                {
+                    return path;
+                }
+            }
+            return default(SuperCurveObject.Path);
+        }
+
         void OnDestroy()
         {
             foreach (var evt in scheduledInputs)
@@ -208,6 +237,8 @@ namespace HeavenStudio.Games
             if (Conductor.instance.isPlaying || Conductor.instance.isPaused) EatTreat(true);
             _allStoryEvents = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "story" });
             UpdateStory();
+            headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
+            bagsAnim.DoScaledAnimationAsync("Idle", 0.5f);
         }
 
         private int _storyIndex = 0;
@@ -264,17 +295,12 @@ namespace HeavenStudio.Games
                 Bite(false);
             }
 
-            Conductor cond = Conductor.instance;
-
-            if (cond.isPlaying && !cond.isPaused)
-            {
-                float normalizedBeat = cond.GetPositionFromBeat(emotionStartBeat, emotionLength);
-                if (normalizedBeat >= 0 && normalizedBeat <= 1f)
-                {
-                    //headAndBodyAnim.DoNormalizedAnimation(emotionAnimName, normalizedBeat);
-                }
-            }
             UpdateStory();
+            headAndBodyAnim.SetScaledAnimationSpeed();
+            bagsAnim.SetScaledAnimationSpeed();
+            cakeBagAnim.SetScaledAnimationSpeed();
+            donutBagAnim.SetScaledAnimationSpeed();
+            windAnim.SetScaledAnimationSpeed();
         }
 
         public override void OnPlay(double beat)
@@ -302,18 +328,18 @@ namespace HeavenStudio.Games
 
         public void Wind()
         {
-            windAnim.Play("Wind", 0, 0);
+            windAnim.DoScaledAnimationAsync("Wind", 0.5f);
         }
 
         public void Bite(bool left)
         {
             if (crying)
             {
-                headAndBodyAnim.Play(left ? "CryBiteL" : "CryBiteR", 0, 0);
+                headAndBodyAnim.DoScaledAnimationAsync(left ? "CryBiteL" : "CryBiteR", 0.5f);
             }
             else
             {
-                headAndBodyAnim.Play(left ? "BiteL" : "BiteR", 0, 0);
+                headAndBodyAnim.DoScaledAnimationAsync(left ? "BiteL" : "BiteR", 0.5f);
             }
         }
 
@@ -358,58 +384,53 @@ namespace HeavenStudio.Games
                 if (noDonutSquash && noCakeSquash)
                 {
                     squashing = false;
-                    bagsAnim.Play("Idle", 0, 0);
+                    bagsAnim.DoScaledAnimationAsync("Idle", 0.5f);
                 }
             }
         }
 
-        public void SetEmotion(double beat, float length, int emotion)
+        public void SetEmotion(int emotion)
         {
             switch (emotion)
             {
                 case (int)EmotionType.Neutral:
-                    if (emotionAnimName == "Smile")
-                    {
-                        headAndBodyAnim.Play("StopSmile", 0, 0);
-                        emotionAnimName = "";
-                    }
-                    else
-                    {
-                        headAndBodyAnim.Play("Idle", 0, 0);
-                    }
+                    //check if smiling then play "StopSmile"
+                    headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     crying = false;
                     break;
                 case (int)EmotionType.ClosedEyes:
-                    headAndBodyAnim.Play("EyesClosed", 0, 0);
+                    headAndBodyAnim.DoScaledAnimationAsync("EyesClosed", 0.5f);
                     crying = false;
                     break;
+                /*
                 case (int)EmotionType.LookUp:
                     emotionStartBeat = beat;
                     emotionLength = length;
                     emotionAnimName = "OpenEyes";
-                    headAndBodyAnim.Play(emotionAnimName, 0, 0);
+                    headAndBodyAnim.DoScaledAnimationAsync(emotionAnimName, 0.5f);
                     crying = false;
                     break;
                 case (int)EmotionType.Smile:
                     emotionStartBeat = beat;
                     emotionLength = length;
                     emotionAnimName = "Smile";
-                    headAndBodyAnim.Play(emotionAnimName, 0, 0);
+                    headAndBodyAnim.DoScaledAnimationAsync(emotionAnimName, 0.5f);
                     crying = false;
                     break;
                 case (int)EmotionType.Sad:
                     emotionStartBeat = beat;
                     emotionLength = length;
                     emotionAnimName = "Sad";
-                    headAndBodyAnim.Play(emotionAnimName, 0, 0);
+                    headAndBodyAnim.DoScaledAnimationAsync(emotionAnimName, 0.5f);
                     crying = true;
                     break;
-                case (int)EmotionType.InstaSad:
-                    headAndBodyAnim.Play("CryIdle", 0, 0);
+                */
+                case (int)EmotionType.Cry:
+                    headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
                     crying = true;
                     break;
                 case (int)EmotionType.Sigh:
-                    headAndBodyAnim.Play("Sigh", 0, 0);
+                    headAndBodyAnim.DoScaledAnimationAsync("Sigh", 0.5f);
                     crying = false;
                     break;
                 default:
@@ -424,7 +445,6 @@ namespace HeavenStudio.Games
 
             var treatComp = newTreat.GetComponent<Treat>();
             treatComp.startBeat = beat;
-            treatComp.curve = isCake ? cakeCurve : donutCurve;
 
             newTreat.SetActive(true);
 
@@ -439,17 +459,17 @@ namespace HeavenStudio.Games
         public void SquashBag(bool isCake)
         {
             squashing = true;
-            bagsAnim.Play("Squashing", 0, 0);
+            bagsAnim.DoScaledAnimationAsync("Squashing", 0.5f);
 
             individualBagHolder.SetActive(true);
 
             if (isCake)
             {
-                cakeBagAnim.Play("CakeSquash", 0, 0);
+                cakeBagAnim.DoScaledAnimationAsync("CakeSquash", 0.5f);
             }
             else
             {
-                donutBagAnim.Play("DonutSquash", 0, 0);
+                donutBagAnim.DoScaledAnimationAsync("DonutSquash", 0.5f);
             }
         }
     }

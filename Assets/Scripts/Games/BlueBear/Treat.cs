@@ -8,17 +8,18 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_BlueBear
 {
-    public class Treat : MonoBehaviour
+    public class Treat : SuperCurveObject
     {
-        const float rotSpeed = 360f;
+        const float barelyDistX = 1.5f;
+        const float barelyDistY = -6f;
+        const float barelyHeight = 4f;
+        const float rotSpeed = 360f * 3;
 
         public bool isCake;
         public double startBeat;
-
-        bool flying = true;
         double flyBeats;
 
-        [NonSerialized] public BezierCurve3D curve;
+        private Path path;
 
         private BlueBear game;
 
@@ -30,33 +31,34 @@ namespace HeavenStudio.Games.Scripts_BlueBear
         private void Start()
         {
             flyBeats = isCake ? 3f : 2f;
+            Path pathToCopy = isCake ? game.GetPath("Cake") : game.GetPath("Donut");
+            path = new();
+            path.positions = new PathPos[2];
+            path.positions[0].pos = pathToCopy.positions[0].pos;
+            path.positions[0].duration = pathToCopy.positions[0].duration;
+            path.positions[0].height = pathToCopy.positions[0].height;
+            path.positions[1].pos = pathToCopy.positions[1].pos;
             game.ScheduleInput(startBeat, flyBeats, isCake ? BlueBear.InputAction_Left : BlueBear.InputAction_Right, Just, Out, Out);
+            Update();
         }
 
         private void Update()
         {
-            if (flying)
+            var cond = Conductor.instance;
+            transform.localPosition = GetPathPositionFromBeat(path, cond.songPositionInBeatsAsDouble, startBeat);
+
+            float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
+            if (flyPos > 2f)
             {
-                var cond = Conductor.instance;
-
-                float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
-                flyPos *= isCake ? 0.75f : 0.6f;
-                transform.position = curve.GetPoint(flyPos);
-
-                if (flyPos > 1f)
-                {
-                    Destroy(gameObject);
-                    return;
-                }
-
-                float rot = isCake ? rotSpeed : -rotSpeed;
-                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
+                Destroy(gameObject);
+                return;
             }
+
+            float rot = isCake ? rotSpeed : -rotSpeed;
+            transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime * cond.pitchedSecPerBeat));
         }
         void EatFood()
         {
-            flying = false;
-
             if (isCake)
             {
                 SoundByte.PlayOneShotGame("blueBear/chompCake");
@@ -71,21 +73,28 @@ namespace HeavenStudio.Games.Scripts_BlueBear
 
             SpawnCrumbs();
 
-            GameObject.Destroy(gameObject);
+            Destroy(gameObject);
         }
 
         private void Just(PlayerActionEvent caller, float state)
         {
-            if (state >= 1f || state <= -1f)
-            {  //todo: proper near miss feedback
+            if (state >= 1f || state <= -1f || true)
+            {
+                SoundByte.PlayOneShot("miss");
                 if (isCake)
                 {
-                    game.headAndBodyAnim.Play("BiteL", 0, 0);
+                    game.headAndBodyAnim.DoScaledAnimationAsync("BiteL", 0, 0);
                 }
                 else
                 {
-                    game.headAndBodyAnim.Play("BiteR", 0, 0);
+                    game.headAndBodyAnim.DoScaledAnimationAsync("BiteR", 0, 0);
                 }
+                path.positions[0].pos = transform.localPosition;
+                path.positions[0].height = barelyHeight;
+                path.positions[0].duration = 1;
+                path.positions[1].pos = new Vector3(path.positions[0].pos.x + (isCake ? -barelyDistX : barelyDistX), path.positions[0].pos.y + barelyDistY);
+                startBeat = Conductor.instance.songPositionInBeatsAsDouble;
+                Update();
                 return;
             }
             EatFood();
@@ -104,7 +113,7 @@ namespace HeavenStudio.Games.Scripts_BlueBear
             var newGradient = new ParticleSystem.MinMaxGradient(isCake ? game.cakeGradient : game.donutGradient);
             newGradient.mode = ParticleSystemGradientMode.RandomColor;
             main.startColor = newGradient;
-            ps.Play();
+            ps.PlayScaledAsync(1);
         }
     }
 }
