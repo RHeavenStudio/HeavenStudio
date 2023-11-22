@@ -61,20 +61,19 @@ namespace HeavenStudio.Games
         [SerializeField] Transform bg;
         [SerializeField] float bgScrollTime;
 
+        [SerializeField] Material tunnelLightMaterial;
+        [SerializeField] Color tunnelTint;
+        [SerializeField] Color tunnelScreen;
         [SerializeField] GameObject tunnelWall;
         [SerializeField] SpriteRenderer tunnelWallRenderer;
         [SerializeField] float tunnelChunksPerSec;
         [SerializeField] float tunnelWallChunkSize;
 
-        Tween bgColorTween;
-        Tween fgColorTween;
         Vector3 tunnelStartPos;
         Sound tunnelSoundRight, tunnelSoundMiddle, tunnelSoundLeft;
 
-
         [Header("References")]
         [SerializeField] GameObject frontHand;
-
 
         [Header("Animators")]
         [SerializeField] Animator cowbellAnimator;
@@ -83,11 +82,7 @@ namespace HeavenStudio.Games
         [Header("Curves")]
         [SerializeField] BezierCurve3D handCurve;
 
-
         GameEvent cowbell = new GameEvent();
-
-
-        int driverState;
 
         float bgStartX;
         float fadeDuration = 2f;
@@ -97,7 +92,7 @@ namespace HeavenStudio.Games
 
         float handStart;
         float handProgress;
-        bool started;
+        bool inTunnel;
 
         public struct QueuedCowbell
         {
@@ -119,9 +114,12 @@ namespace HeavenStudio.Games
             {
                 evt.Disable();
             }
-            if (Conductor.instance != null && Conductor.instance.NotStopped())
+            if (Conductor.instance != null && !(Conductor.instance.isPlaying || Conductor.instance.isPaused))
             {
                 Conductor.instance.FadeMinigameVolume(Conductor.instance.songPositionInBeatsAsDouble, 0, 1);
+                tunnelLightMaterial.SetColor("_Color", Color.white);
+                tunnelLightMaterial.SetColor("_AddColor", Color.black);
+
                 tunnelSoundRight?.Stop();
                 tunnelSoundMiddle?.Stop();
                 tunnelSoundLeft?.Stop();
@@ -130,7 +128,6 @@ namespace HeavenStudio.Games
 
         private void Start()
         {
-            driverState = 0;
             handStart = -1f;
             tunnelWall.SetActive(false);
         }
@@ -172,12 +169,14 @@ namespace HeavenStudio.Games
             {
                 tunnelWall.transform.localPosition = tunnelStartPos - new Vector3(tunnelChunksPerSec * tunnelWallChunkSize * (float)(cond.songPositionAsDouble - tunnelStartTime), 0, 0);
             }
-            if (cond.songPositionAsDouble >= tunnelEndTime + PostTunnelScrnTime)
+            if (inTunnel && cond.songPositionAsDouble >= tunnelEndTime + PostTunnelScrnTime)
             {
                 cond.FadeMinigameVolume(cond.GetBeatFromSongPos(tunnelEndTime + PostTunnelScrnTime), fadeDuration, 1);
+                tunnelLightMaterial.SetColor("_Color", Color.white);
+                tunnelLightMaterial.SetColor("_AddColor", Color.black);
+                inTunnel = false;
             }
         }
-
 
         public void HitCowbell()
         {
@@ -202,7 +201,6 @@ namespace HeavenStudio.Games
 
         public void StartCowbell(double beat, float length)
         {
-            started = true;
             lastCowbell = beat - 1;
             ScheduleInput(lastCowbell, 1, InputAction_BasicPress, CowbellSuccess, CowbellMiss, CowbellEmpty);
         }
@@ -210,7 +208,6 @@ namespace HeavenStudio.Games
         public void CowbellSuccess(PlayerActionEvent caller, float state)
         {
             HitCowbell();
-            //print(state);
             if (Math.Abs(state) >= 1f)
             {
                 driverAnimator.Play("Disturbed", -1, 0);
@@ -220,29 +217,18 @@ namespace HeavenStudio.Games
             {
                 driverAnimator.Play("Idle", -1, 0);
             }
-
         }
-
 
         public void CowbellMiss(PlayerActionEvent caller)
         {
-            //HitCowbell();
-
             driverAnimator.Play("Angry1", -1, 0);
         }
 
-        public void CowbellEmpty(PlayerActionEvent caller)
-        {
-            //HitCowbell();
-        }
-
-
+        public void CowbellEmpty(PlayerActionEvent caller) { }
 
         public static void CountIn(double beat, float length)
         {
-
             List<MultiSound.Sound> cuelist = new List<MultiSound.Sound>();
-
 
             for (int i = 0; i < length; i++)
             {
@@ -264,7 +250,6 @@ namespace HeavenStudio.Games
 
         }
 
-
         public void StartTunnel(double beat, double length, float volume = 0.1f, float fadeDuration = 2f)
         {
             Conductor cond = Conductor.instance;
@@ -284,14 +269,27 @@ namespace HeavenStudio.Games
             this.fadeDuration = fadeDuration;
             cond.FadeMinigameVolume(beat, fadeDuration, volume);
 
+            tunnelSoundRight?.Stop();
+            tunnelSoundMiddle?.Stop();
+            tunnelSoundLeft?.Stop();
+
             tunnelSoundRight = SoundByte.PlayOneShotGame("tunnel/tunnelRight", beat, looping: true);
-            tunnelSoundMiddle = SoundByte.PlayOneShotGame("tunnel/tunnelMiddle", beat + (6/48f), looping: true);
-            tunnelSoundLeft = SoundByte.PlayOneShotGame("tunnel/tunnelLeft" + (12/48f), beat, looping: true);
+            tunnelSoundMiddle = SoundByte.PlayOneShotGame("tunnel/tunnelMiddle", beat + (6 / 48f), looping: true);
+            tunnelSoundLeft = SoundByte.PlayOneShotGame("tunnel/tunnelLeft", beat + (12 / 48f), looping: true);
 
             double tunnelEnd = cond.GetBeatFromSongPos(tunnelEndTime + PostTunnelScrnTime);
             tunnelSoundRight.SetLoopParams(tunnelEnd, 0.1);
-            tunnelSoundMiddle.SetLoopParams(tunnelEnd + (6/48f), 0.1);
-            tunnelSoundLeft.SetLoopParams(tunnelEnd + (12/48f), 0.1);
+            tunnelSoundMiddle.SetLoopParams(tunnelEnd + (6 / 48f), 0.1);
+            tunnelSoundLeft.SetLoopParams(tunnelEnd + (12 / 48f), 0.25);
+
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(cond.GetBeatFromSongPos(tunnelStartTime + 0.25), delegate {
+                    tunnelLightMaterial.SetColor("_Color", tunnelTint);
+                    tunnelLightMaterial.SetColor("_AddColor", tunnelScreen);
+                }),
+            });
+            inTunnel = true;
         }
     }
 }
