@@ -287,7 +287,7 @@ namespace HeavenStudio.Games
                         {
                             currentXPos = flippersMovement.position.x + (moveLeft ? -rollDistance : rollDistance);
                             isMoving = true;
-                            currentCameraXPos = GameCamera.additionalPosition.x + (moveLeft ? -rollDistance : rollDistance);
+                            currentCameraXPos = GameCamera.AdditionalPosition.x + (moveLeft ? -rollDistance : rollDistance);
                             if (moveLeft)
                             {
                                 rightSnow.Play();
@@ -310,7 +310,7 @@ namespace HeavenStudio.Games
                         {
                             EasingFunction.Function funcCam = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuad);
                             float newCameraPosX = funcCam(lastCameraXPos, currentCameraXPos, normalizedCamBeat);
-                            GameCamera.additionalPosition = new Vector3(newCameraPosX, 0, 0);
+                            GameCamera.AdditionalPosition = new Vector3(newCameraPosX, 0, 0);
                         }
                         if (1f >= normalizedBeat)
                         {

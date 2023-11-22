@@ -392,7 +392,7 @@ namespace HeavenStudio.Games
 
         public void SetZoom(int zoom)
         {
-            GameCamera.additionalPosition = new Vector3(0, 0, (ZoomPresets)zoom switch
+            GameCamera.AdditionalPosition = new Vector3(0, 0, (ZoomPresets)zoom switch
             {
                 ZoomPresets.Regular => 0,
                 ZoomPresets.NotThatFar => -4.5f,

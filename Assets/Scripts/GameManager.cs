@@ -605,7 +605,7 @@ namespace HeavenStudio
             }
 
             StartCoroutine(PlayCo(beat, delay));
-            onBeatChanged?.Invoke(beat);
+            //onBeatChanged?.Invoke(beat);
         }
 
         private IEnumerator PlayCo(double beat, float delay = 0f)
@@ -649,7 +649,7 @@ namespace HeavenStudio
 
             Conductor.instance.Stop(beat);
             SetCurrentEventToClosest(beat);
-            onBeatChanged?.Invoke(beat);
+            //onBeatChanged?.Invoke(beat);
 
             // I feel like I should standardize the names
             SkillStarManager.instance.KillStar();
@@ -946,6 +946,8 @@ namespace HeavenStudio
 
         private void SetGame(string game, bool useMinigameColor = true)
         {
+            ResetCamera(); // resetting camera before setting new minigame so minigames can set camera values in their awake call - Rasmus
+
             Destroy(currentGameO);
 
             currentGameO = Instantiate(GetGame(game));
@@ -953,8 +955,6 @@ namespace HeavenStudio
             currentGameO.name = game;
 
             SetCurrentGame(game, useMinigameColor);
-
-            ResetCamera();
         }
 
         public void PreloadGameSequences(string game)

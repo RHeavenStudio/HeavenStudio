@@ -159,6 +159,9 @@ namespace HeavenStudio.Games
 
         private void Awake()
         {
+            GameCamera.AdditionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
+            GameCamera.AdditionalFoV = cameraFOV;
             instance = this;
             paddlers.Init();
 
@@ -367,9 +370,9 @@ namespace HeavenStudio.Games
             opponentServing = false;
 
             //update camera
-            GameCamera.additionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
-            GameCamera.additionalRotEluer = cameraPos.rotation.eulerAngles;
-            GameCamera.additionalFoV = cameraFOV;
+            GameCamera.AdditionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
+            GameCamera.AdditionalFoV = cameraFOV;
         }
 
         public void Bop(double beat, float length, bool bop, bool bopAuto)

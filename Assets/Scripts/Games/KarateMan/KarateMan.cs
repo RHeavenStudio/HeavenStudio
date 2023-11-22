@@ -839,7 +839,7 @@ namespace HeavenStudio.Games
             }
 
             BackgroundColorUpdate();
-            GameCamera.additionalPosition = cameraPosition - GameCamera.defaultPosition;
+            GameCamera.AdditionalPosition = cameraPosition - GameCamera.defaultPosition;
             BGEffect.transform.position = new Vector3(GameCamera.instance.transform.position.x, GameCamera.instance.transform.position.y, 0);
         }
 

@@ -293,11 +293,11 @@ namespace HeavenStudio.Games
                 {
                     if (normalizedShouldStopBeat > 1 && !keepZoomOut)
                     {
-                        GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                        GameCamera.AdditionalPosition = new Vector3(0, 0, 0);
                     }
                     else if (normalizedBeat > 1)
                     {
-                        GameCamera.additionalPosition = new Vector3(currentCamPos.x, currentCamPos.y, currentCamPos.z + 10);
+                        GameCamera.AdditionalPosition = new Vector3(currentCamPos.x, currentCamPos.y, currentCamPos.z + 10);
                     }
                     else
                     {
@@ -305,7 +305,7 @@ namespace HeavenStudio.Games
                         float newPosX = func(lastCamPos.x, currentCamPos.x, normalizedBeat);
                         float newPosY = func(lastCamPos.y, currentCamPos.y, normalizedBeat);
                         float newPosZ = func(lastCamPos.z + 10, currentCamPos.z + 10, normalizedBeat);
-                        GameCamera.additionalPosition = new Vector3(newPosX, newPosY, newPosZ);
+                        GameCamera.AdditionalPosition = new Vector3(newPosX, newPosY, newPosZ);
                     }
                 }
             }
