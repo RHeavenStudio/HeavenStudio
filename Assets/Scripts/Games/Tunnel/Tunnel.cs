@@ -69,6 +69,7 @@ namespace HeavenStudio.Games
         Tween bgColorTween;
         Tween fgColorTween;
         Vector3 tunnelStartPos;
+        Sound tunnelSoundRight, tunnelSoundMiddle, tunnelSoundLeft;
 
 
         [Header("References")]
@@ -121,6 +122,9 @@ namespace HeavenStudio.Games
             if (Conductor.instance != null && Conductor.instance.NotStopped())
             {
                 Conductor.instance.FadeMinigameVolume(Conductor.instance.songPositionInBeatsAsDouble, 0, 1);
+                tunnelSoundRight?.Stop();
+                tunnelSoundMiddle?.Stop();
+                tunnelSoundLeft?.Stop();
             }
         }
 
@@ -163,10 +167,10 @@ namespace HeavenStudio.Games
                 ScheduleInput(lastCowbell, 1, InputAction_BasicPress, CowbellSuccess, CowbellMiss, CowbellEmpty);
             }
 
-            bg.position = new Vector3(bgStartX - (2 * bgStartX * (((float)Time.realtimeSinceStartupAsDouble % bgScrollTime) / bgScrollTime)), 0, 0);
+            // bg.localPosition = new Vector3(bgStartX - (2 * bgStartX * (((float)Time.realtimeSinceStartupAsDouble % bgScrollTime) / bgScrollTime)), 0, 0);
             if (tunnelWall.activeSelf)
             {
-                tunnelWall.transform.position = tunnelStartPos - new Vector3(tunnelChunksPerSec * tunnelWallChunkSize * (float)(cond.songPositionAsDouble - tunnelStartTime), 0, 0);
+                tunnelWall.transform.localPosition = tunnelStartPos - new Vector3(tunnelChunksPerSec * tunnelWallChunkSize * (float)(cond.songPositionAsDouble - tunnelStartTime), 0, 0);
             }
             if (cond.songPositionAsDouble >= tunnelEndTime + PostTunnelScrnTime)
             {
@@ -275,10 +279,19 @@ namespace HeavenStudio.Games
             double durationSec = Math.Ceiling((tunnelEndTime - tunnelStartTime) * 4 * tunnelChunksPerSec) * 0.25 / tunnelChunksPerSec;
 
             tunnelWallRenderer.size = new Vector2((float)durationSec * tunnelWallChunkSize * tunnelChunksPerSec, 13.7f);
-            tunnelWall.transform.position = tunnelStartPos;
+            tunnelWall.transform.localPosition = tunnelStartPos;
             tunnelWall.SetActive(true);
             this.fadeDuration = fadeDuration;
             cond.FadeMinigameVolume(beat, fadeDuration, volume);
+
+            tunnelSoundRight = SoundByte.PlayOneShotGame("tunnel/tunnelRight", beat, looping: true);
+            tunnelSoundMiddle = SoundByte.PlayOneShotGame("tunnel/tunnelMiddle", beat + (6/48f), looping: true);
+            tunnelSoundLeft = SoundByte.PlayOneShotGame("tunnel/tunnelLeft" + (12/48f), beat, looping: true);
+
+            double tunnelEnd = cond.GetBeatFromSongPos(tunnelEndTime + PostTunnelScrnTime);
+            tunnelSoundRight.SetLoopParams(tunnelEnd, 0.1);
+            tunnelSoundMiddle.SetLoopParams(tunnelEnd + (6/48f), 0.1);
+            tunnelSoundLeft.SetLoopParams(tunnelEnd + (12/48f), 0.1);
         }
     }
 }
