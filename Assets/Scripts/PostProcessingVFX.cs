@@ -12,6 +12,7 @@ namespace HeavenStudio
 
         // events
         private List<RiqEntity> _vignettes = new();
+        private List<RiqEntity> _cabbs = new();
 
         private void Awake()
         {
@@ -26,12 +27,15 @@ namespace HeavenStudio
         public void OnBeatChanged(double beat)
         {
             _vignettes = EventCaller.GetAllInGameManagerList("vfx", new string[] { "vignette" });
+            _cabbs = EventCaller.GetAllInGameManagerList("vfx", new string[] { "cabb" });
             UpdateVignette();
+            UpdateChromaticAbberations();
         }
 
         private void Update()
         {
             UpdateVignette();
+            UpdateChromaticAbberations();
         }
 
         private void UpdateVignette()
@@ -47,7 +51,9 @@ namespace HeavenStudio
                 float clampNormal = Mathf.Clamp01(normalized);
                 var func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease)e["ease"]);
 
-                v.enabled.Override(e["enable"]);
+                float newIntensity = func(e["intenStart"], e["intenEnd"], clampNormal);
+
+                v.enabled.Override(newIntensity != 0);
                 if (!v.enabled) continue;
                 v.rounded.Override(e["rounded"]);
 
@@ -55,7 +61,6 @@ namespace HeavenStudio
 
                 v.color.Override(newColor);
 
-                float newIntensity = func(e["intenStart"], e["intenEnd"], clampNormal);
                 v.intensity.Override(newIntensity);
 
                 float newSmoothness = func(e["smoothStart"], e["smoothEnd"], clampNormal);
@@ -63,6 +68,25 @@ namespace HeavenStudio
 
                 float newRoundness = func(e["roundStart"], e["roundEnd"], clampNormal);
                 v.roundness.Override(newRoundness);
+            }
+        }
+
+        private void UpdateChromaticAbberations()
+        {
+            if (!_volume.profile.TryGetSettings<ChromaticAberration>(out var c)) return;
+            c.enabled.Override(false);
+            foreach (var e in _cabbs)
+            {
+                float normalized = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
+                if (normalized < 0) break;
+
+                float clampNormal = Mathf.Clamp01(normalized);
+                var func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease)e["ease"]);
+
+                float newIntensity = func(e["intenStart"], e["intenEnd"], clampNormal);
+                c.enabled.Override(newIntensity != 0);
+                if (!c.enabled) continue;
+                c.intensity.Override(newIntensity);
             }
         }
 

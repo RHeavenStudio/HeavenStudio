@@ -891,23 +891,30 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("enable", true, "Enable"),
+                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
 
                             new("colorStart", Color.black, "Start Color"),
                             new("colorEnd", Color.black, "Start End"),
-
-                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
-                            new("intenEnd", new EntityTypes.Float(0f, 1f), "End Intensity"),
                             
                             new("smoothStart", new EntityTypes.Float(0.01f, 1f, 0.2f), "Start Smoothness"),
                             new("smoothEnd", new EntityTypes.Float(0.01f, 1f, 0.2f), "End Smoothness"),
 
                             new("roundStart", new EntityTypes.Float(0f, 1f, 1f), "Start Roundness"),
                             new("roundEnd", new EntityTypes.Float(0f, 1f, 1f), "End Roundness"),
+                            new("rounded", false, "Rounded"),
 
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
-
-                            new("rounded", false, "Rounded")
+                        }
+                    },
+                    new GameAction("cabb", "Chromatic Abberation")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
                         }
                     }
                 }),
