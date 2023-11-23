@@ -973,6 +973,57 @@ namespace HeavenStudio
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "xStart", "yStart" })
                             }),
                         }
+                    },
+                    new GameAction("grain", "Grain")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
+
+                            new("sizeStart", new EntityTypes.Float(0.3f, 3f, 1f), "Start Size"),
+                            new("sizeEnd", new EntityTypes.Float(0.3f, 3f, 1f), "End Size"),
+
+                            new("colored", true, "Colored"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "sizeStart" })
+                            }),
+                        }
+                    },
+                    new GameAction("colorGrading", "Color Grading")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("tempStart", new EntityTypes.Float(-100f, 100f), "Start Temperature"),
+                            new("tempEnd", new EntityTypes.Float(-100f, 100f), "End Temperature"),
+
+                            new("tintStart", new EntityTypes.Float(-100f, 100f), "Start Tint"),
+                            new("tintEnd", new EntityTypes.Float(-100f, 100f), "End Tint"),
+
+                            new("colorStart", Color.white, "Start Color Filter"),
+                            new("colorEnd", Color.white, "End Color Filter"),
+
+                            new("hueShiftStart", new EntityTypes.Float(-180f, 180f), "Start Hue Shift"),
+                            new("hueShiftEnd", new EntityTypes.Float(-180f, 180f), "End Hue Shift"),
+
+                            new("satStart", new EntityTypes.Float(-100f, 100f), "Start Saturation"),
+                            new("satEnd", new EntityTypes.Float(-100f, 100f), "End Saturation"),
+
+                            new("brightStart", new EntityTypes.Float(-100f, 100f), "Start Brightness"),
+                            new("brightEnd", new EntityTypes.Float(-100f, 100f), "End Brightness"),
+
+                            new("conStart", new EntityTypes.Float(-100f, 100f), "Start Contrast"),
+                            new("conEnd", new EntityTypes.Float(-100f, 100f), "End Contrast"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "tempStart", "tintStart", "colorStart", "hueShiftStart", "satStart", "brightStart", "conStart" })
+                            }),
+                        }
                     }
                 }),
             };
