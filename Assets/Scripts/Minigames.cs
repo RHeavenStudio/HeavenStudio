@@ -774,7 +774,10 @@ namespace HeavenStudio
                             new Param("colorB", Color.white, "End Color"),
                             new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
                             new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "colorA", "valA" })
+                            })
                         }
                     ),
                     new GameAction("filter", "Filter", 1f, true,
@@ -791,7 +794,10 @@ namespace HeavenStudio
 
                             new Param("start", new EntityTypes.Float(0, 1, 1), "Start Intensity"),
                             new Param("end", new EntityTypes.Float(0, 1, 1), "End Intensity"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "start" })
+                            }),
                         }
                     ),
                     new GameAction("move camera", "Move Camera", 1f, true, new List<Param>()
@@ -904,7 +910,10 @@ namespace HeavenStudio
                             new("roundEnd", new EntityTypes.Float(0f, 1f, 1f), "End Roundness"),
                             new("rounded", false, "Rounded"),
 
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "colorStart", "smoothStart", "roundStart" })
+                            }),
                         }
                     },
                     new GameAction("cabb", "Chromatic Abberation")
@@ -914,7 +923,10 @@ namespace HeavenStudio
                         {
                             new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
                             new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart" })
+                            }),
                         }
                     },
                     new GameAction("bloom", "Bloom")
@@ -937,7 +949,10 @@ namespace HeavenStudio
                             new("anaStart", new EntityTypes.Float(-1f, 1f, 0f), "Start Anamorphic Ratio"),
                             new("anaEnd", new EntityTypes.Float(-1f, 1f, 0f), "End Anamorphic Ratio"),
 
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "colorStart", "thresholdStart", "softKneeStart", "anaStart" })
+                            }),
                         }
                     },
                     new GameAction("lensD", "Lens Distortion")
@@ -953,7 +968,10 @@ namespace HeavenStudio
                             new("xEnd", new EntityTypes.Float(0f, 1f, 1f), "End X Multiplier"),
                             new("yEnd", new EntityTypes.Float(0f, 1f, 1f), "End Y Multiplier"),
 
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "xStart", "yStart" })
+                            }),
                         }
                     }
                 }),
