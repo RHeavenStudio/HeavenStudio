@@ -1024,6 +1024,27 @@ namespace HeavenStudio
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "tempStart", "tintStart", "colorStart", "hueShiftStart", "satStart", "brightStart", "conStart" })
                             }),
                         }
+                    },
+                    new GameAction("screenTiling", "Screen Tiling")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("xStart", new EntityTypes.Float(1, 100, 1), "Start Horizontal Tiles"),
+                            new("yStart", new EntityTypes.Float(1, 100, 1), "Start Vertical Tiles"),
+                            new("xEnd", new EntityTypes.Float(1, 100, 1), "End Horizontal Tiles"),
+                            new("yEnd", new EntityTypes.Float(1, 100, 1), "End Vertical Tiles"),
+
+                            new("xScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Horizontal Scroll"),
+                            new("yScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Vertical Scroll"),
+                            new("xScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Horizontal Scroll"),
+                            new("yScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Vertical Scroll"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xStart", "yStart", "xScrollStart", "yScrollStart" })
+                            }),
+                        }
                     }
                 }),
             };
