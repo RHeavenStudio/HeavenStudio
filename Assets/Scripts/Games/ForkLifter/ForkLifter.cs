@@ -69,16 +69,6 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Keep Bopping", "Should Fork bop for the duration of the block?"),
-                        new Param("autoBop", false, "Keep Bopping (Auto)", "Should Fork bop indefinitely?"),
-                    },
-                    resizable = true,
-                },
             },
             new List<string>() {"rvl", "normal"},
             "rvlfork", "en",

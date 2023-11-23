@@ -144,16 +144,17 @@ namespace HeavenStudio.Games
             PersistColor(beat);
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (goBop)
+            {
+                Bop();
+            }
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (goBop)
-                {
-                    Bop();
-                }
-            }
 
             if (isMoving && cond.isPlaying && !cond.isPaused) 
             {

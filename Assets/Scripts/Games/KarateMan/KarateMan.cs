@@ -1166,6 +1166,11 @@ namespace HeavenStudio.Games
             Wind.windMain = windStrength;
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            Joe.RequestBop();
+        }
+
         public void ToggleBop(double beat, float length, bool toggle, bool autoBop)
         {
             Joe.bop.length = autoBop ? float.MaxValue : 0;

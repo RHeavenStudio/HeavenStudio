@@ -51,6 +51,12 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         }
         public bool inNuriLock { get { return (Conductor.instance.songPositionInBeatsAsDouble >= noNuriJabTime && Conductor.instance.songPositionInBeatsAsDouble < noNuriJabTime + 1f); } }
 
+        public void RequestBop()
+        {
+            var cond = Conductor.instance;
+            if (cond.songPositionInBeatsAsDouble > bop.startBeat && cond.songPositionInBeatsAsDouble < bop.startBeat + bop.length && cond.songPositionInBeatsAsDouble >= unPrepareTime && !inCombo) Bop();
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
@@ -93,11 +99,6 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 unPrepareTime = double.MinValue;
                 anim.speed = 1f;
                 anim.Play("Beat", -1, 0);
-            }
-
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, false) && cond.songPositionInBeatsAsDouble > bop.startBeat && cond.songPositionInBeatsAsDouble < bop.startBeat + bop.length && cond.songPositionInBeatsAsDouble >= unPrepareTime && !inCombo)
-            {
-                Bop();
             }
 
             if (inCombo && shouldComboId == -2)

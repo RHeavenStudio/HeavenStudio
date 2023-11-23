@@ -76,12 +76,10 @@ namespace HeavenStudio
         // Conductor is currently paused, but not fully stopped
         public bool isPaused;
 
-        // Last reported beat based on song position
-        private double lastReportedBeat = 0f;
-
         // Metronome tick sound enabled
         public bool metronome = false;
         Util.Sound metronomeSound;
+        private int _metronomeTally = 0;
 
         // pitch values
         private float timelinePitch = 1f;
@@ -210,6 +208,7 @@ namespace HeavenStudio
 
             songPosBeat = GetBeatFromSongPos(time);
             startBeat = songPosBeat;
+            _metronomeTally = 0;
 
             startTime = DateTime.Now;
             absTimeAdjust = 0;
@@ -409,13 +408,10 @@ namespace HeavenStudio
         {
             if (metronome && isPlaying)
             {
-                if (ReportBeat(ref lastReportedBeat))
+                if (songPositionInBeatsAsDouble >= Math.Ceiling(startBeat) + _metronomeTally)
                 {
-                    metronomeSound = Util.SoundByte.PlayOneShot("metronome", lastReportedBeat);
-                }
-                else if (songPositionInBeats < lastReportedBeat)
-                {
-                    lastReportedBeat = Mathf.Round(songPositionInBeats);
+                    metronomeSound = Util.SoundByte.PlayOneShot("metronome", Math.Ceiling(startBeat) + _metronomeTally);
+                    _metronomeTally++;
                 }
             }
             else
@@ -428,6 +424,7 @@ namespace HeavenStudio
             }
         }
 
+        [Obsolete("Conductor.ReportBeat is deprecated. Please use the OnBeatPulse callback instead.")]
         public bool ReportBeat(ref double lastReportedBeat, double offset = 0, bool shiftBeatToOffset = true)
         {
             bool result = songPositionInBeats + (shiftBeatToOffset ? offset : 0f) >= (lastReportedBeat) + 1f;

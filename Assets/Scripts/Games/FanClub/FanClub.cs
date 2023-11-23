@@ -204,8 +204,6 @@ namespace HeavenStudio.Games
         private List<GameObject> Spectators;
 
         //bop-type animations
-        private GameEvent bop = new GameEvent();
-        private GameEvent specBop = new GameEvent();
         private GameEvent noBop = new GameEvent();
         private GameEvent noResponse = new GameEvent();
         private GameEvent noCall = new GameEvent();
@@ -356,30 +354,28 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            var cond = Conductor.instance;
+            if (goBopIdol)
+            {
+                if (!(cond.songPositionInBeatsAsDouble >= noBop.startBeat && cond.songPositionInBeatsAsDouble < noBop.startBeat + noBop.length))
+                {
+                    idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
+                    Blue.PlayAnimState("Beat");
+                    Orange.PlayAnimState("Beat");
+                }
+            }
+            if (goBopSpec)
+            {
+                if (!(cond.songPositionInBeatsAsDouble >= noSpecBop.startBeat && cond.songPositionInBeatsAsDouble < noSpecBop.startBeat + noSpecBop.length))
+                    BopAll();
+            }
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (goBopIdol)
-                {
-                    if (!(cond.songPositionInBeatsAsDouble >= noBop.startBeat && cond.songPositionInBeatsAsDouble < noBop.startBeat + noBop.length))
-                    {
-                        idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
-                        Blue.PlayAnimState("Beat");
-                        Orange.PlayAnimState("Beat");
-                    }
-                }
-            }
-
-            if (cond.ReportBeat(ref specBop.lastReportedBeat, specBop.startBeat % 1))
-            {
-                if (goBopSpec)
-                {
-                    if (!(cond.songPositionInBeatsAsDouble >= noSpecBop.startBeat && cond.songPositionInBeatsAsDouble < noSpecBop.startBeat + noSpecBop.length))
-                        BopAll();
-                }
-            }
             
             //idol jumping physics
             float jumpPos = cond.GetPositionFromBeat(idolJumpStartTime, 1f);

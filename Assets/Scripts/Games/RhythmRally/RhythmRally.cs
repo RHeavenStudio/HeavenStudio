@@ -152,7 +152,6 @@ namespace HeavenStudio.Games
 
         public Paddlers paddlers;
 
-        public GameEvent bop = new GameEvent();
         private bool goBop = true;
 
         public static RhythmRally instance;
@@ -357,22 +356,20 @@ namespace HeavenStudio.Games
                 }
             }
 
-
-            // Paddler bop animation.
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (goBop && !inPose)
-                {
-                    BopSingle();
-                }
-            }
-
             opponentServing = false;
 
             //update camera
             GameCamera.AdditionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
             GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
             GameCamera.AdditionalFoV = cameraFOV;
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (goBop && !inPose)
+            {
+                BopSingle();
+            }
         }
 
         public void Bop(double beat, float length, bool bop, bool bopAuto)
