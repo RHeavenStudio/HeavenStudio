@@ -47,6 +47,7 @@ namespace HeavenStudio
         [NonSerialized] public bool playOnStart;
         [NonSerialized] public double startBeat;
         [NonSerialized] public GameObject currentGameO;
+        private Minigame _currentMinigame;
         [NonSerialized] public bool autoplay;
         [NonSerialized] public bool canInput = true;
         [NonSerialized] public RiqEntity currentSection, nextSection;
@@ -493,6 +494,12 @@ namespace HeavenStudio
                 }
             }
 
+            if (cond.songPositionInBeatsAsDouble >= Math.Ceiling(_playStartBeat) + _pulseTally)
+            {
+                if (_currentMinigame != null) _currentMinigame.OnBeatPulse(Math.Ceiling(_playStartBeat) + _pulseTally);
+                _pulseTally++;
+            }
+
             float seekTime = 8f;
             //seek ahead to preload games that have assetbundles
             SeekAheadAndPreload(cond.songPositionInBeatsAsDouble, seekTime);
@@ -580,10 +587,15 @@ namespace HeavenStudio
 
         #region Play Events
 
+        private double _playStartBeat = 0;
+        private int _pulseTally = 0;
+
         public void Play(double beat, float delay = 0f)
         {
             bool paused = Conductor.instance.isPaused;
             Debug.Log("Playing at " + beat);
+            _playStartBeat = beat;
+            _pulseTally = 0;
             canInput = true;
             if (!paused)
             {
@@ -951,6 +963,10 @@ namespace HeavenStudio
             Destroy(currentGameO);
 
             currentGameO = Instantiate(GetGame(game));
+            if (currentGameO.TryGetComponent<Minigame>(out var minigame))
+            {
+                _currentMinigame = minigame;
+            }
             currentGameO.transform.parent = eventCaller.GamesHolder.transform;
             currentGameO.name = game;
 
