@@ -71,6 +71,7 @@ namespace HeavenStudio
 
         public event Action<double> onBeatChanged;
         public event Action<RiqEntity> onSectionChange;
+        public event Action<double> onBeatPulse;
 
         public int BeatmapEntities()
         {
@@ -497,6 +498,7 @@ namespace HeavenStudio
             if (cond.songPositionInBeatsAsDouble >= Math.Ceiling(_playStartBeat) + _pulseTally)
             {
                 if (_currentMinigame != null) _currentMinigame.OnBeatPulse(Math.Ceiling(_playStartBeat) + _pulseTally);
+                onBeatPulse?.Invoke(Math.Ceiling(_playStartBeat) + _pulseTally);
                 _pulseTally++;
             }
 
