@@ -17,7 +17,6 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         public bool isSqueezed;
         public bool isPreparing;
         public double queuePrepare;
-        public double lastReportedBeat = 0f;
         double lastSqueezeBeat;
         bool isActive = true;
 
@@ -65,10 +64,9 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
             }
         }
 
-        void LateUpdate()
+        public void RequestBop()
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat)
-                && !anim.IsPlayingAnimationName("Bop")
+            if (!anim.IsPlayingAnimationName("Bop")
                 && !anim.IsPlayingAnimationName("Happy")
                 && !anim.IsPlayingAnimationName("Angry")
                 && !anim.IsPlayingAnimationName("Oops")

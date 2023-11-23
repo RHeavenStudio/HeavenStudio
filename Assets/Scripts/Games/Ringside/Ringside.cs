@@ -218,26 +218,27 @@ namespace HeavenStudio.Games
             ReporterBlink();
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop && canBop)
+            {
+                if (UnityEngine.Random.Range(1, 18) == 1)
+                {
+                    wrestlerAnim.DoScaledAnimationAsync("BopPec");
+                }
+                else
+                {
+                    wrestlerAnim.DoScaledAnimationAsync("Bop");
+                }
+            }
+        }
+
         void Update()
         {
             var cond = Conductor.instance;
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (shouldBop && canBop)
-                    {
-                        if (UnityEngine.Random.Range(1, 18) == 1)
-                        {
-                            wrestlerAnim.DoScaledAnimationAsync("BopPec");
-                        }
-                        else
-                        {
-                            wrestlerAnim.DoScaledAnimationAsync("Bop");
-                        }
-                    }
-                }
                 if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && !shouldNotInput)
                 {
                     if ((PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)

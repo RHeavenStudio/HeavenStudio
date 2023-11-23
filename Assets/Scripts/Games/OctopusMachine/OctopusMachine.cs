@@ -206,7 +206,6 @@ namespace HeavenStudio.Games
         bool autoAction;
         double intervalStartBeat;
         float beatInterval = 1f;
-        double lastReportedBeat;
 
         static List<double> queuedSqueezes = new();
         static List<double> queuedReleases = new();
@@ -253,6 +252,23 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (bopIterate >= 3)
+            {
+                bopStatus =
+                bopIterate = 0;
+                autoAction = false;
+            }
+
+            if (autoAction) bopIterate++;
+
+            foreach (var octo in octopodes)
+            {
+                octo.RequestBop();
+            }
+        }
+
         private void Update() 
         {
             BackgroundColorUpdate();
@@ -260,17 +276,6 @@ namespace HeavenStudio.Games
                 foreach (var octo in octopodes) octo.queuePrepare = queuePrepare;
                 if (Text.text is "Wrong! Try Again!" or "Good!") Text.text = "";
                 queuePrepare = double.MaxValue;
-            }
-
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
-            {
-                if (bopIterate >= 3) {
-                    bopStatus =
-                    bopIterate = 0;
-                    autoAction = false;
-                }
-                
-                if (autoAction) bopIterate++;
             }
         }
 

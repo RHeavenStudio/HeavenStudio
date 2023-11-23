@@ -49,16 +49,11 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             {
                 Stab(null);
             }
-
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && shouldBop) 
-            {
-                SingleBop();
-            }
         }
 
         public void SingleBop()
         {
-            anim.DoScaledAnimationAsync("Player_Bop", 0.5f);
+            if (anim.IsAnimationNotPlaying() && shouldBop) anim.DoScaledAnimationAsync("Player_Bop", 0.5f);
         }
 
         public void Eat()

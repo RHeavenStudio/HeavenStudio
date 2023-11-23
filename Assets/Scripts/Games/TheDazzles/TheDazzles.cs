@@ -257,23 +257,24 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop)
+            {
+                foreach (var girl in npcGirls)
+                {
+                    girl.Bop();
+                }
+                player.Bop();
+            }
+        }
+
         void Update()
         {
             var cond = Conductor.instance;
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (shouldBop)
-                    {
-                        foreach (var girl in npcGirls)
-                        {
-                            girl.Bop();
-                        }
-                        player.Bop();
-                    }
-                }
                 if (queuedPoses.Count > 0)
                 {
                     foreach (var pose in queuedPoses)

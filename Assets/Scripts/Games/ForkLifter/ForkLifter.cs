@@ -129,6 +129,11 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            playerInstance.SingleBop();
+        }
+
         private void Update()
         {
             BackgroundColorUpdate();

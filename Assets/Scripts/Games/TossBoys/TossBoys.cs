@@ -262,20 +262,20 @@ namespace HeavenStudio.Games
             return default(SuperCurveObject.Path);
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop)
+            {
+                SingleBop();
+            }
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
             BackgroundColorUpdate();
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (shouldBop)
-                    {
-                        SingleBop();
-                    }
-                }
-
                 if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
                 {
                     TossKid next = GetCurrentReceiver();
