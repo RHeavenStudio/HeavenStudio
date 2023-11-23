@@ -281,19 +281,19 @@ namespace HeavenStudio.Games
                 {
                     if (!keepZoomOut)
                     {
-                        GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                        GameCamera.AdditionalPosition = new Vector3(0, 0, 0);
                         zoomOutAnim.Play("NoZoomOut", 0, 0);
                     }
                     else 
                     {
                         Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
                         if (normalizedBeat > 1)
-                            GameCamera.additionalPosition = new Vector3(0, 30, -100);
+                            GameCamera.AdditionalPosition = new Vector3(0, 30, -100);
                         else
                         {
                             float newPosY = func(0, 30, normalizedBeat);
                             float newPosZ = func(0, -100, normalizedBeat);
-                            GameCamera.additionalPosition = new Vector3(0, newPosY, newPosZ);
+                            GameCamera.AdditionalPosition = new Vector3(0, newPosY, newPosZ);
                         }
                         if (normalizedAnimBeat > 1)
                         {

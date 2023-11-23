@@ -228,6 +228,18 @@ namespace HeavenStudio.Games
             colorEnd = defaultBGColor;
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop)
+            {
+                Bop();
+            }
+            if (spaceGrampsShouldBop)
+            {
+                GrampsBop();
+            }
+        }
+
         // Update is called once per frame
         void Update()
         {
@@ -237,17 +249,6 @@ namespace HeavenStudio.Games
             {
                 scroll.NormalizedX -= xBaseSpeed * xScrollMultiplier * Time.deltaTime;
                 scroll.NormalizedY -= yBaseSpeed * yScrollMultiplier * Time.deltaTime;
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (shouldBop)
-                    {
-                        Bop();
-                    }
-                    if (spaceGrampsShouldBop)
-                    {
-                        GrampsBop();
-                    }
-                }
                 if (isShootingStar)
                 {
                     float normalizedBeat = cond.GetPositionFromBeat(shootingStarStartBeat, shootingStarLength);

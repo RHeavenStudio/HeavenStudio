@@ -157,10 +157,9 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void LateUpdate()
+        public override void OnBeatPulse(double beat)
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat)
-                && !BossAnim.IsPlayingAnimationName("BossCall")
+            if (!BossAnim.IsPlayingAnimationName("BossCall")
                 && !BossAnim.IsPlayingAnimationName("BossSignal")
                 && bossBop)
             {

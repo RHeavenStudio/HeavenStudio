@@ -670,7 +670,7 @@ namespace HeavenStudio.Games
                     Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuad);
 
                     float newX = func(lastTargetCameraX, targetCameraX, normalizedBeat);
-                    GameCamera.additionalPosition = new Vector3(newX, 0, 0);
+                    GameCamera.AdditionalPosition = new Vector3(newX, 0, 0);
                 }
             }
         }
@@ -680,7 +680,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("rockers/lastOne");
             if (moveCamera)
             {
-                lastTargetCameraX = GameCamera.additionalPosition.x;
+                lastTargetCameraX = GameCamera.AdditionalPosition.x;
                 targetCameraX = 0;
                 cameraMoveBeat = beat + 2;
             }
@@ -736,7 +736,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("rockers/cmon");
             if (moveCamera)
             {
-                lastTargetCameraX = GameCamera.additionalPosition.x;
+                lastTargetCameraX = GameCamera.AdditionalPosition.x;
                 targetCameraX = 0;
                 cameraMoveBeat = beat + 2;
             }
@@ -806,7 +806,7 @@ namespace HeavenStudio.Games
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             if (moveCamera)
             {
-                lastTargetCameraX = GameCamera.additionalPosition.x;
+                lastTargetCameraX = GameCamera.AdditionalPosition.x;
                 targetCameraX = 0;
                 cameraMoveBeat = beat + goToMiddleBeat;
             }
@@ -896,7 +896,7 @@ namespace HeavenStudio.Games
 
         private void MoveCamera(double beat)
         {
-            lastTargetCameraX = GameCamera.additionalPosition.x;
+            lastTargetCameraX = GameCamera.AdditionalPosition.x;
             targetCameraX = JJ.transform.localPosition.x;
             cameraMoveBeat = beat;
 
@@ -1058,7 +1058,7 @@ namespace HeavenStudio.Games
                     {
                         if (moveCamera)
                         {
-                            lastTargetCameraX = GameCamera.additionalPosition.x;
+                            lastTargetCameraX = GameCamera.AdditionalPosition.x;
                             targetCameraX = Soshi.transform.localPosition.x;
                             cameraMoveBeat = beat - 1;
                         }

@@ -38,15 +38,42 @@ namespace HeavenStudio
         /**
             camera's current transformation
         **/
-        private static Vector3 position;
-        private static Vector3 rotEluer;
-        private static Vector3 shakeResult;
+        private static Vector3 _position;
+        private static Vector3 Position
+        {
+            get => _position;
+            set
+            {
+                _position = value;
+                instance.ApplyCameraValues();
+            }
+        }
+        private static Vector3 _rotEuler;
+        private static Vector3 RotEuler
+        {
+            get => _rotEuler;
+            set
+            {
+                _rotEuler = value;
+                instance.ApplyCameraValues();
+            }
+        }
+        private static Vector3 _shakeResult;
+        private static Vector3 ShakeResult
+        {
+            get => _shakeResult;
+            set
+            {
+                _shakeResult = value;
+                instance.ApplyCameraValues();
+            }
+        }
 
         /**
             camera's last transformation
         **/
         private static Vector3 positionLast;
-        private static Vector3 rotEluerLast;
+        private static Vector3 rotEulerLast;
         private static Vector3 shakeLast;
 
         /** 
@@ -54,10 +81,46 @@ namespace HeavenStudio
             to use in minigame scripts (Spaceball, Rhythm Rally, Built to Scale, etc.)
             and NOT in the editor
         **/
-        public static Vector3 additionalPosition;
-        public static Vector3 additionalRotEluer;
-        public static Vector3 additionalScale;
-        public static float additionalFoV;
+        private static Vector3 _additionalPosition;
+        public static Vector3 AdditionalPosition
+        {
+            get => _additionalPosition;
+            set
+            {
+                _additionalPosition = value;
+                instance.ApplyCameraValues();
+            }
+        }
+        private static Vector3 _additionalRotEuler;
+        public static Vector3 AdditionalRotEuler
+        {
+            get => _additionalRotEuler;
+            set
+            {
+                _additionalRotEuler = value;
+                instance.ApplyCameraValues();
+            }
+        }
+        private static Vector3 _additionalScale;
+        public static Vector3 AdditionalScale
+        {
+            get => _additionalScale;
+            set
+            {
+                _additionalScale = value;
+                instance.ApplyCameraValues();
+            }
+        }
+        private static float _additionalFoV;
+        public static float AdditionalFoV
+        {
+            get => _additionalFoV;
+            set
+            {
+                _additionalFoV = value;
+                instance.ApplyCameraValues();
+            }
+        }
 
         [Header("Components")]
         public Color baseColor;
@@ -80,7 +143,7 @@ namespace HeavenStudio
             currentColor = baseColor;
             
             positionLast = defaultPosition;
-            rotEluerLast = defaultRotEluer;
+            rotEulerLast = defaultRotEluer;
         }
 
         public void OnBeatChanged(double beat)
@@ -90,7 +153,7 @@ namespace HeavenStudio
             currentColor = baseColor;
 
             positionLast = defaultPosition;
-            rotEluerLast = defaultRotEluer;
+            rotEulerLast = defaultRotEluer;
 
             // this entire thing is a mess redo it later
             //pos
@@ -127,13 +190,19 @@ namespace HeavenStudio
         private void LateUpdate()
         {
             Camera cam = GetCamera();
-            // rotate position by additional rotation
-            Vector3 userPos = Quaternion.Euler(additionalRotEluer) * position;
-            cam.transform.localPosition = userPos + additionalPosition + shakeResult;
-            cam.transform.eulerAngles = rotEluer + additionalRotEluer;
-            cam.fieldOfView = additionalFoV;
             cam.backgroundColor = currentColor;
             if (!StaticCamera.instance.usingMinigameAmbientColor) StaticCamera.instance.SetAmbientGlowColour(currentColor, false, false);
+        }
+
+        private void ApplyCameraValues()
+        {
+            Camera cam = GetCamera();
+            // rotate position by additional rotation
+            Vector3 userPos = Quaternion.Euler(_additionalRotEuler) * _position;
+            cam.transform.localPosition = userPos + _additionalPosition + _shakeResult;
+            cam.transform.eulerAngles = _rotEuler + _additionalRotEuler;
+            cam.fieldOfView = _additionalFoV;
+            //Debug.Log("Camera Pos: " + _additionalPosition);
         }
 
         private void UpdateCameraColor()
@@ -168,19 +237,19 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) CameraAxis.X:
-                            position.x = func(positionLast.x, e["valA"], Mathf.Min(prog, 1f));
+                            Position = new Vector3(func(positionLast.x, e["valA"], Mathf.Min(prog, 1f)), Position.y, Position.z);
                             break;
                         case (int) CameraAxis.Y:
-                            position.y = func(positionLast.y, e["valB"], Mathf.Min(prog, 1f));
+                            Position = new Vector3(Position.x, func(positionLast.y, e["valB"], Mathf.Min(prog, 1f)), Position.z);
                             break;
                         case (int) CameraAxis.Z:
-                            position.z = func(positionLast.z, -e["valC"], Mathf.Min(prog, 1f));
+                            Position = new Vector3(Position.x, Position.y, func(positionLast.z, -e["valC"], Mathf.Min(prog, 1f)));
                             break;
                         default:
                             float dx = func(positionLast.x, e["valA"], Mathf.Min(prog, 1f));
                             float dy = func(positionLast.y, e["valB"], Mathf.Min(prog, 1f));
                             float dz = func(positionLast.z, -e["valC"], Mathf.Min(prog, 1f));
-                            position = new Vector3(dx, dy, dz);
+                            Position = new Vector3(dx, dy, dz);
                             break;
                     }
                 }
@@ -216,19 +285,19 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) CameraAxis.X:
-                            rotEluer.x = func(rotEluerLast.x, e["valA"], Mathf.Min(prog, 1f));
+                            RotEuler = new Vector3(func(rotEulerLast.x, e["valA"], Mathf.Min(prog, 1f)), RotEuler.y, RotEuler.z);
                             break;
                         case (int) CameraAxis.Y:
-                            rotEluer.y = func(rotEluerLast.y, e["valB"], Mathf.Min(prog, 1f));
+                            RotEuler = new Vector3(RotEuler.x, func(rotEulerLast.y, e["valB"], Mathf.Min(prog, 1f)), RotEuler.z);
                             break;
                         case (int) CameraAxis.Z:
-                            rotEluer.z = func(rotEluerLast.z, -e["valC"], Mathf.Min(prog, 1f));
+                            RotEuler = new Vector3(RotEuler.x, RotEuler.y, func(rotEulerLast.z, -e["valC"], Mathf.Min(prog, 1f)));
                             break;
                         default:
-                            float dx = func(rotEluerLast.x, e["valA"], Mathf.Min(prog, 1f));
-                            float dy = func(rotEluerLast.y, e["valB"], Mathf.Min(prog, 1f));
-                            float dz = func(rotEluerLast.z, -e["valC"], Mathf.Min(prog, 1f));
-                            rotEluer = new Vector3(dx, dy, dz);    //I'm stupid and forgot to negate the rotation gfd 😢
+                            float dx = func(rotEulerLast.x, e["valA"], Mathf.Min(prog, 1f));
+                            float dy = func(rotEulerLast.y, e["valB"], Mathf.Min(prog, 1f));
+                            float dz = func(rotEulerLast.z, -e["valC"], Mathf.Min(prog, 1f));
+                            RotEuler = new Vector3(dx, dy, dz);    //I'm stupid and forgot to negate the rotation gfd 😢
                             break;
                     }
                 }
@@ -237,19 +306,19 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) CameraAxis.X:
-                            rotEluerLast.x = e["valA"];
+                            rotEulerLast.x = e["valA"];
                             break;
                         case (int) CameraAxis.Y:
-                            rotEluerLast.y = e["valB"];
+                            rotEulerLast.y = e["valB"];
                             break;
                         case (int) CameraAxis.Z:
-                            rotEluerLast.z = -e["valC"];
+                            rotEulerLast.z = -e["valC"];
                             break;
                         default:
-                            rotEluerLast = new Vector3(e["valA"], e["valB"], -e["valC"]);
+                            rotEulerLast = new Vector3(e["valA"], e["valB"], -e["valC"]);
                             break;
                     }
-                    rotEluerLast = new Vector3(e["valA"], e["valB"], -e["valC"]);
+                    rotEulerLast = new Vector3(e["valA"], e["valB"], -e["valC"]);
                 }
             }
         }
@@ -262,27 +331,27 @@ namespace HeavenStudio
                 if (prog >= 0f)
                 {
                     float fac = Mathf.Cos(Time.time * 80f) * 0.5f;
-                    shakeResult = new Vector3(fac * e["valA"], fac * e["valB"]);
+                    ShakeResult = new Vector3(fac * e["valA"], fac * e["valB"]);
                 }
                 if (prog > 1f)
                 {
-                    shakeResult = new Vector3(0, 0);
+                    ShakeResult = new Vector3(0, 0);
                 }
             }
         }
 
         public static void ResetTransforms()
         {
-            position = defaultPosition;
-            rotEluer = defaultRotEluer;
-            shakeResult = defaultShake;
+            Position = defaultPosition;
+            RotEuler = defaultRotEluer;
+            ShakeResult = defaultShake;
         }
 
         public static void ResetAdditionalTransforms()
         {
-            additionalPosition = new Vector3(0, 0, 0);
-            additionalRotEluer = new Vector3(0, 0, 0);
-            additionalFoV = defaultFoV;
+            AdditionalPosition = new Vector3(0, 0, 0);
+            AdditionalRotEuler = new Vector3(0, 0, 0);
+            AdditionalFoV = defaultFoV;
         }
 
         public static Camera GetCamera()

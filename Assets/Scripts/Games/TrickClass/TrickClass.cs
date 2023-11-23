@@ -116,18 +116,20 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            var cond = Conductor.instance;
+            if (!goBop) return;
+            if ((!playerReady) && cond.songPositionInBeatsAsDouble > playerBopStart)
+                playerAnim.DoScaledAnimationAsync("Bop");
+
+            if (cond.songPositionInBeatsAsDouble > girlBopStart)
+                girlAnim.DoScaledAnimationAsync("Bop");
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && goBop)
-            {
-                if ((!playerReady) && cond.songPositionInBeatsAsDouble > playerBopStart)
-                    playerAnim.DoScaledAnimationAsync("Bop");
-
-                if (cond.songPositionInBeatsAsDouble > girlBopStart)
-                    girlAnim.DoScaledAnimationAsync("Bop");
-            }
-
             if (cond.isPlaying && !cond.isPaused)
             {
                 if (queuedInputs.Count > 0)

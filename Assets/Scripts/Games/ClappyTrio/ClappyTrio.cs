@@ -135,13 +135,14 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop) Bop(Conductor.instance.songPositionInBeatsAsDouble);
+        }
+
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (shouldBop) Bop(cond.songPositionInBeatsAsDouble);
-            }
             if (cond.isPlaying && !cond.isPaused)
             {
                 float normalizedBeat = cond.GetPositionFromBeat(signStartBeat, signLength);

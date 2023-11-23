@@ -90,6 +90,11 @@ namespace HeavenStudio.Util
             anim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * timeScale;
         }
 
+        public static void SetScaledAnimationSpeed(this Animator anim, float timeScale = 0.5f)
+        {
+            anim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * timeScale;
+        }
+
         /// <summary>
         /// Plays animation on animator, at default speed
         /// this is the least nessecary function here lol

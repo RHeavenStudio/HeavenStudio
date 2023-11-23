@@ -17,27 +17,47 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("donut", "Donut")
                 {
-                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false); },
+                    preFunction = delegate { BlueBear.TreatSound(eventCaller.currentEntity.beat, false); },
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false, eventCaller.currentEntity.beat); },
                     defaultLength = 3,
                 },
                 new GameAction("cake", "Cake")
                 {
-                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); },
+                    preFunction = delegate { BlueBear.TreatSound(eventCaller.currentEntity.beat, true); },
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true, eventCaller.currentEntity.beat); },
                     defaultLength = 4,
                 },
-                new GameAction("setEmotion", "Set Emotion")
+                new GameAction("setEmotion", "Emotion")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e.beat, e.length, e["type"]); },
-                    defaultLength = 0.5f,
+                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e["type"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("type", BlueBear.EmotionType.ClosedEyes, "Type", "Which emotion should the blue bear use?")
+                        new Param("type", BlueBear.EmotionType.ClosedEyes, "Emotion", "Which emotion should the blue bear use?")
+                    }
+                },
+                new GameAction("stretchEmotion", "Long Emotion")
+                {   
+                    defaultLength = 4,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", BlueBear.EmotionStretchType.LookUp, "Emotion", "Which emotion should the blue bear use?")
                     }
                 },
                 new GameAction("wind", "Wind")
                 {
                     function = delegate { BlueBear.instance.Wind(); },
                     defaultLength = 0.5f
+                },
+                new GameAction("story", "Story")
+                {
+                    defaultLength = 4,
+                    parameters = new List<Param>()
+                    {
+                        new Param("story", BlueBear.StoryType.Date, "Story"),
+                        new Param("enter", true, "Enter")
+                    },
+                    resizable = true
                 },
                 new GameAction("crumb", "Set Crumb Threshold")
                 {
@@ -61,18 +81,31 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Jukebox;
     using Scripts_BlueBear;
+
     public class BlueBear : Minigame
     {
         public enum EmotionType
         {
-            Neutral,
-            ClosedEyes,
-            LookUp,
-            Smile,
-            Sad,
-            InstaSad,
-            Sigh
+            Neutral = 0,
+            ClosedEyes = 1,
+            Cry = 2,
+            Sigh = 3
+        }
+        public enum EmotionStretchType
+        {
+            LookUp = 0,
+            Smile = 1, 
+            StartCrying = 2,
+        }
+        public enum StoryType
+        {
+            Date,
+            Gift,
+            Girl,
+            Eat,
+            BreakUp
         }
         [Header("Animators")]
         public Animator headAndBodyAnim; // Head and body
@@ -84,6 +117,7 @@ namespace HeavenStudio.Games
         [Header("References")]
         [SerializeField] GameObject leftCrumb;
         [SerializeField] GameObject rightCrumb;
+        [SerializeField] private Animator _storyAnim;
         public GameObject donutBase;
         public GameObject cakeBase;
         public GameObject crumbsBase;
@@ -92,17 +126,12 @@ namespace HeavenStudio.Games
         public GameObject individualBagHolder;
 
         [Header("Variables")]
-        static int rightCrumbAppearThreshold = 15;
-        static int leftCrumbAppearThreshold = 30;
-        static int eatenTreats = 0;
-        double emotionStartBeat;
-        float emotionLength;
-        string emotionAnimName;
+        private int rightCrumbAppearThreshold = 15;
+        private int leftCrumbAppearThreshold = 30;
+        private int eatenTreats = 0;
         bool crying;
-
-        [Header("Curves")]
-        public BezierCurve3D donutCurve;
-        public BezierCurve3D cakeCurve;
+        private List<RiqEntity> _allStoryEvents = new();
+        [SerializeField] private SuperCurveObject.Path[] _treatCurves;
 
         [Header("Gradients")]
         public Gradient donutGradient;
@@ -167,64 +196,230 @@ namespace HeavenStudio.Games
             new("CtrBearRight", new int[] { IARight, IARight, IARight },
             IA_PadRight, IA_TouchRight, IA_BatonRight);
 
+        // Editor gizmo to draw trajectories
+        new void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            foreach (SuperCurveObject.Path path in _treatCurves)
+            {
+                if (path.preview)
+                {
+                    donutBase.GetComponent<SuperCurveObject>().DrawEditorGizmo(path);
+                }
+            }
+        }
+
+        public SuperCurveObject.Path GetPath(string name)
+        {
+            foreach (SuperCurveObject.Path path in _treatCurves)
+            {
+                if (path.name == name)
+                {
+                    return path;
+                }
+            }
+            return default(SuperCurveObject.Path);
+        }
+
         void OnDestroy()
         {
-            if (Conductor.instance.isPlaying || Conductor.instance.isPaused) return;
-            rightCrumbAppearThreshold = 15;
-            leftCrumbAppearThreshold = 30;
-            eatenTreats = 0;
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
             }
+            if (Conductor.instance.isPlaying || Conductor.instance.isPaused) return;
+            rightCrumbAppearThreshold = 15;
+            leftCrumbAppearThreshold = 30;
+            eatenTreats = 0;
         }
 
         private void Awake()
         {
             instance = this;
-            if (Conductor.instance.isPlaying || Conductor.instance.isPaused) EatTreat(true);
+            _allStoryEvents = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "story" });
+            UpdateStory();
+        }
+
+        private int _storyIndex = 0;
+
+        private void UpdateStory()
+        {
+            var cond = Conductor.instance;
+
+            if (_storyIndex >= _allStoryEvents.Count) return;
+
+            var currentStory = _allStoryEvents[_storyIndex];
+
+            if (cond.songPositionInBeatsAsDouble >= currentStory.beat + currentStory.length && _storyIndex + 1 != _allStoryEvents.Count)
+            {
+                _storyIndex++;
+                UpdateStory();
+                return;
+            }
+
+            float normalizedBeat = Mathf.Clamp01(cond.GetPositionFromBeat(currentStory.beat, currentStory.length));
+
+            bool enter = currentStory["enter"];
+
+            switch (currentStory["story"])
+            {
+                case (int)StoryType.Date:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Flashback0" : "Flashback0Exit", normalizedBeat);
+                    break;
+                case (int)StoryType.Gift:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Flashback1" : "Flashback1Exit", normalizedBeat);
+                    break;
+                case (int)StoryType.Girl:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Flashback2" : "Flashback2Exit", normalizedBeat);
+                    break;
+                case (int)StoryType.Eat:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Flashback3" : "Flashback3Exit", normalizedBeat);
+                    break;
+                default:
+                    _storyAnim.DoNormalizedAnimation(enter ? "Breakup" : "BreakupExit", normalizedBeat);
+                    break;
+            }
         }
 
         private void Update()
         {
             headAndBodyAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
+            if (headAndBodyAnim.GetBool("ShouldOpenMouth"))
+            {
+                _emotionCancelled = true;
+            }
 
             if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
             {
+                SoundByte.PlayOneShotGame("blueBear/whiff", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-1, 2), false));
                 Bite(true);
             }
             else if (PlayerInput.GetIsAction(InputAction_Right) && !IsExpectingInputNow(InputAction_Right.inputLockCategory))
             {
+                SoundByte.PlayOneShotGame("blueBear/whiff", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-1, 2), false));
                 Bite(false);
             }
 
-            Conductor cond = Conductor.instance;
+            UpdateEmotions();
 
-            if (cond.isPlaying && !cond.isPaused)
+            UpdateStory();
+            headAndBodyAnim.SetScaledAnimationSpeed();
+            bagsAnim.SetScaledAnimationSpeed();
+            cakeBagAnim.SetScaledAnimationSpeed();
+            donutBagAnim.SetScaledAnimationSpeed();
+            windAnim.SetScaledAnimationSpeed();
+        }
+
+        private bool _emotionCancelled = false;
+        private int _emotionIndex = 0;
+        private List<RiqEntity> _allEmotionsStretch = new();
+        private EmotionStretchType _lastEmotion = EmotionStretchType.LookUp;
+
+        private void UpdateEmotions()
+        {
+            var cond = Conductor.instance;
+            if (_allEmotionsStretch.Count == 0 || _emotionIndex >= _allEmotionsStretch.Count) return;
+
+            var beat = cond.songPositionInBeatsAsDouble;
+
+            var e = _allEmotionsStretch[_emotionIndex];
+
+            if (beat > e.beat + e.length)
             {
-                float normalizedBeat = cond.GetPositionFromBeat(emotionStartBeat, emotionLength);
-                if (normalizedBeat >= 0 && normalizedBeat <= 1f)
+                _emotionIndex++;
+                _lastEmotion = (EmotionStretchType)_allEmotionsStretch[_emotionIndex - 1]["type"];
+                crying = _lastEmotion == EmotionStretchType.StartCrying;
+                _emotionCancelled = false;
+                UpdateEmotions();
+                return;
+            }
+
+            if (beat >= e.beat && beat < e.beat + e.length && !_emotionCancelled)
+            {
+                _lastEmotion = (EmotionStretchType)e["type"];
+                crying = _lastEmotion == EmotionStretchType.StartCrying;
+                float normalizedBeat = cond.GetPositionFromBeat(e.beat, e.length);
+
+                string animName = (EmotionStretchType)e["type"] switch
                 {
-                    //headAndBodyAnim.DoNormalizedAnimation(emotionAnimName, normalizedBeat);
+                    EmotionStretchType.LookUp => "OpenEyes",
+                    EmotionStretchType.Smile => "Smile",
+                    EmotionStretchType.StartCrying => "Sad",
+                    _ => throw new NotImplementedException(),
+                };
+                headAndBodyAnim.DoNormalizedAnimation(animName, normalizedBeat);
+            }
+        }
+
+        private void HandleEmotions(double beat)
+        {
+            _allEmotionsStretch = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" });
+            if (_allEmotionsStretch.Count == 0) return;
+            UpdateEmotions();
+            var allEmosBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => x.beat < beat);
+
+            if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.StartCrying)
+            {
+                headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
+            }
+            else if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.Smile)
+            {
+                headAndBodyAnim.DoScaledAnimationAsync("SmileIdle", 0.5f);
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            HandleTreatsOnStart(beat);
+            HandleEmotions(beat);
+            HandleCrumbs(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            HandleTreatsOnStart(beat);
+            HandleEmotions(beat);
+            HandleCrumbs(beat);
+        }
+
+        private void HandleTreatsOnStart(double gameswitchBeat)
+        {
+            var allTreatEvents = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "donut", "cake" });
+
+            foreach (var e in allTreatEvents)
+            {
+                if (e.beat + e.length - 1 > gameswitchBeat && e.beat < gameswitchBeat)
+                {
+                    SpawnTreat(e.beat, e.datamodel == "blueBear/cake", gameswitchBeat);
                 }
             }
         }
 
         public void Wind()
         {
-            windAnim.Play("Wind", 0, 0);
+            windAnim.DoScaledAnimationAsync("Wind", 0.5f);
         }
 
         public void Bite(bool left)
         {
+            _emotionCancelled = true;
             if (crying)
             {
-                headAndBodyAnim.Play(left ? "CryBiteL" : "CryBiteR", 0, 0);
+                headAndBodyAnim.DoScaledAnimationAsync(left ? "CryBiteL" : "CryBiteR", 0.5f);
             }
             else
             {
-                headAndBodyAnim.Play(left ? "BiteL" : "BiteR", 0, 0);
+                headAndBodyAnim.DoScaledAnimationAsync(left ? "BiteL" : "BiteR", 0.5f);
             }
+        }
+
+        private void HandleCrumbs(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "crumb" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count == 0) return;
+            var lastCrumbEvent = allEventsBeforeBeat[^1];
+            SetCrumbThreshold(lastCrumbEvent["right"], lastCrumbEvent["left"], lastCrumbEvent["reset"]);
+            EatTreat(false);
         }
 
         public void SetCrumbThreshold(int rightThreshold, int leftThreshold, bool reset)
@@ -234,9 +429,9 @@ namespace HeavenStudio.Games
             if (reset) eatenTreats = 0;
         }
 
-        public void EatTreat(bool onlyCheck = false)
+        public void EatTreat(bool appendTreats = true)
         {
-            if (!onlyCheck) eatenTreats++;
+            if (appendTreats) eatenTreats++;
             if (eatenTreats >= leftCrumbAppearThreshold)
             {
                 leftCrumb.SetActive(true);
@@ -268,58 +463,31 @@ namespace HeavenStudio.Games
                 if (noDonutSquash && noCakeSquash)
                 {
                     squashing = false;
-                    bagsAnim.Play("Idle", 0, 0);
+                    bagsAnim.DoScaledAnimationAsync("Idle", 0.5f);
                 }
             }
         }
 
-        public void SetEmotion(double beat, float length, int emotion)
+        public void SetEmotion(int emotion)
         {
+            _emotionCancelled = true;
             switch (emotion)
             {
                 case (int)EmotionType.Neutral:
-                    if (emotionAnimName == "Smile")
-                    {
-                        headAndBodyAnim.Play("StopSmile", 0, 0);
-                        emotionAnimName = "";
-                    }
-                    else
-                    {
-                        headAndBodyAnim.Play("Idle", 0, 0);
-                    }
+                    //check if smiling then play "StopSmile"
+                    headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     crying = false;
                     break;
                 case (int)EmotionType.ClosedEyes:
-                    headAndBodyAnim.Play("EyesClosed", 0, 0);
+                    headAndBodyAnim.DoScaledAnimationAsync("EyesClosed", 0.5f);
                     crying = false;
                     break;
-                case (int)EmotionType.LookUp:
-                    emotionStartBeat = beat;
-                    emotionLength = length;
-                    emotionAnimName = "OpenEyes";
-                    headAndBodyAnim.Play(emotionAnimName, 0, 0);
-                    crying = false;
-                    break;
-                case (int)EmotionType.Smile:
-                    emotionStartBeat = beat;
-                    emotionLength = length;
-                    emotionAnimName = "Smile";
-                    headAndBodyAnim.Play(emotionAnimName, 0, 0);
-                    crying = false;
-                    break;
-                case (int)EmotionType.Sad:
-                    emotionStartBeat = beat;
-                    emotionLength = length;
-                    emotionAnimName = "Sad";
-                    headAndBodyAnim.Play(emotionAnimName, 0, 0);
-                    crying = true;
-                    break;
-                case (int)EmotionType.InstaSad:
-                    headAndBodyAnim.Play("CryIdle", 0, 0);
+                case (int)EmotionType.Cry:
+                    headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
                     crying = true;
                     break;
                 case (int)EmotionType.Sigh:
-                    headAndBodyAnim.Play("Sigh", 0, 0);
+                    headAndBodyAnim.DoScaledAnimationAsync("Sigh", 0.5f);
                     crying = false;
                     break;
                 default:
@@ -327,36 +495,38 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnTreat(double beat, bool isCake)
+        public void SpawnTreat(double beat, bool isCake, double gameSwitchBeat)
         {
             var objectToSpawn = isCake ? cakeBase : donutBase;
             var newTreat = GameObject.Instantiate(objectToSpawn, foodHolder);
 
             var treatComp = newTreat.GetComponent<Treat>();
             treatComp.startBeat = beat;
-            treatComp.curve = isCake ? cakeCurve : donutCurve;
 
             newTreat.SetActive(true);
 
-            SoundByte.PlayOneShotGame(isCake ? "blueBear/cake" : "blueBear/donut");
+            if (beat >= gameSwitchBeat) SquashBag(isCake);
+        }
 
-            SquashBag(isCake);
+        public static void TreatSound(double beat, bool isCake)
+        {
+            SoundByte.PlayOneShot(isCake ? "games/blueBear/cake" : "games/blueBear/donut", beat);
         }
 
         public void SquashBag(bool isCake)
         {
             squashing = true;
-            bagsAnim.Play("Squashing", 0, 0);
+            bagsAnim.DoScaledAnimationAsync("Squashing", 0.5f);
 
             individualBagHolder.SetActive(true);
 
             if (isCake)
             {
-                cakeBagAnim.Play("CakeSquash", 0, 0);
+                cakeBagAnim.DoScaledAnimationAsync("CakeSquash", 0.5f);
             }
             else
             {
-                donutBagAnim.Play("DonutSquash", 0, 0);
+                donutBagAnim.DoScaledAnimationAsync("DonutSquash", 0.5f);
             }
         }
     }

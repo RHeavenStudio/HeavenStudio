@@ -27,7 +27,6 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         public int currentEarlyPeasOnFork;
         public int currentPerfectPeasOnFork;
         public int currentLatePeasOnFork;
-        private double lastReportedBeat;
 
         private bool isEating = false;
 
@@ -49,16 +48,6 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             {
                 Stab(null);
             }
-
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && shouldBop) 
-            {
-                SingleBop();
-            }
-        }
-
-        public void SingleBop()
-        {
-            anim.DoScaledAnimationAsync("Player_Bop", 0.5f);
         }
 
         public void Eat()

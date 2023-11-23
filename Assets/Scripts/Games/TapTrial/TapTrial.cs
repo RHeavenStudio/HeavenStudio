@@ -123,15 +123,16 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop) SingleBop();
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (shouldBop && cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    SingleBop();
-                }
                 GiraffeUpdate(cond);
                 JumpUpdate(cond);
                 ScrollUpdate(cond);
