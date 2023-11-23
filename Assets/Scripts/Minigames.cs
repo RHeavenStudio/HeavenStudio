@@ -663,7 +663,7 @@ namespace HeavenStudio
                         //temp for testing
                         function = delegate {
                             var e = eventCaller.currentEntity;
-                            Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
+                            Common.SkillStarManager.instance.DoStarIn(e.beat, e.length);
                         }
                     },
                     new GameAction("toggle inputs", "Toggle Inputs", 0.5f, true,
@@ -774,7 +774,10 @@ namespace HeavenStudio
                             new Param("colorB", Color.white, "End Color"),
                             new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
                             new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "colorA", "valA" })
+                            })
                         }
                     ),
                     new GameAction("filter", "Filter", 1f, true,
@@ -791,7 +794,10 @@ namespace HeavenStudio
 
                             new Param("start", new EntityTypes.Float(0, 1, 1), "Start Intensity"),
                             new Param("end", new EntityTypes.Float(0, 1, 1), "End Intensity"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "start" })
+                            }),
                         }
                     ),
                     new GameAction("move camera", "Move Camera", 1f, true, new List<Param>()
@@ -884,6 +890,162 @@ namespace HeavenStudio
                             new Param("instantOff", false, "Instant Hide", "Skip the hide animation?"),
                         }
                     ),
+
+                    // Post Processing VFX
+                    new GameAction("vignette", "Vignette")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
+
+                            new("colorStart", Color.black, "Start Color"),
+                            new("colorEnd", Color.black, "End Color"),
+
+                            new("smoothStart", new EntityTypes.Float(0.01f, 1f, 0.2f), "Start Smoothness"),
+                            new("smoothEnd", new EntityTypes.Float(0.01f, 1f, 0.2f), "End Smoothness"),
+
+                            new("roundStart", new EntityTypes.Float(0f, 1f, 1f), "Start Roundness"),
+                            new("roundEnd", new EntityTypes.Float(0f, 1f, 1f), "End Roundness"),
+                            new("rounded", false, "Rounded"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "colorStart", "smoothStart", "roundStart" })
+                            }),
+                        }
+                    },
+                    new GameAction("cabb", "Chromatic Abberation")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart" })
+                            }),
+                        }
+                    },
+                    new GameAction("bloom", "Bloom")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 100f, 0f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(0f, 100f, 1f), "End Intensity"),
+
+                            new("colorStart", Color.white, "Start Tint"),
+                            new("colorEnd", Color.white, "End Tint"),
+
+                            new("thresholdStart", new EntityTypes.Float(0f, 100f, 1f), "Start Threshold"),
+                            new("thresholdEnd", new EntityTypes.Float(0f, 100f, 1f), "End Threshold"),
+
+                            new("softKneeStart", new EntityTypes.Float(0f, 1f, 0.5f), "Start Soft Knee"),
+                            new("softKneeEnd", new EntityTypes.Float(0f, 1f, 0.5f), "End Soft Knee"),
+
+                            new("anaStart", new EntityTypes.Float(-1f, 1f, 0f), "Start Anamorphic Ratio"),
+                            new("anaEnd", new EntityTypes.Float(-1f, 1f, 0f), "End Anamorphic Ratio"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "colorStart", "thresholdStart", "softKneeStart", "anaStart" })
+                            }),
+                        }
+                    },
+                    new GameAction("lensD", "Lens Distortion")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(-100f, 100f, 0f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(-100f, 100f, 1f), "End Intensity"),
+
+                            new("xStart", new EntityTypes.Float(0f, 1f, 1f), "Start X Multiplier"),
+                            new("yStart", new EntityTypes.Float(0f, 1f, 1f), "Start Y Multiplier"),
+                            new("xEnd", new EntityTypes.Float(0f, 1f, 1f), "End X Multiplier"),
+                            new("yEnd", new EntityTypes.Float(0f, 1f, 1f), "End Y Multiplier"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "xStart", "yStart" })
+                            }),
+                        }
+                    },
+                    new GameAction("grain", "Grain")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
+
+                            new("sizeStart", new EntityTypes.Float(0.3f, 3f, 1f), "Start Size"),
+                            new("sizeEnd", new EntityTypes.Float(0.3f, 3f, 1f), "End Size"),
+
+                            new("colored", true, "Colored"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "sizeStart" })
+                            }),
+                        }
+                    },
+                    new GameAction("colorGrading", "Color Grading")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("tempStart", new EntityTypes.Float(-100f, 100f), "Start Temperature"),
+                            new("tempEnd", new EntityTypes.Float(-100f, 100f), "End Temperature"),
+
+                            new("tintStart", new EntityTypes.Float(-100f, 100f), "Start Tint"),
+                            new("tintEnd", new EntityTypes.Float(-100f, 100f), "End Tint"),
+
+                            new("colorStart", Color.white, "Start Color Filter"),
+                            new("colorEnd", Color.white, "End Color Filter"),
+
+                            new("hueShiftStart", new EntityTypes.Float(-180f, 180f), "Start Hue Shift"),
+                            new("hueShiftEnd", new EntityTypes.Float(-180f, 180f), "End Hue Shift"),
+
+                            new("satStart", new EntityTypes.Float(-100f, 100f), "Start Saturation"),
+                            new("satEnd", new EntityTypes.Float(-100f, 100f), "End Saturation"),
+
+                            new("brightStart", new EntityTypes.Float(-100f, 100f), "Start Brightness"),
+                            new("brightEnd", new EntityTypes.Float(-100f, 100f), "End Brightness"),
+
+                            new("conStart", new EntityTypes.Float(-100f, 100f), "Start Contrast"),
+                            new("conEnd", new EntityTypes.Float(-100f, 100f), "End Contrast"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "tempStart", "tintStart", "colorStart", "hueShiftStart", "satStart", "brightStart", "conStart" })
+                            }),
+                        }
+                    },
+                    new GameAction("screenTiling", "Screen Tiling")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("xStart", new EntityTypes.Float(1, 100, 1), "Start Horizontal Tiles"),
+                            new("yStart", new EntityTypes.Float(1, 100, 1), "Start Vertical Tiles"),
+                            new("xEnd", new EntityTypes.Float(1, 100, 1), "End Horizontal Tiles"),
+                            new("yEnd", new EntityTypes.Float(1, 100, 1), "End Vertical Tiles"),
+
+                            new("xScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Horizontal Scroll"),
+                            new("yScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Vertical Scroll"),
+                            new("xScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Horizontal Scroll"),
+                            new("yScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Vertical Scroll"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xStart", "yStart", "xScrollStart", "yScrollStart" })
+                            }),
+                        }
+                    }
                 }),
             };
 

@@ -139,15 +139,15 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, double length, bool doesBop, bool autoBop)
         {
-            playerInstance.shouldBop = autoBop;
-            if (doesBop)
-            {
-                var actions = new List<BeatAction.Action>();
-                for (int i = 0; i < length; i++) {
-                    actions.Add(new(beat + i, delegate { playerInstance.SingleBop(); }));
-                }
-                BeatAction.New(playerInstance, actions);
-            }
+            // playerInstance.shouldBop = autoBop;
+            // if (doesBop)
+            // {
+            //     var actions = new List<BeatAction.Action>();
+            //     for (int i = 0; i < length; i++) {
+            //         actions.Add(new(beat + i, delegate { playerInstance.SingleBop(); }));
+            //     }
+            //     BeatAction.New(playerInstance, actions);
+            // }
         }
 
         public static void Flick(double beat)
