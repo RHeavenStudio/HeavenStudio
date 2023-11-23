@@ -126,9 +126,9 @@ namespace HeavenStudio.Games
         public GameObject individualBagHolder;
 
         [Header("Variables")]
-        static int rightCrumbAppearThreshold = 15;
-        static int leftCrumbAppearThreshold = 30;
-        static int eatenTreats = 0;
+        private int rightCrumbAppearThreshold = 15;
+        private int leftCrumbAppearThreshold = 30;
+        private int eatenTreats = 0;
         bool crying;
         private List<RiqEntity> _allStoryEvents = new();
         [SerializeField] private SuperCurveObject.Path[] _treatCurves;
@@ -236,7 +236,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            if (Conductor.instance.isPlaying || Conductor.instance.isPaused) EatTreat(true);
             _allStoryEvents = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "story" });
             UpdateStory();
         }
@@ -292,12 +291,12 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
             {
-                SoundByte.PlayOneShotGame("blueBear/whiff");
+                SoundByte.PlayOneShotGame("blueBear/whiff", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-1, 2), false));
                 Bite(true);
             }
             else if (PlayerInput.GetIsAction(InputAction_Right) && !IsExpectingInputNow(InputAction_Right.inputLockCategory))
             {
-                SoundByte.PlayOneShotGame("blueBear/whiff");
+                SoundByte.PlayOneShotGame("blueBear/whiff", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-1, 2), false));
                 Bite(false);
             }
 
@@ -373,12 +372,14 @@ namespace HeavenStudio.Games
         {
             HandleTreatsOnStart(beat);
             HandleEmotions(beat);
+            HandleCrumbs(beat);
         }
 
         public override void OnGameSwitch(double beat)
         {
             HandleTreatsOnStart(beat);
             HandleEmotions(beat);
+            HandleCrumbs(beat);
         }
 
         private void HandleTreatsOnStart(double gameswitchBeat)
@@ -412,6 +413,15 @@ namespace HeavenStudio.Games
             }
         }
 
+        private void HandleCrumbs(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "crumb" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count == 0) return;
+            var lastCrumbEvent = allEventsBeforeBeat[^1];
+            SetCrumbThreshold(lastCrumbEvent["right"], lastCrumbEvent["left"], lastCrumbEvent["reset"]);
+            EatTreat(false);
+        }
+
         public void SetCrumbThreshold(int rightThreshold, int leftThreshold, bool reset)
         {
             rightCrumbAppearThreshold = rightThreshold;
@@ -419,9 +429,9 @@ namespace HeavenStudio.Games
             if (reset) eatenTreats = 0;
         }
 
-        public void EatTreat(bool onlyCheck = false)
+        public void EatTreat(bool appendTreats = true)
         {
-            if (!onlyCheck) eatenTreats++;
+            if (appendTreats) eatenTreats++;
             if (eatenTreats >= leftCrumbAppearThreshold)
             {
                 leftCrumb.SetActive(true);
