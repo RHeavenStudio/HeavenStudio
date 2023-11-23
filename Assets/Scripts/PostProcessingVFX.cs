@@ -13,6 +13,7 @@ namespace HeavenStudio
         // events
         private List<RiqEntity> _vignettes = new();
         private List<RiqEntity> _cabbs = new();
+        private List<RiqEntity> _blooms = new();
 
         private void Awake()
         {
@@ -28,14 +29,18 @@ namespace HeavenStudio
         {
             _vignettes = EventCaller.GetAllInGameManagerList("vfx", new string[] { "vignette" });
             _cabbs = EventCaller.GetAllInGameManagerList("vfx", new string[] { "cabb" });
+            _blooms = EventCaller.GetAllInGameManagerList("vfx", new string[] { "bloom" });
+
             UpdateVignette();
             UpdateChromaticAbberations();
+            UpdateBlooms();
         }
 
         private void Update()
         {
             UpdateVignette();
             UpdateChromaticAbberations();
+            UpdateBlooms();
         }
 
         private void UpdateVignette()
@@ -87,6 +92,38 @@ namespace HeavenStudio
                 c.enabled.Override(newIntensity != 0);
                 if (!c.enabled) continue;
                 c.intensity.Override(newIntensity);
+            }
+        }
+
+        private void UpdateBlooms()
+        {
+            if (!_volume.profile.TryGetSettings<Bloom>(out var b)) return;
+            b.enabled.Override(false);
+            foreach (var e in _blooms)
+            {
+                float normalized = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
+                if (normalized < 0) break;
+
+                float clampNormal = Mathf.Clamp01(normalized);
+                var func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease)e["ease"]);
+
+                float newIntensity = func(e["intenStart"], e["intenEnd"], clampNormal);
+                b.enabled.Override(newIntensity != 0);
+                if (!b.enabled) continue;
+                b.intensity.Override(newIntensity);
+
+                Color newColor = ColorEase(e["colorStart"], e["colorEnd"], clampNormal, func);
+
+                b.color.Override(newColor);
+
+                float newThreshold = func(e["thresholdStart"], e["thresholdEnd"], clampNormal);
+                b.threshold.Override(newThreshold);
+
+                float newSoftKnee = func(e["softKneeStart"], e["softKneeEnd"], clampNormal);
+                b.softKnee.Override(newSoftKnee);
+
+                float newAna = func(e["anaStart"], e["anaEnd"], clampNormal);
+                b.anamorphicRatio.Override(newAna);
             }
         }
 

@@ -895,7 +895,7 @@ namespace HeavenStudio
                             new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
 
                             new("colorStart", Color.black, "Start Color"),
-                            new("colorEnd", Color.black, "Start End"),
+                            new("colorEnd", Color.black, "End Color"),
                             
                             new("smoothStart", new EntityTypes.Float(0.01f, 1f, 0.2f), "Start Smoothness"),
                             new("smoothEnd", new EntityTypes.Float(0.01f, 1f, 0.2f), "End Smoothness"),
@@ -914,6 +914,29 @@ namespace HeavenStudio
                         {
                             new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
                             new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
+                        }
+                    },
+                    new GameAction("bloom", "Bloom")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 100f, 0f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(0f, 100f, 1f), "End Intensity"),
+
+                            new("colorStart", Color.white, "Start Tint"),
+                            new("colorEnd", Color.white, "End Tint"),
+
+                            new("thresholdStart", new EntityTypes.Float(0f, 100f, 1f), "Start Threshold"),
+                            new("thresholdEnd", new EntityTypes.Float(0f, 100f, 1f), "End Threshold"),
+                            
+                            new("softKneeStart", new EntityTypes.Float(0f, 1f, 0.5f), "Start Soft Knee"),
+                            new("softKneeEnd", new EntityTypes.Float(0f, 1f, 0.5f), "End Soft Knee"),
+
+                            new("anaStart", new EntityTypes.Float(-1f, 1f, 0f), "Start Anamorphic Ratio"),
+                            new("anaEnd", new EntityTypes.Float(-1f, 1f, 0f), "End Anamorphic Ratio"),
+
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
                         }
                     }
