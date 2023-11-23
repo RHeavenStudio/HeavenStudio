@@ -262,13 +262,15 @@ namespace HeavenStudio.Games
             UpdateCameraZoom();
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (!shouldBop) return;
+            BopSingle();
+        }
+
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
-            {
-                BopSingle();
-            }
 
             if (cond.isPlaying && !cond.isPaused)
             {

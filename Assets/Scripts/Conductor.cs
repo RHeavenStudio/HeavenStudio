@@ -82,6 +82,7 @@ namespace HeavenStudio
         // Metronome tick sound enabled
         public bool metronome = false;
         Util.Sound metronomeSound;
+        private int _metronomeTally = 0;
 
         // pitch values
         private float timelinePitch = 1f;
@@ -204,6 +205,7 @@ namespace HeavenStudio
 
             songPosBeat = GetBeatFromSongPos(time);
             startBeat = songPosBeat;
+            _metronomeTally = 0;
 
             startTime = DateTime.Now;
             absTimeAdjust = 0;
@@ -363,13 +365,10 @@ namespace HeavenStudio
         {
             if (metronome && isPlaying)
             {
-                if (ReportBeat(ref lastReportedBeat))
+                if (songPositionInBeatsAsDouble >= Math.Ceiling(startBeat) + _metronomeTally)
                 {
-                    metronomeSound = Util.SoundByte.PlayOneShot("metronome", lastReportedBeat);
-                }
-                else if (songPositionInBeats < lastReportedBeat)
-                {
-                    lastReportedBeat = Mathf.Round(songPositionInBeats);
+                    metronomeSound = Util.SoundByte.PlayOneShot("metronome", Math.Ceiling(startBeat) + _metronomeTally);
+                    _metronomeTally++;
                 }
             }
             else
