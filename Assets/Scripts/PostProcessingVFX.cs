@@ -14,6 +14,7 @@ namespace HeavenStudio
         private List<RiqEntity> _vignettes = new();
         private List<RiqEntity> _cabbs = new();
         private List<RiqEntity> _blooms = new();
+        private List<RiqEntity> _lensDs = new();
 
         private void Awake()
         {
@@ -30,10 +31,12 @@ namespace HeavenStudio
             _vignettes = EventCaller.GetAllInGameManagerList("vfx", new string[] { "vignette" });
             _cabbs = EventCaller.GetAllInGameManagerList("vfx", new string[] { "cabb" });
             _blooms = EventCaller.GetAllInGameManagerList("vfx", new string[] { "bloom" });
+            _lensDs = EventCaller.GetAllInGameManagerList("vfx", new string[] { "lensD" });
 
             UpdateVignette();
             UpdateChromaticAbberations();
             UpdateBlooms();
+            UpdateLensDistortions();
         }
 
         private void Update()
@@ -41,6 +44,7 @@ namespace HeavenStudio
             UpdateVignette();
             UpdateChromaticAbberations();
             UpdateBlooms();
+            UpdateLensDistortions();
         }
 
         private void UpdateVignette()
@@ -124,6 +128,31 @@ namespace HeavenStudio
 
                 float newAna = func(e["anaStart"], e["anaEnd"], clampNormal);
                 b.anamorphicRatio.Override(newAna);
+            }
+        }
+
+        private void UpdateLensDistortions()
+        {
+            if (!_volume.profile.TryGetSettings<LensDistortion>(out var l)) return;
+            l.enabled.Override(false);
+            foreach (var e in _lensDs)
+            {
+                float normalized = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
+                if (normalized < 0) break;
+
+                float clampNormal = Mathf.Clamp01(normalized);
+                var func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease)e["ease"]);
+
+                float newIntensity = func(e["intenStart"], e["intenEnd"], clampNormal);
+                l.enabled.Override(newIntensity != 0);
+                if (!l.enabled) continue;
+                l.intensity.Override(newIntensity);
+
+                float newX = func(e["xStart"], e["xEnd"], clampNormal);
+                l.intensityX.Override(newX);
+
+                float newY = func(e["yStart"], e["yEnd"], clampNormal);
+                l.intensityY.Override(newY);
             }
         }
 

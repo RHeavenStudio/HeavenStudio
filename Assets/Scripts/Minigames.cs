@@ -663,7 +663,7 @@ namespace HeavenStudio
                         //temp for testing
                         function = delegate {
                             var e = eventCaller.currentEntity;
-                            Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
+                            Common.SkillStarManager.instance.DoStarIn(e.beat, e.length);
                         }
                     },
                     new GameAction("toggle inputs", "Toggle Inputs", 0.5f, true,
@@ -896,7 +896,7 @@ namespace HeavenStudio
 
                             new("colorStart", Color.black, "Start Color"),
                             new("colorEnd", Color.black, "End Color"),
-                            
+
                             new("smoothStart", new EntityTypes.Float(0.01f, 1f, 0.2f), "Start Smoothness"),
                             new("smoothEnd", new EntityTypes.Float(0.01f, 1f, 0.2f), "End Smoothness"),
 
@@ -930,12 +930,28 @@ namespace HeavenStudio
 
                             new("thresholdStart", new EntityTypes.Float(0f, 100f, 1f), "Start Threshold"),
                             new("thresholdEnd", new EntityTypes.Float(0f, 100f, 1f), "End Threshold"),
-                            
+
                             new("softKneeStart", new EntityTypes.Float(0f, 1f, 0.5f), "Start Soft Knee"),
                             new("softKneeEnd", new EntityTypes.Float(0f, 1f, 0.5f), "End Soft Knee"),
 
                             new("anaStart", new EntityTypes.Float(-1f, 1f, 0f), "Start Anamorphic Ratio"),
                             new("anaEnd", new EntityTypes.Float(-1f, 1f, 0f), "End Anamorphic Ratio"),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
+                        }
+                    },
+                    new GameAction("lensD", "Lens Distortion")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(-100f, 100f, 0f), "Start Intensity"),
+                            new("intenEnd", new EntityTypes.Float(-100f, 100f, 1f), "End Intensity"),
+
+                            new("xStart", new EntityTypes.Float(0f, 1f, 1f), "Start X Multiplier"),
+                            new("yStart", new EntityTypes.Float(0f, 1f, 1f), "Start Y Multiplier"),
+                            new("xEnd", new EntityTypes.Float(0f, 1f, 1f), "End X Multiplier"),
+                            new("yEnd", new EntityTypes.Float(0f, 1f, 1f), "End Y Multiplier"),
 
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease"),
                         }
