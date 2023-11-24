@@ -169,7 +169,7 @@ namespace HeavenStudio.Games
 
         protected static bool IA_TouchNrm(out double dt)
         {
-            return PlayerInput.GetFlick(out dt)
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
                 && (instance.currentReceiver is WhichTossKid.Akachan
                     || (instance.lastReceiver is WhichTossKid.Akachan or WhichTossKid.None
                         && instance.currentReceiver is WhichTossKid.None)
@@ -178,7 +178,7 @@ namespace HeavenStudio.Games
         }
         protected static bool IA_TouchDir(out double dt)
         {
-            return PlayerInput.GetFlick(out dt)
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
                 && (instance.currentReceiver is WhichTossKid.Kiiyan
                     || (instance.lastReceiver is WhichTossKid.Kiiyan
                         && instance.currentReceiver is WhichTossKid.None)
@@ -187,7 +187,7 @@ namespace HeavenStudio.Games
         }
         protected static bool IA_TouchAlt(out double dt)
         {
-            return PlayerInput.GetFlick(out dt)
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
                 && (instance.currentReceiver is WhichTossKid.Aokun
                     || (instance.lastReceiver is WhichTossKid.Aokun
                         && instance.currentReceiver is WhichTossKid.None)
@@ -276,44 +276,6 @@ namespace HeavenStudio.Games
             BackgroundColorUpdate();
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
-                {
-                    TossKid next = GetCurrentReceiver();
-                    if (currentReceiver == WhichTossKid.None && lastReceiver != WhichTossKid.None)
-                    {
-                        next = GetReceiver(lastReceiver);
-                    }
-                    else if (currentReceiver == WhichTossKid.None && lastReceiver == WhichTossKid.None)
-                    {
-                        next = akachan;
-                    }
-                    if (PlayerInput.GetIsAction(InputAction_BasicPress))
-                    {
-                        if (currentBall != null && next != null)
-                        {
-                            if (currentBall.willBePopped)
-                            {
-                                next.PopBallPrepare();
-                            }
-                            else
-                            {
-                                next.Crouch();
-                            }
-                        }
-                        else if (next != null)
-                        {
-                            next.Crouch();
-                        }
-                    }
-                    else if (PlayerInput.GetIsAction(InputAction_BasicRelease))
-                    {
-                        if (next != null)
-                        {
-                            next.UnCrouch();
-                        }
-                    }
-                }
-
                 if (PlayerInput.GetIsAction(InputAction_Aka) && !IsExpectingInputNow(InputAction_Aka))
                 {
                     akachan.HitBall(false);

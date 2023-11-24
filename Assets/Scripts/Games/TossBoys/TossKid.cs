@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
 
         public void Bop()
         {
-            if (crouch || preparing) return;
+            if (crouch || preparing || (!anim.IsAnimationNotPlaying() && !anim.IsPlayingAnimationName(prefix + "Idle"))) return;
             DoAnimationScaledAsync("Bop", 0.5f);
         }
 
