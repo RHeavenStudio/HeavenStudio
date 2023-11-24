@@ -88,6 +88,10 @@ namespace HeavenStudio
         private float musicScheduledPitch = 1f;
         private double musicScheduledTime = 0;
 
+        // volume modifier
+        private float timelineVolume = 1f;
+        private float minigameVolume = 1f;
+
         public void SetTimelinePitch(float pitch)
         {
             if (pitch != 0 && pitch * minigamePitch != SongPitch)
@@ -172,6 +176,8 @@ namespace HeavenStudio
                 dspMargin = 2 * dspSizeSeconds;
                 addedPitchChanges.Clear();
                 addedPitchChanges.Add(new AddedPitchChange { time = 0, pitch = SongPitch });
+
+                SetMinigameVolume(1f);
             }
 
             RiqBeatmap chart = GameManager.instance.Beatmap;
@@ -276,6 +282,46 @@ namespace HeavenStudio
 
             musicSource.volume = endVolume;
             StopOnlyAudio();
+        }
+
+        Coroutine fadeOutAudioCoroutine;
+        public void FadeMinigameVolume(double startBeat, double durationBeats = 1f, float targetVolume = 0f)
+        {
+            if (fadeOutAudioCoroutine != null)
+            {
+                StopCoroutine(fadeOutAudioCoroutine);
+            }
+            fadeOutAudioCoroutine = StartCoroutine(FadeMinigameVolumeCoroutine(startBeat, durationBeats, targetVolume));
+        }
+
+        IEnumerator FadeMinigameVolumeCoroutine(double startBeat, double durationBeats, float targetVolume)
+        {
+            float startVolume = minigameVolume;
+            float endVolume = targetVolume;
+            double startTime = startBeat;
+            double endTime = startBeat + durationBeats;
+
+            while (songPositionInBeatsAsDouble < endTime)
+            {
+                if (!NotStopped()) yield break;
+                double t = (songPositionInBeatsAsDouble - startTime) / durationBeats;
+                SetMinigameVolume(Mathf.Lerp(startVolume, endVolume, (float)t));
+                yield return null;
+            }
+
+            SetMinigameVolume(endVolume);
+        }
+
+        public void SetTimelineVolume(float volume)
+        {
+            timelineVolume = volume;
+            musicSource.volume = timelineVolume * minigameVolume;
+        }
+
+        public void SetMinigameVolume(float volume)
+        {
+            minigameVolume = volume;
+            musicSource.volume = timelineVolume * minigameVolume;
         }
 
         void SeekMusicToTime(double fStartPos, double offset)
@@ -522,7 +568,7 @@ namespace HeavenStudio
 
         public void SetVolume(float percent)
         {
-            musicSource.volume = percent / 100f;
+            SetTimelineVolume(percent / 100f);
         }
 
         public float SongLengthInBeats()

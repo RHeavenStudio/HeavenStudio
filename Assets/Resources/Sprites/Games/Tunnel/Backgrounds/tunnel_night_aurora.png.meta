@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e5989d86fbc583249b719e00e74dd7d0
+guid: a281356ca9e231541a3749dcd1326961
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -47,10 +47,10 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 94.144226
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
-  alphaUsage: 0
+  alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
@@ -63,7 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -79,7 +79,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -91,7 +91,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Server
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -105,13 +105,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: oceanTEMP_0
+      name: tunnel_night_aurora_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2369
-        height: 1093
+        x: 185
+        y: 489
+        width: 3878
+        height: 2163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -119,20 +119,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a8f0c98e0993fb24dbd550b314660867
-      internalID: 679429674
+      spriteID: 9282b28ca8ca00549a8c990e4895ff31
+      internalID: 754668278
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: oceanTEMP_1
+      name: tunnel_night_aurora_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2369
-        height: 343
+        x: 4285
+        y: 2514
+        width: 186
+        height: 186
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c384be5c9dfc8534f934448b6e1e4aec
-      internalID: -604265584
+      spriteID: 52b17843877720f45abca95d6729a26c
+      internalID: -1754678122
       vertices: []
       indices: 
       edges: []
@@ -157,11 +157,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      oceanTEMP_0: 679429674
-      oceanTEMP_1: -604265584
+      tunnel_night_aurora_0: 754668278
+      tunnel_night_aurora_1: -1754678122
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
   userData: 
-  assetBundleName: ntrtunnel/common
+  assetBundleName: 
   assetBundleVariant: 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e5989d86fbc583249b719e00e74dd7d0
+guid: 8e79ffb5097b5d94491270d54486980a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 94.144226
+  spritePixelsToUnits: 200
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 0
@@ -63,7 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -79,7 +79,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -91,7 +91,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Server
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -105,43 +105,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: oceanTEMP_0
+      name: tunnelWall_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2369
-        height: 1093
+        x: 263
+        y: 271
+        width: 273
+        height: 2737
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a8f0c98e0993fb24dbd550b314660867
-      internalID: 679429674
+      spriteID: 42e68ccca8914284e954df2011ab5401
+      internalID: -733027735
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: oceanTEMP_1
+      name: tunnelWall_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2369
-        height: 343
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 940
+        y: 271
+        width: 2728
+        height: 2737
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c384be5c9dfc8534f934448b6e1e4aec
-      internalID: -604265584
+      spriteID: 329c2f4d7d330c54c8f8427186251d82
+      internalID: -340746428
       vertices: []
       indices: 
       edges: []
@@ -157,8 +157,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      oceanTEMP_0: 679429674
-      oceanTEMP_1: -604265584
+      tunnelWall_0: -733027735
+      tunnelWall_1: -340746428
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e5989d86fbc583249b719e00e74dd7d0
+guid: 241b9e355c071b7409abb9a1f68c3dfe
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -47,10 +47,10 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 94.144226
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
-  alphaUsage: 0
+  alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
@@ -63,7 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
-  cookieLightType: 1
+  cookieLightType: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -79,7 +79,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -91,7 +91,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Server
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -105,13 +105,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: oceanTEMP_0
+      name: tunnel_moai_grass_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2369
-        height: 1093
+        x: 181
+        y: 1626
+        width: 3818
+        height: 523
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -119,20 +119,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a8f0c98e0993fb24dbd550b314660867
-      internalID: 679429674
+      spriteID: 646993740fbc29e479cf769c2c168c8c
+      internalID: -1192619905
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: oceanTEMP_1
+      name: tunnel_moai_grass_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2369
-        height: 343
+        x: 166
+        y: 651
+        width: 3818
+        height: 751
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c384be5c9dfc8534f934448b6e1e4aec
-      internalID: -604265584
+      spriteID: a7d8b20554dbfb34e9010b473ed836d9
+      internalID: -1594050958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tunnel_moai_grass_2
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 150
+        width: 3818
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c1bc7d6daa9cf7419f05aa21d0b965a
+      internalID: -1959401620
       vertices: []
       indices: 
       edges: []
@@ -157,11 +178,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      oceanTEMP_0: 679429674
-      oceanTEMP_1: -604265584
+      tunnel_moai_grass_0: -1192619905
+      tunnel_moai_grass_1: -1594050958
+      tunnel_moai_grass_2: -1959401620
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
   userData: 
-  assetBundleName: ntrtunnel/common
+  assetBundleName: 
   assetBundleVariant: 
