@@ -9,14 +9,12 @@ namespace HeavenStudio
     public class ScreenTiling : MonoBehaviour
     {
         private RawImage _image;
-        private RectTransform _rectTransform;
 
         private List<RiqEntity> _events = new();
 
         private void Awake()
         {
             _image = GetComponent<RawImage>();
-            _rectTransform = GetComponent<RectTransform>();
         }
 
         private void Start()
@@ -48,14 +46,12 @@ namespace HeavenStudio
                 float newYScroll = func(e["yScrollStart"], e["yScrollEnd"], clampNormal);
 
                 _image.uvRect = new Rect(newXScroll, newYScroll, newXTiles, newYTiles);
-                _rectTransform.localScale = new Vector3(1 / newXTiles, 1 / newYTiles);
             }
         }
 
         public void ResetUVRect()
         {
             _image.uvRect = new Rect(0, 0, 1, 1);
-            _rectTransform.localScale = Vector3.one;
         }
     }
 }

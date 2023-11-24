@@ -119,13 +119,13 @@ namespace HeavenStudio.Games.Global
             {
                 if (e.beat > songPosBeat) continue;
                 var func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease)e["ease"]);
-                int track = (int)e["track"];
+                int slot = e["slot"];
                 float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(e.beat, e.length));
 
                 float intensity = func(1 - e["start"], 1 - e["end"], normalizedBeat);
 
-                amplifies[track - 1].LutTexture = amplifyTextures[(int)e["filter"]];
-                amplifies[track - 1].BlendAmount = intensity;
+                amplifies[slot - 1].LutTexture = amplifyTextures[(int)e["filter"]];
+                amplifies[slot - 1].BlendAmount = intensity;
             }
         }
 

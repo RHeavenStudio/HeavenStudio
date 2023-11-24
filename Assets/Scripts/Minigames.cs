@@ -791,7 +791,7 @@ namespace HeavenStudio
                             new Param("fadeout", new EntityTypes.Float(0, 100, 0), "Fade Out")*/
 
                             // new
-
+                            new Param("slot", new EntityTypes.Integer(1, 10, 1), "Slot", "Slot 1 is activated first and slot 10 last."),
                             new Param("start", new EntityTypes.Float(0, 1, 1), "Start Intensity"),
                             new Param("end", new EntityTypes.Float(0, 1, 1), "End Intensity"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
