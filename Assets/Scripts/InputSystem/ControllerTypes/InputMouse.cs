@@ -427,7 +427,8 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetSlide(out double dt)
         {
-            dt = hasSwiped ? Time.realtimeSinceStartupAsDouble - timeMoveChange : 0;
+            // dt = hasSwiped ? Time.realtimeSinceStartupAsDouble - timeMoveChange : 0;
+            dt = 0;
             return hasSwiped;
         }
 
