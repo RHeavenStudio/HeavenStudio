@@ -1025,7 +1025,15 @@ namespace HeavenStudio
                             }),
                         }
                     },
-                    new GameAction("screenTiling", "Screen Tiling")
+                    new GameAction("fitScreen", "Fit Game To Screen")
+                    {
+                        defaultLength = 0.5f,
+                        parameters = new()
+                        {
+                            new("enable", true, "Enabled")
+                        }
+                    },
+                    new GameAction("screenTiling", "Tile Screen")
                     {
                         resizable = true,
                         parameters = new()
@@ -1034,15 +1042,26 @@ namespace HeavenStudio
                             new("yStart", new EntityTypes.Float(1, 100, 1), "Start Vertical Tiles"),
                             new("xEnd", new EntityTypes.Float(1, 100, 1), "End Horizontal Tiles"),
                             new("yEnd", new EntityTypes.Float(1, 100, 1), "End Vertical Tiles"),
-
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xStart", "yStart" })
+                            }),
+                        }
+                    },
+                    new GameAction("scrollTiles", "Scroll Tiles")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
                             new("xScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Horizontal Scroll"),
                             new("yScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Vertical Scroll"),
                             new("xScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Horizontal Scroll"),
                             new("yScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Vertical Scroll"),
-
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis"),
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
                             {
-                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xStart", "yStart", "xScrollStart", "yScrollStart" })
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xScrollStart", "yScrollStart" })
                             }),
                         }
                     }

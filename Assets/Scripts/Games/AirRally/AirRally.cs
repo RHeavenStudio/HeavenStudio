@@ -1049,11 +1049,11 @@ namespace HeavenStudio.Games
                 SetDistance(distanceEvent.beat, distanceEvent["type"], distanceEvent["ease"]);
             }
 
-            if (wantStartRally >= beat && IsRallyBeat(wantStartRally))
+            if (wantStartRally >= beat && IsRallyBeat(wantStartRally) && wantStartRally < nextGameSwitchBeatGlobal)
             {
                 StartRally(wantStartRally);
             }
-            else if (wantStartBaBum >= beat && IsBaBumBeat(wantStartBaBum))
+            else if (wantStartBaBum >= beat && IsBaBumBeat(wantStartBaBum) && wantStartBaBum < nextGameSwitchBeatGlobal)
             {
                 StartBaBumBumBum(wantStartBaBum, wantCount, wantAlt);
             }

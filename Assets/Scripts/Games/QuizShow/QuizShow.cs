@@ -573,16 +573,7 @@ namespace HeavenStudio.Games
                     ScheduleAutoplayInput(beat, length + inputBeat, InputAction_Right, AutoplayAButton, Nothing, Nothing);
                 }
             }
-
-            if (doingConsectiveIntervals)
-            {
-                countToMatch += relevantInputs.Count;
-            }
-            else
-            {
-                countToMatch = relevantInputs.Count;
-            }
-            int hundredLoops = Mathf.FloorToInt(countToMatch / 100);
+            int hundredLoops = Mathf.FloorToInt((float)countToMatch / 100f);
             countToMatch -= hundredLoops * 100;
             doingConsectiveIntervals = consecutive;
             float timeUpBeat = 0f;
@@ -598,6 +589,14 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat, delegate
                 {
+                    if (doingConsectiveIntervals)
+                    {
+                        countToMatch += relevantInputs.Count;
+                    }
+                    else
+                    {
+                        countToMatch = relevantInputs.Count;
+                    }
                     if (shouldPrepareArms)
                     {
                         contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);
