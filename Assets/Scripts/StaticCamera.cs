@@ -21,6 +21,10 @@ namespace HeavenStudio
         [SerializeField] GameObject ambientBgGO;
         [SerializeField] GameObject letterboxBgGO;
 
+        [SerializeField] RectTransform overlayCanvas;
+        [SerializeField] RectTransform letterboxMask;
+        [SerializeField] RectTransform parentView;
+
         public static StaticCamera instance { get; private set; }
         public new Camera camera;
 
@@ -37,6 +41,7 @@ namespace HeavenStudio
         private List<RiqEntity> panEvents = new();
         private List<RiqEntity> scaleEvents = new();
         private List<RiqEntity> rotationEvents = new();
+        private List<RiqEntity> fitScreenEvents = new();
 
         static Vector3 defaultPan = new Vector3(0, 0, 0);
         static Vector3 defaultScale = new Vector3(1, 1, 1);
@@ -78,6 +83,7 @@ namespace HeavenStudio
             panEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "pan view" });
             scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale view" });
             rotationEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "rotate view" });
+            fitScreenEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "fitScreen" });
 
             panLast = defaultPan;
             scaleLast = defaultScale;
@@ -86,6 +92,7 @@ namespace HeavenStudio
             UpdatePan();
             UpdateRotation();
             UpdateScale();
+            UpdateGameScreenFit();
 
             canvas.localPosition = pan;
             canvas.eulerAngles = new Vector3(0, 0, rotation);
@@ -98,10 +105,32 @@ namespace HeavenStudio
             UpdatePan();
             UpdateRotation();
             UpdateScale();
+            UpdateGameScreenFit();
 
             canvas.localPosition = pan;
             canvas.eulerAngles = new Vector3(0, 0, rotation);
             canvas.localScale = scale;
+        }
+
+        private void UpdateGameScreenFit()
+        {
+            var curBeat = Conductor.instance.songPositionInBeatsAsDouble;
+            letterboxMask.localScale = new Vector3(1, 1, 1);
+            overlayCanvas.localScale = new Vector3(1, 1, 1);
+            foreach (var e in fitScreenEvents)
+            {
+                if (curBeat < e.beat) break;
+                if (e["enable"])
+                {
+                    letterboxMask.localScale = new Vector3(parentView.sizeDelta.x / 16, parentView.sizeDelta.y / 9, 1);
+                    overlayCanvas.localScale = new Vector3(parentView.sizeDelta.x / 16, parentView.sizeDelta.y / 9, 1);
+                }
+                else
+                {
+                    letterboxMask.localScale = new Vector3(1, 1, 1);
+                    overlayCanvas.localScale = new Vector3(1, 1, 1);
+                }
+            }
         }
 
         private void UpdatePan()

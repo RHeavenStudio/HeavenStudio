@@ -1025,6 +1025,14 @@ namespace HeavenStudio
                             }),
                         }
                     },
+                    new GameAction("fitScreen", "Fit Game To Screen")
+                    {
+                        defaultLength = 0.5f,
+                        parameters = new()
+                        {
+                            new("enable", true, "Enabled")
+                        }
+                    },
                     new GameAction("screenTiling", "Tile Screen")
                     {
                         resizable = true,
