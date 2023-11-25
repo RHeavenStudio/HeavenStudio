@@ -523,6 +523,7 @@ namespace HeavenStudio
             public EventCallback inactiveFunction = delegate { };
             public EventCallback preFunction = delegate { };
             public float preFunctionLength = 2.0f;
+            public string categoryName = string.Empty;
 
             /// <summary>
             /// <para>Creates a block that can be used in the editor. The block's function and attributes are defined in the parentheses.</para>
@@ -540,7 +541,7 @@ namespace HeavenStudio
             /// <param name="hidden">Prevents the block from being shown in the game list. Block will still function normally if it is in the timeline.</param>
             /// <param name="preFunction">Runs two beats before this event is reached.</param>
             /// <param name="priority">Priority of this event. Higher priority events will be run first.</param>
-            public GameAction(string actionName, string displayName, float defaultLength = 1, bool resizable = false, List<Param> parameters = null, EventCallback function = null, EventCallback inactiveFunction = null, EventCallback prescheduleFunction = null, bool hidden = false, EventCallback preFunction = null, int priority = 0, float preFunctionLength = 2.0f)
+            public GameAction(string actionName, string displayName, float defaultLength = 1, bool resizable = false, List<Param> parameters = null, EventCallback function = null, EventCallback inactiveFunction = null, EventCallback prescheduleFunction = null, bool hidden = false, EventCallback preFunction = null, int priority = 0, float preFunctionLength = 2.0f, string categoryName = null)
             {
                 this.actionName = actionName;
                 if (displayName == String.Empty) this.displayName = actionName;
@@ -555,6 +556,7 @@ namespace HeavenStudio
                 this.preFunction = prescheduleFunction ?? delegate { };
                 this.priority = priority;
                 this.preFunctionLength = preFunctionLength;
+                this.categoryName = categoryName;
 
 
                 //todo: converting to new versions of GameActions
@@ -932,6 +934,22 @@ namespace HeavenStudio
                             }),
                         }
                     },
+                    new GameAction("vignetteCenter", "Vignette Center")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("x1", new EntityTypes.Float(-1f, 2f, 0.5f), "Start X"),
+                            new("y1", new EntityTypes.Float(-1f, 2f, 0.5f), "Start Y"),
+                            new("x2", new EntityTypes.Float(-1f, 2f, 0.5f), "End X"),
+                            new("y2", new EntityTypes.Float(-1f, 2f, 0.5f), "End Y"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "x1", "y1" })
+                            }),
+                        }
+                    },
                     new GameAction("cabb", "Chromatic Abberation")
                     {
                         resizable = true,
@@ -987,6 +1005,22 @@ namespace HeavenStudio
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "xStart", "yStart" })
+                            }),
+                        }
+                    },
+                    new GameAction("lensDCenter", "Lens Distortion Center")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("x1", new EntityTypes.Float(-1f, 1, 0), "Start X"),
+                            new("y1", new EntityTypes.Float(-1f, 1, 0), "Start Y"),
+                            new("x2", new EntityTypes.Float(-1f, 1, 0), "End X"),
+                            new("y2", new EntityTypes.Float(-1f, 1, 0), "End Y"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "x1", "y1" })
                             }),
                         }
                     },

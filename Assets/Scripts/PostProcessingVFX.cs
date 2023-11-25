@@ -12,9 +12,11 @@ namespace HeavenStudio
 
         // events
         private List<RiqEntity> _vignettes = new();
+        private List<RiqEntity> _vignetteCenters = new();
         private List<RiqEntity> _cabbs = new();
         private List<RiqEntity> _blooms = new();
         private List<RiqEntity> _lensDs = new();
+        private List<RiqEntity> _lensDCenters = new();
         private List<RiqEntity> _grains = new();
         private List<RiqEntity> _colorGradings = new();
 
@@ -31,9 +33,11 @@ namespace HeavenStudio
         public void OnBeatChanged(double beat)
         {
             _vignettes = EventCaller.GetAllInGameManagerList("vfx", new string[] { "vignette" });
+            _vignetteCenters = EventCaller.GetAllInGameManagerList("vfx", new string[] { "vignetteCenter" });
             _cabbs = EventCaller.GetAllInGameManagerList("vfx", new string[] { "cabb" });
             _blooms = EventCaller.GetAllInGameManagerList("vfx", new string[] { "bloom" });
             _lensDs = EventCaller.GetAllInGameManagerList("vfx", new string[] { "lensD" });
+            _lensDCenters = EventCaller.GetAllInGameManagerList("vfx", new string[] { "lensDCenter" });
             _grains = EventCaller.GetAllInGameManagerList("vfx", new string[] { "grain" });
             _colorGradings = EventCaller.GetAllInGameManagerList("vfx", new string[] { "colorGrading" });
 
@@ -85,6 +89,36 @@ namespace HeavenStudio
 
                 float newRoundness = func(e["roundStart"], e["roundEnd"], clampNormal);
                 v.roundness.Override(newRoundness);
+            }
+
+            if (!v.enabled) return;
+            v.center.Override(new Vector2(0.5f, 0.5f));
+            foreach (var e in _vignetteCenters)
+            {
+                float normalized = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
+                if (normalized < 0) break;
+
+                float clampNormal = Mathf.Clamp01(normalized);
+                var func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease)e["ease"]);
+
+                float newX = 0.5f;
+                float newY = 0.5f;
+
+                switch ((StaticCamera.ViewAxis)e["axis"])
+                {
+                    case StaticCamera.ViewAxis.All:
+                        newX = func(e["x1"], e["x2"], clampNormal);
+                        newY = func(e["y1"], e["y2"], clampNormal);
+                        break;
+                    case StaticCamera.ViewAxis.X:
+                        newX = func(e["x1"], e["x2"], clampNormal);
+                        break;
+                    case StaticCamera.ViewAxis.Y:
+                        newY = func(e["y1"], e["y2"], clampNormal);
+                        break;
+                }
+                
+                v.center.Override(new Vector2(newX, newY));
             }
         }
 
@@ -161,6 +195,38 @@ namespace HeavenStudio
 
                 float newY = func(e["yStart"], e["yEnd"], clampNormal);
                 l.intensityY.Override(newY);
+            }
+
+            if (!l.enabled) return;
+            l.centerX.Override(0);
+            l.centerY.Override(0);
+            foreach (var e in _lensDCenters)
+            {
+                float normalized = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
+                if (normalized < 0) break;
+
+                float clampNormal = Mathf.Clamp01(normalized);
+                var func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease)e["ease"]);
+
+                float newX = 0;
+                float newY = 0;
+
+                switch ((StaticCamera.ViewAxis)e["axis"])
+                {
+                    case StaticCamera.ViewAxis.All:
+                        newX = func(e["x1"], e["x2"], clampNormal);
+                        newY = func(e["y1"], e["y2"], clampNormal);
+                        break;
+                    case StaticCamera.ViewAxis.X:
+                        newX = func(e["x1"], e["x2"], clampNormal);
+                        break;
+                    case StaticCamera.ViewAxis.Y:
+                        newY = func(e["y1"], e["y2"], clampNormal);
+                        break;
+                }
+
+                l.centerX.Override(newX);
+                l.centerY.Override(newY);
             }
         }
 

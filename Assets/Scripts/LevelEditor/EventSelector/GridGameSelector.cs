@@ -10,11 +10,9 @@ using DG.Tweening;
 using Starpelly;
 
 using HeavenStudio.Editor.Track;
-using System.Text;
 
 namespace HeavenStudio.Editor
 {
-    // I hate the antichrist.
     public class GridGameSelector : MonoBehaviour
     {
         public Minigames.Minigame SelectedMinigame;
