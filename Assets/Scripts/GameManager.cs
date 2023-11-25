@@ -969,7 +969,9 @@ namespace HeavenStudio
             {
                 _currentMinigame = minigame;
             }
+            Vector3 originalScale = currentGameO.transform.localScale;
             currentGameO.transform.parent = eventCaller.GamesHolder.transform;
+            currentGameO.transform.localScale = originalScale;
             currentGameO.name = game;
 
             SetCurrentGame(game, useMinigameColor);
