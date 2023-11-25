@@ -23,7 +23,7 @@ namespace HeavenStudio.Common
                 PersistentDataManager.SaveSettings();
                 tabsManager.CleanTabs();
 
-                if (GameManager.instance != null && GameManager.instance.CircleCursor != null && GameManager.instance.playOnStart)
+                if (GameManager.instance != null && GameManager.instance.CircleCursor != null && GameManager.instance.playMode)
                 {
                     GameManager.instance.CircleCursor.LockCursor(true);
                 }
@@ -40,7 +40,7 @@ namespace HeavenStudio.Common
                 BuildDateDisplay.text = GlobalGameManager.buildTime;
 
 
-                if (GameManager.instance != null && GameManager.instance.CircleCursor != null && GameManager.instance.playOnStart)
+                if (GameManager.instance != null && GameManager.instance.CircleCursor != null && GameManager.instance.playMode)
                 {
                     GameManager.instance.CircleCursor.LockCursor(false);
                 }

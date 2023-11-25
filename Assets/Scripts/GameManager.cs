@@ -44,14 +44,14 @@ namespace HeavenStudio
             currentPreEvent, currentPreSwitch, currentPreSequence;
         [NonSerialized] public double endBeat;
         [NonSerialized] public float startOffset;
-        [NonSerialized] public bool playOnStart;
+        [NonSerialized] public bool playMode;
         [NonSerialized] public double startBeat;
         [NonSerialized] public GameObject currentGameO;
         private Minigame _currentMinigame;
         [NonSerialized] public bool autoplay;
         [NonSerialized] public bool canInput = true;
         [NonSerialized] public RiqEntity currentSection, nextSection;
-        public double sectionProgress { get; private set; }
+        public double SectionProgress { get; private set; }
 
         public bool GameHasSplitColours
         {
@@ -186,7 +186,7 @@ namespace HeavenStudio
                 SetGame("noGame");
             }
 
-            if (playOnStart)
+            if (playMode)
             {
                 StartCoroutine(WaitReadyAndPlayCo(startBeat));
             }
@@ -297,7 +297,7 @@ namespace HeavenStudio
             Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
             Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
             Conductor.instance.firstBeatOffset = Beatmap.data.offset;
-            if (!playOnStart)
+            if (!playMode)
             {
                 Stop(0);
             }
@@ -326,7 +326,7 @@ namespace HeavenStudio
             }
         }
 
-        public void ScoreInputAccuracy(double accuracy, bool late, double time, double weight = 1, bool doDisplay = true)
+        public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, double weight = 1, bool doDisplay = true, int category = 0)
         {
             totalInputs += weight;
             totalPlayerAccuracy += accuracy * weight;
@@ -563,16 +563,16 @@ namespace HeavenStudio
 
             if (currentSection == null)
             {
-                sectionProgress = 0;
+                SectionProgress = 0;
             }
             else
             {
                 double currectSectionStart = cond.GetSongPosFromBeat(currentSection.beat);
 
                 if (nextSection == null)
-                    sectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(endBeat) - currectSectionStart);
+                    SectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(endBeat) - currectSectionStart);
                 else
-                    sectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(nextSection.beat) - currectSectionStart);
+                    SectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(nextSection.beat) - currectSectionStart);
             }
         }
 
@@ -642,7 +642,7 @@ namespace HeavenStudio
                     miniGame.OnPlay(beat);
             }
 
-            if (playOnStart)
+            if (playMode)
             {
                 CircleCursor.LockCursor(true);
             }
@@ -674,7 +674,7 @@ namespace HeavenStudio
             SectionMedalsManager.instance.OnRemixEnd();
 
             // pass this data to rating screen + stats
-            Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}) ==");
+            Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now:yyyy-MM-dd HH:mm:ss}) ==");
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
             Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100): 0.00}");
             Debug.Log($"Cleared {clearedSections.FindAll(c => c).Count} sections out of {Beatmap.SectionMarkers.Count}");
@@ -690,7 +690,7 @@ namespace HeavenStudio
             {
                 Play(0, restartDelay);
             }
-            else if (playOnStart)
+            else if (playMode)
             {
                 // when rating screen gets added playOnStart will instead move to that scene
                 GlobalGameManager.LoadScene("Title", 0.35f, 0.5f);

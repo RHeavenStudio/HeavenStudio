@@ -269,7 +269,7 @@ namespace HeavenStudio.Games
 
                     if (countsForAccuracy && !(noAutoplay || autoplayOnly) && isEligible)
                     {
-                        GameManager.instance.ScoreInputAccuracy(TimeToAccuracy(time), time > 1.0, time);
+                        GameManager.instance.ScoreInputAccuracy(startBeat + timer, TimeToAccuracy(time), time > 1.0, time);
                         if (state >= 1f || state <= -1f)
                         {
                             GoForAPerfect.instance.Miss();
@@ -343,7 +343,7 @@ namespace HeavenStudio.Games
 
             if (countsForAccuracy && !(noAutoplay || autoplayOnly))
             {
-                GameManager.instance.ScoreInputAccuracy(0, true, 2.0, 1.0, false);
+                GameManager.instance.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, 1.0, false);
                 GoForAPerfect.instance.Miss();
                 SectionMedalsManager.instance.MakeIneligible();
             }

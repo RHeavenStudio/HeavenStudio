@@ -27,13 +27,13 @@ namespace HeavenStudio.Common
         // Update is called once per frame
         void Update()
         {
-            SectionProgress.value = (float) GameManager.instance.sectionProgress;
+            SectionProgress.value = (float) GameManager.instance.SectionProgress;
         }
 
         public void OnBeatChanged(double beat)
         {
             gameObject.SetActive(GameManager.instance.currentSection != null);
-            SectionProgress.value = (float) GameManager.instance.sectionProgress;
+            SectionProgress.value = (float) GameManager.instance.SectionProgress;
         }
 
         public void OnSectionChange(RiqEntity section)
@@ -42,7 +42,7 @@ namespace HeavenStudio.Common
             {
                 gameObject.SetActive(true);
                 SectionText.text = section["sectionName"];
-                SectionProgress.value = (float) GameManager.instance.sectionProgress;
+                SectionProgress.value = (float) GameManager.instance.SectionProgress;
 
                 if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.Off) return;
                 if (!OverlaysManager.OverlaysEnabled) return;

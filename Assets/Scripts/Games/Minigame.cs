@@ -435,7 +435,8 @@ namespace HeavenStudio.Games
 
         public void ScoreMiss(double weight = 1f)
         {
-            GameManager.instance.ScoreInputAccuracy(0, true, NgLateTime(), weight, false);
+            double beat = Conductor.instance?.songPositionInBeatsAsDouble ?? -1;
+            GameManager.instance.ScoreInputAccuracy(beat, 0, true, NgLateTime(), weight, false);
             if (weight > 0)
             {
                 GoForAPerfect.instance.Miss();
