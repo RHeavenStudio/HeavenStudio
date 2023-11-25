@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 
 using HeavenStudio.Common;
+using System;
 
 namespace HeavenStudio.Editor 
 {
@@ -12,12 +13,16 @@ namespace HeavenStudio.Editor
         public Toggle discordRPCCheckbox;
         public Button editorScaleDecre, editorScaleIncre;
         public Toggle scaleWSS;
+        [SerializeField] private Toggle useOldCheckbox;
+
+        public static event Action<bool> onUseOldChanged;
 
         private void Start()
         {
             cursorCheckbox.isOn = PersistentDataManager.gameSettings.editorCursorEnable;
             discordRPCCheckbox.isOn = PersistentDataManager.gameSettings.discordRPCEnable;
             scaleWSS.isOn = PersistentDataManager.gameSettings.scaleWScreenSize;
+            useOldCheckbox.isOn = PersistentDataManager.gameSettings.useOldGameEventSelectionSystem;
 
 
             SetDecreIncreInteractable();
@@ -87,6 +92,12 @@ namespace HeavenStudio.Editor
         {
             editorScaleDecre.interactable = PersistentDataManager.gameSettings.editorScale > -3; // hardcoded? We might not change.
             editorScaleIncre.interactable = PersistentDataManager.gameSettings.editorScale < 5;
+        }
+
+        public void OnUseOldChanged()
+        {
+            PersistentDataManager.gameSettings.useOldGameEventSelectionSystem = useOldCheckbox.isOn;
+            onUseOldChanged?.Invoke(useOldCheckbox.isOn);
         }
     }
 }

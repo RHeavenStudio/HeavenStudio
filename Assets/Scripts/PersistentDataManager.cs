@@ -115,7 +115,8 @@ namespace HeavenStudio.Common
                 bool letterboxBgEnable = true,
                 bool letterboxFxEnable = true,
                 int editorScale = 0,
-                bool scaleWScreenSize = false
+                bool scaleWScreenSize = false,
+                bool useOldGameEventSelectionSystem = false
                 )
             {
                 this.showSplash = showSplash;
@@ -143,6 +144,7 @@ namespace HeavenStudio.Common
                 this.overlaysInEditor = overlaysInEditor;
                 this.letterboxBgEnable = true;
                 this.letterboxFxEnable = true;
+                this.useOldGameEventSelectionSystem = useOldGameEventSelectionSystem;
 
                 this.timingDisplayComponents = new List<OverlaysManager.TimingDisplayComponent>()
                 {
@@ -175,6 +177,7 @@ namespace HeavenStudio.Common
             public bool discordRPCEnable;
             public int editorScale;
             public bool scaleWScreenSize;
+            public bool useOldGameEventSelectionSystem;
 
             // Gameplay Settings
             public PerfectChallengeType perfectChallengeType;

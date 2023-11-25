@@ -13,6 +13,7 @@ using HeavenStudio.Editor.Track;
 
 namespace HeavenStudio.Editor
 {
+    using HeavenStudio.Common;
     public class GridGameSelector : MonoBehaviour
     {
         public Minigames.Minigame SelectedMinigame;
@@ -51,33 +52,44 @@ namespace HeavenStudio.Editor
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
 
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
-            SelectGame(fxActive[0].name);
+            SelectedMinigame = EventCaller.instance.GetMinigame("gameManager");
+            SwitchGameSelectionType(PersistentDataManager.gameSettings.useOldGameEventSelectionSystem);
+            EditorSettings.onUseOldChanged += SwitchGameSelectionType;
         }
 
         private void Update()
         {
-            if (!EventParameterManager.instance.active && !IsPointerOverUIElement())
+            GameEventSelector.SetActive(_usingOld);
+            _newGameEventSelector.SetActive(!_usingOld);
+            if (_usingOld)
             {
-                if (gameOpen)
+                if (!EventParameterManager.instance.active && !IsPointerOverUIElement() && _usingOld)
                 {
-                    if (Input.GetKeyDown(KeyCode.DownArrow))
+                    if (gameOpen)
                     {
-                        UpdateIndex(currentEventIndex + 1);
+                        if (Input.GetKeyDown(KeyCode.DownArrow))
+                        {
+                            UpdateIndex(currentEventIndex + 1);
+                        }
+                        else if (Input.GetKeyDown(KeyCode.UpArrow))
+                        {
+                            UpdateIndex(currentEventIndex - 1);
+                        }
                     }
-                    else if (Input.GetKeyDown(KeyCode.UpArrow))
+
+                    if (RectTransformUtility.RectangleContainsScreenPoint(GameEventSelectorCanScroll, Input.mousePosition, Editor.instance.EditorCamera) && Input.mouseScrollDelta.y != 0)
                     {
-                        UpdateIndex(currentEventIndex - 1);
+                        UpdateIndex(currentEventIndex - Mathf.RoundToInt(Input.mouseScrollDelta.y));
                     }
                 }
 
-                if (RectTransformUtility.RectangleContainsScreenPoint(GameEventSelectorCanScroll, Input.mousePosition, Editor.instance.EditorCamera) && Input.mouseScrollDelta.y != 0)
-                {
-                    UpdateIndex(currentEventIndex - Mathf.RoundToInt(Input.mouseScrollDelta.y));
-                }
+                //moved here so this updates dynamically with window scale
+                UpdateScrollPosition();
             }
+            else
+            {
 
-            //moved here so this updates dynamically with window scale
-            UpdateScrollPosition();
+            }
         }
 
         #region Functions
@@ -138,7 +150,8 @@ namespace HeavenStudio.Editor
             }
 
             SelectedMinigame = EventCaller.instance.GetMinigame(gameName);
-            if (SelectedMinigame == null) {
+            if (SelectedMinigame == null)
+            {
                 SelectGame("gameManager");
                 Debug.LogWarning($"SelectGame() has failed, did you mean to input '{gameName}'?");
                 return;
@@ -147,7 +160,12 @@ namespace HeavenStudio.Editor
             EventParameterManager.instance.Disable();
 
             gameOpen = true;
+            if (_usingOld) SelectGameOld(gameName, index);
+            else SelectGameNew(gameName, index);
+        }
 
+        private void SelectGameOld(string gameName, int index = 0)
+        {
             DestroyEvents();
             AddEvents(index);
 
@@ -441,6 +459,36 @@ namespace HeavenStudio.Editor
             if (Conductor.instance.NotStopped()) return;
 
             dragTimes = 0;
+        }
+
+        #endregion
+
+        #region New Game Event Selection
+
+        [Header("New Game Event Selection")]
+        [SerializeField] private GameObject _newGameEventSelector;
+        [SerializeField] private RectTransform _newEventsParent;
+
+        private bool _usingOld = false;
+
+        public void SwitchGameSelectionType(bool old)
+        {
+            _usingOld = old;
+            if (!gameOpen) return;
+            if (old)
+            {
+                // destroy events here
+            }
+            else
+            {
+                DestroyEvents();
+            }
+            SelectGame(SelectedMinigame.name);
+        }
+
+        private void SelectGameNew(string gameName, int index)
+        {
+
         }
 
         #endregion
