@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using TMPro;
 using Jukebox;
 using UnityEngine.Playables;
+using HeavenStudio.Games;
 
 namespace HeavenStudio
 {
@@ -63,26 +64,57 @@ namespace HeavenStudio
             playedBeatmap = beatmap;
         }
 
+        [Header("Bar parameters")]
+        [SerializeField] float barDuration;
+        [SerializeField] float barRankWait;
+        [SerializeField] float rankMusWait;
+        [SerializeField] Color barColourNg, barColourOk, barColourHi;
+        [SerializeField] Color numColourNg, numColourOk, numColourHi;
+
+        [Header("Audio clips")]
+        [SerializeField] AudioClip messageMid;
+        [SerializeField] AudioClip messageLast;
+        [SerializeField] AudioClip barLoop, barStop;
+        [SerializeField] AudioClip rankNg, rankOk, rankHi;
+        [SerializeField] AudioClip musNgStart, musOkStart, musHiStart;
+        [SerializeField] AudioClip musNg, musOk, musHi;
+
+        [Header("References")]
+        [SerializeField] TMP_Text header;
         [SerializeField] TMP_Text message0;
         [SerializeField] TMP_Text message1;
         [SerializeField] TMP_Text message2;
         [SerializeField] TMP_Text barText;
         [SerializeField] Slider barSlider;
 
-        [SerializeField] AudioClip messageMid, messageLast;
-
+        [SerializeField] GameObject bg;
         [SerializeField] GameObject rankLogo;
         [SerializeField] Animator rankAnim;
         [SerializeField] CanvasScaler scaler;
 
         AudioSource audioSource;
-        bool twoMessage = false, barStarted = false;
+        bool twoMessage = false, barStarted = false, didRank = false;
+        float barTime = 0, barStartTime = float.MaxValue;
 
         public void PrepareJudgement()
         {
+            bg.SetActive(false);
+            rankLogo.SetActive(false);
+
             barText.text = "0";
             barSlider.value = 0;
+            barText.color = numColourNg;
+            barSlider.fillRect.GetComponent<Image>().color = barColourNg;
+
+            // temp
             twoMessage = true;
+            judgementInfo = new()
+            {
+                finalScore = 0.79,
+            };
+            header.text = "Rhythm League Notes";
+            // end temp
+
             if (twoMessage)
             {
                 message0.gameObject.SetActive(false);
@@ -111,14 +143,73 @@ namespace HeavenStudio
         {
             if (!twoMessage) return;
             audioSource.PlayOneShot(messageMid);
-            message1.text = "message line 1";
+            // message1.text = "message line 1";
+            message1.text = "skill issue";
         }
 
         public void ShowMessage2()
         {
             if (!twoMessage) return;
             audioSource.PlayOneShot(messageLast);
-            message2.text = "message line 2";
+            // message2.text = "message line 2";
+            message2.text = "lmao lmao";
+        }
+
+        public void StartBar()
+        {
+            audioSource.clip = barLoop;
+            audioSource.Play();
+
+            barStartTime = Time.time;
+            barTime = (float)judgementInfo.finalScore * barDuration;
+
+            barStarted = true;
+        }
+
+        public void ShowRank()
+        {
+            rankLogo.SetActive(true);
+            bg.SetActive(true);
+            if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+            {
+                rankAnim.Play("Ng");
+                audioSource.PlayOneShot(rankNg);
+            }
+            else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+            {
+                rankAnim.Play("Ok");
+                audioSource.PlayOneShot(rankOk);
+            }
+            else
+            {
+                rankAnim.Play("Hi");
+                audioSource.PlayOneShot(rankHi);
+            }
+        }
+
+        public void StartRankMusic()
+        {
+            if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+            {
+                audioSource.PlayOneShot(musNgStart);
+                audioSource.clip = musNg;
+                audioSource.loop = true;
+                audioSource.PlayScheduled(AudioSettings.dspTime + musNgStart.length);
+            }
+            else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+            {
+                audioSource.PlayOneShot(musOkStart);
+                audioSource.clip = musOk;
+                audioSource.loop = true;
+                audioSource.PlayScheduled(AudioSettings.dspTime + musOkStart.length);
+            }
+            else
+            {
+                audioSource.PlayOneShot(musHiStart);
+                audioSource.clip = musHi;
+                audioSource.loop = true;
+                audioSource.PlayScheduled(AudioSettings.dspTime + musHiStart.length);
+            }
         }
 
         private void Start()
@@ -126,11 +217,72 @@ namespace HeavenStudio
             audioSource = GetComponent<AudioSource>();
         }
 
+        private IEnumerator WaitAndRank()
+        {
+            yield return new WaitForSeconds(barRankWait);
+            ShowRank();
+            yield return new WaitForSeconds(rankMusWait);
+            StartRankMusic();
+        }
+
         private void Update()
         {
             float w = Screen.width / 1920f;
             float h = Screen.height / 1080f;
             scaler.scaleFactor = Mathf.Min(w, h);
+
+            if (barStarted)
+            {
+                float t = Time.time - barStartTime;
+                if (t >= barTime)
+                {
+                    barStarted = false;
+                    audioSource.Stop();
+                    audioSource.PlayOneShot(barStop);
+                    barText.text = ((int)(judgementInfo.finalScore * 100)).ToString();
+                    barSlider.value = (float)judgementInfo.finalScore;
+
+                    if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+                    {
+                        barText.color = numColourNg;
+                        barSlider.fillRect.GetComponent<Image>().color = barColourNg;
+                    }
+                    else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+                    {
+                        barText.color = numColourOk;
+                        barSlider.fillRect.GetComponent<Image>().color = barColourOk;
+                    }
+                    else
+                    {
+                        barText.color = numColourHi;
+                        barSlider.fillRect.GetComponent<Image>().color = barColourHi;
+                    }
+
+                    StartCoroutine(WaitAndRank());
+                }
+                else
+                {
+                    float v = t / barTime * (float)judgementInfo.finalScore;
+                    barText.text = ((int)(v * 100)).ToString();
+                    barSlider.value = v;
+
+                    if (v < Minigame.rankOkThreshold)
+                    {
+                        barText.color = numColourNg;
+                        barSlider.fillRect.GetComponent<Image>().color = barColourNg;
+                    }
+                    else if (v < Minigame.rankHiThreshold)
+                    {
+                        barText.color = numColourOk;
+                        barSlider.fillRect.GetComponent<Image>().color = barColourOk;
+                    }
+                    else
+                    {
+                        barText.color = numColourHi;
+                        barSlider.fillRect.GetComponent<Image>().color = barColourHi;
+                    }
+                }
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace HeavenStudio.Games
     public class Minigame : MonoBehaviour
     {
         public static double ngEarlyTime = 0.085f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.085f;
-        public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
+        public static double rankHiThreshold = 0.8, rankOkThreshold = 0.6;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
         #region Premade Input Actions
