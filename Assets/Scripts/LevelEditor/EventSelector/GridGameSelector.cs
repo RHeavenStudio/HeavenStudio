@@ -37,7 +37,7 @@ namespace HeavenStudio.Editor
         public float posDif;
         public int ignoreSelectCount;
         private int dragTimes;
-        private bool gameOpen;
+        private bool gameOpen = true;
         private float selectorHeight;
         private float eventSize;
         private float timeSinceUpdateIndex = 0.0f;
@@ -52,15 +52,15 @@ namespace HeavenStudio.Editor
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
 
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
-            SelectedMinigame = EventCaller.instance.GetMinigame("gameManager");
+            SelectedMinigame = EventCaller.instance.GetMinigame(fxActive[0].name);
             SwitchGameSelectionType(PersistentDataManager.gameSettings.useOldGameEventSelectionSystem);
             EditorSettings.onUseOldChanged += SwitchGameSelectionType;
         }
 
         private void Update()
         {
-            GameEventSelector.SetActive(_usingOld);
-            _newGameEventSelector.SetActive(!_usingOld);
+            GameEventSelector.SetActive(_usingOld && gameOpen);
+            _newGameEventSelector.SetActive(!_usingOld && gameOpen);
             if (_usingOld)
             {
                 if (!EventParameterManager.instance.active && !IsPointerOverUIElement() && _usingOld)
@@ -158,7 +158,6 @@ namespace HeavenStudio.Editor
             }
 
             EventParameterManager.instance.Disable();
-
             gameOpen = true;
             if (_usingOld) SelectGameOld(gameName, index);
             else SelectGameNew(gameName, index);
@@ -489,6 +488,25 @@ namespace HeavenStudio.Editor
         private void SelectGameNew(string gameName, int index)
         {
 
+        }
+
+        public void Disable()
+        {
+            if (_usingOld)
+            {
+                DestroyEvents();
+            }
+            else
+            {
+
+            }
+            gameOpen = false;
+        }
+
+        public void Enable()
+        {
+            gameOpen = true;
+            SelectGame(SelectedMinigame.name);
         }
 
         #endregion

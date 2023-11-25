@@ -50,6 +50,7 @@ namespace HeavenStudio.Editor
                 if (canDisable && active)
                 {
                     Disable();
+                    GridGameSelector.instance.Enable();
                 }
             }
             canDisable = true;
@@ -66,6 +67,10 @@ namespace HeavenStudio.Editor
 
         public void StartParams(RiqEntity entity)
         {
+            var minigame = EventCaller.instance.GetMinigame(entity.datamodel.Split(0));
+            int actionIndex = minigame.actions.IndexOf(minigame.actions.Find(c => c.actionName == entity.datamodel.Split(1)));
+            Minigames.GameAction action = minigame.actions[actionIndex];
+            if (action.parameters != null) GridGameSelector.instance.Disable();
             active = true;
             AddParams(entity);
         }
