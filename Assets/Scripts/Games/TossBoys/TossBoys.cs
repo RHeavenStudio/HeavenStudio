@@ -1065,8 +1065,7 @@ namespace HeavenStudio.Games
             if (currentSpecialKid != null) currentSpecialKid.crouch = false;
             currentSpecialKid = GetCurrentReceiver();
 
-            if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
-                GetCurrentReceiver().Crouch();
+            GetCurrentReceiver().Crouch();
 
             GetSpecialBasedOnReceiver().SetActive(true);
             switch (currentReceiver)
