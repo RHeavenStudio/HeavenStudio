@@ -818,6 +818,22 @@ namespace HeavenStudio
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         }
                     ),
+                    new("stretch camera", "Stretch Camera")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("x1", new EntityTypes.Float(0f, 50f, 1f), "Start Width"),
+                            new("y1", new EntityTypes.Float(0f, 50f, 1f), "Start Height"),
+                            new("x2", new EntityTypes.Float(0f, 50f, 1f), "End Width"),
+                            new("y2", new EntityTypes.Float(0f, 50f, 1f), "End Height"),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "x1", "y1" })
+                            }),
+                            new Param("axis", GameCamera.CameraAxis.All, "Axis")
+                        }
+                    },
                     new GameAction("camera background color", "Camera Background Color", 1, true, new List<Param>()
                         {
                             new Param("color", Color.black, "Start Color"),

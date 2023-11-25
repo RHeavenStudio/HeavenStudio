@@ -221,18 +221,6 @@ namespace HeavenStudio.Games
             return default(SuperCurveObject.Path);
         }
 
-        void OnDestroy()
-        {
-            foreach (var evt in scheduledInputs)
-            {
-                evt.Disable();
-            }
-            if (Conductor.instance.isPlaying || Conductor.instance.isPaused) return;
-            rightCrumbAppearThreshold = 15;
-            leftCrumbAppearThreshold = 30;
-            eatenTreats = 0;
-        }
-
         private void Awake()
         {
             instance = this;
@@ -357,7 +345,7 @@ namespace HeavenStudio.Games
             if (_allEmotionsStretch.Count == 0) return;
             UpdateEmotions();
             var allEmosBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => x.beat < beat);
-
+            if (allEmosBeforeBeat.Count == 0) return;
             if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.StartCrying)
             {
                 headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);

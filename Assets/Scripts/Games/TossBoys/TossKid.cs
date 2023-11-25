@@ -35,7 +35,6 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                 DoAnimationScaledAsync("Whiff", 0.5f);
                 SoundByte.PlayOneShotGame("tossBoys/whiff");
             }
-            crouch = false;
             preparing = false;
         }
 
@@ -49,12 +48,6 @@ namespace HeavenStudio.Games.Scripts_TossBoys
         {
             DoAnimationScaledAsync("Crouch", 0.5f);
             crouch = true;
-        }
-
-        public void UnCrouch()
-        {
-            DoAnimationScaledAsync("Idle", 1f);
-            crouch = false;
         }
 
         public void PopBall()
