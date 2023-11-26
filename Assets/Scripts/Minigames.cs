@@ -556,7 +556,8 @@ namespace HeavenStudio
                 this.preFunction = prescheduleFunction ?? delegate { };
                 this.priority = priority;
                 this.preFunctionLength = preFunctionLength;
-                this.categoryName = categoryName;
+                if (categoryName != null) this.categoryName = categoryName;
+                else this.categoryName = string.Empty;
 
 
                 //todo: converting to new versions of GameActions
@@ -781,7 +782,10 @@ namespace HeavenStudio
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "colorA", "valA" })
                             })
                         }
-                    ),
+                    )
+                    {
+                        categoryName = "Test 1"
+                    },
                     new GameAction("filter", "Filter", 1f, true,
                         new List<Param>()
                         {
@@ -819,7 +823,10 @@ namespace HeavenStudio
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         }
-                    ),
+                    )
+                    {
+                        categoryName = "Test2"
+                    },
                     new("stretch camera", "Stretch Camera")
                     {
                         resizable = true,

@@ -4505,6 +4505,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameSelectionEventRef: {fileID: 1119871594}
+  _headerObject: {fileID: 1039002537}
+  _headerText: {fileID: 93287373}
 --- !u!1 &170980090
 GameObject:
   m_ObjectHideFlags: 0
@@ -21412,6 +21414,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _categoryRef: {fileID: 167275725}
+  _spacing: -55
+  _headerOffset: 61
 --- !u!1 &889256060
 GameObject:
   m_ObjectHideFlags: 0
@@ -26829,7 +26833,7 @@ MonoBehaviour:
   posDif: 15
   ignoreSelectCount: 2
   _newGameEventSelector: {fileID: 516264814}
-  _cateGoryRef: {fileID: 167275725}
+  _categoryManager: {fileID: 879299405}
 --- !u!114 &1154875948
 MonoBehaviour:
   m_ObjectHideFlags: 0
