@@ -26,6 +26,8 @@ namespace HeavenStudio.Games
 
         public double startBeat;
         public double timer;
+        public int category;
+        public float weight = 1f;
 
         public bool isEligible = true;
         public bool canHit = true; //Indicates if you can still hit the cue or not. If set to false, it'll guarantee a miss
@@ -269,7 +271,7 @@ namespace HeavenStudio.Games
 
                     if (countsForAccuracy && !(noAutoplay || autoplayOnly) && isEligible)
                     {
-                        GameManager.instance.ScoreInputAccuracy(startBeat + timer, TimeToAccuracy(time), time > 1.0, time);
+                        GameManager.instance.ScoreInputAccuracy(startBeat + timer, TimeToAccuracy(time), time > 1.0, time, weight, true, category);
                         if (state >= 1f || state <= -1f)
                         {
                             GoForAPerfect.instance.Miss();
@@ -343,7 +345,7 @@ namespace HeavenStudio.Games
 
             if (countsForAccuracy && !(noAutoplay || autoplayOnly))
             {
-                GameManager.instance.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, 1, false);
+                GameManager.instance.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, weight, false, category);
                 GoForAPerfect.instance.Miss();
                 SectionMedalsManager.instance.MakeIneligible();
             }

@@ -655,7 +655,7 @@ namespace HeavenStudio
                             if (Timeline.instance != null)
                                 Timeline.instance?.Stop(Timeline.instance.PlaybackBeat);
                             else
-                                GameManager.instance.Stop(0);
+                                GameManager.instance.Stop(eventCaller.currentEntity.beat);
                         }
                     ),
                     new GameAction("skill star", "Skill Star", 1f, true)

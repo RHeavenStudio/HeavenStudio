@@ -61,8 +61,8 @@ namespace HeavenStudio.Util
         {
             foreach (Util.Sound sound in playingSounds)
             {
-                if (!sound.available)
-                    return;
+                if (sound == null) continue;
+                if (!sound.available) return;
             }
             Destroy(gameObject);
         }

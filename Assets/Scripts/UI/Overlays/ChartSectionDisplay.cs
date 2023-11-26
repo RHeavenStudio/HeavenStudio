@@ -21,7 +21,7 @@ namespace HeavenStudio.Common
         {
             GameManager.instance.onSectionChange += OnSectionChange;
             GameManager.instance.onBeatChanged += OnBeatChanged;
-            gameObject.SetActive(GameManager.instance.currentSection != null);
+            gameObject.SetActive(GameManager.instance.lastSection != null);
         }
 
         // Update is called once per frame
@@ -32,23 +32,23 @@ namespace HeavenStudio.Common
 
         public void OnBeatChanged(double beat)
         {
-            gameObject.SetActive(GameManager.instance.currentSection != null);
+            gameObject.SetActive(GameManager.instance.lastSection != null);
             SectionProgress.value = (float) GameManager.instance.SectionProgress;
         }
 
-        public void OnSectionChange(RiqEntity section)
+        public void OnSectionChange(RiqEntity newSection, RiqEntity lastSection)
         {
-            if (section != null)
+            if (newSection != null)
             {
                 gameObject.SetActive(true);
-                SectionText.text = section["sectionName"];
+                SectionText.text = newSection["sectionName"];
                 SectionProgress.value = (float) GameManager.instance.SectionProgress;
 
                 if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.Off) return;
                 if (!OverlaysManager.OverlaysEnabled) return;
-                if (section["startPerfect"] && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
+                if (newSection["startPerfect"] && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
                 {
-                    GoForAPerfect.instance.Enable(section.beat);
+                    GoForAPerfect.instance.Enable(newSection.beat);
                 }
             }
         }

@@ -696,7 +696,7 @@ namespace HeavenStudio.Editor.Track
                 TimelineSongPosLine.gameObject.SetActive(true);
             }
 
-            GameManager.instance.Play(time);
+            GameManager.instance.SafePlay(time, 0, false);
 
             SetTimeButtonColors(false, true, true);
         }
