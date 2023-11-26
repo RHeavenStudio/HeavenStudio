@@ -40,6 +40,7 @@ namespace HeavenStudio.Editor
                     GameSelectionCategory spawnedCategory = Instantiate(_categoryRef, transform);
                     lastHeaderObject = spawnedCategory;
                     _categories.Add(spawnedCategory);
+                    lastHeaderObject.SetMaster(this);
 
                     if (lastHeader != string.Empty)
                     {
@@ -56,6 +57,19 @@ namespace HeavenStudio.Editor
                 }
 
                 lastHeaderObject.AddEvent(action);
+            }
+        }
+
+        public void UpdateCategoryPositions()
+        {
+            float currentY = _categoryRef.transform.localPosition.y;
+            for (int i = 0; i < _categories.Count; i++)
+            {
+                if (!_categories[i].HeaderIsActive()) currentY += _headerOffset;
+                _categories[i].transform.localPosition = new Vector3(_categories[i].transform.localPosition.x, currentY);
+
+                Canvas.ForceUpdateCanvases();
+                currentY += _spacing - _categories[i].GetComponent<RectTransform>().rect.height;
             }
         }
 
