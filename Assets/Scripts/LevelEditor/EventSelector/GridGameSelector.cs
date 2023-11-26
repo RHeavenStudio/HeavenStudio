@@ -458,8 +458,7 @@ namespace HeavenStudio.Editor
 
         [Header("New Game Event Selection")]
         [SerializeField] private GameObject _newGameEventSelector;
-        [SerializeField] private RectTransform _newEventsParent;
-        [SerializeField] private GameObject _newEventRef;
+        [SerializeField] private GameSelectionCategory _cateGoryRef;
 
         private bool _usingOld = false;
 
@@ -486,12 +485,11 @@ namespace HeavenStudio.Editor
 
         private void NewAddEvents(int index = 0)
         {
-            if (!EventCaller.FXOnlyGames().Contains(SelectedMinigame))
+            /*if (!EventCaller.FXOnlyGames().Contains(SelectedMinigame))
             {
                 NewGameSelectionEvent sg = Instantiate(_newEventRef, _newEventsParent).GetComponent<NewGameSelectionEvent>();
                 sg.SetText("Switch Game");
                 sg.gameObject.SetActive(true);
-                if (index == 0) sg.SetTextColor(EditorTheme.theme.properties.EventSelectedCol.Hex2RGB());
             }
             else
             {
@@ -504,18 +502,15 @@ namespace HeavenStudio.Editor
                 var action = SelectedMinigame.actions[i];
                 if (action.actionName == "switchGame" || action.hidden) continue;
 
-                NewGameSelectionEvent g = Instantiate(_newEventRef, _newEventsParent).GetComponent<NewGameSelectionEvent>();
+                //NewGameSelectionEvent g = Instantiate(_newEventRef, _newEventsParent).GetComponent<NewGameSelectionEvent>();
                 g.SetText(action.displayName);
 
                 if (action.parameters != null && action.parameters.Count > 0)
                     g.SetActiveGearIcon(true);
 
-                if (index - 1 == i)
-                    g.SetTextColor(EditorTheme.theme.properties.EventSelectedCol.Hex2RGB());
-
                 g.gameObject.SetActive(true);
 
-            }
+            }*/
         }
 
         private void NewDestroyEvents()
@@ -525,10 +520,10 @@ namespace HeavenStudio.Editor
                 transform.GetChild(i).GetChild(0).gameObject.SetActive(false);
             }
 
-            for (int i = 0; i < _newEventsParent.childCount; i++)
+            /*for (int i = 0; i < _newEventsParent.childCount; i++)
             {
                 Destroy(_newEventsParent.GetChild(i).gameObject);
-            }
+            }*/
         }
 
         public void Disable()
