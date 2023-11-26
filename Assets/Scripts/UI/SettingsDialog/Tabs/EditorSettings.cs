@@ -15,8 +15,6 @@ namespace HeavenStudio.Editor
         public Toggle scaleWSS;
         [SerializeField] private Toggle useOldCheckbox;
 
-        public static event Action<bool> onUseOldChanged;
-
         private void Start()
         {
             cursorCheckbox.isOn = PersistentDataManager.gameSettings.editorCursorEnable;
@@ -97,7 +95,7 @@ namespace HeavenStudio.Editor
         public void OnUseOldChanged()
         {
             PersistentDataManager.gameSettings.useOldGameEventSelectionSystem = useOldCheckbox.isOn;
-            onUseOldChanged?.Invoke(useOldCheckbox.isOn);
+            GridGameSelector.instance.SwitchGameSelectionType(useOldCheckbox.isOn);
         }
     }
 }

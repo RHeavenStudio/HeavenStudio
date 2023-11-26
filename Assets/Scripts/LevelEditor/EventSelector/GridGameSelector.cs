@@ -54,7 +54,6 @@ namespace HeavenStudio.Editor
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
             SelectedMinigame = EventCaller.instance.GetMinigame(fxActive[0].name);
             SwitchGameSelectionType(PersistentDataManager.gameSettings.useOldGameEventSelectionSystem);
-            EditorSettings.onUseOldChanged += SwitchGameSelectionType;
         }
 
         private void Update()
@@ -85,10 +84,6 @@ namespace HeavenStudio.Editor
 
                 //moved here so this updates dynamically with window scale
                 UpdateScrollPosition();
-            }
-            else
-            {
-
             }
         }
 
@@ -159,22 +154,19 @@ namespace HeavenStudio.Editor
 
             EventParameterManager.instance.Disable();
             gameOpen = true;
-            if (_usingOld) SelectGameOld(gameName, index);
-            else SelectGameNew(gameName, index);
+            if (_usingOld) SelectGameOld(index);
+            else SelectGameNew(index);
+            Editor.instance?.SetGameEventTitle($"Select game event for {SelectedMinigame.displayName.Replace("\n", "")}");
+            SelectedGameIcon = transform.Find(gameName).gameObject;
+            SelectedGameIcon.GetComponent<GridGameSelectorGame>().ClickIcon();
         }
 
-        private void SelectGameOld(string gameName, int index = 0)
+        private void SelectGameOld(int index = 0)
         {
             DestroyEvents();
             AddEvents(index);
-
-            SelectedGameIcon = transform.Find(gameName).gameObject;
-            SelectedGameIcon.GetComponent<GridGameSelectorGame>().ClickIcon();
-
             currentEventIndex = index;
             UpdateIndex(index, false);
-
-            Editor.instance?.SetGameEventTitle($"Select game event for {SelectedMinigame.displayName.Replace("\n", "")}");
         }
 
         private void AddEvents(int index = 0)
@@ -467,6 +459,7 @@ namespace HeavenStudio.Editor
         [Header("New Game Event Selection")]
         [SerializeField] private GameObject _newGameEventSelector;
         [SerializeField] private RectTransform _newEventsParent;
+        [SerializeField] private GameObject _newEventRef;
 
         private bool _usingOld = false;
 
@@ -476,7 +469,7 @@ namespace HeavenStudio.Editor
             if (!gameOpen) return;
             if (old)
             {
-                // destroy events here
+                NewDestroyEvents();
             }
             else
             {
@@ -485,9 +478,57 @@ namespace HeavenStudio.Editor
             SelectGame(SelectedMinigame.name);
         }
 
-        private void SelectGameNew(string gameName, int index)
+        private void SelectGameNew(int index)
         {
+            NewDestroyEvents();
+            NewAddEvents();
+        }
 
+        private void NewAddEvents(int index = 0)
+        {
+            if (!EventCaller.FXOnlyGames().Contains(SelectedMinigame))
+            {
+                NewGameSelectionEvent sg = Instantiate(_newEventRef, _newEventsParent).GetComponent<NewGameSelectionEvent>();
+                sg.SetText("Switch Game");
+                sg.gameObject.SetActive(true);
+                if (index == 0) sg.SetTextColor(EditorTheme.theme.properties.EventSelectedCol.Hex2RGB());
+            }
+            else
+            {
+                index++;
+                if (SelectedMinigame.name == "gameManager") index++;
+            }
+
+            for (var i = 0; i < SelectedMinigame.actions.Count; i++)
+            {
+                var action = SelectedMinigame.actions[i];
+                if (action.actionName == "switchGame" || action.hidden) continue;
+
+                NewGameSelectionEvent g = Instantiate(_newEventRef, _newEventsParent).GetComponent<NewGameSelectionEvent>();
+                g.SetText(action.displayName);
+
+                if (action.parameters != null && action.parameters.Count > 0)
+                    g.SetActiveGearIcon(true);
+
+                if (index - 1 == i)
+                    g.SetTextColor(EditorTheme.theme.properties.EventSelectedCol.Hex2RGB());
+
+                g.gameObject.SetActive(true);
+
+            }
+        }
+
+        private void NewDestroyEvents()
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                transform.GetChild(i).GetChild(0).gameObject.SetActive(false);
+            }
+
+            for (int i = 0; i < _newEventsParent.childCount; i++)
+            {
+                Destroy(_newEventsParent.GetChild(i).gameObject);
+            }
         }
 
         public void Disable()
@@ -498,7 +539,7 @@ namespace HeavenStudio.Editor
             }
             else
             {
-
+                NewDestroyEvents();
             }
             gameOpen = false;
         }
