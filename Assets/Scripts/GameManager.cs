@@ -50,7 +50,8 @@ namespace HeavenStudio
         private Minigame _currentMinigame;
         [NonSerialized] public bool autoplay;
         [NonSerialized] public bool canInput = true;
-        [NonSerialized] public RiqEntity currentSection, nextSection;
+        [NonSerialized] public RiqEntity lastSection, currentSection;
+        [NonSerialized] public double nextSectionBeat;
         public double SectionProgress { get; private set; }
 
         public bool GameHasSplitColours
@@ -70,7 +71,7 @@ namespace HeavenStudio
         List<RiqEntity> allGameSwitches;
 
         public event Action<double> onBeatChanged;
-        public event Action<RiqEntity> onSectionChange;
+        public event Action<RiqEntity, RiqEntity> onSectionChange;
         public event Action<double> onBeatPulse;
 
         public int BeatmapEntities()
@@ -331,7 +332,7 @@ namespace HeavenStudio
         public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, float weight = 1, bool doDisplay = true, int category = 0)
         {
             totalInputs += weight;
-            totalPlayerAccuracy += accuracy * weight;
+            totalPlayerAccuracy += Math.Pow(accuracy, weight);
 
             judgementInfo.inputs.Add(new JudgementManager.InputInfo
             {
@@ -356,6 +357,15 @@ namespace HeavenStudio
             // push the hit event to the timing display
             if (doDisplay)
                 TimingAccuracyDisplay.instance.MakeAccuracyVfx(time, late);
+        }
+
+        public void DoSectionCompletion(double beat, bool clear, string name, double score)
+        {
+            judgementInfo.medals.Add(new JudgementManager.MedalInfo
+            {
+                beat = beat,
+                cleared = clear
+            });
         }
 
         static bool StringStartsWith(string a, string b)
@@ -495,13 +505,17 @@ namespace HeavenStudio
                 if (cond.songPositionInBeatsAsDouble >= sectionBeats[currentSectionEvent])
                 {
                     Debug.Log("Section " + Beatmap.SectionMarkers[currentSectionEvent]["sectionName"] + " started");
-                    currentSection = Beatmap.SectionMarkers[currentSectionEvent];
+                    lastSection = currentSection;
+                    if (currentSectionEvent < Beatmap.SectionMarkers.Count)
+                        currentSection = Beatmap.SectionMarkers[currentSectionEvent];
+                    else
+                        currentSection = null;
                     currentSectionEvent++;
                     if (currentSectionEvent < Beatmap.SectionMarkers.Count)
-                        nextSection = Beatmap.SectionMarkers[currentSectionEvent];
+                        nextSectionBeat = Beatmap.SectionMarkers[currentSectionEvent].beat;
                     else
-                        nextSection = default(RiqEntity);
-                    onSectionChange?.Invoke(currentSection);
+                        nextSectionBeat = endBeat;
+                    onSectionChange?.Invoke(currentSection, lastSection);
                 }
             }
 
@@ -580,10 +594,7 @@ namespace HeavenStudio
             {
                 double currectSectionStart = cond.GetSongPosFromBeat(currentSection.beat);
 
-                if (nextSection == null)
-                    SectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(endBeat) - currectSectionStart);
-                else
-                    SectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(nextSection.beat) - currectSectionStart);
+                SectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(nextSectionBeat) - currectSectionStart);
             }
         }
 
@@ -676,31 +687,18 @@ namespace HeavenStudio
 
         public void Stop(double beat, bool restart = false, float restartDelay = 0f)
         {
+            // I feel like I should standardize the names
+            SkillStarManager.instance.KillStar();
+            TimingAccuracyDisplay.instance.StopStarFlash();
+            GoForAPerfect.instance.Disable();
+            SectionMedalsManager.instance.OnRemixEnd(endBeat, currentSection);
+
             Minigame miniGame = currentGameO.GetComponent<Minigame>();
             if (miniGame != null)
                 miniGame.OnStop(beat);
 
             Conductor.instance.Stop(beat);
             SetCurrentEventToClosest(beat);
-            //onBeatChanged?.Invoke(beat);
-
-            // I feel like I should standardize the names
-            SkillStarManager.instance.KillStar();
-            TimingAccuracyDisplay.instance.StopStarFlash();
-            GoForAPerfect.instance.Disable();
-            SectionMedalsManager.instance.OnRemixEnd();
-
-            // pass this data to rating screen + stats
-            // Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now:yyyy-MM-dd HH:mm:ss}) ==");
-            // Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
-            // Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100): 0.00}");
-            // Debug.Log($"Cleared {clearedSections.FindAll(c => c).Count} sections out of {Beatmap.SectionMarkers.Count}");
-            // if (SkillStarManager.instance.IsCollected)
-            //     Debug.Log($"Skill Star collected");
-            // else
-            //     Debug.Log($"Skill Star not collected");
-            // if (GoForAPerfect.instance.perfect)
-            //     Debug.Log($"Perfect Clear!");
 
             KillAllSounds();
             if (restart)
@@ -721,7 +719,12 @@ namespace HeavenStudio
             Application.backgroundLoadingPriority = ThreadPriority.Normal;
         }
 
-        private IEnumerator WaitReadyAndPlayCo(double beat)
+        public void SafePlay(double beat, float delay, bool discord)
+        {
+            StartCoroutine(WaitReadyAndPlayCo(beat, delay, discord));
+        }
+
+        private IEnumerator WaitReadyAndPlayCo(double beat, float delay = 1f, bool discord = true)
         {
             WaitUntil yieldOverlays = new WaitUntil(() => OverlaysManager.OverlaysReady);
             WaitUntil yieldBeatmap = new WaitUntil(() => Beatmap != null && Beatmap.Entities.Count > 0);
@@ -729,7 +732,7 @@ namespace HeavenStudio
 
             // wait for overlays to be ready
             yield return yieldOverlays;
-            // wait for first game to be loaded
+            // wait for beatmap to be loaded
             yield return yieldBeatmap;
             //wait for audio clip to be loaded
             yield return yieldAudio;
@@ -737,11 +740,14 @@ namespace HeavenStudio
             SkillStarManager.instance.KillStar();
             TimingAccuracyDisplay.instance.StopStarFlash();
             GoForAPerfect.instance.Disable();
-            SectionMedalsManager.instance?.OnRemixEnd();
+            SectionMedalsManager.instance?.Reset();
 
-            GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"].ToString(), false, true);
+            if (discord)
+            {
+                GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"].ToString(), false, true);
+            }
 
-            Play(beat, 1f);
+            Play(beat, delay);
             yield break;
         }
 
@@ -924,8 +930,8 @@ namespace HeavenStudio
                 }
             }
 
-            currentSection = default(RiqEntity);
-            nextSection = default(RiqEntity);
+            lastSection = null;
+            currentSection = null;
             if (Beatmap.SectionMarkers.Count > 0)
             {
                 currentSectionEvent = 0;
@@ -939,7 +945,7 @@ namespace HeavenStudio
                     currentSectionEvent = t;
                 }
             }
-            onSectionChange?.Invoke(currentSection);
+            onSectionChange?.Invoke(currentSection, lastSection);
 
             SeekAheadAndPreload(beat);
         }

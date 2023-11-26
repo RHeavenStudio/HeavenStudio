@@ -433,10 +433,10 @@ namespace HeavenStudio.Games
             return null;
         }
 
-        public void ScoreMiss(float weight = 1f)
+        public void ScoreMiss(float weight = 1f, int category = 0)
         {
             double beat = Conductor.instance?.songPositionInBeatsAsDouble ?? -1;
-            GameManager.instance.ScoreInputAccuracy(beat, 0, true, NgLateTime(), weight, false);
+            GameManager.instance.ScoreInputAccuracy(beat, 0, true, NgLateTime(), weight, false, category);
             if (weight > 0)
             {
                 GoForAPerfect.instance.Miss();

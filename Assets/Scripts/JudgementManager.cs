@@ -233,6 +233,19 @@ namespace HeavenStudio
             float h = Screen.height / 1080f;
             scaler.scaleFactor = Mathf.Min(w, h);
 
+            InputController currentController = PlayerInput.GetInputController(1);
+            if (currentController.GetLastButtonDown() > 0)
+            {
+                if (didRank)
+                {
+                    // start the sequence for epilogue
+                    GlobalGameManager.LoadScene("Title", 0.35f, 0.5f);
+                }
+                else if (barStarted)
+                {
+                    barTime = Time.time - barStartTime;
+                }
+            }
             if (barStarted)
             {
                 float t = Time.time - barStartTime;
@@ -286,14 +299,6 @@ namespace HeavenStudio
                 }
             }
 
-            if (didRank)
-            {
-                InputController currentController = PlayerInput.GetInputController(1);
-                if (currentController.GetLastButtonDown() > 0)
-                {
-                    GlobalGameManager.LoadScene("Title", 0.35f, 0.5f);
-                }
-            }
         }
     }
 }
