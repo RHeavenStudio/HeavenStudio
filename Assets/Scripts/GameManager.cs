@@ -120,6 +120,8 @@ namespace HeavenStudio
             }
         }
 
+        JudgementManager.JudgementInfo judgementInfo;
+
         private void Awake()
         {
             // autoplay = true;
@@ -326,10 +328,19 @@ namespace HeavenStudio
             }
         }
 
-        public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, double weight = 1, bool doDisplay = true, int category = 0)
+        public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, float weight = 1, bool doDisplay = true, int category = 0)
         {
             totalInputs += weight;
             totalPlayerAccuracy += accuracy * weight;
+
+            judgementInfo.inputs.Add(new JudgementManager.InputInfo
+            {
+                beat = beat,
+                accuracyState = accuracy,
+                timeOffset = time,
+                weight = weight,
+                category = category
+            });
 
             if (accuracy < Minigame.rankOkThreshold && weight > 0)
             {
@@ -615,6 +626,12 @@ namespace HeavenStudio
 
                 SectionMedalsManager.instance.Reset();
                 clearedSections.Clear();
+
+                judgementInfo = new JudgementManager.JudgementInfo
+                {
+                    inputs = new List<JudgementManager.InputInfo>(),
+                    medals = new List<JudgementManager.MedalInfo>()
+                };
             }
 
             StartCoroutine(PlayCo(beat, delay));
@@ -674,16 +691,16 @@ namespace HeavenStudio
             SectionMedalsManager.instance.OnRemixEnd();
 
             // pass this data to rating screen + stats
-            Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now:yyyy-MM-dd HH:mm:ss}) ==");
-            Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
-            Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100): 0.00}");
-            Debug.Log($"Cleared {clearedSections.FindAll(c => c).Count} sections out of {Beatmap.SectionMarkers.Count}");
-            if (SkillStarManager.instance.IsCollected)
-                Debug.Log($"Skill Star collected");
-            else
-                Debug.Log($"Skill Star not collected");
-            if (GoForAPerfect.instance.perfect)
-                Debug.Log($"Perfect Clear!");
+            // Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now:yyyy-MM-dd HH:mm:ss}) ==");
+            // Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
+            // Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100): 0.00}");
+            // Debug.Log($"Cleared {clearedSections.FindAll(c => c).Count} sections out of {Beatmap.SectionMarkers.Count}");
+            // if (SkillStarManager.instance.IsCollected)
+            //     Debug.Log($"Skill Star collected");
+            // else
+            //     Debug.Log($"Skill Star not collected");
+            // if (GoForAPerfect.instance.perfect)
+            //     Debug.Log($"Perfect Clear!");
 
             KillAllSounds();
             if (restart)
@@ -692,8 +709,13 @@ namespace HeavenStudio
             }
             else if (playMode)
             {
-                // when rating screen gets added playOnStart will instead move to that scene
-                GlobalGameManager.LoadScene("Title", 0.35f, 0.5f);
+                judgementInfo.finalScore = (float)PlayerAccuracy;
+                judgementInfo.star = skillStarCollected;
+                judgementInfo.perfect = GoForAPerfect.instance.perfect;
+                judgementInfo.time = DateTime.Now;
+
+                JudgementManager.SetPlayInfo(judgementInfo, Beatmap);
+                GlobalGameManager.LoadScene("Judgement", 0.35f, 0f);
                 CircleCursor.LockCursor(false);
             }
             Application.backgroundLoadingPriority = ThreadPriority.Normal;

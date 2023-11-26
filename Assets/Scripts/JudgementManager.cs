@@ -8,6 +8,7 @@ using TMPro;
 using Jukebox;
 using UnityEngine.Playables;
 using HeavenStudio.Games;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio
 {
@@ -108,10 +109,10 @@ namespace HeavenStudio
 
             // temp
             twoMessage = true;
-            judgementInfo = new()
-            {
-                finalScore = 0.79,
-            };
+            // judgementInfo = new()
+            // {
+            //     finalScore = 0.79,
+            // };
             header.text = "Rhythm League Notes";
             // end temp
 
@@ -185,6 +186,7 @@ namespace HeavenStudio
                 rankAnim.Play("Hi");
                 audioSource.PlayOneShot(rankHi);
             }
+            didRank = true;
         }
 
         public void StartRankMusic()
@@ -281,6 +283,15 @@ namespace HeavenStudio
                         barText.color = numColourHi;
                         barSlider.fillRect.GetComponent<Image>().color = barColourHi;
                     }
+                }
+            }
+
+            if (didRank)
+            {
+                InputController currentController = PlayerInput.GetInputController(1);
+                if (currentController.GetLastButtonDown() > 0)
+                {
+                    GlobalGameManager.LoadScene("Title", 0.35f, 0.5f);
                 }
             }
         }

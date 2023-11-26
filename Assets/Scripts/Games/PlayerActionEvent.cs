@@ -343,7 +343,7 @@ namespace HeavenStudio.Games
 
             if (countsForAccuracy && !(noAutoplay || autoplayOnly))
             {
-                GameManager.instance.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, 1.0, false);
+                GameManager.instance.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, 1, false);
                 GoForAPerfect.instance.Miss();
                 SectionMedalsManager.instance.MakeIneligible();
             }

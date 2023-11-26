@@ -209,6 +209,7 @@ namespace HeavenStudio
         // The GameManager allows you to Input
         public static bool PlayerHasControl()
         {
+            if (GameManager.instance == null || Conductor.instance == null) return true;
             return !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
 
