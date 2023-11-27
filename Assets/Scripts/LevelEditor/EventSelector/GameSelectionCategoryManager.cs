@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HeavenStudio.Editor
 {
@@ -18,12 +19,20 @@ namespace HeavenStudio.Editor
 
         [NonSerialized] public bool NoHover = false;
 
+        private RectTransform _rectTransform;
+
+        private void Awake()
+        {
+            _rectTransform = GetComponent<RectTransform>();
+        }
+
         public void StartCategories(List<Minigames.GameAction> actions, string gameName)
         {
             NoHover = false;
             string lastHeader = string.Empty;
             GameSelectionCategory lastHeaderObject = null;
             float currentY = _categoryRef.transform.localPosition.y;
+            
 
             // eventually add the switch games here
 
@@ -62,6 +71,18 @@ namespace HeavenStudio.Editor
 
                 lastHeaderObject.AddEvent(action);
             }
+
+            Canvas.ForceUpdateCanvases();
+
+            float sizeY = 0;
+
+            for (int i = 0; i < _categories.Count; i++)
+            {
+                if (!_categories[i].HeaderIsActive()) sizeY -= _headerOffset;
+                sizeY -= _spacing - _categories[i].GetComponent<RectTransform>().rect.height;
+            }
+
+            _rectTransform.sizeDelta = new Vector3(0, sizeY, 0);
         }
 
         public void UpdateCategoryPositions()

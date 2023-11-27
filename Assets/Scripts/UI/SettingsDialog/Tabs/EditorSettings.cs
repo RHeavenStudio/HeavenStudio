@@ -13,14 +13,14 @@ namespace HeavenStudio.Editor
         public Toggle discordRPCCheckbox;
         public Button editorScaleDecre, editorScaleIncre;
         public Toggle scaleWSS;
-        [SerializeField] private Toggle useOldCheckbox;
+        [SerializeField] private TMP_Dropdown useOldDropDown;
 
         private void Start()
         {
             cursorCheckbox.isOn = PersistentDataManager.gameSettings.editorCursorEnable;
             discordRPCCheckbox.isOn = PersistentDataManager.gameSettings.discordRPCEnable;
             scaleWSS.isOn = PersistentDataManager.gameSettings.scaleWScreenSize;
-            useOldCheckbox.isOn = PersistentDataManager.gameSettings.useOldGameEventSelectionSystem;
+            useOldDropDown.value = PersistentDataManager.gameSettings.useOldGameEventSelectionSystem ? 1 : 0;
 
 
             SetDecreIncreInteractable();
@@ -94,8 +94,8 @@ namespace HeavenStudio.Editor
 
         public void OnUseOldChanged()
         {
-            PersistentDataManager.gameSettings.useOldGameEventSelectionSystem = useOldCheckbox.isOn;
-            GridGameSelector.instance.SwitchGameSelectionType(useOldCheckbox.isOn);
+            PersistentDataManager.gameSettings.useOldGameEventSelectionSystem = useOldDropDown.value == 1;
+            GridGameSelector.instance.SwitchGameSelectionType(useOldDropDown.value == 1);
         }
     }
 }
