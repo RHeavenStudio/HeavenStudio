@@ -481,10 +481,11 @@ namespace HeavenStudio
             if (!Conductor.instance.isPlaying)
                 return;
             Conductor cond = Conductor.instance;
+            double beat = Math.Max(cond.songPositionInBeatsAsDouble, 0);
 
             if (currentTempoEvent < Beatmap.TempoChanges.Count && currentTempoEvent >= 0)
             {
-                if (cond.songPositionInBeatsAsDouble >= tempoBeats[currentTempoEvent])
+                if (beat >= tempoBeats[currentTempoEvent])
                 {
                     cond.SetBpm(Beatmap.TempoChanges[currentTempoEvent]["tempo"]);
                     currentTempoEvent++;
@@ -493,7 +494,7 @@ namespace HeavenStudio
 
             if (currentVolumeEvent < Beatmap.VolumeChanges.Count && currentVolumeEvent >= 0)
             {
-                if (cond.songPositionInBeatsAsDouble >= volumeBeats[currentVolumeEvent])
+                if (beat >= volumeBeats[currentVolumeEvent])
                 {
                     cond.SetVolume(Beatmap.VolumeChanges[currentVolumeEvent]["volume"]);
                     currentVolumeEvent++;
@@ -502,7 +503,7 @@ namespace HeavenStudio
 
             if (currentSectionEvent < Beatmap.SectionMarkers.Count && currentSectionEvent >= 0)
             {
-                if (cond.songPositionInBeatsAsDouble >= sectionBeats[currentSectionEvent])
+                if (beat >= sectionBeats[currentSectionEvent])
                 {
                     Debug.Log("Section " + Beatmap.SectionMarkers[currentSectionEvent]["sectionName"] + " started");
                     lastSection = currentSection;
@@ -519,7 +520,7 @@ namespace HeavenStudio
                 }
             }
 
-            if (cond.songPositionInBeatsAsDouble >= Math.Ceiling(_playStartBeat) + _pulseTally)
+            if (beat >= Math.Ceiling(_playStartBeat) + _pulseTally)
             {
                 if (_currentMinigame != null) _currentMinigame.OnBeatPulse(Math.Ceiling(_playStartBeat) + _pulseTally);
                 onBeatPulse?.Invoke(Math.Ceiling(_playStartBeat) + _pulseTally);
@@ -528,12 +529,12 @@ namespace HeavenStudio
 
             float seekTime = 8f;
             //seek ahead to preload games that have assetbundles
-            SeekAheadAndPreload(cond.songPositionInBeatsAsDouble, seekTime);
-            SeekAheadAndDoPreEvent(cond.songPositionInBeatsAsDouble);
+            SeekAheadAndPreload(beat, seekTime);
+            SeekAheadAndDoPreEvent(beat);
 
             if (currentEvent < Beatmap.Entities.Count && currentEvent >= 0)
             {
-                if (cond.songPositionInBeatsAsDouble >= eventBeats[currentEvent])
+                if (beat >= eventBeats[currentEvent])
                 {
                     List<RiqEntity> entitiesAtSameBeat = ListPool<RiqEntity>.Get();
                     List<RiqEntity> fxEntities = ListPool<RiqEntity>.Get();
@@ -975,7 +976,7 @@ namespace HeavenStudio
             if (miniGame != null)
                 miniGame.OnGameSwitch(beat);
 
-            while (beat + 0.25 > Conductor.instance.songPositionInBeats)
+            while (beat + 0.25 > Math.Max(Conductor.instance.songPositionInBeatsAsDouble, 0))
             {
                 if (!Conductor.instance.isPlaying)
                 {

@@ -57,6 +57,7 @@ namespace HeavenStudio.Common
             isPaused = true;
             canPick = false;
             optionSelected = 0;
+            ChooseOption((Options)optionSelected, false);
         }
 
         void UnPause(bool instant = false)

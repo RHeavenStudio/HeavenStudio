@@ -444,30 +444,25 @@ namespace HeavenStudio
             return result;
         }
 
-        public float GetLoopPositionFromBeat(float beatOffset, float length)
+        public float GetLoopPositionFromBeat(float beatOffset, float length, bool beatClamp = true)
         {
-            return Mathf.Repeat((songPositionInBeats / length) + beatOffset, 1);
+            float beat = songPositionInBeats;
+            if (beatClamp)
+            {
+                beat = Mathf.Max(beat, 0);
+            }
+            return Mathf.Repeat((beat / length) + beatOffset, 1);
         }
 
-        public float GetPositionFromBeat(double startBeat, double length)
+        public float GetPositionFromBeat(double startBeat, double length, bool beatClamp = true)
         {
-            float a = Mathp.Normalize(songPositionInBeats, (float)startBeat, (float)(startBeat + length));
+            float beat = songPositionInBeats;
+            if (beatClamp)
+            {
+                beat = Mathf.Max(beat, 0);
+            }
+            float a = Mathp.Normalize(beat, (float)startBeat, (float)(startBeat + length));
             return a;
-        }
-
-        public float GetBeatFromPosition(float position, float startBeat, float length)
-        {
-            return Mathp.DeNormalize(position, (float)startBeat, (float)(startBeat + length));
-        }
-
-        public float GetPositionFromMargin(float targetBeat, float margin)
-        {
-            return GetPositionFromBeat(targetBeat - margin, margin);
-        }
-
-        public float GetBeatFromPositionAndMargin(float position, float targetBeat, float margin)
-        {
-            return GetBeatFromPosition(position, targetBeat - margin, margin);
         }
 
         private List<RiqEntity> GetSortedTempoChanges()
