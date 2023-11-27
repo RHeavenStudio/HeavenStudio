@@ -11,9 +11,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private NewGameSelectionEvent _gameSelectionEventRef;
         [SerializeField] private GameObject _headerObject;
         [SerializeField] private TMP_Text _headerText;
-        [SerializeField] private Image _collapseImage;
-        [SerializeField] private Sprite _openSprite;
-        [SerializeField] private Sprite _closedSprite;
+        [SerializeField] private RectTransform _collapseImageTrans;
 
         private bool _isOpen = true;
 
@@ -54,7 +52,7 @@ namespace HeavenStudio.Editor
         {
             _isOpen = !_isOpen;
 
-            _collapseImage.sprite = _isOpen ? _openSprite : _closedSprite;
+            _collapseImageTrans.localEulerAngles = new Vector3(0, 0, _isOpen ? -90 : 0);
 
             foreach (var e in _gameSelectionEventList)
             {
