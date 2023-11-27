@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8600000, guid: 7772de3e46eb44448b1d178755b3e627, type: 2}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -138,7 +138,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 1024
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8600000, guid: fc18082ae04938247a9aef9892d1ae5b, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -382,7 +382,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8600000, guid: 7772de3e46eb44448b1d178755b3e627, type: 2}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -997,9 +997,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoundSequences: []
-  EligibleHits: []
   scheduledInputs: []
-  firstEnable: 0
   currentBGOnColor: {r: 0.9411765, g: 0.2, b: 0.5529412, a: 0}
   currentBGOffColor: {r: 0.6039216, g: 0.15294118, b: 0.3764706, a: 0}
   stepswitcherPlayer: {fileID: 5548089329135658778}
@@ -1031,10 +1029,16 @@ MonoBehaviour:
   - {fileID: 4532798257539804896}
   - {fileID: 3262450115413950937}
   - {fileID: 1533188956834819093}
-  renderTextures:
-  - {fileID: 8600000, guid: 6db82951191c9bb4a9433416ec4b8acd, type: 2}
-  - {fileID: 8600000, guid: fc18082ae04938247a9aef9892d1ae5b, type: 2}
-  - {fileID: 8600000, guid: 7772de3e46eb44448b1d178755b3e627, type: 2}
+  rtSize: {x: 1024, y: 1860}
+  cameraNear1: {fileID: 4375666065977025420}
+  cameraNear2: {fileID: 5999766133995784627}
+  cameraDV: {fileID: 1430771648366705456}
+  topT: {fileID: 828408474045052941}
+  topN: {fileID: 734131896781435878}
+  bottomL: {fileID: 5608916635847886312}
+  bottomC: {fileID: 4640860822531792563}
+  bottomR: {fileID: 1412824496340258240}
+  bottomN: {fileID: 2902868773272670157}
   background: {fileID: 6381378020296668381}
   stepperMaterial: {fileID: 2100000, guid: 471c4a2ed0684d24d9abb5c5aeffc0c4, type: 2}
 --- !u!1 &3794864692894715104
@@ -1988,7 +1992,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 1024
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8600000, guid: 6db82951191c9bb4a9433416ec4b8acd, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -2401,7 +2405,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8600000, guid: fc18082ae04938247a9aef9892d1ae5b, type: 2}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -2924,7 +2928,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 3072
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8600000, guid: 7772de3e46eb44448b1d178755b3e627, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -3242,7 +3246,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8600000, guid: 7772de3e46eb44448b1d178755b3e627, type: 2}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -3399,7 +3403,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8600000, guid: 7772de3e46eb44448b1d178755b3e627, type: 2}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -3578,7 +3582,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8600000, guid: 6db82951191c9bb4a9433416ec4b8acd, type: 2}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
