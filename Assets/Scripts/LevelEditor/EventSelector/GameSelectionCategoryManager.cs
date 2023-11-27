@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,8 +16,11 @@ namespace HeavenStudio.Editor
 
         private List<GameSelectionCategory> _categories = new();
 
+        [NonSerialized] public bool NoHover = false;
+
         public void StartCategories(List<Minigames.GameAction> actions, string gameName)
         {
+            NoHover = false;
             string lastHeader = string.Empty;
             GameSelectionCategory lastHeaderObject = null;
             float currentY = _categoryRef.transform.localPosition.y;

@@ -24,6 +24,12 @@ namespace HeavenStudio.Editor
             _manager = manager;
         }
 
+        public bool NoHover
+        {
+            get => _manager.NoHover;
+            set => _manager.NoHover = value;
+        }
+
         public void SetHeaderText(string text)
         {
             _headerText.text = text;
@@ -45,6 +51,7 @@ namespace HeavenStudio.Editor
             spawnedEvent.SetText(action.displayName);
             spawnedEvent.SetActiveGearIcon(action.parameters != null && action.parameters.Count > 0);
             spawnedEvent.gameObject.SetActive(true);
+            spawnedEvent.SetCategory(this);
             _gameSelectionEventList.Add(spawnedEvent);
         }
 
