@@ -94,7 +94,7 @@ namespace HeavenStudio.Editor
                 _categories[i].transform.localPosition = new Vector3(_categories[i].transform.localPosition.x, currentY);
 
                 Canvas.ForceUpdateCanvases();
-                currentY += _spacing - _categories[i].GetComponent<RectTransform>().rect.height;
+                currentY -= _spacing + _categories[i].GetComponent<RectTransform>().rect.height;
             }
         }
 
