@@ -46,7 +46,7 @@ namespace HeavenStudio.Editor
                     if ((i != 0 && gameName != "gameManager") || (gameName == "gameManager" && i != 1))
                     {
                         Canvas.ForceUpdateCanvases();
-                        currentY += _spacing - lastHeaderObject.GetComponent<RectTransform>().rect.height;
+                        currentY -= _spacing + lastHeaderObject.GetComponent<RectTransform>().rect.height;
                     }
 
                     lastHeader = action.categoryName;
@@ -79,7 +79,7 @@ namespace HeavenStudio.Editor
             for (int i = 0; i < _categories.Count; i++)
             {
                 if (!_categories[i].HeaderIsActive()) sizeY -= _headerOffset;
-                sizeY -= _spacing - _categories[i].GetComponent<RectTransform>().rect.height;
+                sizeY += _spacing + _categories[i].GetComponent<RectTransform>().rect.height;
             }
 
             _rectTransform.sizeDelta = new Vector3(0, sizeY, 0);

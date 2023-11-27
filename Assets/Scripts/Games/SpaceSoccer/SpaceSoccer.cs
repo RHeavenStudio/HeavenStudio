@@ -28,10 +28,6 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("high kick-toe!", "High Kick-Toe!")
                 {
                     defaultLength = 3f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("swing", new EntityTypes.Float(0, 1, 0.5f), "Swing", "The amount of swing")
-                    }
                 },
                 new GameAction("npc kickers enter or exit", "NPC Kickers Enter or Exit")
                 {

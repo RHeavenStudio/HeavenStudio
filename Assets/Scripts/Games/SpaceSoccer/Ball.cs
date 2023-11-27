@@ -22,7 +22,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public double startBeat;
         public State state;
         public double nextAnimBeat;
-        public float highKickSwing = 0f;
         private float lastSpriteRot;
         public bool canKick;
         public bool waitKickRelease;
@@ -81,10 +80,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 }
                 else
                 {
-                    highKickSwing = highKicks[i]["swing"];
-                    if (highKickSwing == 0f)
-                        highKickSwing = 0.5f;
-
                     if (highKicks[i].beat + GetAnimLength(State.HighKicked) > currentBeat)
                     {
                         //Debug.Log("Setting state to high kick");
@@ -272,9 +267,9 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 case State.Kicked:
                     return 1f;
                 case State.HighKicked:
-                    return 2f - highKickSwing;
+                    return 1.5f;
                 case State.Toe:
-                    return 2f - (1f - highKickSwing);
+                    return 1.5f;
                 default:
                     Debug.LogError("Ball has invalid state. State number: " + (int)anim);
                     return 0f;
