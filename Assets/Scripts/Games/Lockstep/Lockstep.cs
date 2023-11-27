@@ -245,6 +245,14 @@ namespace HeavenStudio.Games
             bachEvents = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "bach" });
         }
 
+        void OnDestroy()
+        {
+            foreach (var rt in renderTextures)
+            {
+                rt.Release();
+            }
+        }
+
         private static bool ForceStepOnBeat(double beat)
         {
             return EventCaller.GetAllInGameManagerList("lockstep", new string[] { "marching" }).Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
