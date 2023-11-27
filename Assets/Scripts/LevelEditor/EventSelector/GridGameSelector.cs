@@ -474,6 +474,8 @@ namespace HeavenStudio.Editor
             {
                 DestroyEvents();
             }
+            GameEventSelector.SetActive(_usingOld && gameOpen);
+            _newGameEventSelector.SetActive(!_usingOld && gameOpen);
             SelectGame(SelectedMinigame.name);
         }
 
