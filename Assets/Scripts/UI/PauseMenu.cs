@@ -226,8 +226,8 @@ namespace HeavenStudio.Common
         void OnRestart()
         {
             UnPause(true);
-            GlobalGameManager.ForceFade(0, 1f, 0.5f);
-            GameManager.instance.Stop(0, true, 1.5f);
+            GlobalGameManager.ForceFade(0, 0f, -1f);
+            GameManager.instance.Stop(0, true, 1f);
             SoundByte.PlayOneShot("ui/UIEnter");
         }
 

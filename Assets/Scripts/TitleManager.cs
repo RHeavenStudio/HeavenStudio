@@ -220,6 +220,7 @@ namespace HeavenStudio
                     chartDescText.text = beatmap["remixdesc"];
 
                     playPanel.SetActive(true);
+                    SoundByte.PlayOneShot("ui/UISelect");
                 }
                 catch (System.Exception e)
                 {
@@ -234,7 +235,7 @@ namespace HeavenStudio
         public void PlayPanelAccept()
         {
             SoundByte.PlayOneShot("ui/UIEnter");
-            GlobalGameManager.LoadScene("Game", 0.35f, 0.5f);
+            GlobalGameManager.LoadScene("Game", 0.35f, -1);
         }
 
         public void PlayPanelBack()

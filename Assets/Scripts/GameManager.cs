@@ -191,7 +191,7 @@ namespace HeavenStudio
 
             if (playMode)
             {
-                StartCoroutine(WaitReadyAndPlayCo(startBeat));
+                StartCoroutine(WaitReadyAndPlayCo(startBeat, 1f));
             }
         }
 
@@ -331,17 +331,20 @@ namespace HeavenStudio
 
         public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, float weight = 1, bool doDisplay = true, int category = 0)
         {
-            totalInputs += weight;
-            totalPlayerAccuracy += Math.Pow(accuracy, weight);
-
-            judgementInfo.inputs.Add(new JudgementManager.InputInfo
+            if (weight > 0)
             {
-                beat = beat,
-                accuracyState = accuracy,
-                timeOffset = time,
-                weight = weight,
-                category = category
-            });
+                totalInputs += weight;
+                totalPlayerAccuracy += Math.Abs(accuracy) * weight;
+
+                judgementInfo.inputs.Add(new JudgementManager.InputInfo
+                {
+                    beat = beat,
+                    accuracyState = accuracy,
+                    timeOffset = time,
+                    weight = weight,
+                    category = category
+                });
+            }
 
             if (accuracy < Minigame.rankOkThreshold && weight > 0)
             {
@@ -644,6 +647,11 @@ namespace HeavenStudio
                     inputs = new List<JudgementManager.InputInfo>(),
                     medals = new List<JudgementManager.MedalInfo>()
                 };
+
+                if (playMode && delay > 0)
+                {
+                    GlobalGameManager.ForceFade(0, delay * 0.5f, delay * 0.5f);
+                }
             }
 
             StartCoroutine(PlayCo(beat, delay));

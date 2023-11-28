@@ -165,15 +165,29 @@ namespace HeavenStudio
             instance.fadeImage.DOKill();
             instance.loadingText.enabled = false;
             memPanel.SetActive(false);
-            instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
+            if (fadeOut < 0)
             {
+            }
+            else if (fadeOut == 0)
+            {
+                instance.fadeImage.color = new Color(0, 0, 0, 0);
                 instance.fadeImage.gameObject.SetActive(false);
-            });
+            }
+            else
+            {
+                instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
+                {
+                    instance.fadeImage.gameObject.SetActive(false);
+                });
+            }
         }
 
         IEnumerator ForceFadeAsync(float hold, float fadeOut)
         {
-            yield return new WaitForSeconds(hold);
+            if (hold > 0)
+            {
+                yield return new WaitForSeconds(hold);
+            }
             instance.fadeImage.DOKill();
             instance.loadingText.enabled = false;
             memPanel.SetActive(false);
@@ -246,13 +260,29 @@ namespace HeavenStudio
         {
             instance.fadeImage.DOKill();
             instance.fadeImage.gameObject.SetActive(true);
-            instance.fadeImage.color = new Color(0, 0, 0, 0);
             instance.loadingText.enabled = false;
             instance.memPanel.SetActive(false);
-            instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+            if (fadeIn > 0)
             {
-                instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
-            });
+                instance.fadeImage.color = new Color(0, 0, 0, 0);
+                instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+                {
+                    instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
+                });
+            }
+            else
+            {
+                if (hold > 0 || fadeOut >= 0)
+                {
+                    instance.fadeImage.color = new Color(0, 0, 0, 1);
+                    instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
+                }
+                else
+                {
+                    instance.fadeImage.color = new Color(0, 0, 0, 1);
+                    instance.fadeImage.gameObject.SetActive(true);
+                }
+            }
         }
 
         public static void ShowErrorMessage(string header, string message)
