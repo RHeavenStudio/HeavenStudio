@@ -320,6 +320,7 @@ namespace HeavenStudio.Games
             {
                 stepper.sprite = masterSprite;
             }
+            Canvas.ForceUpdateCanvases();
         }
 
         void PlayStepperAnim(string animName, bool player, float timescale = 1f, float startpos = 0f, int layer = -1)
