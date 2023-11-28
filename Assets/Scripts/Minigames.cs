@@ -151,96 +151,99 @@ namespace HeavenStudio
             Minigames.Minigame game;
             Minigames.GameAction action;
             System.Type type, pType;
-            foreach (var e in data.entities)
+            if (EventCaller.instance != null)
             {
-                var gameName = e.datamodel.Split(0);
-                var actionName = e.datamodel.Split(1);
-                game = EventCaller.instance.GetMinigame(gameName);
-                if (game == null)
+                foreach (var e in data.entities)
                 {
-                    Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
-                    game = new Minigames.Minigame(gameName, gameName.DisplayName() + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
-                    EventCaller.instance.minigames.Add(game);
-                    if (Editor.Editor.instance != null)
-                        Editor.Editor.instance.AddIcon(game);
-                }
-                action = EventCaller.instance.GetGameAction(game, actionName);
-                if (action == null)
-                {
-                    Debug.LogWarning($"Unknown action {gameName}/{actionName} found in remix.json! Adding action...");
-                    var parameters = new List<Minigames.Param>();
-                    foreach (var item in e.dynamicData)
+                    var gameName = e.datamodel.Split(0);
+                    var actionName = e.datamodel.Split(1);
+                    game = EventCaller.instance.GetMinigame(gameName);
+                    if (game == null)
                     {
-                        Debug.Log($"k: {item.Key}, v: {item.Value}");
-                        if (item.Key == "track")
-                            continue;
-                        if (item.Value == null)
-                            continue;
-                        var value = item.Value;
-                        if (value.GetType() == typeof(long))
-                            value = new EntityTypes.Integer(int.MinValue, int.MaxValue, (int)value);
-                        else if (value.GetType() == typeof(double))
-                            value = new EntityTypes.Float(float.NegativeInfinity, float.PositiveInfinity, (float)value);
-                        parameters.Add(new Minigames.Param(item.Key, value, item.Key.DisplayName(), "[inferred from remix.json]"));
+                        Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
+                        game = new Minigames.Minigame(gameName, gameName.DisplayName() + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
+                        EventCaller.instance.minigames.Add(game);
+                        if (Editor.Editor.instance != null)
+                            Editor.Editor.instance.AddIcon(game);
                     }
-                    action = new Minigames.GameAction(actionName, actionName.DisplayName(), e.length, true, parameters);
-                    game.actions.Add(action);
-                }
-
-                //check each param of the action
-                if (action.parameters != null)
-                {
-                    foreach (var param in action.parameters)
+                    action = EventCaller.instance.GetGameAction(game, actionName);
+                    if (action == null)
                     {
-                        type = param.parameter.GetType();
-                        //add property if it doesn't exist
-                        if (!e.dynamicData.ContainsKey(param.propertyName))
+                        Debug.LogWarning($"Unknown action {gameName}/{actionName} found in remix.json! Adding action...");
+                        var parameters = new List<Minigames.Param>();
+                        foreach (var item in e.dynamicData)
                         {
-                            Debug.LogWarning($"Property {param.propertyName} does not exist in the entity's dynamic data! Adding...");
-                            if (type == typeof(EntityTypes.Integer))
-                                e.dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
-                            else if (type == typeof(EntityTypes.Float))
-                                e.dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
-                            else if (type.IsEnum)
-                                e.dynamicData.Add(param.propertyName, (int)param.parameter);
-                            else
-                                e.dynamicData.Add(param.propertyName, Convert.ChangeType(param.parameter, type));
-                            continue;
+                            Debug.Log($"k: {item.Key}, v: {item.Value}");
+                            if (item.Key == "track")
+                                continue;
+                            if (item.Value == null)
+                                continue;
+                            var value = item.Value;
+                            if (value.GetType() == typeof(long))
+                                value = new EntityTypes.Integer(int.MinValue, int.MaxValue, (int)value);
+                            else if (value.GetType() == typeof(double))
+                                value = new EntityTypes.Float(float.NegativeInfinity, float.PositiveInfinity, (float)value);
+                            parameters.Add(new Minigames.Param(item.Key, value, item.Key.DisplayName(), "[inferred from remix.json]"));
                         }
-                        pType = e[param.propertyName].GetType();
-                        if (pType != type)
+                        action = new Minigames.GameAction(actionName, actionName.DisplayName(), e.length, true, parameters);
+                        game.actions.Add(action);
+                    }
+
+                    //check each param of the action
+                    if (action.parameters != null)
+                    {
+                        foreach (var param in action.parameters)
                         {
-                            try
+                            type = param.parameter.GetType();
+                            //add property if it doesn't exist
+                            if (!e.dynamicData.ContainsKey(param.propertyName))
                             {
+                                Debug.LogWarning($"Property {param.propertyName} does not exist in the entity's dynamic data! Adding...");
                                 if (type == typeof(EntityTypes.Integer))
-                                    e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                    e.dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
                                 else if (type == typeof(EntityTypes.Float))
-                                    e.dynamicData[param.propertyName] = (float)e[param.propertyName];
+                                    e.dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
                                 else if (type.IsEnum)
-                                {
-                                    if (pType == typeof(string))
-                                        e.dynamicData[param.propertyName] = (int)Enum.Parse(type, (string)e[param.propertyName]);
-                                    else
-                                        e.dynamicData[param.propertyName] = (int)e[param.propertyName];
-                                }
-                                else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
-                                    e.dynamicData[param.propertyName] = e[param.propertyName].ToObject(type);
+                                    e.dynamicData.Add(param.propertyName, (int)param.parameter);
                                 else
-                                    e.dynamicData[param.propertyName] = Convert.ChangeType(e[param.propertyName], type);
+                                    e.dynamicData.Add(param.propertyName, Convert.ChangeType(param.parameter, type));
+                                continue;
                             }
-                            catch
+                            pType = e[param.propertyName].GetType();
+                            if (pType != type)
                             {
-                                Debug.LogWarning($"Could not convert {param.propertyName} to {type}! Using default value...");
-                                // GlobalGameManager.ShowErrorMessage("Warning", $"Could not convert {e.datamodel}/{param.propertyName} to {type}! This will be loaded using the default value, so chart may be unstable.");
-                                // use default value
-                                if (type == typeof(EntityTypes.Integer))
-                                    e.dynamicData[param.propertyName] = ((EntityTypes.Integer)param.parameter).val;
-                                else if (type == typeof(EntityTypes.Float))
-                                    e.dynamicData[param.propertyName] = ((EntityTypes.Float)param.parameter).val;
-                                else if (type.IsEnum && param.propertyName != "ease")
-                                    e.dynamicData[param.propertyName] = (int)param.parameter;
-                                else
-                                    e.dynamicData[param.propertyName] = Convert.ChangeType(param.parameter, type);
+                                try
+                                {
+                                    if (type == typeof(EntityTypes.Integer))
+                                        e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                    else if (type == typeof(EntityTypes.Float))
+                                        e.dynamicData[param.propertyName] = (float)e[param.propertyName];
+                                    else if (type.IsEnum)
+                                    {
+                                        if (pType == typeof(string))
+                                            e.dynamicData[param.propertyName] = (int)Enum.Parse(type, (string)e[param.propertyName]);
+                                        else
+                                            e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                    }
+                                    else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
+                                        e.dynamicData[param.propertyName] = e[param.propertyName].ToObject(type);
+                                    else
+                                        e.dynamicData[param.propertyName] = Convert.ChangeType(e[param.propertyName], type);
+                                }
+                                catch
+                                {
+                                    Debug.LogWarning($"Could not convert {param.propertyName} to {type}! Using default value...");
+                                    // GlobalGameManager.ShowErrorMessage("Warning", $"Could not convert {e.datamodel}/{param.propertyName} to {type}! This will be loaded using the default value, so chart may be unstable.");
+                                    // use default value
+                                    if (type == typeof(EntityTypes.Integer))
+                                        e.dynamicData[param.propertyName] = ((EntityTypes.Integer)param.parameter).val;
+                                    else if (type == typeof(EntityTypes.Float))
+                                        e.dynamicData[param.propertyName] = ((EntityTypes.Float)param.parameter).val;
+                                    else if (type.IsEnum && param.propertyName != "ease")
+                                        e.dynamicData[param.propertyName] = (int)param.parameter;
+                                    else
+                                        e.dynamicData[param.propertyName] = Convert.ChangeType(param.parameter, type);
+                                }
                             }
                         }
                     }

@@ -40,6 +40,11 @@ namespace HeavenStudio
         [SerializeField] private GameObject snsPanel;
         [SerializeField] private TMP_Text snsVersionText;
 
+        [SerializeField] private GameObject playPanel;
+        [SerializeField] private TMP_Text chartTitleText;
+        [SerializeField] private TMP_Text chartMapperText;
+        [SerializeField] private TMP_Text chartDescText;
+
         private AudioSource musicSource;
 
         private double songPosBeat;
@@ -208,9 +213,13 @@ namespace HeavenStudio
                     RiqFileHandler.UnlockCache();
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
                     Debug.Log("Imported RIQ successfully!");
+                    RiqBeatmap beatmap = RiqFileHandler.ReadRiq();
                     GlobalGameManager.PlayOpenFile = path;
-                    SoundByte.PlayOneShot("ui/UIEnter");
-                    GlobalGameManager.LoadScene("Game", 0.35f, 0.5f);
+                    chartTitleText.text = beatmap["remixtitle"];
+                    chartMapperText.text = beatmap["remixauthor"];
+                    chartDescText.text = beatmap["remixdesc"];
+
+                    playPanel.SetActive(true);
                 }
                 catch (System.Exception e)
                 {
@@ -220,6 +229,18 @@ namespace HeavenStudio
                     return;
                 }
             });
+        }
+
+        public void PlayPanelAccept()
+        {
+            SoundByte.PlayOneShot("ui/UIEnter");
+            GlobalGameManager.LoadScene("Game", 0.35f, 0.5f);
+        }
+
+        public void PlayPanelBack()
+        {
+            SoundByte.PlayOneShot("ui/UICancel");
+            playPanel.SetActive(false);
         }
 
         public void SocialsPressed()
