@@ -53,6 +53,7 @@ namespace HeavenStudio.Editor
 
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
             SelectedMinigame = EventCaller.instance.GetMinigame(fxActive[0].name);
+            _switchGameEvent.SetMaster(_categoryManager);
             SwitchGameSelectionType(PersistentDataManager.gameSettings.useOldGameEventSelectionSystem);
         }
 
@@ -459,6 +460,7 @@ namespace HeavenStudio.Editor
         [Header("New Game Event Selection")]
         [SerializeField] private GameObject _newGameEventSelector;
         [SerializeField] private GameSelectionCategoryManager _categoryManager;
+        [SerializeField] private NewGameSelectionEvent _switchGameEvent;
 
         private bool _usingOld = false;
 
@@ -487,6 +489,15 @@ namespace HeavenStudio.Editor
 
         private void NewAddEvents(int index = 0)
         {
+            if (!EventCaller.FXOnlyGames().Contains(SelectedMinigame))
+            {
+                _switchGameEvent.gameObject.SetActive(true);
+                _switchGameEvent.SetAction(EventCaller.instance.GetGameAction(SelectedMinigame, $"switchGame/{SelectedMinigame.name}"));
+            }
+            else
+            {
+                _switchGameEvent.gameObject.SetActive(false);
+            }
             _categoryManager.StartCategories(SelectedMinigame.actions, SelectedMinigame.name);
         }
 

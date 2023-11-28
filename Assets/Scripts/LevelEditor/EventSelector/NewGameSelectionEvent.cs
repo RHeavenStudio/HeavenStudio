@@ -14,16 +14,25 @@ namespace HeavenStudio.Editor
 
         private Animator _animator;
 
-        private GameSelectionCategory _category;
+        private GameSelectionCategoryManager _manager;
+
+        private bool _shouldDoExitHoverAnim = true;
+
+        private Minigames.GameAction _action;
 
         private void Awake()
         {
             _animator = GetComponent<Animator>();
         }
 
-        public void SetCategory(GameSelectionCategory category)
+        public void SetMaster(GameSelectionCategoryManager manager)
         {
-            _category = category;
+            _manager = manager;
+        }
+
+        public void SetAction(Minigames.GameAction action)
+        {
+            _action = action;
         }
 
         public void SetText(string text)
@@ -44,24 +53,26 @@ namespace HeavenStudio.Editor
         public void PointerDown()
         {
             _animator.Play("GameEventDrag", 0, 0);
-            _category.NoHover = true;
+            _manager.NoHover = true;
+            _shouldDoExitHoverAnim = false;
         }
 
         public void PointerUp()
         {
             _animator.Play("GameEventDragEnd", 0, 0);
-            _category.NoHover = false;
+            _manager.NoHover = false;
         }
 
         public void PointerEnter()
         {
-            if (_category.NoHover) return;
+            if (_manager.NoHover) return;
             _animator.Play("GameEventEnter", 0, 0);
+            _shouldDoExitHoverAnim = true;
         }
 
         public void PointerExit()
         {
-            if (_category.NoHover) return;
+            if (_manager.NoHover || !_shouldDoExitHoverAnim) return;
             _animator.Play("GameEventExit", 0, 0);
         }
     }
