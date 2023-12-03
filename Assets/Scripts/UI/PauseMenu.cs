@@ -134,6 +134,7 @@ namespace HeavenStudio.Common
                         {
                             int idx = t.GetSiblingIndex();
                             optionSelected = idx;
+                            ChooseOption((Options)idx, idx != optionSelected);
                             break;
                         }
                     }
