@@ -421,8 +421,15 @@ namespace HeavenStudio
             {
                 if (PersistentDataManager.gameSettings.discordRPCEnable)
                 {
-                    DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
-                    Debug.Log("Discord status updated");
+                    try
+                    {
+                        DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
+                        Debug.Log("Discord status updated");
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.Log("Discord status update failed: " + e.Message);
+                    }
                 }
             }
         }
