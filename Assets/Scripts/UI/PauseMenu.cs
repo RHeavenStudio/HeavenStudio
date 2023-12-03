@@ -57,7 +57,7 @@ namespace HeavenStudio.Common
             isPaused = true;
             canPick = false;
             optionSelected = 0;
-            ChooseOption((Options)optionSelected, false);
+            ChooseCurrentOption();
         }
 
         void UnPause(bool instant = false)
@@ -130,10 +130,9 @@ namespace HeavenStudio.Common
                 {
                     foreach (Transform t in optionHolder.transform)
                     {
-                        if (t.GetComponent<Collider2D>().OverlapPoint(PlayerInput.GetInputController(1).GetPointer()))
+                        if (t.TryGetComponent<Collider2D>(out Collider2D c) && c.OverlapPoint(PlayerInput.GetInputController(1).GetPointer()))
                         {
                             int idx = t.GetSiblingIndex();
-                            ChooseOption((Options)idx, idx != optionSelected);
                             optionSelected = idx;
                             break;
                         }
