@@ -133,8 +133,8 @@ namespace HeavenStudio.Common
                         if (t.TryGetComponent<Collider2D>(out Collider2D c) && c.OverlapPoint(PlayerInput.GetInputController(1).GetPointer()))
                         {
                             int idx = t.GetSiblingIndex();
-                            optionSelected = idx;
                             ChooseOption((Options)idx, idx != optionSelected);
+                            optionSelected = idx;
                             break;
                         }
                     }

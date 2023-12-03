@@ -265,7 +265,7 @@ namespace HeavenStudio
             settingsPanel.SwitchSettingsDialog();
             SoundByte.PlayOneShot("ui/UISelect");
             // notes:
-            //  gameplay settings currently don't work due to the overlay pereview requiring the screen composition setup from a gameplay prefab
+            //  gameplay settings currently don't work due to the overlay preview requiring the screen composition setup from a gameplay prefab
             //  adding the attract screen will fix this since we'd need to add that prefab for it anyways
         }
 

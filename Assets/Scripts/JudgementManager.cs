@@ -108,12 +108,12 @@ namespace HeavenStudio
             barSlider.fillRect.GetComponent<Image>().color = barColourNg;
 
             // temp
-            twoMessage = true;
+            twoMessage = false;
             // judgementInfo = new()
             // {
             //     finalScore = 0.79,
             // };
-            header.text = "Rhythm League Notes";
+            header.text = playedBeatmap != null ? playedBeatmap["resultcaption"] : "Rhythm League Notes";
             // end temp
 
             if (twoMessage)
@@ -137,7 +137,18 @@ namespace HeavenStudio
         {
             if (twoMessage) return;
             audioSource.PlayOneShot(messageLast);
-            message0.text = "single line message";
+            if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+            {
+                message0.text = playedBeatmap != null ? playedBeatmap["resultcommon_ng"] : "Try harder next time.";
+            }
+            else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+            {
+                message0.text = playedBeatmap != null ? playedBeatmap["resultcommon_ok"] : "Eh. Passable.";
+            }
+            else
+            {
+                message0.text = playedBeatmap != null ? playedBeatmap["resultcommon_hi"] : "Good rhythm.";
+            }
         }
 
         public void ShowMessage1()

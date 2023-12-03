@@ -577,15 +577,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -836,5 +838,17 @@ MonoBehaviour:
     label: Rating Screen Text
     isReadOnly: 0
   - tag: subheader
-    label: Coming Soon!
+    label: Change the messages shown on the rating screen.
+    isReadOnly: 0
+  - tag: resultcaption
+    label: Result Screen Header
+    isReadOnly: 0
+  - tag: resultcommon_hi
+    label: Superb Message
+    isReadOnly: 0
+  - tag: resultcommon_ok
+    label: OK Message
+    isReadOnly: 0
+  - tag: resultcommon_ng
+    label: Try Again Message
     isReadOnly: 0
