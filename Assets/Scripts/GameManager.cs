@@ -746,11 +746,6 @@ namespace HeavenStudio
             if (gamesToPreload.Count > 0)
             {
                 yieldGame = new WaitUntil(() => gamesToPreload.All(x => x.AssetsLoaded));
-                foreach (var game in gamesToPreload)
-                {
-                    Debug.Log($"ASYNC loading assetbundles for game {game.LoadableName}");
-                    game.LoadAssetsAsync().Forget();
-                }
             }
 
             // wait for overlays to be ready
