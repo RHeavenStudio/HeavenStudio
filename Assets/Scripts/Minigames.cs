@@ -146,6 +146,10 @@ namespace HeavenStudio
 
         public static string JukeboxAudioConverter(string filePath, AudioType audioType, string specificType)
         {
+            if (Directory.Exists(Path.Combine(Application.temporaryCachePath, "/savewav")))
+            {
+                Directory.Delete(Path.Combine(Application.temporaryCachePath, "/savewav"), true);
+            }
             if (audioType == AudioType.MPEG)
             {
                 Debug.Log($"mp3 loaded, Converting {filePath} to wav...");
@@ -163,8 +167,8 @@ namespace HeavenStudio
                     }
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
                     string fileName = Path.GetFileNameWithoutExtension(filePath);
-                    SavWav.Save("/RIQCache/" + fileName, clip, true);
-                    filePath = Path.Combine(Application.temporaryCachePath, "/RIQCache/" + fileName + ".wav");
+                    SavWav.Save("/savewav/" + fileName, clip, true);
+                    filePath = Path.Combine(Application.temporaryCachePath, "/savewav/" + fileName + ".wav");
 
                     clip = null;
                 }
