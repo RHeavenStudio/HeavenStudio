@@ -82,7 +82,7 @@ namespace HeavenStudio.Common
         public void OnRemixEnd(double beat, RiqEntity lastSection)
         {
             if (!PersistentDataManager.gameSettings.isMedalOn) return;
-            if (PersistentDataManager.gameSettings.isMedalOn && isMedalsStarted)
+            if (PersistentDataManager.gameSettings.isMedalOn && isMedalsStarted && lastSection != null)
             {
                 GameManager.instance.DoSectionCompletion(beat, isMedalsEligible, lastSection["sectionName"], 1);
                 GameObject medal = Instantiate(isMedalsEligible ? MedalOkPrefab : MedalMissPrefab, MedalsHolder.transform);

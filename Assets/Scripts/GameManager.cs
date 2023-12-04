@@ -73,6 +73,9 @@ namespace HeavenStudio
         public event Action<double> onBeatChanged;
         public event Action<RiqEntity, RiqEntity> onSectionChange;
         public event Action<double> onBeatPulse;
+        public event Action<double> onPlay;
+        public event Action<double> onPause;
+        public event Action<double> onUnPause;
 
         public int BeatmapEntities()
         {
@@ -143,9 +146,6 @@ namespace HeavenStudio
             eventCaller = this.gameObject.AddComponent<EventCaller>();
             eventCaller.GamesHolder = GamesHolder.transform;
             eventCaller.Init();
-            Conductor.instance.SetBpm(120f);
-            Conductor.instance.SetVolume(100f);
-            Conductor.instance.firstBeatOffset = Beatmap.data.offset;
 
             // note: serialize this shit in the inspector //
             GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
@@ -177,6 +177,9 @@ namespace HeavenStudio
             }
 
             SortEventsList();
+            Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
+            Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
+            Conductor.instance.firstBeatOffset = Beatmap.data.offset;
 
             if (Beatmap.Entities.Count >= 1)
             {
@@ -231,6 +234,7 @@ namespace HeavenStudio
 
         public void NewRemix()
         {
+            Debug.Log("Creating new remix");
             AudioLoadDone = false;
             Beatmap = new("1", "HeavenStudio");
             Beatmap.data.properties = Minigames.propertiesModel;
@@ -238,7 +242,6 @@ namespace HeavenStudio
             Beatmap.AddNewVolumeChange(0, 100f);
             Beatmap.data.offset = 0f;
             Conductor.instance.musicSource.clip = null;
-            RiqFileHandler.UnlockCache();
             RiqFileHandler.WriteRiq(Beatmap);
             AudioLoadDone = true;
         }
@@ -680,6 +683,11 @@ namespace HeavenStudio
                 Minigame miniGame = currentGameO?.GetComponent<Minigame>();
                 if (miniGame != null)
                     miniGame.OnPlay(beat);
+                onPlay?.Invoke(beat);
+            }
+            else
+            {
+                onUnPause?.Invoke(beat);
             }
 
             if (playMode)
@@ -693,17 +701,21 @@ namespace HeavenStudio
         public void Pause()
         {
             Conductor.instance.Pause();
-            // Util.SoundByte.PauseOneShots();
+            Util.SoundByte.PauseOneShots();
+            onPause?.Invoke(Conductor.instance.songPositionInBeatsAsDouble);
             canInput = false;
         }
 
         public void Stop(double beat, bool restart = false, float restartDelay = 0f)
         {
             // I feel like I should standardize the names
-            SkillStarManager.instance.KillStar();
-            TimingAccuracyDisplay.instance.StopStarFlash();
-            GoForAPerfect.instance.Disable();
-            SectionMedalsManager.instance.OnRemixEnd(endBeat, currentSection);
+            if (Conductor.instance.isPlaying)
+            {
+                SkillStarManager.instance.KillStar();
+                TimingAccuracyDisplay.instance.StopStarFlash();
+                GoForAPerfect.instance.Disable();
+                SectionMedalsManager.instance.OnRemixEnd(endBeat, currentSection);
+            }
 
             Minigame miniGame = currentGameO.GetComponent<Minigame>();
             if (miniGame != null)
@@ -739,22 +751,27 @@ namespace HeavenStudio
         private IEnumerator WaitReadyAndPlayCo(double beat, float delay = 1f, bool discord = true)
         {
             WaitUntil yieldOverlays = new WaitUntil(() => OverlaysManager.OverlaysReady);
-            WaitUntil yieldBeatmap = new WaitUntil(() => Beatmap != null && Beatmap.Entities.Count > 0);
+            WaitUntil yieldBeatmap = new WaitUntil(() => Beatmap != null && BeatmapEntities() > 0);
             WaitUntil yieldAudio = new WaitUntil(() => AudioLoadDone || (ChartLoadError && !GlobalGameManager.IsShowingDialog));
             WaitUntil yieldGame = null;
             List<Minigames.Minigame> gamesToPreload = SeekAheadAndPreload(beat, 4f);
+            Debug.Log($"Preloading {gamesToPreload.Count} games");
             if (gamesToPreload.Count > 0)
             {
                 yieldGame = new WaitUntil(() => gamesToPreload.All(x => x.AssetsLoaded));
             }
 
             // wait for overlays to be ready
+            Debug.Log("waiting for overlays");
             yield return yieldOverlays;
             // wait for beatmap to be loaded
+            Debug.Log("waiting for beatmap");
             yield return yieldBeatmap;
             //wait for audio clip to be loaded
+            Debug.Log("waiting for audio");
             yield return yieldAudio;
             //wait for games to be loaded
+            Debug.Log("waiting for minigames");
             if (yieldGame != null)
                 yield return yieldGame;
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 using UnityEngine;
+using UnityEngine.Networking;
 using DG.Tweening;
 
 using HeavenStudio.Util;
@@ -32,6 +33,7 @@ namespace HeavenStudio
         public static void InitPreprocessor()
         {
             RiqBeatmap.OnUpdateBeatmap += PreProcessBeatmap;
+            RiqFileHandler.AudioConverter = JukeboxAudioConverter;
         }
 
         public static Dictionary<string, object> propertiesModel = new()
@@ -140,6 +142,35 @@ namespace HeavenStudio
                     }
                 }
             }
+        }
+
+        public static string JukeboxAudioConverter(string filePath, AudioType audioType, string specificType)
+        {
+            if (audioType == AudioType.MPEG)
+            {
+                Debug.Log($"mp3 loaded, Converting {filePath} to wav...");
+                // convert mp3 to wav
+                // import the mp3 as an audioclip
+                string url = "file://" + filePath;
+                using (var www = UnityWebRequestMultimedia.GetAudioClip(url, audioType))
+                {
+                    www.SendWebRequest();
+                    while (!www.isDone) { }
+                    if (www.result == UnityWebRequest.Result.ConnectionError)
+                    {
+                        Debug.LogError($"Could not load audio file {filePath}! Error: {www.error}");
+                        return filePath;
+                    }
+                    AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
+                    string fileName = Path.GetFileNameWithoutExtension(filePath);
+                    Debug.Log(fileName);
+                    SavWav.Save("/RIQCache/" + fileName, clip, true);
+                    filePath = Path.Combine(Application.temporaryCachePath, "/RIQCache/" + fileName + ".wav");
+
+                    clip = null;
+                }
+            }
+            return filePath;
         }
 
         /// <summary>
