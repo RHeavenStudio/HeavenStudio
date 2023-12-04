@@ -367,6 +367,13 @@ namespace HeavenStudio
 
             public AssetBundle GetLocalizedAssetBundle()
             {
+                if (bundleLocalized != null && !localeLoaded)
+                {
+                    bundleLocalized.Unload(true);
+                    bundleLocalized = null;
+                    localeLoaded = false;
+                    localePreloaded = false;
+                }
                 if (!hasLocales) return null;
                 if (!usesAssetBundle) return null;
                 if (bundleLocalized == null || currentLoadedLocale != defaultLocale) //TEMPORARY: use the game's default locale until we add localization support
@@ -382,6 +389,13 @@ namespace HeavenStudio
 
             public AssetBundle GetCommonAssetBundle()
             {
+                if (bundleCommon != null && !commonLoaded)
+                {
+                    bundleCommon.Unload(true);
+                    bundleCommon = null;
+                    commonLoaded = false;
+                    commonPreloaded = false;
+                }
                 if (commonLoaded) return bundleCommon;
                 if (!usesAssetBundle) return null;
                 if (bundleCommon == null)
@@ -404,6 +418,14 @@ namespace HeavenStudio
 
             public async UniTask LoadCommonAssetBundleAsync()
             {
+                if (bundleCommon != null && !commonLoaded)
+                {
+                    await bundleCommon.UnloadAsync(true);
+                    bundleCommon = null;
+                    commonLoaded = false;
+                    commonPreloaded = false;
+                }
+
                 if (commonPreloaded || commonLoaded) return;
                 commonPreloaded = true;
                 if (!usesAssetBundle) return;
@@ -417,6 +439,14 @@ namespace HeavenStudio
 
             public async UniTask LoadLocalizedAssetBundleAsync()
             {
+                if (bundleLocalized != null && !localeLoaded)
+                {
+                    await bundleLocalized.UnloadAsync(true);
+                    bundleLocalized = null;
+                    localeLoaded = false;
+                    localePreloaded = false;
+                }
+                
                 if (!hasLocales) return;
                 if (localePreloaded) return;
                 localePreloaded = true;

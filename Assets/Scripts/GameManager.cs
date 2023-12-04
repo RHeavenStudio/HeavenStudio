@@ -182,7 +182,7 @@ namespace HeavenStudio
             {
                 string game = Beatmap.Entities[0].datamodel.Split(0);
                 SetCurrentGame(game);
-                SetGame(game);
+                StartCoroutine(WaitAndSetGame(game));
             }
             else
             {
@@ -310,7 +310,7 @@ namespace HeavenStudio
             {
                 string game = Beatmap.Entities[0].datamodel.Split(0);
                 SetCurrentGame(game);
-                SetGame(game);
+                StartCoroutine(WaitAndSetGame(game));
             }
             else
             {
@@ -387,8 +387,9 @@ namespace HeavenStudio
             return (bp == bLen);
         }
 
-        public void SeekAheadAndPreload(double start, float seekTime = 8f)
+        public List<Minigames.Minigame> SeekAheadAndPreload(double start, float seekTime = 8f)
         {
+            List<Minigames.Minigame> gamesToPreload = new();
             List<RiqEntity> entitiesAtSameBeat = ListPool<RiqEntity>.Get();
             Minigames.Minigame inf;
 
@@ -401,6 +402,7 @@ namespace HeavenStudio
                     inf = GetGameInfo(gameName);
                     if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                     {
+                        gamesToPreload.Add(inf);
                         Debug.Log($"ASYNC loading assetbundles for game {gameName}");
                         inf.LoadAssetsAsync().Forget();
                     }
@@ -426,6 +428,7 @@ namespace HeavenStudio
                         inf = GetGameInfo(gameName);
                         if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                         {
+                            gamesToPreload.Add(inf);
                             Debug.Log($"ASYNC loading assetbundles for game {gameName}");
                             inf.LoadAssetsAsync().Forget();
                         }
@@ -433,8 +436,8 @@ namespace HeavenStudio
                     }
                 }
             }
-
             ListPool<RiqEntity>.Release(entitiesAtSameBeat);
+            return gamesToPreload;
         }
 
         public void SeekAheadAndDoPreEvent(double start)
@@ -738,6 +741,17 @@ namespace HeavenStudio
             WaitUntil yieldOverlays = new WaitUntil(() => OverlaysManager.OverlaysReady);
             WaitUntil yieldBeatmap = new WaitUntil(() => Beatmap != null && Beatmap.Entities.Count > 0);
             WaitUntil yieldAudio = new WaitUntil(() => AudioLoadDone || (ChartLoadError && !GlobalGameManager.IsShowingDialog));
+            WaitUntil yieldGame = null;
+            List<Minigames.Minigame> gamesToPreload = SeekAheadAndPreload(beat, 4f);
+            if (gamesToPreload.Count > 0)
+            {
+                yieldGame = new WaitUntil(() => gamesToPreload.All(x => x.AssetsLoaded));
+                foreach (var game in gamesToPreload)
+                {
+                    Debug.Log($"ASYNC loading assetbundles for game {game.LoadableName}");
+                    game.LoadAssetsAsync().Forget();
+                }
+            }
 
             // wait for overlays to be ready
             yield return yieldOverlays;
@@ -745,6 +759,9 @@ namespace HeavenStudio
             yield return yieldBeatmap;
             //wait for audio clip to be loaded
             yield return yieldAudio;
+            //wait for games to be loaded
+            if (yieldGame != null)
+                yield return yieldGame;
 
             SkillStarManager.instance.KillStar();
             TimingAccuracyDisplay.instance.StopStarFlash();
@@ -1018,6 +1035,18 @@ namespace HeavenStudio
             SetCurrentGame(game, useMinigameColor);
         }
 
+        private IEnumerator WaitAndSetGame(string game, bool useMinigameColor = true)
+        {
+            var inf = GetGameInfo(game);
+            if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
+            {
+                Debug.Log($"ASYNC loading assetbundles for game {game}");
+                inf.LoadAssetsAsync().Forget();
+                yield return new WaitUntil(() => inf.AssetsLoaded);
+            }
+            SetGame(game, useMinigameColor);
+        }
+
         public void PreloadGameSequences(string game)
         {
             var gameInfo = GetGameInfo(game);
@@ -1047,12 +1076,18 @@ namespace HeavenStudio
                     if (gameInfo.usesAssetBundle)
                     {
                         //game is packed in an assetbundle, load from that instead
-                        if (gameInfo.LoadedPrefab != null) return gameInfo.LoadedPrefab;
-                        // StartCoroutine(gameInfo.LoadCommonAudioClipsAsync());
-                        // StartCoroutine(gameInfo.LoadLocalizedAudioClipsAsync());
-                        return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
+                        if (gameInfo.AssetsLoaded && gameInfo.LoadedPrefab != null) return gameInfo.LoadedPrefab;
+                        
+                        try
+                        {
+                            return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogWarning($"Failed to load assetbundle for game {name}, using sync loading: {e.Message}");
+                            return Resources.Load<GameObject>($"Games/{name}");
+                        }
                     }
-                    name = gameInfo.LoadableName;
                 }
             }
             return Resources.Load<GameObject>($"Games/{name}");
