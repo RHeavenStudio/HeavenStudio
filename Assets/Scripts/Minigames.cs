@@ -163,7 +163,6 @@ namespace HeavenStudio
                     }
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
                     string fileName = Path.GetFileNameWithoutExtension(filePath);
-                    Debug.Log(fileName);
                     SavWav.Save("/RIQCache/" + fileName, clip, true);
                     filePath = Path.Combine(Application.temporaryCachePath, "/RIQCache/" + fileName + ".wav");
 
