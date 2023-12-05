@@ -49,7 +49,8 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("plantCollect", "Veggie Collection Values")
                 {
                     function = delegate { var e = eventCaller.currentEntity; 
-                        CropStomp.instance.SetCollectThresholds(e["threshold"], e["limit"], e["force"], e["forceAmount"]); },
+                        CropStomp.instance.SetCollectThresholds(e["threshold"], e["limit"], e["force"], e["forceAmount"]);
+                    },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -125,7 +126,7 @@ namespace HeavenStudio.Games
 
         private void Awake()
         {
-            instance = this;// Finding grass sprite width for grass scrolling.
+            instance = this; // Finding grass sprite width for grass scrolling.
             farmer.Init();
             Sprite sprite = grass.sprite;
             float borderLeft = sprite.rect.xMin + sprite.border.x;
@@ -172,22 +173,20 @@ namespace HeavenStudio.Games
             }
 
             // find out when the next game switch (or remix end) happens
-            var firstEnd = entities.Find(c => c.datamodel is "gameManager/switchGame/cropStomp" or "gameManager/end" && c.beat > startBeat);
+            RiqEntity firstEnd = entities.Find(c => c.datamodel is "gameManager/switchGame/cropStomp" or "gameManager/end" && c.beat > startBeat);
             endBeat = firstEnd?.beat ?? double.MaxValue;
 
             // Veggie and mole events.
-            var vegEvents = entities.FindAll(v => v.datamodel == "cropStomp/veggies");
-            var moleEvents = entities.FindAll(m => m.datamodel == "cropStomp/mole");
+            List<RiqEntity> vegEvents = entities.FindAll(v => v.datamodel == "cropStomp/veggies");
+            List<RiqEntity> moleEvents = entities.FindAll(m => m.datamodel == "cropStomp/mole");
 
             // Spawn veggies.
-            for (int i = 0; i < vegEvents.Count; i++)
-            {
+            for (int i = 0; i < vegEvents.Count; i++) {
                 var vegBeat = vegEvents[i].beat;
                 var vegLength = vegEvents[i].length;
 
                 // Only consider veggie events that aren't past the start point.
-                if (startBeat <= vegBeat + vegLength)
-                {
+                if (startBeat <= vegBeat + vegLength) {
                     int veggiesInEvent = Mathf.CeilToInt(vegLength + 1) / 2;
 
                     for (int b = 0; b < veggiesInEvent; b++)
@@ -202,12 +201,10 @@ namespace HeavenStudio.Games
             }
 
             // Spawn moles.
-            for (int i = 0; i < moleEvents.Count; i++)
-            {
+            for (int i = 0; i < moleEvents.Count; i++) {
                 var moleBeat = moleEvents[i].beat;
 
-                if (startBeat <= moleBeat && moleBeat < endBeat)
-                {
+                if (startBeat <= moleBeat && moleBeat < endBeat) {
                     SpawnVeggie(moleBeat, startBeat, true);
                 }
             }
@@ -245,8 +242,7 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
 
-            if (!cond.isPlaying || !isMarching)
-                return;
+            if (!cond.isPlaying || !isMarching) return;
 
             // Debug.Log(newBeat);
 
@@ -299,9 +295,7 @@ namespace HeavenStudio.Games
 
         private void LateUpdate()
         {
-            if (!isMarching)
-                return;
-
+            if (!isMarching) return;
             isFlicking = false;
         }
 
@@ -378,8 +372,8 @@ namespace HeavenStudio.Games
             if (shakeTween != null) shakeTween.Kill(true);
 
             DOTween.Punch(() =>
-                GameCamera.additionalPosition,
-                x => GameCamera.additionalPosition = x,
+                GameCamera.AdditionalPosition,
+                x => GameCamera.AdditionalPosition = x,
                 new Vector3(0, 0.75f, 0), Conductor.instance.pitchedSecPerBeat * 0.5f, 18, 1f
             );
 
