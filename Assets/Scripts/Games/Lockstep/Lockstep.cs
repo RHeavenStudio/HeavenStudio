@@ -336,18 +336,19 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (goBop)
+            {
+                PlayStepperAnim("Bop", true, 0.5f);
+            }
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (goBop)
-                    {
-                        PlayStepperAnim("Bop", true, 0.5f);
-                    }
-                }
                 if (queuedInputs.Count > 0)
                 {
                     foreach (var input in queuedInputs)
@@ -392,7 +393,7 @@ namespace HeavenStudio.Games
 
         public void SetZoom(int zoom)
         {
-            GameCamera.additionalPosition = new Vector3(0, 0, (ZoomPresets)zoom switch
+            GameCamera.AdditionalPosition = new Vector3(0, 0, (ZoomPresets)zoom switch
             {
                 ZoomPresets.Regular => 0,
                 ZoomPresets.NotThatFar => -4.5f,

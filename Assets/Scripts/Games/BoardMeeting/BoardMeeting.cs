@@ -92,8 +92,8 @@ namespace HeavenStudio.Games
         public BMExecutive firstSpinner;
         [SerializeField] float shakeIntensity = 0.5f;
         public bool shouldBop = true;
-        bool assistantCanBop = true;
-        bool executivesCanBop = true;
+        private bool assistantCanBop = true;
+        private bool executivesCanBop = true;
         public GameEvent bop = new GameEvent();
         [NonSerialized] public Sound chairLoopSound = null;
         int missCounter = 0;
@@ -126,10 +126,6 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
-                {
-                    SingleBop();
-                }
                 if (PlayerInput.GetIsAction(InputAction_BasicPressing) && !IsExpectingInputNow(InputAction_BasicPress.inputLockCategory))
                 {
                     if (executives[executiveCount - 1].spinning)
@@ -145,6 +141,12 @@ namespace HeavenStudio.Games
                     }
                 }
             }
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (!shouldBop) return;
+            SingleBop();
         }
 
         void SingleBop()
@@ -431,7 +433,7 @@ namespace HeavenStudio.Games
             if (shakeTween != null)
                 shakeTween.Kill(true);
 
-            DOTween.Punch(() => GameCamera.additionalPosition, x => GameCamera.additionalPosition = x, new Vector3(shakeIntensity, 0, 0),
+            DOTween.Punch(() => GameCamera.AdditionalPosition, x => GameCamera.AdditionalPosition = x, new Vector3(shakeIntensity, 0, 0),
                 Conductor.instance.pitchedSecPerBeat * 0.5f, 18, 1f);
             executives[executiveCount - 1].Stop();
             assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);

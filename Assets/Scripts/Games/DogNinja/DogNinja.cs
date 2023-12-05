@@ -17,11 +17,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("Bop", "Bop")
                 {
-                    function = delegate { DogNinja.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]); },
-                    defaultLength = 0.5f,
+                    function = delegate { DogNinja.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["auto"], eventCaller.currentEntity["toggle"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Enable Bopping", "Whether to bop to the beat or not"),
+                        new Param("toggle", true, "Enable Bopping", "Whether to bop to the beat or not"),
+                        new Param("auto", false, "Enable Bopping (Auto)", "Whether to bop to the beat or not automatically"),
                     }
                 },
                 new GameAction("Prepare", "Prepare")
@@ -141,7 +142,7 @@ namespace HeavenStudio.Games
 
         private double lastReportedBeat = 0f;
         private bool birdOnScreen = false;
-        static bool dontBop = false;
+        bool dontBop = false;
         private const string sfxNum = "dogNinja/";
 
         public static DogNinja instance;
@@ -213,6 +214,12 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (dontBop) return;
+            DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
+        }
+
         private void Update()
         {
             if (DogAnim.GetBool("needPrepare") && DogAnim.IsAnimationNotPlaying())
@@ -258,17 +265,18 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void LateUpdate()
+        public void Bop(double beat, float length, bool auto, bool bop)
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && DogAnim.IsAnimationNotPlaying() && !dontBop)
-            {
-                DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
-            }
-        }
+            dontBop = !auto;
+            if (!bop) return;
+            List<BeatAction.Action> actions = new();
 
-        public void Bop(double beat, bool bop)
-        {
-            dontBop = !bop;
+            for (int i = 0; i < length; i++)
+            {
+                actions.Add(new(beat + i, delegate { DogAnim.DoScaledAnimationAsync("Bop", 0.5f); }));
+            }
+
+            if (actions.Count > 0) BeatAction.New(this, actions);
         }
 
         public static void QueueObject(double beat, int direction, int typeL, int typeR, bool prepare, bool muteThrow)

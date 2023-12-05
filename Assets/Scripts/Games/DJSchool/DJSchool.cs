@@ -165,95 +165,48 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (!goBop) return;
+            if (student.isHolding)
+            {
+                student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
+            }
+            else if (!student.swiping && student.anim.IsAnimationNotPlaying())
+            {
+                student.anim.DoScaledAnimationAsync("IdleBop", 0.5f);
+            }
+
+            var yellowState = djYellowAnim.GetCurrentAnimatorStateInfo(0);
+            if (yellowState.IsName("Hey"))
+            {
+                //PostScratchoFace();
+            }
+            if (!andStop && !djYellowHolding)
+            {
+                float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
+                else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed)) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralLeft);
+                djYellowScript.Reverse(djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
+                if (djYellowBopLeft)
+                {
+                    djYellowAnim.DoScaledAnimationAsync("IdleBop2", 0.5f);
+                }
+                else
+                {
+                    djYellowAnim.DoScaledAnimationAsync("IdleBop", 0.5f);
+                }
+                djYellowBopLeft = !djYellowBopLeft;
+
+            }
+            else if (djYellowHolding)
+            {
+                djYellowAnim.DoScaledAnimationAsync("HoldBop", 0.5f);
+            }
+        }
+
         private void Update()
         {
-            #region old script
-            //var cond = Conductor.instance;
-
-            //if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            //{
-            //    if (cond.songPositionInBeatsAsDouble >= bop.startBeat && cond.songPositionInBeatsAsDouble < bop.startBeat + bop.length)
-            //    {
-            //        if (student.anim.IsAnimationNotPlaying())
-            //        {
-            //            if (student.isHolding)
-            //            {
-            //                student.anim.Play("HoldBop", 0, 0);
-            //            }
-            //            else
-            //            {
-            //                student.anim.Play("IdleBop", 0, 0);
-            //            }
-            //        }
-            //        if (djYellowAnim.IsAnimationNotPlaying())
-            //        {
-            //            var yellowState = djYellowAnim.GetCurrentAnimatorStateInfo(0);
-            //            if (yellowState.IsName("Hey"))
-            //            {
-            //                PostScratchoFace();
-            //            }
-
-            //            if (djYellowHolding)
-            //            {
-            //                djYellowAnim.Play("HoldBop", 0, 0);
-            //            }
-            //            else
-            //            {
-            //                // todo: split between left and right bop based on beat
-            //                djYellowAnim.Play("IdleBop", 0, 0);
-            //            }
-            //        }
-            //    }
-            //}
-            #endregion
-
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
-            {
-                if (goBop)
-                {
-                    if (student.isHolding)
-                    {
-                        student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
-                    }
-                    else if (!student.swiping && student.anim.IsAnimationNotPlaying())
-                    {
-                        student.anim.DoScaledAnimationAsync("IdleBop", 0.5f);
-                    }
-
-                    var yellowState = djYellowAnim.GetCurrentAnimatorStateInfo(0);
-                    if (yellowState.IsName("Hey"))
-                    {
-                        //PostScratchoFace();
-                    }
-                    if (!andStop && !djYellowHolding)
-                    {
-                        float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
-                        if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
-                        else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed)) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralLeft);
-                        djYellowScript.Reverse(djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
-                        if (djYellowBopLeft)
-                        {
-                            djYellowAnim.DoScaledAnimationAsync("IdleBop2", 0.5f);
-                        }
-                        else
-                        {
-                            djYellowAnim.DoScaledAnimationAsync("IdleBop", 0.5f);
-                        }
-                        djYellowBopLeft = !djYellowBopLeft;
-
-                    }
-                    else if (djYellowHolding)
-                    {
-                        djYellowAnim.DoScaledAnimationAsync("HoldBop", 0.5f);
-                    }
-                }
-                
-            }
-            else if (Conductor.instance.songPositionInBeatsAsDouble < lastReportedBeat)
-            {
-                lastReportedBeat = Math.Round(Conductor.instance.songPositionInBeatsAsDouble);
-            }
-
             if(PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && !student.isHolding) //Start hold miss
             {
                 student.OnMissHoldForPlayerInput();

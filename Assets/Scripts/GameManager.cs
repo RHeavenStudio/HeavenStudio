@@ -47,6 +47,7 @@ namespace HeavenStudio
         [NonSerialized] public bool playOnStart;
         [NonSerialized] public double startBeat;
         [NonSerialized] public GameObject currentGameO;
+        private Minigame _currentMinigame;
         [NonSerialized] public bool autoplay;
         [NonSerialized] public bool canInput = true;
         [NonSerialized] public RiqEntity currentSection, nextSection;
@@ -70,6 +71,7 @@ namespace HeavenStudio
 
         public event Action<double> onBeatChanged;
         public event Action<RiqEntity> onSectionChange;
+        public event Action<double> onBeatPulse;
 
         public int BeatmapEntities()
         {
@@ -493,6 +495,13 @@ namespace HeavenStudio
                 }
             }
 
+            if (cond.songPositionInBeatsAsDouble >= Math.Ceiling(_playStartBeat) + _pulseTally)
+            {
+                if (_currentMinigame != null) _currentMinigame.OnBeatPulse(Math.Ceiling(_playStartBeat) + _pulseTally);
+                onBeatPulse?.Invoke(Math.Ceiling(_playStartBeat) + _pulseTally);
+                _pulseTally++;
+            }
+
             float seekTime = 8f;
             //seek ahead to preload games that have assetbundles
             SeekAheadAndPreload(cond.songPositionInBeatsAsDouble, seekTime);
@@ -580,10 +589,15 @@ namespace HeavenStudio
 
         #region Play Events
 
+        private double _playStartBeat = 0;
+        private int _pulseTally = 0;
+
         public void Play(double beat, float delay = 0f)
         {
             bool paused = Conductor.instance.isPaused;
             Debug.Log("Playing at " + beat);
+            _playStartBeat = beat;
+            _pulseTally = 0;
             canInput = true;
             if (!paused)
             {
@@ -605,7 +619,7 @@ namespace HeavenStudio
             }
 
             StartCoroutine(PlayCo(beat, delay));
-            onBeatChanged?.Invoke(beat);
+            //onBeatChanged?.Invoke(beat);
         }
 
         private IEnumerator PlayCo(double beat, float delay = 0f)
@@ -649,7 +663,7 @@ namespace HeavenStudio
 
             Conductor.instance.Stop(beat);
             SetCurrentEventToClosest(beat);
-            onBeatChanged?.Invoke(beat);
+            //onBeatChanged?.Invoke(beat);
 
             // I feel like I should standardize the names
             SkillStarManager.instance.KillStar();
@@ -946,15 +960,21 @@ namespace HeavenStudio
 
         private void SetGame(string game, bool useMinigameColor = true)
         {
+            ResetCamera(); // resetting camera before setting new minigame so minigames can set camera values in their awake call - Rasmus
+
             Destroy(currentGameO);
 
             currentGameO = Instantiate(GetGame(game));
+            if (currentGameO.TryGetComponent<Minigame>(out var minigame))
+            {
+                _currentMinigame = minigame;
+            }
+            Vector3 originalScale = currentGameO.transform.localScale;
             currentGameO.transform.parent = eventCaller.GamesHolder.transform;
+            currentGameO.transform.localScale = originalScale;
             currentGameO.name = game;
 
             SetCurrentGame(game, useMinigameColor);
-
-            ResetCamera();
         }
 
         public void PreloadGameSequences(string game)

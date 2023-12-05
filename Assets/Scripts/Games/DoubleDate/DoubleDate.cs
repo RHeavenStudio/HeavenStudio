@@ -138,6 +138,11 @@ namespace HeavenStudio.Games
             clouds.transform.position = Vector3.left * ((Time.realtimeSinceStartup * cloudSpeed) % cloudDistance);
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop) SingleBop();
+        }
+
         void Update()
         {
             var cond = Conductor.instance;
@@ -161,10 +166,6 @@ namespace HeavenStudio.Games
                         }
                     }
                     queuedBalls.Clear();
-                }
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
-                {
-                    SingleBop();
                 }
             }
             else
