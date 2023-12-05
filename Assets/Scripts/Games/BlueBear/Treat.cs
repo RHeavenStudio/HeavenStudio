@@ -68,7 +68,7 @@ namespace HeavenStudio.Games.Scripts_BlueBear
                 SoundByte.PlayOneShotGame("blueBear/chompDonut");
             }
 
-            game.Bite(isCake);
+            game.Bite(Conductor.instance.songPositionInBeatsAsDouble, isCake);
             game.EatTreat();
 
             SpawnCrumbs();
