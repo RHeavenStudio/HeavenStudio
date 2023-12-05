@@ -443,14 +443,14 @@ namespace HeavenStudio.Games
         private void MissJump(PlayerActionEvent caller)
         {
             player.JumpTapMiss(false);
-            if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
+            if (giraffe.IsAnimationNotPlaying() && currentAnim != GiraffeAnimation.Exit) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
             ResetScroll();
         }
 
         private void MissJumpFinal(PlayerActionEvent caller)
         {
             player.JumpTapMiss(true);
-            if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
+            if (giraffe.IsAnimationNotPlaying() && currentAnim != GiraffeAnimation.Exit) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
             ResetScroll();
         }
 
