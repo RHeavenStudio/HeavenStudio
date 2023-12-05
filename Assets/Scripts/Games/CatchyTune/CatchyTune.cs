@@ -80,10 +80,10 @@ namespace HeavenStudio.Games
 
         public enum WhoBops
         {
-            Alalin,
-            Plalin,
-            Both,
-            None
+            Alalin = 1,
+            Plalin = 2,
+            Both = 0,
+            None = 3
         }
 
         public enum Background
@@ -110,10 +110,6 @@ namespace HeavenStudio.Games
 
         private double startSmile = 0;
         private double stopSmile = 0;
-
-        private bool bopLeft = true;
-        private bool bopRight = true;
-        public GameEvent bop = new GameEvent();
 
         public static CatchyTune instance;
         static List<QueuedFruit> queuedFruits = new List<QueuedFruit>();
@@ -184,6 +180,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("catchyTune", "bop", "bopAuto", false);
         }
 
         const float orangeoffset = 0.5f;
@@ -249,6 +246,9 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
+            int whoBopsAuto = BeatIsInBopRegionInt(beat);
+            bool bopLeft = whoBopsAuto == (int)WhoBops.Plalin || whoBopsAuto == (int)WhoBops.Both;
+            bool bopRight = whoBopsAuto == (int)WhoBops.Alalin || whoBopsAuto == (int)WhoBops.Both;
             if (bopLeft && stopCatchLeft == 0)
             {
                 plalinAnim.DoScaledAnimationAsync("bop", 0.5f);
@@ -323,8 +323,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
-            bopLeft = whoBopsAuto == (int)WhoBops.Plalin || whoBopsAuto == (int)WhoBops.Both;
-            bopRight = whoBopsAuto == (int)WhoBops.Alalin || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()

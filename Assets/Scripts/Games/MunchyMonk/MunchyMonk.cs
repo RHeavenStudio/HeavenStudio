@@ -17,14 +17,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Bop(e.beat, e["bop"], e["autoBop"]); 
+                        MunchyMonk.instance.Bop(e.beat, e.length, e["bop"]); 
                     },
                     parameters = new List<Param>()
                     {
                         new Param("bop", true, "Monk Bops?", "Does the monk bop?"),
                         new Param("autoBop", false, "Monk Bops? (Auto)", "Does the monk auto bop?"),
                     },
-                    defaultLength = 0.5f,
+                    resizable = true
                 },
                 new GameAction("MonkMove", "Monk Move")
                 {
@@ -209,7 +209,6 @@ namespace HeavenStudio.Games
         public double lastReportedBeat = 0f;
         public bool needBlush;
         public bool isStaring;
-        bool monkBop = true;
 
         // these variables are static so that they can be set outside of the game/stay the same between game switches
         static public int howManyGulps;
@@ -241,6 +240,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             Baby.SetActive(!disableBaby);
+            SetupBopRegion("munchyMonk", "Bop", "autoBop");
         }
 
         private void Start() 
@@ -352,7 +352,7 @@ namespace HeavenStudio.Games
         public override void OnBeatPulse(double beat)
         {
             if ((MonkAnim.IsAnimationNotPlaying() || MonkAnim.IsPlayingAnimationName("Bop") || MonkAnim.IsPlayingAnimationName("Idle"))
-                && monkBop
+                && BeatIsInBopRegion(beat)
                 && !isStaring)
             {
                 MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
@@ -370,15 +370,23 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(double beat, bool bop, bool autoBop)
+        public void Bop(double beat, double length, bool bop)
         {
-            monkBop = autoBop;
-            if (bop) {
-                needBlush = false;
-                MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
+            if (!bop) return;
+            List<BeatAction.Action> actions = new();
+
+            for (int i = 0; i < length; i++)
+            {
+                actions.Add(new(beat + i, delegate
+                {
+                    needBlush = false;
+                    MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                    if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                    if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
+                }));
             }
+
+            if (actions.Count > 0) BeatAction.New(this, actions);
         }
 
         public void InputFunctions(int whichVar, float state = 0)

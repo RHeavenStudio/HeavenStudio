@@ -144,7 +144,6 @@ namespace HeavenStudio.Games
         public Animator Gramps;
         public Animator Hit;
         public GameObject Player;
-        [NonSerialized] public bool shouldBop = true;
         bool canBop = true;
         bool grampsCanBop = true;
         public bool spaceGrampsShouldBop = false;
@@ -226,11 +225,12 @@ namespace HeavenStudio.Games
             instance = this;
             colorStart = defaultBGColor;
             colorEnd = defaultBGColor;
+            SetupBopRegion("spaceDance", "bop", "auto");
         }
 
         public override void OnBeatPulse(double beat)
         {
-            if (shouldBop)
+            if (BeatIsInBopRegion(beat))
             {
                 Bop();
             }
@@ -656,7 +656,6 @@ namespace HeavenStudio.Games
 
         public void EpicBop(double beat, float length, bool autoDancers, bool dancers, bool autoGramps, bool gramps)
         {
-            shouldBop = autoDancers;
             spaceGrampsShouldBop = autoGramps;
             if (dancers || gramps)
             {

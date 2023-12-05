@@ -163,7 +163,6 @@ namespace HeavenStudio.Games
         Sound SpinningLoop;
         [Header("Variables")]
         [SerializeField] List<PosterImages> posters = new List<PosterImages>();
-        bool shouldBop = true;
         bool canBop = true;
         public bool doingCue;
         double cueLength;
@@ -171,7 +170,6 @@ namespace HeavenStudio.Games
         bool shouldYay;
         bool shouldDoSuccessZoom;
         public bool shouldBeBlack = false;
-        public GameEvent bop = new GameEvent();
         int currentZoomIndex;
         double currentZoomCamBeat;
         float currentZoomCamLength;
@@ -230,6 +228,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("cheerReaders", "bop", "toggle2");
             for (int i = 0; i < topMasks.Count; i++)
             {
                 firstRow[i].posterBook = topMasks[i];
@@ -264,7 +263,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (!shouldBop) return;
+            if (!BeatIsInBopRegion(beat)) return;
             BopSingle();
         }
 
@@ -482,7 +481,6 @@ namespace HeavenStudio.Games
 
         public void BopToggle(double beat, float length, bool startBop, bool bopAuto)
         {
-            shouldBop = bopAuto;
             if (startBop)
             {
                 for (int i = 0; i < length; i++)

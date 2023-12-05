@@ -94,10 +94,8 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         bool intervalStarted;
         double intervalStartBeat;
-        bool bossBop = true;
         public double beatInterval = 4f;
         public bool bossAnnoyed = false;
-        private double lastReportedBeat = 0f;
         const string sfxName = "meatGrinder/";
 
         public static MeatGrinder instance;
@@ -124,6 +122,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("meatGrinder", "bop", "bossBop");
         }
 
         void OnDestroy()
@@ -161,7 +160,7 @@ namespace HeavenStudio.Games
         {
             if (!BossAnim.IsPlayingAnimationName("BossCall")
                 && !BossAnim.IsPlayingAnimationName("BossSignal")
-                && bossBop)
+                && BeatIsInBopRegion(beat))
             {
                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
             }
@@ -169,7 +168,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, double length, bool doesBop, bool autoBop)
         {
-            bossBop = autoBop;
             if (doesBop)
             {
                 for (int i = 0; i < length; i++)

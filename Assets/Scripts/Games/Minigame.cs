@@ -6,6 +6,7 @@ using HeavenStudio.Util;
 using HeavenStudio.Common;
 using HeavenStudio.InputSystem;
 using System;
+using System.Linq;
 
 namespace HeavenStudio.Games
 {
@@ -447,6 +448,82 @@ namespace HeavenStudio.Games
         {
             
         }
+
+        #region Bop
+
+        protected enum DefaultBopEnum
+        {
+            Off = 0,
+            On = 1,
+        }
+
+        private Dictionary<double, int> bopRegion = new();
+
+        public bool BeatIsInBopRegion(double beat)
+        {
+            if (bopRegion.Count == 0) return true;
+
+            int bop = 0;
+            foreach (var item in bopRegion)
+            {
+                if (beat < item.Key) break;
+                if (beat >= item.Key) bop = item.Value;
+            }
+            return (DefaultBopEnum)bop == DefaultBopEnum.On;
+        }
+
+        public int BeatIsInBopRegionInt(double beat)
+        {
+            if (bopRegion.Count == 0) return 0;
+
+            int bop = 0;
+            foreach (var item in bopRegion)
+            {
+                if (beat < item.Key) break;
+                if (beat >= item.Key) bop = item.Value;
+            }
+            return bop;
+        }
+
+        protected void SetupBopRegion(string gameName, string eventName, string toggleName, bool isBool = true)
+        {
+            var allEvents = EventCaller.GetAllInGameManagerList(gameName, new string[] { eventName });
+            allEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            foreach (var e in allEvents)
+            {
+                if (isBool)
+                {
+                    bopRegion.Add(e.beat, e[toggleName] ? 1 : 0);
+                }
+                else
+                {
+                    bopRegion.Add(e.beat, e[toggleName]);
+                }
+            }
+        }
+
+        protected void AddBopRegionEvents(string gameName, string eventName, bool allowBop)
+        {
+            var allEvents = EventCaller.GetAllInGameManagerList(gameName, new string[] { eventName });
+            foreach (var e in allEvents)
+            {
+                bopRegion.Add(e.beat, allowBop ? 1 : 0);
+            }
+            bopRegion = bopRegion.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+
+        protected void AddBopRegionEventsInt(string gameName, string eventName, int allowBop)
+        {
+            var allEvents = EventCaller.GetAllInGameManagerList(gameName, new string[] { eventName });
+            foreach (var e in allEvents)
+            {
+                bopRegion.Add(e.beat, allowBop);
+            }
+            bopRegion = bopRegion.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+
+        #endregion
 
         private void OnDestroy()
         {

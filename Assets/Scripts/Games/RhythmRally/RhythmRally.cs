@@ -152,8 +152,6 @@ namespace HeavenStudio.Games
 
         public Paddlers paddlers;
 
-        private bool goBop = true;
-
         public static RhythmRally instance;
 
         private void Awake()
@@ -166,6 +164,7 @@ namespace HeavenStudio.Games
 
             playerAnim.Play("Idle", 0, 0);
             opponentAnim.Play("Idle", 0, 0);
+            SetupBopRegion("rhythmRally", "bop", "bopAuto");
         }
 
         const float tableHitTime = 0.58f;
@@ -366,7 +365,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (goBop && !inPose)
+            if (BeatIsInBopRegion(beat) && !inPose)
             {
                 BopSingle();
             }
@@ -374,7 +373,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool bop, bool bopAuto)
         {
-            goBop = bopAuto;
             if (bop)
             {
                 for (int i = 0; i < length; i++)

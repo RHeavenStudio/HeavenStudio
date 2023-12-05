@@ -110,9 +110,7 @@ namespace HeavenStudio.Games
         [SerializeField] private float monkeyJumpHeight = 3f;
         [SerializeField] private float maxFlashOpacity = 0.8f;
 
-        private GameEvent bop = new();
         private bool canBop = true;
-        private bool shouldBop = true;
 
         private double jumpStartBeat = double.MinValue;
 
@@ -121,11 +119,12 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("tapTrial", "bop", "toggle2");
         }
 
         public override void OnBeatPulse(double beat)
         {
-            if (shouldBop) SingleBop();
+            if (BeatIsInBopRegion(beat)) SingleBop();
         }
 
         private void Update()
@@ -253,7 +252,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool bop, bool autoBop)
         {
-            shouldBop = autoBop;
             if (bop)
             {
                 List<BeatAction.Action> actions = new();

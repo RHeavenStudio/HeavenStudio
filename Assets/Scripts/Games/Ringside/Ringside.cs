@@ -143,7 +143,6 @@ namespace HeavenStudio.Games
         private float currentZoomCamBeat;
         private Vector3 lastCamPos = new Vector3(0, 0, -10);
         private Vector3 currentCamPos = new Vector3(0, 0, -10);
-        private bool shouldBop = true;
         private bool missedBigGuy;
         private bool reporterShouldHeart;
         private bool hitPose;
@@ -201,6 +200,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("ringside", "toggleBop", "bop");
             var camEvents = EventCaller.GetAllInGameManagerList("ringside", new string[] { "poseForTheFans" });
             List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
@@ -220,7 +220,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (shouldBop && canBop)
+            if (BeatIsInBopRegion(beat) && canBop)
             {
                 if (UnityEngine.Random.Range(1, 18) == 1)
                 {
@@ -331,7 +331,6 @@ namespace HeavenStudio.Games
 
         public void ToggleBop(double beat, float length, bool startBopping, bool autoBop)
         {
-            shouldBop = autoBop;
             if (startBopping)
             {
                 for (int i = 0; i < length; i++)
@@ -510,7 +509,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1, delegate  { PoseCheck(beat); }),
                 new BeatAction.Action(beat + 4f, delegate
                 {
-                    if (shouldBop)
+                    if (BeatIsInBopRegion(beat + 4f))
                     {
                         if (UnityEngine.Random.Range(1, 18) == 1)
                         {

@@ -218,8 +218,6 @@ namespace HeavenStudio.Games
         private static bool wantKamoneAlt = false;
         private static double wantBigReady = double.MinValue;
         private bool hasJumped = false;
-        private bool goBopIdol = true;
-        private bool goBopSpec = true;
         private bool noJudgement = false;
         private bool noJudgementInput = false;
 
@@ -235,6 +233,8 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("fanClub", "bop", "type2", false);
+            AddBopRegionEventsInt("fanClub", "finish", 3);
             Spectators = new List<GameObject>();
             idolAnimator = Arisa.GetComponent<Animator>();
             backupRAnimator = Blue.GetComponent<Animator>();
@@ -357,6 +357,9 @@ namespace HeavenStudio.Games
         public override void OnBeatPulse(double beat)
         {
             var cond = Conductor.instance;
+            int whoBops = BeatIsInBopRegionInt(beat);
+            bool goBopIdol = whoBops == (int)IdolBopType.Both || whoBops == (int)IdolBopType.Idol;
+            bool goBopSpec = whoBops == (int)IdolBopType.Both || whoBops == (int)IdolBopType.Spectators;
             if (goBopIdol)
             {
                 if (!(cond.songPositionInBeatsAsDouble >= noBop.startBeat && cond.songPositionInBeatsAsDouble < noBop.startBeat + noBop.length))
@@ -398,8 +401,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, int target = (int) IdolBopType.Both, int targetAuto = (int)IdolBopType.Both)
         {
-            goBopIdol = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Idol;
-            goBopSpec = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Spectators;
             for (int i = 0; i < length; i++)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
@@ -934,7 +935,6 @@ namespace HeavenStudio.Games
             if (noJudgement) return;
             noJudgement = true;
             noJudgementInput = false;
-            goBopSpec = false;
 
             // recreation of sub61
             BeatAction.New(this, new List<BeatAction.Action>()

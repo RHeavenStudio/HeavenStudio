@@ -258,7 +258,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 1, delegate
                 {
-                    if (game.goBop)
+                    if (game.BeatIsInBopRegion(caller.timer + caller.startBeat + 1))
                     {
                         game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
                         if (game.djYellowHolding) game.djYellowScript.Reverse();
@@ -278,7 +278,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             {
                 new BeatAction.Action(beat, delegate
                 {
-                    if (game.goBop)
+                    if (game.BeatIsInBopRegion(beat))
                     {
                         game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
                         if (game.djYellowHolding) game.djYellowScript.Reverse();
