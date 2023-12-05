@@ -113,14 +113,12 @@ namespace HeavenStudio.Games
         [SerializeField] private Student student;
         [SerializeField] private GameObject djYellow;
         private Animator djYellowAnim;
-        private double lastReportedBeat = 0f;
         public DJYellow djYellowScript;
 
         [Header("Properties")]
         public GameEvent bop = new GameEvent();
         public bool djYellowHolding;
         public bool andStop;
-        public bool goBop;
         public double beatOfInstance;
         private bool djYellowBopLeft;
         public bool shouldBeHolding = false;
@@ -138,7 +136,7 @@ namespace HeavenStudio.Games
             djYellowAnim = djYellow.GetComponent<Animator>();
             djYellowScript = djYellow.GetComponent<DJYellow>();
             student.Init();
-            goBop = true;
+            SetupBopRegion("djSchool", "bop", "toggle");
         }
 
         //For inactive game purposes
@@ -167,7 +165,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (!goBop) return;
+            if (!BeatIsInBopRegion(beat)) return;
             if (student.isHolding)
             {
                 student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
@@ -243,7 +241,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool isBopping, bool autoBop)
         {
-            goBop = autoBop;
             if (isBopping)
             {
                 for (int i = 0; i < length; i++)

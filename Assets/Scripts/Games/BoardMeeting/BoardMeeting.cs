@@ -91,10 +91,8 @@ namespace HeavenStudio.Games
         [SerializeField] List<BMExecutive> executives = new List<BMExecutive>();
         public BMExecutive firstSpinner;
         [SerializeField] float shakeIntensity = 0.5f;
-        public bool shouldBop = true;
         private bool assistantCanBop = true;
         private bool executivesCanBop = true;
-        public GameEvent bop = new GameEvent();
         [NonSerialized] public Sound chairLoopSound = null;
         int missCounter = 0;
         private Tween shakeTween;
@@ -104,6 +102,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("boardMeeting", "bop", "auto");
             InitExecutives();
         }
 
@@ -145,7 +144,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (!shouldBop) return;
+            if (!BeatIsInBopRegion(beat)) return;
             SingleBop();
         }
 
@@ -166,7 +165,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
-            shouldBop = autoBop;
             if (goBop)
             {
                 for (int i = 0; i < length; i++)

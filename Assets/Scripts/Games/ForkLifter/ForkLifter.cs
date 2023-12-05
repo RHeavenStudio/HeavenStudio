@@ -124,6 +124,12 @@ namespace HeavenStudio.Games
             BackgroundColorUpdate();
         }
 
+        public override void OnPlay(double beat)
+        {
+            base.OnPlay(beat);
+            OnGameSwitch(beat);
+        }
+
         public override void OnGameSwitch(double beat)
         {
             base.OnGameSwitch(beat);
@@ -246,11 +252,6 @@ namespace HeavenStudio.Games
                 var lastEventGrad = allEventsBeforeBeatGrad[^1];
                 BackgroundColorGrad(lastEventGrad.beat, lastEventGrad.length, lastEventGrad["start"], lastEventGrad["end"], lastEventGrad["ease"]);
             }
-        }
-
-        public override void OnPlay(double beat)
-        {
-            PersistColor(beat);
         }
     }
 }

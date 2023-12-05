@@ -70,11 +70,8 @@ namespace HeavenStudio.Games
         public Animator CloseCrane;
         public Animator FarCrane;
         public GameObject Player;
-        private bool shouldBop = true;
         private bool missed;
         private bool hasSlurped;
-
-        public GameEvent bop = new GameEvent();
 
         public static RhythmSomen instance;
 
@@ -82,11 +79,12 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("rhythmSomen", "bop", "toggle");
         }
 
         public override void OnBeatPulse(double beat)
         {
-            if (shouldBop) SomenPlayer.DoScaledAnimationAsync("HeadBob", 0.5f);
+            if (BeatIsInBopRegion(beat)) SomenPlayer.DoScaledAnimationAsync("HeadBob", 0.5f);
         }
 
         void Update()
@@ -125,7 +123,6 @@ namespace HeavenStudio.Games
 
         public void ToggleBop(double beat, float length, bool bopOrNah, bool autoBop)
         {
-            shouldBop = autoBop;
             if (bopOrNah)
             {
                 for (int i = 0; i < length; i++)

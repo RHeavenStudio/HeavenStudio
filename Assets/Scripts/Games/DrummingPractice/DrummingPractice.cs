@@ -21,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("bop", true, "Bop", "Should the drummers bop?"),
-                        new Param("autoBop", true, "Bop (Auto)", "Should the drummers auto bop?")
+                        new Param("autoBop", false, "Bop (Auto)", "Should the drummers auto bop?")
                     }
                 },
                 new GameAction("drum", "Hit Drum")
@@ -121,9 +121,6 @@ namespace HeavenStudio.Games
         bool isMoving;
         string moveAnim;
         EasingFunction.Ease lastEase;
-        bool goBop = true;
-
-        public GameEvent bop = new GameEvent();
         public int count = 0;
 
         public static DrummingPractice instance;
@@ -132,6 +129,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             SetMiis();
+            SetupBopRegion("drummingPractice", "bop", "autoBop");
         }
         
         public override void OnGameSwitch(double beat)
@@ -146,7 +144,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (goBop)
+            if (BeatIsInBopRegion(beat))
             {
                 Bop();
             }
@@ -191,7 +189,6 @@ namespace HeavenStudio.Games
 
         public void SetBop(double beat, float length, bool shouldBop, bool autoBop)
         {
-            goBop = autoBop;
             if (shouldBop)
             {
                 for (int i = 0; i < length; i++)

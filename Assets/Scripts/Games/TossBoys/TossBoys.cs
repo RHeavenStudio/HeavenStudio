@@ -147,8 +147,6 @@ namespace HeavenStudio.Games
         Dictionary<double, RiqEntity> passBallDict = new();
         string currentPassType;
         public static TossBoys instance;
-        bool shouldBop = true;
-        public GameEvent bop = new GameEvent();
         float currentEventLength;
 
         const int IAAka = IAMAXCAT;
@@ -236,6 +234,7 @@ namespace HeavenStudio.Games
             instance = this;
             colorStart = defaultBGColor;
             colorEnd = defaultBGColor;
+            SetupBopRegion("tossBoys", "bop", "auto");
         }
 
         new void OnDrawGizmos()
@@ -264,7 +263,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (shouldBop)
+            if (BeatIsInBopRegion(beat))
             {
                 SingleBop();
             }
@@ -352,7 +351,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool auto, bool goBop)
         {
-            shouldBop = auto;
             if (goBop)
             {
                 List<BeatAction.Action> bops = new List<BeatAction.Action>();

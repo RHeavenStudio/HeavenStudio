@@ -114,12 +114,13 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("trickClass", "bop", "autoBop");
         }
 
         public override void OnBeatPulse(double beat)
         {
             var cond = Conductor.instance;
-            if (!goBop) return;
+            if (!BeatIsInBopRegion(beat)) return;
             if ((!playerReady) && cond.songPositionInBeatsAsDouble > playerBopStart)
                 playerAnim.DoScaledAnimationAsync("Bop");
 
