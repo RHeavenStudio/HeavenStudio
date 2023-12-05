@@ -349,24 +349,24 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void LateUpdate() 
+        public override void OnBeatPulse(double beat)
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat)) {
-                if ((MonkAnim.IsAnimationNotPlaying() || MonkAnim.IsPlayingAnimationName("Bop") || MonkAnim.IsPlayingAnimationName("Idle"))
+            if ((MonkAnim.IsAnimationNotPlaying() || MonkAnim.IsPlayingAnimationName("Bop") || MonkAnim.IsPlayingAnimationName("Idle"))
                 && monkBop
-                && !isStaring) 
-                {
-                    MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                }
+                && !isStaring)
+            {
+                MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            }
 
-                if (!MonkAnim.IsPlayingAnimationName("Blush") || !MonkAnim.IsPlayingAnimationName("Stare")) {
-                    if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                    if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
-                }
+            if (!MonkAnim.IsPlayingAnimationName("Blush") || !MonkAnim.IsPlayingAnimationName("Stare"))
+            {
+                if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
+            }
 
-                if (CloudMonkey.activeInHierarchy) {
-                    CloudMonkey.GetComponent<Animator>().DoScaledAnimationAsync("Bop", 0.5f);
-                }
+            if (CloudMonkey.activeInHierarchy) //Why activeInHierarchy? - Rasmus
+            {
+                CloudMonkey.GetComponent<Animator>().DoScaledAnimationAsync("Bop", 0.5f); //DONT DO THIS!!! GetComponent is a really expensive operation - Rasmus
             }
         }
 

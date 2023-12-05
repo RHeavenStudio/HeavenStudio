@@ -412,6 +412,12 @@ namespace HeavenStudio.Games
             }
         }
 
+        // mainly for bopping logic
+        public virtual void OnBeatPulse(double beat)
+        {
+
+        }
+
         public static MultiSound PlaySoundSequence(string game, string name, double startBeat, params SoundSequence.SequenceParams[] args)
         {
             Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);

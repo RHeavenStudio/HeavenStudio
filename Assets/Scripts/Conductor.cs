@@ -76,12 +76,10 @@ namespace HeavenStudio
         // Conductor is currently paused, but not fully stopped
         public bool isPaused;
 
-        // Last reported beat based on song position
-        private double lastReportedBeat = 0f;
-
         // Metronome tick sound enabled
         public bool metronome = false;
         Util.Sound metronomeSound;
+        private int _metronomeTally = 0;
 
         // pitch values
         private float timelinePitch = 1f;
@@ -89,6 +87,10 @@ namespace HeavenStudio
         public float SongPitch { get => isPaused ? 0f : (timelinePitch * minigamePitch); }
         private float musicScheduledPitch = 1f;
         private double musicScheduledTime = 0;
+
+        // volume modifier
+        private float timelineVolume = 1f;
+        private float minigameVolume = 1f;
 
         public void SetTimelinePitch(float pitch)
         {
@@ -170,6 +172,8 @@ namespace HeavenStudio
                 dspMargin = 2 * dspSizeSeconds;
                 addedPitchChanges.Clear();
                 addedPitchChanges.Add(new AddedPitchChange { time = 0, pitch = SongPitch });
+
+                SetMinigameVolume(1f);
             }
 
             var chart = GameManager.instance.Beatmap;
@@ -204,6 +208,7 @@ namespace HeavenStudio
 
             songPosBeat = GetBeatFromSongPos(time);
             startBeat = songPosBeat;
+            _metronomeTally = 0;
 
             startTime = DateTime.Now;
             absTimeAdjust = 0;
@@ -272,6 +277,46 @@ namespace HeavenStudio
 
             musicSource.volume = endVolume;
             StopOnlyAudio();
+        }
+
+        Coroutine fadeOutAudioCoroutine;
+        public void FadeMinigameVolume(double startBeat, double durationBeats = 1f, float targetVolume = 0f)
+        {
+            if (fadeOutAudioCoroutine != null)
+            {
+                StopCoroutine(fadeOutAudioCoroutine);
+            }
+            fadeOutAudioCoroutine = StartCoroutine(FadeMinigameVolumeCoroutine(startBeat, durationBeats, targetVolume));
+        }
+
+        IEnumerator FadeMinigameVolumeCoroutine(double startBeat, double durationBeats, float targetVolume)
+        {
+            float startVolume = minigameVolume;
+            float endVolume = targetVolume;
+            double startTime = startBeat;
+            double endTime = startBeat + durationBeats;
+
+            while (songPositionInBeatsAsDouble < endTime)
+            {
+                if (!NotStopped()) yield break;
+                double t = (songPositionInBeatsAsDouble - startTime) / durationBeats;
+                SetMinigameVolume(Mathf.Lerp(startVolume, endVolume, (float)t));
+                yield return null;
+            }
+
+            SetMinigameVolume(endVolume);
+        }
+
+        public void SetTimelineVolume(float volume)
+        {
+            timelineVolume = volume;
+            musicSource.volume = timelineVolume * minigameVolume;
+        }
+
+        public void SetMinigameVolume(float volume)
+        {
+            minigameVolume = volume;
+            musicSource.volume = timelineVolume * minigameVolume;
         }
 
         void SeekMusicToTime(double fStartPos, double offset)
@@ -363,13 +408,10 @@ namespace HeavenStudio
         {
             if (metronome && isPlaying)
             {
-                if (ReportBeat(ref lastReportedBeat))
+                if (songPositionInBeatsAsDouble >= Math.Ceiling(startBeat) + _metronomeTally)
                 {
-                    metronomeSound = Util.SoundByte.PlayOneShot("metronome", lastReportedBeat);
-                }
-                else if (songPositionInBeats < lastReportedBeat)
-                {
-                    lastReportedBeat = Mathf.Round(songPositionInBeats);
+                    metronomeSound = Util.SoundByte.PlayOneShot("metronome", Math.Ceiling(startBeat) + _metronomeTally);
+                    _metronomeTally++;
                 }
             }
             else
@@ -382,6 +424,7 @@ namespace HeavenStudio
             }
         }
 
+        [Obsolete("Conductor.ReportBeat is deprecated. Please use the OnBeatPulse callback instead.")]
         public bool ReportBeat(ref double lastReportedBeat, double offset = 0, bool shiftBeatToOffset = true)
         {
             bool result = songPositionInBeats + (shiftBeatToOffset ? offset : 0f) >= (lastReportedBeat) + 1f;
@@ -520,7 +563,7 @@ namespace HeavenStudio
 
         public void SetVolume(float percent)
         {
-            musicSource.volume = percent / 100f;
+            SetTimelineVolume(percent / 100f);
         }
 
         public float SongLengthInBeats()

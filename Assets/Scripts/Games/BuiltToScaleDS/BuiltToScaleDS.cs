@@ -128,6 +128,10 @@ namespace HeavenStudio.Games
         {
             instance = this;
 
+            GameCamera.AdditionalPosition = camPos.position + (Quaternion.Euler(camPos.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.AdditionalRotEuler = camPos.eulerAngles;
+            GameCamera.AdditionalFoV = cameraFoV;
+
             environmentMaterials = environmentRenderer.materials;
             elevatorMaterials = elevatorRenderer.materials;
             beltMaterial = Instantiate(environmentMaterials[8]);
@@ -189,13 +193,6 @@ namespace HeavenStudio.Games
             {
                 evt.Disable();
             }
-        }
-
-        private void Start()
-        {
-            GameCamera.additionalPosition = camPos.position + (Quaternion.Euler(camPos.eulerAngles) * Vector3.forward * 10f);
-            GameCamera.additionalRotEluer = camPos.eulerAngles;
-            GameCamera.additionalFoV = cameraFoV;
         }
 
         public void UpdateMappingColors(Color objectColor, Color shooterColor, Color environmentColor)

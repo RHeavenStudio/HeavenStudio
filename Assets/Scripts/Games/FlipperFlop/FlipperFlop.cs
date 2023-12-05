@@ -230,16 +230,17 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (goBopFlip) SingleBop((int)WhoBops.Flippers);
+            if (goBopTuck) SingleBop((int)WhoBops.CaptainTuck);
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (goBopFlip) SingleBop((int)WhoBops.Flippers);
-                    if (goBopTuck) SingleBop((int)WhoBops.CaptainTuck);
-                }
                 if (isWalking)
                 {
                     float normalizedBeat = cond.GetPositionFromBeat(walkStartBeat, walkLength);
@@ -287,7 +288,7 @@ namespace HeavenStudio.Games
                         {
                             currentXPos = flippersMovement.position.x + (moveLeft ? -rollDistance : rollDistance);
                             isMoving = true;
-                            currentCameraXPos = GameCamera.additionalPosition.x + (moveLeft ? -rollDistance : rollDistance);
+                            currentCameraXPos = GameCamera.AdditionalPosition.x + (moveLeft ? -rollDistance : rollDistance);
                             if (moveLeft)
                             {
                                 rightSnow.Play();
@@ -310,7 +311,7 @@ namespace HeavenStudio.Games
                         {
                             EasingFunction.Function funcCam = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuad);
                             float newCameraPosX = funcCam(lastCameraXPos, currentCameraXPos, normalizedCamBeat);
-                            GameCamera.additionalPosition = new Vector3(newCameraPosX, 0, 0);
+                            GameCamera.AdditionalPosition = new Vector3(newCameraPosX, 0, 0);
                         }
                         if (1f >= normalizedBeat)
                         {

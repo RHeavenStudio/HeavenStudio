@@ -218,26 +218,27 @@ namespace HeavenStudio.Games
             ReporterBlink();
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop && canBop)
+            {
+                if (UnityEngine.Random.Range(1, 18) == 1)
+                {
+                    wrestlerAnim.DoScaledAnimationAsync("BopPec");
+                }
+                else
+                {
+                    wrestlerAnim.DoScaledAnimationAsync("Bop");
+                }
+            }
+        }
+
         void Update()
         {
             var cond = Conductor.instance;
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (shouldBop && canBop)
-                    {
-                        if (UnityEngine.Random.Range(1, 18) == 1)
-                        {
-                            wrestlerAnim.DoScaledAnimationAsync("BopPec");
-                        }
-                        else
-                        {
-                            wrestlerAnim.DoScaledAnimationAsync("Bop");
-                        }
-                    }
-                }
                 if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && !shouldNotInput)
                 {
                     if ((PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
@@ -293,11 +294,11 @@ namespace HeavenStudio.Games
                 {
                     if (normalizedShouldStopBeat > 1 && !keepZoomOut)
                     {
-                        GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                        GameCamera.AdditionalPosition = new Vector3(0, 0, 0);
                     }
                     else if (normalizedBeat > 1)
                     {
-                        GameCamera.additionalPosition = new Vector3(currentCamPos.x, currentCamPos.y, currentCamPos.z + 10);
+                        GameCamera.AdditionalPosition = new Vector3(currentCamPos.x, currentCamPos.y, currentCamPos.z + 10);
                     }
                     else
                     {
@@ -305,7 +306,7 @@ namespace HeavenStudio.Games
                         float newPosX = func(lastCamPos.x, currentCamPos.x, normalizedBeat);
                         float newPosY = func(lastCamPos.y, currentCamPos.y, normalizedBeat);
                         float newPosZ = func(lastCamPos.z + 10, currentCamPos.z + 10, normalizedBeat);
-                        GameCamera.additionalPosition = new Vector3(newPosX, newPosY, newPosZ);
+                        GameCamera.AdditionalPosition = new Vector3(newPosX, newPosY, newPosZ);
                     }
                 }
             }

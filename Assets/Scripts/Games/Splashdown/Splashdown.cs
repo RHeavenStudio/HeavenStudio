@@ -65,7 +65,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("amount", "Synchrette Amount")
                 {
-                    function = delegate { Splashdown.instance.SpawnSynchrettes(eventCaller.currentEntity["amount"]); },
+                    function = delegate { Splashdown.instance.SpawnSynchrettes(eventCaller.currentEntity["amount"], eventCaller.currentEntity.beat); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -93,11 +93,24 @@ namespace HeavenStudio.Games
 
         private List<NtrSynchrette> currentSynchrettes = new List<NtrSynchrette>();
         private NtrSynchrette player;
+        private double _gameSwitchBeat = -1;
 
         private void Awake()
         {
             instance = this;
             SpawnSynchrettes(3);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            _gameSwitchBeat = beat;
+        }
+
+        public override void OnPlay(double beat)
+        {
+            var events = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat < beat);
+            if (events.Count == 0) return;
+            _gameSwitchBeat = events[^1].beat;
         }
 
         private void Update()
@@ -125,7 +138,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnSynchrettes(int amount)
+        public void SpawnSynchrettes(int amount, double beat = -1)
         {
             if (currentSynchrettes.Count > 0)
             {
@@ -137,13 +150,20 @@ namespace HeavenStudio.Games
             }
             if (player != null) Destroy(player.gameObject);
             float startPos = -((amount / 2) * synchretteDistance) + ((amount % 2 == 0) ? synchretteDistance / 2 : 0);
-
+            bool shouldGoDown = false;
+            if (beat >= 0)
+            {
+                var inputEvents = EventCaller.GetAllInGameManagerList("splashdown", new string[] { "dive", "appear", "jump", "together", "togetherR9" }).FindAll(x => x.beat < beat && x.beat >= _gameSwitchBeat);
+                if (inputEvents.Count > 0) shouldGoDown = inputEvents[^1].datamodel == "splashdown/dive";
+            }
             for (int i = 0; i < amount; i++)
             {
                 NtrSynchrette spawnedSynchrette = Instantiate(synchrettePrefab, synchretteHolder);
                 spawnedSynchrette.transform.localPosition = new Vector3(startPos + (synchretteDistance * i), spawnedSynchrette.transform.localPosition.y, 0);
                 if (i < amount - 1) currentSynchrettes.Add(spawnedSynchrette);
                 else player = spawnedSynchrette;
+
+                if (shouldGoDown) spawnedSynchrette.GoDown(false);
             }
         }
 

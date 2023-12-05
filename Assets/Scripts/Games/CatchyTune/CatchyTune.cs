@@ -208,13 +208,13 @@ namespace HeavenStudio.Games
                 // print("current beat: " + conductor.songPositionInBeatsAsDouble);
                 if (stopCatchLeft > 0 && stopCatchLeft <= cond.songPositionInBeatsAsDouble)
                 {
-                    plalinAnim.Play("idle", 0, 0);
+                    plalinAnim.DoScaledAnimationAsync("idle", 0.5f);
                     stopCatchLeft = 0;
                 }
 
                 if (stopCatchRight > 0 && stopCatchRight <= cond.songPositionInBeatsAsDouble)
                 {
-                    alalinAnim.Play("idle", 0, 0);
+                    alalinAnim.DoScaledAnimationAsync("idle", 0.5f);
                     stopCatchRight = 0;
                 }
 
@@ -236,19 +236,6 @@ namespace HeavenStudio.Games
                     heartMessage.SetActive(false);
                 }
 
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (bopLeft && stopCatchLeft == 0)
-                    {
-                        plalinAnim.Play("bop", 0, 0);
-                    }
-
-                    if (bopRight && stopCatchRight == 0)
-                    {
-                        alalinAnim.Play("bop", 0, 0);
-                    }
-                }
-
                 if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
                 {
                     catchWhiff(false);
@@ -257,6 +244,19 @@ namespace HeavenStudio.Games
                 {
                     catchWhiff(true);
                 }
+            }
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (bopLeft && stopCatchLeft == 0)
+            {
+                plalinAnim.DoScaledAnimationAsync("bop", 0.5f);
+            }
+
+            if (bopRight && stopCatchRight == 0)
+            {
+                alalinAnim.DoScaledAnimationAsync("bop", 0.5f);
             }
         }
 
@@ -344,23 +344,23 @@ namespace HeavenStudio.Games
                 case (int)WhoBops.Plalin:
                     if (stopCatchLeft == 0)
                     {
-                        plalinAnim.Play("bop", 0, 0);
+                        plalinAnim.DoScaledAnimationAsync("bop", 0.5f);
                     }
                     break;
                 case (int)WhoBops.Alalin:
                     if (stopCatchRight == 0)
                     {
-                        alalinAnim.Play("bop", 0, 0);
+                        alalinAnim.DoScaledAnimationAsync("bop", 0.5f);
                     }
                     break;
                 case (int)WhoBops.Both:
                     if (stopCatchRight == 0)
                     {
-                        alalinAnim.Play("bop", 0, 0);
+                        alalinAnim.DoScaledAnimationAsync("bop", 0.5f);
                     }
                     if (stopCatchLeft == 0)
                     {
-                        plalinAnim.Play("bop", 0, 0);
+                        plalinAnim.DoScaledAnimationAsync("bop", 0.5f);
                     }
                     break;
                 default:
@@ -374,12 +374,12 @@ namespace HeavenStudio.Games
 
             if (side)
             {
-                alalinAnim.Play(anim, 0, 0);
+                alalinAnim.DoScaledAnimationAsync(anim, 0.5f);
                 stopCatchRight = beat + 0.9f;
             }
             else
             {
-                plalinAnim.Play(anim, 0, 0);
+                plalinAnim.DoScaledAnimationAsync(anim, 0.5f);
                 stopCatchLeft = beat + 0.9f;
             }
 
@@ -402,12 +402,12 @@ namespace HeavenStudio.Games
 
             if (side)
             {
-                alalinAnim.Play("miss" + fruitType, 0, 0);
+                alalinAnim.DoScaledAnimationAsync("miss" + fruitType, 0.5f);
                 stopCatchRight = beat + 0.7f;
             }
             else
             {
-                plalinAnim.Play("miss" + fruitType, 0, 0);
+                plalinAnim.DoScaledAnimationAsync("miss" + fruitType, 0.5f);
                 stopCatchLeft = beat + 0.7f;
             }
         }
@@ -438,12 +438,12 @@ namespace HeavenStudio.Games
 
             if (side)
             {
-                alalinAnim.Play("whiff", 0, 0);
+                alalinAnim.DoScaledAnimationAsync("whiff", 0.5f);
                 stopCatchRight = beat + 0.5f;
             }
             else
             {
-                plalinAnim.Play("whiff", 0, 0);
+                plalinAnim.DoScaledAnimationAsync("whiff", 0.5f);
                 stopCatchLeft = beat + 0.5f;
             }
         }

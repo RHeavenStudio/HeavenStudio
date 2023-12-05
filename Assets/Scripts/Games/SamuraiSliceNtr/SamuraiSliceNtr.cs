@@ -169,16 +169,14 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
-        // Update is called once per frame
+        public override void OnBeatPulse(double beat)
+        {
+            if (goBopSamurai) player.Bop();
+            if (goBopChild) childParent.GetComponent<NtrSamuraiChild>().Bop();
+        }
+
         void Update()
         {
-            var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (goBopSamurai) player.Bop();
-                if (goBopChild) childParent.GetComponent<NtrSamuraiChild>().Bop();
-            }
-
             if (PlayerInput.GetIsAction(InputAction_AltDown))
                 DoStep();
             if (PlayerInput.GetIsAction(InputAction_AltUp) && player.isStepping())

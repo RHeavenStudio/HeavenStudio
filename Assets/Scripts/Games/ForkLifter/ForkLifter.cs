@@ -69,16 +69,6 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Keep Bopping", "Should Fork bop for the duration of the block?"),
-                        new Param("autoBop", false, "Keep Bopping (Auto)", "Should Fork bop indefinitely?"),
-                    },
-                    resizable = true,
-                },
             },
             new List<string>() {"rvl", "normal"},
             "rvlfork", "en",
@@ -149,15 +139,15 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, double length, bool doesBop, bool autoBop)
         {
-            playerInstance.shouldBop = autoBop;
-            if (doesBop)
-            {
-                var actions = new List<BeatAction.Action>();
-                for (int i = 0; i < length; i++) {
-                    actions.Add(new(beat + i, delegate { playerInstance.SingleBop(); }));
-                }
-                BeatAction.New(playerInstance, actions);
-            }
+            // playerInstance.shouldBop = autoBop;
+            // if (doesBop)
+            // {
+            //     var actions = new List<BeatAction.Action>();
+            //     for (int i = 0; i < length; i++) {
+            //         actions.Add(new(beat + i, delegate { playerInstance.SingleBop(); }));
+            //     }
+            //     BeatAction.New(playerInstance, actions);
+            // }
         }
 
         public static void Flick(double beat)

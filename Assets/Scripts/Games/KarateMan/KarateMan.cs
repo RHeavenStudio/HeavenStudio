@@ -839,7 +839,7 @@ namespace HeavenStudio.Games
             }
 
             BackgroundColorUpdate();
-            GameCamera.additionalPosition = cameraPosition - GameCamera.defaultPosition;
+            GameCamera.AdditionalPosition = cameraPosition - GameCamera.defaultPosition;
             BGEffect.transform.position = new Vector3(GameCamera.instance.transform.position.x, GameCamera.instance.transform.position.y, 0);
         }
 
@@ -1164,6 +1164,11 @@ namespace HeavenStudio.Games
             main.prewarm = instant;
 
             Wind.windMain = windStrength;
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            Joe.RequestBop();
         }
 
         public void ToggleBop(double beat, float length, bool toggle, bool autoBop)

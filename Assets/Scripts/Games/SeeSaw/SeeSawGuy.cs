@@ -188,7 +188,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         public void Land(LandType landType, bool getUpOut)
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
-            GameCamera.additionalPosition = Vector3.zero;
+            GameCamera.AdditionalPosition = Vector3.zero;
             bool landedOut = false;
             switch (currentState)
             {
