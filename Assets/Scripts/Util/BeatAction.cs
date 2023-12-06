@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace HeavenStudio.Util
 {
-    public class BeatAction : MonoBehaviour
+    public class BeatAction
     {
-        private int index;
-        private List<Action> actions = new List<Action>();
-
         public delegate void EventCallback();
 
         public class Action
@@ -23,32 +22,44 @@ namespace HeavenStudio.Util
             }
         }
 
-        public static BeatAction New(GameObject prefab, List<Action> actions)
+        public static CancellationTokenSource New(MonoBehaviour behaviour, List<Action> actions)
         {
-            BeatAction beatAction = prefab.AddComponent<BeatAction>();
-            beatAction.actions = actions;
+            if (behaviour == null)
+            {
+                Debug.LogWarning("Starting a BeatAction with no assigned behaviour. The Conductor will be used instead.");
+                behaviour = Conductor.instance;
+            }
+            CancellationTokenSource cancelToken = new CancellationTokenSource();
+            RunAsync(behaviour, actions, cancelToken.Token).Forget();
 
-            return beatAction;
+            return cancelToken;
         }
 
-        private void Update()
+        static async UniTask RunAsync(MonoBehaviour behaviour, List<Action> actions, CancellationToken token)
         {
-            double songPositionInBeats = Conductor.instance.songPositionInBeatsAsDouble;
-
-            for (int i = 0; i < actions.Count; i++)
+            try
             {
-                if (songPositionInBeats >= actions[i].beat && index == i)
-                {
-                    actions[i].function.Invoke();
-                    index++;
-                }
+                await BeatActionAsync(behaviour, actions, token);
+            }
+            catch (System.OperationCanceledException)
+            {
+                Debug.Log("BeatAction cancelled.");
             }
         }
 
-        public void Delete()
+        static async UniTask BeatActionAsync(MonoBehaviour behaviour, List<Action> actions, CancellationToken token)
         {
-            Destroy(this);
+            int idx = 0;
+            while (idx < actions.Count)
+            {
+                await UniTask.WaitUntil(() => Conductor.instance.songPositionInBeatsAsDouble >= actions[idx].beat || (!Conductor.instance.isPlaying) || behaviour == null, cancellationToken: token);
+
+                if (behaviour == null || !Conductor.instance.isPlaying)
+                    return;
+
+                actions[idx].function.Invoke();
+                idx++;
+            }
         }
     }
-
 }

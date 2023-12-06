@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,36 +15,58 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("pajamaParty", "Pajama Party", "fc9ac3", false, false, new List<GameAction>()
                 {
+                    new GameAction("bop", "Bop")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; PajamaParty.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
+                        parameters = new List<Param>()
+                        {
+                            new Param("bop", true, "Keep Bopping", "Should Mako and the monkeys bop for the duration of the block?"),
+                            new Param("autoBop", false, "Keep Bopping (Auto)", "Should Mako and the monkeys bop indefinitely?"),
+                        },
+                        resizable = true,
+                    },
                     // both same timing
                     new GameAction("jump (side to middle)", "Side to Middle Jumps")
                     {
-                        function = delegate {PajamaParty.instance.DoThreeJump(eventCaller.currentEntity.beat);},
+                        function = delegate { PajamaParty.instance.DoThreeJump(eventCaller.currentEntity.beat); },
                         defaultLength = 4f,
-                        inactiveFunction = delegate {PajamaParty.WarnThreeJump(eventCaller.currentEntity.beat);}
+                        inactiveFunction = delegate { PajamaParty.WarnThreeJump(eventCaller.currentEntity.beat); }
                     },
                     new GameAction("jump (back to front)", "Back to Front Jumps")
                     {
-                        function =delegate {PajamaParty.instance.DoFiveJump(eventCaller.currentEntity.beat);}, 
+                        function = delegate { PajamaParty.instance.DoFiveJump(eventCaller.currentEntity.beat); }, 
                         defaultLength = 4f, 
-                        inactiveFunction = delegate {PajamaParty.WarnFiveJump(eventCaller.currentEntity.beat);}
+                        inactiveFunction = delegate { PajamaParty.WarnFiveJump(eventCaller.currentEntity.beat); }
                     },
                     //idem
                     new GameAction("slumber", "Slumber")
                     {
-                        function = delegate {var e = eventCaller.currentEntity; PajamaParty.instance.DoSleepSequence(e.beat, e["toggle"], e["type"]);}, 
+                        function = delegate { var e = eventCaller.currentEntity; PajamaParty.instance.DoSleepSequence(e.beat, e["toggle"], e["type"]); }, 
                         defaultLength = 8f,
                         parameters = new List<Param>()
                         {
                             new Param("type", PajamaParty.SleepType.Normal, "Sleep Type", "Type of sleep action to use"),
                             new Param("toggle", false, "Alt. Animation", "Use an alternate animation for Mako")
                         }, 
-                        inactiveFunction = delegate {var e = eventCaller.currentEntity; PajamaParty.WarnSleepSequence(e.beat, e["toggle"], e["type"]);}
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; PajamaParty.WarnSleepSequence(e.beat, e["toggle"], e["type"]); }
                     },
                     new GameAction("throw", "Throw Pillows")
                     {
-                        function = delegate {PajamaParty.instance.DoThrowSequence(eventCaller.currentEntity.beat);}, 
+                        function = delegate { PajamaParty.instance.DoThrowSequence(eventCaller.currentEntity.beat); }, 
                         defaultLength = 8f,
-                        inactiveFunction = delegate {PajamaParty.WarnThrowSequence(eventCaller.currentEntity.beat);}
+                        inactiveFunction = delegate { PajamaParty.WarnThrowSequence(eventCaller.currentEntity.beat); }
+                    },
+                    new GameAction("instant slumber", "Instant Slumber")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; PajamaParty.instance.DoInstantSleep(e.beat + e.length - 1, e["type"]); }, 
+                        defaultLength = 0.5f,
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; PajamaParty.WarnInstantSleep(e.beat, e.length, e["type"]); },
+                        resizable = true,
+                        parameters = new List<Param>()
+                        {
+                            new Param("type", PajamaParty.SleepType.Normal, "Sleep Type", "Type of sleep action to use"),
+                        },
+                        priority = 5,
                     },
                     // todo cosmetic crap
                     // background stuff
@@ -79,13 +102,51 @@ namespace HeavenStudio.Games
         static double WantFiveJump = double.MinValue;
         static double WantThrowSequence = double.MinValue;
         static double WantSleepSequence = double.MinValue;
+        static double WantInstantSleep = double.MinValue;
         static bool WantSleepType = false;
         static int WantSleepAction = (int) PajamaParty.SleepType.Normal;
-
+        static int WantInstantSleepAction = (int) PajamaParty.SleepType.Normal;
+        
         public enum SleepType {
             Normal,
             NoAwake,
         }
+
+        const int IAAltDownCat = IAMAXCAT;
+        const int IAAltUpCat = IAMAXCAT + 1;
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_AltStart);
+        }
+
+        protected static bool IA_PadAltRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltRelease(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_AltStart =
+            new("CtrPillowAltStart", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_AltFinish =
+            new("CtrPillowAltFinish", new int[] { IAAltUpCat, IAFlickCat, IAAltUpCat },
+            IA_PadAltRelease, IA_TouchFlick, IA_BatonAltRelease);
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("CtrPillowTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
 
         void Awake()
         {
@@ -151,6 +212,37 @@ namespace HeavenStudio.Games
                 DoSleepSequence(WantSleepSequence, WantSleepType, WantSleepAction, false);
                 WantSleepSequence = double.MinValue;
             }
+            if (WantInstantSleep != double.MinValue)
+            {
+                DoInstantSleep(WantInstantSleep, WantInstantSleepAction);
+                WantInstantSleep = double.MinValue;
+            }
+        }
+
+        public void Bop(double beat, double length, bool doesBop, bool autoBop)
+        {
+            Mako.shouldBop = autoBop;
+            for (int y = 0; y < 5; y++) {
+                for (int x = 0; x < 5; x++) {
+                    if (!(y == 0 && x == 2)) monkeys[x, y].shouldBop = autoBop;
+                }
+            }
+            
+            if (doesBop) {
+                var actions = new List<BeatAction.Action>();
+                for (int i = 0; i < length; i++)
+                {
+                    actions.Add(new BeatAction.Action(beat + i, delegate {
+                        Mako.anim.DoScaledAnimationAsync("MakoBeat", 0.5f);
+                        for (int y = 0; y < 5; y++) {
+                            for (int x = 0; x < 5; x++) {
+                                if (!(y == 0 && x == 2)) monkeys[x, y].anim.DoScaledAnimationAsync("MonkeyBeat", 0.5f);
+                            }
+                        }
+                    }));
+                }
+                BeatAction.New(this, actions);
+            }
         }
 
         public void DoThreeJump(double beat, bool doSound = true)
@@ -163,7 +255,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("pajamaParty/three3", beat + 2f),
                 });
 
-            BeatAction.New(Bed, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(
                     beat,
@@ -210,7 +302,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("pajamaParty/five5", beat + 2f)
                 });
 
-            BeatAction.New(Bed, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action( beat,        delegate { JumpRow(4, beat); }),
                 new BeatAction.Action( beat + 0.5f, delegate { JumpRow(3, beat + 0.5f, 2); }),
@@ -222,8 +314,8 @@ namespace HeavenStudio.Games
 
         public static void WarnFiveJump(double beat)
         {
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("pajamaParty/five1", beat), 
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("pajamaParty/five1", beat),
                 new MultiSound.Sound("pajamaParty/five2", beat + 0.5f),
                 new MultiSound.Sound("pajamaParty/five3", beat + 1f),
                 new MultiSound.Sound("pajamaParty/five4", beat + 1.5f),
@@ -238,10 +330,10 @@ namespace HeavenStudio.Games
             if (doSound)
                 PlayThrowSequenceSound(beat);
 
-            BeatAction.New(Mako.Player, new List<BeatAction.Action>()
+            BeatAction.New(Mako, new List<BeatAction.Action>()
             {
-                new BeatAction.Action( beat + 2f, delegate { MonkeyCharge(beat + 2f); } ),
-                new BeatAction.Action( beat + 3f, delegate { MonkeyThrow(beat + 3f); } ),
+                new BeatAction.Action(beat + 2f, delegate { MonkeyCharge(beat + 2f); } ),
+                new BeatAction.Action(beat + 3f, delegate { MonkeyThrow(beat + 3f); } ),
             });
         }
 
@@ -267,7 +359,6 @@ namespace HeavenStudio.Games
 
         public void DoSleepSequence(double beat, bool alt = false, int action = (int) PajamaParty.SleepType.Normal, bool doSound = true)
         {
-            var cond = Conductor.instance;
             Mako.StartSleepSequence(beat, alt, action);
             MonkeySleep(beat, action);
             if (doSound)
@@ -292,6 +383,35 @@ namespace HeavenStudio.Games
             WantSleepSequence = beat;
             WantSleepType = alt;
             WantSleepAction = action;
+        }
+
+        public void DoInstantSleep(double deslumber, int action)
+        {
+            Mako.anim.Play("MakoSleepJust", -1, 1);
+            for (int y = 0; y < 5; y++) {
+                for (int x = 0; x < 5; x++) {
+                    if (!(y == 0 && x == 2)) monkeys[x, y].anim.Play("MonkeySleep02", -1, 1);
+                }
+            }
+
+            if (action == 1) return;
+            BeatAction.New(this, new List<BeatAction.Action>() {
+                new BeatAction.Action(deslumber, delegate { 
+                    Mako.anim.DoScaledAnimationAsync("MakoAwake", 0.5f);
+                    SoundByte.PlayOneShotGame("pajamaParty/siestaDone"); 
+                    for (int y = 0; y < 5; y++) {
+                        for (int x = 0; x < 5; x++) {
+                            if (!(y == 0 && x == 2)) monkeys[x, y].anim.DoScaledAnimationAsync("MonkeyAwake", 0.5f);
+                        }
+                    }
+                }),
+            });
+        }
+
+        public static void WarnInstantSleep(double beat, double length, int action)
+        {
+            WantInstantSleep = beat + length - 1;
+            WantInstantSleepAction = action;
         }
 
         public void DoBedImpact()

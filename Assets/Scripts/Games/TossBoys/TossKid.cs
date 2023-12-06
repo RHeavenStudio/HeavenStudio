@@ -35,11 +35,12 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                 DoAnimationScaledAsync("Whiff", 0.5f);
                 SoundByte.PlayOneShotGame("tossBoys/whiff");
             }
+            preparing = false;
         }
 
         public void Bop()
         {
-            if (!anim.IsAnimationNotPlaying() || crouch || preparing) return;
+            if (crouch || preparing || (!anim.IsAnimationNotPlaying() && !anim.IsPlayingAnimationName(prefix + "Idle"))) return;
             DoAnimationScaledAsync("Bop", 0.5f);
         }
 
@@ -74,7 +75,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
 
         public void ShowArrow(double startBeat, float length)
         {
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>(){
+            BeatAction.New(game, new List<BeatAction.Action>(){
                 new BeatAction.Action(startBeat, delegate { arrow.SetActive(true); }),
                 new BeatAction.Action(startBeat + length, delegate { arrow.SetActive(false); }),
             });

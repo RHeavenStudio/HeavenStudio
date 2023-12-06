@@ -77,6 +77,7 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_BoardMeeting;
+    using System;
 
     public class BoardMeeting : Minigame
     {
@@ -90,11 +91,9 @@ namespace HeavenStudio.Games
         [SerializeField] List<BMExecutive> executives = new List<BMExecutive>();
         public BMExecutive firstSpinner;
         [SerializeField] float shakeIntensity = 0.5f;
-        public bool shouldBop = true;
-        bool assistantCanBop = true;
-        bool executivesCanBop = true;
-        public GameEvent bop = new GameEvent();
-        Sound chairLoopSound = null;
+        private bool assistantCanBop = true;
+        private bool executivesCanBop = true;
+        [NonSerialized] public Sound chairLoopSound = null;
         int missCounter = 0;
         private Tween shakeTween;
 
@@ -103,7 +102,21 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("boardMeeting", "bop", "auto");
             InitExecutives();
+        }
+
+        private void OnDestroy()
+        {
+            foreach(var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
+            }
         }
 
         private void Update()
@@ -112,11 +125,7 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
-                {
-                    SingleBop();
-                }
-                if(PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPressing) && !IsExpectingInputNow(InputAction_BasicPress.inputLockCategory))
                 {
                     if (executives[executiveCount - 1].spinning)
                     {
@@ -124,9 +133,19 @@ namespace HeavenStudio.Games
                         SoundByte.PlayOneShotGame("boardMeeting/miss");
                         SoundByte.PlayOneShot("miss");
                         ScoreMiss();
+                        foreach (var evt in scheduledInputs)
+                        {
+                            evt.Disable();
+                        }
                     }
                 }
             }
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (!BeatIsInBopRegion(beat)) return;
+            SingleBop();
         }
 
         void SingleBop()
@@ -146,12 +165,11 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
-            shouldBop = autoBop;
             if (goBop)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -174,7 +192,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("boardMeeting/three", beat + 1),
                 new MultiSound.Sound("boardMeeting/stopAll", beat + 2)
             });
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { assistantAnim.DoScaledAnimationAsync("One", 0.5f); }),
                 new BeatAction.Action(beat + 1, delegate { assistantAnim.DoScaledAnimationAsync("Three", 0.5f); }),
@@ -196,7 +214,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 2.5f, delegate { assistantCanBop = true; })
             });
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustAssistant, MissAssistant, Empty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, JustAssistant, MissAssistant, Empty);
         }
 
         public void Stop(double beat, float length)
@@ -236,8 +254,8 @@ namespace HeavenStudio.Games
                 }));
             }
             stops.Add(new BeatAction.Action(beat + length * executiveCount + 0.5f, delegate { executivesCanBop = true; }));
-            BeatAction.New(instance.gameObject, stops);
-            ScheduleInput(beat, length * (executiveCount - 1), InputType.STANDARD_DOWN, Just, Miss, Empty);
+            BeatAction.New(instance, stops);
+            ScheduleInput(beat, length * (executiveCount - 1), InputAction_BasicPress, Just, Miss, Empty);
         }
 
         public void Prepare()
@@ -277,7 +295,7 @@ namespace HeavenStudio.Games
                     executives[index].Spin(soundToPlay);
                 }));
             }
-            BeatAction.New(instance.gameObject, rolls);
+            BeatAction.New(instance, rolls);
 
         }
 
@@ -309,6 +327,16 @@ namespace HeavenStudio.Games
                     soundToPlay = "Player";
                 }
                 executives[i].Spin(soundToPlay, forceStart);
+            }
+        }
+
+        public void StopChairLoopSoundIfLastToStop()
+        {
+            if (executives.FindAll(x => x.spinning).Count > 1) return;
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
             }
         }
 
@@ -374,7 +402,7 @@ namespace HeavenStudio.Games
             }
             SoundByte.PlayOneShotGame("boardMeeting/stopPlayer");
             executives[executiveCount - 1].Stop();
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
                 {
@@ -403,12 +431,12 @@ namespace HeavenStudio.Games
             if (shakeTween != null)
                 shakeTween.Kill(true);
 
-            DOTween.Punch(() => GameCamera.additionalPosition, x => GameCamera.additionalPosition = x, new Vector3(shakeIntensity, 0, 0),
+            DOTween.Punch(() => GameCamera.AdditionalPosition, x => GameCamera.AdditionalPosition = x, new Vector3(shakeIntensity, 0, 0),
                 Conductor.instance.pitchedSecPerBeat * 0.5f, 18, 1f);
             executives[executiveCount - 1].Stop();
             assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);
             SoundByte.PlayOneShotGame("boardMeeting/stopAllPlayer");
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
                 {

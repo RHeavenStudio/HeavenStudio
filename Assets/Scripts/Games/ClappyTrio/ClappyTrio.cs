@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Threading;
+
 using HeavenStudio.Util;
 using Jukebox;
 using Jukebox.Legacy;
@@ -16,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("clap", "Clap")
                 {
-                    function = delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    function = delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity.beat); }, 
                     resizable = true
                 },
                 new GameAction("bop", "Bop")
@@ -84,11 +86,6 @@ namespace HeavenStudio.Games
 
         [SerializeField] private Sprite[] faces;
 
-        private bool isClapping;
-        private float currentClappingLength;
-        private float lastClapStart;
-        private int clapIndex;
-
         private ClappyTrioPlayer ClappyTrioPlayer;
         public int misses;
         bool shouldBop;
@@ -106,7 +103,7 @@ namespace HeavenStudio.Games
         public static ClappyTrio instance { get; set; }
 
         MultiSound clapSounds = null;
-        BeatAction clapAction = null;
+        CancellationTokenSource clapAction = null;
 
         private void Awake()
         {
@@ -116,20 +113,36 @@ namespace HeavenStudio.Games
         }
         public override void OnGameSwitch(double beat)
         {
+            InitClaps(beat);
+        }
+
+        private void InitClaps(double beat)
+        {
             RiqEntity changeLion = GameManager.instance.Beatmap.Entities.FindLast(c => c.datamodel == "clappyTrio/change lion count" && c.beat <= beat);
-            if(changeLion != null)
+            if (changeLion != null)
             {
                 EventCaller.instance.CallEvent(changeLion, true);
             }
+
+            var allClaps = EventCaller.GetAllInGameManagerList("clappyTrio", new string[] { "clap" });
+
+            foreach (var c in allClaps)
+            {
+                if (c.beat < beat && c.beat + (c.length * (lionCount - 1)) >= beat)
+                {
+                    Clap(c.beat, c.length, beat);
+                }
+            }
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop) Bop(Conductor.instance.songPositionInBeatsAsDouble);
         }
 
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (shouldBop) Bop(cond.songPositionInBeatsAsDouble);
-            }
             if (cond.isPlaying && !cond.isPaused)
             {
                 float normalizedBeat = cond.GetPositionFromBeat(signStartBeat, signLength);
@@ -178,27 +191,38 @@ namespace HeavenStudio.Games
                 clapSounds.Delete();
 
             if (clapAction != null)
-                clapAction.Delete();
+            {
+                clapAction.Cancel();
+                clapAction.Dispose();
+            }
         }
 
-        public void Clap(double beat, float length)
+        public void Clap(double beat, float length, double gameSwitchBeat)
         {
             ClappyTrioPlayer.clapStarted = true;
             ClappyTrioPlayer.canHit = true; // this is technically a lie, this just restores the ability to hit
-
-            isClapping = true;
             
             // makes the other lions clap
             List<MultiSound.Sound> sounds = new List<MultiSound.Sound>();
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             for (int i = 0; i < Lion.Count - 1; i++)
             {
+                bool isBeforeGameSwitch = beat + (length * i) < gameSwitchBeat;
                 int idx = i;
-                sounds.Add(new MultiSound.Sound((i > 0) ? "clappyTrio/middleClap" : "clappyTrio/leftClap", beat + (length * i)));
-                actions.Add(new BeatAction.Action(beat + (length * i), delegate { SetFace(idx, 4); Lion[idx].GetComponent<Animator>().Play("Clap", 0, 0);}));
+                if (isBeforeGameSwitch)
+                {
+                    SetFace(idx, 4); 
+                    Lion[idx].GetComponent<Animator>().Play("Clap", 0, 1);
+                }
+                else
+                {
+                    sounds.Add(new MultiSound.Sound((i > 0) ? "clappyTrio/middleClap" : "clappyTrio/leftClap", beat + (length * i)));
+                    actions.Add(new BeatAction.Action(beat + (length * i), delegate 
+                    { SetFace(idx, 4); Lion[idx].GetComponent<Animator>().Play("Clap", 0, 0); }));
+                }
             }
-            clapSounds = MultiSound.Play(sounds.ToArray());
-            clapAction = BeatAction.New(this.gameObject, actions);
+            if (sounds.Count > 0) clapSounds = MultiSound.Play(sounds.ToArray());
+            if (actions.Count > 0) clapAction = BeatAction.New(this, actions);
 
             // prepare player input
             ClappyTrioPlayer.QueueClap(beat, length * (Lion.Count - 1));
@@ -231,7 +255,7 @@ namespace HeavenStudio.Games
                         bops.Add(new BeatAction.Action(spawnBeat, delegate { misses = 0; }));
                     }
                 }
-                if (bops.Count > 0) BeatAction.New(instance.gameObject, bops);
+                if (bops.Count > 0) BeatAction.New(instance, bops);
             }
         }
 

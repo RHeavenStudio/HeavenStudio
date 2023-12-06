@@ -13,21 +13,17 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         public static ForkLifterPlayer instance { get; set; }
 
         [Header("Objects")]
-        public GameObject fork;
-        public Sprite peaSprite;
         public Sprite hitFX;
         public Sprite hitFXG;
         public Sprite hitFXMiss;
         public Sprite hitFX2;
         public Transform early, perfect, late;
 
-        [SerializeField]
-        private BoxCollider2D col;
-
         private Animator anim;
 
         private int currentHitInList = 0;
 
+        public bool shouldBop;
         public int currentEarlyPeasOnFork;
         public int currentPerfectPeasOnFork;
         public int currentLatePeasOnFork;
@@ -48,14 +44,9 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void LateUpdate()
         {
-            if (PlayerInput.Pressed() && !ForkLifter.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(ForkLifter.InputAction_BasicPress, out _) && !ForkLifter.instance.IsExpectingInputNow(ForkLifter.InputAction_BasicPress.inputLockCategory))
             {
                 Stab(null);
-            }
-
-            if (ForkLifter.instance.EligibleHits.Count == 0)
-            {
-                currentHitInList = 0;
             }
         }
 
@@ -68,6 +59,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             }
         }
 
+        // used in an animation event
         public void EatConfirm()
         {
             if (topbun && middleburger && bottombun)

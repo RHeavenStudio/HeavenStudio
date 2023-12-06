@@ -19,7 +19,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("high", false, "High", "Will they perform high jumps?"),
+                        new Param("high", false, "High", "Will they perform high jumps?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "height", "camMove" })
+                        }),
                         new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
                         new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
                     }
@@ -30,7 +33,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("high", false, "High", "Will they perform high jumps?"),
+                        new Param("high", false, "High", "Will they perform high jumps?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "height", "camMove" })
+                        }),
                         new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
                         new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
                     }
@@ -41,7 +47,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("high", false, "High", "Will they perform high jumps?"),
+                        new Param("high", false, "High", "Will they perform high jumps?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "height", "camMove" })
+                        }),
                         new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
                         new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
                     }
@@ -52,7 +61,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("high", false, "High", "Will they perform high jumps?"),
+                        new Param("high", false, "High", "Will they perform high jumps?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "height", "camMove" })
+                        }),
                         new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
                         new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
                     }
@@ -171,8 +183,8 @@ namespace HeavenStudio.Games
         [NonSerialized] public bool sawShouldBop;
         [NonSerialized] public bool seeShouldBop;
         GameEvent bop = new GameEvent();
-        double bgColorStartBeat;
-        float bgColorLength;
+        double bgColorStartBeat = -1;
+        float bgColorLength = 0;
         Util.EasingFunction.Ease lastEase;
         Color colorFrom;
         Color colorTo;
@@ -192,16 +204,56 @@ namespace HeavenStudio.Games
 
         public static SeeSaw instance;
 
+        private Sound _landSoundEnd;
+        private double _gameSwitchBeat;
+
         private void Awake()
         {
             instance = this;
-            if (allJumpEvents.Count > 0) return;
-            GrabJumpEvents(Conductor.instance.songPositionInBeatsAsDouble);
+            colorFrom = defaultBGColor;
+            colorTo = defaultBGColor;
+            colorFrom2 = defaultBGColorBottom;
+            colorTo2 = defaultBGColorBottom;
+        }
+
+        public override void OnPlay(double beat)
+        {
+            GrabJumpEvents(beat);
+            PersistColor(beat);
+            PersistColors(beat);
+            _gameSwitchBeat = beat;
         }
 
         public override void OnGameSwitch(double beat)
         {
             GrabJumpEvents(beat);
+            PersistColor(beat);
+            PersistColors(beat);
+            _gameSwitchBeat = beat;
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            if (_landSoundEnd != null) _landSoundEnd.Stop();
+        }
+
+        private void PersistColors(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("seeSaw", new string[] { "recolor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat));
+                var e = allEventsBeforeBeat[^1];
+                ChangeMappingColor(e["fill"], e["outline"]);
+            }
+            else
+            {
+                ChangeMappingColor(Color.white, defaultOtherColor);
+            }
         }
 
         private void Start()
@@ -250,7 +302,7 @@ namespace HeavenStudio.Games
                 double goodBeat = tempEvents[0].beat + tempEvents[0].length;
                 for (int i = 1; i < tempEvents.Count; i++)
                 {
-                    if (tempEvents[i].beat != goodBeat)
+                    if (tempEvents[i].beat < goodBeat)
                     {
                         tempEvents2.Add(tempEvents[i]);
                     }
@@ -271,25 +323,38 @@ namespace HeavenStudio.Games
             }
         }
 
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("seeSaw", new string[] { "changeBgColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                ChangeColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
+            }
+        }
+
+        private void BackgroundColorUpdate(Conductor cond)
+        {
+            float normalizedBeat = Mathf.Clamp01(cond.GetPositionFromBeat(bgColorStartBeat, bgColorLength));
+            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
+            float newColorR = func(colorFrom.r, colorTo.r, normalizedBeat);
+            float newColorG = func(colorFrom.g, colorTo.g, normalizedBeat);
+            float newColorB = func(colorFrom.b, colorTo.b, normalizedBeat);
+            bgHigh.color = new Color(newColorR, newColorG, newColorB);
+            gradient.color = new Color(newColorR, newColorG, newColorB);
+            newColorR = func(colorFrom2.r, colorTo2.r, normalizedBeat);
+            newColorG = func(colorFrom2.g, colorTo2.g, normalizedBeat);
+            newColorB = func(colorFrom2.b, colorTo2.b, normalizedBeat);
+            bgLow.color = new Color(newColorR, newColorG, newColorB);
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                float normalizedBeat = cond.GetPositionFromBeat(bgColorStartBeat, bgColorLength);
-                if (normalizedBeat > 0 && normalizedBeat <= 1)
-                {
-                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
-                    float newColorR = func(colorFrom.r, colorTo.r, normalizedBeat);
-                    float newColorG = func(colorFrom.g, colorTo.g, normalizedBeat);
-                    float newColorB = func(colorFrom.b, colorTo.b, normalizedBeat);
-                    bgHigh.color = new Color(newColorR, newColorG, newColorB);
-                    gradient.color = new Color(newColorR, newColorG, newColorB);
-                    newColorR = func(colorFrom2.r, colorTo2.r, normalizedBeat);
-                    newColorG = func(colorFrom2.g, colorTo2.g, normalizedBeat);
-                    newColorB = func(colorFrom2.b, colorTo2.b, normalizedBeat);
-                    bgLow.color = new Color(newColorR, newColorG, newColorB);
-                }
+                BackgroundColorUpdate(cond);
                 if (allJumpEvents.Count > 0 && !(see.dead || saw.dead))
                 {
                     if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex >= 0)
@@ -302,10 +367,9 @@ namespace HeavenStudio.Games
                             {
                                 if (canPrepare && cond.songPositionInBeatsAsDouble < allJumpEvents[currentJumpIndex].beat)
                                 {
-
                                     float beatToJump = (float)allJumpEvents[currentJumpIndex].beat - (inJump ? 1 : 2);
-                                    SoundByte.PlayOneShotGame("seeSaw/prepareHigh", beatToJump);
-                                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                                    if (beatToJump >= _gameSwitchBeat) SoundByte.PlayOneShotGame("seeSaw/prepareHigh", beatToJump);
+                                    BeatAction.New(instance, new List<BeatAction.Action>()
                                     {
                                         new BeatAction.Action(beatToJump, delegate { see.SetState(inJump ? SeeSawGuy.JumpState.StartJumpIn : SeeSawGuy.JumpState.StartJump, beatToJump); see.canBop = false; })
                                     });
@@ -379,7 +443,7 @@ namespace HeavenStudio.Games
                         }
                     }));
                 }
-                BeatAction.New(instance.gameObject, bops);
+                BeatAction.New(instance, bops);
             }
         }
 
@@ -432,7 +496,7 @@ namespace HeavenStudio.Games
                 });
             }
 
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, high ? JustLongHigh : JustLong, MissLong, Empty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, high ? JustLongHigh : JustLong, MissLong, Empty);
             if (currentJumpIndex < allJumpEvents.Count) 
             { 
                 if (currentJumpIndex >= 0)
@@ -444,8 +508,8 @@ namespace HeavenStudio.Games
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 4)
                 {
                     saw.canBop = true;
-                    SoundByte.PlayOneShotGame("seeSaw/otherLand", beat + 4);
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    _landSoundEnd = SoundByte.PlayOneShotGame("seeSaw/otherLand", beat + 4);
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + 3.75f, delegate { see.canBop = true; }),
                         new BeatAction.Action(beat + 4, delegate { see.Land(SeeSawGuy.LandType.Normal, true); canPrepare = true;})
@@ -491,7 +555,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("seeSaw/otherVoiceLong2", beat + 1),
                 });
             }
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, high ? JustShortHigh : JustShort, MissShort, Empty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, high ? JustShortHigh : JustShort, MissShort, Empty);
             if (currentJumpIndex < allJumpEvents.Count)
             {
                 if (currentJumpIndex >= 0)
@@ -504,8 +568,8 @@ namespace HeavenStudio.Games
                 {
                     saw.canBop = true;
                     float beatLength = see.ShouldEndJumpOut() ? 4 : 3;
-                    SoundByte.PlayOneShotGame("seeSaw/otherLand", beat + beatLength);
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    _landSoundEnd = SoundByte.PlayOneShotGame("seeSaw/otherLand", beat + beatLength);
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + beatLength - 0.25f, delegate { see.canBop = true; }),
                         new BeatAction.Action(beat + beatLength, delegate { see.Land(SeeSawGuy.LandType.Normal, true); canPrepare = true;})
@@ -551,7 +615,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("seeSaw/otherVoiceShort2", beat + 0.5f),
                 });
             }
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, high ? JustLongHigh : JustLong, MissLong, Empty);
+            ScheduleInput(beat, 1f, InputAction_BasicPress, high ? JustLongHigh : JustLong, MissLong, Empty);
             if (currentJumpIndex < allJumpEvents.Count)
             {
                 if (currentJumpIndex >= 0)
@@ -564,8 +628,8 @@ namespace HeavenStudio.Games
                 {
                     saw.canBop = true;
                     float beatLength = see.ShouldEndJumpOut() ? 3 : 2;
-                    SoundByte.PlayOneShotGame("seeSaw/otherLand", beat + beatLength);
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    _landSoundEnd = SoundByte.PlayOneShotGame("seeSaw/otherLand", beat + beatLength);
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + beatLength - 0.25f, delegate { see.canBop = true; }),
                         new BeatAction.Action(beat + beatLength, delegate { see.Land(SeeSawGuy.LandType.Normal, false); canPrepare = true; })
@@ -611,7 +675,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("seeSaw/otherVoiceShort2", beat + 0.5f),
                 });
             }
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, high ? JustShortHigh : JustShort, MissShort, Empty);
+            ScheduleInput(beat, 1f, InputAction_BasicPress, high ? JustShortHigh : JustShort, MissShort, Empty);
             if (currentJumpIndex < allJumpEvents.Count)
             {
                 if (currentJumpIndex >= 0)
@@ -623,8 +687,8 @@ namespace HeavenStudio.Games
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 2)
                 {
                     saw.canBop = true;
-                    SoundByte.PlayOneShotGame("seeSaw/otherLand", beat + 2);
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    _landSoundEnd = SoundByte.PlayOneShotGame("seeSaw/otherLand", beat + 2);
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + 1.75f, delegate { see.canBop = true; }),
                         new BeatAction.Action(beat + 2, delegate { see.Land(SeeSawGuy.LandType.Normal, false); canPrepare = true;})
@@ -667,18 +731,19 @@ namespace HeavenStudio.Games
 
         void DetermineSeeJump(double beat, bool miss = false, bool high = false, float height = 0)
         {
-            if (currentJumpIndex >= 0
-                && (allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/longLong" || allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/shortLong"))
+            if (currentJumpIndex < 0) return;
+            if (allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/longLong" || allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/shortLong")
             {
                 if (NextJumpEventIsOnBeat())
                 {
+                    bool shouldHighJump = allJumpEvents[currentJumpIndex]["high"] || high;
                     if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longLong" or "seeSaw/shortLong")
                     {
-                        see.SetState(high ? SeeSawGuy.JumpState.HighOutOut : SeeSawGuy.JumpState.OutOut, beat, miss, height);
+                        see.SetState(shouldHighJump ? SeeSawGuy.JumpState.HighOutOut : SeeSawGuy.JumpState.OutOut, beat, miss, height);
                     }
                     else if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longShort" or "seeSaw/shortShort")
                     {
-                        see.SetState(high ? SeeSawGuy.JumpState.HighOutIn : SeeSawGuy.JumpState.OutIn, beat, miss, height);
+                        see.SetState(shouldHighJump ? SeeSawGuy.JumpState.HighOutIn : SeeSawGuy.JumpState.OutIn, beat, miss, height);
                     }
                 }
                 else
@@ -694,8 +759,7 @@ namespace HeavenStudio.Games
                 }
 
             }
-            else if (currentJumpIndex >= 0
-                && (allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/longShort" || allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/shortShort"))
+            else if (allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/longShort" || allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/shortShort")
             {
                 if (NextJumpEventIsOnBeat())
                 {

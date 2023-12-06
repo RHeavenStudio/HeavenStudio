@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -88,6 +89,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using JetBrains.Annotations;
     using Scripts_NtrSamurai;
 
     public class SamuraiSliceNtr : Minigame
@@ -101,14 +103,11 @@ namespace HeavenStudio.Games
 
         public enum WhoBops
         {
-            Samurai = 0,
+            Samurai = 2,
             Children = 1,
-            Both = 2,
+            Both = 0,
             None = 3
         }
-
-        private bool goBopSamurai = true;
-        private bool goBopChild = true;
 
         [Header("References")]
         public NtrSamurai player;
@@ -131,36 +130,69 @@ namespace HeavenStudio.Games
 
         public GameEvent bop = new GameEvent();
 
+        const int IAAltDownCat = IAMAXCAT;
+        const int IAAltUpCat = IAMAXCAT + 1;
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt);
+        }
+
+        protected static bool IA_PadAltRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltRelease(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_AltDown =
+            new("NtrSamuraiAltDown", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_AltUp =
+            new("NtrSamuraiAltUp", new int[] { IAAltUpCat, IAFlickCat, IAAltUpCat },
+            IA_PadAltRelease, IA_TouchBasicRelease, IA_BatonAltRelease);
+
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("samuraiSliceNtr", "bop", "whoBopsAuto", false);
         }
 
-        // Update is called once per frame
+        public override void OnBeatPulse(double beat)
+        {
+            int whoBopsAuto = BeatIsInBopRegionInt(beat);
+            bool goBopSamurai = whoBopsAuto == (int)WhoBops.Samurai || whoBopsAuto == (int)WhoBops.Both;
+            bool goBopChild = whoBopsAuto == (int)WhoBops.Children || whoBopsAuto == (int)WhoBops.Both;
+
+            if (goBopSamurai) player.Bop();
+            if (goBopChild) childParent.GetComponent<NtrSamuraiChild>().Bop();
+        }
+
         void Update()
         {
-            var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (goBopSamurai) player.Bop();
-                if (goBopChild) childParent.GetComponent<NtrSamuraiChild>().Bop();
-            }
-
-            if (PlayerInput.AltPressed())
+            if (PlayerInput.GetIsAction(InputAction_AltDown))
                 DoStep();
-            if (PlayerInput.AltPressedUp() && player.isStepping())
+            if (PlayerInput.GetIsAction(InputAction_AltUp) && player.isStepping())
                 DoUnStep();
-            if (PlayerInput.Pressed())
+            if (PlayerInput.GetIsAction(InputAction_FlickPress))
                 DoSlice();
         }
 
         public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
-            goBopSamurai = whoBopsAuto == (int)WhoBops.Samurai || whoBopsAuto == (int)WhoBops.Both;
-            goBopChild = whoBopsAuto == (int)WhoBops.Children || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate { BopSingle(whoBops); })
                 });

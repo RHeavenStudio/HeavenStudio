@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
-using DG.Tweening;
+using HeavenStudio.InputSystem;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
@@ -81,14 +81,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("changeBG", "Change Background Color")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; TossBoys.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); },
+                    function = delegate {var e = eventCaller.currentEntity; TossBoys.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("start", TossBoys.defaultBGColor, "Start Color", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
                         new Param("end", TossBoys.defaultBGColor, "End Color", "The end color for the fade."),
-                        new Param("toggle", false, "Instant", "Should the background instantly change color?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     }
                 },
             },
@@ -140,7 +140,6 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer bg;
 
         [Header("Properties")]
-        Tween bgColorTween;
         [SerializeField] SuperCurveObject.Path[] ballPaths;
         WhichTossKid lastReceiver = WhichTossKid.None;
         WhichTossKid currentReceiver = WhichTossKid.None;
@@ -148,13 +147,94 @@ namespace HeavenStudio.Games
         Dictionary<double, RiqEntity> passBallDict = new();
         string currentPassType;
         public static TossBoys instance;
-        bool shouldBop = true;
-        public GameEvent bop = new GameEvent();
         float currentEventLength;
+
+        const int IAAka = IAMAXCAT;
+        const int IAAo = IAMAXCAT + 1;
+        const int IAKii = IAMAXCAT + 2;
+
+        protected static bool IA_PadDir(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_PadAlt(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+
+        protected static bool IA_TouchNrm(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && (instance.currentReceiver is WhichTossKid.Akachan
+                    || (instance.lastReceiver is WhichTossKid.Akachan or WhichTossKid.None
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Aka)
+                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+        protected static bool IA_TouchDir(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && (instance.currentReceiver is WhichTossKid.Kiiyan
+                    || (instance.lastReceiver is WhichTossKid.Kiiyan
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Kii)
+                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Aka))));
+        }
+        protected static bool IA_TouchAlt(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && (instance.currentReceiver is WhichTossKid.Aokun
+                    || (instance.lastReceiver is WhichTossKid.Aokun
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Ao)
+                        && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+
+        protected static bool IA_BatonNrm(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && (instance.currentReceiver is WhichTossKid.Akachan
+                    || (instance.lastReceiver is WhichTossKid.Akachan or WhichTossKid.None
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Aka)
+                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+        protected static bool IA_BatonDir(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && (instance.currentReceiver is WhichTossKid.Kiiyan
+                    || (instance.lastReceiver is WhichTossKid.Kiiyan
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Ao)
+                        && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+        protected static bool IA_BatonAlt(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && (instance.currentReceiver is WhichTossKid.Aokun
+                    || (instance.lastReceiver is WhichTossKid.Aokun
+                        && instance.currentReceiver is WhichTossKid.None));
+        }
+
+        public static PlayerInput.InputAction InputAction_Aka =
+            new("BasicPress", new int[] { IAAka, IAAka, IAAka },
+            IA_PadBasicPress, IA_TouchNrm, IA_BatonNrm);
+        public static PlayerInput.InputAction InputAction_Ao =
+            new("BasicPress", new int[] { IAAo, IAAo, IAAo },
+            IA_PadAlt, IA_TouchAlt, IA_BatonAlt);
+        public static PlayerInput.InputAction InputAction_Kii =
+            new("BasicPress", new int[] { IAKii, IAKii, IAKii },
+            IA_PadDir, IA_TouchDir, IA_BatonDir);
 
         private void Awake()
         {
             instance = this;
+            colorStart = defaultBGColor;
+            colorEnd = defaultBGColor;
+            SetupBopRegion("tossBoys", "bop", "auto");
         }
 
         new void OnDrawGizmos()
@@ -181,54 +261,84 @@ namespace HeavenStudio.Games
             return default(SuperCurveObject.Path);
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat))
+            {
+                SingleBop();
+            }
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
+            BackgroundColorUpdate();
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (shouldBop)
-                    {
-                        SingleBop();
-                    }
-                }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_Aka) && !IsExpectingInputNow(InputAction_Aka))
                 {
                     akachan.HitBall(false);
                 }
-                if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_Ao) && !IsExpectingInputNow(InputAction_Ao))
                 {
                     aokun.HitBall(false);
                 }
-                if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_Kii) && !IsExpectingInputNow(InputAction_Kii))
                 {
                     kiiyan.HitBall(false);
                 }
             }
         }
 
-        public void ChangeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = Color.white; //obviously put to the default color of the game
+        private Color colorEnd = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("tossBoys", new string[] { "changeBG" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
             {
-                bg.color = color;
-            }
-            else
-            {
-                bgColorTween = bg.DOColor(color, seconds);
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["start"], lastEvent["end"], lastEvent["ease"]);
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        public override void OnPlay(double beat)
         {
-            ChangeBackgroundColor(start, 0f);
-            if (!instant) ChangeBackgroundColor(end, beats);
+            PersistColor(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColor(beat);
         }
 
         #region Bop 
@@ -241,7 +351,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool auto, bool goBop)
         {
-            shouldBop = auto;
             if (goBop)
             {
                 List<BeatAction.Action> bops = new List<BeatAction.Action>();
@@ -249,7 +358,7 @@ namespace HeavenStudio.Games
                 {
                     bops.Add(new BeatAction.Action(beat + i, delegate { SingleBop(); }));
                 }
-                BeatAction.New(instance.gameObject, bops);
+                BeatAction.New(instance, bops);
             }
         }
         #endregion
@@ -324,22 +433,24 @@ namespace HeavenStudio.Games
                 ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
                 if (passBallDict[beat + length].datamodel == "tossBoys/dual" || passBallDict[beat + length].datamodel == "tossBoys/lightning" || passBallDict[beat + length].datamodel == "tossBoys/blur")
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                     });
                 }
                 else if (passBallDict[beat + length].datamodel == "tossBoys/pop")
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + length - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
-                    });
+                    currentBall.willBePopped = true;
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                        BeatAction.New(instance, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + length - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
+                        });
                 }
             }
             else
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length, delegate { Miss(null); })
                 });
@@ -407,10 +518,12 @@ namespace HeavenStudio.Games
             }
             if (passBallDict.ContainsKey(beat + currentEventLength) && passBallDict[beat + currentEventLength].datamodel == "tossBoys/pop")
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + currentEventLength - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
-                });
+                currentBall.willBePopped = true;
+                if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + currentEventLength - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
+                    });
             }
         }
 
@@ -459,7 +572,7 @@ namespace HeavenStudio.Games
             };
             if (passBallDict.ContainsKey(beat + length) && (passBallDict[beat + length].datamodel is "tossBoys/dual" or "tossBoys/lightning" or "tossBoys/blur"))
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                 });
@@ -514,7 +627,7 @@ namespace HeavenStudio.Games
             };
             if (passBallDict.ContainsKey(beat + length) && (passBallDict[beat + length].datamodel is "tossBoys/lightning" or "tossBoys/blur"))
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                 });
@@ -568,7 +681,7 @@ namespace HeavenStudio.Games
             };
             if (passBallDict.ContainsKey(beat + length) && (passBallDict[beat + length].datamodel is "tossBoys/dual" or "tossBoys/lightning" or "tossBoys/blur"))
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                 });
@@ -624,7 +737,7 @@ namespace HeavenStudio.Games
             if (secondBeat == 0.25f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + "Low" + 3, beat + 0.5f, 1, 1, false, thirdOffset));
             if (passBallDict.ContainsKey(beat + length) && (passBallDict[beat + length].datamodel is "tossBoys/dual" or "tossBoys/blur"))
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                 });
@@ -949,7 +1062,9 @@ namespace HeavenStudio.Games
             specialKii.SetActive(false);
             if (currentSpecialKid != null) currentSpecialKid.crouch = false;
             currentSpecialKid = GetCurrentReceiver();
+
             GetCurrentReceiver().Crouch();
+
             GetSpecialBasedOnReceiver().SetActive(true);
             switch (currentReceiver)
             {
@@ -1015,23 +1130,21 @@ namespace HeavenStudio.Games
             currentReceiver = (WhichTossKid)who;
         }
 
-        InputType GetInputTypeBasedOnCurrentReceiver()
+        PlayerInput.InputAction GetInputTypeBasedOnCurrentReceiver()
         {
             return GetInputBasedOnTossKid(currentReceiver);
         }
 
-        InputType GetInputBasedOnTossKid(WhichTossKid tossKid)
+        PlayerInput.InputAction GetInputBasedOnTossKid(WhichTossKid tossKid)
         {
             switch (tossKid)
             {
-                case WhichTossKid.Akachan:
-                    return InputType.STANDARD_DOWN;
                 case WhichTossKid.Aokun:
-                    return InputType.STANDARD_ALT_DOWN;
+                    return InputAction_Ao;
                 case WhichTossKid.Kiiyan:
-                    return InputType.DIRECTION_DOWN;
+                    return InputAction_Kii;
                 default:
-                    return InputType.ANY;
+                    return InputAction_Aka;
             }
         }
 

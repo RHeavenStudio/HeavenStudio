@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
         public void PrepareTogether(bool forceMute = false)
         {
             together = true;
-            if ((PlayerInput.Pressing() && !JJ) || forceMute)
+            if ((PlayerInput.GetIsAction(Rockers.InputAction_BasicPressing) && !JJ) || forceMute)
             {
                 DoScaledAnimationAsync("ComeOnPrepare", 0.5f);
                 if (forceMute) Mute(true, true);
@@ -87,7 +87,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             else
             {
                 if (strumming) strumEffect.GetComponent<Animator>().Play("StrumIdle", 0, 0);
-                if (PlayerInput.Pressing() || (GameManager.instance.autoplay && muted))
+                if (PlayerInput.GetIsAction(Rockers.InputAction_BasicPressing) || (GameManager.instance.autoplay && muted))
                 {
                     DoScaledAnimationAsync("Crouch", 0.5f);
                 }

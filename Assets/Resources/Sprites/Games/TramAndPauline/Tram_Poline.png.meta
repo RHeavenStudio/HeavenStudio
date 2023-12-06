@@ -1,0 +1,1619 @@
+fileFormatVersion: 2
+guid: 4bb254c95297bab478253f58952b6c19
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Tram_Poline_0
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 4399
+        width: 380
+        height: 339
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8064e0238fb4e24ead6a9ef218227dc
+      internalID: 506777752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_1
+      rect:
+        serializedVersion: 2
+        x: 539
+        y: 4381
+        width: 380
+        height: 358
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1436a5962dc88f14e897a199a9d9104e
+      internalID: 1195294947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_2
+      rect:
+        serializedVersion: 2
+        x: 1043
+        y: 4389
+        width: 432
+        height: 386
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df3ea06596319ce48a6425d0e9170f30
+      internalID: 332173158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_3
+      rect:
+        serializedVersion: 2
+        x: 1629
+        y: 4431
+        width: 184
+        height: 328
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 406725dd0c8a72e4f906f114b89a1b88
+      internalID: -671724876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_4
+      rect:
+        serializedVersion: 2
+        x: 2187
+        y: 4399
+        width: 380
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3707590e8935c144a8fdb489c4c628fc
+      internalID: 1865592121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_5
+      rect:
+        serializedVersion: 2
+        x: 2643
+        y: 4381
+        width: 380
+        height: 358
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d73844d6829a48a4b9e1d653b9865c77
+      internalID: 1630768757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_6
+      rect:
+        serializedVersion: 2
+        x: 3051
+        y: 4389
+        width: 626
+        height: 352
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 130cd3fe0522c3d4c8b61c40ce680c07
+      internalID: 1153758573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_7
+      rect:
+        serializedVersion: 2
+        x: 3733
+        y: 4427
+        width: 184
+        height: 328
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 829a08d7970e5214b837d9a8c946facf
+      internalID: -1086574686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_8
+      rect:
+        serializedVersion: 2
+        x: 4289
+        y: 4429
+        width: 376
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbb008f21c229e54ca3965a4cc45d61c
+      internalID: -1983733368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_9
+      rect:
+        serializedVersion: 2
+        x: 5119
+        y: 4429
+        width: 376
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca6f76e5d5feae247892878c57c89450
+      internalID: -574011881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_10
+      rect:
+        serializedVersion: 2
+        x: 6165
+        y: 4429
+        width: 556
+        height: 298
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 340ec8a6b4b58e44db3ca48cbe0750df
+      internalID: 558908006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_11
+      rect:
+        serializedVersion: 2
+        x: 6995
+        y: 4429
+        width: 554
+        height: 298
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4729ce8e6180f4b49971be12173f593d
+      internalID: -505173690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_12
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 3873
+        width: 630
+        height: 442
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc9f26e8c1f1a6b49b0e97ffd377d7e3
+      internalID: -1601085416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_13
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 3739
+        width: 640
+        height: 576
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c52f33b88522af43b1faab5407344b8
+      internalID: -1105916204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_14
+      rect:
+        serializedVersion: 2
+        x: 1545
+        y: 4027
+        width: 418
+        height: 338
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de5d8c3ff27b7b94085a9418dbf62593
+      internalID: -1702401621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_15
+      rect:
+        serializedVersion: 2
+        x: 2185
+        y: 3867
+        width: 630
+        height: 442
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 950199a8438966647895d62a8a3fdf12
+      internalID: -2064319846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_16
+      rect:
+        serializedVersion: 2
+        x: 2875
+        y: 3733
+        width: 642
+        height: 578
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 181c8ec564c5558409525b3e4fbc5863
+      internalID: 1032633895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_17
+      rect:
+        serializedVersion: 2
+        x: 3649
+        y: 4021
+        width: 418
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba1c3e2e852392848ac822b580b6adfd
+      internalID: 1790713167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_18
+      rect:
+        serializedVersion: 2
+        x: 4351
+        y: 3835
+        width: 490
+        height: 586
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fac9b9309a8ae2746ad7881b5a961345
+      internalID: 1218011953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_19
+      rect:
+        serializedVersion: 2
+        x: 5065
+        y: 3749
+        width: 470
+        height: 586
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cad0ebf3838bb354a9b6edb67d5aba98
+      internalID: 1102254721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_20
+      rect:
+        serializedVersion: 2
+        x: 6323
+        y: 3835
+        width: 474
+        height: 584
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8f7444759ed2a14fbc19549a6614f08
+      internalID: -1337826008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_21
+      rect:
+        serializedVersion: 2
+        x: 7025
+        y: 3699
+        width: 482
+        height: 636
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bfd87b1aa5824f4ea138e2491ec04d4
+      internalID: -100510824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_22
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 3381
+        width: 534
+        height: 452
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 579d204f7543ecf46864f5d1b483cc3e
+      internalID: 568583939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_23
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 2485
+        width: 616
+        height: 1132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58d51d16c0a1f444f872e7b350159ae7
+      internalID: 1916083883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_24
+      rect:
+        serializedVersion: 2
+        x: 1505
+        y: 3591
+        width: 386
+        height: 330
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 412b0fab526b36a4495d9fd2aebed16d
+      internalID: -736395761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_25
+      rect:
+        serializedVersion: 2
+        x: 2231
+        y: 3377
+        width: 534
+        height: 452
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 811ccc9123fb3a14c93d6c52813c7dc7
+      internalID: 1920605854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_26
+      rect:
+        serializedVersion: 2
+        x: 2875
+        y: 2479
+        width: 616
+        height: 1132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e757803a630be60429dc18ddd0afa0a5
+      internalID: 1902106775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_27
+      rect:
+        serializedVersion: 2
+        x: 3609
+        y: 3585
+        width: 386
+        height: 330
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 128038866d9420b459a056ccfa4c7fb1
+      internalID: 865119245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_28
+      rect:
+        serializedVersion: 2
+        x: 4351
+        y: 3283
+        width: 490
+        height: 542
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7abf4aff8a0515c44bd518f9b38bc9d6
+      internalID: 1431452828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_29
+      rect:
+        serializedVersion: 2
+        x: 5717
+        y: 3593
+        width: 376
+        height: 332
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00af7881e07e5a14caeee44991477d70
+      internalID: -478157749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_30
+      rect:
+        serializedVersion: 2
+        x: 6419
+        y: 3281
+        width: 284
+        height: 548
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8771cf966fab1674ea5c9834515ecb8e
+      internalID: -721760435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_31
+      rect:
+        serializedVersion: 2
+        x: 7683
+        y: 3591
+        width: 376
+        height: 334
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b522147069f34684e93547ffef7f9426
+      internalID: 2052876433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_32
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 2891
+        width: 552
+        height: 452
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e147ad9abeecb94a995a1a4bc6a35a9
+      internalID: -299793715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_33
+      rect:
+        serializedVersion: 2
+        x: 1495
+        y: 3151
+        width: 406
+        height: 332
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e840e41de2281df478c2943ac21081e6
+      internalID: -2047807969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_34
+      rect:
+        serializedVersion: 2
+        x: 2231
+        y: 2885
+        width: 552
+        height: 452
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 267ee306d27cd55408f22c27654488fb
+      internalID: -1244959431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_35
+      rect:
+        serializedVersion: 2
+        x: 3601
+        y: 3147
+        width: 406
+        height: 332
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a0e025accc9e154eace1ee8e18739b6
+      internalID: 726770444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_36
+      rect:
+        serializedVersion: 2
+        x: 4351
+        y: 2863
+        width: 490
+        height: 418
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fec127967e09f7b4e92836d194fac80f
+      internalID: 932023467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_37
+      rect:
+        serializedVersion: 2
+        x: 4997
+        y: 2535
+        width: 578
+        height: 906
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2c087a549540d547a80068aca6e3e36
+      internalID: 52238250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_38
+      rect:
+        serializedVersion: 2
+        x: 5691
+        y: 3149
+        width: 430
+        height: 376
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1139fb2b5b5fdc0449eaad3f138d533d
+      internalID: -1066432611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_39
+      rect:
+        serializedVersion: 2
+        x: 6379
+        y: 2853
+        width: 364
+        height: 422
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23170a76aee8c2e47a72028174a8fe52
+      internalID: -774661284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_40
+      rect:
+        serializedVersion: 2
+        x: 6959
+        y: 2547
+        width: 580
+        height: 872
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8faba15bcda81cb4ab27beaa79018f97
+      internalID: 279250657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_41
+      rect:
+        serializedVersion: 2
+        x: 7657
+        y: 3147
+        width: 428
+        height: 378
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 910505a1668239b40a0c3d881a3eaf09
+      internalID: -1766254054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_42
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 2449
+        width: 512
+        height: 402
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22518202bb7552f48ae79b275927b33c
+      internalID: 1460779252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_43
+      rect:
+        serializedVersion: 2
+        x: 1449
+        y: 2645
+        width: 508
+        height: 408
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87f23abd523d6e34f8ee05b0ecf5df03
+      internalID: 333892560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_44
+      rect:
+        serializedVersion: 2
+        x: 2233
+        y: 2445
+        width: 512
+        height: 402
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91976f9b99756f147aaf24f7d603bde2
+      internalID: -28663454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_45
+      rect:
+        serializedVersion: 2
+        x: 3553
+        y: 2641
+        width: 508
+        height: 408
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e23c61cca7b7eda4c8f5974f77cf60d5
+      internalID: -1037717881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_46
+      rect:
+        serializedVersion: 2
+        x: 4351
+        y: 2443
+        width: 490
+        height: 400
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6288127c52781b4e8ec55f9c677f396
+      internalID: -1206921680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_47
+      rect:
+        serializedVersion: 2
+        x: 5691
+        y: 2651
+        width: 430
+        height: 406
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d23d93e61e121ac43b0d7e61090621bb
+      internalID: -1059554193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_48
+      rect:
+        serializedVersion: 2
+        x: 6357
+        y: 2431
+        width: 406
+        height: 412
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3991bb566d59d14aa878e5f80738f9f
+      internalID: 1638494861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_49
+      rect:
+        serializedVersion: 2
+        x: 7657
+        y: 2611
+        width: 428
+        height: 446
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6d0cca371f4ee745a723eff09ed3827
+      internalID: 80207369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_50
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 1763
+        width: 1792
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8fa79490b3316049b613be02675de06
+      internalID: 1624462638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_51
+      rect:
+        serializedVersion: 2
+        x: 2421
+        y: 1355
+        width: 320
+        height: 438
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a4a0cee3e15bb24b89b086d80600be2
+      internalID: -268222786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_52
+      rect:
+        serializedVersion: 2
+        x: 2937
+        y: 1355
+        width: 322
+        height: 438
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e21535c9f9b2f64b93ab744a712b801
+      internalID: -1788611594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_53
+      rect:
+        serializedVersion: 2
+        x: 4122
+        y: 504
+        width: 1724
+        height: 1752
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cde999769dfb57b408cf6e32cfef3717
+      internalID: -438339391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_54
+      rect:
+        serializedVersion: 2
+        x: 6041
+        y: 963
+        width: 2004
+        height: 1296
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d35b631f7567ca74e82a5e72533467b7
+      internalID: -1677570643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_55
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 1533
+        width: 1794
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94bdc56ab8c34b546a6775bf580b3989
+      internalID: 1909896325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_56
+      rect:
+        serializedVersion: 2
+        x: 3373
+        y: 1313
+        width: 338
+        height: 434
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd961409cbe37414cb73339a69c28868
+      internalID: 1880164431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_57
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 1325
+        width: 1792
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc4e6d552a1bf1d45b28830b20d0e3ee
+      internalID: -1628330866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_58
+      rect:
+        serializedVersion: 2
+        x: 558
+        y: 636
+        width: 509
+        height: 246
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e38e509ab32be5643b33066af0c23787
+      internalID: 728790989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_59
+      rect:
+        serializedVersion: 2
+        x: 2421
+        y: 725
+        width: 286
+        height: 478
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b66d9b901c683e649877f66e3bdc3519
+      internalID: 942440800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_60
+      rect:
+        serializedVersion: 2
+        x: 2995
+        y: 725
+        width: 286
+        height: 478
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0824c138382fd0c4d83bc94c448cfb20
+      internalID: 6812262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_61
+      rect:
+        serializedVersion: 2
+        x: 3477
+        y: 759
+        width: 220
+        height: 414
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58c8058f893f5e84bb0395cda1e1a598
+      internalID: 1692983100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_62
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 201
+        width: 114
+        height: 546
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2b8876022abe4a48bb631fafecbda18
+      internalID: 616869559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_63
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 387
+        width: 136
+        height: 136
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 178ff98ced03eaa46a7aa8906d8b81c0
+      internalID: -264540805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_64
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 201
+        width: 376
+        height: 364
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6eb2b8b08a2970f4197c0d1508f73d3d
+      internalID: 19007827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_65
+      rect:
+        serializedVersion: 2
+        x: 1231
+        y: 219
+        width: 356
+        height: 342
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4dbbfbb01cee032429c79c1024f5deda
+      internalID: -1258078219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_66
+      rect:
+        serializedVersion: 2
+        x: 1725
+        y: 201
+        width: 374
+        height: 372
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca0e654873e778f4590b9c593df873e2
+      internalID: 1876203649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tram_Poline_67
+      rect:
+        serializedVersion: 2
+        x: 4124
+        y: 199
+        width: 1722
+        height: 239
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c540800fc019d1e408e3e76f0911fb7e
+      internalID: -470760272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Tram_Poline_0: 506777752
+      Tram_Poline_1: 1195294947
+      Tram_Poline_10: 558908006
+      Tram_Poline_11: -505173690
+      Tram_Poline_12: -1601085416
+      Tram_Poline_13: -1105916204
+      Tram_Poline_14: -1702401621
+      Tram_Poline_15: -2064319846
+      Tram_Poline_16: 1032633895
+      Tram_Poline_17: 1790713167
+      Tram_Poline_18: 1218011953
+      Tram_Poline_19: 1102254721
+      Tram_Poline_2: 332173158
+      Tram_Poline_20: -1337826008
+      Tram_Poline_21: -100510824
+      Tram_Poline_22: 568583939
+      Tram_Poline_23: 1916083883
+      Tram_Poline_24: -736395761
+      Tram_Poline_25: 1920605854
+      Tram_Poline_26: 1902106775
+      Tram_Poline_27: 865119245
+      Tram_Poline_28: 1431452828
+      Tram_Poline_29: -478157749
+      Tram_Poline_3: -671724876
+      Tram_Poline_30: -721760435
+      Tram_Poline_31: 2052876433
+      Tram_Poline_32: -299793715
+      Tram_Poline_33: -2047807969
+      Tram_Poline_34: -1244959431
+      Tram_Poline_35: 726770444
+      Tram_Poline_36: 932023467
+      Tram_Poline_37: 52238250
+      Tram_Poline_38: -1066432611
+      Tram_Poline_39: -774661284
+      Tram_Poline_4: 1865592121
+      Tram_Poline_40: 279250657
+      Tram_Poline_41: -1766254054
+      Tram_Poline_42: 1460779252
+      Tram_Poline_43: 333892560
+      Tram_Poline_44: -28663454
+      Tram_Poline_45: -1037717881
+      Tram_Poline_46: -1206921680
+      Tram_Poline_47: -1059554193
+      Tram_Poline_48: 1638494861
+      Tram_Poline_49: 80207369
+      Tram_Poline_5: 1630768757
+      Tram_Poline_50: 1624462638
+      Tram_Poline_51: -268222786
+      Tram_Poline_52: -1788611594
+      Tram_Poline_53: -438339391
+      Tram_Poline_54: -1677570643
+      Tram_Poline_55: 1909896325
+      Tram_Poline_56: 1880164431
+      Tram_Poline_57: -1628330866
+      Tram_Poline_58: 728790989
+      Tram_Poline_59: 942440800
+      Tram_Poline_6: 1153758573
+      Tram_Poline_60: 6812262
+      Tram_Poline_61: 1692983100
+      Tram_Poline_62: 616869559
+      Tram_Poline_63: -264540805
+      Tram_Poline_64: 19007827
+      Tram_Poline_65: -1258078219
+      Tram_Poline_66: 1876203649
+      Tram_Poline_67: -470760272
+      Tram_Poline_7: -1086574686
+      Tram_Poline_8: -1983733368
+      Tram_Poline_9: -574011881
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

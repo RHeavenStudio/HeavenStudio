@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         public void Init(double beat)
         {
-            game.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Just, Miss, Empty);
+            game.ScheduleInput(beat, 1f, DoubleDate.InputAction_FlickPress, Just, Miss, Empty);
             path = game.GetPath("BasketBallIn");
             UpdateLastRealPos();
             pathStartBeat = beat - 1f;
@@ -55,7 +55,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         void Just(PlayerActionEvent caller, float state)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 3f, delegate
                 {
