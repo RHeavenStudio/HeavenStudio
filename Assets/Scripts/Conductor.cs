@@ -406,11 +406,11 @@ namespace HeavenStudio
 
         public void LateUpdate()
         {
-            if (metronome && isPlaying)
+            if (isPlaying)
             {
                 if (songPositionInBeatsAsDouble >= Math.Ceiling(startBeat) + _metronomeTally)
                 {
-                    metronomeSound = Util.SoundByte.PlayOneShot("metronome", Math.Ceiling(startBeat) + _metronomeTally);
+                    if (metronome) metronomeSound = Util.SoundByte.PlayOneShot("metronome", Math.Ceiling(startBeat) + _metronomeTally);
                     _metronomeTally++;
                 }
             }

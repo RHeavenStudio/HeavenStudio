@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         void Update()
         {
             if (queuePrepare <= Conductor.instance.songPositionInBeatsAsDouble && Conductor.instance.NotStopped()) {
-                if (!(isPreparing || isSqueezed || anim.IsPlayingAnimationName("Release") || anim.IsPlayingAnimationName("Pop"))) 
+                if (!(isPreparing || isSqueezed || anim.IsPlayingAnimationNames("Release", "Pop"))) 
                 {
                     anim.DoScaledAnimationFromBeatAsync("Prepare", 0.5f, queuePrepare);
                     isPreparing = true;
@@ -66,15 +66,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 
         public void RequestBop()
         {
-            if (!anim.IsPlayingAnimationName("Bop")
-                && !anim.IsPlayingAnimationName("Happy")
-                && !anim.IsPlayingAnimationName("Angry")
-                && !anim.IsPlayingAnimationName("Oops")
-                && !anim.IsPlayingAnimationName("Release")
-                && !anim.IsPlayingAnimationName("Pop")
-                && !isPreparing
-                && !isSqueezed
-                && !cantBop)
+            if (!anim.IsPlayingAnimationNames("Bop", "Happy", "Angry", "Oops", "Release", "Pop") && !isPreparing && !isSqueezed && !cantBop)
             {
                 PlayAnimation(game.bopStatus);
             }

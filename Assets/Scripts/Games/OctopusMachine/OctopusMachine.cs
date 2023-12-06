@@ -229,6 +229,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("octopusMachine", "bop", "keepBop");
         }
 
         private void Start() 
@@ -263,8 +264,11 @@ namespace HeavenStudio.Games
 
             if (autoAction) bopIterate++;
 
+            bool keepBop = BeatIsInBopRegion(beat);
+
             foreach (var octo in octopodes)
             {
+                octo.cantBop = !keepBop;
                 octo.RequestBop();
             }
         }
@@ -339,7 +343,6 @@ namespace HeavenStudio.Games
             foreach (var octo in octopodes) {
                 if (singleBop) octo.PlayAnimation(whichBop);
                 if (keepBop) bopStatus = whichBop;
-                octo.cantBop = !keepBop;
             }
         }
 

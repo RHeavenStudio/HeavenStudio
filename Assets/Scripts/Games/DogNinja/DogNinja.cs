@@ -140,9 +140,7 @@ namespace HeavenStudio.Games
 
         [SerializeField] Sprite[] ObjectTypes;
 
-        private double lastReportedBeat = 0f;
         private bool birdOnScreen = false;
-        bool dontBop = false;
         private const string sfxNum = "dogNinja/";
 
         public static DogNinja instance;
@@ -200,6 +198,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("dogNinja", "Bop", "auto");
         }
 
         void OnDestroy()
@@ -216,7 +215,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (dontBop) return;
+            if (!BeatIsInBopRegion(beat)) return;
             DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
@@ -267,7 +266,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool auto, bool bop)
         {
-            dontBop = !auto;
             if (!bop) return;
             List<BeatAction.Action> actions = new();
 

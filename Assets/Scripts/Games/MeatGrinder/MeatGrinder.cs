@@ -100,9 +100,14 @@ namespace HeavenStudio.Games
         public Animator TackAnim;
 
         [Header("Variables")]
+<<<<<<< HEAD
         bool bossBop = true;
+=======
+        bool intervalStarted;
+        double intervalStartBeat;
+        public double beatInterval = 4f;
+>>>>>>> release_1
         public bool bossAnnoyed = false;
-        private double lastReportedBeat = 0f;
         const string sfxName = "meatGrinder/";
 
         public static MeatGrinder instance;
@@ -129,6 +134,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("meatGrinder", "bop", "bossBop");
         }
 
         private void Update()
@@ -154,9 +160,9 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (!BossAnim.IsPlayingAnimationName("BossCall")
-                && !BossAnim.IsPlayingAnimationName("BossSignal")
-                && bossBop)
+            if (!BossAnim.IsPlayingAnimationNames("BossCall")
+                && !BossAnim.IsPlayingAnimationNames("BossSignal")
+                && BeatIsInBopRegion(beat))
             {
                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
             }
@@ -164,10 +170,25 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
+<<<<<<< HEAD
             if (queuedIntervals.Count > 0)
             {
                 foreach (var interval in queuedIntervals) StartInterval(interval.beat, interval.length, beat, interval.autoPassTurn);
                 queuedIntervals.Clear();
+=======
+            if (doesBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance, new List<BeatAction.Action>() {
+                        new BeatAction.Action(beat + i, delegate {
+                            if (!BossAnim.IsPlayingAnimationNames("BossCall") && !BossAnim.IsPlayingAnimationNames("BossSignal")) {
+                                BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
+                            }
+                        })
+                    });
+                }
+>>>>>>> release_1
             }
         }
 

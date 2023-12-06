@@ -692,6 +692,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("karateman", "bop", "toggle");
             
             KarateManPot.ResetLastCombo();
 
@@ -1168,13 +1169,13 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
+            bool autoBop = BeatIsInBopRegion(beat);
+            Joe.bop.length = autoBop ? float.MaxValue : 0;
             Joe.RequestBop();
         }
 
         public void ToggleBop(double beat, float length, bool toggle, bool autoBop)
         {
-            Joe.bop.length = autoBop ? float.MaxValue : 0;
-
             if (toggle)
             {
                 var actions = new List<BeatAction.Action>();

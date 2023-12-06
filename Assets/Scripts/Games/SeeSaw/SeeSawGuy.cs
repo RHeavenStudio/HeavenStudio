@@ -136,9 +136,34 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         break;
                     case JumpState.HighOutOut:
+                        if (currentBeat >= startBeat + 1 && !hasChangedAnimMidAir && see)
+                        {
+                            if (!hasChangedAnimMidAir) anim.Play("Jump_OutOut_Fall", 0, 0);
+                            hasChangedAnimMidAir = true;
+                        }
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
+                        break;
                     case JumpState.HighOutIn:
+                        if (currentBeat >= startBeat + 1 && !hasChangedAnimMidAir && see)
+                        {
+                            if (!hasChangedAnimMidAir) anim.Play("Jump_OutIn_Tuck", 0, 0);
+                            hasChangedAnimMidAir = true;
+                        }
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
+                        break;
                     case JumpState.HighInOut:
+                        if (currentBeat >= startBeat + 1 && !hasChangedAnimMidAir && see)
+                        {
+                            if (!hasChangedAnimMidAir) anim.Play("Jump_InOut_Tuck", 0, 0);
+                            hasChangedAnimMidAir = true;
+                        }
+                        break;
                     case JumpState.HighInIn:
+                        if (currentBeat >= startBeat + 1 && !hasChangedAnimMidAir && see)
+                        {
+                            if (!hasChangedAnimMidAir) anim.Play("Jump_InIn_Fall", 0, 0);
+                            hasChangedAnimMidAir = true;
+                        }
                         transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         break;
                 }

@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("setEmotion", "Emotion")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e.beat, e["type"]); },
                     parameters = new List<Param>()
                     {
                         new Param("type", BlueBear.EmotionType.ClosedEyes, "Emotion", "Which emotion should the blue bear use?")
@@ -274,18 +274,18 @@ namespace HeavenStudio.Games
             headAndBodyAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
             if (headAndBodyAnim.GetBool("ShouldOpenMouth"))
             {
-                _emotionCancelled = true;
+                _emotionCancelledBeat = Conductor.instance.songPositionInBeatsAsDouble;
             }
 
             if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
             {
                 SoundByte.PlayOneShotGame("blueBear/whiff", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-1, 2), false));
-                Bite(true);
+                Bite(Conductor.instance.songPositionInBeatsAsDouble, true);
             }
             else if (PlayerInput.GetIsAction(InputAction_Right) && !IsExpectingInputNow(InputAction_Right.inputLockCategory))
             {
                 SoundByte.PlayOneShotGame("blueBear/whiff", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-1, 2), false));
-                Bite(false);
+                Bite(Conductor.instance.songPositionInBeatsAsDouble, false);
             }
 
             UpdateEmotions();
@@ -298,7 +298,7 @@ namespace HeavenStudio.Games
             windAnim.SetScaledAnimationSpeed();
         }
 
-        private bool _emotionCancelled = false;
+        private double _emotionCancelledBeat = -1;
         private int _emotionIndex = 0;
         private List<RiqEntity> _allEmotionsStretch = new();
         private EmotionStretchType _lastEmotion = EmotionStretchType.LookUp;
@@ -317,12 +317,11 @@ namespace HeavenStudio.Games
                 _emotionIndex++;
                 _lastEmotion = (EmotionStretchType)_allEmotionsStretch[_emotionIndex - 1]["type"];
                 crying = _lastEmotion == EmotionStretchType.StartCrying;
-                _emotionCancelled = false;
                 UpdateEmotions();
                 return;
             }
 
-            if (beat >= e.beat && beat < e.beat + e.length && !_emotionCancelled)
+            if (beat >= e.beat && beat < e.beat + e.length && !(_emotionCancelledBeat >= e.beat && _emotionCancelledBeat < e.beat + e.length))
             {
                 _lastEmotion = (EmotionStretchType)e["type"];
                 crying = _lastEmotion == EmotionStretchType.StartCrying;
@@ -388,9 +387,9 @@ namespace HeavenStudio.Games
             windAnim.DoScaledAnimationAsync("Wind", 0.5f);
         }
 
-        public void Bite(bool left)
+        public void Bite(double beat, bool left)
         {
-            _emotionCancelled = true;
+            _emotionCancelledBeat = beat;
             if (crying)
             {
                 headAndBodyAnim.DoScaledAnimationAsync(left ? "CryBiteL" : "CryBiteR", 0.5f);
@@ -456,14 +455,15 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SetEmotion(int emotion)
+        public void SetEmotion(double beat, int emotion)
         {
-            _emotionCancelled = true;
+            _emotionCancelledBeat = beat;
             switch (emotion)
             {
                 case (int)EmotionType.Neutral:
-                    //check if smiling then play "StopSmile"
                     headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
+                    if (_allEmotionsStretch.Count == 0 || _lastEmotion != EmotionStretchType.Smile) return;
+                    headAndBodyAnim.DoScaledAnimationAsync("StopSmile", 0.5f);
                     crying = false;
                     break;
                 case (int)EmotionType.ClosedEyes:

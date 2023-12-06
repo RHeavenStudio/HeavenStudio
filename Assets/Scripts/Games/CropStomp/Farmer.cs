@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             if (PlayerInput.GetIsAction(CropStomp.InputAction_BasicPress) && !game.IsExpectingInputNow(CropStomp.InputAction_BasicPress))
             {
-                game.bodyAnim.Play("Crouch", 0, 0);
+                game.bodyAnim.DoScaledAnimationAsync("Crouch", 0.5f);
             }
         }
 
@@ -87,8 +87,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             startPlant.SetActive(collectedPlants >= plantThreshold);
             if (spawnedPlants.Count > 0)
             {
-                foreach (var plant in spawnedPlants)
-                {
+                foreach (var plant in spawnedPlants) {
                     Destroy(plant);
                 }
                 spawnedPlants.Clear();
@@ -102,8 +101,9 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 {
                     spawnedPlant = Instantiate(plantLastRef, collectedHolder);
                     spawnedPlant.GetComponent<SpriteRenderer>().sprite = veggieSprites[lastVeggieType];
+                } else {
+                    spawnedPlant = Instantiate((realIndex % 2 == 0) ? plantRightRef : plantLeftRef, collectedHolder);
                 }
-                else spawnedPlant = Instantiate((realIndex % 2 == 0) ? plantRightRef : plantLeftRef, collectedHolder);
                 spawnedPlant.transform.localPosition = new Vector3(0, (realIndex * plantDistance) + plantStartDistance, 0);
                 spawnedPlant.GetComponent<SpriteRenderer>().sortingOrder = -realIndex - 2;
                 spawnedPlant.SetActive(true);
@@ -119,9 +119,8 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
         private void Miss(PlayerActionEvent caller)
         {
-            if (GameManager.instance.currentGame != "cropStomp") return;
-            if (!game.isMarching)
-                return;
+            if (GameManager.instance.currentGame != "cropStomp" || !game.isMarching) return;
+            
             // REMARK: does not count for performance
             nextStompBeat += 2f;
             stomp?.Disable();
@@ -133,18 +132,12 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
         void Stomp(bool ng)
         {
-            if (GameManager.instance.currentGame != "cropStomp") return;
-            if (!game.isMarching)
-                return;
-            if (ng)
-            {
-                game.bodyAnim.Play("Crouch", 0, 0);
-            }
-            else
-            {
+            if (GameManager.instance.currentGame != "cropStomp" || !game.isMarching) return;
+            if (ng) {
+                game.bodyAnim.DoScaledAnimationAsync("Crouch", 0.5f);
+            } else {
                 game.Stomp();
-                game.bodyAnim.Play("Stomp", 0, 0);
-
+                game.bodyAnim.DoScaledAnimationAsync("Stomp", 0.5f);
             }
             nextStompBeat += 2f;
             stomp?.Disable();

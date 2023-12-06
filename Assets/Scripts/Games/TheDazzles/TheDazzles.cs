@@ -228,8 +228,6 @@ namespace HeavenStudio.Games
         bool doingPoses = false;
         bool shouldHold = false;
         double crouchEndBeat;
-        public bool shouldBop = true;
-        public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
         static List<QueuedCrouch> queuedCrouches = new List<QueuedCrouch>();
         [Header("Components")]
@@ -255,11 +253,12 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("theDazzles", "bop", "toggle");
         }
 
         public override void OnBeatPulse(double beat)
         {
-            if (shouldBop)
+            if (BeatIsInBopRegion(beat))
             {
                 foreach (var girl in npcGirls)
                 {
@@ -353,7 +352,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
-            shouldBop = autoBop;
             if (goBop)
             {
                 for (int i = 0; i < length; i++)

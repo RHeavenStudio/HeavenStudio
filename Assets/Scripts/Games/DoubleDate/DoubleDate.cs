@@ -76,9 +76,7 @@ namespace HeavenStudio.Games
         [SerializeField] public float shadowDepthScaleMax;
         [SerializeField] SuperCurveObject.Path[] ballBouncePaths;
         double lastGirlGacha = double.MinValue;
-        bool shouldBop = true;
         bool canBop = true;
-        GameEvent bop = new GameEvent();
         public static DoubleDate instance;
         public static List<QueuedBall> queuedBalls = new List<QueuedBall>();
         [NonSerialized] public double lastHitWeasel = double.MinValue;
@@ -132,6 +130,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("doubleDate", "bop", "autoBop");
         }
 
         private void Start() {
@@ -140,7 +139,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (shouldBop) SingleBop();
+            if (BeatIsInBopRegion(beat)) SingleBop();
         }
 
         void Update()
@@ -198,7 +197,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
-            shouldBop = autoBop;
             if (goBop)
             {
                 for (int i = 0; i < length; i++)

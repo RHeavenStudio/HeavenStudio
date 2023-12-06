@@ -89,6 +89,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using JetBrains.Annotations;
     using Scripts_NtrSamurai;
 
     public class SamuraiSliceNtr : Minigame
@@ -102,14 +103,11 @@ namespace HeavenStudio.Games
 
         public enum WhoBops
         {
-            Samurai = 0,
+            Samurai = 2,
             Children = 1,
-            Both = 2,
+            Both = 0,
             None = 3
         }
-
-        private bool goBopSamurai = true;
-        private bool goBopChild = true;
 
         [Header("References")]
         public NtrSamurai player;
@@ -167,10 +165,15 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("samuraiSliceNtr", "bop", "whoBopsAuto", false);
         }
 
         public override void OnBeatPulse(double beat)
         {
+            int whoBopsAuto = BeatIsInBopRegionInt(beat);
+            bool goBopSamurai = whoBopsAuto == (int)WhoBops.Samurai || whoBopsAuto == (int)WhoBops.Both;
+            bool goBopChild = whoBopsAuto == (int)WhoBops.Children || whoBopsAuto == (int)WhoBops.Both;
+
             if (goBopSamurai) player.Bop();
             if (goBopChild) childParent.GetComponent<NtrSamuraiChild>().Bop();
         }
@@ -187,8 +190,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
-            goBopSamurai = whoBopsAuto == (int)WhoBops.Samurai || whoBopsAuto == (int)WhoBops.Both;
-            goBopChild = whoBopsAuto == (int)WhoBops.Children || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
