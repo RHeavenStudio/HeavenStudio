@@ -266,7 +266,7 @@ namespace HeavenStudio.Games
                         }
                     }
                 }
-                if (!DancerP.IsPlayingAnimationName("PunchDo") && !DancerP.IsPlayingAnimationName("TurnRightDo") && !DancerP.IsPlayingAnimationName("SitDownDo"))
+                if (!DancerP.IsPlayingAnimationNames("PunchDo", "TurnRightDo", "SitDownDo"))
                 {
                     if (PlayerInput.GetIsAction(InputAction_Punch) && !IsExpectingInputNow(InputAction_Punch))
                     {

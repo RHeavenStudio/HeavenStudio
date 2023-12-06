@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Update()
         {
-            if (anim.IsPlayingAnimationName("DarkIdle") || anim.IsPlayingAnimationName("LightIdle")) GameObject.Destroy(gameObject);
+            if (anim.IsPlayingAnimationNames("DarkIdle") || anim.IsPlayingAnimationNames("LightIdle")) GameObject.Destroy(gameObject);
         }
         
         private void InputActions(bool annoyBoss, string whichSfx, string whichAnim)

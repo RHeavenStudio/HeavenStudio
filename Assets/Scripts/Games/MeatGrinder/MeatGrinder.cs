@@ -158,8 +158,8 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (!BossAnim.IsPlayingAnimationName("BossCall")
-                && !BossAnim.IsPlayingAnimationName("BossSignal")
+            if (!BossAnim.IsPlayingAnimationNames("BossCall")
+                && !BossAnim.IsPlayingAnimationNames("BossSignal")
                 && BeatIsInBopRegion(beat))
             {
                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
@@ -174,7 +174,7 @@ namespace HeavenStudio.Games
                 {
                     BeatAction.New(instance, new List<BeatAction.Action>() {
                         new BeatAction.Action(beat + i, delegate {
-                            if (!BossAnim.IsPlayingAnimationName("BossCall") && !BossAnim.IsPlayingAnimationName("BossSignal")) {
+                            if (!BossAnim.IsPlayingAnimationNames("BossCall") && !BossAnim.IsPlayingAnimationNames("BossSignal")) {
                                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
                             }
                         })

@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
 
         public void MissPose()
         {
-            if (!singing && anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") && !anim.IsPlayingAnimationName("MissIdle")) anim.Play("MissIdle", 0, 0);
+            if (!singing && anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") && !anim.IsPlayingAnimationNames("MissIdle")) anim.Play("MissIdle", 0, 0);
         }
 
         public void StartCrouch()
