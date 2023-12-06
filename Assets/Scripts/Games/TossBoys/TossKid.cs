@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                 spawnedEffect.Play();
                 DoAnimationScaledAsync(crouch ? "CrouchHit" : "Hit", 0.5f);
             }
-            else if (!anim.IsPlayingAnimationName(prefix + "Whiff") && !anim.IsPlayingAnimationName(prefix + "Miss"))
+            else if (!anim.IsPlayingAnimationNames(prefix + "Whiff", prefix + "Miss"))
             {
                 DoAnimationScaledAsync("Whiff", 0.5f);
                 SoundByte.PlayOneShotGame("tossBoys/whiff");
@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
 
         public void Bop()
         {
-            if (crouch || preparing || (!anim.IsAnimationNotPlaying() && !anim.IsPlayingAnimationName(prefix + "Idle"))) return;
+            if (crouch || preparing || (!anim.IsAnimationNotPlaying() && !anim.IsPlayingAnimationNames(prefix + "Idle"))) return;
             DoAnimationScaledAsync("Bop", 0.5f);
         }
 

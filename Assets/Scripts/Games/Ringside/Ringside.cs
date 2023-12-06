@@ -248,7 +248,7 @@ namespace HeavenStudio.Games
 
                         wrestlerAnim.DoScaledAnimationAsync("YeMiss", 0.25f);
                         SoundByte.PlayOneShotGame($"ringside/confusedanswer");
-                        if (reporterAnim.IsPlayingAnimationName("IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
+                        if (reporterAnim.IsPlayingAnimationNames("IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
                     }
                 }
                 if ( PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch

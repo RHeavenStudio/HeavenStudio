@@ -312,7 +312,7 @@ namespace HeavenStudio.Games
                     {
                         NPCBallTransporters.GetComponent<Animator>().Play("NPCGoBigMode", 0, 0);
                     }
-                    if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationName("BallTransporterLeftOpened"))
+                    if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationNames("BallTransporterLeftOpened"))
                     {
                         instance.ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
                         instance.ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);

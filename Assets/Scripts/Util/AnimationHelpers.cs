@@ -14,11 +14,12 @@ namespace HeavenStudio.Util
         /// Returns true if animName is currently playing on animator
         /// </summary>
         /// <param name="anim">Animator to check</param>
-        /// <param name="animName">name of animation to look out for</param>
-        public static bool IsPlayingAnimationName(this Animator anim, string animName)
+        /// <param name="animNames">name(s) of animation to look out for</param>
+        public static bool IsPlayingAnimationNames(this Animator anim, params string[] animNames)
         {
             var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-            return (stateInfo.normalizedTime < stateInfo.speed || stateInfo.loop) && stateInfo.IsName(animName);
+            var isPlaying = Array.Exists(animNames, animName => stateInfo.IsName(animName));
+            return (stateInfo.normalizedTime < stateInfo.speed || stateInfo.loop) && isPlaying;
         }
 
         /// <summary>

@@ -287,13 +287,10 @@ namespace HeavenStudio.Games
             }
 
             // blushes when done eating but not when staring
-            if (needBlush 
-                && !MonkAnim.IsPlayingAnimationName("Eat")
-                && !MonkAnim.IsPlayingAnimationName("Stare")
-                && !MonkAnim.IsPlayingAnimationName("Barely")
-                && !MonkAnim.IsPlayingAnimationName("Miss")
+            if (needBlush
+                && !MonkAnim.IsPlayingAnimationNames("Eat", "Stare", "Barely", "Miss")
                 && !isStaring
-                && !noBlush) 
+                && !noBlush)
             {
                 MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
                 needBlush = false;
@@ -351,14 +348,14 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if ((MonkAnim.IsAnimationNotPlaying() || MonkAnim.IsPlayingAnimationName("Bop") || MonkAnim.IsPlayingAnimationName("Idle"))
+            if ((MonkAnim.IsAnimationNotPlaying() || MonkAnim.IsPlayingAnimationNames("Bop", "Idle"))
                 && BeatIsInBopRegion(beat)
                 && !isStaring)
             {
                 MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
             }
 
-            if (!MonkAnim.IsPlayingAnimationName("Blush") || !MonkAnim.IsPlayingAnimationName("Stare"))
+            if (!MonkAnim.IsPlayingAnimationNames("Blush", "Stare"))
             {
                 if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
