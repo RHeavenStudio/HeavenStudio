@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 151360738741628551}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.46, y: -1.23, z: 0}
   m_LocalScale: {x: 0.6415348, y: 0.6415348, z: 0.6415348}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -99,9 +99,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startBeat: 0
-  cueLength: 0
-  cueBased: 0
-  meatType: 
+  meatType: 0
+  anim: {fileID: 2525979697215420720}
+  sr: {fileID: 9090016194217145924}
+  meats:
+  - {fileID: -9124615959790710355, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
+  - {fileID: -4224877059003839859, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
+  - {fileID: -936998580, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
 --- !u!95 &2525979697215420720
 Animator:
   serializedVersion: 5
