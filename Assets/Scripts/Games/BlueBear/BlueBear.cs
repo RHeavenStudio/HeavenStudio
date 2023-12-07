@@ -344,14 +344,24 @@ namespace HeavenStudio.Games
             if (_allEmotionsStretch.Count == 0) return;
             UpdateEmotions();
             var allEmosBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => x.beat < beat);
-            if (allEmosBeforeBeat.Count == 0) return;
-            if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.StartCrying)
+            var allSetEmosBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "setEmotion" }).FindAll(x => x.beat < beat);
+            if (allEmosBeforeBeat.Count != 0)
             {
-                headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
+                if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.StartCrying)
+                {
+                    headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
+                }
+                else if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.Smile)
+                {
+                    headAndBodyAnim.DoScaledAnimationAsync("SmileIdle", 0.5f);
+                }
             }
-            else if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.Smile)
+            if (allSetEmosBeforeBeat.Count != 0)
             {
-                headAndBodyAnim.DoScaledAnimationAsync("SmileIdle", 0.5f);
+                EmotionType lastType = (EmotionType)allSetEmosBeforeBeat[^1]["type"];
+
+                if (allEmosBeforeBeat.Count > 0 && allSetEmosBeforeBeat[^1].beat >= allEmosBeforeBeat[^1].beat) SetEmotion(beat, (int)lastType, false);
+                else SetEmotion(beat, (int)lastType);
             }
         }
 
@@ -455,16 +465,16 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SetEmotion(double beat, int emotion)
+        public void SetEmotion(double beat, int emotion, bool ableToStopSmile = true)
         {
             _emotionCancelledBeat = beat;
             switch (emotion)
             {
                 case (int)EmotionType.Neutral:
-                    headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
-                    if (_allEmotionsStretch.Count == 0 || _lastEmotion != EmotionStretchType.Smile) return;
-                    headAndBodyAnim.DoScaledAnimationAsync("StopSmile", 0.5f);
                     crying = false;
+                    headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
+                    if (_allEmotionsStretch.Count == 0 || _lastEmotion != EmotionStretchType.Smile || !ableToStopSmile) return;
+                    headAndBodyAnim.DoScaledAnimationAsync("StopSmile", 0.5f);
                     break;
                 case (int)EmotionType.ClosedEyes:
                     headAndBodyAnim.DoScaledAnimationAsync("EyesClosed", 0.5f);
