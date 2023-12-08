@@ -421,6 +421,18 @@ namespace HeavenStudio.Editor.Track
             if (MouseInTimeline)
                 MouseInTimeline = RectTransformUtility.RectangleContainsScreenPoint(TimelineScroll.viewport,
                     Input.mousePosition, Editor.instance.EditorCamera);
+            
+            foreach (var rect in GameObject.FindGameObjectsWithTag("BlocksEditor"))
+            {
+                if (rect.TryGetComponent(out RectTransform rectTransform))
+                {
+                    if (RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Camera.main))
+                    {
+                        MouseInTimeline = false;
+                        break;
+                    }
+                }
+            }
 
             /*
             if (MouseInTimeline)

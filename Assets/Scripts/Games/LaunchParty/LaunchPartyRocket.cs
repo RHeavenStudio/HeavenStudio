@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
                 SoundByte.PlayOneShotGame("launchParty/rocket_endBad");
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
                 if (!anim.IsPlayingAnimationNames("RocketBarelyLeft", "RocketBarelyRight")) anim.Play("RocketBarely" + leftOrRight, 0, 0);
-                game.ScoreMiss(0.5);
+                game.ScoreMiss(0.5f);
             }
         }
 

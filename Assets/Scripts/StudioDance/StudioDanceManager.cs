@@ -13,14 +13,15 @@ namespace HeavenStudio.StudioDance
 
         public void OpenDanceWindow()
         {
-            var mobj = GameObject.Instantiate(windowBase, windowHolder);
-            mobj.SetActive(true);
+            windowBase.SetActive(true);
             content.SetActive(true);
         }
 
         public void CloseDanceWindow()
         {
+            windowBase.SetActive(false);
             content.SetActive(false);
+            Editor.CreditsLegalSettings.MakeSecretInactive();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace HeavenStudio.Editor
 
         private void Start()
         {
+            SecretActive = false;
             SecretCounter = 0;
             secretObject.SetActive(false);
         }
@@ -33,7 +34,7 @@ namespace HeavenStudio.Editor
             }
         }
 
-        public void OnClickSecret()
+        public static void OnClickSecret()
         {
             if (SecretActive) return;
 
@@ -51,25 +52,19 @@ namespace HeavenStudio.Editor
             }
         }
 
-        public void MakeSecretInactive()
+        public static void MakeSecretInactive()
         {
             SecretCounter = 0;
-            secretObject.SetActive(false);
             SecretActive = false;
-
-            if (Editor.instance == null)
-            {
-
-            }
-            else
-            {
-                Editor.instance.StudioDanceManager.CloseDanceWindow();
-            }
         }
 
         public override void OnOpenTab()
         {
             creditsDisplay.text = creditsText.text;
+            if (SecretCounter == 0)
+            {
+                secretObject.SetActive(false);
+            }
         }
 
         public override void OnCloseTab()
