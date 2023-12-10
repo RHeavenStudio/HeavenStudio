@@ -708,7 +708,7 @@ namespace HeavenStudio.Games
         {
             if (reporterHeadAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             {
-                reporterHeadAnim.DoScaledAnimationAsync("Blink", 0.5f);
+                reporterHeadAnim.DoScaledAnimationAsync("BlinkHead", 0.5f);
             }
             float randomTime = UnityEngine.Random.Range(0.3f, 1.8f);
             Invoke("ReporterBlink", randomTime);
