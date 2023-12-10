@@ -17155,9 +17155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoundSequences: []
-  EligibleHits: []
   scheduledInputs: []
-  firstEnable: 0
   bowAnim: {fileID: 2313498870028602967}
   bowHolderAnim: {fileID: 7069819975018639362}
   doorAnim: {fileID: 4043381983643525914}
@@ -22163,8 +22161,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7942869944722116910}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00194, y: -2.59, z: 0}
-  m_LocalScale: {x: 77.15107, y: 24.64087, z: 0.7532187}
+  m_LocalPosition: {x: 0.23, y: -0.99, z: 0}
+  m_LocalScale: {x: 331.6418, y: 225.36447, z: 5.5111284}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4558759897136001682}
@@ -22210,7 +22208,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: -100
   m_Sprite: {fileID: -5952566289195896545, guid: ca4775e289092c04791daaf42e19cacb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
