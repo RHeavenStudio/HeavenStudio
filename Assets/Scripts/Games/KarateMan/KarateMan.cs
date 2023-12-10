@@ -260,7 +260,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("fxType", KarateMan.BackgroundFXType.None, "FX Type", "The background effect to be displayed"),
                         new Param("type", KarateMan.NoriMode.None, "Flow Bar type", "The type of Flow bar to use", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam((x, _) => (int)x != (int)KarateMan.NoriMode.None, new string[] { "startColor" })
+                            new Param.CollapseParam((x, _) => (int)x != (int)KarateMan.NoriMode.None, new string[] { "type" })
                         }),
                         new Param("hitsPerHeart", new EntityTypes.Float(0f, 20f, 0f), "Hits Per Heart", "How many hits will it take for each heart to light up? (0 will do it automatically.)"),
                         new Param("toggle", true, "Enable Combos", "Allow the player to combo? (Contextual combos will still be allowed even when off)"),
@@ -340,7 +340,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        KarateMan.instance.UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"]);
+                        KarateMan.instance.UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"], e["colorD"], e["star"]);
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -348,6 +348,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorA", new Color(1,1,1,1), "Joe Body Color", "The color to use for Karate Joe's body"),
                         new Param("colorB", new Color(0.81f,0.81f,0.81f,1), "Joe Highlight Color", "The color to use for Karate Joe's highlights"),
                         new Param("colorC", new Color(1,1,1,1), "Item Color", "The color to use for the thrown items"),
+                        new Param("star", KarateMan.StarColorOption.ItemColor, "Star Color Options", "", new()
+                        {
+                            new((x, _) => (int)x == (int)KarateMan.StarColorOption.Custom, new string[] { "colorD" })
+                        }),
+                        new Param("colorD", new Color(1,1,1,1), "Star Color", "The color to use for star particles"),
                     },
                 },
                 new GameAction("particle effects", "Particle Effects")
@@ -480,7 +485,7 @@ namespace HeavenStudio.Games
             Gradient,
             Radial,
             Blood,
-            //ManMan?
+            SeniorGradient
         }
 
         public enum ShadowType
@@ -555,6 +560,8 @@ namespace HeavenStudio.Games
         public Color BodyColor = Color.white;
         public Color HighlightColor = new Color(0.81f, 0.81f, 0.81f);
         public Color ItemColor = Color.white;
+        [NonSerialized] public bool useItemColorForStar = true;
+        public Color StarColor = Color.white;
 
         [Header("Word")]
         public Animator Word;
@@ -765,9 +772,9 @@ namespace HeavenStudio.Games
             }
             
             if (obj != null) {
-                UpdateMaterialColour(obj["colorA"], obj["colorB"], obj["colorC"]);
+                UpdateMaterialColour(obj["colorA"], obj["colorB"], obj["colorC"], obj["colorD"], obj["star"]);
             } else {
-                UpdateMaterialColour(Color.white, new Color(0.81f, 0.81f, 0.81f), Color.white);
+                UpdateMaterialColour(Color.white, new Color(0.81f, 0.81f, 0.81f), Color.white, Color.white, (int)StarColorOption.ItemColor);
             }
 
             // init modifier(s)
@@ -1139,11 +1146,19 @@ namespace HeavenStudio.Games
             IsComboEnable = combo;
         }
 
-        public void UpdateMaterialColour(Color mainCol, Color highlightCol, Color objectCol)
+        public enum StarColorOption
+        {
+            ItemColor,
+            Custom
+        }
+
+        public void UpdateMaterialColour(Color mainCol, Color highlightCol, Color objectCol, Color starCol, int starColOption)
         {
             BodyColor = mainCol;
             HighlightColor = highlightCol;
             ItemColor = objectCol;
+            StarColor = starCol;
+            useItemColorForStar = starColOption == 0;
         }
 
         public void SetParticleEffect(double beat, int type, bool instant, float windStrength, float particleStrength)

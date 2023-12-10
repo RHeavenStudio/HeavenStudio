@@ -617,6 +617,9 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     else
                         SoundByte.PlayOneShotGame("karateman/potHit", forcePlay: true);
                     p = Instantiate(HitParticles[3], HitPosition[1].position, Quaternion.identity, game.ItemHolder);
+                    var main = p.main;
+                    if (game.useItemColorForStar) main.startColor = new(game.ItemColor);
+                    else main.startColor = new(game.StarColor);
                     p.Play();
 
                     break;
