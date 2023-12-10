@@ -17,6 +17,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private GameObject DropdownP;
         [SerializeField] private GameObject ColorP;
         [SerializeField] private GameObject StringP;
+        [SerializeField] private GameObject ImageP;
 
         [Header("Layout Prefabs")]
         [SerializeField] private GameObject DividerP;
@@ -83,6 +84,21 @@ namespace HeavenStudio.Editor
                 input = InitPrefab(prefab, tooltip);
                 var property = input.GetComponent<StringChartPropertyPrefab>();
                 property.SetProperties(diag, propertyName, type, caption);
+            }
+            else if (objType == typeof(EntityTypes.Resource))
+            {
+                switch (((EntityTypes.Resource)type).type)
+                {
+                    case EntityTypes.Resource.ResourceType.Image:
+                        prefab = diag.ImageP;
+                        input = InitPrefab(prefab, tooltip);
+                        var property = input.GetComponent<ImageChartResourcePrefab>();
+                        property.SetProperties(diag, propertyName, type, caption);
+                        break;
+                    default:
+                        Debug.LogError("Can't make property interface of type: " + type.GetType());
+                        return;
+                }
             }
             else
             {

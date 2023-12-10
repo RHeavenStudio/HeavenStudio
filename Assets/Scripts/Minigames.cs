@@ -82,6 +82,14 @@ namespace HeavenStudio
 
                 {"resultrepeat_hi", "You followed the example well."},          // "Superb" message for call-and-response games (two-liner)
                 {"resultrepeat_ng", "Next time, follow the example better."},   // "Try Again" message for call-and-response games (two-liner)
+
+                {"epilogue_hi", "Superb picture"},                              // epilogue "Superb" message
+                {"epilogue_ok", "OK picture"},                                  // epilogue "OK" message
+                {"epilogue_ng", "Try Again picture"},                           // epilogue "Try Again" message
+
+                {"epilogue_hi_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Hi")},    // epilogue "Superb" image resource path
+                {"epilogue_ok_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ok")},    // epilogue "OK" image resource path
+                {"epilogue_ng_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ng")},    // epilogue "Try Again" image resource path
             };
 
         static Dictionary<string, object> tempoChangeModel = new()
@@ -252,6 +260,8 @@ namespace HeavenStudio
                                         e.dynamicData[param.propertyName] = (int)e[param.propertyName];
                                     else if (type == typeof(EntityTypes.Float))
                                         e.dynamicData[param.propertyName] = (float)e[param.propertyName];
+                                    else if (type == typeof(EntityTypes.Resource))
+                                        e.dynamicData[param.propertyName] = (EntityTypes.Resource)e[param.propertyName];
                                     else if (type.IsEnum)
                                     {
                                         if (pType == typeof(string))
@@ -306,9 +316,18 @@ namespace HeavenStudio
             //go thru each property of the model beatmap and add any missing keyvalue pair
             foreach (var prop in propertiesModel)
             {
+                var mType = propertiesModel[prop.Key].GetType();
                 if (!data.properties.ContainsKey(prop.Key))
                 {
                     data.properties.Add(prop.Key, prop.Value);
+                }
+                else
+                {
+                    // convert all JObjects to their respective types
+                    if (data.properties[prop.Key].GetType() == typeof(Newtonsoft.Json.Linq.JObject))
+                    {
+                        data.properties[prop.Key] = (data.properties[prop.Key] as Newtonsoft.Json.Linq.JObject).ToObject(mType);
+                    }
                 }
             }
 

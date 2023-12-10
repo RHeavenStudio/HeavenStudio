@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using TMPro;
 using Jukebox;
 using UnityEngine.Playables;
+using UnityEngine.Networking;
 using HeavenStudio.Games;
 using HeavenStudio.InputSystem;
 
@@ -79,6 +80,7 @@ namespace HeavenStudio
         [SerializeField] AudioClip rankNg, rankOk, rankHi;
         [SerializeField] AudioClip musNgStart, musOkStart, musHiStart;
         [SerializeField] AudioClip musNg, musOk, musHi;
+        [SerializeField] AudioClip jglNg, jglOk, jglHi;
 
         [Header("References")]
         [SerializeField] TMP_Text header;
@@ -88,13 +90,18 @@ namespace HeavenStudio
         [SerializeField] TMP_Text barText;
         [SerializeField] Slider barSlider;
 
+        [SerializeField] TMP_Text epilogueMessage;
+        [SerializeField] Image epilogueImage;
+        [SerializeField] AspectRatioFitter epilogueFitter;
+
         [SerializeField] GameObject bg;
         [SerializeField] GameObject rankLogo;
         [SerializeField] Animator rankAnim;
         [SerializeField] CanvasScaler scaler;
+        [SerializeField] Animator canvasAnim;
 
         AudioSource audioSource;
-        bool twoMessage = false, barStarted = false, didRank = false;
+        bool twoMessage = false, barStarted = false, didRank = false, didEpilogue = false;
         float barTime = 0, barStartTime = float.MaxValue;
 
         public void PrepareJudgement()
@@ -130,6 +137,60 @@ namespace HeavenStudio
                 message1.gameObject.SetActive(false);
                 message2.gameObject.SetActive(false);
                 message0.text = " ";
+            }
+
+            string imagePath = "";
+            string imageName = "";
+            EntityTypes.Resource? imageResource;
+            if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+            {
+                imageResource = playedBeatmap != null ? playedBeatmap["epilogue_ng_res"] : null;
+            }
+            else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+            {
+                imageResource = playedBeatmap != null ? playedBeatmap["epilogue_ok_res"] : null;
+            }
+            else
+            {
+                imageResource = playedBeatmap != null ? playedBeatmap["epilogue_hi_res"] : null;
+            }
+
+            if (imageResource != null)
+            {
+                imagePath = imageResource.Value.path;
+                imageName = imageResource.Value.name;
+                try
+                {
+                    string fsPath = RiqFileHandler.GetResourcePath(imageName, imagePath);
+                    // fetch the image using UnityWebRequest
+                    StartCoroutine(LoadImage(fsPath));
+                }
+                catch (System.IO.DirectoryNotFoundException)
+                {
+                    Debug.Log("image resource doesn't exist, using blank placeholder");
+                    epilogueImage.sprite = null;
+                    epilogueFitter.aspectRatio = 16f / 9f;
+                }
+            }
+        }
+
+        IEnumerator LoadImage(string path)
+        {
+            UnityWebRequest www = UnityWebRequestTexture.GetTexture("file://" + path);
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.Log(www.error);
+                epilogueImage.sprite = null;
+                epilogueFitter.aspectRatio = 16f / 9f;
+            }
+            else
+            {
+                Texture2D texture = DownloadHandlerTexture.GetContent(www);
+                epilogueImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                epilogueImage.preserveAspect = true;
+                epilogueFitter.aspectRatio = (float)texture.width / (float)texture.height;
             }
         }
 
@@ -197,7 +258,6 @@ namespace HeavenStudio
                 rankAnim.Play("Hi");
                 audioSource.PlayOneShot(rankHi);
             }
-            didRank = true;
         }
 
         public void StartRankMusic()
@@ -223,6 +283,7 @@ namespace HeavenStudio
                 audioSource.loop = true;
                 audioSource.PlayScheduled(AudioSettings.dspTime + musHiStart.length);
             }
+            didRank = true;
         }
 
         private void Start()
@@ -247,9 +308,32 @@ namespace HeavenStudio
             InputController currentController = PlayerInput.GetInputController(1);
             if (currentController.GetLastButtonDown() > 0)
             {
-                if (didRank)
+                if (didRank && !didEpilogue)
                 {
                     // start the sequence for epilogue
+                    canvasAnim.Play("EpilogueOpen");
+                    audioSource.Stop();
+                    if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+                    {
+                        epilogueMessage.text = playedBeatmap != null ? playedBeatmap["epilogue_ng"] : "Try Again picture";
+                        audioSource.PlayOneShot(jglNg);
+                    }
+                    else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+                    {
+                        epilogueMessage.text = playedBeatmap != null ? playedBeatmap["epilogue_ok"] : "OK picture";
+                        audioSource.PlayOneShot(jglOk);
+                    }
+                    else
+                    {
+                        epilogueMessage.text = playedBeatmap != null ? playedBeatmap["epilogue_hi"] : "Superb picture";
+                        audioSource.PlayOneShot(jglHi);
+                    }
+                    didEpilogue = true;
+                }
+                else if (didEpilogue)
+                {
+                    audioSource.Stop();
+                    RiqFileHandler.ClearCache();
                     GlobalGameManager.LoadScene("Title", 0.35f, 0.5f);
                 }
                 else if (barStarted)

@@ -28,6 +28,7 @@ namespace HeavenStudio.Editor
         [SerializeField] public GameObject DropdownP;
         [SerializeField] public GameObject ColorP;
         [SerializeField] public GameObject StringP;
+        [SerializeField] public GameObject ImageP;
 
         [Header("Layout Prefabs")]
         [SerializeField] public GameObject DividerP;

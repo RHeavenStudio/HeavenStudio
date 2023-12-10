@@ -830,6 +830,7 @@ MonoBehaviour:
   DropdownP: {fileID: 0}
   ColorP: {fileID: 0}
   StringP: {fileID: 0}
+  ImageP: {fileID: 0}
   DividerP: {fileID: 0}
   HeaderP: {fileID: 0}
   SubHeaderP: {fileID: 0}
@@ -851,4 +852,22 @@ MonoBehaviour:
     isReadOnly: 0
   - tag: resultcommon_ng
     label: Try Again Message
+    isReadOnly: 0
+  - tag: epilogue_hi
+    label: Superb Epilogue Caption
+    isReadOnly: 0
+  - tag: epilogue_ok
+    label: OK Epilogue Caption
+    isReadOnly: 0
+  - tag: epilogue_ng
+    label: Try Again Epilogue Caption
+    isReadOnly: 0
+  - tag: epilogue_hi_res
+    label: Superb Epilogue Image
+    isReadOnly: 0
+  - tag: epilogue_ok_res
+    label: OK Epilogue Image
+    isReadOnly: 0
+  - tag: epilogue_ng_res
+    label: Try Again Epilogue Image
     isReadOnly: 0

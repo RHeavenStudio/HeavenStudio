@@ -231,16 +231,17 @@ namespace HeavenStudio
             Util.SoundByte.PauseOneShots();
         }
 
-        public void Stop(double time)
+        public void Stop(double beat)
         {
             if (absTimeAdjust != 0)
             {
                 Debug.Log($"Last playthrough had a dsp (audio) drift of {absTimeAdjust}.\nConsider increasing audio buffer size if audio distortion was present.");
             }
-            this.time = time;
+            songPosBeat = beat;
 
+            time = GetSongPosFromBeat(beat);
             songPos = time;
-            songPosBeat = 0;
+
             absTimeAdjust = 0;
 
             isPlaying = false;
