@@ -37,26 +37,30 @@ namespace HeavenStudio.Games.Loaders
                         new("open", true, "Should Open Mouth")
                     }
                 },
-                new GameAction("setEmotion", "Emotion")
+                new GameAction("stretchEmotion", "Emotion")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e.beat, e["type"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", BlueBear.EmotionType.ClosedEyes, "Emotion", "Which emotion should the blue bear use?")
-                    }
-                },
-                new GameAction("stretchEmotion", "Long Emotion")
-                {   
+                    function = delegate { var e = eventCaller.currentEntity; if (e["instant"]) BlueBear.instance.SetEmotion(e.beat, e["type"]); },
                     defaultLength = 4,
                     resizable = true,
                     parameters = new List<Param>()
                     {
+                        new Param("instant", false, "Instant"),
                         new Param("type", BlueBear.EmotionStretchType.LookUp, "Emotion", "Which emotion should the blue bear use?")
                     }
                 },
                 new GameAction("wind", "Wind")
                 {
                     function = delegate { BlueBear.instance.Wind(); },
+                    defaultLength = 0.5f
+                },
+                new GameAction("sigh", "Sigh")
+                {
+                    function = delegate { BlueBear.instance.Sigh(); },
+                    defaultLength = 0.5f
+                },
+                new GameAction("open", "Open Mouth")
+                {
+                    function = delegate { BlueBear.instance.OpenMouth(); },
                     defaultLength = 0.5f
                 },
                 new GameAction("story", "Story")
@@ -96,16 +100,9 @@ namespace HeavenStudio.Games
 
     public class BlueBear : Minigame
     {
-        public enum EmotionType
-        {
-            Neutral = 0,
-            ClosedEyes = 1,
-            Cry = 2,
-            Sigh = 3,
-            OpenMouth = 4
-        }
         public enum EmotionStretchType
         {
+            NoEmotion = -1,
             LookUp = 0,
             Smile = 1, 
             StartCrying = 2,
@@ -344,19 +341,19 @@ namespace HeavenStudio.Games
                     EmotionStretchType.LookUp => "OpenEyes",
                     EmotionStretchType.Smile => "Smile",
                     EmotionStretchType.StartCrying => "Sad",
+                    EmotionStretchType.NoEmotion => "",
                     _ => throw new NotImplementedException(),
                 };
-                headAndBodyAnim.DoNormalizedAnimation(animName, normalizedBeat);
+                if (animName != "") headAndBodyAnim.DoNormalizedAnimation(animName, normalizedBeat);
             }
         }
 
         private void HandleEmotions(double beat)
         {
-            _allEmotionsStretch = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" });
+            _allEmotionsStretch = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => !x["instant"]);
             if (_allEmotionsStretch.Count == 0) return;
             UpdateEmotions();
-            var allEmosBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => x.beat < beat);
-            var allSetEmosBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "setEmotion" }).FindAll(x => x.beat < beat);
+            var allEmosBeforeBeat = _allEmotionsStretch.FindAll(x => x.beat < beat);
             if (allEmosBeforeBeat.Count != 0)
             {
                 if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.StartCrying)
@@ -367,13 +364,6 @@ namespace HeavenStudio.Games
                 {
                     headAndBodyAnim.DoScaledAnimationAsync("SmileIdle", 0.5f);
                 }
-            }
-            if (allSetEmosBeforeBeat.Count != 0)
-            {
-                EmotionType lastType = (EmotionType)allSetEmosBeforeBeat[^1]["type"];
-
-                if (allEmosBeforeBeat.Count > 0 && allSetEmosBeforeBeat[^1].beat >= allEmosBeforeBeat[^1].beat) SetEmotion(beat, (int)lastType, false);
-                else SetEmotion(beat, (int)lastType);
             }
         }
 
@@ -407,6 +397,16 @@ namespace HeavenStudio.Games
         public void Wind()
         {
             windAnim.DoScaledAnimationAsync("Wind", 0.5f);
+        }
+
+        public void Sigh()
+        {
+            headAndBodyAnim.DoScaledAnimationAsync("Sigh", 0.5f);
+        }
+
+        public void OpenMouth()
+        {
+            _wantMouthOpen = true;
         }
 
         public void Bite(double beat, bool left, bool longBite)
@@ -484,28 +484,23 @@ namespace HeavenStudio.Games
         {
             _emotionCancelledBeat = beat;
             _wantMouthOpen = false;
+            crying = false;
             switch (emotion)
             {
-                case (int)EmotionType.Neutral:
-                    crying = false;
+                case (int)EmotionStretchType.NoEmotion:
                     headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     if (_allEmotionsStretch.Count == 0 || _lastEmotion != EmotionStretchType.Smile || !ableToStopSmile) return;
                     headAndBodyAnim.DoScaledAnimationAsync("StopSmile", 0.5f);
                     break;
-                case (int)EmotionType.ClosedEyes:
+                case (int)EmotionStretchType.LookUp:
                     headAndBodyAnim.DoScaledAnimationAsync("EyesClosed", 0.5f);
-                    crying = false;
                     break;
-                case (int)EmotionType.Cry:
+                case (int)EmotionStretchType.StartCrying:
                     headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
                     crying = true;
                     break;
-                case (int)EmotionType.Sigh:
-                    headAndBodyAnim.DoScaledAnimationAsync("Sigh", 0.5f);
-                    crying = false;
-                    break;
-                case (int)EmotionType.OpenMouth:
-                    _wantMouthOpen = true;
+                case (int)EmotionStretchType.Smile:
+                    headAndBodyAnim.DoScaledAnimationAsync("SmileIdle", 0.5f);
                     break;
                 default:
                     break;
