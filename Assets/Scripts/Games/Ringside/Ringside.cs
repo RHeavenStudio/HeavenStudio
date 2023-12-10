@@ -529,7 +529,7 @@ namespace HeavenStudio.Games
                     shouldNotInput = false;
                     canBop = true;
                     reporterAnim.Play("IdleReporter", 0, 0);
-                    reporterHeadAnim.Play("Idle", 0, 0);
+                    if (reporterHeadAnim.IsAnimationNotPlaying()) reporterHeadAnim.Play("Idle", 0, 0);
                 }),
             });
             if (!keepZoomedOut)
@@ -734,7 +734,7 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame($"ringside/huhaudience{UnityEngine.Random.Range(0, 2)}");
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { reporterAnim.Play("IdleReporter", 0, 0); reporterHeadAnim.Play("Idle", 0, 0); }),
+                    new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { reporterAnim.Play("IdleReporter", 0, 0); if (reporterHeadAnim.IsAnimationNotPlaying()) reporterHeadAnim.Play("Idle", 0, 0); }),
                 });
                 return;
             }
@@ -756,7 +756,7 @@ namespace HeavenStudio.Games
                     reporterAnim.Play("IdleReporter", 0, 0);
                 }),
                 new BeatAction.Action(caller.startBeat + caller.timer + 0.6f, delegate { flashObject.SetActive(false); }),
-                new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { reporterHeadAnim.Play("Idle", 0, 0); }),
+                new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { if (reporterHeadAnim.IsAnimationNotPlaying()) reporterHeadAnim.Play("Idle", 0, 0); }),
             });
         }
 
@@ -799,7 +799,7 @@ namespace HeavenStudio.Games
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(caller.startBeat + caller.timer + 0.5f, delegate { reporterAnim.Play("IdleReporter", 0, 0); reporterHeadAnim.Play("Miss", 0, 0); }),
-                        new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { reporterHeadAnim.Play("Idle", 0, 0); }),
+                        new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { if (reporterHeadAnim.IsAnimationNotPlaying()) reporterHeadAnim.Play("Idle", 0, 0); }),
                     });
                 }
                 return;
@@ -824,7 +824,7 @@ namespace HeavenStudio.Games
                         flashObject.SetActive(true);
                     }),
                     new BeatAction.Action(caller.startBeat + caller.timer + 0.6f, delegate { flashObject.SetActive(false); }),
-                    new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { reporterHeadAnim.Play("Idle", 0, 0); }),
+                    new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { if (reporterHeadAnim.IsAnimationNotPlaying()) reporterHeadAnim.Play("Idle", 0, 0); }),
                 });
             }
             else
@@ -833,7 +833,7 @@ namespace HeavenStudio.Games
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 0.5f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
-                    new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { reporterHeadAnim.Play("Idle", 0, 0); }),
+                    new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { if (reporterHeadAnim.IsAnimationNotPlaying()) reporterHeadAnim.Play("Idle", 0, 0); }),
                 });
             }
         }
