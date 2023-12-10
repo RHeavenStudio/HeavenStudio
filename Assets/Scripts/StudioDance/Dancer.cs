@@ -24,11 +24,11 @@ namespace HeavenStudio.StudioDance
                 if (!isDance) return;
                 if (currentBeat % 2 != 0)
                 {
-                    animator.DoScaledAnimationAsync("PoseL");
+                    animator.DoScaledAnimationAsync("MakerPoseL");
                 }
                 else
                 {
-                    animator.DoScaledAnimationAsync("PoseR");
+                    animator.DoScaledAnimationAsync("MakerPoseR");
                 }
                 isDance = false;
                 return;
@@ -46,11 +46,11 @@ namespace HeavenStudio.StudioDance
 
             if (currentBeat % 2 != 0)
             {
-                animator.DoScaledAnimation("DanceL", currentBeat);
+                animator.DoScaledAnimation("MakerL", currentBeat);
             }
             else
             {
-                animator.DoScaledAnimation("DanceR", currentBeat);
+                animator.DoScaledAnimation("MakerR", currentBeat);
             }
         }
     }
