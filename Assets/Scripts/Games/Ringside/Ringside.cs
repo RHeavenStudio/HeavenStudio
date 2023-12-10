@@ -528,6 +528,8 @@ namespace HeavenStudio.Games
                     else wrestlerAnim.Play("Idle", 0, 1);
                     shouldNotInput = false;
                     canBop = true;
+                    reporterAnim.Play("IdleReporter", 0, 0);
+                    reporterHeadAnim.Play("Idle", 0, 0);
                 }),
             });
             if (!keepZoomedOut)
@@ -709,6 +711,14 @@ namespace HeavenStudio.Games
             if (reporterHeadAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             {
                 reporterHeadAnim.DoScaledAnimationAsync("BlinkHead", 0.5f);
+            }
+            else if (reporterHeadAnim.GetCurrentAnimatorStateInfo(0).IsName("ExtendIdle"))
+            {
+                reporterHeadAnim.DoScaledAnimationAsync("ExtendBlink", 0.5f);
+            }
+            else if (reporterHeadAnim.GetCurrentAnimatorStateInfo(0).IsName("Excited"))
+            {
+                reporterHeadAnim.DoScaledAnimationAsync("ExcitedBlink", 0.5f);
             }
             float randomTime = UnityEngine.Random.Range(0.3f, 1.8f);
             Invoke("ReporterBlink", randomTime);
