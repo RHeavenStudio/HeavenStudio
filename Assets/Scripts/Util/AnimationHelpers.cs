@@ -34,7 +34,7 @@ namespace HeavenStudio.Util
         /// <param name="length">duration of animation (progress 1.0)</param>
         /// <param name="timeScale">multiplier for animation progress (smaller values make animation slower)</param>
         /// <param name="animLayer">animator layer to play animation on</param>
-        public static void DoScaledAnimation(this Animator anim, string animName, double startTime, float length = 1f, float timeScale = 1f, int animLayer = -1, bool clamp = false)
+        public static void DoScaledAnimation(this Animator anim, string animName, double startTime, double length = 1, float timeScale = 1f, int animLayer = -1, bool clamp = false)
         {
             if (anim == null) return;
             float pos = Conductor.instance.GetPositionFromBeat(startTime, length) * timeScale;

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 973228652645146835}
   - component: {fileID: 4775133465026292988}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: EyeR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6655367851817632929}
   - component: {fileID: 4953487523721041835}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4702797700737321925}
   - component: {fileID: 5458371096400718163}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: LegL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -262,7 +262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2110027195199092298}
   - component: {fileID: 4427864031391791721}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Hips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -346,7 +346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7505236120496206873}
   - component: {fileID: 557025351280167168}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: LegR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 6255441584635482009}
   - component: {fileID: 3010192506600983308}
   - component: {fileID: 2183142695466388869}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: FacePoser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -518,7 +518,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 3
 --- !u!1 &5026812869604169951
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,7 +529,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7709742647477725240}
   - component: {fileID: 6312424392463044102}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: ArmL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -614,7 +614,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1083994433150499968}
   - component: {fileID: 5523632144322233404}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Torso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -699,7 +699,7 @@ GameObject:
   - component: {fileID: 3517870697961505299}
   - component: {fileID: 64880960188446444}
   - component: {fileID: 8921318804363366668}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Arisa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -760,6 +760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e57f95bd19852bc46a88eb6f67404fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugChoreography: {fileID: 11400000, guid: d96e0429653a87e458402bf2b27c9d48, type: 2}
 --- !u!1 &5151345010187160570
 GameObject:
   m_ObjectHideFlags: 0
@@ -770,7 +771,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5005212596909708348}
   - component: {fileID: 4416567173055721529}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Hair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -854,7 +855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5160251771824588981}
   - component: {fileID: 3554116500381240446}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -941,7 +942,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4525173648653743717}
   - component: {fileID: 7310797463115372175}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: EyeL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1025,7 +1026,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2039106335442564576}
   - component: {fileID: 7586809368672341742}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: HandR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1109,7 +1110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6527505363066208356}
   - component: {fileID: 564498618862425150}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: HandL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1193,7 +1194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2718293722777145542}
   - component: {fileID: 750753234517336609}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Collar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1277,7 +1278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 526469563006529719}
   - component: {fileID: 6366747730854244537}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: ArmR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1362,7 +1363,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1088882758183167198}
   - component: {fileID: 7073094819256516695}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
