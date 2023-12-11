@@ -39,6 +39,37 @@ namespace HeavenStudio.Games.Loaders
                     preFunctionLength = 1f,
                     defaultLength = 2.5f,
                 },
+                new GameAction("blush", "Blush")
+                {
+                    function = delegate { DoubleDate.instance.GirlBlush(); }
+                },
+                new GameAction("toggleGirls", "Girls Presence")
+                {
+                    function = delegate { DoubleDate.instance.ToggleGirls(eventCaller.currentEntity["b"]); },
+                    defaultLength = 0.5f,
+                    parameters = new()
+                    {
+                        new("b", false, "Present?")
+                    }
+                },
+                new GameAction("stare", "Boy Stare")
+                {
+                    function = delegate { DoubleDate.instance.ToggleStare(eventCaller.currentEntity["b"]); },
+                    defaultLength = 0.5f,
+                    parameters = new()
+                    {
+                        new("b", true, "Should stare?")
+                    }
+                },
+                new GameAction("time", "Time of Day")
+                {
+                    function = delegate { DoubleDate.instance.SetTime(eventCaller.currentEntity["d"]); },
+                    defaultLength = 0.5f,
+                    parameters = new()
+                    {
+                        new("d", DoubleDate.DayTime.Noon, "Time")
+                    }
+                }
             },
             new List<string>() {"rvl", "normal"},
             "rvldate", "en",
@@ -67,8 +98,21 @@ namespace HeavenStudio.Games
         [SerializeField] DoubleDateWeasels weasels;
         [SerializeField] Animator treeAnim;
         [SerializeField] GameObject clouds;
+        [SerializeField] private GameObject girlObj;
+        [SerializeField] private GameObject girlWeaselObj;
+        [SerializeField] private GameObject girlWeaselShockObj;
+        [SerializeField] private Material doubleDateCellAnim;
+        [SerializeField] private SpriteRenderer bgSquare;
+        [SerializeField] private SpriteRenderer bgGradient;
+        [SerializeField] private Sprite bgIntro;
+        [SerializeField] private Sprite bgLong;
+
+        private Color squareColor;
 
         [Header("Variables")]
+        [SerializeField] private Color _skyColor;
+        [SerializeField] private Color noonColor;
+        [SerializeField] private float _animSpeed = 1.25f;
         [SerializeField] public float cloudSpeed;
         [SerializeField] public float cloudDistance;
         [SerializeField] public float floorHeight;
@@ -114,9 +158,67 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void CheckGirlsPresence(double beat)
+        {
+            var allEvents = EventCaller.GetAllInGameManagerList("doubleDate", new string[] { "toggleGirls" }).FindAll(x => x.beat < beat);
+            if (allEvents.Count == 0) return;
+            allEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            ToggleGirls(allEvents[^1]["b"]);
+        }
+
+        public void CheckBoyStare(double beat)
+        {
+            var allEvents = EventCaller.GetAllInGameManagerList("doubleDate", new string[] { "stare" }).FindAll(x => x.beat < beat);
+            if (allEvents.Count == 0) return;
+            allEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            ToggleStare(allEvents[^1]["b"]);
+        }
+
+        public enum DayTime
+        {
+            Day,
+            Noon
+        }
+
+        private void DayTimeCheck(double beat)
+        {
+            var allEvents = EventCaller.GetAllInGameManagerList("doubleDate", new string[] { "time" }).FindAll(x => x.beat < beat);
+            if (allEvents.Count == 0) return;
+            allEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            SetTime(allEvents[^1]["d"]);
+        }
+
+        public void SetTime(int time)
+        {
+            if (time == (int)DayTime.Noon)
+            {
+                doubleDateCellAnim.SetColor("_Color", noonColor);
+                bgSquare.color = squareColor;
+                bgGradient.sprite = bgLong;
+                return;
+            }
+
+            doubleDateCellAnim.SetColor("_Color", Color.white);
+            bgSquare.color = _skyColor;
+            bgGradient.sprite = bgIntro;
+        }
+
         public override void OnPlay(double beat)
         {
             queuedBalls.Clear();
+            CheckGirlsPresence(beat);
+            CheckBoyStare(beat);
+            DayTimeCheck(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            CheckGirlsPresence(beat);
+            CheckBoyStare(beat);
+            DayTimeCheck(beat);
         }
 
         private void OnDestroy() {
@@ -131,6 +233,8 @@ namespace HeavenStudio.Games
         {
             instance = this;
             SetupBopRegion("doubleDate", "bop", "autoBop");
+            doubleDateCellAnim.SetColor("_Color", noonColor);
+            squareColor = bgSquare.color;
         }
 
         private void Start() {
@@ -176,11 +280,11 @@ namespace HeavenStudio.Games
             }
             if (PlayerInput.GetIsAction(InputAction_TouchPress))
             {
-                boyAnim.DoScaledAnimationAsync("Ready", 1f);
+                boyAnim.DoScaledAnimationAsync("Ready", _animSpeed);
             }
             if (PlayerInput.GetIsAction(InputAction_TouchRelease) && !IsExpectingInputNow(InputAction_FlickPress))
             {
-                boyAnim.DoScaledAnimationAsync("UnReady", 1f);
+                boyAnim.DoScaledAnimationAsync("UnReady", _animSpeed);
             }
             if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress))
             {
@@ -188,6 +292,26 @@ namespace HeavenStudio.Games
                 Kick(true, true, false);
             }
             clouds.transform.position = Vector3.left * ((Time.realtimeSinceStartup * cloudSpeed) % cloudDistance);
+        }
+
+        public void GirlBlush()
+        {
+            girlAnim.DoScaledAnimationAsync("GirlBlush", _animSpeed);
+        }
+
+        public void ToggleGirls(bool active)
+        {
+            girlObj.SetActive(active);
+            girlWeaselObj.SetActive(active);
+            girlWeaselShockObj.SetActive(active);
+        }
+
+        private bool _isStaring = false;
+
+        public void ToggleStare(bool active)
+        {
+            boyAnim.SetBool("Stare", active);
+            _isStaring = active;
         }
 
         public void ToggleBop(bool go)
@@ -213,10 +337,10 @@ namespace HeavenStudio.Games
         {
             if (canBop)
             {
-                boyAnim.DoScaledAnimationAsync("IdleBop", 1f);
+                boyAnim.DoScaledAnimationAsync(_isStaring ? "IdleBop2" : "IdleBop", _animSpeed);
             }
             if (Conductor.instance.songPositionInBeatsAsDouble > lastGirlGacha)
-                girlAnim.DoScaledAnimationAsync("GirlBop", 1f);
+                girlAnim.DoScaledAnimationAsync("GirlBop", _animSpeed);
             weasels.Bop();
         }
 
@@ -224,12 +348,12 @@ namespace HeavenStudio.Games
         {
             if (hit)
             {
-                boyAnim.DoScaledAnimationAsync("Kick", 0.5f);
+                boyAnim.DoScaledAnimationAsync("Kick", _animSpeed);
                 if (jump)
                 {
                     weasels.Jump();
                     lastGirlGacha = Conductor.instance.songPositionInBeatsAsDouble + 0.5f;
-                    girlAnim.DoScaledAnimationAsync("GirlLookUp", 0.5f);
+                    girlAnim.DoScaledAnimationAsync("GirlLookUp", _animSpeed);
                 }
                 else if (weaselsHappy) weasels.Happy();
                 if (!forceNoLeaves)
@@ -239,14 +363,14 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1f, delegate
                         {
                             leaves.Play();
-                            treeAnim.DoScaledAnimationAsync("TreeRustle", 1f);
+                            treeAnim.DoScaledAnimationAsync("TreeRustle", _animSpeed);
                         })
                     });
                 }
             }
             else
             {
-                boyAnim.DoScaledAnimationAsync("Barely", 0.5f);
+                boyAnim.DoScaledAnimationAsync("Barely", _animSpeed);
                 weasels.Surprise();
             }
         }
@@ -331,7 +455,7 @@ namespace HeavenStudio.Games
         public void MissKick(double beat, bool hit = false)
         {
             lastGirlGacha = Conductor.instance.songPositionInBeatsAsDouble + 1.5f;
-            girlAnim.DoScaledAnimationAsync("GirlSad", 0.5f);
+            girlAnim.DoScaledAnimationAsync("GirlSad", _animSpeed);
             if (hit)
             {
                 lastHitWeasel = Conductor.instance.songPositionInBeatsAsDouble;

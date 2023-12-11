@@ -486,7 +486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5057601987836241533
 Transform:
   m_ObjectHideFlags: 0
@@ -495,7 +495,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 527631771265542313}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.186, y: -2.816, z: 1.835911}
+  m_LocalPosition: {x: 3.24, y: -7.75, z: 1.835911}
   m_LocalScale: {x: 0.37757048, y: 0.37757048, z: 0.3775703}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14954,6 +14954,17 @@ MonoBehaviour:
   weasels: {fileID: 1744652231623238581}
   treeAnim: {fileID: 2725162487030184716}
   clouds: {fileID: 2827042187832415127}
+  girlObj: {fileID: 924406857522765850}
+  girlWeaselObj: {fileID: 9083234075388257105}
+  girlWeaselShockObj: {fileID: 527631771265542313}
+  doubleDateCellAnim: {fileID: 2100000, guid: fc4d078e5116cc74bad3552a6fc3e25d, type: 2}
+  bgSquare: {fileID: 6265365961793110146}
+  bgGradient: {fileID: 9108262814518596854}
+  bgIntro: {fileID: 8188186736342864057, guid: 1f442840d85d9e944819c7e21ab38483, type: 3}
+  bgLong: {fileID: -3642036459305862908, guid: 1f442840d85d9e944819c7e21ab38483, type: 3}
+  _skyColor: {r: 0.64705884, g: 1, b: 1, a: 1}
+  noonColor: {r: 0.9529412, g: 0.87058824, b: 0.7764706, a: 1}
+  _animSpeed: 1
   cloudSpeed: 0.06
   cloudDistance: 20
   floorHeight: -2.75
