@@ -26,7 +26,6 @@ namespace HeavenStudio.Games
 
         public double startBeat;
         public double timer;
-        public int category;
         public float weight = 1f;
 
         public bool isEligible = true;
@@ -271,7 +270,7 @@ namespace HeavenStudio.Games
 
                     if (countsForAccuracy && !(noAutoplay || autoplayOnly) && isEligible)
                     {
-                        GameManager.instance.ScoreInputAccuracy(startBeat + timer, TimeToAccuracy(time), time > 1.0, time, weight, true, category);
+                        GameManager.instance.ScoreInputAccuracy(startBeat + timer, TimeToAccuracy(time), time > 1.0, time, weight, true);
                         if (state >= 1f || state <= -1f)
                         {
                             GoForAPerfect.instance.Miss();
@@ -345,7 +344,7 @@ namespace HeavenStudio.Games
 
             if (countsForAccuracy && !(noAutoplay || autoplayOnly))
             {
-                GameManager.instance.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, weight, false, category);
+                GameManager.instance.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, weight, false);
                 GoForAPerfect.instance.Miss();
                 SectionMedalsManager.instance.MakeIneligible();
             }

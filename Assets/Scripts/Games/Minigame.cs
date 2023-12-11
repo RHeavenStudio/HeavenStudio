@@ -434,10 +434,10 @@ namespace HeavenStudio.Games
             return null;
         }
 
-        public void ScoreMiss(float weight = 1f, int category = 0)
+        public void ScoreMiss(float weight = 1f)
         {
             double beat = Conductor.instance?.songPositionInBeatsAsDouble ?? -1;
-            GameManager.instance.ScoreInputAccuracy(beat, 0, true, NgLateTime(), weight, false, category);
+            GameManager.instance.ScoreInputAccuracy(beat, 0, true, NgLateTime(), weight, false);
             if (weight > 0)
             {
                 GoForAPerfect.instance.Miss();
@@ -447,7 +447,6 @@ namespace HeavenStudio.Games
 
         public void ToggleSplitColoursDisplay(bool on)
         {
-            
         }
 
         #region Bop

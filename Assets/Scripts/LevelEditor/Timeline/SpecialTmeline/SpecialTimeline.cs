@@ -240,6 +240,10 @@ namespace HeavenStudio.Editor.Track
             {
                 RiqEntity sectionC = GameManager.instance.Beatmap.AddNewSectionMarker(Timeline.instance.MousePos2BeatSnap, "New Section");
 
+                sectionC.CreateProperty("startPerfect", false);
+                sectionC.CreateProperty("weight", 1f);
+                sectionC.CreateProperty("category", 0);
+
                 sectionTimelineObj.chartEntity = sectionC;
                 GameManager.instance.Beatmap.SectionMarkers.Add(sectionC);
                 CommandManager.Instance.AddCommand(new Commands.AddMarker(sectionC, sectionC.guid, HoveringTypes.SectionChange));

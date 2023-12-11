@@ -53,6 +53,8 @@ namespace HeavenStudio
         [NonSerialized] public RiqEntity lastSection, currentSection;
         [NonSerialized] public double nextSectionBeat;
         public double SectionProgress { get; private set; }
+        public float MarkerWeight { get; private set; }
+        public int MarkerCategory { get; private set; }
 
         public bool GameHasSplitColours
         {
@@ -332,20 +334,20 @@ namespace HeavenStudio
             }
         }
 
-        public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, float weight = 1, bool doDisplay = true, int category = 0)
+        public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, float weight = 1, bool doDisplay = true)
         {
-            if (weight > 0)
+            if (weight > 0 && MarkerWeight > 0)
             {
-                totalInputs += weight;
-                totalPlayerAccuracy += Math.Abs(accuracy) * weight;
+                totalInputs += weight * MarkerWeight;
+                totalPlayerAccuracy += Math.Abs(accuracy) * weight * MarkerWeight;
 
                 judgementInfo.inputs.Add(new JudgementManager.InputInfo
                 {
                     beat = beat,
                     accuracyState = accuracy,
                     timeOffset = time,
-                    weight = weight,
-                    category = category
+                    weight = weight * MarkerWeight,
+                    category = MarkerCategory
                 });
             }
 
@@ -514,18 +516,43 @@ namespace HeavenStudio
             {
                 if (cond.songPositionInBeatsAsDouble >= sectionBeats[currentSectionEvent])
                 {
-                    Debug.Log("Section " + Beatmap.SectionMarkers[currentSectionEvent]["sectionName"] + " started");
-                    lastSection = currentSection;
-                    if (currentSectionEvent < Beatmap.SectionMarkers.Count)
-                        currentSection = Beatmap.SectionMarkers[currentSectionEvent];
-                    else
-                        currentSection = null;
-                    currentSectionEvent++;
-                    if (currentSectionEvent < Beatmap.SectionMarkers.Count)
-                        nextSectionBeat = Beatmap.SectionMarkers[currentSectionEvent].beat;
-                    else
+                    RiqEntity marker = Beatmap.SectionMarkers[currentSectionEvent];
+                    if (!string.IsNullOrEmpty(marker["sectionName"]))
+                    {
+                        Debug.Log("Section " + marker["sectionName"] + " started");
+                        lastSection = currentSection;
+                        if (currentSectionEvent < Beatmap.SectionMarkers.Count)
+                            currentSection = marker;
+                        else
+                            currentSection = null;
                         nextSectionBeat = endBeat;
-                    onSectionChange?.Invoke(currentSection, lastSection);
+                        foreach (RiqEntity futureSection in Beatmap.SectionMarkers)
+                        {
+                            if (futureSection.beat < marker.beat) continue;
+                            if (futureSection == marker) continue;
+                            if (!string.IsNullOrEmpty(futureSection["sectionName"]))
+                            {
+                                nextSectionBeat = futureSection.beat;
+                                break;
+                            }
+                        }
+                        onSectionChange?.Invoke(currentSection, lastSection);
+                    }
+
+                    if (OverlaysManager.OverlaysEnabled)
+                    {
+                        if (PersistentDataManager.gameSettings.perfectChallengeType != PersistentDataManager.PerfectChallengeType.Off)
+                        {
+                            if (marker["startPerfect"] && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
+                            {
+                                GoForAPerfect.instance.Enable(marker.beat);
+                            }
+                        }
+                    }
+
+                    MarkerWeight = marker["weight"];
+                    MarkerCategory = marker["category"];
+                    currentSectionEvent++;
                 }
             }
 
@@ -653,6 +680,9 @@ namespace HeavenStudio
                     inputs = new List<JudgementManager.InputInfo>(),
                     medals = new List<JudgementManager.MedalInfo>()
                 };
+
+                MarkerWeight = 1;
+                MarkerCategory = 0;
 
                 if (playMode && delay > 0)
                 {

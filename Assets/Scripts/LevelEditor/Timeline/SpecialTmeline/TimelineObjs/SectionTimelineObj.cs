@@ -29,7 +29,10 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateLabel()
         {
-            sectionLabel.text = chartEntity["sectionName"];
+            if (string.IsNullOrEmpty(chartEntity["sectionName"]))
+                sectionLabel.text = $"x{chartEntity["weight"]:0}";
+            else
+                sectionLabel.text = $"x{chartEntity["weight"]:0} | {chartEntity["sectionName"]}";
             if (!moving)
                 SetX(chartEntity);
         }
@@ -88,7 +91,7 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
-                gameObject.SetActive(false);   
+                gameObject.SetActive(false);
 
             }
         }

@@ -43,13 +43,6 @@ namespace HeavenStudio.Common
                 gameObject.SetActive(true);
                 SectionText.text = newSection["sectionName"];
                 SectionProgress.value = (float) GameManager.instance.SectionProgress;
-
-                if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.Off) return;
-                if (!OverlaysManager.OverlaysEnabled) return;
-                if (newSection["startPerfect"] && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
-                {
-                    GoForAPerfect.instance.Enable(newSection.beat);
-                }
             }
         }
     }

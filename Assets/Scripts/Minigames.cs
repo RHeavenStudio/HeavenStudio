@@ -43,53 +43,52 @@ namespace HeavenStudio
 
                 ////// CATEGORY 1: SONG INFO
                 // general chart info
-                {"remixtitle", "New Remix"},        // chart name
-                {"remixauthor", "Your Name"},       // charter's name
-                {"remixdesc", "Remix Description"}, // chart description
-                {"remixlevel", 1},                  // chart difficulty (maybe offer a suggestion but still have the mapper determine it)
-                {"remixtempo", 120f},               // avg. chart tempo
-                {"remixtags", ""},                  // chart tags
-                {"icontype", 0},                    // chart icon (presets, custom - future)
-                {"iconurl", ""},                    // custom icon location (future)
-                {"challengetype", 0},               // perfect challenge type
-                {"playstyle", RecommendedControlStyle.Any},                   // recommended control style
+                {"remixtitle", "New Remix"},                                                                                        // chart name
+                {"remixauthor", "Your Name"},                                                                                       // charter's name
+                {"remixdesc", "Remix Description"},                                                                                 // chart description
+                {"remixlevel", 1},                                                                                                  // chart difficulty (maybe offer a suggestion but still have the mapper determine it)
+                {"remixtempo", 120f},                                                                                               // avg. chart tempo
+                {"remixtags", ""},                                                                                                  // chart tags
+                {"icontype", 0},                                                                                                    // chart icon (presets, custom - future)
+                {"iconres", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Select/", "Icon")},           // custom icon location (future)
+                {"challengetype", 0},                                                                                               // perfect challenge type
+                {"playstyle", RecommendedControlStyle.Any},                                                                         // recommended control style
 
                 // chart song info
-                {"idolgenre", "Song Genre"},        // song genre
-                {"idolsong", "Song Name"},          // song name
-                {"idolcredit", "Artist"},           // song artist
+                {"idolgenre", "Song Genre"},                                                                                        // song genre
+                {"idolsong", "Song Name"},                                                                                          // song name
+                {"idolcredit", "Artist"},                                                                                           // song artist
 
                 ////// CATEGORY 2: PROLOGUE AND EPILOGUE
                 // chart prologue
-                {"prologuetype", 0},                // prologue card animation (future)
-                {"prologuecaption", "Remix"},       // prologue card sub-title (future)
+                {"prologuetype", 0},                                                                                                // prologue card animation (future)
+                {"prologuecaption", "Remix"},                                                                                       // prologue card sub-title (future)
 
                 // chart results screen messages
-                {"resultcaption", "Rhythm League Notes"},                       // result screen header
-                {"resultcommon_hi", "Good rhythm."},                            // generic "Superb" message (one-liner, or second line for single-type)
-                {"resultcommon_ok", "Eh. Passable."},                           // generic "OK" message (one-liner, or second line for single-type)
-                {"resultcommon_ng", "Try harder next time."},                   // generic "Try Again" message (one-liner, or second line for single-type)
+                {"resultcaption", "Rhythm League Notes"},                                                                           // result screen header
+                {"resultcommon_hi", "Good rhythm."},                                                                                // generic "Superb" message (one-liner)
+                {"resultcommon_ok", "Eh. Passable."},                                                                               // generic "OK" message (one-liner)
+                {"resultcommon_ng", "Try harder next time."},                                                                       // generic "Try Again" message (one-liner)
 
-                    // the following are shown / hidden in-editor depending on the tags of the games used
-                {"resultnormal_hi", "You show strong fundamentals."},           // "Superb" message for normal games (two-liner)
-                {"resultnormal_ng", "Work on your fundamentals."},              // "Try Again" message for normal games (two-liner)
+                {"resultcat0_hi", "You show strong fundamentals."},                                                                 // "Superb" message for input category 0 "normal" (two-liner)
+                {"resultcat0_ng", "Work on your fundamentals."},                                                                    // "Try Again" message for input category 0 "normal" (two-liner)
 
-                {"resultkeep_hi", "You kept the beat well."},                   // "Superb" message for keep-the-beat games (two-liner)
-                {"resultkeep_ng", "You had trouble keeping the beat."},         // "Try Again" message for keep-the-beat games (two-liner)
+                {"resultcat1_hi", "You kept the beat well."},                                                                       // "Superb" message for input category 1 "keep" (two-liner)
+                {"resultcat1_ng", "You had trouble keeping the beat."},                                                             // "Try Again" message for input category 1 "keep" (two-liner)
 
-                {"resultaim_hi", "You had great aim."},                         // "Superb" message for aim games (two-liner)
-                {"resultaim_ng", "Your aim was a little shaky."},               // "Try Again" message for aim games (two-liner)
+                {"resultcat2_hi", "You had great aim."},                                                                            // "Superb" message for input category 2 "aim" (two-liner)
+                {"resultcat2_ng", "Your aim was a little shaky."},                                                                  // "Try Again" message for input category 2 "aim" (two-liner)
+                                                    
+                {"resultcat3_hi", "You followed the example well."},                                                                // "Superb" message for input category 3 "repeat" (two-liner)
+                {"resultcat3_ng", "Next time, follow the example better."},                                                         // "Try Again" message for input category 3 "repeat" (two-liner)
 
-                {"resultrepeat_hi", "You followed the example well."},          // "Superb" message for call-and-response games (two-liner)
-                {"resultrepeat_ng", "Next time, follow the example better."},   // "Try Again" message for call-and-response games (two-liner)
+                {"epilogue_hi", "Superb picture"},                                                                                  // epilogue "Superb" message
+                {"epilogue_ok", "OK picture"},                                                                                      // epilogue "OK" message
+                {"epilogue_ng", "Try Again picture"},                                                                               // epilogue "Try Again" message
 
-                {"epilogue_hi", "Superb picture"},                              // epilogue "Superb" message
-                {"epilogue_ok", "OK picture"},                                  // epilogue "OK" message
-                {"epilogue_ng", "Try Again picture"},                           // epilogue "Try Again" message
-
-                {"epilogue_hi_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Hi")},    // epilogue "Superb" image resource path
-                {"epilogue_ok_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ok")},    // epilogue "OK" image resource path
-                {"epilogue_ng_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ng")},    // epilogue "Try Again" image resource path
+                {"epilogue_hi_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Hi")},   // epilogue "Superb" image resource path
+                {"epilogue_ok_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ok")},   // epilogue "OK" image resource path
+                {"epilogue_ng_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ng")},   // epilogue "Try Again" image resource path
             };
 
         static Dictionary<string, object> tempoChangeModel = new()
@@ -108,11 +107,9 @@ namespace HeavenStudio
         static Dictionary<string, object> sectionMarkModel = new()
         {
             {"sectionName", ""},
-            {"isCheckpoint", false},
             {"startPerfect", false},
-            {"breakSection", false},
-            {"extendsPrevious", false},
-            {"sectionWeight", 1f},
+            {"weight", 1f},
+            {"category", 0},
         };
 
         static void PreProcessSpecialEntity(RiqEntity e, Dictionary<string, object> model)
@@ -499,7 +496,7 @@ namespace HeavenStudio
                     localeLoaded = false;
                     localePreloaded = false;
                 }
-                
+
                 if (!hasLocales) return;
                 if (localePreloaded) return;
                 localePreloaded = true;
