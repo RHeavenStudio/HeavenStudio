@@ -39,13 +39,16 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("stretchEmotion", "Emotion")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; if (e["instant"]) BlueBear.instance.SetEmotion(e.beat, e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; if (e["instant"] || e["type"] == (int)BlueBear.EmotionStretchType.NoEmotion) BlueBear.instance.SetEmotion(e.beat, e["type"]); },
                     defaultLength = 4,
                     resizable = true,
                     parameters = new List<Param>()
                     {
+                        new Param("type", BlueBear.EmotionStretchType.NoEmotion, "Emotion", "Which emotion should the blue bear use?", new()
+                        {
+                            new((x, _) => (int)x != (int)BlueBear.EmotionStretchType.NoEmotion, new string[] { "instant" })
+                        }),
                         new Param("instant", false, "Instant"),
-                        new Param("type", BlueBear.EmotionStretchType.LookUp, "Emotion", "Which emotion should the blue bear use?")
                     }
                 },
                 new GameAction("wind", "Wind")
@@ -311,6 +314,7 @@ namespace HeavenStudio.Games
         private int _emotionIndex = 0;
         private List<RiqEntity> _allEmotionsStretch = new();
         private EmotionStretchType _lastEmotion = EmotionStretchType.LookUp;
+        private bool _firstEmotionFrame = true;
 
         private void UpdateEmotions()
         {
@@ -326,6 +330,12 @@ namespace HeavenStudio.Games
                 _emotionIndex++;
                 _lastEmotion = (EmotionStretchType)_allEmotionsStretch[_emotionIndex - 1]["type"];
                 crying = _lastEmotion == EmotionStretchType.StartCrying;
+                _firstEmotionFrame = true;
+                if (_lastEmotion == EmotionStretchType.Smile)
+                {
+                    headAndBodyAnim.DoScaledAnimationAsync("StopSmile", 0.5f);
+                }
+
                 UpdateEmotions();
                 return;
             }
@@ -334,12 +344,19 @@ namespace HeavenStudio.Games
             {
                 _lastEmotion = (EmotionStretchType)e["type"];
                 crying = _lastEmotion == EmotionStretchType.StartCrying;
+
+                if (_firstEmotionFrame && _lastEmotion == EmotionStretchType.Smile)
+                {
+                    headAndBodyAnim.DoScaledAnimationAsync("Smile", 0.5f);
+                    _firstEmotionFrame = false;
+                }
+
                 float normalizedBeat = cond.GetPositionFromBeat(e.beat, e.length);
 
                 string animName = (EmotionStretchType)e["type"] switch
                 {
                     EmotionStretchType.LookUp => "OpenEyes",
-                    EmotionStretchType.Smile => "Smile",
+                    EmotionStretchType.Smile => "",
                     EmotionStretchType.StartCrying => "Sad",
                     EmotionStretchType.NoEmotion => "",
                     _ => throw new NotImplementedException(),
@@ -350,7 +367,7 @@ namespace HeavenStudio.Games
 
         private void HandleEmotions(double beat)
         {
-            _allEmotionsStretch = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => !x["instant"]);
+            _allEmotionsStretch = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => !(x["instant"] || x["type"] == (int)EmotionStretchType.NoEmotion));
             if (_allEmotionsStretch.Count == 0) return;
             UpdateEmotions();
             var allEmosBeforeBeat = _allEmotionsStretch.FindAll(x => x.beat < beat);
@@ -489,8 +506,6 @@ namespace HeavenStudio.Games
             {
                 case (int)EmotionStretchType.NoEmotion:
                     headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
-                    if (_allEmotionsStretch.Count == 0 || _lastEmotion != EmotionStretchType.Smile || !ableToStopSmile) return;
-                    headAndBodyAnim.DoScaledAnimationAsync("StopSmile", 0.5f);
                     break;
                 case (int)EmotionStretchType.LookUp:
                     headAndBodyAnim.DoScaledAnimationAsync("EyesClosed", 0.5f);
