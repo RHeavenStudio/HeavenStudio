@@ -23,21 +23,33 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("soccer", "Soccer Ball")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueSoccerBall(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueSoccerBall(e.beat, e["b"]); },
                     preFunctionLength = 1f,
                     defaultLength = 2f,
+                    parameters = new()
+                    {
+                        new("b", false, "Weasels Jump")
+                    }
                 },
                 new GameAction("basket", "Basket Ball")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueBasketBall(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueBasketBall(e.beat, e["b"]); },
                     preFunctionLength = 1f,
                     defaultLength = 2f,
+                    parameters = new()
+                    {
+                        new("b", false, "Weasels Jump")
+                    }
                 },
                 new GameAction("football", "Football")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueFootBall(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueFootBall(e.beat, e["b"]); },
                     preFunctionLength = 1f,
                     defaultLength = 2.5f,
+                    parameters = new()
+                    {
+                        new("b", true, "Weasels Jump")
+                    }
                 },
                 new GameAction("blush", "Blush")
                 {
@@ -136,6 +148,7 @@ namespace HeavenStudio.Games
         {
             public double beat;
             public BallType type;
+            public bool jump;
         }
 
         public static PlayerInput.InputAction InputAction_TouchPress =
@@ -258,13 +271,13 @@ namespace HeavenStudio.Games
                         switch (ball.type)
                         {
                             case BallType.Soccer:
-                                SpawnSoccerBall(ball.beat);
+                                SpawnSoccerBall(ball.beat, ball.jump);
                                 break;
                             case BallType.Basket:
-                                SpawnBasketBall(ball.beat);
+                                SpawnBasketBall(ball.beat, ball.jump);
                                 break;
                             case BallType.Football:
-                                SpawnFootBall(ball.beat);
+                                SpawnFootBall(ball.beat, ball.jump);
                                 break;
                         }
                     }
@@ -375,36 +388,38 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void QueueSoccerBall(double beat)
+        public static void QueueSoccerBall(double beat, bool shouldJump)
         {
             if (GameManager.instance.currentGame != "doubleDate")
             {
                 queuedBalls.Add(new QueuedBall()
                 {
                     beat = beat,
-                    type = BallType.Soccer
+                    type = BallType.Soccer,
+                    jump = shouldJump
                 });
             }
             else
             {
-                instance.SpawnSoccerBall(beat);
+                instance.SpawnSoccerBall(beat, shouldJump);
             }
             SoundByte.PlayOneShotGame("doubleDate/soccerBounce", beat, forcePlay: true);
         }
 
-        public static void QueueBasketBall(double beat)
+        public static void QueueBasketBall(double beat, bool shouldJump)
         {
             if (GameManager.instance.currentGame != "doubleDate")
             {
                 queuedBalls.Add(new QueuedBall()
                 {
                     beat = beat,
-                    type = BallType.Basket
+                    type = BallType.Basket,
+                    jump = shouldJump
                 });
             }
             else
             {
-                instance.SpawnBasketBall(beat);
+                instance.SpawnBasketBall(beat, shouldJump);
             }
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -413,19 +428,20 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
         }
 
-        public static void QueueFootBall(double beat)
+        public static void QueueFootBall(double beat, bool shouldJump)
         {
             if (GameManager.instance.currentGame != "doubleDate")
             {
                 queuedBalls.Add(new QueuedBall()
                 {
                     beat = beat,
-                    type = BallType.Football
+                    type = BallType.Football,
+                    jump = shouldJump
                 });
             }
             else
             {
-                instance.SpawnFootBall(beat);
+                instance.SpawnFootBall(beat, shouldJump);
             }
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -434,22 +450,22 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
         }
 
-        public void SpawnSoccerBall(double beat)
+        public void SpawnSoccerBall(double beat, bool shouldJump)
         {
             SoccerBall spawnedBall = Instantiate(soccer, instance.transform).GetComponent<SoccerBall>();
-            spawnedBall.Init(beat);
+            spawnedBall.Init(beat, shouldJump);
         }
 
-        public void SpawnBasketBall(double beat)
+        public void SpawnBasketBall(double beat, bool shouldJump)
         {
             Basketball spawnedBall = Instantiate(basket, instance.transform).GetComponent<Basketball>();
-            spawnedBall.Init(beat);
+            spawnedBall.Init(beat, shouldJump);
         }
 
-        public void SpawnFootBall(double beat)
+        public void SpawnFootBall(double beat, bool shouldJump)
         {
             Football spawnedBall = Instantiate(football, instance.transform).GetComponent<Football>();
-            spawnedBall.Init(beat);
+            spawnedBall.Init(beat, shouldJump);
         }
 
         public void MissKick(double beat, bool hit = false)
