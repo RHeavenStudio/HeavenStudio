@@ -29,10 +29,11 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateLabel()
         {
+            //<sprite="categoryMarker" name="cat0">
             if (string.IsNullOrEmpty(chartEntity["sectionName"]))
-                sectionLabel.text = $"x{chartEntity["weight"]:0}";
+                sectionLabel.text = $"<sprite=\"categoryMarker\" name=\"cat{chartEntity["category"]}\"> x{chartEntity["weight"]:0}";
             else
-                sectionLabel.text = $"x{chartEntity["weight"]:0} | {chartEntity["sectionName"]}";
+                sectionLabel.text = $"<sprite=\"categoryMarker\" name=\"cat{chartEntity["category"]}\"> x{chartEntity["weight"]:0} | {chartEntity["sectionName"]}";
             if (!moving)
                 SetX(chartEntity);
         }
@@ -93,6 +94,14 @@ namespace HeavenStudio.Editor.Track
             {
                 gameObject.SetActive(false);
 
+            }
+        }
+
+        public void Remove()
+        {
+            if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.ChartSection)
+            {
+                DeleteObj();
             }
         }
     }

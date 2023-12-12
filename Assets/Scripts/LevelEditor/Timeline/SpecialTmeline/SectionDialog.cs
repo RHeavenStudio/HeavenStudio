@@ -17,6 +17,10 @@ public class SectionDialog : Dialog
     [SerializeField] Slider markerWeight;
     [SerializeField] TMP_InputField markerWeightManual;
 
+    [SerializeField] Sprite catOff;
+    [SerializeField] Button[] catButtons;
+    [SerializeField] Sprite[] catSprites;
+
     public void SwitchSectionDialog()
     {
         if (dialog.activeSelf)
@@ -47,17 +51,20 @@ public class SectionDialog : Dialog
         markerWeight.maxValue = 8;
         markerWeight.minValue = 0;
         markerWeight.wholeNumbers = true;
+
+        UpdateCatButtonState();
     }
 
     public void DeleteSection()
     {
+        if (sectionObj != null)
+        {
+            sectionObj.Remove();
+        }
         if (dialog.activeSelf)
         {
-            dialog.SetActive(false);
-            Editor.instance.inAuthorativeMenu = false;
+            SwitchSectionDialog();
         }
-        if (sectionObj == null) return;
-        sectionObj.DeleteObj();
     }
 
     public void ChangeSectionName(string name)
@@ -86,5 +93,17 @@ public class SectionDialog : Dialog
         if (sectionObj == null) return;
         sectionObj.chartEntity["weight"] = (float) Math.Round(Convert.ToSingle(markerWeightManual.text), 2);
         markerWeight.value = sectionObj.chartEntity["weight"];
+    }
+
+    void UpdateCatButtonState()
+    {
+        if (sectionObj == null) return;
+        for (int i = 0; i < catButtons.Length; i++)
+        {
+            if (i == (int) sectionObj.chartEntity["category"])
+                catButtons[i].GetComponent<Image>().sprite = catSprites[i];
+            else
+                catButtons[i].GetComponent<Image>().sprite = catOff;
+        }
     }
 }

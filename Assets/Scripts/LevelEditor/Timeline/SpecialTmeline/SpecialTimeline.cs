@@ -200,7 +200,6 @@ namespace HeavenStudio.Editor.Track
             {
                 RiqEntity volumeC = GameManager.instance.Beatmap.AddNewVolumeChange(Timeline.instance.MousePos2BeatSnap, 100f);
                 volumeTimelineObj.chartEntity = volumeC;
-                GameManager.instance.Beatmap.VolumeChanges.Add(volumeC);
                 CommandManager.Instance.AddCommand(new Commands.AddMarker(volumeC, volumeC.guid, HoveringTypes.VolumeChange));
             }
             else
@@ -245,7 +244,6 @@ namespace HeavenStudio.Editor.Track
                 sectionC.CreateProperty("category", 0);
 
                 sectionTimelineObj.chartEntity = sectionC;
-                GameManager.instance.Beatmap.SectionMarkers.Add(sectionC);
                 CommandManager.Instance.AddCommand(new Commands.AddMarker(sectionC, sectionC.guid, HoveringTypes.SectionChange));
             }
             else
