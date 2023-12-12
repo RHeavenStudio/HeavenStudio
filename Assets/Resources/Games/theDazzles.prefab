@@ -15253,7 +15253,7 @@ ParticleSystemRenderer:
   m_UseCustomVertexStreams: 1
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
-  m_AllowRoll: 0
+  m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
@@ -16139,32 +16139,32 @@ ParticleSystem:
       maxColor: {r: 0, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 0, b: 1, a: 1}
-        key2: {r: 1, g: 1, b: 0, a: 0}
-        key3: {r: 1, g: 1, b: 1, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 1, g: 0.37254903, b: 0.7607844, a: 1}
+        key1: {r: 0.47058827, g: 0.8941177, b: 0, a: 1}
+        key2: {r: 0.80392164, g: 0.13725491, b: 0.80392164, a: 1}
+        key3: {r: 0.9921569, g: 0.94117653, b: 0.007843138, a: 0}
+        key4: {r: 0.9960785, g: 0.65882355, b: 0.33333334, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
-        ctime0: 21627
-        ctime1: 43253
-        ctime2: 65535
-        ctime3: 65150
-        ctime4: 0
+        ctime0: 11313
+        ctime1: 25486
+        ctime2: 40309
+        ctime3: 54352
+        ctime4: 64885
         ctime5: 0
         ctime6: 0
         ctime7: 0
         atime0: 0
         atime1: 65535
-        atime2: 0
+        atime2: 65535
         atime3: 0
         atime4: 0
         atime5: 0
         atime6: 0
         atime7: 0
         m_Mode: 1
-        m_NumColorKeys: 3
+        m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
@@ -17277,20 +17277,20 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 0, g: 1, b: 1, a: 1}
-        key2: {r: 0, g: 1, b: 1, a: 0}
-        key3: {r: 0, g: 0, b: 0, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
-        key5: {r: 0, g: 0, b: 0, a: 0}
-        key6: {r: 0, g: 0, b: 0, a: 0}
+        key1: {r: 1, g: 1, b: 1, a: 1}
+        key2: {r: 0.47058827, g: 0.8941177, b: 0, a: 0}
+        key3: {r: 0.47058827, g: 0.89019614, b: 0, a: 0}
+        key4: {r: 1, g: 0.37254903, b: 0.7607844, a: 0}
+        key5: {r: 0.9803922, g: 0.3803922, b: 0.7372549, a: 0}
+        key6: {r: 1, g: 0.5549109, b: 0.5235849, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 65535
-        ctime2: 65535
-        ctime3: 0
-        ctime4: 0
-        ctime5: 0
-        ctime6: 0
+        ctime1: 26396
+        ctime2: 27696
+        ctime3: 40569
+        ctime4: 41740
+        ctime5: 50972
+        ctime6: 52922
         ctime7: 0
         atime0: 0
         atime1: 39321
@@ -17301,23 +17301,23 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 2
+        m_NumColorKeys: 7
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 0, a: 1}
-        key2: {r: 0, g: 0, b: 0, a: 0}
-        key3: {r: 0, g: 0, b: 0, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key1: {r: 1, g: 1, b: 1, a: 1}
+        key2: {r: 0.9921569, g: 0.94117653, b: 0.007843138, a: 0}
+        key3: {r: 0.9921569, g: 0.94117653, b: 0.007843137, a: 0}
+        key4: {r: 0.47058827, g: 0.8941177, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 65535
-        ctime2: 0
-        ctime3: 0
-        ctime4: 0
+        ctime1: 20415
+        ctime2: 21975
+        ctime3: 41349
+        ctime4: 50842
         ctime5: 0
         ctime6: 0
         ctime7: 0
@@ -17330,7 +17330,7 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 2
+        m_NumColorKeys: 5
         m_NumAlphaKeys: 2
   UVModule:
     serializedVersion: 2
@@ -19781,7 +19781,7 @@ ParticleSystem:
       emitter: {fileID: 2119934406253295872}
       type: 0
       properties: 7
-      emitProbability: 1
+      emitProbability: 0.8
   LightsModule:
     enabled: 0
     ratio: 1
@@ -30763,7 +30763,7 @@ ParticleSystemRenderer:
   m_UseCustomVertexStreams: 1
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
-  m_AllowRoll: 0
+  m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
@@ -31958,20 +31958,20 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 1
-          outSlope: 1
+          inSlope: 1.4096917
+          outSlope: 1.4096917
           tangentMode: 34
           weightedMode: 0
           inWeight: 0
-          outWeight: 0
+          outWeight: 0.33333334
         - serializedVersion: 3
-          time: 1
+          time: 0.70937496
           value: 1
-          inSlope: 1
-          outSlope: 1
+          inSlope: 1.4096917
+          outSlope: 1.4096917
           tangentMode: 34
           weightedMode: 0
-          inWeight: 0
+          inWeight: 0.33333334
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -32295,8 +32295,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 29257
-        atime2: 50061
+        atime1: 12743
+        atime2: 43300
         atime3: 0
         atime4: 0
         atime5: 0
@@ -40865,7 +40865,7 @@ ParticleSystemRenderer:
   m_UseCustomVertexStreams: 1
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
-  m_AllowRoll: 0
+  m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
@@ -40936,7 +40936,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SoundSequences: []
   scheduledInputs: []
-  shouldBop: 1
   npcGirls:
   - {fileID: 962492760851015032}
   - {fileID: 2957882268029249500}
@@ -46369,7 +46368,7 @@ ParticleSystemRenderer:
   m_UseCustomVertexStreams: 1
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
-  m_AllowRoll: 0
+  m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
@@ -51451,7 +51450,7 @@ ParticleSystemRenderer:
   m_UseCustomVertexStreams: 1
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
-  m_AllowRoll: 0
+  m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304

@@ -457,7 +457,7 @@ namespace HeavenStudio.Games
             On = 1,
         }
 
-        private Dictionary<double, int> bopRegion = new();
+        protected Dictionary<double, int> bopRegion = new();
 
         public bool BeatIsInBopRegion(double beat)
         {
@@ -488,10 +488,16 @@ namespace HeavenStudio.Games
         protected void SetupBopRegion(string gameName, string eventName, string toggleName, bool isBool = true)
         {
             var allEvents = EventCaller.GetAllInGameManagerList(gameName, new string[] { eventName });
+            if (allEvents.Count == 0) return;
             allEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
 
             foreach (var e in allEvents)
             {
+                if (bopRegion.ContainsKey(e.beat))
+                {
+                    Debug.Log("Two bops on the same beat, ignoring this one");
+                    continue;
+                }
                 if (isBool)
                 {
                     bopRegion.Add(e.beat, e[toggleName] ? 1 : 0);

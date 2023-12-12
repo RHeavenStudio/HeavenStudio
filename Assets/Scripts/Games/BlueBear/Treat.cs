@@ -13,10 +13,12 @@ namespace HeavenStudio.Games.Scripts_BlueBear
         const float barelyDistX = 1.5f;
         const float barelyDistY = -6f;
         const float barelyHeight = 4f;
-        const float rotSpeed = 360f * 3;
+        const float rotSpeed = 280f;
 
         public bool isCake;
         public double startBeat;
+        [NonSerialized] public bool hold = false;
+        [NonSerialized] public bool shouldOpen = true;
         double flyBeats;
 
         private Path path;
@@ -42,6 +44,11 @@ namespace HeavenStudio.Games.Scripts_BlueBear
             Update();
         }
 
+        private void OnDestroy()
+        {
+            if (shouldOpen) game.shouldOpenMouthCount--;
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
@@ -55,7 +62,7 @@ namespace HeavenStudio.Games.Scripts_BlueBear
             }
 
             float rot = isCake ? rotSpeed : -rotSpeed;
-            transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime * cond.pitchedSecPerBeat));
+            transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime / cond.pitchedSecPerBeat));
         }
         void EatFood()
         {
@@ -68,7 +75,7 @@ namespace HeavenStudio.Games.Scripts_BlueBear
                 SoundByte.PlayOneShotGame("blueBear/chompDonut");
             }
 
-            game.Bite(Conductor.instance.songPositionInBeatsAsDouble, isCake);
+            game.Bite(Conductor.instance.songPositionInBeatsAsDouble, isCake, hold);
             game.EatTreat();
 
             SpawnCrumbs();
