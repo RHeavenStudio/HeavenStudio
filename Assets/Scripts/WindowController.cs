@@ -216,7 +216,15 @@ namespace HeavenStudio
             pan = defaultPan;
             scale = defaultScale;
             shakeResult = defaultShake;
-            GlobalGameManager.ChangeScreenSize();
+            #if UNITY_EDITOR
+            return;
+            #else
+            if(Application.isEditor || !Editor.Editor.instance.fullscreen || !Conductor.instance.isPlaying) return;
+            if(PersistentDataManager.gameSettings.windowDanceEnable)
+            {
+                GlobalGameManager.ChangeScreenSize();
+            }
+            #endif
         }
     }
 }

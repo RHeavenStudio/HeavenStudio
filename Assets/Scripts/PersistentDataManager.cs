@@ -38,7 +38,7 @@ namespace HeavenStudio.Common
                 false,
                 true,
                 true,
-                true
+                false
             );
 
             // disable if platform is mac
