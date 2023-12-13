@@ -21,6 +21,8 @@ public class SectionDialog : Dialog
     [SerializeField] Button[] catButtons;
     [SerializeField] Sprite[] catSprites;
 
+    bool initHooks;
+
     public void SwitchSectionDialog()
     {
         if (dialog.activeSelf)
@@ -38,6 +40,21 @@ public class SectionDialog : Dialog
             markerWeight.maxValue = 8;
             markerWeight.minValue = 0;
             markerWeight.wholeNumbers = true;
+
+            if (!initHooks)
+            {
+                initHooks = true;
+                for (int i = 0; i < catButtons.Length; i++)
+                {
+                    int cat = i;
+                    catButtons[i].onClick.AddListener(() =>
+                    {
+                        if (sectionObj == null) return;
+                        sectionObj.chartEntity["category"] = cat;
+                        UpdateCatButtonState();
+                    });
+                }
+            }
         }
     }
 

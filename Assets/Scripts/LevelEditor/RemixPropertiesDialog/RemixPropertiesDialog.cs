@@ -34,6 +34,7 @@ namespace HeavenStudio.Editor
         [SerializeField] public GameObject DividerP;
         [SerializeField] public GameObject HeaderP;
         [SerializeField] public GameObject SubHeaderP;
+        [SerializeField] public GameObject ResultDialogP;
 
         [NonSerialized] public RiqBeatmap chart;
         List<GameObject> tabContents;
@@ -93,6 +94,10 @@ namespace HeavenStudio.Editor
                     else if (property.tag == "subheader")
                     {
                         container.AddSubHeader(this, property.label);
+                    }
+                    else if (property.tag == "resultmessagediag")
+                    {
+                        container.AddResultMessageEditor(this);
                     }
                     else
                     {

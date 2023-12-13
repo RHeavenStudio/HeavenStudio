@@ -43,7 +43,8 @@ namespace HeavenStudio
             {
                 Image,
                 Audio,
-                MSMD
+                MSMD,
+                AssetBundle
             }
 
             public string path;
