@@ -310,32 +310,7 @@ namespace HeavenStudio.Editor.Track
                 WaveformToggle();
             });
 
-            Tooltip.AddTooltip(SongBeat.gameObject, "Current Beat");
-            Tooltip.AddTooltip(SongPos.gameObject, "Current Time");
-            Tooltip.AddTooltip(CurrentTempo.gameObject, "Current Tempo (BPM)");
-
-            Tooltip.AddTooltip(PlayBTN.gameObject, "Play <color=#adadad>[Space]</color>");
-            Tooltip.AddTooltip(PauseBTN.gameObject, "Pause <color=#adadad>[Shift + Space]</color>");
-            Tooltip.AddTooltip(StopBTN.gameObject, "Stop <color=#adadad>[Space]</color>");
-
-            Tooltip.AddTooltip(MetronomeBTN.gameObject, "Metronome <color=#adadad>[M]</color>");
-            Tooltip.AddTooltip(AutoplayBTN.gameObject, "Autoplay <color=#adadad>[P]</color>");
-
-            Tooltip.AddTooltip(SelectionsBTN.gameObject, "Tool: Selection <color=#adadad>[1]</color>");
-            Tooltip.AddTooltip(TempoChangeBTN.gameObject, "Tool: Tempo Change <color=#adadad>[2]</color>");
-            Tooltip.AddTooltip(MusicVolumeBTN.gameObject, "Tool: Music Volume <color=#adadad>[3]</color>");
-            Tooltip.AddTooltip(ChartSectionBTN.gameObject, "Tool: Beatmap Sections <color=#adadad>[4]</color>");
-
-            Tooltip.AddTooltip(StartingTempoSpecialAll.gameObject, "Starting Tempo (BPM)");
-            Tooltip.AddTooltip(StartingTempoSpecialTempo.gameObject, "Starting Tempo (BPM)");
-            Tooltip.AddTooltip(StartingVolumeSpecialVolume.gameObject, "Starting Volume (%)");
-
-            Tooltip.AddTooltip(ZoomInBTN.gameObject, "Zoom In");
-            Tooltip.AddTooltip(ZoomOutBTN.gameObject, "Zoom Out");
-            Tooltip.AddTooltip(ZoomResetBTN.gameObject, "Zoom Reset");
             Tooltip.AddTooltip(WaveformBTN.gameObject, "Waveform Toggle");
-
-            Tooltip.AddTooltip(PlaybackSpeed.gameObject, "The preview's playback speed. Right click to reset to 1.0");
 
             SetTimeButtonColors(true, false, false);
             MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
