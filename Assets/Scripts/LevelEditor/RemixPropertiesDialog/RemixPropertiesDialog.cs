@@ -47,6 +47,7 @@ namespace HeavenStudio.Editor
             {
                 Editor.instance.canSelect = true;
                 Editor.instance.inAuthorativeMenu = false;
+                Editor.instance.editingInputField = false;
                 dialog.SetActive(false);
 
                 tabsManager.CleanTabs();
@@ -57,6 +58,7 @@ namespace HeavenStudio.Editor
                 ResetAllDialogs();
                 Editor.instance.canSelect = false;
                 Editor.instance.inAuthorativeMenu = true;
+                Editor.instance.editingInputField = true;
                 dialog.SetActive(true);
 
                 chart = GameManager.instance.Beatmap;

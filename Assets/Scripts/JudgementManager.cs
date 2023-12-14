@@ -16,6 +16,13 @@ namespace HeavenStudio
     [RequireComponent(typeof(PlayableDirector), typeof(AudioSource))]
     public class JudgementManager : MonoBehaviour
     {
+        enum Rank
+        {
+            Ng = 0,
+            Ok = 1,
+            Hi = 2
+        }
+
         public enum InputCategory : int
         {
             Normal = 0,
@@ -96,32 +103,163 @@ namespace HeavenStudio
 
         [SerializeField] GameObject bg;
         [SerializeField] GameObject rankLogo;
+        [SerializeField] TMP_Text justOk;
         [SerializeField] Animator rankAnim;
+        [SerializeField] ParticleSystem okParticles1, okParticles2;
         [SerializeField] CanvasScaler scaler;
         [SerializeField] Animator canvasAnim;
 
         AudioSource audioSource;
-        bool twoMessage = false, barStarted = false, didRank = false, didEpilogue = false;
+        List<int> usedCategories;
+        float[] categoryInputs;
+        double[] categoryScores;
+        string msg0, msg1, msg2;
         float barTime = 0, barStartTime = float.MaxValue;
+        Rank rank;
+        bool twoMessage = false, barStarted = false, didRank = false, didEpilogue = false, subRank = false;
 
         public void PrepareJudgement()
         {
             bg.SetActive(false);
             rankLogo.SetActive(false);
+            justOk.gameObject.SetActive(false);
+            subRank = false;
 
             barText.text = "0";
             barSlider.value = 0;
             barText.color = numColourNg;
             barSlider.fillRect.GetComponent<Image>().color = barColourNg;
 
-            // temp
-            twoMessage = false;
-            // judgementInfo = new()
-            // {
-            //     finalScore = 0.79,
-            // };
+            string propSuffix = "ng";
+            if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+            {
+                rank = Rank.Ng;
+                propSuffix = "ng";
+            }
+            else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+            {
+                rank = Rank.Ok;
+                propSuffix = "ok";
+            }
+            else
+            {
+                rank = Rank.Hi;
+                propSuffix = "hi";
+            }
+
+            GetCategoryInfo();
+
+            int firstCat = 0, secondCat = 0;
+            double lastScore = 0;
+            if (usedCategories.Count == 1)
+            {
+                twoMessage = false;
+                if (playedBeatmap != null)
+                {
+                    msg0 = playedBeatmap[$"resultcommon_{propSuffix}"];
+                }
+                else
+                {
+                    msg0 = rank switch
+                    {
+                        Rank.Ng => "Try harder next time.",
+                        Rank.Ok => "Eh. Passable.",
+                        _ => "Good rhythm.",
+                    };
+                }
+            }
+            else
+            {
+                switch (rank)
+                {
+                    case Rank.Ok:
+                        // check if any category has a hi score
+                        foreach (int cat in usedCategories)
+                        {
+                            if (categoryScores[cat] > lastScore)
+                            {
+                                lastScore = categoryScores[cat];
+                                firstCat = cat;
+                            }
+                        }
+                        SetOkMessages(firstCat, lastScore);
+                        break;
+                    case Rank.Ng:
+                        // find the first and second worst categories
+                        firstCat = -1;
+                        secondCat = -1;
+                        lastScore = double.MaxValue;
+                        foreach (int cat in usedCategories)
+                        {
+                            if (categoryScores[cat] < lastScore)
+                            {
+                                lastScore = categoryScores[cat];
+                                firstCat = cat;
+                            }
+                        }
+                        lastScore = double.MaxValue;
+                        foreach (int cat in usedCategories)
+                        {
+                            if (cat == firstCat) continue;
+                            if (categoryScores[cat] < lastScore)
+                            {
+                                lastScore = categoryScores[cat];
+                                secondCat = cat;
+                            }
+                        }
+                        // only show one message if only one category fails
+                        twoMessage = categoryScores[secondCat] < Minigame.rankOkThreshold;
+                        if (playedBeatmap != null)
+                        {
+                            msg0 = msg1 = playedBeatmap[$"resultcat{firstCat}_ng"];
+                            msg2 = playedBeatmap[$"resultcat{secondCat}_ng"];
+                        }
+                        else
+                        {
+                            msg0 = msg1 = "Try harder next time.";
+                            msg2 = "Try harder next time.";
+                        }
+                        break;
+                    case Rank.Hi:
+                        // find the first and second best categories
+                        firstCat = -1;
+                        secondCat = -1;
+                        lastScore = 0;
+                        foreach (int cat in usedCategories)
+                        {
+                            if (categoryScores[cat] > lastScore)
+                            {
+                                lastScore = categoryScores[cat];
+                                firstCat = cat;
+                            }
+                        }
+                        lastScore = 0;
+                        foreach (int cat in usedCategories)
+                        {
+                            if (cat == firstCat) continue;
+                            if (categoryScores[cat] > lastScore)
+                            {
+                                lastScore = categoryScores[cat];
+                                secondCat = cat;
+                            }
+                        }
+                        // only show one message if only one category passes
+                        twoMessage = categoryScores[secondCat] >= Minigame.rankHiThreshold;
+                        if (playedBeatmap != null)
+                        {
+                            msg0 = msg1 = playedBeatmap[$"resultcat{firstCat}_hi"];
+                            msg2 = playedBeatmap[$"resultcat{secondCat}_hi"];
+                        }
+                        else
+                        {
+                            msg0 = msg1 = "Good rhythm.";
+                            msg2 = "Good rhythm.";
+                        }
+                        break;
+                }
+            }
+
             header.text = playedBeatmap != null ? playedBeatmap["resultcaption"] : "Rhythm League Notes";
-            // end temp
 
             if (twoMessage)
             {
@@ -139,14 +277,14 @@ namespace HeavenStudio
                 message0.text = " ";
             }
 
-            string imagePath = "";
-            string imageName = "";
+            string imagePath;
+            string imageName;
             EntityTypes.Resource? imageResource;
-            if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+            if (rank == Rank.Ng)
             {
                 imageResource = playedBeatmap != null ? playedBeatmap["epilogue_ng_res"] : null;
             }
-            else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+            else if (rank == Rank.Ok)
             {
                 imageResource = playedBeatmap != null ? playedBeatmap["epilogue_ok_res"] : null;
             }
@@ -170,6 +308,71 @@ namespace HeavenStudio
                     Debug.Log("image resource doesn't exist, using blank placeholder");
                     epilogueImage.sprite = null;
                     epilogueFitter.aspectRatio = 16f / 9f;
+                }
+            }
+        }
+
+        void SetOkMessages(int cat, double score)
+        {
+            twoMessage = false;
+            if (score >= Minigame.rankHiThreshold)
+            {
+                // just OK
+                subRank = true;
+                if (playedBeatmap != null)
+                {
+                    msg0 = playedBeatmap[$"resultcat{cat}_hi"];
+                }
+                else
+                {
+                    msg0 = "Good rhythm.";
+                }
+            }
+            else
+            {
+                if (playedBeatmap != null)
+                {
+                    msg0 = playedBeatmap[$"resultcommon_ok"];
+                }
+                else
+                {
+                    msg0 = "Eh. Passable.";
+                }
+            }
+        }
+
+        void GetCategoryInfo()
+        {
+            int maxCat = 0;
+            usedCategories = new();
+            if (playedBeatmap == null || playedBeatmap.data.beatmapSections.Count == 0)
+            {
+                usedCategories.Add(0);
+                return;
+            }
+            foreach (var section in playedBeatmap.data.beatmapSections)
+            {
+                int cat = section["category"];
+                if (!usedCategories.Contains(cat))
+                {
+                    usedCategories.Add(cat);
+                    maxCat = Mathf.Max(maxCat, cat);
+                }
+            }
+            usedCategories.Sort();
+
+            categoryInputs = new float[maxCat + 1];
+            categoryScores = new double[maxCat + 1];
+            foreach (var input in judgementInfo.inputs)
+            {
+                categoryInputs[input.category] += input.weight;
+                categoryScores[input.category] += input.accuracyState * input.weight;
+            }
+            for (int i = 0; i < categoryScores.Length; i++)
+            {
+                if (categoryInputs[i] > 0)
+                {
+                    categoryScores[i] /= categoryInputs[i];
                 }
             }
         }
@@ -198,18 +401,7 @@ namespace HeavenStudio
         {
             if (twoMessage) return;
             audioSource.PlayOneShot(messageLast);
-            if (judgementInfo.finalScore < Minigame.rankOkThreshold)
-            {
-                message0.text = playedBeatmap != null ? playedBeatmap["resultcommon_ng"] : "Try harder next time.";
-            }
-            else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
-            {
-                message0.text = playedBeatmap != null ? playedBeatmap["resultcommon_ok"] : "Eh. Passable.";
-            }
-            else
-            {
-                message0.text = playedBeatmap != null ? playedBeatmap["resultcommon_hi"] : "Good rhythm.";
-            }
+            message0.text = msg0;
         }
 
         public void ShowMessage1()
@@ -217,7 +409,7 @@ namespace HeavenStudio
             if (!twoMessage) return;
             audioSource.PlayOneShot(messageMid);
             // message1.text = "message line 1";
-            message1.text = "skill issue";
+            message1.text = msg1;
         }
 
         public void ShowMessage2()
@@ -225,7 +417,7 @@ namespace HeavenStudio
             if (!twoMessage) return;
             audioSource.PlayOneShot(messageLast);
             // message2.text = "message line 2";
-            message2.text = "lmao lmao";
+            message2.text = "Also..." + msg2;
         }
 
         public void StartBar()
@@ -243,14 +435,19 @@ namespace HeavenStudio
         {
             rankLogo.SetActive(true);
             bg.SetActive(true);
-            if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+            if (rank == Rank.Ng)
             {
                 rankAnim.Play("Ng");
                 audioSource.PlayOneShot(rankNg);
             }
-            else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+            else if (rank == Rank.Ok)
             {
                 rankAnim.Play("Ok");
+                if (subRank)
+                {
+                    justOk.gameObject.SetActive(true);
+                    justOk.text = "...but, just";
+                }
                 audioSource.PlayOneShot(rankOk);
             }
             else
@@ -262,14 +459,14 @@ namespace HeavenStudio
 
         public void StartRankMusic()
         {
-            if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+            if (rank == Rank.Ng)
             {
                 audioSource.PlayOneShot(musNgStart);
                 audioSource.clip = musNg;
                 audioSource.loop = true;
                 audioSource.PlayScheduled(AudioSettings.dspTime + musNgStart.length);
             }
-            else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+            else if (rank == Rank.Ok)
             {
                 audioSource.PlayOneShot(musOkStart);
                 audioSource.clip = musOk;
@@ -311,14 +508,16 @@ namespace HeavenStudio
                 if (didRank && !didEpilogue)
                 {
                     // start the sequence for epilogue
+                    okParticles1.Stop();
+                    okParticles2.Stop();
                     canvasAnim.Play("EpilogueOpen");
                     audioSource.Stop();
-                    if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+                    if (rank == Rank.Ng)
                     {
                         epilogueMessage.text = playedBeatmap != null ? playedBeatmap["epilogue_ng"] : "Try Again picture";
                         audioSource.PlayOneShot(jglNg);
                     }
-                    else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+                    else if (rank == Rank.Ok)
                     {
                         epilogueMessage.text = playedBeatmap != null ? playedBeatmap["epilogue_ok"] : "OK picture";
                         audioSource.PlayOneShot(jglOk);
@@ -352,12 +551,12 @@ namespace HeavenStudio
                     barText.text = ((int)(judgementInfo.finalScore * 100)).ToString();
                     barSlider.value = (float)judgementInfo.finalScore;
 
-                    if (judgementInfo.finalScore < Minigame.rankOkThreshold)
+                    if (rank == Rank.Ng)
                     {
                         barText.color = numColourNg;
                         barSlider.fillRect.GetComponent<Image>().color = barColourNg;
                     }
-                    else if (judgementInfo.finalScore < Minigame.rankHiThreshold)
+                    else if (rank == Rank.Ok)
                     {
                         barText.color = numColourOk;
                         barSlider.fillRect.GetComponent<Image>().color = barColourOk;

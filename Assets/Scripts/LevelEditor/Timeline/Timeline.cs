@@ -399,6 +399,7 @@ namespace HeavenStudio.Editor.Track
             
             foreach (var rect in GameObject.FindGameObjectsWithTag("BlocksEditor"))
             {
+                if (!rect.activeInHierarchy) continue;
                 if (rect.TryGetComponent(out RectTransform rectTransform))
                 {
                     if (RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Camera.main))

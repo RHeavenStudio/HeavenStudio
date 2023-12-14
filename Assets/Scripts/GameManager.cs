@@ -696,10 +696,6 @@ namespace HeavenStudio
 
         private IEnumerator PlayCo(double beat, float delay = 0f)
         {
-            if (delay > 0)
-            {
-                yield return new WaitForSeconds(delay);
-            }
             bool paused = Conductor.instance.isPaused;
 
             if (!paused)
@@ -710,6 +706,14 @@ namespace HeavenStudio
                 SetCurrentEventToClosest(beat);
                 KillAllSounds();
 
+                if (delay > 0)
+                {
+                    yield return new WaitForSeconds(delay);
+                }
+            }
+
+            if (!paused)
+            {
                 Minigame miniGame = currentGameO?.GetComponent<Minigame>();
                 if (miniGame != null)
                     miniGame.OnPlay(beat);

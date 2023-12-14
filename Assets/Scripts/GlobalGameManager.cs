@@ -341,7 +341,7 @@ namespace HeavenStudio
             if (!Screen.fullScreen)
             {
                 // Set the resolution to the display's current resolution
-                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
                 Screen.fullScreen = true;
                 PersistentDataManager.gameSettings.isFullscreen = true;
             }

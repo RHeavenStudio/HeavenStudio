@@ -36,6 +36,8 @@ namespace HeavenStudio.Editor
         Sprite[] rankImages;
 
         bool initHooks;
+        int currentEditingCat = -1;
+        List<int> usedCategories;
         RemixPropertiesDialog diag;
         Ranks currentEditingRank;
 
@@ -45,27 +47,28 @@ namespace HeavenStudio.Editor
             currentEditingRank = Ranks.Ok;
             rankImages = new Sprite[3];
             diag.StartCoroutine(LoadRankImages());
-            UpdateInfo();
+            GetUsedCategories();
 
             if (!initHooks)
             {
                 initHooks = true;
-                headerInput.onSelect.AddListener(
-                    _ =>
-                        Editor.instance.editingInputField = true
-                );
+
+                for (int i = 0; i < catButtons.Length; i++)
+                {
+                    int cat = i;
+                    catButtons[i].onClick.AddListener(() =>
+                    {
+                        SetCatEditing(cat);
+                    });
+                }
+
                 headerInput.onValueChanged.AddListener(
                     _ =>
                     {
                         diag.chart["resultcaption"] = headerInput.text;
-                        Editor.instance.editingInputField = false;
                     }
                 );
 
-                epilogueInput.onSelect.AddListener(
-                    _ =>
-                        Editor.instance.editingInputField = true
-                );
                 epilogueInput.onValueChanged.AddListener(
                     _ =>
                     {
@@ -76,16 +79,14 @@ namespace HeavenStudio.Editor
                             _ => "ok",
                         };
                         diag.chart["epilogue_" + propSuffix] = epilogueInput.text;
-                        Editor.instance.editingInputField = false;
                     }
                 );
 
-                messageInput.onSelect.AddListener(
-                    _ =>
-                        Editor.instance.editingInputField = true
-                );
                 messageInput.onValueChanged.AddListener(DoMessageInput);
             }
+
+            UpdateInfo();
+            SetCatEditing(usedCategories[0]);
         }
 
         void UpdateInfo()
@@ -103,9 +104,7 @@ namespace HeavenStudio.Editor
                 _ => "ok",
             };
             epilogueInput.text = (string)diag.chart["epilogue_" + propSuffix];
-
-            //todo: check categories
-            messageInput.text = (string)diag.chart["resultcommon_" + propSuffix];
+            SetCatEditing(currentEditingCat);
         }
 
         void DoMessageInput(string _)
@@ -116,8 +115,72 @@ namespace HeavenStudio.Editor
                 Ranks.Hi => "hi",
                 _ => "ok",
             };
-            diag.chart["resultcommon_" + propSuffix] = messageInput.text;
-            Editor.instance.editingInputField = false;
+
+            if (usedCategories.Count == 1)
+            {
+                diag.chart["resultcommon_" + propSuffix] = messageInput.text;
+            }
+            else
+            {
+                diag.chart["resultcat" + currentEditingCat + "_" + propSuffix] = messageInput.text;
+            }
+        }
+
+        void SetCatEditing(int cat)
+        {
+            string propSuffix = currentEditingRank switch
+            {
+                Ranks.Ng => "ng",
+                Ranks.Hi => "hi",
+                _ => "ok",
+            };
+
+            cat = Mathf.Clamp(cat, 0, catButtons.Length - 1);
+
+            if (usedCategories.Count == 1 || currentEditingRank == Ranks.Ok)
+            {
+                currentEditingCat = usedCategories[0];
+                for (int i = 0; i < catButtons.Length; i++)
+                {
+                    catButtons[i].gameObject.SetActive(false);
+                }
+
+                messageInput.text = (string)diag.chart["resultcommon_" + propSuffix];
+            }
+            else
+            {
+                currentEditingCat = cat;
+                for (int i = 0; i < catButtons.Length; i++)
+                {
+                    catButtons[i].gameObject.SetActive(usedCategories.Contains(i));
+                    if (i == currentEditingCat)
+                        catButtons[i].GetComponent<Image>().sprite = catSprites[i];
+                    else
+                        catButtons[i].GetComponent<Image>().sprite = catOff;
+                }
+
+                messageInput.text = (string)diag.chart["resultcat" + currentEditingCat + "_" + propSuffix];
+            }
+        }
+
+        void GetUsedCategories()
+        {
+            RiqBeatmap chart = diag.chart;
+            usedCategories = new();
+            if (chart.data.beatmapSections.Count == 0)
+            {
+                usedCategories.Add(0);
+                return;
+            }
+            foreach (var section in chart.data.beatmapSections)
+            {
+                int cat = section["category"];
+                if (!usedCategories.Contains(cat))
+                {
+                    usedCategories.Add(cat);
+                }
+            }
+            usedCategories.Sort();
         }
 
         public void GoPrevRank()
