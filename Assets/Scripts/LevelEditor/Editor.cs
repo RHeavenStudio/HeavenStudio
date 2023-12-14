@@ -108,25 +108,7 @@ namespace HeavenStudio.Editor
 
             foreach (var minigame in EventCaller.instance.minigames)
                 AddIcon(minigame);
-
-            Tooltip.AddTooltip(NewBTN.gameObject, "New <color=#adadad>[Ctrl+N]</color>");
-            Tooltip.AddTooltip(OpenBTN.gameObject, "Open <color=#adadad>[Ctrl+O]</color>");
-            Tooltip.AddTooltip(SaveBTN.gameObject, "Save Project <color=#adadad>[Ctrl+S]</color>\nSave Project As <color=#adadad>[Ctrl+Alt+S]</color>");
-            Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
-            Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
-            Tooltip.AddTooltip(CopyBTN.gameObject, "Copy <color=#adadad>[Ctrl+C]</color>");
-            Tooltip.AddTooltip(PasteBTN.gameObject, "Paste <color=#adadad>[Ctrl+V]</color>");
-            Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
-            Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
-            Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
-            Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
-            Tooltip.AddTooltip(ChartParamBTN.gameObject, "Remix Properties");
-            Tooltip.AddTooltip(SortAlphabetBTN.gameObject, "Sort Alphabetically");
-            Tooltip.AddTooltip(SortFavoritesBTN.gameObject, "Sort By Favorite");
-            Tooltip.AddTooltip(SortChronologicBTN.gameObject, "Sort Chronologically");
-            Tooltip.AddTooltip(SearchBar.gameObject, "Search Games");
-
-            Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
+                
             UpdateEditorStatus(true);
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
