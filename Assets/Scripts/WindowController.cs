@@ -49,8 +49,11 @@ namespace HeavenStudio
             #if UNITY_EDITOR
             return;
             #else
-            if(Application.isEditor || !Editor.Editor.instance.fullscreen || !Conductor.instance.isPlaying) return;
-            if(PersistentDataManager.gameSettings.windowDanceEnable)
+            if(Application.isEditor || !Conductor.instance.isPlaying) return;
+            if(!Editor.Editor.instance.fullscreen && PersistentDataManager.gameSettings.windowDanceEnable)
+            {
+                GlobalGameManager.ChangeScreenSize();
+            }else if(PersistentDataManager.gameSettings.windowDanceEnable)
             {
                 controls.windowSize = (new Vector2(resX, resY));
                 controls.windowPosition = (new Vector2(x, y));
@@ -85,7 +88,6 @@ namespace HeavenStudio
 
             panEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "pan window" });
             scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale window" });
-
             shakeEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "shake window" });
 
             panLast = defaultPan;
@@ -93,7 +95,7 @@ namespace HeavenStudio
 
             UpdateScale();
             UpdatePan();
-            //SetShakeIntensity();
+            SetShakeIntensity();
         }
 
         // Update is called once per frame
@@ -106,8 +108,8 @@ namespace HeavenStudio
             //prob isnt
             UpdateScale();
             UpdatePan();
-            //SetShakeIntensity();
-            SetPosition(Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
+            SetShakeIntensity();
+            SetPosition(Convert.ToInt16(pan.x + shakeResult.x), Convert.ToInt16(pan.y + shakeResult.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
         }
 
         private void UpdatePan()
@@ -191,7 +193,7 @@ namespace HeavenStudio
             }
         }
 
-        /*
+        
         private void SetShakeIntensity()
         {
             foreach (var e in shakeEvents)
@@ -205,26 +207,21 @@ namespace HeavenStudio
                 }
                 if (prog > 1f)
                 {
-                    shakeResult = new Vector3(0, 0, 0);
+                    shakeResult = new Vector3(0, 0);
                     Debug.Log(shakeResult);
                 }
             }
-        }*/
+        }
 
         public void Reset()
         {
             pan = defaultPan;
             scale = defaultScale;
             shakeResult = defaultShake;
-            #if UNITY_EDITOR
-            return;
-            #else
-            if(Application.isEditor || !Editor.Editor.instance.fullscreen || !Conductor.instance.isPlaying) return;
             if(PersistentDataManager.gameSettings.windowDanceEnable)
             {
                 GlobalGameManager.ChangeScreenSize();
             }
-            #endif
         }
     }
 }

@@ -858,12 +858,12 @@ namespace HeavenStudio
                         }
                     ),
                     //Non functional until further notice
-                    /*new GameAction("shake window", "Shake Window", 1f, true, new List<Param>()
+                    new GameAction("shake window", "Shake Window", 1f, true, new List<Param>()
                         {
                             new Param("valA", new EntityTypes.Float(0, 10, 0), "Horizontal Intensity"),
-                            new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity")
+                            new Param("valB", new EntityTypes.Float(0, 10, 0), "Vertical Intensity")
                         }
-                    ),*/
+                    ),
 
                     new GameAction("display textbox", "Display Textbox", 1f, true, new List<Param>()
                         {
