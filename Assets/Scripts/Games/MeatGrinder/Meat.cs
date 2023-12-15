@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_MeatGrinder
 {
@@ -11,9 +12,12 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         public double startBeat;
         public MeatType meatType;
 
+        private string meatTypeStr;
+        private bool isHit = false;
+
         [Header("Animators")]
-        [SerializeField] private Animator anim;
-        [SerializeField] private SpriteRenderer sr;
+        private Animator anim;
+        private SpriteRenderer sr;
         [SerializeField] private Sprite[] meats;
 
         public enum MeatType
@@ -28,24 +32,37 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         private void Awake()
         {
             game = MeatGrinder.instance;
-            sr.sprite = meats[(int)meatType];
+            anim = GetComponent<Animator>();
+            sr = GetComponent<SpriteRenderer>();
         }
 
         private void Start()
         {
+            meatTypeStr = meatType.ToString();
+            sr.sprite = meats[(int)meatType];
+            Debug.Log(meats[(int)meatType]);
+            Debug.Log(sr.sprite.name);
+
             game.ScheduleInput(startBeat, 1, MeatGrinder.InputAction_Press, Hit, Miss, Nothing);
         }
 
         private void Update()
         {
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat + 0.5, 1);
-            anim.DoNormalizedAnimation("MeatThrown", normalizedBeat);
+            // if (Input.GetKey(KeyCode.G)) { // Insane.
+            //     anim.enabled = true;
+            // }
+            Debug.Log(sr.sprite.name);
+            if (!isHit) {
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 1.1);
+                anim.DoNormalizedAnimation("MeatThrown", normalizedBeat);
+            }
         }
 
         private void Hit(PlayerActionEvent caller, float state)
         {
+            isHit = true;
             game.TackAnim.SetBool("tackMeated", false);
-            anim.DoScaledAnimationAsync(meatType.ToString() + "Hit", 0.5f);
+            anim.DoScaledAnimationAsync(meatTypeStr + "Hit", 0.5f);
             
             bool isBarely = state is >= 1f or <= -1f;
 
@@ -59,7 +76,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             game.bossAnnoyed = true;
             SoundByte.PlayOneShotGame("meatGrinder/miss");
 
-            game.TackAnim.DoScaledAnimationAsync("TackMiss" + meatType, 0.5f);
+            game.TackAnim.DoScaledAnimationAsync("TackMiss" + meatTypeStr, 0.5f);
             game.TackAnim.SetBool("tackMeated", true);
             game.BossAnim.DoScaledAnimationAsync("BossMiss", 0.5f);
 
@@ -67,6 +84,10 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         }
 
         private void Nothing(PlayerActionEvent caller) { }
+
+        public void SetSprite() {
+            sr.sprite = meats[(int)meatType];
+        }
 
         public void DestroySelf() {
             Destroy(gameObject);

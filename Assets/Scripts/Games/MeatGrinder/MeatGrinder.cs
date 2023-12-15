@@ -7,7 +7,7 @@ using UnityEngine;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    public static class pcoMeatLoader
+    public static class PcoMeatLoader
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
@@ -93,7 +93,7 @@ namespace HeavenStudio.Games
 
     public class MeatGrinder : Minigame
     {
-        static List<QueuedInterval> queuedIntervals = new ();
+        static List<QueuedInterval> queuedIntervals = new();
         struct QueuedInterval
         {
             public double beat;
@@ -111,7 +111,7 @@ namespace HeavenStudio.Games
         public Animator TackAnim;
 
         [Header("Variables")]
-        bool bossBop = true;
+        private bool bossBop = true;
         public bool bossAnnoyed = false;
         const string sfxName = "meatGrinder/";
 
@@ -179,11 +179,11 @@ namespace HeavenStudio.Games
                 foreach (var interval in queuedIntervals) StartInterval(interval.beat, interval.length, beat, interval.autoPassTurn);
                 queuedIntervals.Clear();
             }
-        }
-
-        private RiqEntity GetLastIntervalBeforeBeat(double beat)
-        {
-            return EventCaller.GetAllInGameManagerList("meatGrinder", new string[] { "StartInterval" }).FindLast(x => x.beat <= beat);
+            if (queuedMeats.Count > 0)
+            {
+                foreach (var meat in queuedMeats) MeatToss(meat.beat, meat["bacon"]);
+                queuedMeats.Clear();
+            }
         }
 
         private List<RiqEntity> GetRelevantMeatCallsBetweenBeat(double beat, double endBeat)
@@ -207,6 +207,13 @@ namespace HeavenStudio.Games
                     });
                 }
             }
+        }
+
+        public void TackExpression(int expression)
+        {
+            string anim = ((TackExpressions)expression).ToString();
+            TackAnim.DoScaledAnimationAsync("Tack" + anim, 0.5f);
+            Debug.Log(anim);
         }
 
         public static void PreInterval(double beat, float length, bool autoPassTurn)
@@ -261,9 +268,9 @@ namespace HeavenStudio.Games
         {
             SoundByte.PlayOneShotGame(sfxName + "toss");
 
-            Meat Meat = Instantiate(MeatBase, transform).GetComponent<Meat>();
-            Meat.startBeat = beat;
-            Meat.meatType = bacon ? Meat.MeatType.BaconBall : Meat.MeatType.DarkMeat;
+            Meat meat = Instantiate(MeatBase, transform).GetComponent<Meat>();
+            meat.startBeat = beat;
+            meat.meatType = bacon ? Meat.MeatType.BaconBall : Meat.MeatType.DarkMeat;
         }
 
         public static void PrePassTurn(double beat)
