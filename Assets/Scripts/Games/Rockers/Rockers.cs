@@ -623,7 +623,7 @@ namespace HeavenStudio.Games
                     && PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease))
                 {
                     // todo: strum
-                    Soshi.UnHold();
+                    Soshi.StrumStringsLast(false, false, true);
                 }
                 if (PlayerInput.GetIsAction(InputAction_BasicRelease))
                 {

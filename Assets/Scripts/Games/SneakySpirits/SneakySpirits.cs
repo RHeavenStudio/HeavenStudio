@@ -199,13 +199,13 @@ namespace HeavenStudio.Games
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("sneakySpirits/moving", beat, 1f, volume1 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length, 1f, volume2 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 2, 1f, volume3 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 3, 1f, volume4 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 4, 1f, volume5 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 5, 1f, volume6 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 6, 1f, volume7 * 0.01f),
+                new MultiSound.Sound("sneakySpirits/moving", beat, 1f, volume1 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length, 1f, volume2 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 2, 1f, volume3 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 3, 1f, volume4 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 4, 1f, volume5 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 5, 1f, volume6 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 6, 1f, volume7 * 0.01f, false, 0.019),
             }, forcePlay: true);
         }
 
