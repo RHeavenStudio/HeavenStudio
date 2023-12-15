@@ -950,7 +950,7 @@ TextureImporter:
         width: 865
         height: 310
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 4}
       outline: []
       physicsShape: []
@@ -971,7 +971,7 @@ TextureImporter:
         width: 350
         height: 368
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 3, z: 0, w: 4}
       outline: []
       physicsShape: []
@@ -992,7 +992,7 @@ TextureImporter:
         width: 370
         height: 597
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1000,6 +1000,69 @@ TextureImporter:
       bones: []
       spriteID: fa4fca644aa119543b36fd39238fc6c4
       internalID: -2132715462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cartguy_Body
+      rect:
+        serializedVersion: 2
+        x: 3450
+        y: 28
+        width: 1202
+        height: 1083
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 1}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d08249186212c74e966f6ada67cb81d
+      internalID: -874638833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cartguy_Head
+      rect:
+        serializedVersion: 2
+        x: 1581
+        y: 69
+        width: 395
+        height: 334
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 8}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91072d79f7968614da5b9ad6d89cc2fc
+      internalID: 654036574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cartguy_Phone
+      rect:
+        serializedVersion: 2
+        x: 4702
+        y: 4
+        width: 1201
+        height: 1084
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 8, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d41785782ba8ab248af98eeb4e7d3b0f
+      internalID: -782445393
       vertices: []
       indices: 
       edges: []
@@ -1035,6 +1098,9 @@ TextureImporter:
       BossLeg_Call: -4011833703415356042
       BossLeg_Idle: -6832404233960673140
       BossRail: -34569046180808356
+      Cartguy_Body: -874638833
+      Cartguy_Head: 654036574
+      Cartguy_Phone: -782445393
       DarkMeat_Ball: 3852543032336476745
       DarkMeat_Smack: 3011316499841328870
       DarkMeat_Smear: -9124615959790710355
