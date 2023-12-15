@@ -92,6 +92,8 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         public void Early()
         {
+            player.Stab(null);
+
             GameObject pea = new GameObject();
 
             pea.transform.parent = player.early.transform;
@@ -124,6 +126,8 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         public void Late()
         {
+            player.Stab(null);
+
             GameObject pea = new GameObject();
             pea.transform.parent = player.late.transform;
             pea.transform.localScale = Vector2.one;
@@ -161,18 +165,23 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void Just(PlayerActionEvent caller, float state)
         {
-            if (state >= 1f) {
+            if (state >= 1f) 
+            {
                 Late();
-            }  else if (state <= -1f) {
+            }
+            else if (state <= -1f) 
+            {
                 Early();
-            } else {
+            } 
+            else 
+            {
                 Hit();
             }
         }
 
         private void Miss(PlayerActionEvent caller) 
         {
-            SoundByte.PlayOneShot("forkLifter/disappointed");
+            SoundByte.PlayOneShotGame("forkLifter/disappointed");
             BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+ 2.45f, delegate { 
