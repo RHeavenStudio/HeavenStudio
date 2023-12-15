@@ -54,7 +54,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: -0.681, y: -0.447, z: 0}
+        value: {x: -0.681, y: -0.465, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
         tangentMode: 0
@@ -311,6 +311,13 @@ AnimationClip:
     path: Flask
     classID: 212
     script: {fileID: 0}
+  - curve:
+    - time: 0
+      value: {fileID: 2100000, guid: dbfed2cf4cbdaec4e85a2e4c8c56f585, type: 2}
+    attribute: m_Materials.Array.data[0]
+    path: Flask
+    classID: 212
+    script: {fileID: 0}
   m_SampleRate: 30
   m_WrapMode: 0
   m_Bounds:
@@ -388,6 +395,13 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+    - serializedVersion: 2
+      path: 4144374205
+      attribute: 0
+      script: {fileID: 0}
+      typeID: 212
+      customType: 21
+      isPPtrCurve: 1
     pptrCurveMapping:
     - {fileID: 1476451571, guid: 32b8969086bedeb45b1cb9a4a9c5cddb, type: 3}
     - {fileID: 1476451571, guid: 32b8969086bedeb45b1cb9a4a9c5cddb, type: 3}
@@ -400,6 +414,7 @@ AnimationClip:
     - {fileID: -1657199552, guid: 32b8969086bedeb45b1cb9a4a9c5cddb, type: 3}
     - {fileID: -1142424825, guid: 32b8969086bedeb45b1cb9a4a9c5cddb, type: 3}
     - {fileID: -1142424825, guid: 32b8969086bedeb45b1cb9a4a9c5cddb, type: 3}
+    - {fileID: 2100000, guid: dbfed2cf4cbdaec4e85a2e4c8c56f585, type: 2}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -463,7 +478,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.447
+        value: -0.465
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
