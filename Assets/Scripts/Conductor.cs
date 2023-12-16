@@ -472,12 +472,14 @@ namespace HeavenStudio
             return GameManager.instance.Beatmap.TempoChanges;
         }
 
-        public float GetBpmAtBeat(double beat)
+        public float GetBpmAtBeat(double beat, out float swingRatio)
         {
+            swingRatio = 0.5f;
             var chart = GameManager.instance.Beatmap;
             if (chart.TempoChanges.Count == 0)
                 return 120f;
             float bpm = chart.TempoChanges[0]["tempo"];
+            swingRatio = chart.TempoChanges[0]["swing"] + 0.5f;
 
             foreach (RiqEntity t in chart.TempoChanges)
             {
@@ -486,9 +488,40 @@ namespace HeavenStudio
                     break;
                 }
                 bpm = t["tempo"];
+                swingRatio = t["swing"] + 0.5f;
             }
 
             return bpm;
+        }
+
+        public float GetBpmAtBeat(double beat)
+        {
+            return GetBpmAtBeat(beat, out _);
+        }
+
+        public float GetSwingRatioAtBeat(double beat)
+        {
+            float swingRatio;
+            GetBpmAtBeat(beat, out swingRatio);
+            return swingRatio;
+        }
+
+        public double GetSwungBeat(double beat, float ratio)
+        {
+            return beat + GetSwingOffset(beat, ratio);
+        }
+
+        public double GetSwingOffset(double beatFrac, float ratio)
+        {
+            beatFrac %= 1;
+            if (beatFrac <= 0.5)
+            {
+                return 0.5 / ratio * beatFrac;
+            }
+            else
+            {
+                return 0.5 + (0.5 / (1f - ratio) * (beatFrac - ratio));
+            }
         }
 
         public double GetSongPosFromBeat(double beat)
