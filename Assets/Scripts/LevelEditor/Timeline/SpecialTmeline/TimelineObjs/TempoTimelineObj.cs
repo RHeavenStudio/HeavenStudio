@@ -15,6 +15,7 @@ namespace HeavenStudio.Editor.Track
         [Header("Components")]
         [SerializeField] private TMP_Text tempoTXT;
         [SerializeField] private GameObject tempoLine;
+        [SerializeField] private TempoDialog tempoDialog;
 
         new private void Update()
         {
@@ -22,28 +23,17 @@ namespace HeavenStudio.Editor.Track
             if (hovering)
             {
                 SpecialTimeline.hoveringTypes |= SpecialTimeline.HoveringTypes.TempoChange;
-                if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
-                {
-                    float newTempo = Input.mouseScrollDelta.y;
-
-                    if (Input.GetKey(KeyCode.LeftShift))
-                        newTempo *= 5f;
-                    if (Input.GetKey(KeyCode.LeftControl))
-                        newTempo *= 0.01f;
-
-                    chartEntity["tempo"] += newTempo;
-
-                    //make sure tempo is positive
-                    if (chartEntity["tempo"] < 1)
-                        chartEntity["tempo"] = 1;
-                    
-                    if (first && newTempo != 0)
-                        Timeline.instance.UpdateStartingBPMText();
-
-                    Timeline.instance.FitToSong();
-                }
             }
+            UpdateTempo();
+        }
 
+        public void SetTempo(float tempo)
+        {
+            chartEntity["tempo"] = Mathf.Clamp(tempo, 1, 10000);
+            if (first)
+            {
+                Timeline.instance.UpdateStartingBPMText();
+            }
             UpdateTempo();
         }
 
@@ -67,10 +57,10 @@ namespace HeavenStudio.Editor.Track
 
         public override void OnRightClick()
         {
-            if (first) return;
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
             {
-                DeleteObj();
+                tempoDialog.SetTempoObj(this);
+                tempoDialog.SwitchTempoDialog();
             }
         }
 
@@ -101,7 +91,16 @@ namespace HeavenStudio.Editor.Track
                     tempoLine.SetActive(false);
             }
             else
-                gameObject.SetActive(false);   
+                gameObject.SetActive(false);
+        }
+
+        public void Remove()
+        {
+            if (first) return;
+            if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
+            {
+                DeleteObj();
+            }
         }
     }
 }

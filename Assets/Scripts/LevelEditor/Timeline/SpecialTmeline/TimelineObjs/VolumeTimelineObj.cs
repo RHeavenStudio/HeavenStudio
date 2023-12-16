@@ -15,6 +15,7 @@ namespace HeavenStudio.Editor.Track
         [Header("Components")]
         [SerializeField] private TMP_Text volumeTXT;
         [SerializeField] private GameObject volumeLine;
+        [SerializeField] private VolumeDialog volumeDialog;
 
         new private void Update()
         {
@@ -22,23 +23,16 @@ namespace HeavenStudio.Editor.Track
             if (hovering)
             {
                 SpecialTimeline.hoveringTypes |= SpecialTimeline.HoveringTypes.VolumeChange;
-                if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
-                {
-                    float newVolume = Input.mouseScrollDelta.y;
+            }
+            UpdateVolume();
+        }
 
-                    if (Input.GetKey(KeyCode.LeftShift))
-                        newVolume *= 5f;
-                    if (Input.GetKey(KeyCode.LeftControl))
-                        newVolume *= 0.01f;
-
-                    chartEntity["volume"] += newVolume;
-
-                    //make sure volume is positive
-                    chartEntity["volume"] = Mathf.Clamp(chartEntity["volume"], 0, 100);
-
-                    if (first && newVolume != 0)
-                        Timeline.instance.UpdateStartingVolText();
-                }
+        public void SetVolume(float volume)
+        {
+            chartEntity["volume"] = Mathf.Clamp(volume, 0, 100);
+            if (first)
+            {
+                Timeline.instance.UpdateStartingVolText();
             }
             UpdateVolume();
         }
@@ -63,10 +57,10 @@ namespace HeavenStudio.Editor.Track
 
         public override void OnRightClick()
         {
-            if (first) return;
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
             {
-                DeleteObj();
+                volumeDialog.SetVolumeObj(this);
+                volumeDialog.SwitchVolumeDialog();
             }
         }
 
@@ -98,6 +92,15 @@ namespace HeavenStudio.Editor.Track
             }
             else
                 gameObject.SetActive(false);   
+        }
+
+        public void Remove()
+        {
+            if (first) return;
+            if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
+            {
+                DeleteObj();
+            }
         }
     }
 }
