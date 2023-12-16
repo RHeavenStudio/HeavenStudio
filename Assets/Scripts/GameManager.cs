@@ -239,7 +239,7 @@ namespace HeavenStudio
             Debug.Log("Creating new remix");
             AudioLoadDone = false;
             Beatmap = new("1", "HeavenStudio");
-            Beatmap.data.properties = Minigames.propertiesModel;
+            Beatmap.data.properties = new(Minigames.propertiesModel);
             Beatmap.AddNewTempoChange(0, 120f);
             Beatmap.AddNewVolumeChange(0, 100f);
             Beatmap.data.offset = 0f;

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using HeavenStudio.Editor.Track;
 using Jukebox;
 using Jukebox.Legacy;
@@ -14,6 +15,11 @@ namespace HeavenStudio.Editor
     {
         [Header("General References")]
         [SerializeField] TabsManager tabsManager;
+        [SerializeField] Sprite returnIcon;
+        [SerializeField] Color returnColor;
+        [SerializeField] Sprite saveIcon;
+        [SerializeField] Color saveColor;
+        [SerializeField] Image returnButtonImage;
 
         [Header("Containers")]
         [SerializeField] ChartInfoProperties[] containers;
@@ -38,6 +44,7 @@ namespace HeavenStudio.Editor
 
         [NonSerialized] public RiqBeatmap chart;
         List<GameObject> tabContents;
+        bool saveAfterClose = false, saveAs = false;
 
         private void Start() { }
 
@@ -52,6 +59,11 @@ namespace HeavenStudio.Editor
 
                 tabsManager.CleanTabs();
                 tabContents = null;
+
+                if (saveAfterClose)
+                {
+                    Editor.instance.SaveRemix(saveAs);
+                }
             }
             else
             {
@@ -63,6 +75,7 @@ namespace HeavenStudio.Editor
 
                 chart = GameManager.instance.Beatmap;
                 chart["propertiesmodified"] = true;
+                SetSaveOnClose(false);
 
                 tabContents = tabsManager.GenerateTabs(tabs);
                 foreach (var tab in tabContents)
@@ -70,6 +83,14 @@ namespace HeavenStudio.Editor
                     tab.GetComponent<ChartInfoProperties>().Init(this);
                 }
             }
+        }
+
+        public void SetSaveOnClose(bool saveAfterClose, bool saveAs = false)
+        {
+            this.saveAfterClose = saveAfterClose;
+            this.saveAs = saveAs;
+            returnButtonImage.sprite = saveAfterClose ? saveIcon : returnIcon;
+            returnButtonImage.color = saveAfterClose ? saveColor : returnColor;
         }
 
         public void SetupDialog(PropertyTag[] tags, ChartInfoProperties container)

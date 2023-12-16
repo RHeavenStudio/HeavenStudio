@@ -359,19 +359,36 @@ namespace HeavenStudio.Editor
 
         public void SaveRemix(bool saveAs = true)
         {
-            if (saveAs == true)
+            Debug.Log(GameManager.instance.Beatmap["propertiesmodified"]);
+            if (!(bool)GameManager.instance.Beatmap["propertiesmodified"])
             {
-                SaveRemixFilePanel();
+                foreach (var dialog in Dialogs)
+                {
+                    if (dialog.GetType() == typeof(RemixPropertiesDialog))
+                    {
+                        GlobalGameManager.ShowErrorMessage("Set Remix Properties", "Set remix properties before saving.");
+                        (dialog as RemixPropertiesDialog).SwitchPropertiesDialog();
+                        (dialog as RemixPropertiesDialog).SetSaveOnClose(true, saveAs);
+                        return;
+                    }
+                }
             }
             else
             {
-                if (currentRemixPath == string.Empty || currentRemixPath == null)
+                if (saveAs == true)
                 {
                     SaveRemixFilePanel();
                 }
                 else
                 {
-                    SaveRemixFile(currentRemixPath);
+                    if (currentRemixPath == string.Empty || currentRemixPath == null)
+                    {
+                        SaveRemixFilePanel();
+                    }
+                    else
+                    {
+                        SaveRemixFile(currentRemixPath);
+                    }
                 }
             }
         }

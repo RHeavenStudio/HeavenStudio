@@ -36,75 +36,75 @@ namespace HeavenStudio
             RiqFileHandler.AudioConverter = JukeboxAudioConverter;
         }
 
-        public static Dictionary<string, object> propertiesModel = new()
-            {
-                // mapper set properties? (future: use this to flash the button)
-                {"propertiesmodified", false},
+        readonly public static Dictionary<string, object> propertiesModel = new()
+        {
+            // mapper set properties? (future: use this to flash the button)
+            {"propertiesmodified", false},
 
-                ////// CATEGORY 1: SONG INFO
-                // general chart info
-                {"remixtitle", "New Remix"},                                                                                        // chart name
-                {"remixauthor", "Your Name"},                                                                                       // charter's name
-                {"remixdesc", "Remix Description"},                                                                                 // chart description
-                {"remixlevel", 1},                                                                                                  // chart difficulty (maybe offer a suggestion but still have the mapper determine it)
-                {"remixtempo", 120f},                                                                                               // avg. chart tempo
-                {"remixtags", ""},                                                                                                  // chart tags
-                {"icontype", 0},                                                                                                    // chart icon (presets, custom - future)
-                {"iconres", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Select/", "Icon")},           // custom icon location (future)
-                {"challengetype", 0},                                                                                               // perfect challenge type
-                {"playstyle", RecommendedControlStyle.Any},                                                                         // recommended control style
+            ////// CATEGORY 1: SONG INFO
+            // general chart info
+            {"remixtitle", "New Remix"},                                                                                        // chart name
+            {"remixauthor", "Your Name"},                                                                                       // charter's name
+            {"remixdesc", "Remix Description"},                                                                                 // chart description
+            {"remixlevel", 1},                                                                                                  // chart difficulty (maybe offer a suggestion but still have the mapper determine it)
+            {"remixtempo", 120f},                                                                                               // avg. chart tempo
+            {"remixtags", ""},                                                                                                  // chart tags
+            {"icontype", 0},                                                                                                    // chart icon (presets, custom - future)
+            {"iconres", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Select/", "Icon")},           // custom icon location (future)
+            {"challengetype", 0},                                                                                               // perfect challenge type
+            {"playstyle", RecommendedControlStyle.Any},                                                                         // recommended control style
 
-                // chart song info
-                {"idolgenre", "Song Genre"},                                                                                        // song genre
-                {"idolsong", "Song Name"},                                                                                          // song name
-                {"idolcredit", "Artist"},                                                                                           // song artist
+            // chart song info
+            {"idolgenre", "Song Genre"},                                                                                        // song genre
+            {"idolsong", "Song Name"},                                                                                          // song name
+            {"idolcredit", "Artist"},                                                                                           // song artist
 
-                ////// CATEGORY 2: PROLOGUE AND EPILOGUE
-                // chart prologue
-                {"prologuetype", 0},                                                                                                // prologue card animation (future)
-                {"prologuecaption", "Remix"},                                                                                       // prologue card sub-title (future)
+            ////// CATEGORY 2: PROLOGUE AND EPILOGUE
+            // chart prologue
+            {"prologuetype", 0},                                                                                                // prologue card animation (future)
+            {"prologuecaption", "Remix"},                                                                                       // prologue card sub-title (future)
 
-                // chart results screen messages
-                {"resultcaption", "Rhythm League Notes"},                                                                           // result screen header
-                {"resultcommon_hi", "Good rhythm."},                                                                                // generic "Superb" message (one-liner)
-                {"resultcommon_ok", "Eh. Passable."},                                                                               // generic "OK" message (one-liner)
-                {"resultcommon_ng", "Try harder next time."},                                                                       // generic "Try Again" message (one-liner)
+            // chart results screen messages
+            {"resultcaption", "Rhythm League Notes"},                                                                           // result screen header
+            {"resultcommon_hi", "Good rhythm."},                                                                                // generic "Superb" message (one-liner)
+            {"resultcommon_ok", "Eh. Passable."},                                                                               // generic "OK" message (one-liner)
+            {"resultcommon_ng", "Try harder next time."},                                                                       // generic "Try Again" message (one-liner)
 
-                {"resultcat0_hi", "You show strong fundamentals."},                                                                 // "Superb" message for input category 0 "normal" (two-liner)
-                {"resultcat0_ng", "Work on your fundamentals."},                                                                    // "Try Again" message for input category 0 "normal" (two-liner)
+            {"resultcat0_hi", "You show strong fundamentals."},                                                                 // "Superb" message for input category 0 "normal" (two-liner)
+            {"resultcat0_ng", "Work on your fundamentals."},                                                                    // "Try Again" message for input category 0 "normal" (two-liner)
 
-                {"resultcat1_hi", "You kept the beat well."},                                                                       // "Superb" message for input category 1 "keep" (two-liner)
-                {"resultcat1_ng", "You had trouble keeping the beat."},                                                             // "Try Again" message for input category 1 "keep" (two-liner)
+            {"resultcat1_hi", "You kept the beat well."},                                                                       // "Superb" message for input category 1 "keep" (two-liner)
+            {"resultcat1_ng", "You had trouble keeping the beat."},                                                             // "Try Again" message for input category 1 "keep" (two-liner)
 
-                {"resultcat2_hi", "You had great aim."},                                                                            // "Superb" message for input category 2 "aim" (two-liner)
-                {"resultcat2_ng", "Your aim was a little shaky."},                                                                  // "Try Again" message for input category 2 "aim" (two-liner)
-                                                    
-                {"resultcat3_hi", "You followed the example well."},                                                                // "Superb" message for input category 3 "repeat" (two-liner)
-                {"resultcat3_ng", "Next time, follow the example better."},                                                         // "Try Again" message for input category 3 "repeat" (two-liner)
+            {"resultcat2_hi", "You had great aim."},                                                                            // "Superb" message for input category 2 "aim" (two-liner)
+            {"resultcat2_ng", "Your aim was a little shaky."},                                                                  // "Try Again" message for input category 2 "aim" (two-liner)
+                                                
+            {"resultcat3_hi", "You followed the example well."},                                                                // "Superb" message for input category 3 "repeat" (two-liner)
+            {"resultcat3_ng", "Next time, follow the example better."},                                                         // "Try Again" message for input category 3 "repeat" (two-liner)
 
-                {"epilogue_hi", "Superb picture"},                                                                                  // epilogue "Superb" message
-                {"epilogue_ok", "OK picture"},                                                                                      // epilogue "OK" message
-                {"epilogue_ng", "Try Again picture"},                                                                               // epilogue "Try Again" message
+            {"epilogue_hi", "Superb picture"},                                                                                  // epilogue "Superb" message
+            {"epilogue_ok", "OK picture"},                                                                                      // epilogue "OK" message
+            {"epilogue_ng", "Try Again picture"},                                                                               // epilogue "Try Again" message
 
-                {"epilogue_hi_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Hi")},   // epilogue "Superb" image resource path
-                {"epilogue_ok_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ok")},   // epilogue "OK" image resource path
-                {"epilogue_ng_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ng")},   // epilogue "Try Again" image resource path
-            };
+            {"epilogue_hi_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Hi")},   // epilogue "Superb" image resource path
+            {"epilogue_ok_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ok")},   // epilogue "OK" image resource path
+            {"epilogue_ng_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ng")},   // epilogue "Try Again" image resource path
+        };
 
-        static Dictionary<string, object> tempoChangeModel = new()
+        readonly static Dictionary<string, object> tempoChangeModel = new()
         {
             {"tempo", 120f},
             {"swing", 0f},
             {"timeSignature", new Vector2(4, 4)},
         };
 
-        static Dictionary<string, object> volumeChangeModel = new()
+        readonly static Dictionary<string, object> volumeChangeModel = new()
         {
             {"volume", 1f},
             {"fade", Util.EasingFunction.Ease.Instant},
         };
 
-        static Dictionary<string, object> sectionMarkModel = new()
+        readonly static Dictionary<string, object> sectionMarkModel = new()
         {
             {"sectionName", ""},
             {"startPerfect", false},
