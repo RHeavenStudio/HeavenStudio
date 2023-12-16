@@ -375,13 +375,13 @@ namespace HeavenStudio.Editor
             }
             else
             {
-                if (saveAs == true)
+                if (saveAs)
                 {
                     SaveRemixFilePanel();
                 }
                 else
                 {
-                    if (currentRemixPath == string.Empty || currentRemixPath == null)
+                    if (currentRemixPath is "" or null)
                     {
                         SaveRemixFilePanel();
                     }
@@ -405,6 +405,7 @@ namespace HeavenStudio.Editor
                 if (path != String.Empty)
                 {
                     SaveRemixFile(path);
+                    currentRemixPath = path;
                 }
             });
         }
