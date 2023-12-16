@@ -134,6 +134,7 @@ namespace HeavenStudio.Editor
         public void ShowQuitPopUp(bool show)
         {
             _confirmQuitMain.SetActive(show);
+            SetAuthoritiveMenu(show);
         }
 
         public bool ShouldQuit = false;
@@ -533,6 +534,16 @@ namespace HeavenStudio.Editor
         public static bool MouseInRectTransform(RectTransform rectTransform)
         {
             return (rectTransform.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera));
+        }
+
+        public void ReturnToTitle()
+        {
+            GlobalGameManager.LoadScene("Title");
+        }
+
+        public void SetAuthoritiveMenu(bool state)
+        {
+            inAuthorativeMenu = state;
         }
 
         public void ToggleDebugCam()
