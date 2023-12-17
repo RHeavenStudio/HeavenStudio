@@ -466,12 +466,12 @@ namespace HeavenStudio.Games
             var nextForce = false;
             if (passBallDict.TryGetValue(beat + lastLength, out var e))
             {
+                if (e.datamodel == "tossBoys/pop") return;
                 curReceiver = e["who"];
                 blurSet = e.datamodel == "tossBoys/blur";
                 currentLength = e.length;
                 nextIsSpecial = IsSpecialEvent(e.datamodel);
                 eventDatamodel = e.datamodel;
-                if (e.datamodel == "tossBoys/pop") return;
             }
             else
             {
