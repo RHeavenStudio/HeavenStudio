@@ -29,6 +29,10 @@ namespace HeavenStudio
         [SerializeField] Button errorOkButton;
         [SerializeField] Button errorLogButton;
         [SerializeField] Slider dialogProgress;
+
+        [Header("Debug")]
+        [SerializeField] private GameObject DebugHolder;
+
         public static bool IsShowingDialog;
         public static string PlayOpenFile = null;
 
@@ -39,7 +43,7 @@ namespace HeavenStudio
 
         static string loadedScene;
         static string lastLoadedScene;
-        static AsyncOperation asyncLoad;
+        static AsyncOperation asyncLoad, asyncFree;
 
         public static string levelLocation;
         public static bool officialLevel;
@@ -154,14 +158,21 @@ namespace HeavenStudio
         IEnumerator LoadSceneAsync(string scene, float fadeOut)
         {
             Application.backgroundLoadingPriority = ThreadPriority.Normal;
-            //TODO: create flow mem loading icon
+
+            asyncFree = Resources.UnloadUnusedAssets();
+            while (!asyncFree.isDone)
+            {
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(0.5f);
+
             asyncLoad = SceneManager.LoadSceneAsync(scene);
             while (!asyncLoad.isDone)
             {
                 yield return null;
             }
 
-            //TODO: fade out flow mem loading icon
             instance.fadeImage.DOKill();
             instance.loadingText.enabled = false;
             memPanel.SetActive(false);
@@ -236,7 +247,7 @@ namespace HeavenStudio
 
             instance.fadeImage.DOKill();
             instance.fadeImage.gameObject.SetActive(true);
-            instance.loadingText.enabled = true;
+            // instance.loadingText.enabled = true;
             instance.memPanel.SetActive(true);
             instance.memRenderer.ChangeMem();
             if (fadeIn <= 0)

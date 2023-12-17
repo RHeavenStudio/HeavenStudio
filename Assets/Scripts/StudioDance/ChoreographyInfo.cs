@@ -16,6 +16,7 @@ namespace HeavenStudio.StudioDance
         }
 
         public string choreographyName;
+        public string introState;
         public List<ChoreographyStep> choreographySteps;
         public string poseStateOdd;
         public string poseStateEven;

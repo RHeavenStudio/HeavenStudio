@@ -7,6 +7,7 @@ namespace HeavenStudio.StudioDance
     public class Dancer : MonoBehaviour
     {
         [SerializeField] ChoreographyInfo debugChoreography;
+        [SerializeField] ChoreographyInfo[] choreographies;
         private Animator animator;
         private double currentBeat = 0f;
 
@@ -15,6 +16,9 @@ namespace HeavenStudio.StudioDance
         private ChoreographyInfo currentChoreography;
         private double totalChoreographyLength = 0f;
 
+        public ChoreographyInfo[] ChoreographyInfos { get => choreographies; }
+        public ChoreographyInfo CurrentChoreography { get => currentChoreography; }
+
         public void SetChoreography(ChoreographyInfo choreography)
         {
             currentChoreography = choreography;
@@ -22,6 +26,23 @@ namespace HeavenStudio.StudioDance
             foreach (var step in choreography.choreographySteps)
             {
                 totalChoreographyLength += step.beatLength;
+            }
+        }
+
+        public void SetChoreography(int index)
+        {
+            if (index < 0 || index >= choreographies.Length) return;
+            var choreography = choreographies[index];
+            currentChoreography = choreography;
+            totalChoreographyLength = 0f;
+            foreach (var step in choreography.choreographySteps)
+            {
+                totalChoreographyLength += step.beatLength;
+            }
+
+            if (!Conductor.instance.isPlaying)
+            {
+                animator.Play(currentChoreography.introState);
             }
         }
 
@@ -39,6 +60,8 @@ namespace HeavenStudio.StudioDance
             {
                 SetChoreography(debugChoreography);
             }
+
+            animator.Play(currentChoreography.introState);
         }
 
         private void OnBeatPulse(double beat)
@@ -55,11 +78,11 @@ namespace HeavenStudio.StudioDance
                 if (!isDance) return;
                 if (currentBeat % 2 != 0)
                 {
-                    animator.DoScaledAnimationAsync(currentChoreography.poseStateOdd);
+                    animator.Play(currentChoreography.poseStateOdd);
                 }
                 else
                 {
-                    animator.DoScaledAnimationAsync(currentChoreography.poseStateEven);
+                    animator.Play(currentChoreography.poseStateEven);
                 }
                 isDance = false;
                 return;

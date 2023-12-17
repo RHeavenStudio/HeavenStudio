@@ -63,8 +63,6 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
 
-        [SerializeField] private GameObject DebugHolder;
-
         [Header("Dialogs")]
         [SerializeField] private Dialog[] Dialogs;
 
@@ -226,11 +224,6 @@ namespace HeavenStudio.Editor
                     {
                         SaveRemix(false);
                     }
-                }
-
-                if (Input.GetKeyDown(KeyCode.F12))
-                {
-                    DebugHolder.gameObject.SetActive(!DebugHolder.activeInHierarchy);
                 }
             }
             #endregion
