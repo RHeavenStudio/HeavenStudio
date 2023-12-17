@@ -317,10 +317,6 @@ namespace HeavenStudio.Games
                 tempEvents.Remove(jump);
             }
             allJumpEvents = tempEvents;
-            foreach (var jump in allJumpEvents)
-            {
-                Debug.Log(jump.beat);
-            }
         }
 
         private void PersistColor(double beat)
