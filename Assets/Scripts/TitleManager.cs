@@ -210,6 +210,7 @@ namespace HeavenStudio
 
                 try
                 {
+                    RiqFileHandler.ClearCache();
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
                     Debug.Log("Imported RIQ successfully!");
                     RiqBeatmap beatmap = RiqFileHandler.ReadRiq();
