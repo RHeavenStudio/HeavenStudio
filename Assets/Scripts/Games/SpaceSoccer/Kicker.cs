@@ -384,6 +384,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 // queue normal kick input
                 nextHit = game.ScheduleInput(caller.startBeat + caller.timer, ball.GetAnimLength(Ball.State.Kicked), SpaceSoccer.InputAction_BasicPress, KickJust, Miss, Out);
             }
+            game.hitBeats.Add(caller.startBeat + caller.timer);
         }
 
         private void Miss(PlayerActionEvent caller) 
@@ -407,6 +408,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             Toe(true);
             nextHit = game.ScheduleInput(caller.startBeat, 3f, SpaceSoccer.InputAction_BasicPress, KickJust, Miss, Out);
             ball.canKick = false;
+            game.hitBeats.Add(caller.startBeat + caller.timer);
         }
 
         private void ToePrepareJust(PlayerActionEvent caller, float state)
