@@ -432,7 +432,11 @@ namespace HeavenStudio.Games
             DispenseExec(beat, length, who, false, "");
             if (auto && passBallDict.TryGetValue(beat + length, out var e))
             {
-                DispenseRecursion(beat + length, -1, autoInterval, ignoreSpecial, callAuto, e["who"], (int)WhichTossKid.None, false, e.length, IsSpecialEvent(e.datamodel), false, e.datamodel);
+                if (e.datamodel == "tossBoys/blur")
+                {
+                    DispenseRecursion(beat + length, -1, autoInterval, ignoreSpecial, callAuto, (int)WhichTossKid.None, who, false, e.length, true, true, e.datamodel);
+                }
+                else DispenseRecursion(beat + length, -1, autoInterval, ignoreSpecial, callAuto, e["who"], who, false, e.length, IsSpecialEvent(e.datamodel), false, e.datamodel);
             }
         }
 
@@ -571,7 +575,7 @@ namespace HeavenStudio.Games
             lastReceiver = currentReceiver;
             if (passBallDict.TryGetValue(beat, out var receiver))
             {
-                currentReceiver = (WhichTossKid)receiver["who"];
+                if (receiver.datamodel != "tossBoys/blur") currentReceiver = (WhichTossKid)receiver["who"];
                 currentPassType = receiver.datamodel;
                 currentEventLength = receiver.length;
             }
