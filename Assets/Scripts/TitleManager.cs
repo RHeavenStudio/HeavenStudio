@@ -61,12 +61,13 @@ namespace HeavenStudio
 
         private bool logoRevealed;
 
-        private bool menuMode, snsRevealed;
+        private bool menuMode, snsRevealed, exiting;
 
         private Animator menuAnim;
 
         private void Start()
         {
+            exiting = false;
             menuAnim = GetComponent<Animator>();
             musicSource = GetComponent<AudioSource>();
             musicSource.PlayScheduled(AudioSettings.dspTime);
@@ -179,6 +180,8 @@ namespace HeavenStudio
 
         public void CreatePressed()
         {
+            if (exiting) return;
+            exiting = true;
             GlobalGameManager.PlayOpenFile = null;
             GlobalGameManager.LoadScene("Editor");
             SoundByte.PlayOneShot("ui/UIEnter");
@@ -234,6 +237,8 @@ namespace HeavenStudio
 
         public void PlayPanelAccept()
         {
+            if (exiting) return;
+            exiting = true;
             SoundByte.PlayOneShot("ui/UIEnter");
             GlobalGameManager.LoadScene("Game", 0.35f, -1);
         }
