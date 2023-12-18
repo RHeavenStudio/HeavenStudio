@@ -417,7 +417,7 @@ namespace HeavenStudio
             if (!twoMessage) return;
             audioSource.PlayOneShot(messageLast);
             // message2.text = "message line 2";
-            message2.text = "Also..." + msg2;
+            message2.text = MessageAdd + msg2;
         }
 
         public void StartBar()

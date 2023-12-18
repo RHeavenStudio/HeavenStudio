@@ -2768,7 +2768,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78496949}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.0000076293945}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3460,8 +3460,8 @@ MonoBehaviour:
       m_Calls: []
   parentWindow: {fileID: 113063171}
   isLocked: 0
-  minWidth: 125
-  minHeight: 125
+  minWidth: 200
+  minHeight: 150
   cursor: {fileID: 2800000, guid: 5b69212126b91114ea8f0a926d77c519, type: 3}
   axis: 2
   onWindowPulled:
@@ -3844,8 +3844,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f10846845fcf9489fc69eccfbd24c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWidth: 0
-  maxHeight: 0
+  maxWidth: 1280
+  maxHeight: 720
 --- !u!1 &114662347
 GameObject:
   m_ObjectHideFlags: 0
@@ -14545,8 +14545,8 @@ MonoBehaviour:
       m_Calls: []
   parentWindow: {fileID: 113063171}
   isLocked: 0
-  minWidth: 125
-  minHeight: 125
+  minWidth: 200
+  minHeight: 150
   cursor: {fileID: 2800000, guid: 2b62059c6b03f004db5a180b61188820, type: 3}
   axis: 2
   onWindowPulled:
@@ -26848,7 +26848,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1589389271}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.99910504
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32256,8 +32256,8 @@ MonoBehaviour:
       m_Calls: []
   parentWindow: {fileID: 113063171}
   isLocked: 0
-  minWidth: 125
-  minHeight: 125
+  minWidth: 200
+  minHeight: 150
   cursor: {fileID: 2800000, guid: 40a8ef17dc9780c4085eb2001e1c9ac1, type: 3}
   axis: 1
   onWindowPulled:
@@ -32704,7 +32704,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 175.38774}
+  m_AnchoredPosition: {x: 0, y: 173.14276}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1154875945
@@ -34123,7 +34123,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 6
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -36444,8 +36444,8 @@ MonoBehaviour:
       m_Calls: []
   parentWindow: {fileID: 113063171}
   isLocked: 0
-  minWidth: 125
-  minHeight: 125
+  minWidth: 200
+  minHeight: 150
   cursor: {fileID: 2800000, guid: 5704ce039ab9a4d41bce815832591a2f, type: 3}
   axis: 0
   onWindowPulled:
@@ -38411,8 +38411,8 @@ MonoBehaviour:
       m_Calls: []
   parentWindow: {fileID: 113063171}
   isLocked: 0
-  minWidth: 125
-  minHeight: 125
+  minWidth: 200
+  minHeight: 150
   cursor: {fileID: 2800000, guid: 2b62059c6b03f004db5a180b61188820, type: 3}
   axis: 2
   onWindowPulled:
@@ -47541,8 +47541,8 @@ MonoBehaviour:
       m_Calls: []
   parentWindow: {fileID: 113063171}
   isLocked: 0
-  minWidth: 125
-  minHeight: 125
+  minWidth: 200
+  minHeight: 150
   cursor: {fileID: 2800000, guid: 5704ce039ab9a4d41bce815832591a2f, type: 3}
   axis: 0
   onWindowPulled:
@@ -48846,8 +48846,8 @@ MonoBehaviour:
       m_Calls: []
   parentWindow: {fileID: 113063171}
   isLocked: 0
-  minWidth: 125
-  minHeight: 125
+  minWidth: 200
+  minHeight: 150
   cursor: {fileID: 2800000, guid: 40a8ef17dc9780c4085eb2001e1c9ac1, type: 3}
   axis: 1
   onWindowPulled:
@@ -50540,8 +50540,8 @@ MonoBehaviour:
       m_Calls: []
   parentWindow: {fileID: 113063171}
   isLocked: 0
-  minWidth: 125
-  minHeight: 125
+  minWidth: 200
+  minHeight: 150
   cursor: {fileID: 2800000, guid: 5b69212126b91114ea8f0a926d77c519, type: 3}
   axis: 2
   onWindowPulled:

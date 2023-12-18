@@ -245,6 +245,7 @@ namespace HeavenStudio
 
         public void PlayPanelBack()
         {
+            RiqFileHandler.ClearCache();
             SoundByte.PlayOneShot("ui/UICancel");
             playPanel.SetActive(false);
         }
