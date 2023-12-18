@@ -33,7 +33,7 @@ public class TempoDialog : Dialog
 
     void Update()
     {
-        if (tempoObj != null && tempoObj.first)
+        if (tempoObj != null)
         {
             tempoInput.text = tempoObj.chartEntity["tempo"].ToString("F");
         }

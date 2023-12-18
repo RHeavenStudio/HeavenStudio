@@ -434,7 +434,7 @@ namespace HeavenStudio
         public void ShowRank()
         {
             rankLogo.SetActive(true);
-            bg.SetActive(true);
+            // bg.SetActive(true);
             if (rank == Rank.Ng)
             {
                 rankAnim.Play("Ng");

@@ -37,7 +37,7 @@ public class VolumeDialog : Dialog
 
     void Update()
     {
-        if (volumeObj != null && volumeObj.first)
+        if (volumeObj != null)
         {
             volumeInput.text = volumeObj.chartEntity["volume"].ToString("F");
         }
