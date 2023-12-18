@@ -23,6 +23,18 @@ namespace HeavenStudio.Editor.Track
             if (hovering)
             {
                 SpecialTimeline.hoveringTypes |= SpecialTimeline.HoveringTypes.VolumeChange;
+
+                if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
+                {
+                    float newVolume = Input.mouseScrollDelta.y;
+
+                    if (Input.GetKey(KeyCode.LeftShift))
+                        newVolume *= 5f;
+                    if (Input.GetKey(KeyCode.LeftControl))
+                        newVolume *= 0.01f;
+
+                    SetVolume(chartEntity["volume"] + newVolume);
+                }
             }
             UpdateVolume();
         }

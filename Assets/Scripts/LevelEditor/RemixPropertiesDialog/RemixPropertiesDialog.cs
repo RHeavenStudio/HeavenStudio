@@ -20,6 +20,7 @@ namespace HeavenStudio.Editor
         [SerializeField] Sprite saveIcon;
         [SerializeField] Color saveColor;
         [SerializeField] Image returnButtonImage;
+        [SerializeField] GameObject onSaveButton;
 
         [Header("Containers")]
         [SerializeField] ChartInfoProperties[] containers;
@@ -59,11 +60,6 @@ namespace HeavenStudio.Editor
 
                 tabsManager.CleanTabs();
                 tabContents = null;
-
-                if (saveAfterClose)
-                {
-                    Editor.instance.SaveRemix(saveAs);
-                }
             }
             else
             {
@@ -85,12 +81,21 @@ namespace HeavenStudio.Editor
             }
         }
 
+        public void CloseAndSave()
+        {
+            if (saveAfterClose)
+            {
+                Editor.instance.SaveRemix(saveAs);
+            }
+            SwitchPropertiesDialog();
+        }
+
         public void SetSaveOnClose(bool saveAfterClose, bool saveAs = false)
         {
             this.saveAfterClose = saveAfterClose;
             this.saveAs = saveAs;
-            returnButtonImage.sprite = saveAfterClose ? saveIcon : returnIcon;
-            returnButtonImage.color = saveAfterClose ? saveColor : returnColor;
+
+            onSaveButton.SetActive(saveAfterClose);
         }
 
         public void SetupDialog(PropertyTag[] tags, ChartInfoProperties container)

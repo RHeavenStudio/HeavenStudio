@@ -23,6 +23,18 @@ namespace HeavenStudio.Editor.Track
             if (hovering)
             {
                 SpecialTimeline.hoveringTypes |= SpecialTimeline.HoveringTypes.TempoChange;
+
+                if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
+                {
+                    float newTempo = Input.mouseScrollDelta.y;
+
+                    if (Input.GetKey(KeyCode.LeftShift))
+                        newTempo *= 5f;
+                    if (Input.GetKey(KeyCode.LeftControl))
+                        newTempo *= 0.01f;
+
+                    SetTempo(chartEntity["tempo"] + newTempo);
+                }
             }
             UpdateTempo();
         }
@@ -34,6 +46,7 @@ namespace HeavenStudio.Editor.Track
             {
                 Timeline.instance.UpdateStartingBPMText();
             }
+            Timeline.instance.FitToSong();
             UpdateTempo();
         }
 

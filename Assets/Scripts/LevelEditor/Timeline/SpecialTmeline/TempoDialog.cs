@@ -31,10 +31,18 @@ public class TempoDialog : Dialog
         }
     }
 
+    void Update()
+    {
+        if (tempoObj != null && tempoObj.first)
+        {
+            tempoInput.text = tempoObj.chartEntity["tempo"].ToString("F");
+        }
+    }
+
     public void SetTempoObj(TempoTimelineObj tempoObj)
     {
         this.tempoObj = tempoObj;
-        deleteButton.interactable = !tempoObj.first;
+        deleteButton.gameObject.SetActive(!tempoObj.first);
 
         tempoInput.text = tempoObj.chartEntity["tempo"].ToString("F");
     }

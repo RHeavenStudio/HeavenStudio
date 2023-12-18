@@ -35,10 +35,19 @@ public class VolumeDialog : Dialog
         }
     }
 
+    void Update()
+    {
+        if (volumeObj != null && volumeObj.first)
+        {
+            volumeInput.text = volumeObj.chartEntity["volume"].ToString("F");
+        }
+    }
+
     public void SetVolumeObj(VolumeTimelineObj volumeObj)
     {
         this.volumeObj = volumeObj;
-        deleteButton.interactable = !volumeObj.first;
+        deleteButton.gameObject.SetActive(!volumeObj.first);
+
         volumeSlider.value = volumeObj.chartEntity["volume"];
         volumeInput.text = volumeObj.chartEntity["volume"].ToString("F");
     }

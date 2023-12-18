@@ -172,6 +172,8 @@ namespace HeavenStudio.Editor.Track
             specialTimelineObjs.Add(tempoTimelineObj.chartEntity.guid, tempoTimelineObj);
 
             Timeline.instance.FitToSong();
+            if (create)
+                tempoTimelineObj.OnRightClick();
         }
 
         public void AddVolumeChange(bool create, RiqEntity volumeChange_ = null, bool first = false)
@@ -210,6 +212,8 @@ namespace HeavenStudio.Editor.Track
             volumeTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
             specialTimelineObjs.Add(volumeTimelineObj.chartEntity.guid, volumeTimelineObj);
+            if (create)
+                volumeTimelineObj.OnRightClick();
         }
 
         public void AddChartSection(bool create, RiqEntity chartSection_ = null)
