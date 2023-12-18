@@ -84,9 +84,10 @@ public class SectionDialog : Dialog
         }
     }
 
-    public void ChangeSectionName(string name)
+    public void ChangeSectionName()
     {
         if (sectionObj == null) return;
+        string name = sectionName.text;
         if (string.IsNullOrWhiteSpace(name)) name = string.Empty;
         sectionObj.chartEntity["sectionName"] = name;
         sectionObj.UpdateLabel();

@@ -79,6 +79,7 @@ namespace HeavenStudio.Editor.Track
 
         public override bool OnMove(float beat, bool final = false)
         {
+            if (beat < 0) beat = 0;
             foreach (var tempoChange in GameManager.instance.Beatmap.TempoChanges)
             {
                 if (this.chartEntity == tempoChange)

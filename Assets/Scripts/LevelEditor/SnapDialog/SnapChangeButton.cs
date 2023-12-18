@@ -11,12 +11,12 @@ namespace HeavenStudio.Editor
         public SnapDialog SnapDialog;
         public bool isDown;
 
-        public override void OnPointerDown(PointerEventData eventData)
-        {
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                SnapDialog.ChangeCommon(isDown);
-            }
-        }
+        // public override void OnPointerDown(PointerEventData eventData)
+        // {
+        //     if (eventData.button == PointerEventData.InputButton.Left)
+        //     {
+        //         SnapDialog.ChangeCommon(isDown);
+        //     }
+        // }
     }
 }

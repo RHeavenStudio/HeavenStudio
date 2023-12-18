@@ -320,8 +320,14 @@ namespace HeavenStudio
                 }
                 else
                 {
+                    // convert enums to the intended enum type
+                    if (mType.IsEnum)
+                    {
+                        if (data.properties[prop.Key].GetType() == typeof(string))
+                            data.properties[prop.Key] = Enum.Parse(mType, (string)data.properties[prop.Key]);
+                    }
                     // convert all JObjects to their respective types
-                    if (data.properties[prop.Key].GetType() == typeof(Newtonsoft.Json.Linq.JObject))
+                    else if (data.properties[prop.Key].GetType() == typeof(Newtonsoft.Json.Linq.JObject))
                     {
                         data.properties[prop.Key] = (data.properties[prop.Key] as Newtonsoft.Json.Linq.JObject).ToObject(mType);
                     }
