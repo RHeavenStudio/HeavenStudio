@@ -40,6 +40,7 @@ public class VolumeDialog : Dialog
         if (volumeObj != null)
         {
             volumeInput.text = volumeObj.chartEntity["volume"].ToString("F");
+            volumeSlider.value = volumeObj.chartEntity["volume"];
         }
     }
 
