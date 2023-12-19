@@ -19,8 +19,9 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         [NonSerialized] public double startBeat;
         [NonSerialized] public MeatType meatType;
+        [NonSerialized] public double reactionBeats = -1;
+        [NonSerialized] public int reaction;
 
-        private string meatTypeStr;
         private bool isHit = false;
 
         // const float meatStart = 0;
@@ -50,10 +51,9 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Start()
         {
-            meatTypeStr = meatType.ToString();
             sr.sprite = meats[(int)meatType];
-            Debug.Log(meats[(int)meatType]);
-            Debug.Log(sr.sprite.name);
+            Debug.Log(startBeat);
+            Debug.Log(reactionBeats);
 
             game.ScheduleInput(startBeat, 1, MeatGrinder.InputAction_Press, Hit, Miss, Nothing);
         }
@@ -61,22 +61,18 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         private void Update()
         {
             Conductor cond = Conductor.instance;
-            // if (Input.GetKey(KeyCode.G)) { // Insane.
-            //     anim.enabled = true;
-            // }
-            Debug.Log(sr.sprite.name);
             if (!isHit)
             {
                 double startTime = cond.GetSongPosFromBeat(startBeat);
                 double hitTime = cond.GetSongPosFromBeat(startBeat + 1);
-                double missTime = cond.GetSongPosFromBeat(startBeat + 1) + MeatGrinder.ngLateTime;
+                double missTime = hitTime + MeatGrinder.ngLateTime;
                 double currentTime = cond.songPositionAsDouble;
                 Vector3 lastPos = transform.position;
                 Vector3 startPos = meatType == MeatType.LightMeat ? startPositionAlt.position : startPosition.position;
 
                 float hitAlongMissRatio = Vector3.Dot((startPos - missPosition.position), (startPos - hitPosition.position));
                 hitAlongMissRatio /= Vector3.Dot((startPos - missPosition.position), (startPos - missPosition.position));
-                Vector3 hitOnMissPos = startPos + (missPosition.position - startPos) * hitAlongMissRatio;
+                Vector3 hitOnMissPos = startPos + ((missPosition.position - startPos) * hitAlongMissRatio);
 
                 float totalProg = (float)((currentTime - startTime) / (missTime - startTime));
 
@@ -90,9 +86,9 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
                     float prog = (float)((currentTime - startTime) / (hitTime - startTime));
                     transform.position = Vector3.Lerp(startPos, hitOnMissPos, prog);
                 }
-                float yMul = totalProg * 2f - 1f;
+                float yMul = (totalProg * 2f) - 1f;
                 float yWeight = -(yMul * yMul) + 1f;
-                transform.position += Vector3.up * (meatType == MeatType.LightMeat ? meatFlyHeightAlt : meatFlyHeight) * yWeight;
+                transform.position += (meatType == MeatType.LightMeat ? meatFlyHeightAlt : meatFlyHeight) * yWeight * Vector3.up;
                 // point towards the next position
                 transform.right = transform.position - lastPos;
 
@@ -105,13 +101,19 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             anim.enabled = true;
             isHit = true;
             game.TackAnim.SetBool("tackMeated", false);
-            anim.DoScaledAnimationAsync(meatTypeStr + "Hit", 0.5f);
+            anim.DoScaledAnimationAsync(meatType.ToString() + "Hit", 0.5f);
 
             bool isBarely = state is >= 1f or <= -1f;
 
             game.bossAnnoyed = isBarely;
             SoundByte.PlayOneShotGame("meatGrinder/" + (isBarely ? "tink" : "meatHit"));
             game.TackAnim.DoScaledAnimationAsync("TackHit" + (isBarely ? "Barely" : "Success"), 0.5f);
+
+            if (reactionBeats > 0) {
+                BeatAction.New(game, new List<BeatAction.Action>() {
+                    new(startBeat + reactionBeats + 1, delegate { game.TackExpression(reaction); })
+                });
+            }
         }
 
         private void Miss(PlayerActionEvent caller)
@@ -120,7 +122,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             game.bossAnnoyed = true;
             SoundByte.PlayOneShotGame("meatGrinder/miss");
 
-            game.TackAnim.DoScaledAnimationAsync("TackMiss" + meatTypeStr, 0.5f);
+            game.TackAnim.DoScaledAnimationAsync("TackMiss" + meatType.ToString(), 0.5f);
             game.TackAnim.SetBool("tackMeated", true);
             game.BossAnim.DoScaledAnimationAsync("BossMiss", 0.5f);
 

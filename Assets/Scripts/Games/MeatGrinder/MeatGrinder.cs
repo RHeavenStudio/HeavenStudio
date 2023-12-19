@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MeatGrinder.instance.MeatToss(e.beat, e["bacon"]);
+                        MeatGrinder.instance.MeatToss(e.beat, e["bacon"], e["reaction"], e["reactionBeats"]);
                     },
                     inactiveFunction = delegate {
                         MeatGrinder.QueueMeatToss(eventCaller.currentEntity);
@@ -41,6 +41,10 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("bacon", false, "Bacon Ball", "Throw a bacon ball instead of the typical meat"),
+                        new Param("reaction", MeatGrinder.TackExpressions.None, "Tack Reaction", "If this is hit, what expression should tack do?", new List<Param.CollapseParam>() {
+                            new((x, y) => (int)x != (int)MeatGrinder.TackExpressions.None, new string[] { "reactionBeats" }),
+                        }),
+                        new Param("reactionBeats", new EntityTypes.Float(0.5f, 10, 1), "React After", "The amount of beats to wait until reacting"),
                     },
                 },
                 new GameAction("StartInterval", "Start Interval")
@@ -63,6 +67,13 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     priority = 2,
                     preFunctionLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("reaction", MeatGrinder.TackExpressions.None, "Tack Reaction", "If this is hit, what expression should tack do?", new List<Param.CollapseParam>() {
+                            new((x, y) => (int)x != (int)MeatGrinder.TackExpressions.None, new string[] { "reactionBeats" }),
+                        }),
+                        new Param("reactionBeats", new EntityTypes.Float(0.5f, 10, 1), "React After", "The amount of beats to wait until reacting"),
+                    },
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
@@ -80,12 +91,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MeatGrinder.instance.CartGuy(e.beat, e.length, e["spider"]);
+                        MeatGrinder.instance.CartGuy(e.beat, e.length, e["spider"], e["direction"], e["ease"]);
                     },
                     resizable = true,
                     defaultLength = 16,
                     parameters = new List<Param>() {
                         new Param("spider", false, "On Phone", "Put a spider in the box?"),
+                        new Param("direction", MeatGrinder.CartGuyDirection.Right, "Direction", "The direction the cart will be carted to."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "What ease will"),
                     }
                 },
             }
@@ -105,15 +118,16 @@ namespace HeavenStudio.Games
 
     public class MeatGrinder : Minigame
     {
-        static List<QueuedInterval> queuedIntervals = new();
-        struct QueuedInterval
+        private static List<QueuedInterval> queuedIntervals = new();
+
+        private struct QueuedInterval
         {
             public double beat;
             public float length;
             public bool autoPassTurn;
         }
 
-        static List<RiqEntity> queuedMeats = new();
+        private static List<RiqEntity> queuedMeats = new();
 
         [Header("Objects")]
         public GameObject MeatBase;
@@ -127,18 +141,27 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         private bool bossBop = true;
         public bool bossAnnoyed = false;
+        public Util.EasingFunction.Ease cartEase = Util.EasingFunction.Ease.Linear;
         public double cartBeat = double.MaxValue;
         public float cartLength = 0;
         public bool cartSpider = false;
-        const string sfxName = "meatGrinder/";
+        public string cartDir = "Left";
+        private const string sfxName = "meatGrinder/";
 
         public static MeatGrinder instance;
 
         public enum TackExpressions
         {
+            None,
             Content,
             // Smug,
             Wonder,
+        }
+
+        public enum CartGuyDirection
+        {
+            Right,
+            Left,
         }
 
         protected static bool IA_PadAny(out double dt)
@@ -175,7 +198,7 @@ namespace HeavenStudio.Games
 
             if (passedTurns.Count > 0)
             {
-                foreach (var pass in passedTurns)
+                foreach (double pass in passedTurns)
                 {
                     PassTurnStandalone(pass);
                 }
@@ -186,8 +209,11 @@ namespace HeavenStudio.Games
             {
                 // CartGuyParentAnim.gameObject.SetActive(true);
                 if (cartSpider) CartGuyAnim.Play("Phone", 0, 0);
-                float beatPos = Conductor.instance.GetPositionFromBeat(cartBeat, cartLength);
-                CartGuyParentAnim.DoNormalizedAnimation("Move", beatPos);
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(cartBeat, cartLength);
+                Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(cartEase);
+                float newPos = func(0f, 1f, normalizedBeat);
+                CartGuyParentAnim.DoNormalizedAnimation($"Move{cartDir}", newPos);
+                if (normalizedBeat >= 1) cartLength = 0;
             }
         }
 
@@ -212,7 +238,7 @@ namespace HeavenStudio.Games
             }
             if (queuedMeats.Count > 0)
             {
-                foreach (var meat in queuedMeats) MeatToss(meat.beat, meat["bacon"]);
+                foreach (var meat in queuedMeats) MeatToss(meat.beat, meat["bacon"], meat["reaction"], meat["reactionBeats"]);
                 queuedMeats.Clear();
             }
             OnPlay(beat);
@@ -223,7 +249,7 @@ namespace HeavenStudio.Games
             RiqEntity cg = GameManager.instance.Beatmap.Entities.Find(c => c.datamodel == "meatGrinder/cartGuy");
             if (cg != null)
             {
-                CartGuy(cg.beat, cg.length, cg["spider"]);
+                CartGuy(cg.beat, cg.length, cg["spider"], cg["direction"], cg["ease"]);
             }
         }
 
@@ -237,16 +263,16 @@ namespace HeavenStudio.Games
             bossBop = autoBop;
             if (doesBop)
             {
+                var actions = new List<BeatAction.Action>();
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance, new List<BeatAction.Action>() {
-                        new BeatAction.Action(beat + i, delegate {
-                            if (!BossAnim.IsPlayingAnimationNames("BossCall") && !BossAnim.IsPlayingAnimationNames("BossSignal")) {
-                                BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
-                            }
-                        })
-                    });
+                    actions.Add( new BeatAction.Action(beat + i, delegate {
+                        if (!BossAnim.IsPlayingAnimationNames("BossCall", "BossSignal")) {
+                            BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
+                        }
+                    }));
                 }
+                BeatAction.New(instance, actions);
             }
         }
 
@@ -257,11 +283,13 @@ namespace HeavenStudio.Games
             Debug.Log(anim);
         }
 
-        public void CartGuy(double beat, float length, bool spider)
+        public void CartGuy(double beat, float length, bool spider, int direction, int ease)
         {
             cartBeat = beat;
             cartLength = length;
             cartSpider = spider;
+            cartDir = direction == 0 ? "Right" : "Left";
+            cartEase = (Util.EasingFunction.Ease)ease;
         }
 
         public static void PreInterval(double beat, float length, bool autoPassTurn)
@@ -318,7 +346,7 @@ namespace HeavenStudio.Games
             queuedMeats.Add(entity);
         }
 
-        public void MeatToss(double beat, bool bacon)
+        public void MeatToss(double beat, bool bacon, int reaction, float reactionBeat)
         {
             SoundByte.PlayOneShotGame(sfxName + "toss");
 
@@ -326,6 +354,8 @@ namespace HeavenStudio.Games
             meat.gameObject.SetActive(true);
             meat.startBeat = beat;
             meat.meatType = bacon ? Meat.MeatType.BaconBall : Meat.MeatType.DarkMeat;
+            meat.reactionBeats = reactionBeat;
+            meat.reaction = reaction;
         }
 
         public static void PrePassTurn(double beat)
@@ -356,12 +386,16 @@ namespace HeavenStudio.Games
             for (int i = 0; i < allCallEvents.Count; i++)
             {
                 double relativeBeat = allCallEvents[i].beat - intervalBeat;
+                float reactionBeats = allCallEvents[i]["reactionBeats"];
+                int reaction = allCallEvents[i]["reaction"];
                 meatCalls.Add(new BeatAction.Action(beat + relativeBeat - 1, delegate
                 {
-                    Meat Meat = Instantiate(MeatBase, transform).GetComponent<Meat>();
-                    Meat.gameObject.SetActive(true);
-                    Meat.startBeat = beat + relativeBeat - 1;
-                    Meat.meatType = Meat.MeatType.LightMeat;
+                    Meat meat = Instantiate(MeatBase, transform).GetComponent<Meat>();
+                    meat.gameObject.SetActive(true);
+                    meat.startBeat = beat + relativeBeat - 1;
+                    meat.meatType = Meat.MeatType.LightMeat;
+                    meat.reactionBeats = reactionBeats;
+                    meat.reaction = reaction;
                 }));
             }
             BeatAction.New(this, meatCalls);
