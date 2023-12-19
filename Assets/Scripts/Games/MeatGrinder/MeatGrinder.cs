@@ -69,11 +69,23 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { MeatGrinder.PrePassTurn(eventCaller.currentEntity.beat); },
                     preFunctionLength = 1
                 },
-                new GameAction("expressions", "Tack Expressions")
+                new GameAction("tackExpressions", "Tack Expressions")
                 {
                     function = delegate { MeatGrinder.instance.TackExpression(eventCaller.currentEntity["expression"]); },
                     parameters = new List<Param>() {
                         new Param("expression", MeatGrinder.TackExpressions.Content, "Expression", "The expression Tack will display"),
+                    }
+                },
+                new GameAction("cartGuy", "Cart Guy")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        MeatGrinder.instance.CartGuy(e.beat, e.length, e["spider"]);
+                    },
+                    resizable = true,
+                    defaultLength = 8,
+                    parameters = new List<Param>() {
+                        new Param("spider", false, "Spider", "Put a spider in the box?"),
                     }
                 },
             }
@@ -109,10 +121,15 @@ namespace HeavenStudio.Games
         [Header("Animators")]
         public Animator BossAnim;
         public Animator TackAnim;
+        [SerializeField] Animator CartGuyParentAnim;
+        [SerializeField] Animator CartGuyAnim;
 
         [Header("Variables")]
         private bool bossBop = true;
         public bool bossAnnoyed = false;
+        public double cartBeat = double.MaxValue;
+        public float cartLength = 0;
+        public bool cartSpider = false;
         const string sfxName = "meatGrinder/";
 
         public static MeatGrinder instance;
@@ -162,6 +179,13 @@ namespace HeavenStudio.Games
                 }
                 passedTurns.Clear();
             }
+
+            if (cartLength != 0) {
+                // CartGuyParentAnim.gameObject.SetActive(true);
+                if (cartSpider) CartGuyAnim.Play("Phone", 0, 0);
+                float beatPos = Conductor.instance.GetPositionFromBeat(cartBeat, cartLength);
+                CartGuyParentAnim.DoNormalizedAnimation("Move", beatPos);
+            }
         }
 
         public override void OnBeatPulse(double beat)
@@ -169,6 +193,9 @@ namespace HeavenStudio.Games
             if (!BossAnim.IsPlayingAnimationNames("BossCall", "BossSignal") && BeatIsInBopRegion(beat))
             {
                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
+            }
+            if (!cartSpider && CartGuyParentAnim.gameObject.activeSelf) {
+                CartGuyAnim.DoScaledAnimationAsync("Bop", 0.5f);
             }
         }
 
@@ -183,6 +210,15 @@ namespace HeavenStudio.Games
             {
                 foreach (var meat in queuedMeats) MeatToss(meat.beat, meat["bacon"]);
                 queuedMeats.Clear();
+            }
+            OnPlay(beat);
+        }
+
+        public override void OnPlay(double beat)
+        {
+            RiqEntity cg = GameManager.instance.Beatmap.Entities.Find(c => c.datamodel == "meatGrinder/cartGuy");
+            if (cg != null) {
+                CartGuy(cg.beat, cg.length, cg["spider"]);
             }
         }
 
@@ -214,6 +250,13 @@ namespace HeavenStudio.Games
             string anim = ((TackExpressions)expression).ToString();
             TackAnim.DoScaledAnimationAsync("Tack" + anim, 0.5f);
             Debug.Log(anim);
+        }
+
+        public void CartGuy(double beat, float length, bool spider)
+        {
+            cartBeat = beat;
+            cartLength = length;
+            cartSpider = spider;
         }
 
         public static void PreInterval(double beat, float length, bool autoPassTurn)

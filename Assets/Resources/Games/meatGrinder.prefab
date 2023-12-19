@@ -1,5 +1,59 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &94407889856619213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7113627674537123824}
+  - component: {fileID: 8490229799144356405}
+  m_Layer: 0
+  m_Name: CartGuyParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7113627674537123824
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94407889856619213}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6108272155782336078}
+  m_Father: {fileID: 544937591884515791}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8490229799144356405
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94407889856619213}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c7183f353e3748244a41bf3306b3f07e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &132672732590890907
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,7 +65,7 @@ GameObject:
   - component: {fileID: 6108272155782336078}
   - component: {fileID: 2660979752167028621}
   m_Layer: 0
-  m_Name: Cart Guy
+  m_Name: CartGuy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,8 +85,8 @@ Transform:
   m_Children:
   - {fileID: 9137826182641448076}
   - {fileID: 6696015552443844136}
-  m_Father: {fileID: 544937591884515791}
-  m_RootOrder: 4
+  m_Father: {fileID: 7113627674537123824}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2660979752167028621
 Animator:
@@ -1218,7 +1272,7 @@ Transform:
   - {fileID: 4773680412020886884}
   - {fileID: 7318783844351071632}
   - {fileID: 4341155700984804648}
-  - {fileID: 6108272155782336078}
+  - {fileID: 7113627674537123824}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1239,7 +1293,12 @@ MonoBehaviour:
   MeatBase: {fileID: 151360738741628551}
   BossAnim: {fileID: 8611037719571569512}
   TackAnim: {fileID: 8591333713642157499}
+  CartGuyParentAnim: {fileID: 8490229799144356405}
+  CartGuyAnim: {fileID: 2660979752167028621}
   bossAnnoyed: 0
+  cartBeat: 1.7976931348623157e+308
+  cartLength: 0
+  cartSpider: 0
 --- !u!1 &3432557403964010436
 GameObject:
   m_ObjectHideFlags: 0
@@ -2328,7 +2387,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 57
-  m_Sprite: {fileID: -782445393, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
+  m_Sprite: {fileID: -874638833, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
