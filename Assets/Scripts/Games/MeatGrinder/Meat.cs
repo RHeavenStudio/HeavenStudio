@@ -15,6 +15,9 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         private string meatTypeStr;
         private bool isHit = false;
 
+        // const float meatStart = 0;
+        // const float meatEnd = 3.43f;
+
         [Header("Animators")]
         private Animator anim;
         private SpriteRenderer sr;
@@ -34,6 +37,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             game = MeatGrinder.instance;
             anim = GetComponent<Animator>();
             sr = GetComponent<SpriteRenderer>();
+            anim.writeDefaultValuesOnDisable = false;
         }
 
         private void Start()
@@ -53,13 +57,18 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             // }
             Debug.Log(sr.sprite.name);
             if (!isHit) {
-                float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 1.1);
-                anim.DoNormalizedAnimation("MeatThrown", normalizedBeat);
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 1);
+                float newX = Mathf.LerpUnclamped(-14f, 1.7f, normalizedBeat);
+                Debug.Log(newX);
+                transform.position = new Vector3(newX, -1.2f);
+
+                // anim.DoNormalizedAnimation("MeatThrown", normalizedBeat);
             }
         }
 
         private void Hit(PlayerActionEvent caller, float state)
         {
+            anim.enabled = true;
             isHit = true;
             game.TackAnim.SetBool("tackMeated", false);
             anim.DoScaledAnimationAsync(meatTypeStr + "Hit", 0.5f);
@@ -73,6 +82,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Miss(PlayerActionEvent caller)
         {
+            anim.enabled = true;
             game.bossAnnoyed = true;
             SoundByte.PlayOneShotGame("meatGrinder/miss");
 
