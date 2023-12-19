@@ -9,8 +9,16 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 {
     public class Meat : MonoBehaviour
     {
-        public double startBeat;
-        public MeatType meatType;
+        [SerializeField] Transform startPosition;
+        [SerializeField] Transform startPositionALt;
+        [SerializeField] Transform hitPosition;
+        [SerializeField] Transform missPosition;
+        [SerializeField] float meatFlyHeight = 1f;
+        [SerializeField] float meatFlyHeightAlt = 1f;
+        [SerializeField] bool showAltCurve;
+
+        [NonSerialized] public double startBeat;
+        [NonSerialized] public MeatType meatType;
 
         private string meatTypeStr;
         private bool isHit = false;
@@ -52,15 +60,41 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Update()
         {
+            Conductor cond = Conductor.instance;
             // if (Input.GetKey(KeyCode.G)) { // Insane.
             //     anim.enabled = true;
             // }
             Debug.Log(sr.sprite.name);
-            if (!isHit) {
-                float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 1);
-                float newX = Mathf.LerpUnclamped(-14f, 1.7f, normalizedBeat);
-                Debug.Log(newX);
-                transform.position = new Vector3(newX, -1.2f);
+            if (!isHit)
+            {
+                double startTime = cond.GetSongPosFromBeat(startBeat);
+                double hitTime = cond.GetSongPosFromBeat(startBeat + 1);
+                double missTime = cond.GetSongPosFromBeat(startBeat + 1) + MeatGrinder.ngLateTime;
+                double currentTime = cond.songPositionAsDouble;
+                Vector3 lastPos = transform.position;
+                Vector3 startPos = meatType == MeatType.LightMeat ? startPositionALt.position : startPosition.position;
+
+                float hitAlongMissRatio = Vector3.Dot((startPos - missPosition.position), (startPos - hitPosition.position));
+                hitAlongMissRatio /= Vector3.Dot((startPos - missPosition.position), (startPos - missPosition.position));
+                Vector3 hitOnMissPos = startPos + (missPosition.position - startPos) * hitAlongMissRatio;
+
+                float totalProg = (float)((currentTime - startTime) / (missTime - startTime));
+
+                if (currentTime >= hitTime)
+                {
+                    float prog = (float)((currentTime - hitTime) / (missTime - hitTime));
+                    transform.position = Vector3.Lerp(hitOnMissPos, missPosition.position, prog);
+                }
+                else
+                {
+                    float prog = (float)((currentTime - startTime) / (hitTime - startTime));
+                    transform.position = Vector3.Lerp(startPos, hitOnMissPos, prog);
+                }
+                float yMul = totalProg * 2f - 1f;
+                float yWeight = -(yMul * yMul) + 1f;
+                transform.position += Vector3.up * (meatType == MeatType.LightMeat ? meatFlyHeightAlt : meatFlyHeight) * yWeight;
+                // point towards the next position
+                transform.right = transform.position - lastPos;
 
                 // anim.DoNormalizedAnimation("MeatThrown", normalizedBeat);
             }
@@ -72,7 +106,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             isHit = true;
             game.TackAnim.SetBool("tackMeated", false);
             anim.DoScaledAnimationAsync(meatTypeStr + "Hit", 0.5f);
-            
+
             bool isBarely = state is >= 1f or <= -1f;
 
             game.bossAnnoyed = isBarely;
@@ -95,12 +129,72 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Nothing(PlayerActionEvent caller) { }
 
-        public void SetSprite() {
+        public void SetSprite()
+        {
             sr.sprite = meats[(int)meatType];
         }
 
-        public void DestroySelf() {
+        public void DestroySelf()
+        {
             Destroy(gameObject);
+        }
+
+        /// <summary>
+        /// Callback to draw gizmos that are pickable and always drawn.
+        /// </summary>
+        private void OnDrawGizmos()
+        {
+            // draw a line showing the direction from the miss position to the hit position
+            if (startPosition == null) return;
+            if (startPositionALt == null) return;
+
+            Vector3 startPos = showAltCurve ? startPositionALt.position : startPosition.position;
+            if (hitPosition != null && missPosition != null && startPos != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(startPos, hitPosition.position);
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(startPos, missPosition.position);
+                Gizmos.color = Color.green;
+                Vector3 direction = (hitPosition.position - missPosition.position).normalized;
+                Gizmos.DrawRay(missPosition.position, direction * 10);
+
+                // project start position -> hit position onto start position -> miss position
+                float hitAlongMissRatio = Vector3.Dot((startPos - missPosition.position), (startPos - hitPosition.position));
+                hitAlongMissRatio /= Vector3.Dot((startPos - missPosition.position), (startPos - missPosition.position));
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawRay(startPos, (missPosition.position - startPos) * hitAlongMissRatio);
+
+                DrawCurveGizmo(startPos, missPosition.position, Vector3.up * (showAltCurve ? meatFlyHeightAlt : meatFlyHeight), Color.yellow, 0.1f);
+            }
+        }
+
+        void DrawCurveGizmo(Vector3 start, Vector3 end, Vector3 height, Color colour, float interval)
+        {
+            Gizmos.color = colour;
+            Vector3 lastPos = start;
+            Vector3 pos;
+            float t, yMul, yWeight;
+            for (float i = 0; i < 1; i += interval)
+            {
+                t = i;
+                pos = Vector3.Lerp(start, end, t);
+
+                yMul = t * 2f - 1f;
+                yWeight = -(yMul * yMul) + 1f;
+
+                pos += height * yWeight;
+                Gizmos.DrawLine(lastPos, pos);
+                lastPos = pos;
+            }
+            t = 1f;
+            pos = end;
+
+            yMul = t * 2f - 1f;
+            yWeight = -(yMul * yMul) + 1f;
+
+            pos += height * yWeight;
+            Gizmos.DrawLine(lastPos, pos);
         }
     }
 }

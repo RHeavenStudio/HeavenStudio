@@ -83,9 +83,9 @@ namespace HeavenStudio.Games.Loaders
                         MeatGrinder.instance.CartGuy(e.beat, e.length, e["spider"]);
                     },
                     resizable = true,
-                    defaultLength = 8,
+                    defaultLength = 16,
                     parameters = new List<Param>() {
-                        new Param("spider", false, "Spider", "Put a spider in the box?"),
+                        new Param("spider", false, "On Phone", "Put a spider in the box?"),
                     }
                 },
             }
@@ -151,13 +151,14 @@ namespace HeavenStudio.Games
         }
 
         public static PlayerInput.InputAction InputAction_Press =
-            new("PcoMeatPress", new int[] { IAPressCat, IAFlickCat, IAPressCat },
+            new("PcoMeatPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
             IA_PadAny, IA_TouchBasicPress, IA_BatonBasicPress);
-        
+
         private void Awake()
         {
             instance = this;
             SetupBopRegion("meatGrinder", "bop", "bossBop");
+            MeatBase.SetActive(false);
         }
 
         private void Update()
@@ -174,13 +175,15 @@ namespace HeavenStudio.Games
 
             if (passedTurns.Count > 0)
             {
-                foreach (var pass in passedTurns) {
+                foreach (var pass in passedTurns)
+                {
                     PassTurnStandalone(pass);
                 }
                 passedTurns.Clear();
             }
 
-            if (cartLength != 0) {
+            if (cartLength != 0)
+            {
                 // CartGuyParentAnim.gameObject.SetActive(true);
                 if (cartSpider) CartGuyAnim.Play("Phone", 0, 0);
                 float beatPos = Conductor.instance.GetPositionFromBeat(cartBeat, cartLength);
@@ -194,7 +197,8 @@ namespace HeavenStudio.Games
             {
                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
             }
-            if (!cartSpider && CartGuyParentAnim.gameObject.activeSelf) {
+            if (!cartSpider && CartGuyParentAnim.gameObject.activeSelf)
+            {
                 CartGuyAnim.DoScaledAnimationAsync("Bop", 0.5f);
             }
         }
@@ -217,7 +221,8 @@ namespace HeavenStudio.Games
         public override void OnPlay(double beat)
         {
             RiqEntity cg = GameManager.instance.Beatmap.Entities.Find(c => c.datamodel == "meatGrinder/cartGuy");
-            if (cg != null) {
+            if (cg != null)
+            {
                 CartGuy(cg.beat, cg.length, cg["spider"]);
             }
         }
@@ -263,10 +268,14 @@ namespace HeavenStudio.Games
         {
             SoundByte.PlayOneShotGame(sfxName + "startSignal", beat - 1, forcePlay: true);
 
-            if (GameManager.instance.currentGame == "meatGrinder") {
+            if (GameManager.instance.currentGame == "meatGrinder")
+            {
                 instance.StartInterval(beat, length, beat, autoPassTurn);
-            } else {
-                queuedIntervals.Add(new QueuedInterval() {
+            }
+            else
+            {
+                queuedIntervals.Add(new QueuedInterval()
+                {
                     beat = beat,
                     length = length,
                     autoPassTurn = autoPassTurn
@@ -286,8 +295,10 @@ namespace HeavenStudio.Games
             {
                 double eventBeat = allCallEvents[i].beat;
 
-                if (eventBeat >= gameSwitchBeat) {
-                    actions.Add(new BeatAction.Action(eventBeat, delegate {
+                if (eventBeat >= gameSwitchBeat)
+                {
+                    actions.Add(new BeatAction.Action(eventBeat, delegate
+                    {
                         BossAnim.DoScaledAnimationAsync("BossCall", 0.5f);
                         SoundByte.PlayOneShotGame(sfxName + "signal");
                     }));
@@ -312,15 +323,19 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame(sfxName + "toss");
 
             Meat meat = Instantiate(MeatBase, transform).GetComponent<Meat>();
+            meat.gameObject.SetActive(true);
             meat.startBeat = beat;
             meat.meatType = bacon ? Meat.MeatType.BaconBall : Meat.MeatType.DarkMeat;
         }
 
         public static void PrePassTurn(double beat)
         {
-            if (GameManager.instance.currentGame == "meatGrinder") {
+            if (GameManager.instance.currentGame == "meatGrinder")
+            {
                 instance.PassTurnStandalone(beat);
-            } else {
+            }
+            else
+            {
                 passedTurns.Add(beat);
             }
         }
@@ -341,8 +356,10 @@ namespace HeavenStudio.Games
             for (int i = 0; i < allCallEvents.Count; i++)
             {
                 double relativeBeat = allCallEvents[i].beat - intervalBeat;
-                meatCalls.Add(new BeatAction.Action(beat + relativeBeat - 1, delegate {
+                meatCalls.Add(new BeatAction.Action(beat + relativeBeat - 1, delegate
+                {
                     Meat Meat = Instantiate(MeatBase, transform).GetComponent<Meat>();
+                    Meat.gameObject.SetActive(true);
                     Meat.startBeat = beat + relativeBeat - 1;
                     Meat.meatType = Meat.MeatType.LightMeat;
                 }));
