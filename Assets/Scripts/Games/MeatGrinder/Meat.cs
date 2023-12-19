@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
     public class Meat : MonoBehaviour
     {
         [SerializeField] Transform startPosition;
-        [SerializeField] Transform startPositionALt;
+        [SerializeField] Transform startPositionAlt;
         [SerializeField] Transform hitPosition;
         [SerializeField] Transform missPosition;
         [SerializeField] float meatFlyHeight = 1f;
@@ -72,7 +72,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
                 double missTime = cond.GetSongPosFromBeat(startBeat + 1) + MeatGrinder.ngLateTime;
                 double currentTime = cond.songPositionAsDouble;
                 Vector3 lastPos = transform.position;
-                Vector3 startPos = meatType == MeatType.LightMeat ? startPositionALt.position : startPosition.position;
+                Vector3 startPos = meatType == MeatType.LightMeat ? startPositionAlt.position : startPosition.position;
 
                 float hitAlongMissRatio = Vector3.Dot((startPos - missPosition.position), (startPos - hitPosition.position));
                 hitAlongMissRatio /= Vector3.Dot((startPos - missPosition.position), (startPos - missPosition.position));
@@ -146,9 +146,9 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         {
             // draw a line showing the direction from the miss position to the hit position
             if (startPosition == null) return;
-            if (startPositionALt == null) return;
+            if (startPositionAlt == null) return;
 
-            Vector3 startPos = showAltCurve ? startPositionALt.position : startPosition.position;
+            Vector3 startPos = showAltCurve ? startPositionAlt.position : startPosition.position;
             if (hitPosition != null && missPosition != null && startPos != null)
             {
                 Gizmos.color = Color.red;
