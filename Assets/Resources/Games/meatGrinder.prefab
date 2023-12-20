@@ -1335,9 +1335,11 @@ MonoBehaviour:
   CartGuyParentAnim: {fileID: 8490229799144356405}
   CartGuyAnim: {fileID: 2660979752167028621}
   bossAnnoyed: 0
+  cartEase: 0
   cartBeat: 1.7976931348623157e+308
   cartLength: 0
   cartSpider: 0
+  cartDir: Left
 --- !u!1 &2707801222513399487
 GameObject:
   m_ObjectHideFlags: 0
@@ -1871,7 +1873,7 @@ Transform:
   m_GameObject: {fileID: 4819901448718752500}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.47, y: -0.11, z: 0}
-  m_LocalScale: {x: 0.9490899, y: 0.9490899, z: 0.9490899}
+  m_LocalScale: {x: 1.043999, y: 0.9490899, z: 0.9490899}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1113279616887289042}
@@ -2489,7 +2491,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 57
-  m_Sprite: {fileID: -874638833, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
+  m_Sprite: {fileID: -782445393, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
