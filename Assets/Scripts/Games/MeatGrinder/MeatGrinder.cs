@@ -31,9 +31,11 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
+                        SoundByte.PlayOneShotGame("meatGrinder/toss", forcePlay: true);
                         MeatGrinder.instance.MeatToss(e.beat, e["bacon"], e["reaction"], e["reactionBeats"]);
                     },
                     inactiveFunction = delegate {
+                        SoundByte.PlayOneShotGame("meatGrinder/toss", forcePlay: true);
                         MeatGrinder.QueueMeatToss(eventCaller.currentEntity);
                     },
                     defaultLength = 2f,
@@ -64,6 +66,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("MeatCall", "Meat Call")
                 {
+                    inactiveFunction = delegate { SoundByte.PlayOneShotGame("meatGrinder/signal", forcePlay: true); },
                     defaultLength = 0.5f,
                     priority = 2,
                     preFunctionLength = 1f,
@@ -80,11 +83,15 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { MeatGrinder.PrePassTurn(eventCaller.currentEntity.beat); },
                     preFunctionLength = 1
                 },
-                new GameAction("tackExpressions", "Tack Expressions")
+                new GameAction("expressions", "Expressions")
                 {
-                    function = delegate { MeatGrinder.instance.TackExpression(eventCaller.currentEntity["expression"]); },
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        MeatGrinder.instance.DoExpressions(e["tackExpression"], e["bossExpression"]);
+                    },
                     parameters = new List<Param>() {
-                        new Param("expression", MeatGrinder.TackExpressions.Content, "Expression", "The expression Tack will display"),
+                        new Param("tackExpression", MeatGrinder.TackExpressions.Content, "Tack Expression", "The expression Tack will display"),
+                        new Param("bossExpression", MeatGrinder.BossExpressions.None, "Boss Expression", "The expression Boss will display"),
                     }
                 },
                 new GameAction("cartGuy", "Cart Guy")
@@ -144,7 +151,7 @@ namespace HeavenStudio.Games
         public Util.EasingFunction.Ease cartEase = Util.EasingFunction.Ease.Linear;
         public double cartBeat = double.MaxValue;
         public float cartLength = 0;
-        public bool cartSpider = false;
+        public bool cartPhone = false;
         public string cartDir = "Left";
         private const string sfxName = "meatGrinder/";
 
@@ -154,8 +161,15 @@ namespace HeavenStudio.Games
         {
             None,
             Content,
-            // Smug,
+            Smug,
             Wonder,
+        }
+
+        public enum BossExpressions
+        {
+            None,
+            Eyebrow,
+            Scared,
         }
 
         public enum CartGuyDirection
@@ -205,10 +219,12 @@ namespace HeavenStudio.Games
                 passedTurns.Clear();
             }
 
+            CartGuyParentAnim.gameObject.SetActive(cartLength != 0);
+
             if (cartLength != 0)
             {
                 // CartGuyParentAnim.gameObject.SetActive(true);
-                if (cartSpider) CartGuyAnim.Play("Phone", 0, 0);
+                if (cartPhone) CartGuyAnim.Play("Phone", 0, 0);
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(cartBeat, cartLength);
                 Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(cartEase);
                 float newPos = func(0f, 1f, normalizedBeat);
@@ -223,9 +239,9 @@ namespace HeavenStudio.Games
             {
                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
             }
-            if (!cartSpider && CartGuyParentAnim.gameObject.activeSelf)
+            if (CartGuyParentAnim.gameObject.activeSelf)
             {
-                CartGuyAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                CartGuyAnim.DoScaledAnimationAsync(cartPhone ? "PhoneBop" : "Bop", 0.5f);
             }
         }
 
@@ -266,7 +282,7 @@ namespace HeavenStudio.Games
                 var actions = new List<BeatAction.Action>();
                 for (int i = 0; i < length; i++)
                 {
-                    actions.Add( new BeatAction.Action(beat + i, delegate {
+                    actions.Add(new BeatAction.Action(beat + i, delegate {
                         if (!BossAnim.IsPlayingAnimationNames("BossCall", "BossSignal")) {
                             BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
                         }
@@ -276,18 +292,23 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void TackExpression(int expression)
+        public void DoExpressions(int tackExpression, int bossExpression = 0)
         {
-            string anim = ((TackExpressions)expression).ToString();
-            TackAnim.DoScaledAnimationAsync("Tack" + anim, 0.5f);
-            Debug.Log(anim);
+            if (tackExpression != (int)TackExpressions.None) {
+                string tackAnim = ((TackExpressions)tackExpression).ToString();
+                TackAnim.DoScaledAnimationAsync("Tack" + tackAnim, 0.5f);
+            }
+            if (bossExpression != (int)BossExpressions.None) {
+                string bossAnim = ((BossExpressions)bossExpression).ToString();
+                BossAnim.DoScaledAnimationAsync("Boss" + bossAnim, 0.5f);
+            }
         }
 
         public void CartGuy(double beat, float length, bool spider, int direction, int ease)
         {
             cartBeat = beat;
             cartLength = length;
-            cartSpider = spider;
+            cartPhone = spider;
             cartDir = direction == 0 ? "Right" : "Left";
             cartEase = (Util.EasingFunction.Ease)ease;
         }
@@ -348,8 +369,6 @@ namespace HeavenStudio.Games
 
         public void MeatToss(double beat, bool bacon, int reaction, float reactionBeat)
         {
-            SoundByte.PlayOneShotGame(sfxName + "toss");
-
             Meat meat = Instantiate(MeatBase, transform).GetComponent<Meat>();
             meat.gameObject.SetActive(true);
             meat.startBeat = beat;

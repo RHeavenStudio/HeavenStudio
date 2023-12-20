@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         [NonSerialized] public double startBeat;
         [NonSerialized] public MeatType meatType;
-        [NonSerialized] public double reactionBeats = -1;
+        [NonSerialized] public double reactionBeats;
         [NonSerialized] public int reaction;
 
         private bool isHit = false;
@@ -109,9 +109,9 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             SoundByte.PlayOneShotGame("meatGrinder/" + (isBarely ? "tink" : "meatHit"));
             game.TackAnim.DoScaledAnimationAsync("TackHit" + (isBarely ? "Barely" : "Success"), 0.5f);
 
-            if (reactionBeats > 0) {
+            if (reaction > 0) {
                 BeatAction.New(game, new List<BeatAction.Action>() {
-                    new(startBeat + reactionBeats + 1, delegate { game.TackExpression(reaction); })
+                    new(startBeat + reactionBeats + 1, delegate { game.DoExpressions(reaction); })
                 });
             }
         }
