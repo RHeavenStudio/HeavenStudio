@@ -718,6 +718,24 @@ namespace HeavenStudio
                 if (miniGame != null)
                     miniGame.OnPlay(beat);
                 onPlay?.Invoke(beat);
+
+                bool hasStartPerfect = false;
+                foreach (RiqEntity marker in Beatmap.SectionMarkers)
+                {
+                    if (marker["startPerfect"])
+                    {
+                        hasStartPerfect = true;
+                        break;
+                    }
+                }
+
+                if (OverlaysManager.OverlaysEnabled && !hasStartPerfect)
+                {
+                    if (PersistentDataManager.gameSettings.perfectChallengeType != PersistentDataManager.PerfectChallengeType.Off)
+                    {
+                        GoForAPerfect.instance.Enable(0);
+                    }
+                }
             }
             else
             {

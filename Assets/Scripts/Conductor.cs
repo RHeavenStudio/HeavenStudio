@@ -86,6 +86,7 @@ namespace HeavenStudio
         private float timelinePitch = 1f;
         private float minigamePitch = 1f;
         public float SongPitch { get => isPaused ? 0f : (timelinePitch * minigamePitch); }
+        public float TimelinePitch { get => timelinePitch; }
         private float musicScheduledPitch = 1f;
         private double musicScheduledTime = 0;
 
@@ -95,6 +96,7 @@ namespace HeavenStudio
 
         public void SetTimelinePitch(float pitch)
         {
+            if (isPaused) return;
             if (pitch != 0 && pitch * minigamePitch != SongPitch)
             {
                 Debug.Log("added pitch change " + pitch * minigamePitch + " at" + absTime);

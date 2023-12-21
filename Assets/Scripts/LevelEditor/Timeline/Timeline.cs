@@ -397,6 +397,8 @@ namespace HeavenStudio.Editor.Track
                 MouseInTimeline = RectTransformUtility.RectangleContainsScreenPoint(TimelineScroll.viewport,
                     Input.mousePosition, Editor.instance.EditorCamera);
             
+            PlaybackSpeed.interactable = !Conductor.instance.isPaused;
+            
             foreach (var rect in GameObject.FindGameObjectsWithTag("BlocksEditor"))
             {
                 if (!rect.activeInHierarchy) continue;
@@ -1113,15 +1115,30 @@ namespace HeavenStudio.Editor.Track
         const float SpeedSnap = 0.25f;
         public void SetPlaybackSpeed(float speed)
         {
-            float spd = Mathp.Round2Nearest(speed, SpeedSnap);
-            PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
-            Conductor.instance.SetTimelinePitch(spd);
-            PlaybackSpeed.value = spd;
+            if (Conductor.instance.isPaused)
+            {
+                float spd = Conductor.instance.TimelinePitch;
+                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+                PlaybackSpeed.value = spd;
+            }
+            else
+            {
+                float spd = Mathp.Round2Nearest(speed, SpeedSnap);
+                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+                Conductor.instance.SetTimelinePitch(spd);
+                PlaybackSpeed.value = spd;
+            }
         }
 
         public void ResetPlaybackSpeed()
         {
-            if (Input.GetMouseButton(1))
+            if (Conductor.instance.isPaused)
+            {
+                float spd = Conductor.instance.TimelinePitch;
+                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+                PlaybackSpeed.value = spd;
+            }
+            else if (Input.GetMouseButton(1))
             {
                 PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: 1x";
                 PlaybackSpeed.value = 1f;
