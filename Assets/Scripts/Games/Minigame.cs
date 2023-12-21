@@ -12,8 +12,16 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double ngEarlyTime = 0.085f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.085f;
+        public static double ngEarlyTimeBase = 0.085f, justEarlyTimeBase = 0.06f, aceEarlyTimeBase = 0.01f, aceLateTimeBase = 0.01f, justLateTimeBase = 0.06f, ngLateTimeBase = 0.085f;
         public static double rankHiThreshold = 0.8, rankOkThreshold = 0.6;
+
+        public static double ngEarlyTime => ngEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double justEarlyTime => justEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double aceEarlyTime => aceEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double aceLateTime => aceLateTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double justLateTime => justLateTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double ngLateTime => ngLateTimeBase * Conductor.instance?.SongPitch ?? 1;
+
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
         #region Premade Input Actions
