@@ -33,7 +33,11 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftControl))
                         newVolume *= 0.01f;
 
-                    SetVolume(chartEntity["volume"] + newVolume);
+                    if (newVolume != 0)
+                    {
+                        SetVolume(chartEntity["volume"] + newVolume);
+                        volumeDialog.RefreshDialog();
+                    }
                 }
             }
             UpdateVolume();

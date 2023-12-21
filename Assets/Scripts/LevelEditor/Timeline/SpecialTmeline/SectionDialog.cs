@@ -11,6 +11,7 @@ using TMPro;
 
 public class SectionDialog : Dialog
 {
+    const float MIN_WEIGHT = 0, MAX_WEIGHT = 10;
     SectionTimelineObj sectionObj;
     [SerializeField] TMP_InputField sectionName;
     [SerializeField] Toggle challengeEnable;
@@ -37,8 +38,8 @@ public class SectionDialog : Dialog
             ResetAllDialogs();
             dialog.SetActive(true);
 
-            markerWeight.maxValue = 8;
-            markerWeight.minValue = 0;
+            markerWeight.maxValue = MAX_WEIGHT;
+            markerWeight.minValue = MIN_WEIGHT;
             markerWeight.wholeNumbers = true;
 
             if (!initHooks)
@@ -65,8 +66,8 @@ public class SectionDialog : Dialog
         challengeEnable.isOn = sectionObj.chartEntity["startPerfect"];
         markerWeight.value = sectionObj.chartEntity["weight"];
 
-        markerWeight.maxValue = 8;
-        markerWeight.minValue = 0;
+        markerWeight.maxValue = MAX_WEIGHT;
+        markerWeight.minValue = MIN_WEIGHT;
         markerWeight.wholeNumbers = true;
 
         UpdateCatButtonState();
@@ -109,8 +110,9 @@ public class SectionDialog : Dialog
     public void SetSectionWeightManual()
     {
         if (sectionObj == null) return;
-        sectionObj.chartEntity["weight"] = (float) Math.Round(Convert.ToSingle(markerWeightManual.text), 2);
+        sectionObj.chartEntity["weight"] = Mathf.Round((float)Math.Clamp(Convert.ToSingle(markerWeightManual.text), MIN_WEIGHT, MAX_WEIGHT));
         markerWeight.value = sectionObj.chartEntity["weight"];
+        markerWeightManual.text = ((float) sectionObj.chartEntity["weight"]).ToString("G");
     }
 
     void UpdateCatButtonState()

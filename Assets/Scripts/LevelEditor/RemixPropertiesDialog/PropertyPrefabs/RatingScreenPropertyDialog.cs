@@ -116,7 +116,7 @@ namespace HeavenStudio.Editor
                 _ => "ok",
             };
 
-            if (usedCategories.Count == 1)
+            if (usedCategories.Count == 1 || currentEditingRank == Ranks.Ok)
             {
                 diag.chart["resultcommon_" + propSuffix] = messageInput.text;
             }

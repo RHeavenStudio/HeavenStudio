@@ -49,6 +49,7 @@ namespace HeavenStudio
         double absTime, absTimeAdjust;
         double dspSizeSeconds;
         double dspMargin = 128 / 44100.0;
+        bool deferTimeKeeping = false;
 
         // the dspTime we started at
         private double dspStart;
@@ -186,7 +187,7 @@ namespace HeavenStudio
 
             startPos = GetSongPosFromBeat(beat);
             firstBeatOffset = offset;
-            time = startPos;
+            time = startPos - (3 * dspSizeSeconds);
 
             if (musicSource.clip != null && startPos < musicSource.clip.length - offset)
             {
@@ -199,11 +200,12 @@ namespace HeavenStudio
                 }
                 else
                 {
-                    musicScheduledTime = dspTime + (dspMargin * 2);
-                    dspStart = dspTime + (dspMargin * 2);
+                    musicScheduledTime = dspTime + (3 * dspSizeSeconds);
+                    dspStart = dspTime + (3 * dspSizeSeconds);
                 }
                 musicScheduledPitch = SongPitch;
                 musicSource.PlayScheduled(musicScheduledTime);
+                Debug.Log($"playback scheduled for dsptime {dspStart}");
             }
             if (musicSource.clip == null)
             {
@@ -215,10 +217,25 @@ namespace HeavenStudio
             _metronomeTally = 0;
 
             startTime = DateTime.Now;
-            absTimeAdjust = 0;
+            absTimeAdjust = -(3 * dspSizeSeconds);
+            deferTimeKeeping = (musicSource.clip != null);
 
             isPlaying = true;
             isPaused = false;
+        }
+
+        void OnAudioFilterRead(float[] data, int channels)
+        {
+            // don't actually do anything with the data
+            // wait until we get a dsp update before starting to keep time
+            if (deferTimeKeeping && AudioSettings.dspTime >= dspStart)
+            {
+                Debug.Log($"dsptime: {AudioSettings.dspTime}, deferred timekeeping for {DateTime.Now - startTime} seconds");
+                deferTimeKeeping = false;
+                startTime = DateTime.Now;
+                dspStart = AudioSettings.dspTime;
+                absTimeAdjust = 0;
+            }
         }
 
         public void Pause()
@@ -226,6 +243,7 @@ namespace HeavenStudio
             if (!isPlaying) return;
             isPlaying = false;
             isPaused = true;
+            deferTimeKeeping = false;
 
             musicSource.Stop();
             Util.SoundByte.PauseOneShots();
@@ -246,6 +264,7 @@ namespace HeavenStudio
 
             isPlaying = false;
             isPaused = false;
+            deferTimeKeeping = false;
 
             musicSource.Stop();
         }

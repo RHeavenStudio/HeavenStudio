@@ -35,7 +35,7 @@ public class VolumeDialog : Dialog
         }
     }
 
-    void Update()
+    public void RefreshDialog()
     {
         if (volumeObj != null)
         {
@@ -69,8 +69,9 @@ public class VolumeDialog : Dialog
     {
         if (volumeObj != null)
         {
-            volumeObj.SetVolume(volumeSlider.value);
-            volumeInput.text = volumeSlider.value.ToString("F");
+            volumeObj.SetVolume(System.MathF.Round(volumeSlider.value, 2));
+            volumeInput.text = volumeObj.chartEntity["volume"].ToString("F");
+            volumeSlider.value = volumeObj.chartEntity["volume"];
         }
     }
 
@@ -80,7 +81,8 @@ public class VolumeDialog : Dialog
         {
             float volume = float.Parse(volumeInput.text);
             volumeObj.SetVolume(volume);
-            volumeSlider.value = volume;
+            volumeInput.text = volumeObj.chartEntity["volume"].ToString("F");
+            volumeSlider.value = volumeObj.chartEntity["volume"];
         }
     }
 }

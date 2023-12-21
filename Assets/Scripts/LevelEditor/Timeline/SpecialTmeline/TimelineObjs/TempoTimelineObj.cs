@@ -33,7 +33,12 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftControl))
                         newTempo *= 0.01f;
 
-                    SetTempo(chartEntity["tempo"] + newTempo);
+                    if (newTempo != 0)
+                    {
+                        SetTempo(chartEntity["tempo"] + newTempo);
+                        tempoDialog.RefreshDialog();
+                    }
+
                 }
             }
             UpdateTempo();

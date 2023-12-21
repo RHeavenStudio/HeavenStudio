@@ -31,7 +31,7 @@ public class TempoDialog : Dialog
         }
     }
 
-    void Update()
+    public void RefreshDialog()
     {
         if (tempoObj != null)
         {
@@ -65,6 +65,7 @@ public class TempoDialog : Dialog
         {
             float tempo = float.Parse(tempoInput.text);
             tempoObj.SetTempo(tempo);
+            tempoInput.text = tempoObj.chartEntity["tempo"].ToString("F");
         }
     }
 
