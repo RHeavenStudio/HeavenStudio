@@ -34,6 +34,8 @@ namespace HeavenStudio.Games
         [Header("Components")]
         [SerializeField] private Transform _cameraTransform;
         [SerializeField] private Transform _scrollTransform;
+        [SerializeField] private TCJumper _jumper;
+        [SerializeField] private TCTotemManager _totemManager;
 
         [Header("Properties")]
         [SerializeField] private float _scrollSpeedX = 3.838f;
@@ -41,6 +43,7 @@ namespace HeavenStudio.Games
 
         private double _startBeat = double.MaxValue;
         private double _endBeat = double.MaxValue;
+        public double EndBeat => _endBeat;
 
         public static TotemClimb instance;
 
@@ -76,11 +79,18 @@ namespace HeavenStudio.Games
             if (allStarts.Count == 0) return;
 
             _startBeat = allStarts[0].beat;
+            _totemManager.InitBeats(_startBeat);
+
+            BeatAction.New(this, new()
+            {
+                new(_startBeat - 1, delegate { _jumper.StartJumping(_startBeat - 1); })
+            });
 
             var allStops = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "stop" }).FindAll(x => x.beat > _startBeat && x.beat < nextGameSwitchBeat);
             if (allStops.Count == 0) return;
 
             _endBeat = allStops[0].beat;
+            _totemManager.InitBeats(_startBeat);
         }
 
         private void Update()
