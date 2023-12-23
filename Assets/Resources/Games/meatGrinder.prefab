@@ -1097,7 +1097,7 @@ GameObject:
   - component: {fileID: 1827108650296241172}
   - component: {fileID: 8880821737167752546}
   m_Layer: 0
-  m_Name: BigGear (1)
+  m_Name: Big
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1334,12 +1334,13 @@ MonoBehaviour:
   TackAnim: {fileID: 8591333713642157499}
   CartGuyParentAnim: {fileID: 8490229799144356405}
   CartGuyAnim: {fileID: 2660979752167028621}
+  GearAnims:
+  - {fileID: 2010620652897398612}
+  - {fileID: 8277077324340739918}
+  - {fileID: 8880821737167752546}
+  - {fileID: 8634187518571851645}
+  - {fileID: 1267443179515578174}
   bossAnnoyed: 0
-  cartEase: 0
-  cartBeat: 1.7976931348623157e+308
-  cartLength: 0
-  cartPhone: 0
-  cartDir: Left
 --- !u!1 &2707801222513399487
 GameObject:
   m_ObjectHideFlags: 0
@@ -1551,7 +1552,7 @@ GameObject:
   - component: {fileID: 5740312479299997546}
   - component: {fileID: 1267443179515578174}
   m_Layer: 0
-  m_Name: BigGear (2)
+  m_Name: Big
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1943,7 +1944,7 @@ GameObject:
   - component: {fileID: 4781199580935872767}
   - component: {fileID: 8277077324340739918}
   m_Layer: 0
-  m_Name: SmallGear
+  m_Name: Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2026,7 +2027,7 @@ Animator:
   m_GameObject: {fileID: 5027933940018834288}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b87b8184496fe9142a8c9a18e55d8080, type: 2}
+  m_Controller: {fileID: 9100000, guid: d43b9052abbcc984bafbb1cc011790fa, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2514,7 +2515,7 @@ GameObject:
   - component: {fileID: 9177278018785002683}
   - component: {fileID: 2010620652897398612}
   m_Layer: 0
-  m_Name: BigGear
+  m_Name: Big
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3566,7 +3567,7 @@ GameObject:
   - component: {fileID: 18350484223611572}
   - component: {fileID: 8634187518571851645}
   m_Layer: 0
-  m_Name: SmallGear (1)
+  m_Name: Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3649,7 +3650,7 @@ Animator:
   m_GameObject: {fileID: 9071785972026254626}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b87b8184496fe9142a8c9a18e55d8080, type: 2}
+  m_Controller: {fileID: 9100000, guid: d43b9052abbcc984bafbb1cc011790fa, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

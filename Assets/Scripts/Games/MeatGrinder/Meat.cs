@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_MeatGrinder
 {
@@ -19,8 +18,8 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         [NonSerialized] public double startBeat;
         [NonSerialized] public MeatType meatType;
-        [NonSerialized] public double reactionBeats;
-        [NonSerialized] public int reaction;
+        [NonSerialized] public MeatGrinder.Reaction tackReaction;
+        [NonSerialized] public MeatGrinder.Reaction bossReaction;
 
         private bool isHit = false;
 
@@ -31,6 +30,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         private Animator anim;
         private SpriteRenderer sr;
         [SerializeField] private Sprite[] meats;
+
 
         public enum MeatType
         {
@@ -52,8 +52,6 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         private void Start()
         {
             sr.sprite = meats[(int)meatType];
-            Debug.Log(startBeat);
-            Debug.Log(reactionBeats);
 
             game.ScheduleInput(startBeat, 1, MeatGrinder.InputAction_Press, Hit, Miss, Nothing);
         }
@@ -109,9 +107,18 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             SoundByte.PlayOneShotGame("meatGrinder/" + (isBarely ? "tink" : "meatHit"));
             game.TackAnim.DoScaledAnimationAsync("TackHit" + (isBarely ? "Barely" : "Success"), 0.5f);
 
-            if (reaction > 0) {
+            // if (meatType == MeatType.BaconBall) {
+            //     game.DoExpressions(0, (int)MeatGrinder.BossExpressions.Scared);
+            // }
+
+            if (tackReaction.expression > 0) {
                 BeatAction.New(game, new List<BeatAction.Action>() {
-                    new(startBeat + reactionBeats + 1, delegate { game.DoExpressions(reaction); })
+                    new(startBeat + tackReaction.beat + 1, delegate { game.DoExpressions(tackReaction.expression); }),
+                });
+            }
+            if (bossReaction.expression > 0) {
+                BeatAction.New(game, new List<BeatAction.Action>() {
+                    new(startBeat + bossReaction.beat + 1, delegate { game.DoExpressions(0, bossReaction.expression); }),
                 });
             }
         }

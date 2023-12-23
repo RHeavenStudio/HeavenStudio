@@ -580,6 +580,16 @@ namespace HeavenStudio
         private void LateUpdate()
         {
             OverlaysManager.instance.TogleOverlaysVisibility(Editor.Editor.instance == null || Editor.Editor.instance.fullscreen || ((PersistentDataManager.gameSettings.overlaysInEditor) && (!Editor.Editor.instance.fullscreen)) || HeavenStudio.Editor.GameSettings.InPreview);
+            
+            if (!Conductor.instance.isPlaying)
+                return;
+            
+            if (Conductor.instance.songPositionInBeatsAsDouble >= Math.Ceiling(_playStartBeat) + _latePulseTally)
+            {
+                if (_currentMinigame != null) _currentMinigame.OnLateBeatPulse(Math.Ceiling(_playStartBeat) + _latePulseTally);
+                onBeatPulse?.Invoke(Math.Ceiling(_playStartBeat) + _latePulseTally);
+                _latePulseTally++;
+            }
         }
 
         public void ToggleInputs(bool inputs)
@@ -591,6 +601,7 @@ namespace HeavenStudio
 
         private double _playStartBeat = 0;
         private int _pulseTally = 0;
+        private int _latePulseTally = 0;
 
         public void Play(double beat, float delay = 0f)
         {
@@ -598,6 +609,7 @@ namespace HeavenStudio
             Debug.Log("Playing at " + beat);
             _playStartBeat = beat;
             _pulseTally = 0;
+            _latePulseTally = 0;
             canInput = true;
             if (!paused)
             {
