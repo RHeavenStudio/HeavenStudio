@@ -32,6 +32,8 @@ namespace HeavenStudio.Editor
         [SerializeField] Sprite[] catSprites;
 
         [SerializeField] Sprite[] rankSprites;
+        
+        [SerializeField] Sprite epilogueNg, epilogueOk, epilogueHi;
 
         Sprite[] rankImages;
 
@@ -92,7 +94,19 @@ namespace HeavenStudio.Editor
         void UpdateInfo()
         {
             headerInput.text = (string)diag.chart["resultcaption"];
-            imagePreview.sprite = rankImages[(int)currentEditingRank];
+            if (rankImages[(int)currentEditingRank] != null)
+            {
+                imagePreview.sprite = rankImages[(int)currentEditingRank];
+            }
+            else 
+            {
+                imagePreview.sprite = currentEditingRank switch
+                {
+                    Ranks.Ng => epilogueNg,
+                    Ranks.Hi => epilogueHi,
+                    _ => epilogueOk,
+                };
+            }
             imagePreview.preserveAspect = true;
 
             rankPreview.sprite = rankSprites[(int)currentEditingRank];
@@ -272,7 +286,19 @@ namespace HeavenStudio.Editor
                 }
             }
 
-            imagePreview.sprite = rankImages[(int)currentEditingRank];
+            if (rankImages[(int)currentEditingRank] != null)
+            {
+                imagePreview.sprite = rankImages[(int)currentEditingRank];
+            }
+            else 
+            {
+                imagePreview.sprite = currentEditingRank switch
+                {
+                    Ranks.Ng => epilogueNg,
+                    Ranks.Hi => epilogueHi,
+                    _ => epilogueOk,
+                };
+            }
             imagePreview.preserveAspect = true;
         }
 
@@ -285,7 +311,13 @@ namespace HeavenStudio.Editor
             {
                 Debug.Log(www.error);
                 rankImages[(int)rank] = null;
-                imagePreview.sprite = null;
+                imagePreview.sprite = rank switch
+                {
+                    Ranks.Ng => epilogueNg,
+                    Ranks.Hi => epilogueHi,
+                    _ => epilogueOk,
+                };
+                imagePreview.preserveAspect = true;
             }
             else
             {

@@ -100,6 +100,7 @@ namespace HeavenStudio
         [SerializeField] TMP_Text epilogueMessage;
         [SerializeField] Image epilogueImage;
         [SerializeField] AspectRatioFitter epilogueFitter;
+        [SerializeField] Sprite epilogueNg, epilogueOk, epilogueHi;
 
         [SerializeField] GameObject bg;
         [SerializeField] GameObject rankLogo;
@@ -306,7 +307,12 @@ namespace HeavenStudio
                 catch (System.IO.DirectoryNotFoundException)
                 {
                     Debug.Log("image resource doesn't exist, using blank placeholder");
-                    epilogueImage.sprite = null;
+                    epilogueImage.sprite = rank switch
+                    {
+                        Rank.Ok => epilogueOk,
+                        Rank.Hi => epilogueHi,
+                        _ => epilogueNg
+                    };
                     epilogueFitter.aspectRatio = 16f / 9f;
                 }
             }
@@ -385,7 +391,12 @@ namespace HeavenStudio
             if (www.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.Log(www.error);
-                epilogueImage.sprite = null;
+                epilogueImage.sprite = rank switch
+                {
+                    Rank.Ok => epilogueOk,
+                    Rank.Hi => epilogueHi,
+                    _ => epilogueNg
+                };
                 epilogueFitter.aspectRatio = 16f / 9f;
             }
             else
