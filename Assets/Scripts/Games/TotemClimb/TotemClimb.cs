@@ -100,6 +100,11 @@ namespace HeavenStudio.Games
             ScrollUpdate(cond);
         }
 
+        public void BopTotemAtBeat(double beat)
+        {
+            _totemManager.BopTotemAtBeat(beat);
+        }
+
         private void ScrollUpdate(Conductor cond)
         {
             if (_startBeat == double.MaxValue) return;

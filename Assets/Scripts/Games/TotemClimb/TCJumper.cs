@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         {
             StartCoroutine(JumpCo(beat));
             if (beat + 1 >= _game.EndBeat) return;
-            _game.ScheduleInput(beat, 1, Minigame.InputAction_BasicPress, Just, Empty, Empty);
+            _game.ScheduleInput(beat, 1, Minigame.InputAction_BasicPress, Just, Miss, Empty);
         }
 
 
@@ -72,11 +72,18 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private void Just(PlayerActionEvent caller, float state)
         {
             StartJumping(caller.startBeat + caller.timer);
+            _game.BopTotemAtBeat(caller.startBeat + caller.timer);
             if (state >= 1f || state <= -1f)
             {
                 return;
             }
             SoundByte.PlayOneShotGame("totemClimb/totemland");
+        }
+
+        private void Miss(PlayerActionEvent caller)
+        {
+            StartJumping(caller.startBeat + caller.timer);
+            _game.BopTotemAtBeat(caller.startBeat + caller.timer);
         }
 
         private void Empty(PlayerActionEvent caller) { }

@@ -1,3 +1,4 @@
+using HeavenStudio.Util;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,10 +24,12 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         {
             public double beat;
             public Transform transform;
+            public Animator anim;
 
-            public Totem(Transform mTransform, double mBeat = 0)
+            public Totem(Transform mTransform, Animator mAnim, double mBeat = 0)
             {
                 transform = mTransform;
+                anim = mAnim;
                 beat = mBeat;
             }
         }
@@ -38,13 +41,13 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _totemStartX = _totemTransform.localPosition.x;
             _totemStartY = _totemTransform.localPosition.y;
 
-            _totems.Add(new(_totemTransform));
+            _totems.Add(new(_totemTransform, _totemTransform.GetComponent<Animator>()));
 
             for (int i = 1; i < _totemAmount; i++)
             {
                 Transform spawnedTotem = Instantiate(_totemTransform, transform);
                 spawnedTotem.transform.localPosition = new Vector3(_totemStartX + (_xDistance * i), _totemStartY + (_yDistance * i));
-                _totems.Add(new(spawnedTotem));
+                _totems.Add(new(spawnedTotem, spawnedTotem.GetComponent<Animator>()));
             }
         }
 
@@ -55,6 +58,14 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 _totems[i].beat = startBeat + i;
                 if (_totems[i].beat - 1 >= _game.EndBeat) _totems[i].transform.gameObject.SetActive(false);
             }
+        }
+
+        public void BopTotemAtBeat(double beat)
+        {
+            var t = _totems.Find(x => x.beat == beat);
+            if (t == null) return;
+
+            t.anim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
         private void Update()
