@@ -12,7 +12,7 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double ngEarlyTimeBase = 0.1, justEarlyTimeBase = 0.045, aceEarlyTimeBase = 0.008, aceLateTimeBase = 0.008, justLateTimeBase = 0.045, ngLateTimeBase = 0.1;
+        public static double ngEarlyTimeBase = 0.1, justEarlyTimeBase = 0.05, aceEarlyTimeBase = 0.0075, aceLateTimeBase = 0.0075, justLateTimeBase = 0.05, ngLateTimeBase = 0.1;
         public static double rankHiThreshold = 0.8, rankOkThreshold = 0.6;
 
         public static double ngEarlyTime => ngEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
