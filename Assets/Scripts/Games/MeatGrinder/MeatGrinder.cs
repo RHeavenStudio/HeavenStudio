@@ -114,23 +114,19 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MeatGrinder.instance.Gears(e.beat, e.length, e["ease"], e["type"], e["speed"]);
+                        MeatGrinder.instance.ChangeGears(e.beat, e.length, e["ease"], e["speed"]);
                     },
                     resizable = true,
                     defaultLength = 1,
                     parameters = new List<Param>() {
-                        new Param("type", MeatGrinder.GearMode.Constant, "Ease", "What type of movement will the gears use?", new List<Param.CollapseParam>() {
-                            new((x, y) => (int)x != (int)MeatGrinder.GearMode.None, new string[] { "ease" }),
-                        }),
                         new Param("speed", new EntityTypes.Float(0, 10, 1), "Speed", "How fast will the gears go?"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "What ease will the gears speed up with?"),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "What ease will the gears speed up/slow down with?"),
                     }
                 },
-            }
-            // ,
-            // new List<string>() { "pco", "normal", "repeat" },
-            // "pcomeat", "en",
-            // new List<string>() { }
+            },
+            new List<string>() { "pco", "normal", "repeat" },
+            "pcomeat", "en",
+            new List<string>() { }
             );
         }
     }
@@ -169,7 +165,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private static List<RiqEntity> queuedMeats = new();
+        // private static List<RiqEntity> queuedMeats = new();
 
         [Header("Objects")]
         public GameObject MeatBase;
@@ -179,7 +175,7 @@ namespace HeavenStudio.Games
         public Animator TackAnim;
         [SerializeField] Animator CartGuyParentAnim;
         [SerializeField] Animator CartGuyAnim;
-        [SerializeField] Animator[] GearAnims;
+        [SerializeField] Transform[] Gears;
 
         [Header("Variables")]
         private bool bossBop = true;
@@ -188,9 +184,7 @@ namespace HeavenStudio.Games
         private bool cartPhone = false;
         private string cartDir = "Left";
         private UpdateEasing gearEase;
-        private GearMode gearType = GearMode.Constant;
         private float oldGearSpeed = 1;
-        private float currentGearSpeed = 1;
         private float newGearSpeed = 1;
         private const string sfxName = "meatGrinder/";
 
@@ -217,13 +211,6 @@ namespace HeavenStudio.Games
             Left,
         }
 
-        public enum GearMode
-        {
-            None,
-            Constant,
-            Beat,
-        }
-
         protected static bool IA_PadAny(out double dt)
         {
             return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
@@ -246,6 +233,7 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
+            var cond = Conductor.instance;
             if (PlayerInput.GetIsAction(InputAction_Press) && !IsExpectingInputNow(InputAction_Press))
             {
                 TackAnim.DoScaledAnimationAsync("TackEmptyHit", 0.5f);
@@ -265,20 +253,24 @@ namespace HeavenStudio.Games
                 passedTurns.Clear();
             }
 
+            var currentGearSpeed = newGearSpeed;
             if (gearEase.length != 0)
             {
-                float normalizedBeat = Conductor.instance.GetPositionFromBeat(gearEase.beat, gearEase.length);
+                float normalizedBeat = cond.GetPositionFromBeat(gearEase.beat, gearEase.length);
                 Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(gearEase.ease);
                 currentGearSpeed = func(oldGearSpeed, newGearSpeed, normalizedBeat);
-                Debug.Log(currentGearSpeed);
                 if (normalizedBeat >= 1) cartEase.length = 0;
+            }
+            foreach (Transform gear in Gears)
+            {
+                double newZ = Time.deltaTime * currentGearSpeed * 50 * (gear.name == "Big" ? -1 : 1) / cond.pitchedSecPerBeat;
+                gear.Rotate(new Vector3(0, 0, (float)newZ));
             }
 
             if (cartEase.length != 0)
             {
-                // CartGuyParentAnim.gameObject.SetActive(true);
                 if (cartPhone) CartGuyAnim.Play("Phone", 0, 0);
-                float normalizedBeat = Conductor.instance.GetPositionFromBeat(cartEase.beat, cartEase.length);
+                float normalizedBeat = cond.GetPositionFromBeat(cartEase.beat, cartEase.length);
                 Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(cartEase.ease);
                 float newPos = func(0f, 1f, normalizedBeat);
                 CartGuyParentAnim.DoNormalizedAnimation($"Move{cartDir}", newPos);
@@ -286,10 +278,6 @@ namespace HeavenStudio.Games
             }
 
             CartGuyParentAnim.gameObject.SetActive(cartEase.length != 0);
-
-            if (gearType != GearMode.Beat) {
-                UpdateGears();
-            }
         }
 
         public override void OnLateBeatPulse(double beat)
@@ -303,22 +291,6 @@ namespace HeavenStudio.Games
                 Debug.Log(cartPhone ? "PhoneBop" : "Bop");
                 CartGuyAnim.DoScaledAnimationAsync(cartPhone ? "PhoneBop" : "Bop", 0.5f);
             }
-
-            if (gearType == GearMode.Beat) {
-                UpdateGears();
-            }
-        }
-
-        private void UpdateGears()
-        {
-            Action<Animator> action = gearType switch {
-                GearMode.Constant => gear => gear.DoNormalizedAnimation(gear.gameObject.name == "Small" ? "SpinForeverLeft" : "SpinForeverRight", (Conductor.instance.songPositionInBeats / (10 * newGearSpeed)) % 1),
-                GearMode.Beat =>     gear => gear.DoScaledAnimationAsync(gear.gameObject.name == "Small" ? "SpinOnceLeft" : "SpinOnceRight", 0.5f),
-                _ =>                 gear => gear.Play("Nothing", 0, 0), // GearMode.None
-            };
-            foreach (Animator gear in GearAnims) {
-                action.Invoke(gear);
-            }
         }
 
         public override void OnGameSwitch(double beat)
@@ -328,20 +300,28 @@ namespace HeavenStudio.Games
                 foreach (var interval in queuedIntervals) StartInterval(interval.beat, interval.length, beat, interval.autoPassTurn);
                 queuedIntervals.Clear();
             }
-            if (queuedMeats.Count > 0)
-            {
-                foreach (var meat in queuedMeats) MeatToss(meat.beat, meat["bacon"], meat["tackReaction"], meat["tackReactionBeats"], meat["bossReaction"], meat["bossReactionBeats"]);
-                queuedMeats.Clear();
-            }
+            // if (queuedMeats.Count > 0)
+            // {
+            //     foreach (var meat in queuedMeats) MeatToss(meat.beat, meat["bacon"], meat["tackReaction"], meat["tackReactionBeats"], meat["bossReaction"], meat["bossReactionBeats"]);
+            //     queuedMeats.Clear();
+            // }
             OnPlay(beat);
         }
 
         public override void OnPlay(double beat)
         {
-            RiqEntity cg = GameManager.instance.Beatmap.Entities.Find(c => c.datamodel == "meatGrinder/cartGuy");
-            if (cg != null)
-            {
+            List<RiqEntity> allEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel[.."meatGrinder".Length] == "meatGrinder");
+            RiqEntity cg = allEntities.Find(c => c.datamodel == "meatGrinder/cartGuy");
+            if (cg != null) {
                 CartGuy(cg.beat, cg.length, cg["spider"], cg["direction"], cg["ease"]);
+            }
+            RiqEntity gr = allEntities.Find(c => c.datamodel == "meatGrinder/gears");
+            if (gr != null) {
+                ChangeGears(gr.beat, gr.length, gr["ease"], gr["speed"]);
+            }
+            List<RiqEntity> meats = allEntities.FindAll(c => c.datamodel == "meatGrinder/MeatToss" && beat > c.beat && beat < c.beat + 1);
+            foreach (var meat in meats) {
+                MeatToss(meat.beat, meat["bacon"], meat["tackReaction"], meat["tackReactionBeats"], meat["bossReaction"], meat["bossReactionBeats"]);
             }
         }
 
@@ -391,14 +371,13 @@ namespace HeavenStudio.Games
             cartDir = direction == 0 ? "Right" : "Left";
         }
 
-        public void Gears(double beat, float length, int ease, int type, float speed)
+        public void ChangeGears(double beat, float length, int ease, float speed)
         {
             gearEase = new() {
                 beat = beat,
                 length = length,
                 ease = (Util.EasingFunction.Ease)ease,
             };
-            gearType = (GearMode)type;
 
             oldGearSpeed = newGearSpeed;
             newGearSpeed = speed;
@@ -455,7 +434,7 @@ namespace HeavenStudio.Games
 
         public static void QueueMeatToss(RiqEntity entity)
         {
-            queuedMeats.Add(entity);
+            // queuedMeats.Add(entity);
         }
 
         public void MeatToss(double beat, bool bacon, int tackReaction, float tackReactionBeats, int bossReaction, float bossReactionBeats)
