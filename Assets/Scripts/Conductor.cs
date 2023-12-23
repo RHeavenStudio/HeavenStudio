@@ -189,7 +189,7 @@ namespace HeavenStudio
 
             startPos = GetSongPosFromBeat(beat);
             firstBeatOffset = offset;
-            time = startPos - (3 * dspSizeSeconds);
+            time = startPos;
 
             if (musicSource.clip != null && startPos < musicSource.clip.length - offset)
             {
@@ -197,13 +197,13 @@ namespace HeavenStudio
                 double musicStartDelay = -offset - startPos;
                 if (musicStartDelay > 0)
                 {
-                    musicScheduledTime = dspTime + (musicStartDelay / SongPitch);
-                    dspStart = dspTime;
+                    musicScheduledTime = dspTime + (musicStartDelay / SongPitch) + 2*dspSizeSeconds;
+                    dspStart = dspTime + 2*dspSizeSeconds;
                 }
                 else
                 {
-                    musicScheduledTime = dspTime + (3 * dspSizeSeconds);
-                    dspStart = dspTime + (3 * dspSizeSeconds);
+                    musicScheduledTime = dspTime + 2*dspSizeSeconds;
+                    dspStart = dspTime + 2*dspSizeSeconds;
                 }
                 musicScheduledPitch = SongPitch;
                 musicSource.PlayScheduled(musicScheduledTime);
@@ -214,12 +214,12 @@ namespace HeavenStudio
                 dspStart = dspTime;
             }
 
-            songPosBeat = GetBeatFromSongPos(time);
+            songPosBeat = beat;
             startBeat = songPosBeat;
             _metronomeTally = 0;
 
             startTime = DateTime.Now;
-            absTimeAdjust = -(3 * dspSizeSeconds);
+            absTimeAdjust = 0;
             deferTimeKeeping = (musicSource.clip != null);
 
             isPlaying = true;
@@ -228,15 +228,17 @@ namespace HeavenStudio
 
         void OnAudioFilterRead(float[] data, int channels)
         {
+            if (!deferTimeKeeping) return;
             // don't actually do anything with the data
             // wait until we get a dsp update before starting to keep time
-            if (deferTimeKeeping && AudioSettings.dspTime >= dspStart)
+            double dsp = AudioSettings.dspTime;
+            if (dsp >= dspStart - dspSizeSeconds)
             {
-                Debug.Log($"dsptime: {AudioSettings.dspTime}, deferred timekeeping for {DateTime.Now - startTime} seconds");
                 deferTimeKeeping = false;
-                startTime = DateTime.Now;
-                dspStart = AudioSettings.dspTime;
+                Debug.Log($"dsptime: {dsp}, deferred timekeeping for {DateTime.Now - startTime} seconds (delta dsp {dsp - dspStart})");
+                startTime += TimeSpan.FromSeconds(dsp - dspStart);
                 absTimeAdjust = 0;
+                dspStart = dsp;
             }
         }
 
@@ -370,7 +372,8 @@ namespace HeavenStudio
         {
             if (isPlaying)
             {
-                if (AudioSettings.dspTime < musicScheduledTime && musicScheduledPitch != SongPitch)
+                double dsp = AudioSettings.dspTime;
+                if (dsp < musicScheduledTime && musicScheduledPitch != SongPitch)
                 {
                     if (SongPitch == 0f)
                     {
@@ -382,30 +385,33 @@ namespace HeavenStudio
                             musicSource.UnPause();
                         musicScheduledPitch = SongPitch;
 
-                        musicScheduledTime = (AudioSettings.dspTime + (-GameManager.instance.Beatmap.data.offset - songPositionAsDouble) / (double)SongPitch);
+                        musicScheduledTime = (dsp + (-GameManager.instance.Beatmap.data.offset - songPositionAsDouble) / (double)SongPitch);
                         musicSource.SetScheduledStartTime(musicScheduledTime);
                     }
                 }
 
-                absTime = (DateTime.Now - startTime).TotalSeconds;
-
-                //dspTime to sync with audio thread in case of drift
-                dspTime = AudioSettings.dspTime - dspStart;
-                if (Math.Abs(absTime + absTimeAdjust - dspTime) > dspMargin)
+                if (!deferTimeKeeping)
                 {
-                    int i = 0;
-                    while (Math.Abs(absTime + absTimeAdjust - dspTime) > dspMargin)
+                    absTime = (DateTime.Now - startTime).TotalSeconds;
+
+                    //dspTime to sync with audio thread in case of drift
+                    dspTime = dsp - dspStart;
+                    if (Math.Abs(absTime + absTimeAdjust - dspTime) > dspMargin)
                     {
-                        i++;
-                        absTimeAdjust = (dspTime - absTime + absTimeAdjust) * 0.5;
-                        if (i > 8) break;
+                        int i = 0;
+                        while (Math.Abs(absTime + absTimeAdjust - dspTime) > dspMargin)
+                        {
+                            i++;
+                            absTimeAdjust = (dspTime - absTime + absTimeAdjust) * 0.5;
+                            if (i > 8) break;
+                        }
                     }
+
+                    time = MapTimeToPitchChanges(absTime + absTimeAdjust);
+
+                    songPos = startPos + time;
+                    songPosBeat = GetBeatFromSongPos(songPos);
                 }
-
-                time = MapTimeToPitchChanges(absTime + absTimeAdjust);
-
-                songPos = startPos + time;
-                songPosBeat = GetBeatFromSongPos(songPos);
             }
         }
 
