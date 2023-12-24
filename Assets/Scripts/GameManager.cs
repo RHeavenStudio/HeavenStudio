@@ -405,11 +405,14 @@ namespace HeavenStudio
                 {
                     string gameName = allGameSwitches[currentPreSwitch].datamodel.Split('/')[2];
                     inf = GetGameInfo(gameName);
-                    if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
+                    if (inf != null && !(inf.inferred || inf.fxOnly))
                     {
-                        gamesToPreload.Add(inf);
-                        Debug.Log($"ASYNC loading assetbundles for game {gameName}");
-                        inf.LoadAssetsAsync().Forget();
+                        if (inf.usesAssetBundle && !inf.AssetsLoaded)
+                        {
+                            gamesToPreload.Add(inf);
+                            Debug.Log($"ASYNC loading assetbundles for game {gameName}");
+                            inf.LoadAssetsAsync().Forget();
+                        }
                     }
                     currentPreSwitch++;
                 }
@@ -431,11 +434,14 @@ namespace HeavenStudio
                     {
                         string gameName = entity.datamodel.Split('/')[0];
                         inf = GetGameInfo(gameName);
-                        if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
+                        if (inf != null && !(inf.inferred || inf.fxOnly))
                         {
-                            gamesToPreload.Add(inf);
-                            Debug.Log($"ASYNC loading assetbundles for game {gameName}");
-                            inf.LoadAssetsAsync().Forget();
+                            if (inf.usesAssetBundle && !inf.AssetsLoaded)
+                            {
+                                gamesToPreload.Add(inf);
+                                Debug.Log($"ASYNC loading assetbundles for game {gameName}");
+                                inf.LoadAssetsAsync().Forget();
+                            }
                         }
                         currentPreEvent++;
                     }
@@ -714,9 +720,14 @@ namespace HeavenStudio
 
             if (!paused)
             {
-                Minigame miniGame = currentGameO?.GetComponent<Minigame>();
-                if (miniGame != null)
-                    miniGame.OnPlay(beat);
+                Minigame miniGame = null;
+                if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
+                {
+                    if (miniGame != null)
+                    {
+                        miniGame.OnPlay(beat);
+                    }
+                }
                 onPlay?.Invoke(beat);
 
                 bool hasStartPerfect = false;
@@ -769,9 +780,14 @@ namespace HeavenStudio
                 SectionMedalsManager.instance.OnRemixEnd(endBeat, currentSection);
             }
 
-            Minigame miniGame = currentGameO.GetComponent<Minigame>();
-            if (miniGame != null)
-                miniGame.OnStop(beat);
+            Minigame miniGame;
+            if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
+            {
+                if (miniGame != null)
+                {
+                    miniGame.OnStop(beat);
+                }
+            }
 
             Conductor.instance.Stop(beat);
             SetCurrentEventToClosest(beat);
@@ -1061,9 +1077,14 @@ namespace HeavenStudio
 
             SetGame(game, false);
 
-            Minigame miniGame = currentGameO.GetComponent<Minigame>();
-            if (miniGame != null)
-                miniGame.OnGameSwitch(beat);
+            Minigame miniGame;
+            if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
+            {
+                if (miniGame != null)
+                {
+                    miniGame.OnGameSwitch(beat);
+                }
+            }
 
             while (beat + 0.25 > Math.Max(Conductor.instance.songPositionInBeatsAsDouble, 0))
             {
@@ -1125,6 +1146,10 @@ namespace HeavenStudio
             var gameInfo = GetGameInfo(name);
             if (gameInfo != null)
             {
+                if (gameInfo.inferred)
+                {
+                    return Resources.Load<GameObject>($"Games/noGame");
+                }
                 if (gameInfo.fxOnly)
                 {
                     var gameInfos = Beatmap.Entities
