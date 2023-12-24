@@ -123,10 +123,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "What ease will the gears speed up/slow down with?"),
                     }
                 },
-            },
-            new List<string>() { "pco", "normal", "repeat" },
-            "pcomeat", "en",
-            new List<string>() { }
+            }
+            // ,
+            // new List<string>() { "pco", "normal", "repeat" },
+            // "pcomeat", "en",
+            // new List<string>() { }
             );
         }
     }
@@ -169,14 +170,15 @@ namespace HeavenStudio.Games
 
         [Header("Objects")]
         public GameObject MeatBase;
+        public ParticleSystem MeatSplash;
+        [SerializeField] Transform[] Gears;
+
 
         [Header("Animators")]
         public Animator BossAnim;
         public Animator TackAnim;
         [SerializeField] Animator CartGuyParentAnim;
         [SerializeField] Animator CartGuyAnim;
-        [SerializeField] Transform[] Gears;
-
         [Header("Variables")]
         private bool bossBop = true;
         public bool bossAnnoyed = false;
@@ -261,11 +263,6 @@ namespace HeavenStudio.Games
                 currentGearSpeed = func(oldGearSpeed, newGearSpeed, normalizedBeat);
                 if (normalizedBeat >= 1) cartEase.length = 0;
             }
-            foreach (Transform gear in Gears)
-            {
-                double newZ = Time.deltaTime * currentGearSpeed * 50 * (gear.name == "Big" ? -1 : 1) / cond.pitchedSecPerBeat;
-                gear.Rotate(new Vector3(0, 0, (float)newZ));
-            }
 
             if (cartEase.length != 0)
             {
@@ -278,6 +275,13 @@ namespace HeavenStudio.Games
             }
 
             CartGuyParentAnim.gameObject.SetActive(cartEase.length != 0);
+
+            if (cond.isPlaying && !cond.isPaused)
+            foreach (Transform gear in Gears)
+            {
+                double newZ = Time.deltaTime * currentGearSpeed * 50 * (gear.name == "Big" ? -1 : 1) / cond.pitchedSecPerBeat;
+                gear.Rotate(new Vector3(0, 0, (float)newZ));
+            }
         }
 
         public override void OnLateBeatPulse(double beat)
