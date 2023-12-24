@@ -53,9 +53,6 @@ namespace HeavenStudio
         private static Vector3 panLast;
         private static Vector3 scaleLast;
         private static float rotationLast;
-        private static Vector3 letterboxLast;
-        private static Vector3 tilePanLast;
-        private static Vector3 screenTileLast;
 
         private void Awake()
         {
