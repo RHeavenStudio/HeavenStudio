@@ -45,6 +45,7 @@ namespace HeavenStudio
         [SerializeField] private TMP_Text chartTitleText;
         [SerializeField] private TMP_Text chartMapperText;
         [SerializeField] private TMP_Text chartDescText;
+        [SerializeField] private TMP_Text chartStyleText;
 
         [SerializeField] private Selectable[] mainSelectables;
         [SerializeField] private Selectable defaultSelectable;
@@ -202,21 +203,27 @@ namespace HeavenStudio
                 var controller = PlayerInput.GetInputController(1);
                 if (playMenuRevealed)
                 {
-                    switch (controller.GetLastActionDown())
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
                     {
-                        case (int) InputController.ActionsPad.East:
-                            PlayPanelAccept();
-                            break;
-                        case (int) InputController.ActionsPad.South:
-                            PlayPanelBack();
-                            break;
+                        switch (controller.GetLastActionDown())
+                        {
+                            case (int)InputController.ActionsPad.East:
+                                PlayPanelAccept();
+                                break;
+                            case (int)InputController.ActionsPad.South:
+                                PlayPanelBack();
+                                break;
+                        }
                     }
                 }
                 else if (snsRevealed)
                 {
-                    if (controller.GetLastActionDown() == (int)InputController.ActionsPad.South)
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
                     {
-                        SocialsClose();
+                        if (controller.GetLastActionDown() == (int)InputController.ActionsPad.South)
+                        {
+                            SocialsClose();
+                        }
                     }
                 }
                 else
@@ -482,6 +489,7 @@ namespace HeavenStudio
                     chartTitleText.text = beatmap["remixtitle"];
                     chartMapperText.text = beatmap["remixauthor"];
                     chartDescText.text = beatmap["remixdesc"];
+                    chartStyleText.text = $"Recommended Control Style: {beatmap["playstyle"].ToString()}";
 
                     playPanel.SetActive(true);
                     playMenuRevealed = true;

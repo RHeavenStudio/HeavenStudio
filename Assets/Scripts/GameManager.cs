@@ -1203,6 +1203,7 @@ namespace HeavenStudio
                 CircleCursor.SetCursorColors(Color.white, Color.white, Color.white);
                 HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black, false);
             }
+            CircleCursor.ClearTrail(false);
         }
 
         private void SetAmbientGlowToCurrentMinigameColor()
