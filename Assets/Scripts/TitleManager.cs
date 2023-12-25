@@ -100,20 +100,42 @@ namespace HeavenStudio
             songPos = time + offset;
 
             songPosBeat = SecsToBeats(songPos);
-            if (Input.anyKeyDown)
+
+            var controllers = PlayerInput.GetInputControllers();
+            foreach (var newController in controllers)
             {
-                if (logoRevealed && !menuMode)
+                if (newController.GetLastButtonDown(true) > 0)
                 {
-                    menuMode = true;
-                    menuAnim.Play("Revealed", 0, 0);
-                    pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
+                    if (logoRevealed && !menuMode)
+                    {
+                        menuMode = true;
+                        menuAnim.Play("Revealed", 0, 0);
+                        pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
+                        SoundByte.PlayOneShot("ui/UIEnter");
+
+                        Debug.Log("Assigning controller: " + newController.GetDeviceName());
+
+                        var lastController = PlayerInput.GetInputController(1);
+                        if (lastController != newController)
+                        {
+                            lastController.SetPlayer(null);
+                            newController.SetPlayer(1);
+
+                            if ((lastController as InputSystem.InputJoyshock) != null)
+                            {
+                                (lastController as InputSystem.InputJoyshock)?.UnAssignOtherHalf();
+                            }
+
+                            if ((newController as InputSystem.InputJoyshock) != null)
+                            {
+                                newController.OnSelected();
+                                (newController as InputSystem.InputJoyshock)?.UnAssignOtherHalf();
+                            }
+                        }
+                    }
                 }
-                // else if (snsRevealed)
-                // {
-                //     snsRevealed = false;
-                //     snsPanel.SetActive(false);
-                // }
             }
+
             if (loops == 0 && !logoRevealed)
             {
                 float normalizedBeat = GetPositionFromBeat(4, 1);

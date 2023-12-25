@@ -136,7 +136,7 @@ namespace HeavenStudio.InputSystem
             return false;
         }
 
-        public override int GetLastButtonDown()
+        public override int GetLastButtonDown(bool strict = false)
         {
             if (Input.anyKeyDown)
             {

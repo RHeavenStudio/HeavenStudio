@@ -256,12 +256,13 @@ namespace HeavenStudio.InputSystem
             return action is 0;
         }
 
-        public override int GetLastButtonDown()
+        public override int GetLastButtonDown(bool strict = false)
         {
             if (Input.anyKeyDown)
             {
                 for (KeyCode i = keyCodes[1]; i <= KeyCode.Mouse6; i++)
                 {
+                    if (strict && i < KeyCode.Mouse0) continue;
                     if (Input.GetKeyDown(i))
                         return (int)i;
                 }

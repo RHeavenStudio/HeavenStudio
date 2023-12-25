@@ -225,7 +225,7 @@ namespace HeavenStudio.InputSystem
         /// Gets the last pressed physical button
         /// </summary>
         /// <returns></returns>
-        public abstract int GetLastButtonDown();
+        public abstract int GetLastButtonDown(bool strict = false);
 
         /// <summary>
         /// Gets the last pressed virtual action
