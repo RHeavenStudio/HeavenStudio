@@ -107,14 +107,14 @@ namespace HeavenStudio.InputSystem
         //buttons used in Heaven Studio gameplay ("Form Baton" / WiiMote Style)
         public enum ActionsBaton : int
         {
-            South = 0,      //-- all these...
-            East = 1,       // |
+            North = 0,      //-- all these...
+            South = 1,      // |
             West = 2,       // |
-            North = 3,      //--
-            Face = 4,       // < ...are also equivalent to this, but with added directionality
-            Trigger = 5,    // should never be used alone, but still bindable separately (controller logic should handle confirming & timestamping face + trigger input)
-            Up = 6,     // Wiimote 1
-            Down = 7,   // Wiimote 2
+            East = 3,       //--
+            Trigger = 4,    // < ...are also equivalent to this, but with added directionality
+            Face = 5,
+            Down = 6,     // Wiimote 1
+            Up = 7,   // Wiimote 2
             Pause = 8,
         }
 

@@ -151,7 +151,7 @@ namespace HeavenStudio.InputSystem
 
         public override int GetLastActionDown()
         {
-            for (int i = 0; i < BINDS_MAX; i++)
+            for (int i = 0; i < currentBindings.Pad.Length; i++)
             {
                 if (Input.GetKeyDown((KeyCode)currentBindings.Pad[i]))
                     return i;

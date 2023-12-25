@@ -272,9 +272,9 @@ namespace HeavenStudio.InputSystem
 
         public override int GetLastActionDown()
         {
-            for (int i = 0; i < BINDS_MAX; i++)
+            for (int i = 0; i < currentBindings.Touch.Length; i++)
             {
-                if (Input.GetKeyDown((KeyCode)currentBindings.Pad[i]))
+                if (Input.GetKeyDown((KeyCode)currentBindings.Touch[i]))
                     return i;
             }
             return -1;

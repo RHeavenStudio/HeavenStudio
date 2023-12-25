@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using HeavenStudio.Util;
 using HeavenStudio.Common;
+using HeavenStudio.InputSystem;
 using Starpelly;
 using System.Linq;
 
@@ -45,6 +46,11 @@ namespace HeavenStudio
         [SerializeField] private TMP_Text chartMapperText;
         [SerializeField] private TMP_Text chartDescText;
 
+        [SerializeField] private Selectable[] mainSelectables;
+        [SerializeField] private Selectable defaultSelectable;
+        [SerializeField] private RectTransform selectedDisplayRect;
+        [SerializeField] private GameObject selectedDisplayIcon;
+
         private AudioSource musicSource;
 
         private double songPosBeat;
@@ -61,9 +67,12 @@ namespace HeavenStudio
 
         private bool logoRevealed;
 
-        private bool menuMode, snsRevealed, exiting;
+        private bool menuMode, snsRevealed, playMenuRevealed, exiting, firstPress, usingMouse;
 
         private Animator menuAnim;
+        private Selectable currentSelectable, mouseSelectable;
+        private RectTransform currentSelectableRect, lastSelectableRect;
+        private float selectableLerpTimer;
 
         private void Start()
         {
@@ -74,6 +83,7 @@ namespace HeavenStudio
             startTime = Time.realtimeSinceStartupAsDouble;
             var _rand = new System.Random();
             starAnims = starAnims.OrderBy(_ => _rand.Next()).ToList();
+            selectedDisplayRect.gameObject.SetActive(false);
 
 #if UNITY_EDITOR
             versionText.text = "EDITOR";
@@ -101,14 +111,19 @@ namespace HeavenStudio
 
             songPosBeat = SecsToBeats(songPos);
 
-            var controllers = PlayerInput.GetInputControllers();
-            foreach (var newController in controllers)
+            if (logoRevealed && !menuMode)
             {
-                if (newController.GetLastButtonDown(true) > 0)
+                var controllers = PlayerInput.GetInputControllers();
+                foreach (var newController in controllers)
                 {
-                    if (logoRevealed && !menuMode)
+                    if (newController.GetLastButtonDown(true) > 0)
                     {
                         menuMode = true;
+                        firstPress = true;
+                        currentSelectable = defaultSelectable;
+                        SetSelectableRectTarget(currentSelectable);
+                        selectableLerpTimer = 1;
+
                         menuAnim.Play("Revealed", 0, 0);
                         pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
                         SoundByte.PlayOneShot("ui/UIEnter");
@@ -120,16 +135,19 @@ namespace HeavenStudio
                         {
                             lastController.SetPlayer(null);
                             newController.SetPlayer(1);
+                            PlayerInput.CurrentControlStyle = newController.GetDefaultStyle();
+                            usingMouse = PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch;
+                            selectedDisplayIcon.SetActive(!usingMouse);
 
-                            if ((lastController as InputSystem.InputJoyshock) != null)
+                            if ((lastController as InputJoyshock) != null)
                             {
-                                (lastController as InputSystem.InputJoyshock)?.UnAssignOtherHalf();
+                                (lastController as InputJoyshock)?.UnAssignOtherHalf();
                             }
 
-                            if ((newController as InputSystem.InputJoyshock) != null)
+                            if ((newController as InputJoyshock) != null)
                             {
                                 newController.OnSelected();
-                                (newController as InputSystem.InputJoyshock)?.UnAssignOtherHalf();
+                                (newController as InputJoyshock)?.UnAssignOtherHalf();
                             }
                         }
                     }
@@ -177,11 +195,232 @@ namespace HeavenStudio
                     altBop = !altBop;
                 }
                 targetBopBeat += 1;
-                // if ((!settingsPanel.IsOpen) && logoRevealed && logoHoverCollider.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
-                // {
-                //     SoundByte.PlayOneShot("metronome");
-                // }
             }
+
+            if (menuMode && !(exiting || GlobalGameManager.IsShowingDialog))
+            {
+                var controller = PlayerInput.GetInputController(1);
+                if (playMenuRevealed)
+                {
+                    switch (controller.GetLastActionDown())
+                    {
+                        case (int) InputController.ActionsPad.East:
+                            PlayPanelAccept();
+                            break;
+                        case (int) InputController.ActionsPad.South:
+                            PlayPanelBack();
+                            break;
+                    }
+                }
+                else if (snsRevealed)
+                {
+                    if (controller.GetLastActionDown() == (int)InputController.ActionsPad.South)
+                    {
+                        SocialsClose();
+                    }
+                }
+                else
+                {
+                    UpdateSelectable(controller);
+                }
+            }
+        }
+
+        void UpdateSelectable(InputController controller)
+        {
+            selectableLerpTimer += Time.deltaTime;
+            if (selectableLerpTimer < 0.2f)
+            {
+                float prog = Mathf.Clamp01(selectableLerpTimer / 0.2f);
+                prog = 1f - Mathf.Pow(1f - prog, 3);
+                selectedDisplayRect.position = Vector3.Lerp(lastSelectableRect.position, currentSelectableRect.position, prog);
+                selectedDisplayRect.sizeDelta = Vector2.Lerp(lastSelectableRect.sizeDelta, currentSelectableRect.sizeDelta, prog);
+            }
+            else
+            {
+                selectedDisplayRect.position = currentSelectableRect.position;
+                selectedDisplayRect.sizeDelta = currentSelectableRect.sizeDelta;
+            }
+
+            switch (PlayerInput.CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Pad:
+                    if (controller.GetActionUp(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out _))
+                    {
+                        if (firstPress)
+                        {
+                            firstPress = false;
+                        }
+                        else if (currentSelectable != null && !usingMouse)
+                        {
+                            SoundByte.PlayOneShot("ui/UIPromptUp");
+                            currentSelectable.GetComponent<Button>()?.onClick.Invoke();
+                        }
+                    }
+                    break;
+                case InputController.ControlStyles.Baton:
+                    if (controller.GetActionUp(InputController.ControlStyles.Baton, (int)InputController.ActionsBaton.Face, out _))
+                    {
+                        if (firstPress)
+                        {
+                            firstPress = false;
+                        }
+                        else if (currentSelectable != null && !usingMouse)
+                        {
+                            SoundByte.PlayOneShot("ui/UIPromptUp");
+                            currentSelectable.GetComponent<Button>()?.onClick.Invoke();
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+            {
+                switch (controller.GetLastActionDown())
+                {
+                    case (int)InputController.ActionsPad.East:
+                        if ((currentSelectable != null) && !firstPress)
+                        {
+                            if (usingMouse)
+                            {
+                                usingMouse = false;
+                                selectedDisplayIcon.SetActive(true);
+                            }
+                            SoundByte.PlayOneShot("ui/UIPromptDown");
+                        }
+                        break;
+                    case (int)InputController.ActionsPad.Up:
+                        if (firstPress)
+                        {
+                            firstPress = false;
+                        }
+                        else if (currentSelectable != null)
+                        {
+                            if (currentSelectable.FindSelectableOnUp() != null)
+                            {
+                                usingMouse = false;
+                                selectedDisplayIcon.SetActive(true);
+                                currentSelectable = currentSelectable.FindSelectableOnUp();
+                                currentSelectable.Select();
+                                SetSelectableRectTarget(currentSelectable);
+                                SoundByte.PlayOneShot("ui/UIOption");
+                            }
+                            else
+                            {
+                                // SoundByte.PlayOneShot("ui/UISelect");
+                            }
+                        }
+                        break;
+                    case (int)InputController.ActionsPad.Down:
+                        if (firstPress)
+                        {
+                            firstPress = false;
+                        }
+                        else if (currentSelectable != null)
+                        {
+                            if (currentSelectable.FindSelectableOnDown() != null)
+                            {
+                                usingMouse = false;
+                                selectedDisplayIcon.SetActive(true);
+                                currentSelectable = currentSelectable.FindSelectableOnDown();
+                                currentSelectable.Select();
+                                SetSelectableRectTarget(currentSelectable);
+                                SoundByte.PlayOneShot("ui/UIOption");
+                            }
+                            else
+                            {
+                                // SoundByte.PlayOneShot("ui/UISelect");
+                            }
+                        }
+                        break;
+                    case (int)InputController.ActionsPad.Left:
+                        if (firstPress)
+                        {
+                            firstPress = false;
+                        }
+                        else if (currentSelectable != null)
+                        {
+                            if (currentSelectable.FindSelectableOnLeft() != null)
+                            {
+                                usingMouse = false;
+                                selectedDisplayIcon.SetActive(true);
+                                currentSelectable = currentSelectable.FindSelectableOnLeft();
+                                currentSelectable.Select();
+                                SetSelectableRectTarget(currentSelectable);
+                                SoundByte.PlayOneShot("ui/UIOption");
+                            }
+                            else
+                            {
+                                // SoundByte.PlayOneShot("ui/UISelect");
+                            }
+                        }
+                        break;
+                    case (int)InputController.ActionsPad.Right:
+                        if (firstPress)
+                        {
+                            firstPress = false;
+                        }
+                        else if (currentSelectable != null)
+                        {
+                            if (currentSelectable.FindSelectableOnRight() != null)
+                            {
+                                usingMouse = false;
+                                selectedDisplayIcon.SetActive(true);
+                                currentSelectable = currentSelectable.FindSelectableOnRight();
+                                currentSelectable.Select();
+                                SetSelectableRectTarget(currentSelectable);
+                                SoundByte.PlayOneShot("ui/UIOption");
+                            }
+                            else
+                            {
+                                // SoundByte.PlayOneShot("ui/UISelect");
+                            }
+                        }
+                        break;
+                }
+            }
+            foreach (var selectable in mainSelectables)
+            {
+                // get button the mouse is hovering over
+                if (RectTransformUtility.RectangleContainsScreenPoint(selectable.GetComponent<RectTransform>(), Input.mousePosition, Camera.main))
+                {
+                    if (mouseSelectable != selectable)
+                    {
+                        mouseSelectable = selectable;
+                        usingMouse = true;
+                        selectedDisplayIcon.SetActive(false);
+                    }
+                    if (currentSelectable != selectable && usingMouse)
+                    {
+                        currentSelectable = selectable;
+                        SetSelectableRectTarget(currentSelectable);
+                        SoundByte.PlayOneShot("ui/UIOption");
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        void SetSelectableRectTarget(Selectable selectable)
+        {
+            if (selectable == null)
+            {
+                selectedDisplayRect.gameObject.SetActive(false);
+                return;
+            }
+            selectedDisplayRect.gameObject.SetActive(true);
+            lastSelectableRect = currentSelectableRect;
+            currentSelectableRect = selectable.GetComponent<RectTransform>();
+
+            if (lastSelectableRect == null)
+            {
+                lastSelectableRect = currentSelectableRect;
+            }
+            selectedDisplayRect.position = lastSelectableRect.position;
+            selectedDisplayRect.sizeDelta = lastSelectableRect.sizeDelta;
+            selectableLerpTimer = 0;
         }
 
         public double SecsToBeats(double s)
@@ -245,6 +484,7 @@ namespace HeavenStudio
                     chartDescText.text = beatmap["remixdesc"];
 
                     playPanel.SetActive(true);
+                    playMenuRevealed = true;
                     SoundByte.PlayOneShot("ui/UISelect");
                 }
                 catch (System.Exception e)
@@ -270,6 +510,7 @@ namespace HeavenStudio
             RiqFileHandler.ClearCache();
             SoundByte.PlayOneShot("ui/UICancel");
             playPanel.SetActive(false);
+            playMenuRevealed = false;
         }
 
         public void SocialsPressed()
