@@ -42,6 +42,10 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _game.ScheduleInput(beat, 1, Minigame.InputAction_BasicPress, Just, Miss, Empty);
         }
 
+        public void Bop()
+        {
+            _anim.DoScaledAnimationAsync("Bop", 0.5f);
+        }
 
         private IEnumerator JumpCo(double beat)
         {

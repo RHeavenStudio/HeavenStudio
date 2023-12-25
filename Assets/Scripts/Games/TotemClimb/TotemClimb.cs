@@ -18,9 +18,20 @@ namespace HeavenStudio.Games.Loaders
                 {
 
                 },
+                new("triple", "Triple Jumping")
+                {
+                    defaultLength = 2f,
+                    resizable = true
+                },
                 new("stop", "Stop Jumping")
                 {
 
+                },
+                new("bop", "Bop")
+                {
+                    function = delegate { TotemClimb.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity.beat); },
+                    resizable = true,
+                    defaultLength = 4f
                 }
             });
         }
@@ -55,6 +66,7 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             CalculateStartAndEndBeat(beat);
+            HandleBopsOnStart(beat);
         }
 
         public override void OnPlay(double beat)
@@ -64,6 +76,7 @@ namespace HeavenStudio.Games
             if (allGameSwitches.Count > 0) lastGameSwitchBeat = allGameSwitches[^1].beat;
 
             CalculateStartAndEndBeat(lastGameSwitchBeat);
+            HandleBopsOnStart(beat);
         }
 
         private void CalculateStartAndEndBeat(double beat)
@@ -93,6 +106,14 @@ namespace HeavenStudio.Games
             _totemManager.InitBeats(_startBeat);
         }
 
+        private void HandleBopsOnStart(double beat)
+        {
+            var e = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "bop" }).Find(x => x.beat < beat && x.beat + x.length > beat);
+            if (e == null) return;
+
+            Bop(e.beat, e.length, beat);
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
@@ -104,6 +125,29 @@ namespace HeavenStudio.Games
         {
             _totemManager.BopTotemAtBeat(beat);
         }
+
+        public void Bop(double beat, float length, double callBeat)
+        {
+            List<BeatAction.Action> actions = new();
+
+            for (int i = 0; i < length; i++)
+            {
+                double bopBeat = beat + i;
+                if (bopBeat < callBeat) continue;
+                actions.Add(new(bopBeat, delegate
+                {
+                    BopJumper(bopBeat);
+                }));
+            }
+
+            if (actions.Count > 0) BeatAction.New(this, actions);
+        }
+
+        private void BopJumper(double beat)
+        {
+            if (beat >= _startBeat && beat < _endBeat) return;
+            _jumper.Bop();
+        } 
 
         private void ScrollUpdate(Conductor cond)
         {
