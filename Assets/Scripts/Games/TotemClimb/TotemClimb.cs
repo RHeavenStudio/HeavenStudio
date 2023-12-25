@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
 using HeavenStudio.Games.Scripts_TotemClimb;
+using Jukebox;
+using System;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -56,6 +58,8 @@ namespace HeavenStudio.Games
         private double _endBeat = double.MaxValue;
         public double EndBeat => _endBeat;
 
+        [NonSerialized] public List<RiqEntity> _tripleEvents = new(); 
+
         public static TotemClimb instance;
 
         private void Awake()
@@ -66,6 +70,7 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             CalculateStartAndEndBeat(beat);
+            GetTripleEvents();
             HandleBopsOnStart(beat);
         }
 
@@ -76,6 +81,7 @@ namespace HeavenStudio.Games
             if (allGameSwitches.Count > 0) lastGameSwitchBeat = allGameSwitches[^1].beat;
 
             CalculateStartAndEndBeat(lastGameSwitchBeat);
+            GetTripleEvents();
             HandleBopsOnStart(beat);
         }
 
@@ -112,6 +118,29 @@ namespace HeavenStudio.Games
             if (e == null) return;
 
             Bop(e.beat, e.length, beat);
+        }
+
+        private void GetTripleEvents()
+        {
+            var triples = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "triple" }).FindAll(x => x.beat >= _startBeat && x.beat + x.length <= _endBeat);
+            if (triples.Count == 0) return;
+
+            triples.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            var tempTriples = new List<RiqEntity>();
+
+            double lastLengthBeat = _startBeat;
+
+            for (int i = 0; i < triples.Count; i++)
+            {
+                if (triples[i].beat >= lastLengthBeat && IsOnBeat(_startBeat, triples[i].beat))
+                {
+                    tempTriples.Add(triples[i]);
+                    lastLengthBeat = triples[i].beat + triples[i].length;
+                }
+            }
+
+            _tripleEvents = tempTriples;
         }
 
         private void Update()
@@ -157,6 +186,17 @@ namespace HeavenStudio.Games
 
             _scrollTransform.localPosition = new Vector3(normalizedBeat * _scrollSpeedX, normalizedBeat * _scrollSpeedY);
             _cameraTransform.localPosition = new Vector3(_scrollTransform.localPosition.x * -2, _scrollTransform.localPosition.y * -2);
+        }
+
+        private bool IsOnBeat(double startBeat, double targetBeat)
+        {
+            return (targetBeat - startBeat) % 1 == 0;
+        }
+
+        public bool IsTripleBeat(double beat)
+        {
+            if (_tripleEvents.Count == 0) return false;
+            return _tripleEvents.Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
         }
     }
 }

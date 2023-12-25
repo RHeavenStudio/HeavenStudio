@@ -56,7 +56,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             for (int i = 0; i < _totems.Count; i++)
             {
                 _totems[i].beat = startBeat + i;
-                if (_totems[i].beat - 1 >= _game.EndBeat) _totems[i].transform.gameObject.SetActive(false);
+                if (_totems[i].beat - 1 >= _game.EndBeat || _game.IsTripleBeat(_totems[i].beat)) _totems[i].transform.gameObject.SetActive(false);
             }
         }
 
@@ -79,7 +79,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
                 t.transform.localPosition = new Vector3(t.transform.localPosition.x + (_xDistance * _totemAmount), t.transform.localPosition.y + (_yDistance * _totemAmount));
                 t.beat += _totemAmount;
-                if (t.beat - 1 >= _game.EndBeat) t.transform.gameObject.SetActive(false);
+                t.transform.gameObject.SetActive(!(t.beat - 1 >= _game.EndBeat || _game.IsTripleBeat(t.beat)));
                 _totemIndex++;
             }
         }
