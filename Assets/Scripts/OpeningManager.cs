@@ -96,9 +96,22 @@ namespace HeavenStudio
 
         IEnumerator WaitAndFinishOpening()
         {
-            WaitUntil wait = new WaitUntil(() => Input.anyKeyDown || (timer >= 8));
+            WaitUntil wait = new WaitUntil(() => CheckForInput() || (timer >= 8));
             yield return wait;
             OnFinishDisclaimer(0.35f);
+        }
+
+        bool CheckForInput()
+        {
+            var controllers = PlayerInput.GetInputControllers();
+            foreach (var newController in controllers)
+            {
+                if (newController.GetLastButtonDown(true) > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         void OnFinishDisclaimer(float fadeDuration = 0)
