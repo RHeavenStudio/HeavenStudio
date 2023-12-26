@@ -314,7 +314,7 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
-            List<RiqEntity> allEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel[.."meatGrinder".Length] == "meatGrinder");
+            List<RiqEntity> allEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == "meatGrinder");
             RiqEntity cg = allEntities.Find(c => c.datamodel == "meatGrinder/cartGuy");
             if (cg != null) {
                 CartGuy(cg.beat, cg.length, cg["spider"], cg["direction"], cg["ease"]);

@@ -110,6 +110,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             // if (meatType == MeatType.BaconBall) {
             //     game.DoExpressions(0, (int)MeatGrinder.BossExpressions.Scared);
             // }
+            game.MeatSplash.Play();
 
             if (tackReaction.expression > 0) {
                 BeatAction.New(game, new List<BeatAction.Action>() {

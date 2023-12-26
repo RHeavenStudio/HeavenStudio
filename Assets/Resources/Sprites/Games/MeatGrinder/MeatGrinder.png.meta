@@ -1013,7 +1013,7 @@ TextureImporter:
         width: 1202
         height: 1083
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 1}
       outline: []
       physicsShape: []
@@ -1034,7 +1034,7 @@ TextureImporter:
         width: 395
         height: 334
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 8}
       outline: []
       physicsShape: []
@@ -1055,7 +1055,7 @@ TextureImporter:
         width: 1201
         height: 1084
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 8, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1063,6 +1063,195 @@ TextureImporter:
       bones: []
       spriteID: d41785782ba8ab248af98eeb4e7d3b0f
       internalID: -782445393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MeatGrinder_0
+      rect:
+        serializedVersion: 2
+        x: 2271
+        y: 1777
+        width: 65
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cff8536cdf29fc44bfe14fcd045a2b4
+      internalID: 956318709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MeatGrinder_1
+      rect:
+        serializedVersion: 2
+        x: 2425
+        y: 1763
+        width: 97
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0fc2b352f0331a4dbb75611ca759266
+      internalID: 254911747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MeatGrinder_2
+      rect:
+        serializedVersion: 2
+        x: 2574
+        y: 1773
+        width: 86
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 495037536a3ba914582b5b5450f3794e
+      internalID: -1859398730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MeatGrinder_3
+      rect:
+        serializedVersion: 2
+        x: 2280
+        y: 1619
+        width: 65
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94a6ae96baa4c314eba4d4508cb1201c
+      internalID: -1267345776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MeatGrinder_4
+      rect:
+        serializedVersion: 2
+        x: 2433
+        y: 1623
+        width: 96
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7435e64fb439d8468a32cfa6e0fb90c
+      internalID: -1087476415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MeatGrinder_5
+      rect:
+        serializedVersion: 2
+        x: 2581
+        y: 1633
+        width: 86
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ceb13e26e632c24bb8bf3162876e2c2
+      internalID: -153435262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MeatGrinder_6
+      rect:
+        serializedVersion: 2
+        x: 2265
+        y: 1508
+        width: 75
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41be6f2f75e3d0449ba11c90aef165af
+      internalID: 656107612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MeatGrinder_7
+      rect:
+        serializedVersion: 2
+        x: 2413
+        y: 1494
+        width: 104
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d44b3a2e5f81e444dad6164b6be6e61a
+      internalID: 148945787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MeatGrinder_8
+      rect:
+        serializedVersion: 2
+        x: 2593
+        y: 1516
+        width: 74
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ae86f60388073948b9d92f6a3108ccb
+      internalID: 1900531226
       vertices: []
       indices: 
       edges: []
@@ -1111,7 +1300,16 @@ TextureImporter:
       LightMeat_Smack: -8867440539974192047
       LightMeat_Smear: -4224877059003839859
       MeatBowl: 5295954126975429523
+      MeatGrinder_0: 956318709
+      MeatGrinder_1: 254911747
       MeatGrinder_15: -696133525170897383
+      MeatGrinder_2: -1859398730
+      MeatGrinder_3: -1267345776
+      MeatGrinder_4: -1087476415
+      MeatGrinder_5: -153435262
+      MeatGrinder_6: 656107612
+      MeatGrinder_7: 148945787
+      MeatGrinder_8: 1900531226
       Pounder_Head: 7282857851290212827
       Pounder_Joint: 7058567707624637937
       Shock: -3946390436822436375
