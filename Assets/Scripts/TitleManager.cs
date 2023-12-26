@@ -70,7 +70,7 @@ namespace HeavenStudio
 
         private bool menuMode, snsRevealed, playMenuRevealed, exiting, firstPress, usingMouse;
 
-        private Animator menuAnim;
+        private Animator menuAnim, selectedDisplayAnim;
         private Selectable currentSelectable, mouseSelectable;
         private RectTransform currentSelectableRect, lastSelectableRect;
         private float selectableLerpTimer;
@@ -85,6 +85,11 @@ namespace HeavenStudio
             var _rand = new System.Random();
             starAnims = starAnims.OrderBy(_ => _rand.Next()).ToList();
             selectedDisplayRect.gameObject.SetActive(false);
+
+            if (selectedDisplayRect.TryGetComponent(out Animator anim))
+            {
+                selectedDisplayAnim = anim;
+            }
 
 #if UNITY_EDITOR
             versionText.text = "EDITOR";
@@ -111,6 +116,11 @@ namespace HeavenStudio
             songPos = time + offset;
 
             songPosBeat = SecsToBeats(songPos);
+
+            if (selectedDisplayAnim.isActiveAndEnabled)
+            {
+                selectedDisplayAnim.DoNormalizedAnimation("Idle", GetPositionFromBeat(0, 2));
+            }
 
             if (logoRevealed && !menuMode)
             {
@@ -226,11 +236,22 @@ namespace HeavenStudio
                         }
                     }
                 }
-                else
+                else if (settingsPanel.IsOpen)
+                {
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                    {
+                        if (controller.GetLastActionDown() == (int)InputController.ActionsPad.South)
+                        {
+                            SettingsClose();
+                        }
+                    }
+                }
+                else if (!firstPress)
                 {
                     UpdateSelectable(controller);
                 }
             }
+            if (firstPress) firstPress = false;
         }
 
         void UpdateSelectable(InputController controller)
@@ -249,60 +270,23 @@ namespace HeavenStudio
                 selectedDisplayRect.sizeDelta = currentSelectableRect.sizeDelta;
             }
 
-            switch (PlayerInput.CurrentControlStyle)
-            {
-                case InputController.ControlStyles.Pad:
-                    if (controller.GetActionUp(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out _))
-                    {
-                        if (firstPress)
-                        {
-                            firstPress = false;
-                        }
-                        else if (currentSelectable != null && !usingMouse)
-                        {
-                            SoundByte.PlayOneShot("ui/UIPromptUp");
-                            currentSelectable.GetComponent<Button>()?.onClick.Invoke();
-                        }
-                    }
-                    break;
-                case InputController.ControlStyles.Baton:
-                    if (controller.GetActionUp(InputController.ControlStyles.Baton, (int)InputController.ActionsBaton.Face, out _))
-                    {
-                        if (firstPress)
-                        {
-                            firstPress = false;
-                        }
-                        else if (currentSelectable != null && !usingMouse)
-                        {
-                            SoundByte.PlayOneShot("ui/UIPromptUp");
-                            currentSelectable.GetComponent<Button>()?.onClick.Invoke();
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
             if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
             {
                 switch (controller.GetLastActionDown())
                 {
                     case (int)InputController.ActionsPad.East:
-                        if ((currentSelectable != null) && !firstPress)
+                        if (currentSelectable != null)
                         {
                             if (usingMouse)
                             {
                                 usingMouse = false;
                                 selectedDisplayIcon.SetActive(true);
                             }
-                            SoundByte.PlayOneShot("ui/UIPromptDown");
+                            currentSelectable.GetComponent<Button>()?.onClick.Invoke();
                         }
                         break;
                     case (int)InputController.ActionsPad.Up:
-                        if (firstPress)
-                        {
-                            firstPress = false;
-                        }
-                        else if (currentSelectable != null)
+                        if (currentSelectable != null)
                         {
                             if (currentSelectable.FindSelectableOnUp() != null)
                             {
@@ -320,11 +304,7 @@ namespace HeavenStudio
                         }
                         break;
                     case (int)InputController.ActionsPad.Down:
-                        if (firstPress)
-                        {
-                            firstPress = false;
-                        }
-                        else if (currentSelectable != null)
+                        if (currentSelectable != null)
                         {
                             if (currentSelectable.FindSelectableOnDown() != null)
                             {
@@ -342,11 +322,7 @@ namespace HeavenStudio
                         }
                         break;
                     case (int)InputController.ActionsPad.Left:
-                        if (firstPress)
-                        {
-                            firstPress = false;
-                        }
-                        else if (currentSelectable != null)
+                        if (currentSelectable != null)
                         {
                             if (currentSelectable.FindSelectableOnLeft() != null)
                             {
@@ -364,11 +340,7 @@ namespace HeavenStudio
                         }
                         break;
                     case (int)InputController.ActionsPad.Right:
-                        if (firstPress)
-                        {
-                            firstPress = false;
-                        }
-                        else if (currentSelectable != null)
+                        if (currentSelectable != null)
                         {
                             if (currentSelectable.FindSelectableOnRight() != null)
                             {
@@ -539,11 +511,23 @@ namespace HeavenStudio
 
         public void SettingsPressed()
         {
-            settingsPanel.SwitchSettingsDialog();
-            SoundByte.PlayOneShot("ui/UISelect");
+            if (!settingsPanel.IsOpen)
+            {
+                settingsPanel.SwitchSettingsDialog();
+                SoundByte.PlayOneShot("ui/UISelect");
+            }
             // notes:
             //  gameplay settings currently don't work due to the overlay preview requiring the screen composition setup from a gameplay prefab
             //  adding the attract screen will fix this since we'd need to add that prefab for it anyways
+        }
+
+        public void SettingsClose()
+        {
+            if (settingsPanel.IsOpen)
+            {
+                settingsPanel.SwitchSettingsDialog();
+                SoundByte.PlayOneShot("ui/UICancel");
+            }
         }
 
         public void QuitPressed()
