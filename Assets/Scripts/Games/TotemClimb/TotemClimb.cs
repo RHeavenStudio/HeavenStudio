@@ -98,8 +98,6 @@ namespace HeavenStudio.Games
             if (allStarts.Count == 0) return;
 
             _startBeat = allStarts[0].beat;
-            _totemManager.InitBeats(_startBeat);
-
             BeatAction.New(this, new()
             {
                 new(_startBeat - 1, delegate { _jumper.StartJumping(_startBeat - 1); })
@@ -109,7 +107,6 @@ namespace HeavenStudio.Games
             if (allStops.Count == 0) return;
 
             _endBeat = allStops[0].beat;
-            _totemManager.InitBeats(_startBeat);
         }
 
         private void HandleBopsOnStart(double beat)
@@ -141,6 +138,7 @@ namespace HeavenStudio.Games
             }
 
             _tripleEvents = tempTriples;
+            _totemManager.InitBeats(_startBeat);
         }
 
         private void Update()
