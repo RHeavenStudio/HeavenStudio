@@ -795,6 +795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _totemTransform: {fileID: 2892683027369623692}
+  _frogTransform: {fileID: 5749667637740173319}
   _xDistance: 3.838
   _yDistance: 1.45
   _totemAmount: 12
@@ -2213,6 +2214,8 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   _jumpDistanceX: 3.838
   _jumpDistanceY: 1.45
+  _jumpDistanceSmallX: 1.919
+  _jumpDistanceSmallY: 0.725
   _jumpOffsetY: 0.1
   _jumpHeight: 2
 --- !u!95 &7450811870195608846

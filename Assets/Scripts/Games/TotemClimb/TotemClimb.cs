@@ -22,6 +22,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new("triple", "Triple Jumping")
                 {
+                    preFunction = delegate { TotemClimb.TripleJumpSound(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
                     defaultLength = 2f,
                     resizable = true
                 },
@@ -195,6 +196,19 @@ namespace HeavenStudio.Games
         {
             if (_tripleEvents.Count == 0) return false;
             return _tripleEvents.Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
+        }
+
+        public static void TripleJumpSound(double beat, float length)
+        {
+            length = Mathf.Max(length, 2f);
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new("totemClimb/beatchange", beat - 2),
+                new("totemClimb/beatchange", beat - 1.5f),
+                new("totemClimb/beatchange", beat - 1f),
+                new("totemClimb/beatchange", beat + length - 2),
+                new("totemClimb/beatchange", beat + length - 1),
+            }, true);
         }
     }
 }

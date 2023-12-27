@@ -8,6 +8,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
     public class TCTotemManager : MonoBehaviour
     {
         [SerializeField] private Transform _totemTransform;
+        [SerializeField] private Transform _frogTransform;
         [SerializeField] private float _xDistance;
         [SerializeField] private float _yDistance;
         [SerializeField] private int _totemAmount = 12;
@@ -16,6 +17,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private float _totemStartX;
         private float _totemStartY;
         private List<Totem> _totems = new();
+        private List<Frog> _frogs = new();
 
         private int _totemIndex = 0;
         private TotemClimb _game;
@@ -30,6 +32,22 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             {
                 transform = mTransform;
                 anim = mAnim;
+                beat = mBeat;
+            }
+        }
+
+        private class Frog
+        {
+            public double beat;
+            public Transform transform;
+            public Animator anim, anim1, anim2;
+
+            public Frog(Transform mTransform, Animator mAnim, Animator mAnim1, Animator mAnim2, double mBeat)
+            {
+                transform = mTransform;
+                anim = mAnim;
+                anim1 = mAnim1;
+                anim2 = mAnim2;
                 beat = mBeat;
             }
         }
@@ -57,6 +75,18 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             {
                 _totems[i].beat = startBeat + i;
                 _totems[i].transform.gameObject.SetActive(_totems[i].beat - 1 < _game.EndBeat && !_game.IsTripleBeat(_totems[i].beat));
+            }
+
+            foreach (var e in _game._tripleEvents) 
+            { 
+                for (int i = 0; i < e.length; i += 2)
+                {
+                    double beat = e.beat + i;
+                    Transform spawnedFrog = Instantiate(_frogTransform, transform);
+                    spawnedFrog.transform.localPosition += new Vector3(_xDistance * (float)(beat - startBeat), _yDistance * (float)(beat - startBeat));
+                    spawnedFrog.gameObject.SetActive(true);
+                    _frogs.Add(new Frog(spawnedFrog, null, null, null, beat));
+                }
             }
         }
 
