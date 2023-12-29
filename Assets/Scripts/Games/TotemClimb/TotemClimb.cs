@@ -73,6 +73,8 @@ namespace HeavenStudio.Games
             CalculateStartAndEndBeat(beat);
             GetTripleEvents();
             HandleBopsOnStart(beat);
+            _totemManager.InitBeats(_startBeat);
+            _jumper.InitPath(_startBeat);
         }
 
         public override void OnPlay(double beat)
@@ -84,6 +86,8 @@ namespace HeavenStudio.Games
             CalculateStartAndEndBeat(lastGameSwitchBeat);
             GetTripleEvents();
             HandleBopsOnStart(beat);
+            _totemManager.InitBeats(_startBeat);
+            _jumper.InitPath(_startBeat);
         }
 
         private void CalculateStartAndEndBeat(double beat)
@@ -139,7 +143,6 @@ namespace HeavenStudio.Games
             }
 
             _tripleEvents = tempTriples;
-            _totemManager.InitBeats(_startBeat);
         }
 
         private void Update()
@@ -152,6 +155,11 @@ namespace HeavenStudio.Games
         public void BopTotemAtBeat(double beat)
         {
             _totemManager.BopTotemAtBeat(beat);
+        }
+
+        public Transform GetJumperPointAtBeat(double beat)
+        {
+            return _totemManager.GetJumperPointAtBeat(beat);
         }
 
         public void Bop(double beat, float length, double callBeat)

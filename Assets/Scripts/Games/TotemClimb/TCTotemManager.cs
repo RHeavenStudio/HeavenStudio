@@ -16,41 +16,11 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private Transform _scrollTransform;
         private float _totemStartX;
         private float _totemStartY;
-        private List<Totem> _totems = new();
-        private List<Frog> _frogs = new();
+        private List<TCTotem> _totems = new();
+        private List<TCFrog> _frogs = new();
 
         private int _totemIndex = 0;
         private TotemClimb _game;
-
-        private class Totem
-        {
-            public double beat;
-            public Transform transform;
-            public Animator anim;
-
-            public Totem(Transform mTransform, Animator mAnim, double mBeat = 0)
-            {
-                transform = mTransform;
-                anim = mAnim;
-                beat = mBeat;
-            }
-        }
-
-        private class Frog
-        {
-            public double beat;
-            public Transform transform;
-            public Animator anim, anim1, anim2;
-
-            public Frog(Transform mTransform, Animator mAnim, Animator mAnim1, Animator mAnim2, double mBeat)
-            {
-                transform = mTransform;
-                anim = mAnim;
-                anim1 = mAnim1;
-                anim2 = mAnim2;
-                beat = mBeat;
-            }
-        }
 
         private void Awake()
         {
@@ -59,13 +29,13 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _totemStartX = _totemTransform.localPosition.x;
             _totemStartY = _totemTransform.localPosition.y;
 
-            _totems.Add(new(_totemTransform, _totemTransform.GetComponent<Animator>()));
+            _totems.Add(_totemTransform.GetComponent<TCTotem>());
 
             for (int i = 1; i < _totemAmount; i++)
             {
                 Transform spawnedTotem = Instantiate(_totemTransform, transform);
                 spawnedTotem.transform.localPosition = new Vector3(_totemStartX + (_xDistance * i), _totemStartY + (_yDistance * i));
-                _totems.Add(new(spawnedTotem, spawnedTotem.GetComponent<Animator>()));
+                _totems.Add(spawnedTotem.GetComponent<TCTotem>());
             }
         }
 
@@ -85,7 +55,8 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     Transform spawnedFrog = Instantiate(_frogTransform, transform);
                     spawnedFrog.transform.localPosition += new Vector3(_xDistance * (float)(beat - startBeat), _yDistance * (float)(beat - startBeat));
                     spawnedFrog.gameObject.SetActive(true);
-                    _frogs.Add(new Frog(spawnedFrog, null, null, null, beat));
+                    _frogs.Add(spawnedFrog.GetComponent<TCFrog>());
+                    _frogs[i].beat = beat;
                 }
             }
         }
@@ -95,7 +66,18 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             var t = _totems.Find(x => x.beat == beat);
             if (t == null) return;
 
-            t.anim.DoScaledAnimationAsync("Bop", 0.5f);
+            t.Bop();
+        }
+
+        public Transform GetJumperPointAtBeat(double beat)
+        {
+            var t = _totems.Find(x => x.beat == beat);
+            if (t == null)
+            {
+                Debug.Log($"Jumper Point unavaible at beat {beat}.");
+                return null;
+            }
+            return t.JumperPoint;
         }
 
         private void Update()
