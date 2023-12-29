@@ -10,6 +10,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
     {
         [SerializeField] private Transform _initialPoint;
         [SerializeField] private float _jumpHeight = 2f;
+        [SerializeField] private float _jumpHeightTriple = 1f;
 
         private Path _path;
         private Animator _anim;
@@ -33,10 +34,20 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 target = _initialPoint,
                 height = _jumpHeight
             };
-            _path.positions[1] = new PathPos()
+            if (_game.IsTripleBeat(beat))
             {
-                target = _game.GetJumperPointAtBeat(beat)
-            };
+                _path.positions[1] = new PathPos()
+                {
+                    target = _game.GetJumperFrogPointAtBeat(beat, -1)
+                };
+            }
+            else
+            {
+                _path.positions[1] = new PathPos()
+                {
+                    target = _game.GetJumperPointAtBeat(beat)
+                };
+            }
         }
 
         public void StartJumping(double beat)
@@ -45,7 +56,14 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             StartCoroutine(JumpCo(beat));
             if (beat + 1 >= _game.EndBeat) return;
             
-            _game.ScheduleInput(beat, 1, Minigame.InputAction_BasicPress, Just, Miss, Empty);
+            _game.ScheduleInput(beat, 1, Minigame.InputAction_BasicPress, nextIsTriple ? JustTripleEnter : Just, nextIsTriple ? MissTripleEnter : Miss, Empty);
+        }
+
+        public void TripleJumping(double beat, bool enter)
+        {
+            StartCoroutine(JumpTripleCo(beat, enter));
+            if (beat + 0.5 >= _game.EndBeat) return;
+            _game.ScheduleInput(beat, 0.5, Minigame.InputAction_BasicPress, enter ? JustTripleExit : Just, enter ? MissTripleExit : Miss, Empty);
         }
 
         public void Bop()
@@ -59,16 +77,39 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             {
                 _path = new Path();
                 _path.positions = new PathPos[2];
-                _path.positions[0] = new PathPos()
+                if (_game.IsTripleBeat(beat))
                 {
-                    duration = 1 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 1)),
-                    height = _jumpHeight,
-                    target = _game.GetJumperPointAtBeat(beat)
-                };
-                _path.positions[1] = new PathPos()
+                    _path.positions[0] = new PathPos()
+                    {
+                        duration = 1 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 1)),
+                        height = _jumpHeight,
+                        target = _game.GetJumperFrogPointAtBeat(beat, 1)
+                    };
+                }
+                else
                 {
-                    target = _game.GetJumperPointAtBeat(beat + 1)
-                };
+                    _path.positions[0] = new PathPos()
+                    {
+                        duration = 1 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 1)),
+                        height = _jumpHeight,
+                        target = _game.GetJumperPointAtBeat(beat)
+                    };
+                }
+                
+                if (_game.IsTripleBeat(beat + 1))
+                {
+                    _path.positions[1] = new PathPos()
+                    {
+                        target = _game.GetJumperFrogPointAtBeat(beat + 1, -1)
+                    };
+                }
+                else
+                {
+                    _path.positions[1] = new PathPos()
+                    {
+                        target = _game.GetJumperPointAtBeat(beat + 1)
+                    };
+                }
             }
             _anim.Play("Jump", 0, 0);
 
@@ -76,6 +117,44 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             bool playedFall = false;
 
             while(normalizedBeat < 1f)
+            {
+                transform.position = GetPathPositionFromBeat(_path, Math.Min(Conductor.instance.songPositionInBeatsAsDouble, beat + _path.positions[0].duration), beat);
+
+                if (normalizedBeat >= 0.5f && !playedFall)
+                {
+                    _anim.Play("Fall", 0, 0);
+                    playedFall = true;
+                }
+
+                normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
+                yield return null;
+            }
+            _anim.Play("Idle", 0, 0);
+        }
+
+        private IEnumerator JumpTripleCo(double beat, bool enter)
+        {
+            if (beat >= _startBeat)
+            {
+                _path = new Path();
+                _path.positions = new PathPos[2];
+                _path.positions[0] = new PathPos()
+                {
+                    duration = 0.5f - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 0.5)),
+                    height = _jumpHeightTriple,
+                    target = _game.GetJumperFrogPointAtBeat(beat, enter ? -1 : 0)
+                };
+                _path.positions[1] = new PathPos()
+                {
+                    target = _game.GetJumperFrogPointAtBeat(beat + 0.5, enter ? 0 : 1)
+                };
+            }
+            _anim.Play("Jump", 0, 0);
+
+            float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
+            bool playedFall = false;
+
+            while (normalizedBeat < 1f)
             {
                 transform.position = GetPathPositionFromBeat(_path, Math.Min(Conductor.instance.songPositionInBeatsAsDouble, beat + _path.positions[0].duration), beat);
 
@@ -103,10 +182,40 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             SoundByte.PlayOneShotGame(isTriple ? "totemClimb/totemlandb" : "totemClimb/totemland");
         }
 
+        private void JustTripleEnter(PlayerActionEvent caller, float state)
+        {
+            TripleJumping(caller.startBeat + caller.timer, true);
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            SoundByte.PlayOneShotGame("totemClimb/totemland");
+        }
+
+        private void JustTripleExit(PlayerActionEvent caller, float state)
+        {
+            TripleJumping(caller.startBeat + caller.timer, false);
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            SoundByte.PlayOneShotGame("totemClimb/totemland");
+        }
+
         private void Miss(PlayerActionEvent caller)
         {
             StartJumping(caller.startBeat + caller.timer);
             _game.BopTotemAtBeat(caller.startBeat + caller.timer);
+        }
+
+        private void MissTripleEnter(PlayerActionEvent caller)
+        {
+            TripleJumping(caller.startBeat + caller.timer, true);
+        }
+
+        private void MissTripleExit(PlayerActionEvent caller)
+        {
+            TripleJumping(caller.startBeat + caller.timer, false);
         }
 
         private void Empty(PlayerActionEvent caller) { }

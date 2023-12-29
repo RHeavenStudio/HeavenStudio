@@ -162,6 +162,11 @@ namespace HeavenStudio.Games
             return _totemManager.GetJumperPointAtBeat(beat);
         }
 
+        public Transform GetJumperFrogPointAtBeat(double beat, int part)
+        {
+            return _totemManager.GetJumperFrogPointAtBeat(beat, part);
+        }
+
         public void Bop(double beat, float length, double callBeat)
         {
             List<BeatAction.Action> actions = new();

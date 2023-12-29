@@ -55,8 +55,8 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     Transform spawnedFrog = Instantiate(_frogTransform, transform);
                     spawnedFrog.transform.localPosition += new Vector3(_xDistance * (float)(beat - startBeat), _yDistance * (float)(beat - startBeat));
                     spawnedFrog.gameObject.SetActive(true);
+                    spawnedFrog.GetComponent<TCFrog>().beat = beat;
                     _frogs.Add(spawnedFrog.GetComponent<TCFrog>());
-                    _frogs[i].beat = beat;
                 }
             }
         }
@@ -78,6 +78,25 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 return null;
             }
             return t.JumperPoint;
+        }
+
+        public Transform GetJumperFrogPointAtBeat(double beat, int part)
+        {
+            var f = _frogs.Find(x => beat >= x.beat && beat < x.beat + 2);
+            if (f == null)
+            {
+                Debug.Log($"Jumper Frog Point unavaible at beat {beat}.");
+                return null;
+            }
+            switch (part)
+            {
+                case -1:
+                    return f.JumperPointLeft;
+                case 0:
+                    return f.JumperPointMiddle;
+                default:
+                    return f.JumperPointRight;
+            }
         }
 
         private void Update()
