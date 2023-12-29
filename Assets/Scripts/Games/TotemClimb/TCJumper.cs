@@ -50,18 +50,18 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             }
         }
 
-        public void StartJumping(double beat)
+        public void StartJumping(double beat, bool miss = false)
         {
             bool nextIsTriple = _game.IsTripleBeat(beat + 1);
-            StartCoroutine(JumpCo(beat));
+            StartCoroutine(JumpCo(beat, miss));
             if (beat + 1 >= _game.EndBeat) return;
             
             _game.ScheduleInput(beat, 1, Minigame.InputAction_BasicPress, nextIsTriple ? JustTripleEnter : Just, nextIsTriple ? MissTripleEnter : Miss, Empty);
         }
 
-        public void TripleJumping(double beat, bool enter)
+        public void TripleJumping(double beat, bool enter, bool miss = false)
         {
-            StartCoroutine(JumpTripleCo(beat, enter));
+            StartCoroutine(JumpTripleCo(beat, enter, miss));
             if (beat + 0.5 >= _game.EndBeat) return;
             _game.ScheduleInput(beat, 0.5, Minigame.InputAction_BasicPress, enter ? JustTripleExit : Just, enter ? MissTripleExit : Miss, Empty);
         }
@@ -71,7 +71,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _anim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
-        private IEnumerator JumpCo(double beat)
+        private IEnumerator JumpCo(double beat, bool miss)
         {
             if (beat >= _startBeat)
             {
@@ -111,7 +111,8 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     };
                 }
             }
-            _anim.Play("Jump", 0, 0);
+            if (!miss) _anim.Play("Jump", 0, 0);
+            else _anim.DoScaledAnimationAsync("Miss", 0.5f);
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
             bool playedFall = false;
@@ -122,7 +123,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
                 if (normalizedBeat >= 0.5f && !playedFall)
                 {
-                    _anim.Play("Fall", 0, 0);
+                    if (!miss) _anim.Play("Fall", 0, 0);
                     playedFall = true;
                 }
 
@@ -132,7 +133,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _anim.Play("Idle", 0, 0);
         }
 
-        private IEnumerator JumpTripleCo(double beat, bool enter)
+        private IEnumerator JumpTripleCo(double beat, bool enter, bool miss)
         {
             if (beat >= _startBeat)
             {
@@ -149,7 +150,8 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     target = _game.GetJumperFrogPointAtBeat(beat + 0.5, enter ? 0 : 1)
                 };
             }
-            _anim.Play("Jump", 0, 0);
+            if (!miss) _anim.Play("Jump", 0, 0);
+            else _anim.DoScaledAnimationAsync("Miss", 0.5f);
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
             bool playedFall = false;
@@ -160,7 +162,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
                 if (normalizedBeat >= 0.5f && !playedFall)
                 {
-                    _anim.Play("Fall", 0, 0);
+                    if (!miss) _anim.Play("Fall", 0, 0);
                     playedFall = true;
                 }
 
@@ -178,6 +180,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             if (isTriple) _game.FallFrogAtBeat(caller.startBeat + caller.timer, 1);
             if (state >= 1f || state <= -1f)
             {
+                SoundByte.PlayOneShot("nearMiss");
                 return;
             }
             SoundByte.PlayOneShotGame(isTriple ? "totemClimb/totemlandb" : "totemClimb/totemland");
@@ -189,6 +192,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _game.FallFrogAtBeat(caller.startBeat + caller.timer, -1);
             if (state >= 1f || state <= -1f)
             {
+                SoundByte.PlayOneShot("nearMiss");
                 return;
             }
             SoundByte.PlayOneShotGame("totemClimb/totemland");
@@ -200,6 +204,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _game.FallFrogAtBeat(caller.startBeat + caller.timer, 0);
             if (state >= 1f || state <= -1f)
             {
+                SoundByte.PlayOneShot("nearMiss");
                 return;
             }
             SoundByte.PlayOneShotGame("totemClimb/totemland");
@@ -207,21 +212,24 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         private void Miss(PlayerActionEvent caller)
         {
-            StartJumping(caller.startBeat + caller.timer);
+            StartJumping(caller.startBeat + caller.timer, true);
             _game.BopTotemAtBeat(caller.startBeat + caller.timer);
             if (_game.IsTripleBeat(caller.startBeat + caller.timer)) _game.FallFrogAtBeat(caller.startBeat + caller.timer, 1);
+            SoundByte.PlayOneShot("miss");
         }
 
         private void MissTripleEnter(PlayerActionEvent caller)
         {
-            TripleJumping(caller.startBeat + caller.timer, true);
+            TripleJumping(caller.startBeat + caller.timer, true, true);
             _game.FallFrogAtBeat(caller.startBeat + caller.timer, -1);
+            SoundByte.PlayOneShot("miss");
         }
 
         private void MissTripleExit(PlayerActionEvent caller)
         {
-            TripleJumping(caller.startBeat + caller.timer, false);
+            TripleJumping(caller.startBeat + caller.timer, false, true);
             _game.FallFrogAtBeat(caller.startBeat + caller.timer, 0);
+            SoundByte.PlayOneShot("miss");
         }
 
         private void Empty(PlayerActionEvent caller) { }
