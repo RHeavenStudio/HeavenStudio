@@ -99,6 +99,18 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             }
         }
 
+        public void FallFrogAtBeat(double beat, int part)
+        {
+            var f = _frogs.Find(x => beat >= x.beat && beat < x.beat + 2);
+            if (f == null)
+            {
+                Debug.Log($"Frog unavaible at beat {beat}.");
+                return;
+            }
+
+            f.FallPiece(part);
+        }
+
         private void Update()
         {
             float currentScrollX = _scrollTransform.localPosition.x;

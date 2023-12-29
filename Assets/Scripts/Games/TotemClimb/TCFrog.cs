@@ -1,3 +1,4 @@
+using HeavenStudio.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,21 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         public Transform JumperPointMiddle => _jumperPointMiddle;
         public Transform JumperPointRight => _jumperPointRight;
 
+        public void FallPiece(int part)
+        {
+            switch (part)
+            {
+                case -1:
+                    _animLeft.DoScaledAnimationAsync("Fall", 0.5f);
+                    break;
+                case 0:
+                    _animMiddle.DoScaledAnimationAsync("Fall", 0.5f);
+                    break;
+                default:
+                    _animRight.DoScaledAnimationAsync("Fall", 0.5f);
+                    break;
+            }
+        }
     }
 }
 

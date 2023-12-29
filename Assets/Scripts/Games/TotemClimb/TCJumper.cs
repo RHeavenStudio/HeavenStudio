@@ -175,6 +175,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             bool isTriple = _game.IsTripleBeat(caller.startBeat + caller.timer);
             StartJumping(caller.startBeat + caller.timer);
             _game.BopTotemAtBeat(caller.startBeat + caller.timer);
+            if (isTriple) _game.FallFrogAtBeat(caller.startBeat + caller.timer, 1);
             if (state >= 1f || state <= -1f)
             {
                 return;
@@ -185,6 +186,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private void JustTripleEnter(PlayerActionEvent caller, float state)
         {
             TripleJumping(caller.startBeat + caller.timer, true);
+            _game.FallFrogAtBeat(caller.startBeat + caller.timer, -1);
             if (state >= 1f || state <= -1f)
             {
                 return;
@@ -195,6 +197,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private void JustTripleExit(PlayerActionEvent caller, float state)
         {
             TripleJumping(caller.startBeat + caller.timer, false);
+            _game.FallFrogAtBeat(caller.startBeat + caller.timer, 0);
             if (state >= 1f || state <= -1f)
             {
                 return;
@@ -206,16 +209,19 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         {
             StartJumping(caller.startBeat + caller.timer);
             _game.BopTotemAtBeat(caller.startBeat + caller.timer);
+            if (_game.IsTripleBeat(caller.startBeat + caller.timer)) _game.FallFrogAtBeat(caller.startBeat + caller.timer, 1);
         }
 
         private void MissTripleEnter(PlayerActionEvent caller)
         {
             TripleJumping(caller.startBeat + caller.timer, true);
+            _game.FallFrogAtBeat(caller.startBeat + caller.timer, -1);
         }
 
         private void MissTripleExit(PlayerActionEvent caller)
         {
             TripleJumping(caller.startBeat + caller.timer, false);
+            _game.FallFrogAtBeat(caller.startBeat + caller.timer, 0);
         }
 
         private void Empty(PlayerActionEvent caller) { }
