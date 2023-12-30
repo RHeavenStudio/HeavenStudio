@@ -299,10 +299,10 @@ TextureImporter:
         serializedVersion: 2
         x: 1139
         y: 1476
-        width: 511
-        height: 634
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 529
+        height: 645
+      alignment: 9
+      pivot: {x: 0.47307, y: 0.4842236}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -323,7 +323,7 @@ TextureImporter:
         width: 433
         height: 655
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -339,12 +339,12 @@ TextureImporter:
       name: frog2
       rect:
         serializedVersion: 2
-        x: 2252
+        x: 2215
         y: 1484
-        width: 509
-        height: 886
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 546
+        height: 904
+      alignment: 9
+      pivot: {x: 0.5276107, y: 0.48999414}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -352,6 +352,111 @@ TextureImporter:
       bones: []
       spriteID: aa5f0fe89391f2e45a5a46fe0f46dd0c
       internalID: -1228472510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dragon
+      rect:
+        serializedVersion: 2
+        x: 1177
+        y: 2162
+        width: 489
+        height: 379
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6873bef45b1504499e274ba63a97354
+      internalID: -1281924911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wing2
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 2084
+        width: 265
+        height: 236
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18b387437250c7e4e8a0d9107c08cb8d
+      internalID: -500930693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dragonbody
+      rect:
+        serializedVersion: 2
+        x: 759
+        y: 2372
+        width: 332
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99ed4daf673fb26438a0a60427e0b735
+      internalID: -992368394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: star
+      rect:
+        serializedVersion: 2
+        x: 2777
+        y: 2675
+        width: 142
+        height: 148
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 433ae3aa11b67fb4fbcfde92993c927a
+      internalID: 1025117743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sweat
+      rect:
+        serializedVersion: 2
+        x: 2768
+        y: 2507
+        width: 151
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80970345256478d41947d82c9b0178dd
+      internalID: 869300542
       vertices: []
       indices: 
       edges: []
@@ -367,6 +472,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      dragon: -1281924911
+      dragonbody: -992368394
       foot0: -774751624
       foot1: 2050925680
       frog0: -1549223093
@@ -374,9 +481,12 @@ TextureImporter:
       frog2: -1228472510
       jumper0: -477173263
       jumper1: -825022746
+      star: 1025117743
+      sweat: 869300542
       totem0: 1921032003
       totem1: 1031057130
       totem2: 2141254573
+      wing2: -500930693
       wingleft: -591290891
       wingright: -470877788
   spritePackingTag: 

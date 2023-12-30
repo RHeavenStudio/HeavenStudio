@@ -26,6 +26,20 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     resizable = true
                 },
+                new("high", "High Jump")
+                {
+                    preFunction = delegate
+                    {
+                        double beat = eventCaller.currentEntity.beat;
+
+                        MultiSound.Play(new MultiSound.Sound[]
+                        {
+                            new MultiSound.Sound("count-ins/ready1", beat - 2f),
+                            new MultiSound.Sound("count-ins/ready2", beat - 1f),
+                        }, false, true);
+                    },
+                    defaultLength = 4f           
+                },
                 new("stop", "Stop Jumping")
                 {
 
@@ -59,7 +73,8 @@ namespace HeavenStudio.Games
         private double _endBeat = double.MaxValue;
         public double EndBeat => _endBeat;
 
-        [NonSerialized] public List<RiqEntity> _tripleEvents = new(); 
+        [NonSerialized] public List<RiqEntity> _tripleEvents = new();
+        [NonSerialized] public List<RiqEntity> _highJumpEvents = new();
 
         public static TotemClimb instance;
 
@@ -71,6 +86,7 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             CalculateStartAndEndBeat(beat);
+            GetHighJumpEvents();
             GetTripleEvents();
             HandleBopsOnStart(beat);
             _totemManager.InitBeats(_startBeat);
@@ -84,6 +100,7 @@ namespace HeavenStudio.Games
             if (allGameSwitches.Count > 0) lastGameSwitchBeat = allGameSwitches[^1].beat;
 
             CalculateStartAndEndBeat(lastGameSwitchBeat);
+            GetHighJumpEvents();
             GetTripleEvents();
             HandleBopsOnStart(beat);
             _totemManager.InitBeats(_startBeat);
@@ -122,6 +139,29 @@ namespace HeavenStudio.Games
             Bop(e.beat, e.length, beat);
         }
 
+        private void GetHighJumpEvents()
+        {
+            var highs = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "high" }).FindAll(x => x.beat >= _startBeat && x.beat < _endBeat);
+            if (highs.Count == 0) return;
+
+            highs.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            var tempHighs = new List<RiqEntity>();
+
+            double goodAfterBeat = _startBeat;
+
+            foreach (var h in highs)
+            {
+                if (h.beat >= goodAfterBeat && IsOnBeat(_startBeat, h.beat))
+                {
+                    tempHighs.Add(h);
+                    goodAfterBeat = h.beat + 4;
+                }
+            }
+
+            _highJumpEvents = tempHighs;
+        }
+
         private void GetTripleEvents()
         {
             var triples = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "triple" }).FindAll(x => x.beat >= _startBeat && x.beat + x.length <= _endBeat);
@@ -133,12 +173,13 @@ namespace HeavenStudio.Games
 
             double lastLengthBeat = _startBeat;
 
-            for (int i = 0; i < triples.Count; i++)
+            foreach (var t in triples)
             {
-                if (triples[i].beat >= lastLengthBeat && IsOnBeat(_startBeat, triples[i].beat))
+                if (t.beat >= lastLengthBeat && IsOnBeat(_startBeat, t.beat))
                 {
-                    tempTriples.Add(triples[i]);
-                    lastLengthBeat = triples[i].beat + triples[i].length;
+                    if (_highJumpEvents.Find(x => x.beat + 4f > t.beat && x.beat + 4 < t.beat + t.length + 4) != null) continue; 
+                    tempTriples.Add(t);
+                    lastLengthBeat = t.beat + t.length;
                 }
             }
 
@@ -201,6 +242,24 @@ namespace HeavenStudio.Games
             double beatDistance = _endBeat - _startBeat;
             float normalizedBeat = Mathf.Clamp(cond.GetPositionFromBeat(_startBeat, 1), 0f, (float)beatDistance);
 
+            if (IsHighBeatBasedOnStart(normalizedBeat))
+            {
+                var h = GetHighJumpAtBeatBasedOnStart(normalizedBeat);
+                if (h != null)
+                {
+                    double highBeat = h.beat - _startBeat;
+                    if (normalizedBeat >= highBeat + 2)
+                    {
+                        normalizedBeat = Mathf.Clamp(normalizedBeat - 2 + (cond.GetPositionFromBeat(highBeat + 2, 2) * 2), (float)highBeat, (float)highBeat + 4);
+                        Debug.Log(normalizedBeat);
+                    }
+                    else if (normalizedBeat >= highBeat)
+                    {
+                        normalizedBeat = Mathf.Clamp(normalizedBeat, 0f, (float)highBeat);
+                    }
+                }
+            }
+
             _scrollTransform.localPosition = new Vector3(normalizedBeat * _scrollSpeedX, normalizedBeat * _scrollSpeedY);
             _cameraTransform.localPosition = new Vector3(_scrollTransform.localPosition.x * -2, _scrollTransform.localPosition.y * -2);
         }
@@ -216,6 +275,29 @@ namespace HeavenStudio.Games
             return _tripleEvents.Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
         }
 
+        public bool IsHighBeat(double beat)
+        {
+            if (_highJumpEvents.Count == 0) return false;
+            return _highJumpEvents.Find(x => beat >= x.beat && beat < x.beat + 4) != null;
+        }
+
+        public bool IsHighBeatBasedOnStart(double beat)
+        {
+            if (_highJumpEvents.Count == 0) return false;
+            return _highJumpEvents.Find(x => beat >= x.beat - _startBeat && beat < x.beat - _startBeat + 4) != null;
+        }
+
+        public RiqEntity GetHighJumpAtBeatBasedOnStart(double beat)
+        {
+            if (_highJumpEvents.Count == 0) return null;
+            return _highJumpEvents.Find(x => beat >= x.beat - _startBeat && beat < x.beat - _startBeat + 4);
+        }
+
+        public bool IsTripleOrHighBeat(double beat)
+        {
+            return IsHighBeat(beat) || IsTripleBeat(beat);
+        }
+
         public static void TripleJumpSound(double beat, float length)
         {
             length = Mathf.Max(length, 2f);
@@ -226,7 +308,7 @@ namespace HeavenStudio.Games
                 new("totemClimb/beatchange", beat - 1f),
                 new("totemClimb/beatchange", beat + length - 2),
                 new("totemClimb/beatchange", beat + length - 1),
-            }, true);
+            }, true, true);
         }
     }
 }

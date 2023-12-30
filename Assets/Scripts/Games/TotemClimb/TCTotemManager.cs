@@ -9,6 +9,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
     {
         [SerializeField] private Transform _totemTransform;
         [SerializeField] private Transform _frogTransform;
+        [SerializeField] private TCDragon _dragon;
         [SerializeField] private float _xDistance;
         [SerializeField] private float _yDistance;
         [SerializeField] private int _totemAmount = 12;
@@ -18,6 +19,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private float _totemStartY;
         private List<TCTotem> _totems = new();
         private List<TCFrog> _frogs = new();
+        private List<TCDragon> _dragons = new();
 
         private int _totemIndex = 0;
         private TotemClimb _game;
@@ -44,7 +46,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             for (int i = 0; i < _totems.Count; i++)
             {
                 _totems[i].beat = startBeat + i;
-                _totems[i].transform.gameObject.SetActive(_totems[i].beat - 1 < _game.EndBeat && !_game.IsTripleBeat(_totems[i].beat));
+                _totems[i].transform.gameObject.SetActive(_totems[i].beat - 1 < _game.EndBeat && !_game.IsTripleOrHighBeat(_totems[i].beat));
             }
 
             foreach (var e in _game._tripleEvents) 
@@ -58,6 +60,16 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     spawnedFrog.GetComponent<TCFrog>().beat = beat;
                     _frogs.Add(spawnedFrog.GetComponent<TCFrog>());
                 }
+            }
+
+            foreach (var e in _game._highJumpEvents)
+            {
+                double beat = e.beat;
+                TCDragon spawnedDragon = Instantiate(_dragon, transform);
+                spawnedDragon.transform.localPosition += new Vector3(_xDistance * (float)(beat - startBeat), _yDistance * (float)(beat - startBeat));
+                spawnedDragon.gameObject.SetActive(true);
+                spawnedDragon.beat = beat;
+                _dragons.Add(spawnedDragon);
             }
         }
 
@@ -122,7 +134,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
                 t.transform.localPosition = new Vector3(t.transform.localPosition.x + (_xDistance * _totemAmount), t.transform.localPosition.y + (_yDistance * _totemAmount));
                 t.beat += _totemAmount;
-                t.transform.gameObject.SetActive(t.beat - 1 < _game.EndBeat && !_game.IsTripleBeat(t.beat));
+                t.transform.gameObject.SetActive(t.beat - 1 < _game.EndBeat && !_game.IsTripleOrHighBeat(t.beat));
                 _totemIndex++;
             }
         }
