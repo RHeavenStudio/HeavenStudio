@@ -112,9 +112,13 @@ namespace HeavenStudio.Games
 
         //game scene
         public static PajamaParty instance;
+
+        public bool HighState => highState;
+        public bool ExpectHigh => expectHigh;
+
         CtrPillowMonkey[,] monkeys;
         double cameraHighStart = double.MaxValue;
-        bool bgState, highState;
+        bool bgState, highState, expectHigh;
 
         //cues while unoaded
         static double WantThreeJump = double.MinValue;
@@ -244,7 +248,7 @@ namespace HeavenStudio.Games
             }
             if (WantThrowSequence != double.MinValue)
             {
-                DoThrowSequence(WantThrowSequence, false);
+                DoThrowSequence(WantThrowSequence, false, high: WantThrowHigh);
                 WantThrowSequence = double.MinValue;
             }
             if (WantSleepSequence != double.MinValue)
@@ -379,6 +383,7 @@ namespace HeavenStudio.Games
             if (high)
             {
                 cameraHighStart = beat + 3;
+                expectHigh = true;
             }
 
             BeatAction.New(Mako, new List<BeatAction.Action>()
@@ -547,6 +552,19 @@ namespace HeavenStudio.Games
             else
             {
                 BgAnimator.DoScaledAnimationAsync(bgState ? "SlideOpen" : "SlideClose", (float)(1.0 / length));
+            }
+        }
+
+        public void ToggleHighState(bool hit)
+        {
+            expectHigh = false;
+            if (hit && !highState)
+            {
+                highState = true;
+            }
+            else
+            {
+                highState = false;
             }
         }
     }

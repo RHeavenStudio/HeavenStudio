@@ -10,13 +10,18 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 {
     public class CtrPillowPlayer : MonoBehaviour
     {
-        [Header("Objects")]
-        public GameObject Player;
-        public GameObject Shadow;
-        public GameObject Projectile;
-        public GameObject Projectile_Root;
+        const string HighSuffix = "_H";
+        const string NrmSuffix = "";
 
-        public Animator anim;
+        [Header("Objects")]
+        [SerializeField] GameObject Player;
+        [SerializeField] GameObject Shadow;
+        [SerializeField] GameObject Projectile;
+        [SerializeField] GameObject Projectile_Root;
+
+        public Animator anim { get; private set; }
+        string animSuffix => (PajamaParty.instance.HighState ? HighSuffix : NrmSuffix);
+
         double lastReportedBeat;
         double startJumpTime = double.MinValue;
         float jumpLength = 0;
@@ -91,7 +96,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 Player.transform.localPosition = new Vector3(0, jumpHeight * yWeight);
                 Shadow.transform.localScale = new Vector3((1f - yWeight * 0.2f) * 1.65f, (1f - yWeight * 0.2f), 1f);
                 // handles the shirt lifting
-                anim.DoScaledAnimation("MakoJump", startJumpTime, jumpLength);
+                anim.DoScaledAnimation("MakoJump" + animSuffix, startJumpTime, jumpLength);
             }
             else
             {
@@ -102,11 +107,11 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     hasJumped = false;
                     PajamaParty.instance.DoBedImpact();
                     if (jumpNg)
-                        anim.DoScaledAnimationAsync("MakoCatchNg");
+                        anim.DoScaledAnimationAsync("MakoCatchNg" + animSuffix);
                     else if (jumpHeight != 4f)
-                        anim.DoScaledAnimationAsync("MakoCatch");
+                        anim.DoScaledAnimationAsync("MakoCatch" + animSuffix);
                     else
-                        anim.DoScaledAnimationAsync("MakoLand");
+                        anim.DoScaledAnimationAsync("MakoLand" + animSuffix);
                     jumpNg = false;
                 }
                 startJumpTime = double.MinValue;
@@ -141,11 +146,11 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                     if (throwNg)
                     {
-                        anim.DoUnscaledAnimation("MakoCatchNg");
+                        anim.DoUnscaledAnimation("MakoCatchNg" + animSuffix);
                     }
                     else
                     {
-                        anim.DoUnscaledAnimation("MakoCatch");
+                        anim.DoUnscaledAnimation("MakoCatch" + animSuffix);
                     }
                     //TODO: change when locales are a thing
                     SoundByte.PlayOneShotGame("pajamaParty/catch" + UnityEngine.Random.Range(0, 2)); //bruh
@@ -164,7 +169,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         {
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && !hasThrown && !startedSleeping && canCharge && shouldBop)
             {
-                anim.DoScaledAnimationAsync("MakoBeat", 0.5f);
+                anim.DoScaledAnimationAsync("MakoBeat" + animSuffix, 0.5f);
             }
         }
 
@@ -205,7 +210,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         {
             startedSleeping = false;
             canJump = false;
-            anim.DoUnscaledAnimation("MakoReady");
+            anim.DoUnscaledAnimation("MakoReady" + animSuffix);
             charging = true;
         }
 
@@ -215,17 +220,37 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             var cond = Conductor.instance;
             charging = false;
             canCharge = false;
-            if (hit)
-                anim.DoUnscaledAnimation("MakoThrow");
-            else
+            var game = PajamaParty.instance;
+            if (game.ExpectHigh)
             {
-                anim.DoScaledAnimationAsync("MakoThrowOut", 0.5f);
                 BeatAction.New(this, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(
-                        beat + 0.5f,
-                        delegate {
-                            anim.DoScaledAnimationAsync("MakoPickUp");
+                    new
+                    (
+                        beat + 1,
+                        delegate
+                        {
+                            game.ToggleHighState(hit);
+                            anim.DoUnscaledAnimation("MakoThrow" + animSuffix, 1);
+                        }
+                    )
+                });
+            }
+            if (hit)
+            {
+                anim.DoUnscaledAnimation("MakoThrow" + animSuffix);
+            }
+            else
+            {
+                anim.DoScaledAnimationAsync("MakoThrowOut" + animSuffix, 0.5f);
+                BeatAction.New(this, new List<BeatAction.Action>()
+                {
+                    new
+                    (
+                        beat + 0.5,
+                        delegate
+                        {
+                            anim.DoScaledAnimationAsync("MakoPickUp" + animSuffix);
                             SoundByte.PlayOneShotGame("pajamaParty/catch" + UnityEngine.Random.Range(0, 2)); //bruh
                             Projectile.SetActive(false);
                             canCharge = true;
@@ -239,7 +264,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         public void PlayerThrough(double beat)
         {
             var cond = Conductor.instance;
-            anim.DoScaledAnimationAsync("MakoThrough", 0.5f);
+            anim.DoScaledAnimationAsync("MakoThrough" + animSuffix, 0.5f);
             charging = false;
             canCharge = false;
             canJump = false;
@@ -358,7 +383,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 hasJumped = false;
                 PajamaParty.instance.DoBedImpact();
 
-                anim.DoScaledAnimationAsync("MakoLand");
+                anim.DoScaledAnimationAsync("MakoLand" + animSuffix);
             }
             startJumpTime = double.MinValue;
             Player.transform.localPosition = new Vector3(0, 0);
@@ -383,11 +408,11 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 {
                     new BeatAction.Action(
                         beat,
-                        delegate { anim.DoScaledAnimationAsync("MakoSleep00"); }
+                        delegate { anim.DoScaledAnimationAsync("MakoSleep00" + animSuffix); }
                     ),
                     new BeatAction.Action(
                         beat + 0.5f,
-                        delegate { anim.DoUnscaledAnimation("MakoSleep01"); }
+                        delegate { anim.DoUnscaledAnimation("MakoSleep01" + animSuffix); }
                     ),
                     new BeatAction.Action(
                         beat + 1f,
@@ -399,7 +424,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                         beat + 3f,
                         delegate {
                             if (canSleep)
-                                anim.DoScaledAnimationAsync(alt ? "MakoReadySleep01" : "MakoReadySleep");
+                                anim.DoScaledAnimationAsync((alt ? "MakoReadySleep01" : "MakoReadySleep") + animSuffix);
                         }
                     ),
                     new BeatAction.Action(
@@ -423,11 +448,11 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             caller.CanHit(false);
             canSleep = false;
             if (state <= -1f || state >= 1f)
-                anim.DoUnscaledAnimation("MakoSleepNg");
+                anim.DoUnscaledAnimation("MakoSleepNg" + animSuffix);
             else
             {
                 SoundByte.PlayOneShotGame("pajamaParty/siesta4");
-                anim.DoScaledAnimationAsync("MakoSleepJust");
+                anim.DoScaledAnimationAsync("MakoSleepJust" + animSuffix);
 
                 if (!longSleep)
                 {
@@ -436,7 +461,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                             new BeatAction.Action(
                                 caller.startBeat + 7f,
                                 delegate {
-                                    anim.DoScaledAnimationAsync("MakoAwake");
+                                    anim.DoScaledAnimationAsync("MakoAwake" + animSuffix);
                                     SoundByte.PlayOneShotGame("pajamaParty/siestaDone");
                                 }
                             ),
@@ -451,7 +476,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             var cond = Conductor.instance;
             if (canSleep)
             {
-                anim.DoScaledAnimationAsync("MakoSleepThrough", 1, 0);
+                anim.DoScaledAnimationAsync("MakoSleepThrough" + animSuffix, 1, 0);
                 caller.CanHit(false);
                 canSleep = false;
             }
@@ -462,7 +487,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             var cond = Conductor.instance;
             if (canSleep)
             {
-                anim.DoScaledAnimationAsync("MakoSleepOut", 0.5f);
+                anim.DoScaledAnimationAsync("MakoSleepOut" + animSuffix, 0.5f);
                 SoundByte.PlayOneShotGame("pajamaParty/siestaBad");
                 caller.CanHit(false);
                 canSleep = false;
