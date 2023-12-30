@@ -63,8 +63,6 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
 
-        [SerializeField] private GameObject DebugHolder;
-
         [Header("Dialogs")]
         [SerializeField] private Dialog[] Dialogs;
 
@@ -134,6 +132,7 @@ namespace HeavenStudio.Editor
         public void ShowQuitPopUp(bool show)
         {
             _confirmQuitMain.SetActive(show);
+            SetAuthoritiveMenu(show);
         }
 
         public bool ShouldQuit = false;
@@ -225,11 +224,6 @@ namespace HeavenStudio.Editor
                     {
                         SaveRemix(false);
                     }
-                }
-
-                if (Input.GetKeyDown(KeyCode.F12))
-                {
-                    DebugHolder.gameObject.SetActive(!DebugHolder.activeInHierarchy);
                 }
             }
             #endregion
@@ -359,19 +353,36 @@ namespace HeavenStudio.Editor
 
         public void SaveRemix(bool saveAs = true)
         {
-            if (saveAs == true)
+            Debug.Log(GameManager.instance.Beatmap["propertiesmodified"]);
+            if (!(bool)GameManager.instance.Beatmap["propertiesmodified"])
             {
-                SaveRemixFilePanel();
+                foreach (var dialog in Dialogs)
+                {
+                    if (dialog.GetType() == typeof(RemixPropertiesDialog))
+                    {
+                        GlobalGameManager.ShowErrorMessage("Set Remix Properties", "Set remix properties before saving.");
+                        (dialog as RemixPropertiesDialog).SwitchPropertiesDialog();
+                        (dialog as RemixPropertiesDialog).SetSaveOnClose(true, saveAs);
+                        return;
+                    }
+                }
             }
             else
             {
-                if (currentRemixPath == string.Empty || currentRemixPath == null)
+                if (saveAs)
                 {
                     SaveRemixFilePanel();
                 }
                 else
                 {
-                    SaveRemixFile(currentRemixPath);
+                    if (currentRemixPath is "" or null)
+                    {
+                        SaveRemixFilePanel();
+                    }
+                    else
+                    {
+                        SaveRemixFile(currentRemixPath);
+                    }
                 }
             }
         }
@@ -388,6 +399,7 @@ namespace HeavenStudio.Editor
                 if (path != String.Empty)
                 {
                     SaveRemixFile(path);
+                    currentRemixPath = path;
                 }
             });
         }
@@ -396,7 +408,6 @@ namespace HeavenStudio.Editor
         {
             try
             {
-                RiqFileHandler.UnlockCache();
                 RiqFileHandler.WriteRiq(GameManager.instance.Beatmap);
                 RiqFileHandler.PackRiq(path, true);
                 Debug.Log("Packed RIQ successfully!");
@@ -447,7 +458,6 @@ namespace HeavenStudio.Editor
 
                 try
                 {
-                    RiqFileHandler.UnlockCache();
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
                     Debug.Log("Imported RIQ successfully!");
                     LoadRemix();
@@ -517,6 +527,16 @@ namespace HeavenStudio.Editor
         public static bool MouseInRectTransform(RectTransform rectTransform)
         {
             return (rectTransform.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera));
+        }
+
+        public void ReturnToTitle()
+        {
+            GlobalGameManager.LoadScene("Title");
+        }
+
+        public void SetAuthoritiveMenu(bool state)
+        {
+            inAuthorativeMenu = state;
         }
 
         public void ToggleDebugCam()

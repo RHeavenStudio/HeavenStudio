@@ -61,7 +61,7 @@ namespace HeavenStudio
         private void Close()
         {
             DSGuyAnimator.Play("Close", -1);
-            Circle.SetActive(true);
+            Circle.SetActive(true && PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch);
             isOpen = false;
         }
 
@@ -70,7 +70,7 @@ namespace HeavenStudio
             flickStart = startPos;
             vel = newVel;
             DSGuyAnimator.Play("Flick", -1);
-            Circle.SetActive(true);
+            Circle.SetActive(true && PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch);
             isOpen = false;
         }
 
@@ -86,6 +86,10 @@ namespace HeavenStudio
             }
             else
             {
+                DSGuy.SetActive(PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch);
+                Circle.SetActive(PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch);
+                if (PlayerInput.CurrentControlStyle != InputSystem.InputController.ControlStyles.Touch) return;
+
                 bool lrState = PlayerInput.GetInputController(1).GetPointerLeftRight();
                 if (splitTouchSnapEffect != null && PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch && (GameManager.instance?.GameHasSplitColours ?? false))
                 {
@@ -111,7 +115,7 @@ namespace HeavenStudio
                 }
                 else if (splitTouchSnapEffect != null && splitTouchSnapEffect.emitting)
                 {
-                    ClearTrail();
+                    ClearTrail(false);
                 }
 
                 gameObject.transform.position = pos;
@@ -160,13 +164,14 @@ namespace HeavenStudio
             ClearTrail();
         }
 
-        public void ClearTrail()
+        public void ClearTrail(bool emm = false)
         {
             trailEnableTime = 0;
             if (splitTouchSnapEffect != null)
             {
                 splitTouchSnapEffect.Clear();
             }
+            splitTouchSnapEffect.emitting = emm;
         }
 
         public void SetCursorColors(Color main, Color left, Color right)

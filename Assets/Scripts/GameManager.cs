@@ -44,14 +44,17 @@ namespace HeavenStudio
             currentPreEvent, currentPreSwitch, currentPreSequence;
         [NonSerialized] public double endBeat;
         [NonSerialized] public float startOffset;
-        [NonSerialized] public bool playOnStart;
+        [NonSerialized] public bool playMode;
         [NonSerialized] public double startBeat;
         [NonSerialized] public GameObject currentGameO;
         private Minigame _currentMinigame;
         [NonSerialized] public bool autoplay;
         [NonSerialized] public bool canInput = true;
-        [NonSerialized] public RiqEntity currentSection, nextSection;
-        public double sectionProgress { get; private set; }
+        [NonSerialized] public RiqEntity lastSection, currentSection;
+        [NonSerialized] public double nextSectionBeat;
+        public double SectionProgress { get; private set; }
+        public float MarkerWeight { get; private set; }
+        public int MarkerCategory { get; private set; }
 
         public bool GameHasSplitColours
         {
@@ -70,8 +73,11 @@ namespace HeavenStudio
         List<RiqEntity> allGameSwitches;
 
         public event Action<double> onBeatChanged;
-        public event Action<RiqEntity> onSectionChange;
+        public event Action<RiqEntity, RiqEntity> onSectionChange;
         public event Action<double> onBeatPulse;
+        public event Action<double> onPlay;
+        public event Action<double> onPause;
+        public event Action<double> onUnPause;
 
         public int BeatmapEntities()
         {
@@ -120,6 +126,8 @@ namespace HeavenStudio
             }
         }
 
+        JudgementManager.JudgementInfo judgementInfo;
+
         private void Awake()
         {
             // autoplay = true;
@@ -140,9 +148,6 @@ namespace HeavenStudio
             eventCaller = this.gameObject.AddComponent<EventCaller>();
             eventCaller.GamesHolder = GamesHolder.transform;
             eventCaller.Init();
-            Conductor.instance.SetBpm(120f);
-            Conductor.instance.SetVolume(100f);
-            Conductor.instance.firstBeatOffset = Beatmap.data.offset;
 
             // note: serialize this shit in the inspector //
             GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
@@ -174,22 +179,24 @@ namespace HeavenStudio
             }
 
             SortEventsList();
+            Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
+            Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
+            Conductor.instance.firstBeatOffset = Beatmap.data.offset;
 
             if (Beatmap.Entities.Count >= 1)
             {
                 string game = Beatmap.Entities[0].datamodel.Split(0);
                 SetCurrentGame(game);
-                SetGame(game);
+                StartCoroutine(WaitAndSetGame(game));
             }
             else
             {
                 SetGame("noGame");
             }
 
-            if (playOnStart)
+            if (playMode)
             {
-                StartCoroutine(WaitReadyAndPlayCo(startBeat));
-                CircleCursor.LockCursor(true);
+                StartCoroutine(WaitReadyAndPlayCo(startBeat, 1f));
             }
         }
 
@@ -229,14 +236,14 @@ namespace HeavenStudio
 
         public void NewRemix()
         {
+            Debug.Log("Creating new remix");
             AudioLoadDone = false;
             Beatmap = new("1", "HeavenStudio");
-            Beatmap.data.properties = Minigames.propertiesModel;
+            Beatmap.data.properties = new(Minigames.propertiesModel);
             Beatmap.AddNewTempoChange(0, 120f);
             Beatmap.AddNewVolumeChange(0, 100f);
             Beatmap.data.offset = 0f;
             Conductor.instance.musicSource.clip = null;
-            RiqFileHandler.UnlockCache();
             RiqFileHandler.WriteRiq(Beatmap);
             AudioLoadDone = true;
         }
@@ -298,7 +305,7 @@ namespace HeavenStudio
             Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
             Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
             Conductor.instance.firstBeatOffset = Beatmap.data.offset;
-            if (!playOnStart)
+            if (!playMode)
             {
                 Stop(0);
             }
@@ -308,7 +315,7 @@ namespace HeavenStudio
             {
                 string game = Beatmap.Entities[0].datamodel.Split(0);
                 SetCurrentGame(game);
-                SetGame(game);
+                StartCoroutine(WaitAndSetGame(game));
             }
             else
             {
@@ -327,10 +334,22 @@ namespace HeavenStudio
             }
         }
 
-        public void ScoreInputAccuracy(double accuracy, bool late, double time, double weight = 1, bool doDisplay = true)
+        public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, float weight = 1, bool doDisplay = true)
         {
-            totalInputs += weight;
-            totalPlayerAccuracy += accuracy * weight;
+            if (weight > 0 && MarkerWeight > 0)
+            {
+                totalInputs += weight * MarkerWeight;
+                totalPlayerAccuracy += Math.Abs(accuracy) * weight * MarkerWeight;
+
+                judgementInfo.inputs.Add(new JudgementManager.InputInfo
+                {
+                    beat = beat,
+                    accuracyState = accuracy,
+                    timeOffset = time,
+                    weight = weight * MarkerWeight,
+                    category = MarkerCategory
+                });
+            }
 
             if (accuracy < Minigame.rankOkThreshold && weight > 0)
             {
@@ -346,6 +365,15 @@ namespace HeavenStudio
             // push the hit event to the timing display
             if (doDisplay)
                 TimingAccuracyDisplay.instance.MakeAccuracyVfx(time, late);
+        }
+
+        public void DoSectionCompletion(double beat, bool clear, string name, double score)
+        {
+            judgementInfo.medals.Add(new JudgementManager.MedalInfo
+            {
+                beat = beat,
+                cleared = clear
+            });
         }
 
         static bool StringStartsWith(string a, string b)
@@ -364,8 +392,9 @@ namespace HeavenStudio
             return (bp == bLen);
         }
 
-        public void SeekAheadAndPreload(double start, float seekTime = 8f)
+        public List<Minigames.Minigame> SeekAheadAndPreload(double start, float seekTime = 8f)
         {
+            List<Minigames.Minigame> gamesToPreload = new();
             List<RiqEntity> entitiesAtSameBeat = ListPool<RiqEntity>.Get();
             Minigames.Minigame inf;
 
@@ -376,10 +405,14 @@ namespace HeavenStudio
                 {
                     string gameName = allGameSwitches[currentPreSwitch].datamodel.Split('/')[2];
                     inf = GetGameInfo(gameName);
-                    if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
+                    if (inf != null && !(inf.inferred || inf.fxOnly))
                     {
-                        Debug.Log($"ASYNC loading assetbundles for game {gameName}");
-                        inf.LoadAssetsAsync().Forget();
+                        if (inf.usesAssetBundle && !inf.AssetsLoaded)
+                        {
+                            gamesToPreload.Add(inf);
+                            Debug.Log($"ASYNC loading assetbundles for game {gameName}");
+                            inf.LoadAssetsAsync().Forget();
+                        }
                     }
                     currentPreSwitch++;
                 }
@@ -401,17 +434,21 @@ namespace HeavenStudio
                     {
                         string gameName = entity.datamodel.Split('/')[0];
                         inf = GetGameInfo(gameName);
-                        if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
+                        if (inf != null && !(inf.inferred || inf.fxOnly))
                         {
-                            Debug.Log($"ASYNC loading assetbundles for game {gameName}");
-                            inf.LoadAssetsAsync().Forget();
+                            if (inf.usesAssetBundle && !inf.AssetsLoaded)
+                            {
+                                gamesToPreload.Add(inf);
+                                Debug.Log($"ASYNC loading assetbundles for game {gameName}");
+                                inf.LoadAssetsAsync().Forget();
+                            }
                         }
                         currentPreEvent++;
                     }
                 }
             }
-
             ListPool<RiqEntity>.Release(entitiesAtSameBeat);
+            return gamesToPreload;
         }
 
         public void SeekAheadAndDoPreEvent(double start)
@@ -456,11 +493,12 @@ namespace HeavenStudio
 
         private void Update()
         {
-            if (BeatmapEntities() < 1) //bruh really you forgot to ckeck tempo changes
+            if (BeatmapEntities() < 1)
                 return;
             if (!Conductor.instance.isPlaying)
                 return;
             Conductor cond = Conductor.instance;
+            double clampedBeat = Math.Max(cond.songPositionInBeatsAsDouble, 0);
 
             if (currentTempoEvent < Beatmap.TempoChanges.Count && currentTempoEvent >= 0)
             {
@@ -484,14 +522,43 @@ namespace HeavenStudio
             {
                 if (cond.songPositionInBeatsAsDouble >= sectionBeats[currentSectionEvent])
                 {
-                    Debug.Log("Section " + Beatmap.SectionMarkers[currentSectionEvent]["sectionName"] + " started");
-                    currentSection = Beatmap.SectionMarkers[currentSectionEvent];
+                    RiqEntity marker = Beatmap.SectionMarkers[currentSectionEvent];
+                    if (!string.IsNullOrEmpty(marker["sectionName"]))
+                    {
+                        Debug.Log("Section " + marker["sectionName"] + " started");
+                        lastSection = currentSection;
+                        if (currentSectionEvent < Beatmap.SectionMarkers.Count)
+                            currentSection = marker;
+                        else
+                            currentSection = null;
+                        nextSectionBeat = endBeat;
+                        foreach (RiqEntity futureSection in Beatmap.SectionMarkers)
+                        {
+                            if (futureSection.beat < marker.beat) continue;
+                            if (futureSection == marker) continue;
+                            if (!string.IsNullOrEmpty(futureSection["sectionName"]))
+                            {
+                                nextSectionBeat = futureSection.beat;
+                                break;
+                            }
+                        }
+                        onSectionChange?.Invoke(currentSection, lastSection);
+                    }
+
+                    if (OverlaysManager.OverlaysEnabled)
+                    {
+                        if (PersistentDataManager.gameSettings.perfectChallengeType != PersistentDataManager.PerfectChallengeType.Off)
+                        {
+                            if (marker["startPerfect"] && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
+                            {
+                                GoForAPerfect.instance.Enable(marker.beat);
+                            }
+                        }
+                    }
+
+                    MarkerWeight = marker["weight"];
+                    MarkerCategory = marker["category"];
                     currentSectionEvent++;
-                    if (currentSectionEvent < Beatmap.SectionMarkers.Count)
-                        nextSection = Beatmap.SectionMarkers[currentSectionEvent];
-                    else
-                        nextSection = default(RiqEntity);
-                    onSectionChange?.Invoke(currentSection);
                 }
             }
 
@@ -504,12 +571,12 @@ namespace HeavenStudio
 
             float seekTime = 8f;
             //seek ahead to preload games that have assetbundles
-            SeekAheadAndPreload(cond.songPositionInBeatsAsDouble, seekTime);
-            SeekAheadAndDoPreEvent(cond.songPositionInBeatsAsDouble);
+            SeekAheadAndPreload(clampedBeat, seekTime);
+            SeekAheadAndDoPreEvent(clampedBeat);
 
             if (currentEvent < Beatmap.Entities.Count && currentEvent >= 0)
             {
-                if (cond.songPositionInBeatsAsDouble >= eventBeats[currentEvent])
+                if (clampedBeat >= eventBeats[currentEvent])
                 {
                     List<RiqEntity> entitiesAtSameBeat = ListPool<RiqEntity>.Get();
                     List<RiqEntity> fxEntities = ListPool<RiqEntity>.Get();
@@ -564,16 +631,13 @@ namespace HeavenStudio
 
             if (currentSection == null)
             {
-                sectionProgress = 0;
+                SectionProgress = 0;
             }
             else
             {
                 double currectSectionStart = cond.GetSongPosFromBeat(currentSection.beat);
 
-                if (nextSection == null)
-                    sectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(endBeat) - currectSectionStart);
-                else
-                    sectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(nextSection.beat) - currectSectionStart);
+                SectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(nextSectionBeat) - currectSectionStart);
             }
         }
 
@@ -616,6 +680,20 @@ namespace HeavenStudio
 
                 SectionMedalsManager.instance.Reset();
                 clearedSections.Clear();
+
+                judgementInfo = new JudgementManager.JudgementInfo
+                {
+                    inputs = new List<JudgementManager.InputInfo>(),
+                    medals = new List<JudgementManager.MedalInfo>()
+                };
+
+                MarkerWeight = 1;
+                MarkerCategory = 0;
+
+                if (playMode && delay > 0)
+                {
+                    GlobalGameManager.ForceFade(0, delay * 0.5f, delay * 0.5f);
+                }
             }
 
             StartCoroutine(PlayCo(beat, delay));
@@ -624,14 +702,9 @@ namespace HeavenStudio
 
         private IEnumerator PlayCo(double beat, float delay = 0f)
         {
-            yield return new WaitForSeconds(delay);
             bool paused = Conductor.instance.isPaused;
 
-            if (paused)
-            {
-                Util.SoundByte.UnpauseOneShots();
-            }
-            else
+            if (!paused)
             {
                 Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
                 Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
@@ -639,11 +712,51 @@ namespace HeavenStudio
                 SetCurrentEventToClosest(beat);
                 KillAllSounds();
 
-                Minigame miniGame = currentGameO?.GetComponent<Minigame>();
-                if (miniGame != null)
-                    miniGame.OnPlay(beat);
+                if (delay > 0)
+                {
+                    yield return new WaitForSeconds(delay);
+                }
             }
 
+            if (!paused)
+            {
+                Minigame miniGame = null;
+                if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
+                {
+                    if (miniGame != null)
+                    {
+                        miniGame.OnPlay(beat);
+                    }
+                }
+                onPlay?.Invoke(beat);
+
+                bool hasStartPerfect = false;
+                foreach (RiqEntity marker in Beatmap.SectionMarkers)
+                {
+                    if (marker["startPerfect"])
+                    {
+                        hasStartPerfect = true;
+                        break;
+                    }
+                }
+
+                if (OverlaysManager.OverlaysEnabled && !hasStartPerfect)
+                {
+                    if (PersistentDataManager.gameSettings.perfectChallengeType != PersistentDataManager.PerfectChallengeType.Off)
+                    {
+                        GoForAPerfect.instance.Enable(0);
+                    }
+                }
+            }
+            else
+            {
+                onUnPause?.Invoke(beat);
+            }
+
+            if (playMode)
+            {
+                CircleCursor.LockCursor(true);
+            }
             Application.backgroundLoadingPriority = ThreadPriority.Low;
             Conductor.instance.Play(beat);
         }
@@ -652,70 +765,95 @@ namespace HeavenStudio
         {
             Conductor.instance.Pause();
             Util.SoundByte.PauseOneShots();
+            onPause?.Invoke(Conductor.instance.songPositionInBeatsAsDouble);
             canInput = false;
         }
 
         public void Stop(double beat, bool restart = false, float restartDelay = 0f)
         {
-            Minigame miniGame = currentGameO.GetComponent<Minigame>();
-            if (miniGame != null)
-                miniGame.OnStop(beat);
+            // I feel like I should standardize the names
+            if (Conductor.instance.isPlaying)
+            {
+                SkillStarManager.instance.KillStar();
+                TimingAccuracyDisplay.instance.StopStarFlash();
+                GoForAPerfect.instance.Disable();
+                SectionMedalsManager.instance.OnRemixEnd(endBeat, currentSection);
+            }
+
+            Minigame miniGame;
+            if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
+            {
+                if (miniGame != null)
+                {
+                    miniGame.OnStop(beat);
+                }
+            }
 
             Conductor.instance.Stop(beat);
             SetCurrentEventToClosest(beat);
-            //onBeatChanged?.Invoke(beat);
-
-            // I feel like I should standardize the names
-            SkillStarManager.instance.KillStar();
-            TimingAccuracyDisplay.instance.StopStarFlash();
-            GoForAPerfect.instance.Disable();
-            SectionMedalsManager.instance.OnRemixEnd();
-
-            // pass this data to rating screen + stats
-            Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}) ==");
-            Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
-            Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100): 0.00}");
-            Debug.Log($"Cleared {clearedSections.FindAll(c => c).Count} sections out of {Beatmap.SectionMarkers.Count}");
-            if (SkillStarManager.instance.IsCollected)
-                Debug.Log($"Skill Star collected");
-            else
-                Debug.Log($"Skill Star not collected");
-            if (GoForAPerfect.instance.perfect)
-                Debug.Log($"Perfect Clear!");
 
             KillAllSounds();
-            if (playOnStart || restart)
+            if (restart)
             {
                 Play(0, restartDelay);
             }
-            else
+            else if (playMode)
             {
-                Application.backgroundLoadingPriority = ThreadPriority.Normal;
+                judgementInfo.finalScore = (float)PlayerAccuracy;
+                judgementInfo.star = skillStarCollected;
+                judgementInfo.perfect = GoForAPerfect.instance.perfect;
+                judgementInfo.time = DateTime.Now;
+
+                JudgementManager.SetPlayInfo(judgementInfo, Beatmap);
+                GlobalGameManager.LoadScene("Judgement", 0.35f, 0f);
+                CircleCursor.LockCursor(false);
             }
-            // when rating screen gets added playOnStart will instead move to that scene
+            Application.backgroundLoadingPriority = ThreadPriority.Normal;
         }
 
-        private IEnumerator WaitReadyAndPlayCo(double beat)
+        public void SafePlay(double beat, float delay, bool discord)
+        {
+            StartCoroutine(WaitReadyAndPlayCo(beat, delay, discord));
+        }
+
+        private IEnumerator WaitReadyAndPlayCo(double beat, float delay = 1f, bool discord = true)
         {
             WaitUntil yieldOverlays = new WaitUntil(() => OverlaysManager.OverlaysReady);
-            WaitUntil yieldBeatmap = new WaitUntil(() => Beatmap != null && Beatmap.Entities.Count > 0);
+            WaitUntil yieldBeatmap = new WaitUntil(() => Beatmap != null && BeatmapEntities() > 0);
             WaitUntil yieldAudio = new WaitUntil(() => AudioLoadDone || (ChartLoadError && !GlobalGameManager.IsShowingDialog));
+            WaitUntil yieldGame = null;
+            List<Minigames.Minigame> gamesToPreload = SeekAheadAndPreload(beat, 4f);
+            Debug.Log($"Preloading {gamesToPreload.Count} games");
+            if (gamesToPreload.Count > 0)
+            {
+                yieldGame = new WaitUntil(() => gamesToPreload.All(x => x.AssetsLoaded));
+            }
 
             // wait for overlays to be ready
+            Debug.Log("waiting for overlays");
             yield return yieldOverlays;
-            // wait for first game to be loaded
+            // wait for beatmap to be loaded
+            Debug.Log("waiting for beatmap");
             yield return yieldBeatmap;
             //wait for audio clip to be loaded
+            Debug.Log("waiting for audio");
             yield return yieldAudio;
+            //wait for games to be loaded
+            Debug.Log("waiting for minigames");
+            if (yieldGame != null)
+                yield return yieldGame;
 
             SkillStarManager.instance.KillStar();
             TimingAccuracyDisplay.instance.StopStarFlash();
             GoForAPerfect.instance.Disable();
-            SectionMedalsManager.instance?.OnRemixEnd();
+            SectionMedalsManager.instance?.Reset();
 
-            GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"].ToString(), false, true);
+            if (discord)
+            {
+                GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"].ToString(), false, true);
+            }
 
-            Play(beat, 1f);
+            Play(beat, delay);
             yield break;
         }
 
@@ -898,8 +1036,8 @@ namespace HeavenStudio
                 }
             }
 
-            currentSection = default(RiqEntity);
-            nextSection = default(RiqEntity);
+            lastSection = null;
+            currentSection = null;
             if (Beatmap.SectionMarkers.Count > 0)
             {
                 currentSectionEvent = 0;
@@ -913,7 +1051,7 @@ namespace HeavenStudio
                     currentSectionEvent = t;
                 }
             }
-            onSectionChange?.Invoke(currentSection);
+            onSectionChange?.Invoke(currentSection, lastSection);
 
             SeekAheadAndPreload(beat);
         }
@@ -939,11 +1077,16 @@ namespace HeavenStudio
 
             SetGame(game, false);
 
-            Minigame miniGame = currentGameO.GetComponent<Minigame>();
-            if (miniGame != null)
-                miniGame.OnGameSwitch(beat);
+            Minigame miniGame;
+            if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
+            {
+                if (miniGame != null)
+                {
+                    miniGame.OnGameSwitch(beat);
+                }
+            }
 
-            while (beat + 0.25 > Conductor.instance.songPositionInBeats)
+            while (beat + 0.25 > Math.Max(Conductor.instance.songPositionInBeatsAsDouble, 0))
             {
                 if (!Conductor.instance.isPlaying)
                 {
@@ -977,6 +1120,18 @@ namespace HeavenStudio
             SetCurrentGame(game, useMinigameColor);
         }
 
+        private IEnumerator WaitAndSetGame(string game, bool useMinigameColor = true)
+        {
+            var inf = GetGameInfo(game);
+            if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
+            {
+                Debug.Log($"ASYNC loading assetbundles for game {game}");
+                inf.LoadAssetsAsync().Forget();
+                yield return new WaitUntil(() => inf.AssetsLoaded);
+            }
+            SetGame(game, useMinigameColor);
+        }
+
         public void PreloadGameSequences(string game)
         {
             var gameInfo = GetGameInfo(game);
@@ -991,6 +1146,10 @@ namespace HeavenStudio
             var gameInfo = GetGameInfo(name);
             if (gameInfo != null)
             {
+                if (gameInfo.inferred)
+                {
+                    return Resources.Load<GameObject>($"Games/noGame");
+                }
                 if (gameInfo.fxOnly)
                 {
                     var gameInfos = Beatmap.Entities
@@ -1006,12 +1165,18 @@ namespace HeavenStudio
                     if (gameInfo.usesAssetBundle)
                     {
                         //game is packed in an assetbundle, load from that instead
-                        if (gameInfo.LoadedPrefab != null) return gameInfo.LoadedPrefab;
-                        // StartCoroutine(gameInfo.LoadCommonAudioClipsAsync());
-                        // StartCoroutine(gameInfo.LoadLocalizedAudioClipsAsync());
-                        return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
+                        if (gameInfo.AssetsLoaded && gameInfo.LoadedPrefab != null) return gameInfo.LoadedPrefab;
+                        
+                        try
+                        {
+                            return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogWarning($"Failed to load assetbundle for game {name}, using sync loading: {e.Message}");
+                            return Resources.Load<GameObject>($"Games/{name}");
+                        }
                     }
-                    name = gameInfo.LoadableName;
                 }
             }
             return Resources.Load<GameObject>($"Games/{name}");
@@ -1038,6 +1203,7 @@ namespace HeavenStudio
                 CircleCursor.SetCursorColors(Color.white, Color.white, Color.white);
                 HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black, false);
             }
+            CircleCursor.ClearTrail(false);
         }
 
         private void SetAmbientGlowToCurrentMinigameColor()

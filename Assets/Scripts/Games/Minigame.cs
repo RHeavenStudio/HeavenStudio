@@ -12,8 +12,16 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double ngEarlyTime = 0.085f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.085f;
-        public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
+        public static double ngEarlyTimeBase = 0.1, justEarlyTimeBase = 0.05, aceEarlyTimeBase = 0.01, aceLateTimeBase = 0.01, justLateTimeBase = 0.05, ngLateTimeBase = 0.1;
+        public static double rankHiThreshold = 0.8, rankOkThreshold = 0.6;
+
+        public static double ngEarlyTime => ngEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double justEarlyTime => justEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double aceEarlyTime => aceEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double aceLateTime => aceLateTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double justLateTime => justLateTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double ngLateTime => ngLateTimeBase * Conductor.instance?.SongPitch ?? 1;
+
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
         #region Premade Input Actions
@@ -349,34 +357,46 @@ namespace HeavenStudio.Games
         }
 
         // now should fix the fast bpm problem
-        public static double NgEarlyTime()
+        public static double NgEarlyTime(float pitch = -1)
         {
-            return 1f - ngEarlyTime;
+            if (pitch < 0)
+                return 1f - ngEarlyTime;
+            return 1f - (ngEarlyTimeBase * pitch);
         }
 
-        public static double JustEarlyTime()
+        public static double JustEarlyTime(float pitch = -1)
         {
-            return 1f - justEarlyTime;
+            if (pitch < 0)
+                return 1f - justEarlyTime;
+            return 1f - (justEarlyTimeBase * pitch);
         }
 
-        public static double JustLateTime()
+        public static double JustLateTime(float pitch = -1)
         {
-            return 1f + justLateTime;
+            if (pitch < 0)
+                return 1f + justLateTime;
+            return 1f + (justLateTimeBase * pitch);
         }
 
-        public static double NgLateTime()
+        public static double NgLateTime(float pitch = -1)
         {
-            return 1f + ngLateTime;
+            if (pitch < 0)
+                return 1f + ngLateTime;
+            return 1f + (ngLateTimeBase * pitch);
         }
 
-        public static double AceEarlyTime()
+        public static double AceEarlyTime(float pitch = -1)
         {
-            return 1f - aceEarlyTime;
+            if (pitch < 0)
+                return 1f - aceEarlyTime;
+            return 1f - (aceEarlyTimeBase * pitch);
         }
 
-        public static double AceLateTime()
+        public static double AceLateTime(float pitch = -1)
         {
-            return 1f + aceLateTime;
+            if (pitch < 0)
+                return 1f + aceLateTime;
+            return 1f + (aceLateTimeBase * pitch);
         }
 
         public virtual void OnGameSwitch(double beat)
@@ -434,9 +454,10 @@ namespace HeavenStudio.Games
             return null;
         }
 
-        public void ScoreMiss(double weight = 1f)
+        public void ScoreMiss(float weight = 1f)
         {
-            GameManager.instance.ScoreInputAccuracy(0, true, NgLateTime(), weight, false);
+            double beat = Conductor.instance?.songPositionInBeatsAsDouble ?? -1;
+            GameManager.instance.ScoreInputAccuracy(beat, 0, true, NgLateTime(), weight, false);
             if (weight > 0)
             {
                 GoForAPerfect.instance.Miss();
@@ -446,7 +467,6 @@ namespace HeavenStudio.Games
 
         public void ToggleSplitColoursDisplay(bool on)
         {
-            
         }
 
         #region Bop

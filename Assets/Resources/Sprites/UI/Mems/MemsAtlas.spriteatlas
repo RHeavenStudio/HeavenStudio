@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MemsAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 4096
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 8
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 314b36a384cf5a344ae5a2ddc635830b, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 075d7b9054369b141b11804c580d16cb, type: 3}
+  - {fileID: 21300000, guid: 927d0ff08e3d25f43b964561a2a78b7a, type: 3}
+  - {fileID: 21300000, guid: aefcaae3c408b1146ab7f895e5ed25a8, type: 3}
+  - {fileID: 21300000, guid: 53fa847421beab44b920da4de48172da, type: 3}
+  - {fileID: 21300000, guid: d70f337577b76c7499cbf8ccdc3566c0, type: 3}
+  - {fileID: 21300000, guid: 55990aa6fcc323c4f98264476d3b21a6, type: 3}
+  - {fileID: 21300000, guid: 3d5fbf07adc45644293e12694ebaae15, type: 3}
+  - {fileID: 21300000, guid: df74af9782a8bca4ea4480d9524ba150, type: 3}
+  - {fileID: 21300000, guid: 2945cd68a22478648bd804c2be3252c6, type: 3}
+  - {fileID: 21300000, guid: 2c9d45b9e04493443876a15629290be8, type: 3}
+  - {fileID: 21300000, guid: c16c8bc9a1d5859469af017f71d749a5, type: 3}
+  - {fileID: 21300000, guid: 06d97dd9b093c3f48aac281dbc09a0a4, type: 3}
+  - {fileID: 21300000, guid: c33ab4ca05ea9d2418ffbf54147d9391, type: 3}
+  - {fileID: 21300000, guid: 68b50fabad3a30e4ab08dcd5354e2122, type: 3}
+  - {fileID: 21300000, guid: 36a44f4cd36be50428664a7b5de8d949, type: 3}
+  - {fileID: 21300000, guid: 7e37446c8de787e489b134853048a59f, type: 3}
+  - {fileID: 21300000, guid: 3ea565ec9d41a9f4fa0249b9b3d7c91e, type: 3}
+  - {fileID: 21300000, guid: 01654a0d97ba8ba43a5408448b0fc5e2, type: 3}
+  - {fileID: 21300000, guid: 7a08530e9ecb6304ab6bcb2efe34f86f, type: 3}
+  - {fileID: 21300000, guid: 3461833ef95128644800b7aec37c4a39, type: 3}
+  - {fileID: 21300000, guid: c9b55e8f51ab07e4fb5f585aad57f9b6, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - gleeclubmem
+  - meatgrindermem
+  - djschoolmem
+  - tunnelmem
+  - dazzlesmem
+  - lockstepmem
+  - idol
+  - spacedancemem
+  - pingpong
+  - munchymonkmem
+  - doubledatemem
+  - cropstompmem
+  - tap
+  - karate
+  - kittiesmem
+  - marchingordersmem
+  - tossboysmem
+  - sneakyspiritsmem
+  - rockersmem
+  - btsdsmem
+  - pajamapartymem
+  m_RenderDataMap: {}
+  m_Tag: MemsAtlas
+  m_IsVariant: 0

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 using UnityEngine;
+using UnityEngine.Networking;
 using DG.Tweening;
 
 using HeavenStudio.Util;
@@ -32,77 +33,83 @@ namespace HeavenStudio
         public static void InitPreprocessor()
         {
             RiqBeatmap.OnUpdateBeatmap += PreProcessBeatmap;
+            RiqFileHandler.AudioConverter = JukeboxAudioConverter;
         }
 
-        public static Dictionary<string, object> propertiesModel = new()
-            {
-                // mapper set properties? (future: use this to flash the button)
-                {"propertiesmodified", false},
+        readonly public static Dictionary<string, object> propertiesModel = new()
+        {
+            // mapper set properties? (future: use this to flash the button)
+            {"propertiesmodified", false},
 
-                ////// CATEGORY 1: SONG INFO
-                // general chart info
-                {"remixtitle", "New Remix"},        // chart name
-                {"remixauthor", "Your Name"},       // charter's name
-                {"remixdesc", "Remix Description"}, // chart description
-                {"remixlevel", 1},                  // chart difficulty (maybe offer a suggestion but still have the mapper determine it)
-                {"remixtempo", 120f},               // avg. chart tempo
-                {"remixtags", ""},                  // chart tags
-                {"icontype", 0},                    // chart icon (presets, custom - future)
-                {"iconurl", ""},                    // custom icon location (future)
-                {"challengetype", 0},               // perfect challenge type
-                {"playstyle", RecommendedControlStyle.Any},                   // recommended control style
+            ////// CATEGORY 1: SONG INFO
+            // general chart info
+            {"remixtitle", "New Remix"},                                                                                        // chart name
+            {"remixauthor", "Your Name"},                                                                                       // charter's name
+            {"remixdesc", "Remix Description"},                                                                                 // chart description
+            {"remixlevel", 1},                                                                                                  // chart difficulty (maybe offer a suggestion but still have the mapper determine it)
+            {"remixtempo", 120f},                                                                                               // avg. chart tempo
+            {"remixtags", ""},                                                                                                  // chart tags
+            {"icontype", 0},                                                                                                    // chart icon (presets, custom - future)
+            {"iconres", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Select/", "Icon")},           // custom icon location (future)
+            {"challengetype", 0},                                                                                               // perfect challenge type
+            {"playstyle", RecommendedControlStyle.Any},                                                                         // recommended control style
 
-                // chart song info
-                {"idolgenre", "Song Genre"},        // song genre
-                {"idolsong", "Song Name"},          // song name
-                {"idolcredit", "Artist"},           // song artist
+            // chart song info
+            {"idolgenre", "Song Genre"},                                                                                        // song genre
+            {"idolsong", "Song Name"},                                                                                          // song name
+            {"idolcredit", "Artist"},                                                                                           // song artist
 
-                ////// CATEGORY 2: PROLOGUE AND EPILOGUE
-                // chart prologue
-                {"prologuetype", 0},                // prologue card animation (future)
-                {"prologuecaption", "Remix"},       // prologue card sub-title (future)
+            ////// CATEGORY 2: PROLOGUE AND EPILOGUE
+            // chart prologue
+            {"prologuetype", 0},                                                                                                // prologue card animation (future)
+            {"prologuecaption", "Remix"},                                                                                       // prologue card sub-title (future)
 
-                // chart results screen messages
-                {"resultcaption", "Rhythm League Notes"},                       // result screen header
-                {"resultcommon_hi", "Good rhythm."},                            // generic "Superb" message (one-liner, or second line for single-type)
-                {"resultcommon_ok", "Eh. Passable."},                           // generic "OK" message (one-liner, or second line for single-type)
-                {"resultcommon_ng", "Try harder next time."},                   // generic "Try Again" message (one-liner, or second line for single-type)
+            // chart results screen messages
+            {"resultcaption", "Rhythm League Notes"},                                                                           // result screen header
+            {"resultcommon_hi", "Good rhythm."},                                                                                // generic "Superb" message (one-liner)
+            {"resultcommon_ok", "Eh. Passable."},                                                                               // generic "OK" message (one-liner)
+            {"resultcommon_ng", "Try harder next time."},                                                                       // generic "Try Again" message (one-liner)
 
-                    // the following are shown / hidden in-editor depending on the tags of the games used
-                {"resultnormal_hi", "You show strong fundamentals."},           // "Superb" message for normal games (two-liner)
-                {"resultnormal_ng", "Work on your fundamentals."},              // "Try Again" message for normal games (two-liner)
+            {"resultcat0_hi", "You show strong fundamentals."},                                                                 // "Superb" message for input category 0 "normal" (two-liner)
+            {"resultcat0_ng", "Work on your fundamentals."},                                                                    // "Try Again" message for input category 0 "normal" (two-liner)
 
-                {"resultkeep_hi", "You kept the beat well."},                   // "Superb" message for keep-the-beat games (two-liner)
-                {"resultkeep_ng", "You had trouble keeping the beat."},         // "Try Again" message for keep-the-beat games (two-liner)
+            {"resultcat1_hi", "You kept the beat well."},                                                                       // "Superb" message for input category 1 "keep" (two-liner)
+            {"resultcat1_ng", "You had trouble keeping the beat."},                                                             // "Try Again" message for input category 1 "keep" (two-liner)
 
-                {"resultaim_hi", "You had great aim."},                         // "Superb" message for aim games (two-liner)
-                {"resultaim_ng", "Your aim was a little shaky."},               // "Try Again" message for aim games (two-liner)
+            {"resultcat2_hi", "You had great aim."},                                                                            // "Superb" message for input category 2 "aim" (two-liner)
+            {"resultcat2_ng", "Your aim was a little shaky."},                                                                  // "Try Again" message for input category 2 "aim" (two-liner)
+                                                
+            {"resultcat3_hi", "You followed the example well."},                                                                // "Superb" message for input category 3 "repeat" (two-liner)
+            {"resultcat3_ng", "Next time, follow the example better."},                                                         // "Try Again" message for input category 3 "repeat" (two-liner)
 
-                {"resultrepeat_hi", "You followed the example well."},          // "Superb" message for call-and-response games (two-liner)
-                {"resultrepeat_ng", "Next time, follow the example better."},   // "Try Again" message for call-and-response games (two-liner)
-            };
+            {"epilogue_hi", "Superb picture"},                                                                                  // epilogue "Superb" message
+            {"epilogue_ok", "OK picture"},                                                                                      // epilogue "OK" message
+            {"epilogue_ng", "Try Again picture"},                                                                               // epilogue "Try Again" message
 
-        static Dictionary<string, object> tempoChangeModel = new()
+            {"epilogue_hi_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Hi")},   // epilogue "Superb" image resource path
+            {"epilogue_ok_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ok")},   // epilogue "OK" image resource path
+            {"epilogue_ng_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ng")},   // epilogue "Try Again" image resource path
+        };
+
+        readonly static Dictionary<string, object> tempoChangeModel = new()
         {
             {"tempo", 120f},
             {"swing", 0f},
             {"timeSignature", new Vector2(4, 4)},
         };
 
-        static Dictionary<string, object> volumeChangeModel = new()
+        readonly static Dictionary<string, object> volumeChangeModel = new()
         {
             {"volume", 1f},
             {"fade", Util.EasingFunction.Ease.Instant},
         };
 
-        static Dictionary<string, object> sectionMarkModel = new()
+        readonly static Dictionary<string, object> sectionMarkModel = new()
         {
             {"sectionName", ""},
-            {"isCheckpoint", false},
             {"startPerfect", false},
-            {"breakSection", false},
-            {"extendsPrevious", false},
-            {"sectionWeight", 1f},
+            {"weight", 1f},
+            {"category", 0},
         };
 
         static void PreProcessSpecialEntity(RiqEntity e, Dictionary<string, object> model)
@@ -142,6 +149,38 @@ namespace HeavenStudio
             }
         }
 
+        public static string JukeboxAudioConverter(string filePath, AudioType audioType, string specificType)
+        {
+            if (Directory.Exists(Path.Combine(Application.temporaryCachePath, "/savewav")))
+            {
+                Directory.Delete(Path.Combine(Application.temporaryCachePath, "/savewav"), true);
+            }
+            if (audioType == AudioType.MPEG)
+            {
+                Debug.Log($"mp3 loaded, Converting {filePath} to wav...");
+                // convert mp3 to wav
+                // import the mp3 as an audioclip
+                string url = "file://" + filePath;
+                using (var www = UnityWebRequestMultimedia.GetAudioClip(url, audioType))
+                {
+                    www.SendWebRequest();
+                    while (!www.isDone) { }
+                    if (www.result == UnityWebRequest.Result.ConnectionError)
+                    {
+                        Debug.LogError($"Could not load audio file {filePath}! Error: {www.error}");
+                        return filePath;
+                    }
+                    AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
+                    string fileName = Path.GetFileNameWithoutExtension(filePath);
+                    SavWav.Save("/savewav/" + fileName, clip, true);
+                    filePath = Path.Combine(Application.temporaryCachePath, "/savewav/" + fileName + ".wav");
+
+                    clip = null;
+                }
+            }
+            return filePath;
+        }
+
         /// <summary>
         /// processes an riq beatmap after it is loaded
         /// </summary>
@@ -151,96 +190,101 @@ namespace HeavenStudio
             Minigames.Minigame game;
             Minigames.GameAction action;
             System.Type type, pType;
-            foreach (var e in data.entities)
+            if (EventCaller.instance != null)
             {
-                var gameName = e.datamodel.Split(0);
-                var actionName = e.datamodel.Split(1);
-                game = EventCaller.instance.GetMinigame(gameName);
-                if (game == null)
+                foreach (var e in data.entities)
                 {
-                    Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
-                    game = new Minigames.Minigame(gameName, gameName.DisplayName() + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
-                    EventCaller.instance.minigames.Add(game);
-                    if (Editor.Editor.instance != null)
-                        Editor.Editor.instance.AddIcon(game);
-                }
-                action = EventCaller.instance.GetGameAction(game, actionName);
-                if (action == null)
-                {
-                    Debug.LogWarning($"Unknown action {gameName}/{actionName} found in remix.json! Adding action...");
-                    var parameters = new List<Minigames.Param>();
-                    foreach (var item in e.dynamicData)
+                    var gameName = e.datamodel.Split(0);
+                    var actionName = e.datamodel.Split(1);
+                    game = EventCaller.instance.GetMinigame(gameName);
+                    if (game == null)
                     {
-                        Debug.Log($"k: {item.Key}, v: {item.Value}");
-                        if (item.Key == "track")
-                            continue;
-                        if (item.Value == null)
-                            continue;
-                        var value = item.Value;
-                        if (value.GetType() == typeof(long))
-                            value = new EntityTypes.Integer(int.MinValue, int.MaxValue, (int)value);
-                        else if (value.GetType() == typeof(double))
-                            value = new EntityTypes.Float(float.NegativeInfinity, float.PositiveInfinity, (float)value);
-                        parameters.Add(new Minigames.Param(item.Key, value, item.Key.DisplayName(), "[inferred from remix.json]"));
+                        Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
+                        game = new Minigames.Minigame(gameName, gameName.DisplayName() + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
+                        EventCaller.instance.minigames.Add(game);
+                        if (Editor.Editor.instance != null)
+                            Editor.Editor.instance.AddIcon(game);
                     }
-                    action = new Minigames.GameAction(actionName, actionName.DisplayName(), e.length, true, parameters);
-                    game.actions.Add(action);
-                }
-
-                //check each param of the action
-                if (action.parameters != null)
-                {
-                    foreach (var param in action.parameters)
+                    action = EventCaller.instance.GetGameAction(game, actionName);
+                    if (action == null)
                     {
-                        type = param.parameter.GetType();
-                        //add property if it doesn't exist
-                        if (!e.dynamicData.ContainsKey(param.propertyName))
+                        Debug.LogWarning($"Unknown action {gameName}/{actionName} found in remix.json! Adding action...");
+                        var parameters = new List<Minigames.Param>();
+                        foreach (var item in e.dynamicData)
                         {
-                            Debug.LogWarning($"Property {param.propertyName} does not exist in the entity's dynamic data! Adding...");
-                            if (type == typeof(EntityTypes.Integer))
-                                e.dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
-                            else if (type == typeof(EntityTypes.Float))
-                                e.dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
-                            else if (type.IsEnum)
-                                e.dynamicData.Add(param.propertyName, (int)param.parameter);
-                            else
-                                e.dynamicData.Add(param.propertyName, Convert.ChangeType(param.parameter, type));
-                            continue;
+                            Debug.Log($"k: {item.Key}, v: {item.Value}");
+                            if (item.Key == "track")
+                                continue;
+                            if (item.Value == null)
+                                continue;
+                            var value = item.Value;
+                            if (value.GetType() == typeof(long))
+                                value = new EntityTypes.Integer(int.MinValue, int.MaxValue, (int)value);
+                            else if (value.GetType() == typeof(double))
+                                value = new EntityTypes.Float(float.NegativeInfinity, float.PositiveInfinity, (float)value);
+                            parameters.Add(new Minigames.Param(item.Key, value, item.Key.DisplayName(), "[inferred from remix.json]"));
                         }
-                        pType = e[param.propertyName].GetType();
-                        if (pType != type)
+                        action = new Minigames.GameAction(actionName, actionName.DisplayName(), e.length, true, parameters);
+                        game.actions.Add(action);
+                    }
+
+                    //check each param of the action
+                    if (action.parameters != null)
+                    {
+                        foreach (var param in action.parameters)
                         {
-                            try
+                            type = param.parameter.GetType();
+                            //add property if it doesn't exist
+                            if (!e.dynamicData.ContainsKey(param.propertyName))
                             {
+                                Debug.LogWarning($"Property {param.propertyName} does not exist in the entity's dynamic data! Adding...");
                                 if (type == typeof(EntityTypes.Integer))
-                                    e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                    e.dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
                                 else if (type == typeof(EntityTypes.Float))
-                                    e.dynamicData[param.propertyName] = (float)e[param.propertyName];
+                                    e.dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
                                 else if (type.IsEnum)
-                                {
-                                    if (pType == typeof(string))
-                                        e.dynamicData[param.propertyName] = (int)Enum.Parse(type, (string)e[param.propertyName]);
-                                    else
-                                        e.dynamicData[param.propertyName] = (int)e[param.propertyName];
-                                }
-                                else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
-                                    e.dynamicData[param.propertyName] = e[param.propertyName].ToObject(type);
+                                    e.dynamicData.Add(param.propertyName, (int)param.parameter);
                                 else
-                                    e.dynamicData[param.propertyName] = Convert.ChangeType(e[param.propertyName], type);
+                                    e.dynamicData.Add(param.propertyName, Convert.ChangeType(param.parameter, type));
+                                continue;
                             }
-                            catch
+                            pType = e[param.propertyName].GetType();
+                            if (pType != type)
                             {
-                                Debug.LogWarning($"Could not convert {param.propertyName} to {type}! Using default value...");
-                                // GlobalGameManager.ShowErrorMessage("Warning", $"Could not convert {e.datamodel}/{param.propertyName} to {type}! This will be loaded using the default value, so chart may be unstable.");
-                                // use default value
-                                if (type == typeof(EntityTypes.Integer))
-                                    e.dynamicData[param.propertyName] = ((EntityTypes.Integer)param.parameter).val;
-                                else if (type == typeof(EntityTypes.Float))
-                                    e.dynamicData[param.propertyName] = ((EntityTypes.Float)param.parameter).val;
-                                else if (type.IsEnum && param.propertyName != "ease")
-                                    e.dynamicData[param.propertyName] = (int)param.parameter;
-                                else
-                                    e.dynamicData[param.propertyName] = Convert.ChangeType(param.parameter, type);
+                                try
+                                {
+                                    if (type == typeof(EntityTypes.Integer))
+                                        e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                    else if (type == typeof(EntityTypes.Float))
+                                        e.dynamicData[param.propertyName] = (float)e[param.propertyName];
+                                    else if (type == typeof(EntityTypes.Resource))
+                                        e.dynamicData[param.propertyName] = (EntityTypes.Resource)e[param.propertyName];
+                                    else if (type.IsEnum)
+                                    {
+                                        if (pType == typeof(string))
+                                            e.dynamicData[param.propertyName] = (int)Enum.Parse(type, (string)e[param.propertyName]);
+                                        else
+                                            e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                    }
+                                    else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
+                                        e.dynamicData[param.propertyName] = e[param.propertyName].ToObject(type);
+                                    else
+                                        e.dynamicData[param.propertyName] = Convert.ChangeType(e[param.propertyName], type);
+                                }
+                                catch
+                                {
+                                    Debug.LogWarning($"Could not convert {param.propertyName} to {type}! Using default value...");
+                                    // GlobalGameManager.ShowErrorMessage("Warning", $"Could not convert {e.datamodel}/{param.propertyName} to {type}! This will be loaded using the default value, so chart may be unstable.");
+                                    // use default value
+                                    if (type == typeof(EntityTypes.Integer))
+                                        e.dynamicData[param.propertyName] = ((EntityTypes.Integer)param.parameter).val;
+                                    else if (type == typeof(EntityTypes.Float))
+                                        e.dynamicData[param.propertyName] = ((EntityTypes.Float)param.parameter).val;
+                                    else if (type.IsEnum && param.propertyName != "ease")
+                                        e.dynamicData[param.propertyName] = (int)param.parameter;
+                                    else
+                                        e.dynamicData[param.propertyName] = Convert.ChangeType(param.parameter, type);
+                                }
                             }
                         }
                     }
@@ -269,9 +313,24 @@ namespace HeavenStudio
             //go thru each property of the model beatmap and add any missing keyvalue pair
             foreach (var prop in propertiesModel)
             {
+                var mType = propertiesModel[prop.Key].GetType();
                 if (!data.properties.ContainsKey(prop.Key))
                 {
                     data.properties.Add(prop.Key, prop.Value);
+                }
+                else
+                {
+                    // convert enums to the intended enum type
+                    if (mType.IsEnum)
+                    {
+                        if (data.properties[prop.Key].GetType() == typeof(string))
+                            data.properties[prop.Key] = Enum.Parse(mType, (string)data.properties[prop.Key]);
+                    }
+                    // convert all JObjects to their respective types
+                    else if (data.properties[prop.Key].GetType() == typeof(Newtonsoft.Json.Linq.JObject))
+                    {
+                        data.properties[prop.Key] = (data.properties[prop.Key] as Newtonsoft.Json.Linq.JObject).ToObject(mType);
+                    }
                 }
             }
 
@@ -364,6 +423,13 @@ namespace HeavenStudio
 
             public AssetBundle GetLocalizedAssetBundle()
             {
+                if (bundleLocalized != null && !localeLoaded)
+                {
+                    bundleLocalized.Unload(true);
+                    bundleLocalized = null;
+                    localeLoaded = false;
+                    localePreloaded = false;
+                }
                 if (!hasLocales) return null;
                 if (!usesAssetBundle) return null;
                 if (bundleLocalized == null || currentLoadedLocale != defaultLocale) //TEMPORARY: use the game's default locale until we add localization support
@@ -379,6 +445,13 @@ namespace HeavenStudio
 
             public AssetBundle GetCommonAssetBundle()
             {
+                if (bundleCommon != null && !commonLoaded)
+                {
+                    bundleCommon.Unload(true);
+                    bundleCommon = null;
+                    commonLoaded = false;
+                    commonPreloaded = false;
+                }
                 if (commonLoaded) return bundleCommon;
                 if (!usesAssetBundle) return null;
                 if (bundleCommon == null)
@@ -401,6 +474,14 @@ namespace HeavenStudio
 
             public async UniTask LoadCommonAssetBundleAsync()
             {
+                if (bundleCommon != null && !commonLoaded)
+                {
+                    await bundleCommon.UnloadAsync(true);
+                    bundleCommon = null;
+                    commonLoaded = false;
+                    commonPreloaded = false;
+                }
+
                 if (commonPreloaded || commonLoaded) return;
                 commonPreloaded = true;
                 if (!usesAssetBundle) return;
@@ -414,6 +495,14 @@ namespace HeavenStudio
 
             public async UniTask LoadLocalizedAssetBundleAsync()
             {
+                if (bundleLocalized != null && !localeLoaded)
+                {
+                    await bundleLocalized.UnloadAsync(true);
+                    bundleLocalized = null;
+                    localeLoaded = false;
+                    localePreloaded = false;
+                }
+
                 if (!hasLocales) return;
                 if (localePreloaded) return;
                 localePreloaded = true;
@@ -655,7 +744,7 @@ namespace HeavenStudio
                             if (Timeline.instance != null)
                                 Timeline.instance?.Stop(Timeline.instance.PlaybackBeat);
                             else
-                                GameManager.instance.Stop(0);
+                                GameManager.instance.Stop(eventCaller.currentEntity.beat);
                         }
                     ),
                     new GameAction("skill star", "Skill Star", 1f, true)

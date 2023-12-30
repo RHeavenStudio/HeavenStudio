@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -197,13 +198,16 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer[] slaveSteppers;
 
         // rendertextures update when the slave steppers change sprites
-        [SerializeField] CustomRenderTexture[] renderTextures;
+        [SerializeField] Vector2 rtSize;
+        [SerializeField] Camera cameraNear1, cameraNear2, cameraDV;
+        [SerializeField] RawImage topT, topN, bottomL, bottomC, bottomR, bottomN;
 
         [SerializeField] SpriteRenderer background;
         [SerializeField] Material stepperMaterial;
 
         [Header("Properties")]
         static List<QueuedMarch> queuedInputs = new();
+        RenderTexture[] renderTextures;
         Sprite masterSprite;
         HowMissed currentMissStage;
         bool lessSteppers = false;
@@ -243,6 +247,39 @@ namespace HeavenStudio.Games
             }
 
             bachEvents = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "bach" });
+
+            renderTextures = new RenderTexture[3];
+            renderTextures[0] = new RenderTexture((int)rtSize.x, (int)rtSize.y, 24, RenderTextureFormat.ARGB32)
+            {
+                wrapMode = TextureWrapMode.Repeat,
+            };
+            renderTextures[1] = new RenderTexture((int)rtSize.x, (int)rtSize.y, 24, RenderTextureFormat.ARGB32)
+            {
+                wrapMode = TextureWrapMode.Repeat,
+            };
+            renderTextures[2] = new RenderTexture((int)rtSize.x, (int)rtSize.y, 24, RenderTextureFormat.ARGB32)
+            {
+                wrapMode = TextureWrapMode.Repeat,
+            };
+
+            cameraNear1.targetTexture = renderTextures[0];
+            cameraNear2.targetTexture = renderTextures[1];
+            cameraDV.targetTexture = renderTextures[2];
+
+            topT.texture = renderTextures[2];
+            topN.texture = renderTextures[0];
+            bottomL.texture = renderTextures[2];
+            bottomC.texture = renderTextures[2];
+            bottomR.texture = renderTextures[2];
+            bottomN.texture = renderTextures[1];
+        }
+
+        void OnDestroy()
+        {
+            foreach (var rt in renderTextures)
+            {
+                rt.Release();
+            }
         }
 
         private static bool ForceStepOnBeat(double beat)
@@ -312,6 +349,10 @@ namespace HeavenStudio.Games
             masterStepperAnim.gameObject.SetActive(!lessSteppers);
 
             UpdateAndRenderSlaves();
+
+            cameraNear1.Render();
+            cameraNear2.Render();
+            cameraDV.Render();
         }
 
         void UpdateAndRenderSlaves()
@@ -693,7 +734,7 @@ namespace HeavenStudio.Games
         private void JustOn(PlayerActionEvent caller, float state)
         {
             currentMissStage = HowMissed.NotMissed;
-            stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+            stepswitcherPlayer?.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("nearMiss");
@@ -706,7 +747,7 @@ namespace HeavenStudio.Games
         private void JustOff(PlayerActionEvent caller, float state)
         {
             currentMissStage = HowMissed.NotMissed;
-            stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+            stepswitcherPlayer?.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("nearMiss");
@@ -719,7 +760,7 @@ namespace HeavenStudio.Games
         private void MissOn(PlayerActionEvent caller)
         {
             if (currentMissStage == HowMissed.MissedOn) return;
-            stepswitcherPlayer.Play("OnbeatMiss", 0, 0);
+            stepswitcherPlayer?.Play("OnbeatMiss", 0, 0);
             SoundByte.PlayOneShotGame("lockstep/wayOff");
             currentMissStage = HowMissed.MissedOn;
         }
@@ -727,7 +768,7 @@ namespace HeavenStudio.Games
         private void MissOff(PlayerActionEvent caller)
         {
             if (currentMissStage == HowMissed.MissedOff) return;
-            stepswitcherPlayer.Play("OffbeatMiss", 0, 0);
+            stepswitcherPlayer?.Play("OffbeatMiss", 0, 0);
             SoundByte.PlayOneShotGame("lockstep/wayOff");
             currentMissStage = HowMissed.MissedOff;
         }

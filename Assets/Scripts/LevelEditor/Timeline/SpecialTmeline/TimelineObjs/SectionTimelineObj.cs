@@ -29,7 +29,11 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateLabel()
         {
-            sectionLabel.text = chartEntity["sectionName"];
+            //<sprite="categoryMarker" name="cat0">
+            if (string.IsNullOrEmpty(chartEntity["sectionName"]))
+                sectionLabel.text = $"<sprite=\"categoryMarker\" name=\"cat{chartEntity["category"]}\"> x{chartEntity["weight"]:0}";
+            else
+                sectionLabel.text = $"<sprite=\"categoryMarker\" name=\"cat{chartEntity["category"]}\"> x{chartEntity["weight"]:0} | {chartEntity["sectionName"]}";
             if (!moving)
                 SetX(chartEntity);
         }
@@ -56,6 +60,7 @@ namespace HeavenStudio.Editor.Track
 
         public override bool OnMove(float beat, bool final = false)
         {
+            if (beat < 0) beat = 0;
             foreach (RiqEntity sectionChange in GameManager.instance.Beatmap.SectionMarkers)
             {
                 if (this.chartEntity == sectionChange)
@@ -88,8 +93,16 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
-                gameObject.SetActive(false);   
+                gameObject.SetActive(false);
 
+            }
+        }
+
+        public void Remove()
+        {
+            if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.ChartSection)
+            {
+                DeleteObj();
             }
         }
     }
