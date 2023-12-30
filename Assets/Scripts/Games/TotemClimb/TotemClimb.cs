@@ -266,7 +266,6 @@ namespace HeavenStudio.Games
                     if (normalizedBeat >= highBeat + 2)
                     {
                         normalizedBeat = Mathf.Clamp(normalizedBeat - 2 + (cond.GetPositionFromBeat(h.beat + 2, 2) * 2), (float)highBeat, (float)highBeat + 4);
-                        Debug.Log(normalizedBeat);
                     }
                     else if (normalizedBeat >= highBeat)
                     {

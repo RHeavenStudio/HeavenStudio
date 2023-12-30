@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using HeavenStudio.Util;
-using static UnityEngine.GraphicsBuffer;
 
 namespace HeavenStudio.Games.Scripts_TotemClimb
 {
     public class TCJumper : SuperCurveObject
     {
         [SerializeField] private Transform _initialPoint;
+        [SerializeField] private ParticleSystem _highParticle;
+        [SerializeField] private ParticleSystem _jumpParticle;
         [SerializeField] private float _jumpHeight = 2f;
         [SerializeField] private float _jumpHeightTriple = 1f;
         [SerializeField] private float _jumpHighHeight = 6f;
@@ -36,18 +37,18 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 target = _initialPoint,
                 height = _jumpHeight
             };
-            if (_game.IsTripleBeat(beat))
+            if (_game.IsHighBeat(beat))
             {
                 _path.positions[1] = new PathPos()
                 {
-                    target = _game.GetJumperFrogPointAtBeat(beat, -1)
+                    target = _game.GetDragonPointAtBeat(beat)
                 };
             }
             else
             {
                 _path.positions[1] = new PathPos()
                 {
-                    target = _game.GetJumperPointAtBeat(beat)
+                    target = _game.IsTripleBeat(beat) ? _game.GetJumperFrogPointAtBeat(beat, -1) : _game.GetJumperPointAtBeat(beat)
                 };
             }
         }
@@ -209,7 +210,11 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     };
                 }
             }
-            if (!miss) _anim.Play("Jump", 0, 0);
+            if (!miss)
+            {
+                _anim.Play("HighJump", 0, 0);
+                _highParticle.PlayScaledAsync(0.5f);
+            }
             else _anim.DoScaledAnimationAsync("Miss", 0.5f);
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
@@ -229,17 +234,36 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 yield return null;
             }
             _anim.Play("Idle", 0, 0);
+            _highParticle.Stop();
         }
 
         private IEnumerator HoldCo(double beat)
         {
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, 1);
+            float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, 2 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 2)));
             Transform dragonPoint = _game.GetDragonPointAtBeat(beat);
+            bool canUnHold = true;
             while (normalizedBeat < 1f)
             {
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, 1);
                 transform.position = dragonPoint.position;
-                yield return null;
+
+                if (!_game.IsExpectingInputNow(Minigame.InputAction_FlickRelease) 
+                    && (PlayerInput.GetIsAction(Minigame.InputAction_FlickRelease) || PlayerInput.GetIsAction(Minigame.InputAction_BasicRelease))
+                    && canUnHold)
+                {
+                    _anim.DoScaledAnimationAsync("UnHold", 0.5f);
+                    _game.ScoreMiss();
+                    canUnHold = false;
+                }
+                if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !canUnHold)
+                {
+                    _anim.DoScaledAnimationAsync("Hold", 0.5f);
+                    SoundByte.PlayOneShot("nearMiss");
+                    _game.ScoreMiss();
+                    canUnHold = true;
+                }
+
+                    yield return null;
             }
         }
 
@@ -254,6 +278,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 SoundByte.PlayOneShot("nearMiss");
                 return;
             }
+            _jumpParticle.PlayScaledAsync(0.5f);
             SoundByte.PlayOneShotGame(isTriple ? "totemClimb/totemlandb" : "totemClimb/totemland");
         }
 
@@ -266,6 +291,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 SoundByte.PlayOneShot("nearMiss");
                 return;
             }
+            _jumpParticle.PlayScaledAsync(0.5f);
             SoundByte.PlayOneShotGame("totemClimb/totemland");
         }
 
@@ -278,6 +304,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 SoundByte.PlayOneShot("nearMiss");
                 return;
             }
+            _jumpParticle.PlayScaledAsync(0.5f);
             SoundByte.PlayOneShotGame("totemClimb/totemland");
         }
 
@@ -286,6 +313,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             SoundByte.PlayOneShotGame("totemClimb/chargejump");
             _game.HoldDragonAtBeat(caller.startBeat + caller.timer);
             StartCoroutine(HoldCo(caller.startBeat + caller.timer));
+            _anim.DoScaledAnimationAsync("Hold", 0.5f);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("nearMiss");
@@ -302,6 +330,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 SoundByte.PlayOneShot("nearMiss");
                 return;
             }
+            _jumpParticle.PlayScaledAsync(0.5f);
             SoundByte.PlayOneShotGame("totemClimb/superjumpgood");
         }
 

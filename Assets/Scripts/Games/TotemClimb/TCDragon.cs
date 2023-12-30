@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         public void Hold()
         {
-            _anim.DoScaledAnimationAsync("Hold", 0.5f);
+            _anim.DoScaledAnimationAsync("Hold", 0.25f);
         }
 
         public void Release()
