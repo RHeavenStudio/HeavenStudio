@@ -135,7 +135,6 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 {
                     yield break;
                 }
-                Debug.Log(Math.Clamp(Conductor.instance.songPositionInBeatsAsDouble, beat, beat + _path.positions[0].duration) + ", Beat: " + beat);
                 transform.position = GetPathPositionFromBeat(_path, Math.Clamp(Conductor.instance.songPositionInBeatsAsDouble, beat, beat + _path.positions[0].duration), beat);
 
                 if (normalizedBeat >= 0.5f && !playedFall)
