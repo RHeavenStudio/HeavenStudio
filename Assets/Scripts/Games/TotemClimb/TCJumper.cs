@@ -10,6 +10,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
     {
         [SerializeField] private Transform _initialPoint;
         [SerializeField] private ParticleSystem _highParticle;
+        [SerializeField] private ParticleSystem _highMissParticle;
         [SerializeField] private ParticleSystem _jumpParticle;
         [SerializeField] private float _jumpHeight = 2f;
         [SerializeField] private float _jumpHeightTriple = 1f;
@@ -53,11 +54,11 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             }
         }
 
-        public void StartJumping(double beat, bool miss = false)
+        public void StartJumping(double beat, bool miss = false, bool nearMiss = false)
         {
             bool nextIsTriple = _game.IsTripleBeat(beat + 1);
             bool nextIsHigh = _game.IsHighBeat(beat + 1);
-            StartCoroutine(JumpCo(beat, miss));
+            StartCoroutine(JumpCo(beat, miss, nearMiss));
             if (beat + 1 >= _game.EndBeat) return;
             if (nextIsHigh)
             {
@@ -81,9 +82,9 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             else _game.ScheduleInput(beat, 2, Minigame.InputAction_BasicPress, nextIsTriple ? JustTripleEnter : Just, nextIsTriple ? MissTripleEnter : Miss, Empty);
         }
 
-        public void TripleJumping(double beat, bool enter, bool miss = false)
+        public void TripleJumping(double beat, bool enter, bool miss = false, bool nearMiss = false)
         {
-            StartCoroutine(JumpTripleCo(beat, enter, miss));
+            StartCoroutine(JumpTripleCo(beat, enter, miss, nearMiss));
             if (beat + 0.5 >= _game.EndBeat) return;
             _game.ScheduleInput(beat, 0.5, Minigame.InputAction_BasicPress, enter ? JustTripleExit : Just, enter ? MissTripleExit : Miss, Empty);
         }
@@ -93,7 +94,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _anim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
-        private IEnumerator JumpCo(double beat, bool miss)
+        private IEnumerator JumpCo(double beat, bool miss, bool nearMiss)
         {
             if (beat >= _startBeat)
             {
@@ -121,29 +122,35 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     };
                 }
             }
-            if (!miss) _anim.Play("Jump", 0, 0);
+            if (!miss) _anim.DoScaledAnimationAsync(nearMiss ? "NearMiss" : "Jump", 0.5f);
             else _anim.DoScaledAnimationAsync("Miss", 0.5f);
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
             bool playedFall = false;
+            bool firstFrame = true;
 
             while(normalizedBeat < 1f)
             {
-                transform.position = GetPathPositionFromBeat(_path, Math.Min(Conductor.instance.songPositionInBeatsAsDouble, beat + _path.positions[0].duration), beat);
+                if (_game.IsExpectingInputNow(Minigame.InputAction_BasicPress) && PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !firstFrame)
+                {
+                    yield break;
+                }
+                Debug.Log(Math.Clamp(Conductor.instance.songPositionInBeatsAsDouble, beat, beat + _path.positions[0].duration) + ", Beat: " + beat);
+                transform.position = GetPathPositionFromBeat(_path, Math.Clamp(Conductor.instance.songPositionInBeatsAsDouble, beat, beat + _path.positions[0].duration), beat);
 
                 if (normalizedBeat >= 0.5f && !playedFall)
                 {
-                    if (!miss) _anim.Play("Fall", 0, 0);
+                    if (!miss && !nearMiss) _anim.Play("Fall", 0, 0);
                     playedFall = true;
                 }
-
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
+                firstFrame = false;
                 yield return null;
             }
             _anim.Play("Idle", 0, 0);
         }
 
-        private IEnumerator JumpTripleCo(double beat, bool enter, bool miss)
+        private IEnumerator JumpTripleCo(double beat, bool enter, bool miss, bool nearMiss)
         {
             if (beat >= _startBeat)
             {
@@ -160,23 +167,29 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     target = _game.GetJumperFrogPointAtBeat(beat + 0.5, enter ? 0 : 1)
                 };
             }
-            if (!miss) _anim.Play("Jump", 0, 0);
+            if (!miss) _anim.DoScaledAnimationAsync(nearMiss ? "NearMiss" : "Jump", 0.5f);
             else _anim.DoScaledAnimationAsync("Miss", 0.5f);
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
             bool playedFall = false;
+            bool firstFrame = true;
 
             while (normalizedBeat < 1f)
             {
-                transform.position = GetPathPositionFromBeat(_path, Math.Min(Conductor.instance.songPositionInBeatsAsDouble, beat + _path.positions[0].duration), beat);
+                if (_game.IsExpectingInputNow(Minigame.InputAction_BasicPress) && PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !firstFrame)
+                {
+                    yield break;
+                }
+                transform.position = GetPathPositionFromBeat(_path, Math.Clamp(Conductor.instance.songPositionInBeatsAsDouble, beat, beat + _path.positions[0].duration), beat);
 
                 if (normalizedBeat >= 0.5f && !playedFall)
                 {
-                    if (!miss) _anim.Play("Fall", 0, 0);
+                    if (!miss && !nearMiss) _anim.Play("Fall", 0, 0);
                     playedFall = true;
                 }
 
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
+                firstFrame = false;
                 yield return null;
             }
             _anim.Play("Idle", 0, 0);
@@ -215,14 +228,23 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 _anim.Play("HighJump", 0, 0);
                 _highParticle.PlayScaledAsync(0.5f);
             }
-            else _anim.DoScaledAnimationAsync("Miss", 0.5f);
+            else
+            {
+                _anim.DoScaledAnimationAsync("HighMiss", 0.5f);
+                _highMissParticle.PlayScaledAsync(0.5f);
+            }
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
             bool playedFall = false;
+            bool firstFrame = true;
 
             while (normalizedBeat < 1f)
             {
-                transform.position = GetPathPositionFromBeat(_path, Math.Min(Conductor.instance.songPositionInBeatsAsDouble, beat + _path.positions[0].duration), beat);
+                if (_game.IsExpectingInputNow(Minigame.InputAction_BasicPress) && PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !firstFrame)
+                {
+                    yield break;
+                }
+                transform.position = GetPathPositionFromBeat(_path, Math.Clamp(Conductor.instance.songPositionInBeatsAsDouble, beat, beat + _path.positions[0].duration), beat);
 
                 if (normalizedBeat >= 0.5f && !playedFall)
                 {
@@ -231,10 +253,12 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 }
 
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
+                firstFrame = false;
                 yield return null;
             }
             _anim.Play("Idle", 0, 0);
             _highParticle.Stop();
+            _highMissParticle.Stop();
         }
 
         private IEnumerator HoldCo(double beat)
@@ -263,14 +287,19 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     canUnHold = true;
                 }
 
-                    yield return null;
+                if (_game.IsExpectingInputNow(Minigame.InputAction_FlickRelease) && PlayerInput.GetIsAction(Minigame.InputAction_FlickRelease))
+                {
+                    yield break;
+                }
+
+                yield return null;
             }
         }
 
         private void Just(PlayerActionEvent caller, float state)
         {
             bool isTriple = _game.IsTripleBeat(caller.startBeat + caller.timer);
-            StartJumping(caller.startBeat + caller.timer);
+            StartJumping(caller.startBeat + caller.timer, false, state >= 1f || state <= -1f);
             _game.BopTotemAtBeat(caller.startBeat + caller.timer);
             if (isTriple) _game.FallFrogAtBeat(caller.startBeat + caller.timer, 1);
             if (state >= 1f || state <= -1f)
@@ -284,7 +313,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         private void JustTripleEnter(PlayerActionEvent caller, float state)
         {
-            TripleJumping(caller.startBeat + caller.timer, true);
+            TripleJumping(caller.startBeat + caller.timer, true, false, state >= 1f || state <= -1f);
             _game.FallFrogAtBeat(caller.startBeat + caller.timer, -1);
             if (state >= 1f || state <= -1f)
             {
@@ -297,7 +326,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         private void JustTripleExit(PlayerActionEvent caller, float state)
         {
-            TripleJumping(caller.startBeat + caller.timer, false);
+            TripleJumping(caller.startBeat + caller.timer, false, false, state >= 1f || state <= -1f);
             _game.FallFrogAtBeat(caller.startBeat + caller.timer, 0);
             if (state >= 1f || state <= -1f)
             {
@@ -323,7 +352,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         private void JustRelease(PlayerActionEvent caller, float state)
         {
-            HighJump(caller.startBeat + caller.timer, false);
+            HighJump(caller.startBeat + caller.timer, state >= 1f && state <= -1f);
             _game.ReleaseDragonAtBeat(caller.startBeat + caller.timer);
             if (state >= 1f || state <= -1f)
             {
