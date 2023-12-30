@@ -172,6 +172,8 @@ namespace HeavenStudio.Editor.Track
             specialTimelineObjs.Add(tempoTimelineObj.chartEntity.guid, tempoTimelineObj);
 
             Timeline.instance.FitToSong();
+            if (create)
+                tempoTimelineObj.OnRightClick();
         }
 
         public void AddVolumeChange(bool create, RiqEntity volumeChange_ = null, bool first = false)
@@ -200,7 +202,6 @@ namespace HeavenStudio.Editor.Track
             {
                 RiqEntity volumeC = GameManager.instance.Beatmap.AddNewVolumeChange(Timeline.instance.MousePos2BeatSnap, 100f);
                 volumeTimelineObj.chartEntity = volumeC;
-                GameManager.instance.Beatmap.VolumeChanges.Add(volumeC);
                 CommandManager.Instance.AddCommand(new Commands.AddMarker(volumeC, volumeC.guid, HoveringTypes.VolumeChange));
             }
             else
@@ -211,6 +212,8 @@ namespace HeavenStudio.Editor.Track
             volumeTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
             specialTimelineObjs.Add(volumeTimelineObj.chartEntity.guid, volumeTimelineObj);
+            if (create)
+                volumeTimelineObj.OnRightClick();
         }
 
         public void AddChartSection(bool create, RiqEntity chartSection_ = null)
@@ -240,8 +243,11 @@ namespace HeavenStudio.Editor.Track
             {
                 RiqEntity sectionC = GameManager.instance.Beatmap.AddNewSectionMarker(Timeline.instance.MousePos2BeatSnap, "New Section");
 
+                sectionC.CreateProperty("startPerfect", false);
+                sectionC.CreateProperty("weight", 1f);
+                sectionC.CreateProperty("category", 0);
+
                 sectionTimelineObj.chartEntity = sectionC;
-                GameManager.instance.Beatmap.SectionMarkers.Add(sectionC);
                 CommandManager.Instance.AddCommand(new Commands.AddMarker(sectionC, sectionC.guid, HoveringTypes.SectionChange));
             }
             else

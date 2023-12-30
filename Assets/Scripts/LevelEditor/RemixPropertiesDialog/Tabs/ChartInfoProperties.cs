@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Jukebox;
 
 namespace HeavenStudio.Editor 
 {
@@ -9,19 +10,6 @@ namespace HeavenStudio.Editor
         [Header("General References")]
         [SerializeField] private GameObject propertyHolder;
         RemixPropertiesDialog dialog;
-
-        [Header("Property Prefabs")]
-        [SerializeField] private GameObject IntegerP;
-        [SerializeField] private GameObject FloatP;
-        [SerializeField] private GameObject BooleanP;
-        [SerializeField] private GameObject DropdownP;
-        [SerializeField] private GameObject ColorP;
-        [SerializeField] private GameObject StringP;
-
-        [Header("Layout Prefabs")]
-        [SerializeField] private GameObject DividerP;
-        [SerializeField] private GameObject HeaderP;
-        [SerializeField] private GameObject SubHeaderP;
 
         [Header("Editable Properties")]
         [SerializeField] RemixPropertiesDialog.PropertyTag[] tags;
@@ -84,6 +72,21 @@ namespace HeavenStudio.Editor
                 var property = input.GetComponent<StringChartPropertyPrefab>();
                 property.SetProperties(diag, propertyName, type, caption);
             }
+            else if (objType == typeof(EntityTypes.Resource))
+            {
+                switch (((EntityTypes.Resource)type).type)
+                {
+                    case EntityTypes.Resource.ResourceType.Image:
+                        prefab = diag.ImageP;
+                        input = InitPrefab(prefab, tooltip);
+                        var property = input.GetComponent<ImageChartResourcePrefab>();
+                        property.SetProperties(diag, propertyName, type, caption);
+                        break;
+                    default:
+                        Debug.LogError("Can't make property interface of type: " + type.GetType());
+                        return;
+                }
+            }
             else
             {
                 Debug.LogError("Can't make property interface of type: " + type.GetType());
@@ -107,7 +110,13 @@ namespace HeavenStudio.Editor
             var input = InitPrefab(diag.SubHeaderP);
             input.GetComponent<RemixPropertyPrefab>().InitProperties(diag, "", text);
         }
-        
+
+        public void AddResultMessageEditor(RemixPropertiesDialog diag)
+        {
+            var input = InitPrefab(diag.ResultDialogP);
+            input.GetComponent<RatingScreenPropertyDialog>().InitProperties(diag, "", "");
+        }
+
         private GameObject InitPrefab(GameObject prefab, string tooltip = "")
         {
             GameObject input = Instantiate(prefab);

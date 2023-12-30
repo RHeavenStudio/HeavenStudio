@@ -141,7 +141,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 if (!KarateMan.instance.IsExpectingInputNow(KarateMan.InputAction_Press))
                 {
-                    Punch(1, PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch);
+                    Punch(_lastPunchedHeavy ? 2 : 1, PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch, _lastPunchedHeavy);
                     SoundByte.PlayOneShotGame("karateman/swingNoHit", forcePlay: true);
                 }
             }
@@ -215,7 +215,9 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             lastChargeTime = double.MinValue;
         }
 
-        public bool Punch(int forceHand = 0, bool touchCharge = false)
+        private bool _lastPunchedHeavy = false;
+
+        public bool Punch(int forceHand = 0, bool touchCharge = false, bool punchedHeavy = false)
         {
             if (GameManager.instance.currentGame != "karateman") return false;
             var cond = Conductor.instance;
@@ -225,6 +227,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             unPrepareTime = double.MinValue;
             lastChargeTime = double.MinValue;
             inKick = false;
+            _lastPunchedHeavy = punchedHeavy;
 
             switch (forceHand)
             {

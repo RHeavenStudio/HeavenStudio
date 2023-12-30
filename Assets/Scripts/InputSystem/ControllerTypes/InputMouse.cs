@@ -256,12 +256,13 @@ namespace HeavenStudio.InputSystem
             return action is 0;
         }
 
-        public override int GetLastButtonDown()
+        public override int GetLastButtonDown(bool strict = false)
         {
             if (Input.anyKeyDown)
             {
                 for (KeyCode i = keyCodes[1]; i <= KeyCode.Mouse6; i++)
                 {
+                    if (strict && i < KeyCode.Mouse0) continue;
                     if (Input.GetKeyDown(i))
                         return (int)i;
                 }
@@ -271,9 +272,9 @@ namespace HeavenStudio.InputSystem
 
         public override int GetLastActionDown()
         {
-            for (int i = 0; i < BINDS_MAX; i++)
+            for (int i = 0; i < currentBindings.Touch.Length; i++)
             {
-                if (Input.GetKeyDown((KeyCode)currentBindings.Pad[i]))
+                if (Input.GetKeyDown((KeyCode)currentBindings.Touch[i]))
                     return i;
             }
             return -1;
@@ -427,7 +428,8 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetSlide(out double dt)
         {
-            dt = hasSwiped ? Time.realtimeSinceStartupAsDouble - timeMoveChange : 0;
+            // dt = hasSwiped ? Time.realtimeSinceStartupAsDouble - timeMoveChange : 0;
+            dt = 0;
             return hasSwiped;
         }
 
@@ -467,7 +469,10 @@ namespace HeavenStudio.InputSystem
         public override void TogglePointerLock(bool locked)
         {
             Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
-            RecentrePointer();
+            if (locked)
+            {
+                RecentrePointer();
+            }
         }
 
         public override void RecentrePointer()

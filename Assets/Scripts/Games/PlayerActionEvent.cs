@@ -26,6 +26,7 @@ namespace HeavenStudio.Games
 
         public double startBeat;
         public double timer;
+        public float weight = 1f;
 
         public bool isEligible = true;
         public bool canHit = true; //Indicates if you can still hit the cue or not. If set to false, it'll guarantee a miss
@@ -33,6 +34,8 @@ namespace HeavenStudio.Games
         public bool triggersAutoplay = true;
         bool lockedByEvent = false;
         bool markForDeletion = false;
+
+        float pitchWhenHit = 1f;
 
         public bool autoplayOnly = false; //Indicates if the input event only triggers when it's autoplay. If set to true, NO Miss or Blank events will be triggered when you're not autoplaying.
 
@@ -70,25 +73,7 @@ namespace HeavenStudio.Games
             {
                 return PlayerInput.GetIsAction(InputAction, out dt);
             }
-            return (
-                //General inputs, both down and up
-                (PlayerInput.Pressed(out dt) && inputType.HasFlag(InputType.STANDARD_DOWN)) ||
-                (PlayerInput.AltPressed(out dt) && inputType.HasFlag(InputType.STANDARD_ALT_DOWN)) ||
-                (PlayerInput.GetAnyDirectionDown(out dt) && inputType.HasFlag(InputType.DIRECTION_DOWN)) ||
-                (PlayerInput.PressedUp(out dt) && inputType.HasFlag(InputType.STANDARD_UP)) ||
-                (PlayerInput.AltPressedUp(out dt) && inputType.HasFlag(InputType.STANDARD_ALT_UP)) ||
-                (PlayerInput.GetAnyDirectionUp(out dt) && inputType.HasFlag(InputType.DIRECTION_UP)) ||
-                //Specific directional inputs
-                (PlayerInput.GetSpecificDirectionDown(PlayerInput.DOWN, out dt) && inputType.HasFlag(InputType.DIRECTION_DOWN_DOWN)) ||
-                (PlayerInput.GetSpecificDirectionDown(PlayerInput.UP, out dt) && inputType.HasFlag(InputType.DIRECTION_UP_DOWN)) ||
-                (PlayerInput.GetSpecificDirectionDown(PlayerInput.LEFT, out dt) && inputType.HasFlag(InputType.DIRECTION_LEFT_DOWN)) ||
-                (PlayerInput.GetSpecificDirectionDown(PlayerInput.RIGHT, out dt) && inputType.HasFlag(InputType.DIRECTION_RIGHT_DOWN)) ||
-
-                (PlayerInput.GetSpecificDirectionUp(PlayerInput.DOWN, out dt) && inputType.HasFlag(InputType.DIRECTION_DOWN_UP)) ||
-                (PlayerInput.GetSpecificDirectionUp(PlayerInput.UP, out dt) && inputType.HasFlag(InputType.DIRECTION_UP_UP)) ||
-                (PlayerInput.GetSpecificDirectionUp(PlayerInput.LEFT, out dt) && inputType.HasFlag(InputType.DIRECTION_LEFT_UP)) ||
-                (PlayerInput.GetSpecificDirectionUp(PlayerInput.RIGHT, out dt) && inputType.HasFlag(InputType.DIRECTION_RIGHT_UP))
-            );
+            return false;
         }
 
         public void CanHit(bool canHit)
@@ -103,8 +88,9 @@ namespace HeavenStudio.Games
 
         public void Update()
         {
+            Conductor cond = Conductor.instance;
             if (markForDeletion) CleanUp();
-            if (!Conductor.instance.NotStopped()) CleanUp(); // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
+            if (!cond.NotStopped()) CleanUp(); // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
 
             if (noAutoplay && autoplayOnly) autoplayOnly = false;
             if (noAutoplay && triggersAutoplay) triggersAutoplay = false;
@@ -118,7 +104,7 @@ namespace HeavenStudio.Games
             }
 
             //BUGFIX: ActionEvents destroyed too early
-            if (normalizedTime > Minigame.NgLateTime()) Miss();
+            if (normalizedTime > Minigame.NgLateTime(cond.SongPitch)) Miss();
 
             if (lockedByEvent)
             {
@@ -134,10 +120,6 @@ namespace HeavenStudio.Games
                 normalizedTime -= dt;
                 if (IsExpectingInputNow())
                 {
-                    // if (InputAction != null)
-                    // {
-                    //     Debug.Log("Hit " + InputAction.name);
-                    // }
                     double stateProg = ((normalizedTime - Minigame.JustEarlyTime()) / (Minigame.JustLateTime() - Minigame.JustEarlyTime()) - 0.5f) * 2;
                     Hit(stateProg, normalizedTime);
                 }
@@ -260,16 +242,16 @@ namespace HeavenStudio.Games
             {
                 if (canHit)
                 {
+                    CleanUp();
+                    pitchWhenHit = Conductor.instance.SongPitch;
                     double normalized = time - 1f;
                     int offset = Mathf.CeilToInt((float)normalized * 1000);
                     GameManager.instance.AvgInputOffset = offset;
                     state = System.Math.Max(-1.0, System.Math.Min(1.0, state));
-                    OnHit(this, (float)state);
 
-                    CleanUp();
                     if (countsForAccuracy && !(noAutoplay || autoplayOnly) && isEligible)
                     {
-                        GameManager.instance.ScoreInputAccuracy(TimeToAccuracy(time), time > 1.0, time);
+                        GameManager.instance.ScoreInputAccuracy(startBeat + timer, TimeToAccuracy(time, pitchWhenHit), time > 1.0, time, weight, true);
                         if (state >= 1f || state <= -1f)
                         {
                             GoForAPerfect.instance.Miss();
@@ -280,6 +262,7 @@ namespace HeavenStudio.Games
                             GoForAPerfect.instance.Hit();
                         }
                     }
+                    OnHit(this, (float)state);
                 }
                 else
                 {
@@ -288,29 +271,30 @@ namespace HeavenStudio.Games
             }
         }
 
-        double TimeToAccuracy(double time)
+        double TimeToAccuracy(double time, float pitch = -1)
         {
-            if (time >= Minigame.AceEarlyTime() && time <= Minigame.AceLateTime())
+            if (pitch < 0) pitch = pitchWhenHit;
+            if (time >= Minigame.AceEarlyTime(pitch) && time <= Minigame.AceLateTime(pitch))
             {
                 // Ace
                 return 1.0;
             }
 
             double state = 0;
-            if (time >= Minigame.JustEarlyTime() && time <= Minigame.JustLateTime())
+            if (time >= Minigame.JustEarlyTime(pitch) && time <= Minigame.JustLateTime(pitch))
             {
                 // Good Hit
                 if (time > 1.0)
                 {
                     // late half of timing window
-                    state = 1.0 - ((time - Minigame.AceLateTime()) / (Minigame.JustLateTime() - Minigame.AceLateTime()));
+                    state = 1.0 - ((time - Minigame.AceLateTime(pitch)) / (Minigame.JustLateTime(pitch) - Minigame.AceLateTime(pitch)));
                     state *= 1.0 - Minigame.rankHiThreshold;
                     state += Minigame.rankHiThreshold;
                 }
                 else
                 {
                     //early half of timing window
-                    state = ((time - Minigame.JustEarlyTime()) / (Minigame.AceEarlyTime() - Minigame.JustEarlyTime()));
+                    state = ((time - Minigame.JustEarlyTime(pitch)) / (Minigame.AceEarlyTime(pitch) - Minigame.JustEarlyTime(pitch)));
                     state *= 1.0 - Minigame.rankHiThreshold;
                     state += Minigame.rankHiThreshold;
                 }
@@ -320,13 +304,13 @@ namespace HeavenStudio.Games
                 if (time > 1.0)
                 {
                     // late half of timing window
-                    state = 1.0 - ((time - Minigame.JustLateTime()) / (Minigame.NgLateTime() - Minigame.JustLateTime()));
+                    state = 1.0 - ((time - Minigame.JustLateTime(pitch)) / (Minigame.NgLateTime(pitch) - Minigame.JustLateTime(pitch)));
                     state *= Minigame.rankOkThreshold;
                 }
                 else
                 {
                     //early half of timing window
-                    state = ((time - Minigame.JustEarlyTime()) / (Minigame.AceEarlyTime() - Minigame.JustEarlyTime()));
+                    state = ((time - Minigame.JustEarlyTime(pitch)) / (Minigame.AceEarlyTime(pitch) - Minigame.JustEarlyTime(pitch)));
                     state *= Minigame.rankOkThreshold;
                 }
             }
@@ -335,15 +319,15 @@ namespace HeavenStudio.Games
 
         public void Miss()
         {
+            CleanUp();
             if (OnMiss != null && enabled && !autoplayOnly)
             {
                 OnMiss(this);
             }
 
-            CleanUp();
             if (countsForAccuracy && !(noAutoplay || autoplayOnly))
             {
-                GameManager.instance.ScoreInputAccuracy(0, true, 2.0, 1.0, false);
+                GameManager.instance.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, weight, false);
                 GoForAPerfect.instance.Miss();
                 SectionMedalsManager.instance.MakeIneligible();
             }

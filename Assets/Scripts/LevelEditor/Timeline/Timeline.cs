@@ -310,32 +310,7 @@ namespace HeavenStudio.Editor.Track
                 WaveformToggle();
             });
 
-            Tooltip.AddTooltip(SongBeat.gameObject, "Current Beat");
-            Tooltip.AddTooltip(SongPos.gameObject, "Current Time");
-            Tooltip.AddTooltip(CurrentTempo.gameObject, "Current Tempo (BPM)");
-
-            Tooltip.AddTooltip(PlayBTN.gameObject, "Play <color=#adadad>[Space]</color>");
-            Tooltip.AddTooltip(PauseBTN.gameObject, "Pause <color=#adadad>[Shift + Space]</color>");
-            Tooltip.AddTooltip(StopBTN.gameObject, "Stop <color=#adadad>[Space]</color>");
-
-            Tooltip.AddTooltip(MetronomeBTN.gameObject, "Metronome <color=#adadad>[M]</color>");
-            Tooltip.AddTooltip(AutoplayBTN.gameObject, "Autoplay <color=#adadad>[P]</color>");
-
-            Tooltip.AddTooltip(SelectionsBTN.gameObject, "Tool: Selection <color=#adadad>[1]</color>");
-            Tooltip.AddTooltip(TempoChangeBTN.gameObject, "Tool: Tempo Change <color=#adadad>[2]</color>");
-            Tooltip.AddTooltip(MusicVolumeBTN.gameObject, "Tool: Music Volume <color=#adadad>[3]</color>");
-            Tooltip.AddTooltip(ChartSectionBTN.gameObject, "Tool: Beatmap Sections <color=#adadad>[4]</color>");
-
-            Tooltip.AddTooltip(StartingTempoSpecialAll.gameObject, "Starting Tempo (BPM)");
-            Tooltip.AddTooltip(StartingTempoSpecialTempo.gameObject, "Starting Tempo (BPM)");
-            Tooltip.AddTooltip(StartingVolumeSpecialVolume.gameObject, "Starting Volume (%)");
-
-            Tooltip.AddTooltip(ZoomInBTN.gameObject, "Zoom In");
-            Tooltip.AddTooltip(ZoomOutBTN.gameObject, "Zoom Out");
-            Tooltip.AddTooltip(ZoomResetBTN.gameObject, "Zoom Reset");
             Tooltip.AddTooltip(WaveformBTN.gameObject, "Waveform Toggle");
-
-            Tooltip.AddTooltip(PlaybackSpeed.gameObject, "The preview's playback speed. Right click to reset to 1.0");
 
             SetTimeButtonColors(true, false, false);
             MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
@@ -421,6 +396,21 @@ namespace HeavenStudio.Editor.Track
             if (MouseInTimeline)
                 MouseInTimeline = RectTransformUtility.RectangleContainsScreenPoint(TimelineScroll.viewport,
                     Input.mousePosition, Editor.instance.EditorCamera);
+            
+            PlaybackSpeed.interactable = !Conductor.instance.isPaused;
+            
+            foreach (var rect in GameObject.FindGameObjectsWithTag("BlocksEditor"))
+            {
+                if (!rect.activeInHierarchy) continue;
+                if (rect.TryGetComponent(out RectTransform rectTransform))
+                {
+                    if (RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Camera.main))
+                    {
+                        MouseInTimeline = false;
+                        break;
+                    }
+                }
+            }
 
             /*
             if (MouseInTimeline)
@@ -696,7 +686,7 @@ namespace HeavenStudio.Editor.Track
                 TimelineSongPosLine.gameObject.SetActive(true);
             }
 
-            GameManager.instance.Play(time);
+            GameManager.instance.SafePlay(time, 0, false);
 
             SetTimeButtonColors(false, true, true);
         }
@@ -1125,15 +1115,30 @@ namespace HeavenStudio.Editor.Track
         const float SpeedSnap = 0.25f;
         public void SetPlaybackSpeed(float speed)
         {
-            float spd = Mathp.Round2Nearest(speed, SpeedSnap);
-            PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
-            Conductor.instance.SetTimelinePitch(spd);
-            PlaybackSpeed.value = spd;
+            if (Conductor.instance.isPaused)
+            {
+                float spd = Conductor.instance.TimelinePitch;
+                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+                PlaybackSpeed.value = spd;
+            }
+            else
+            {
+                float spd = Mathp.Round2Nearest(speed, SpeedSnap);
+                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+                Conductor.instance.SetTimelinePitch(spd);
+                PlaybackSpeed.value = spd;
+            }
         }
 
         public void ResetPlaybackSpeed()
         {
-            if (Input.GetMouseButton(1))
+            if (Conductor.instance.isPaused)
+            {
+                float spd = Conductor.instance.TimelinePitch;
+                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+                PlaybackSpeed.value = spd;
+            }
+            else if (Input.GetMouseButton(1))
             {
                 PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: 1x";
                 PlaybackSpeed.value = 1f;
