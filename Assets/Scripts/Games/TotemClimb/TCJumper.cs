@@ -268,6 +268,11 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             bool canUnHold = true;
             while (normalizedBeat < 1f)
             {
+                if (_game.IsExpectingInputNow(Minigame.InputAction_FlickRelease) && PlayerInput.GetIsAction(Minigame.InputAction_FlickRelease))
+                {
+                    yield break;
+                }
+
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, 1);
                 transform.position = dragonPoint.position;
 
@@ -286,12 +291,6 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     _game.ScoreMiss();
                     canUnHold = true;
                 }
-
-                if (_game.IsExpectingInputNow(Minigame.InputAction_FlickRelease) && PlayerInput.GetIsAction(Minigame.InputAction_FlickRelease))
-                {
-                    yield break;
-                }
-
                 yield return null;
             }
         }
