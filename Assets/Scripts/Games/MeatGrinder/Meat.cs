@@ -110,11 +110,13 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
                 MeatType.BaconBall or _ => (0.667f, 1),
             };
             var sheetAnim = game.MeatSplash.textureSheetAnimation;
+            var main = game.MeatSplash.main;
             sheetAnim.frameOverTime = new ParticleSystem.MinMaxCurve(rangeStart, rangeEnd);
+            main.simulationSpeed = 0.5f / Conductor.instance.pitchedSecPerBeat;
 
             // has a probability of zero normally so it's not played with Play() but this exposes it to the editor
-            int amount = (int)game.MeatSplash.emission.GetBurst(0).count.constant;
-            game.MeatSplash.Emit(new ParticleSystem.EmitParams(), amount);
+            var emission = game.MeatSplash.emission;
+            game.MeatSplash.Emit(new ParticleSystem.EmitParams(), (int)emission.GetBurst(0).count.constant);
 
             if (tackReaction.expression > 0) {
                 BeatAction.New(game, new List<BeatAction.Action>() {
