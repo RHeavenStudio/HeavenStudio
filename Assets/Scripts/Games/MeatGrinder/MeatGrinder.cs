@@ -276,9 +276,6 @@ namespace HeavenStudio.Games
 
             CartGuyParentAnim.gameObject.SetActive(cartEase.length != 0);
 
-            // Debug.Log("isPlaying : " + cond.isPlaying);
-            // Debug.Log("isPaused : " + cond.isPaused);
-            // Debug.Log("NotStopped : " + cond.NotStopped());
             if (cond.isPlaying && !cond.isPaused) {
                 foreach (Transform gear in Gears) {
                     double newZ = Time.deltaTime * currentGearSpeed * 50 * (gear.name == "Big" ? -1 : 1) / cond.pitchedSecPerBeat;
@@ -420,7 +417,7 @@ namespace HeavenStudio.Games
         public void StartInterval(double beat, float length, double gameSwitchBeat, bool autoPassTurn)
         {
             List<BeatAction.Action> actions = new() {
-                new(beat - 1, delegate { BossAnim.DoScaledAnimationFromBeatAsync("BossSignal", 0.5f, beat - 1); }),
+                new(beat - 1, delegate { if (Conductor.instance.songPositionInBeatsAsDouble < beat) BossAnim.DoScaledAnimationFromBeatAsync("BossSignal", 0.5f, beat - 1); }),
             };
 
             var allCallEvents = GetRelevantMeatCallsBetweenBeat(beat, beat + length);

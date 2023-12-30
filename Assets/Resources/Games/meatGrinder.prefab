@@ -263,7 +263,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 344575782839395223}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -25, y: 4, z: 0}
+  m_LocalPosition: {x: -25, y: 2.81, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2061,7 +2061,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5367660552507315250}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.63, y: -0.77, z: 0}
+  m_LocalPosition: {x: 2.67, y: -0.77, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2151,7 +2151,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 0.6
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -3012,7 +3012,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 10
+        scalar: 5
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -3085,13 +3085,13 @@ ParticleSystem:
           inWeight: 0
           outWeight: 0.67731327
         - serializedVersion: 3
-          time: 0.19609144
+          time: 1
           value: 0
-          inSlope: -12.338608
-          outSlope: -12.338608
+          inSlope: -3.0356529
+          outSlope: -3.0356529
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0.18219988
+          inWeight: 0.1632253
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
