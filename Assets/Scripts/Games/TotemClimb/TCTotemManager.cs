@@ -123,6 +123,39 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             f.FallPiece(part);
         }
 
+        public Transform GetHighJumperPointAtBeat(double beat)
+        {
+            var d = _dragons.Find(x => beat >= x.beat && beat < x.beat + 4);
+            if (d == null)
+            {
+                Debug.Log($"Jumper Dragon Point unavaible at beat {beat}.");
+                return null;
+            }
+            return d.JumperPoint;
+        }
+
+        public void HoldDragonAtBeat(double beat)
+        {
+            var d = _dragons.Find(x => beat >= x.beat && beat < x.beat + 4);
+            if (d == null)
+            {
+                Debug.Log($"Dragon unavaible at beat {beat}.");
+                return;
+            }
+            d.Hold();
+        }
+
+        public void ReleaseDragonAtBeat(double beat)
+        {
+            var d = _dragons.Find(x => beat >= x.beat && beat < x.beat + 4);
+            if (d == null)
+            {
+                Debug.Log($"Dragon unavaible at beat {beat}.");
+                return;
+            }
+            d.Release();
+        }
+
         private void Update()
         {
             float currentScrollX = _scrollTransform.localPosition.x;

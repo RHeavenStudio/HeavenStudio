@@ -208,6 +208,21 @@ namespace HeavenStudio.Games
             return _totemManager.GetJumperFrogPointAtBeat(beat, part);
         }
 
+        public Transform GetDragonPointAtBeat(double beat)
+        {
+            return _totemManager.GetHighJumperPointAtBeat(beat);
+        }
+
+        public void HoldDragonAtBeat(double beat)
+        {
+            _totemManager.HoldDragonAtBeat(beat);
+        }
+
+        public void ReleaseDragonAtBeat(double beat)
+        {
+            _totemManager.ReleaseDragonAtBeat(beat);
+        }
+
         public void FallFrogAtBeat(double beat, int part)
         {
             _totemManager.FallFrogAtBeat(beat, part);
@@ -250,7 +265,7 @@ namespace HeavenStudio.Games
                     double highBeat = h.beat - _startBeat;
                     if (normalizedBeat >= highBeat + 2)
                     {
-                        normalizedBeat = Mathf.Clamp(normalizedBeat - 2 + (cond.GetPositionFromBeat(highBeat + 2, 2) * 2), (float)highBeat, (float)highBeat + 4);
+                        normalizedBeat = Mathf.Clamp(normalizedBeat - 2 + (cond.GetPositionFromBeat(h.beat + 2, 2) * 2), (float)highBeat, (float)highBeat + 4);
                         Debug.Log(normalizedBeat);
                     }
                     else if (normalizedBeat >= highBeat)
