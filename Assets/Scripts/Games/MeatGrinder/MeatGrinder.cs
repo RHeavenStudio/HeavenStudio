@@ -173,12 +173,12 @@ namespace HeavenStudio.Games
         public ParticleSystem MeatSplash;
         [SerializeField] Transform[] Gears;
 
-
         [Header("Animators")]
         public Animator BossAnim;
         public Animator TackAnim;
         [SerializeField] Animator CartGuyParentAnim;
         [SerializeField] Animator CartGuyAnim;
+        
         [Header("Variables")]
         private bool bossBop = true;
         public bool bossAnnoyed = false;
@@ -276,11 +276,22 @@ namespace HeavenStudio.Games
 
             CartGuyParentAnim.gameObject.SetActive(cartEase.length != 0);
 
-            if (cond.isPlaying && !cond.isPaused)
-            foreach (Transform gear in Gears)
-            {
-                double newZ = Time.deltaTime * currentGearSpeed * 50 * (gear.name == "Big" ? -1 : 1) / cond.pitchedSecPerBeat;
-                gear.Rotate(new Vector3(0, 0, (float)newZ));
+            // Debug.Log("isPlaying : " + cond.isPlaying);
+            // Debug.Log("isPaused : " + cond.isPaused);
+            // Debug.Log("NotStopped : " + cond.NotStopped());
+            if (cond.isPlaying && !cond.isPaused) {
+                foreach (Transform gear in Gears) {
+                    double newZ = Time.deltaTime * currentGearSpeed * 50 * (gear.name == "Big" ? -1 : 1) / cond.pitchedSecPerBeat;
+                    gear.Rotate(new Vector3(0, 0, (float)newZ));
+                }
+            }
+            
+            if (cond.isPlaying) {
+                MeatSplash.Play();
+            } else if (cond.isPaused) {
+                MeatSplash.Pause();
+            } else {
+                MeatSplash.Stop();
             }
         }
 

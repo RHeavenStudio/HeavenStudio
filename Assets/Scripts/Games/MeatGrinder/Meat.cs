@@ -2,6 +2,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HeavenStudio.Games.Scripts_MeatGrinder
@@ -31,7 +32,6 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         private SpriteRenderer sr;
         [SerializeField] private Sprite[] meats;
 
-
         public enum MeatType
         {
             DarkMeat,
@@ -46,7 +46,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             game = MeatGrinder.instance;
             anim = GetComponent<Animator>();
             sr = GetComponent<SpriteRenderer>();
-            anim.writeDefaultValuesOnDisable = false;
+            // anim.writeDefaultValuesOnDisable = false;
         }
 
         private void Start()
@@ -89,8 +89,6 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
                 transform.position += (meatType == MeatType.LightMeat ? meatFlyHeightAlt : meatFlyHeight) * yWeight * Vector3.up;
                 // point towards the next position
                 transform.right = transform.position - lastPos;
-
-                // anim.DoNormalizedAnimation("MeatThrown", normalizedBeat);
             }
         }
 
@@ -107,10 +105,17 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             SoundByte.PlayOneShotGame("meatGrinder/" + (isBarely ? "tink" : "meatHit"));
             game.TackAnim.DoScaledAnimationAsync("TackHit" + (isBarely ? "Barely" : "Success"), 0.5f);
 
-            // if (meatType == MeatType.BaconBall) {
-            //     game.DoExpressions(0, (int)MeatGrinder.BossExpressions.Scared);
-            // }
-            game.MeatSplash.Play();
+            
+            (float rangeStart, float rangeEnd) = meatType switch { // im not good enough at math to figure out how to make this an equation
+                MeatType.DarkMeat => (0, 0.333f),
+                MeatType.LightMeat => (0.334f, 0.666f),
+                MeatType.BaconBall or _ => (0.667f, 1),
+            };
+            var sheetAnim = game.MeatSplash.textureSheetAnimation;
+            sheetAnim.frameOverTime = new ParticleSystem.MinMaxCurve(rangeStart, rangeEnd);
+            
+            int amount = (int)game.MeatSplash.emission.GetBurst(0).count.constant;
+            game.MeatSplash.Emit(new ParticleSystem.EmitParams(), amount);
 
             if (tackReaction.expression > 0) {
                 BeatAction.New(game, new List<BeatAction.Action>() {
