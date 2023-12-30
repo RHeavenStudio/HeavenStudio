@@ -226,7 +226,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
                 if (normalizedBeat >= 0.5f && !playedFall)
                 {
-                    if (!miss) _anim.Play("Fall", 0, 0);
+                    if (!miss) _anim.Play("HighFall", 0, 0);
                     playedFall = true;
                 }
 
