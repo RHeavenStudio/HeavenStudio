@@ -266,7 +266,6 @@ namespace HeavenStudio.Games
 
             if (cartEase.length != 0)
             {
-                if (cartPhone) CartGuyAnim.Play("Phone", 0, 0);
                 float normalizedBeat = cond.GetPositionFromBeat(cartEase.beat, cartEase.length);
                 Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(cartEase.ease);
                 float newPos = func(0f, 1f, normalizedBeat);
@@ -301,7 +300,11 @@ namespace HeavenStudio.Games
 
             if (CartGuyParentAnim.gameObject.activeSelf) {
                 Debug.Log(cartPhone ? "PhoneBop" : "Bop");
-                CartGuyAnim.DoScaledAnimationAsync(cartPhone ? "PhoneBop" : "Bop", 0.5f);
+                if (cartPhone) {
+                    CartGuyAnim.DoScaledAnimationAsync("PhoneBop", 0.5f);
+                } else {
+                    CartGuyAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                }
             }
         }
 
@@ -381,6 +384,9 @@ namespace HeavenStudio.Games
             };
             cartPhone = spider;
             cartDir = direction == 0 ? "Right" : "Left";
+            if (cartPhone) {
+                CartGuyAnim.Play("Phone", 0, 0);
+            }
         }
 
         public void ChangeGears(double beat, float length, int ease, float speed)
