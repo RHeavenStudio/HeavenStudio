@@ -75,7 +75,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             if (nextIsHigh)
             {
                 _game.ScheduleInput(beat, 2, Minigame.InputAction_BasicPress, JustHold, Empty, Empty);
-                _game.ScheduleInput(beat, 5, Minigame.InputAction_FlickRelease, JustRelease, MissRelease, Empty);
+                _game.ScheduleInput(beat, 4, Minigame.InputAction_FlickRelease, JustRelease, MissRelease, Empty);
             }
             else _game.ScheduleInput(beat, 2, Minigame.InputAction_BasicPress, nextIsTriple ? JustTripleEnter : Just, nextIsTriple ? MissTripleEnter : Miss, Empty);
         }
