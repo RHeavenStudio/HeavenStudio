@@ -122,44 +122,51 @@ namespace HeavenStudio
                 selectedDisplayAnim.DoNormalizedAnimation("Idle", GetPositionFromBeat(0, 2));
             }
 
-            if (logoRevealed && !menuMode)
+            if (!menuMode && songPosBeat >= 0.5)
             {
                 var controllers = PlayerInput.GetInputControllers();
                 foreach (var newController in controllers)
                 {
                     if (newController.GetLastButtonDown(true) > 0)
                     {
-                        menuMode = true;
-                        firstPress = true;
-                        currentSelectable = defaultSelectable;
-                        SetSelectableRectTarget(currentSelectable);
-                        selectableLerpTimer = 1;
-
-                        menuAnim.Play("Revealed", 0, 0);
-                        pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
-                        SoundByte.PlayOneShot("ui/UIEnter");
-
-                        Debug.Log("Assigning controller: " + newController.GetDeviceName());
-
-                        var lastController = PlayerInput.GetInputController(1);
-                        if (lastController != newController)
+                        if (logoRevealed)
                         {
-                            lastController.SetPlayer(null);
-                            newController.SetPlayer(1);
-                            PlayerInput.CurrentControlStyle = newController.GetDefaultStyle();
-                            usingMouse = PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch;
-                            selectedDisplayIcon.SetActive(!usingMouse);
+                            menuMode = true;
+                            firstPress = true;
+                            currentSelectable = defaultSelectable;
+                            SetSelectableRectTarget(currentSelectable);
+                            selectableLerpTimer = 1;
 
-                            if ((lastController as InputJoyshock) != null)
-                            {
-                                (lastController as InputJoyshock)?.UnAssignOtherHalf();
-                            }
+                            menuAnim.Play("Revealed", 0, 0);
+                            pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
+                            SoundByte.PlayOneShot("ui/UIEnter");
 
-                            if ((newController as InputJoyshock) != null)
+                            Debug.Log("Assigning controller: " + newController.GetDeviceName());
+
+                            var lastController = PlayerInput.GetInputController(1);
+                            if (lastController != newController)
                             {
-                                newController.OnSelected();
-                                (newController as InputJoyshock)?.UnAssignOtherHalf();
+                                lastController.SetPlayer(null);
+                                newController.SetPlayer(1);
+                                PlayerInput.CurrentControlStyle = newController.GetDefaultStyle();
+                                usingMouse = PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch;
+                                selectedDisplayIcon.SetActive(!usingMouse);
+
+                                if ((lastController as InputJoyshock) != null)
+                                {
+                                    (lastController as InputJoyshock)?.UnAssignOtherHalf();
+                                }
+
+                                if ((newController as InputJoyshock) != null)
+                                {
+                                    newController.OnSelected();
+                                    (newController as InputJoyshock)?.UnAssignOtherHalf();
+                                }
                             }
+                        }
+                        else
+                        {
+                            SkipToBeat(4);
                         }
                     }
                 }
@@ -416,6 +423,16 @@ namespace HeavenStudio
         {
             float a = Mathp.Normalize((float)songPosBeat, startBeat, startBeat + length);
             return a;
+        }
+
+        public void SkipToBeat(double beat)
+        {
+            if (songPosBeat >= beat) return;
+            double seconds = BeatsToSecs(beat, bpm);
+            time = seconds;
+            songPos = time + offset;
+            songPosBeat = SecsToBeats(songPos);
+            musicSource.time = (float)time;
         }
 
         public void CreatePressed()
