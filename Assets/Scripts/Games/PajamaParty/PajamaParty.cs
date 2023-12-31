@@ -67,6 +67,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         function = delegate { var e = eventCaller.currentEntity; PajamaParty.instance.OpenBackground(e.beat, e.length, e["instant"]); },
                         defaultLength = 4f,
+                        resizable = true,
                         parameters = new List<Param>()
                         {
                             new Param("instant", false, "Instant", "Instantly open / close the background"),
