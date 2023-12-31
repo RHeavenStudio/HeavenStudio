@@ -400,7 +400,7 @@ namespace HeavenStudio.Games
             BeatAction.New(Mako, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2, delegate { MonkeyCharge(beat + 2); } ),
-                new BeatAction.Action(beat + 3, delegate { MonkeyThrow(beat + 3); } ),
+                new BeatAction.Action(beat + 3, delegate { MonkeyThrow(beat + 3, high); } ),
             });
         }
 
@@ -530,13 +530,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void MonkeyThrow(double beat)
+        public void MonkeyThrow(double beat, bool high)
         {
             foreach (CtrPillowMonkey monkey in monkeys)
             {
                 if (monkey != null)
                 {
-                    monkey.Throw(beat);
+                    monkey.Throw(beat, high);
                 }
             }
         }
