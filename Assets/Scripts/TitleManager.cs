@@ -166,7 +166,7 @@ namespace HeavenStudio
                         }
                         else
                         {
-                            SkipToBeat(4);
+                            SkipToBeat(5);
                         }
                     }
                 }
