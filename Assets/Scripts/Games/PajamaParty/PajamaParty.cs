@@ -72,6 +72,21 @@ namespace HeavenStudio.Games.Loaders
                             new Param("instant", false, "Instant", "Instantly open / close the background"),
                         },
                     },
+                    new GameAction("dream boats", "Background Boats")
+                    {
+                        function = delegate { PajamaParty.instance.DreamBoats(); },
+                        defaultLength = 1,
+                    },
+                    new GameAction("high mode", "Instant Costumes")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; PajamaParty.instance.ForceToggleHigh(e["toggle"], e.beat); },
+                        defaultLength = 0.5f,
+                        parameters = new List<Param>()
+                        {
+                            new Param("toggle", true, "Change Costumes", "Enable / disable costumes"),
+                        },
+                        priority = 5,
+                    },
                     new GameAction("instant slumber", "Instant Slumber")
                     {
                         function = delegate { var e = eventCaller.currentEntity; PajamaParty.instance.DoInstantSleep(e.beat + e.length - 1, e["type"]); },
@@ -81,16 +96,6 @@ namespace HeavenStudio.Games.Loaders
                         parameters = new List<Param>()
                         {
                             new Param("type", PajamaParty.SleepType.Normal, "Sleep Type", "Type of sleep action to use"),
-                        },
-                        priority = 5,
-                    },
-                    new GameAction("high mode", "Instant Costumes")
-                    {
-                        function = delegate { var e = eventCaller.currentEntity; PajamaParty.instance.ForceToggleHigh(e["toggle"], e.beat); },
-                        defaultLength = 0.5f,
-                        parameters = new List<Param>()
-                        {
-                            new Param("toggle", true, "Change Costumes", "Enable / disable costumes"),
                         },
                         priority = 5,
                     },
@@ -641,6 +646,11 @@ namespace HeavenStudio.Games
         public void PrepareHighState()
         {
             monkeyColMat.SetColor("_ColorAlpha", highState ? monkeyHighColour : monkeyNrmColour);
+        }
+
+        public void DreamBoats()
+        {
+            BgAnimator.Play("BoatsAppear", 3, 0);
         }
     }
 }
