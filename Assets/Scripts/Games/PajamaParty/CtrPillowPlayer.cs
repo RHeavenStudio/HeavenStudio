@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         private bool startedSleeping = false;
 
         double startThrowTime = double.MinValue;
-        float throwLength = 0;
+        double throwLength = 0;
         float throwHeight = 0;
 
         bool throwType = true; // true = throw, false = dropped ("Out")
@@ -181,15 +181,15 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             if (drop)
             {
                 throwType = false;
-                throwLength = 0.5f;
+                throwLength = 0.5;
                 Projectile.GetComponent<Animator>().DoScaledAnimation("ThrowOut", startThrowTime, throwLength);
                 Projectile.transform.rotation = Quaternion.Euler(0, 0, 360f * UnityEngine.Random.Range(0f, 1f));
             }
             else
             {
                 throwType = true;
-                throwHeight = ng ? 1.5f : 12f;
-                throwLength = ng ? 1f : 4f;
+                throwHeight = ng ? 1.5f : 14f;
+                throwLength = ng ? 1 : 4;
             }
         }
 
@@ -227,11 +227,19 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 {
                     new
                     (
-                        beat + 1,
+                        beat + 0.5,
                         delegate
                         {
-                            game.ToggleHighState(hit);
+                            game.ToggleHighState(hit && !ng, beat + 0.5);
+                        }
+                    ),
+                    new
+                    (
+                        beat + 2,
+                        delegate
+                        {
                             anim.DoUnscaledAnimation("MakoThrow" + animSuffix, 1);
+                            game.PrepareHighState();
                         }
                     )
                 });
@@ -347,12 +355,13 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             if (state <= -1f || state >= 1f)
             {
                 SoundByte.PlayOneShot("miss");
-                EndCharge(cond.songPositionInBeatsAsDouble, true, true);
+                throwNg = true;
+                EndCharge(cond.songPositionInBeatsAsDouble, true, throwNg);
             }
             else
             {
                 SoundByte.PlayOneShotGame("pajamaParty/throw5");
-                EndCharge(cond.songPositionInBeatsAsDouble, true, (throwNg || false));
+                EndCharge(cond.songPositionInBeatsAsDouble, true, throwNg);
             }
             caller.CanHit(false);
         }

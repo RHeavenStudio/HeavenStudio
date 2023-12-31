@@ -31,10 +31,10 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
         double startThrowTime = double.MinValue;
         float throwLength = 4f;
-        float throwHeight = 12f;
+        float throwHeight = 14f;
 
         private bool hasThrown = false;
-        
+
         void Awake()
         {
             anim = Monkey.GetComponent<Animator>();
@@ -51,9 +51,9 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             {
                 hasJumped = true;
                 float yMul = jumpPos * 2f - 1f;
-                float yWeight = -(yMul*yMul) + 1f;
+                float yWeight = -(yMul * yMul) + 1f;
                 Monkey.transform.localPosition = new Vector3(0, jumpHeight * yWeight);
-                Shadow.transform.localScale = new Vector3((1f-yWeight*0.2f) * 1.2f, (1f-yWeight*0.2f) * 0.8f, 1f);
+                Shadow.transform.localScale = new Vector3((1f - yWeight * 0.2f) * 1.2f, (1f - yWeight * 0.2f) * 0.8f, 1f);
                 if (jumpAlt > 1)
                 {
                     float t;
@@ -89,8 +89,8 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             {
                 hasThrown = true;
                 float yMul = jumpPos * 2f - 1f;
-                float yWeight = -(yMul*yMul) + 1f;
-                Projectile.transform.localPosition = new Vector3(0, throwHeight * yWeight + 1.5f);
+                float yWeight = -(yMul * yMul) + 1f;
+                Projectile.transform.localPosition = new Vector3(0, (throwHeight * yWeight) + 1.5f);
                 Projectile.transform.rotation = Quaternion.Euler(0, 0, Projectile.transform.rotation.eulerAngles.z - (360f * Time.deltaTime));
             }
             else
@@ -108,7 +108,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             }
         }
 
-        private void LateUpdate() 
+        private void LateUpdate()
         {
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && !hasThrown && !shouldntBop && shouldBop)
             {
@@ -155,31 +155,31 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             startJumpTime = double.MinValue;
             Monkey.transform.localPosition = new Vector3(0, 0);
             Shadow.transform.localScale = new Vector3(1.2f, 0.8f, 1f);
-            
-            List<BeatAction.Action> seq = 
+
+            List<BeatAction.Action> seq =
                 new List<BeatAction.Action>()
                 {
                     new BeatAction.Action( beat, delegate { anim.DoScaledAnimationAsync("MonkeySleep00"); }),
                     new BeatAction.Action( beat + 0.5f, delegate { anim.DoUnscaledAnimation("MonkeySleep01"); }),
                 };
-            
+
             if (col == 0 || col == 4)
             {
-                seq.Add(new BeatAction.Action( beat + 1f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
+                seq.Add(new BeatAction.Action(beat + 1f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
             }
             else if (col == 1 || col == 3)
             {
-                seq.Add(new BeatAction.Action( beat + 1.5f, delegate { anim.DoScaledAnimationAsync("MonkeyReadySleep"); }));
-                seq.Add(new BeatAction.Action( beat + 2.5f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
+                seq.Add(new BeatAction.Action(beat + 1.5f, delegate { anim.DoScaledAnimationAsync("MonkeyReadySleep"); }));
+                seq.Add(new BeatAction.Action(beat + 2.5f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
             }
             else
             {
-                seq.Add(new BeatAction.Action( beat + 3f, delegate { anim.DoScaledAnimationAsync("MonkeyReadySleep"); }));
-                seq.Add(new BeatAction.Action( beat + 4f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
+                seq.Add(new BeatAction.Action(beat + 3f, delegate { anim.DoScaledAnimationAsync("MonkeyReadySleep"); }));
+                seq.Add(new BeatAction.Action(beat + 4f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
             }
 
-            if (action != (int) PajamaParty.SleepType.NoAwake)
-                seq.Add(new BeatAction.Action( beat + 7f, delegate { anim.DoScaledAnimationAsync("MonkeyAwake"); }));
+            if (action != (int)PajamaParty.SleepType.NoAwake)
+                seq.Add(new BeatAction.Action(beat + 7f, delegate { anim.DoScaledAnimationAsync("MonkeyAwake"); }));
 
             BeatAction.New(this, seq);
         }

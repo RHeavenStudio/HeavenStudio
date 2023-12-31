@@ -110,6 +110,11 @@ namespace HeavenStudio.Games
         [SerializeField] Transform SpawnRoot;
         [SerializeField] float HighCameraHeight;
 
+        [Header("Materials")]
+        [SerializeField] Color monkeyNrmColour;
+        [SerializeField] Color monkeyHighColour;
+        [SerializeField] Material monkeyColMat;
+
         //game scene
         public static PajamaParty instance;
 
@@ -118,6 +123,7 @@ namespace HeavenStudio.Games
 
         CtrPillowMonkey[,] monkeys;
         double cameraHighStart = double.MaxValue;
+        double castleAppearStart = double.MaxValue;
         bool bgState, highState, expectHigh;
 
         //cues while unoaded
@@ -217,7 +223,7 @@ namespace HeavenStudio.Games
 
         void Start()
         {
-            Castle.SetActive(false);
+            monkeyColMat.SetColor("_ColorAlpha", highState ? monkeyHighColour : monkeyNrmColour);
         }
 
         void Update()
@@ -232,6 +238,11 @@ namespace HeavenStudio.Games
                 additional.y = yWeight * HighCameraHeight;
             }
             GameCamera.AdditionalPosition = additional;
+
+            if (cond.songPositionInBeatsAsDouble >= castleAppearStart)
+            {
+                BgAnimator.DoScaledAnimation(highState ? "CastleAppear" : "CastleHide", castleAppearStart, 3.5, animLayer: 1, clamp: true);
+            }
         }
 
         public override void OnGameSwitch(double beat)
@@ -546,16 +557,16 @@ namespace HeavenStudio.Games
             bgState = !bgState;
             if (instant)
             {
-                BgAnimator.Play(bgState ? "SlideOpen" : "SlideClose", -1, 1);
+                BgAnimator.Play(bgState ? "SlideOpen" : "SlideClose", 0, 1);
                 BgAnimator.speed = 0;
             }
             else
             {
-                BgAnimator.DoScaledAnimationAsync(bgState ? "SlideOpen" : "SlideClose", (float)(1.0 / length));
+                BgAnimator.DoScaledAnimationAsync(bgState ? "SlideOpen" : "SlideClose", (float)(1.0 / length), animLayer: 0);
             }
         }
 
-        public void ToggleHighState(bool hit)
+        public void ToggleHighState(bool hit, double beat)
         {
             expectHigh = false;
             if (hit && !highState)
@@ -566,6 +577,12 @@ namespace HeavenStudio.Games
             {
                 highState = false;
             }
+            castleAppearStart = beat;
+        }
+
+        public void PrepareHighState()
+        {
+            monkeyColMat.SetColor("_ColorAlpha", highState ? monkeyHighColour : monkeyNrmColour);
         }
     }
 }
