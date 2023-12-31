@@ -71,23 +71,30 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
                 hitAlongMissRatio /= Vector3.Dot((startPos - missPosition.position), (startPos - missPosition.position));
                 Vector3 hitOnMissPos = startPos + ((missPosition.position - startPos) * hitAlongMissRatio);
 
-                float totalProg = (float)((currentTime - startTime) / (missTime - startTime));
+                float prog;
 
                 if (currentTime >= hitTime)
                 {
-                    float prog = (float)((currentTime - hitTime) / (missTime - hitTime));
+                    prog = (float)((currentTime - hitTime) / (missTime - hitTime));
                     transform.position = Vector3.Lerp(hitOnMissPos, missPosition.position, prog);
+
+                    prog = (prog * (1 - hitAlongMissRatio)) + hitAlongMissRatio;
                 }
                 else
                 {
-                    float prog = (float)((currentTime - startTime) / (hitTime - startTime));
+                    prog = (float)((currentTime - startTime) / (hitTime - startTime));
                     transform.position = Vector3.Lerp(startPos, hitOnMissPos, prog);
+
+                    prog *= hitAlongMissRatio;
                 }
-                float yMul = (totalProg * 2f) - 1f;
+                float yMul = prog * 2f - 1f;
                 float yWeight = -(yMul * yMul) + 1f;
                 transform.position += (meatType == MeatType.LightMeat ? meatFlyHeightAlt : meatFlyHeight) * yWeight * Vector3.up;
                 // point towards the next position
-                transform.right = transform.position - lastPos;
+                if (cond.isPlaying)
+                {
+                    transform.right = transform.position - lastPos;
+                }
             }
         }
 
