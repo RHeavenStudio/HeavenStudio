@@ -439,6 +439,13 @@ namespace HeavenStudio.Games
 
         }
 
+        // added because OnBeatPulse had some animation issues going on
+        // if your bopping overlaps with other animations, use this instead
+        public virtual void OnLateBeatPulse(double beat)
+        {
+
+        }
+
         public static MultiSound PlaySoundSequence(string game, string name, double startBeat, params SoundSequence.SequenceParams[] args)
         {
             Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);
