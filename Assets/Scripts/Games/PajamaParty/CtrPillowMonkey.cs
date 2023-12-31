@@ -203,5 +203,10 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
             BeatAction.New(this, seq);
         }
+
+        public void DoForcedHigh()
+        {
+            anim.Play("NoPose" + animSuffix, -1, 0);
+        }
     }
 }

@@ -7,6 +7,8 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+using Jukebox;
+
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
@@ -82,6 +84,16 @@ namespace HeavenStudio.Games.Loaders
                         },
                         priority = 5,
                     },
+                    new GameAction("high mode", "Instant Costumes")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; PajamaParty.instance.ForceToggleHigh(e["toggle"], e.beat); },
+                        defaultLength = 0.5f,
+                        parameters = new List<Param>()
+                        {
+                            new Param("toggle", true, "Change Costumes", "Enable / disable costumes"),
+                        },
+                        priority = 5,
+                    },
                     // todo cosmetic crap
                     // background stuff
                     // do shit with mako's face? (talking?)
@@ -105,6 +117,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject MonkeyPrefab;
         [SerializeField] GameObject Castle;
         [SerializeField] Animator BgAnimator;
+        [SerializeField] ParticleSystem BalloonsEffect;
 
         [Header("Positions")]
         [SerializeField] Transform SpawnRoot;
@@ -224,6 +237,7 @@ namespace HeavenStudio.Games
         void Start()
         {
             monkeyColMat.SetColor("_ColorAlpha", highState ? monkeyHighColour : monkeyNrmColour);
+            Update();
         }
 
         void Update()
@@ -271,6 +285,24 @@ namespace HeavenStudio.Games
             {
                 DoInstantSleep(WantInstantSleep, WantInstantSleepAction);
                 WantInstantSleep = double.MinValue;
+            }
+
+            EntityPreCheck(beat);
+        }
+
+        public override void OnPlay(double beat)
+        {
+            EntityPreCheck(beat);
+        }
+
+        void EntityPreCheck(double beat)
+        {
+            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split(0) == "pajamaParty");
+
+            RiqEntity high = prevEntities.FindLast(c => c.beat < beat && c.datamodel == "pajamaParty/high mode");
+            if (high != null)
+            {
+                ForceToggleHigh(high["toggle"], high.beat);
             }
         }
 
@@ -566,18 +598,44 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ToggleHighState(bool hit, double beat)
+        public void ForceToggleHigh(bool toggle, double beat)
+        {
+            expectHigh = false;
+            highState = toggle;
+            castleAppearStart = beat - 4;
+            PrepareHighState();
+            Mako.DoForcedHigh();
+            foreach (CtrPillowMonkey monkey in monkeys)
+            {
+                if (monkey != null)
+                {
+                    monkey.DoForcedHigh();
+                }
+            }
+        }
+
+        public void ToggleHighState(bool hit, double beat, bool instant = false)
         {
             expectHigh = false;
             if (hit && !highState)
             {
                 highState = true;
+                if (!instant)
+                {
+                    BalloonsEffect.Play();
+                }
+                BgAnimator.Play("FloatsNear", 2, 0);
             }
             else
             {
                 highState = false;
+                if (!instant)
+                {
+                    BalloonsEffect.Play();
+                }
+                BgAnimator.Play("FloatsFar", 2, 0);
             }
-            castleAppearStart = beat;
+            castleAppearStart = instant ? beat - 4 : beat;
         }
 
         public void PrepareHighState()

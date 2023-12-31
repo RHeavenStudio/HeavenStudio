@@ -503,5 +503,10 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             }
         }
         //////
+
+        public void DoForcedHigh()
+        {
+            anim.Play("NoPose" + animSuffix, -1, 0);
+        }
     }
 }
