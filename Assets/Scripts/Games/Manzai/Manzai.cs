@@ -79,6 +79,8 @@ namespace HeavenStudio.Games
 
         [SerializeField] Animator VultureAnim;
         [SerializeField] Animator RavenAnim;
+        [SerializeField] Animator HaiBubbleL;
+        [SerializeField] Animator HaiBubbleR;
 
         bool ravenBop = true;
         bool vultureBop = true;
@@ -173,9 +175,11 @@ namespace HeavenStudio.Games
 
         public void DoPun(double beat)
         {
+            int bubbleAnimation = UnityEngine.Random.Range(0, 2);
+
             SoundByte.PlayOneShotGame("manzai/"+sfxDefs[0].sfx, pitch: Conductor.instance.songBpm/98);
-            ScheduleInput(beat, 2.5f, InputAction_BasicPress, HaiJust, HaiMiss, Nothing);
-            ScheduleInput(beat, 3.0f, InputAction_BasicPress, HaiJust, HaiMiss, Nothing);
+            ScheduleInput(beat, 2.5f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustL : HaiJustR, HaiMiss, Nothing);
+            ScheduleInput(beat, 3.0f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustR : HaiJustL, HaiMiss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.0f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
@@ -188,7 +192,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void HaiJust(PlayerActionEvent caller, float state)
+        public void HaiJustFull()
         {
             SoundByte.PlayOneShotGame("manzai/hai", pitch: Conductor.instance.songBpm/98);
             SoundByte.PlayOneShotGame("manzai/haiAccent");
@@ -196,11 +200,26 @@ namespace HeavenStudio.Games
             VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
+        public void HaiJustL(PlayerActionEvent caller, float state)
+        {
+            HaiBubbleL.DoScaledAnimationAsync("HaiL", 0.5f);
+            HaiJustFull();
+        }
+
+        public void HaiJustR(PlayerActionEvent caller, float state)
+        {
+            HaiBubbleR.DoScaledAnimationAsync("HaiR", 0.5f);
+            HaiJustFull();
+        }
+
+
         public void HaiMiss(PlayerActionEvent caller)
         {
-            SoundByte.PlayOneShotGame("manzai/hai");
-            RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
-            VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            //SoundByte.PlayOneShotGame("manzai/audienceSad");
+            
+            //SoundByte.PlayOneShotGame("manzai/hai");
+            //RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
+            //VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
         public void Nothing(PlayerActionEvent caller)
