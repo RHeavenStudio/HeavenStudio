@@ -103,9 +103,9 @@ namespace HeavenStudio.Games.Loaders
                     // background stuff
                     // do shit with mako's face? (talking?)
                 },
-                new List<string>() { "ctr", "normal" }
-                // "ctrpillow", "jp",
-                // new List<string>() {"en", "jp", "ko"}
+                new List<string>() { "ctr", "normal" },
+                "ctrpillow", "en",
+                new List<string>() {"en", "jp", "ko"}
             );
         }
     }
