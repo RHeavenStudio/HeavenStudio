@@ -300,6 +300,8 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         private void SwitchToNextState(IEnumerator coroutine)
         {
+            _highParticle.Stop();
+            _highMissParticle.Stop();
             if (_currentStateCo != null) StopCoroutine(_currentStateCo);
             _currentStateCo = coroutine;
             StartCoroutine(_currentStateCo);
