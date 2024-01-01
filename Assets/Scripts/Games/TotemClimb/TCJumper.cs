@@ -131,14 +131,9 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
             bool playedFall = false;
-            bool firstFrame = true;
 
             while(normalizedBeat < 1f)
             {
-                if (_game.IsExpectingInputNow(Minigame.InputAction_BasicPress) && PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !firstFrame)
-                {
-                    yield break;
-                }
                 transform.position = GetPathPositionFromBeat(_path, Math.Clamp(Conductor.instance.songPositionInBeatsAsDouble, beat, beat + _path.positions[0].duration), beat);
 
                 if (normalizedBeat >= 0.5f && !playedFall)
@@ -147,7 +142,6 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     playedFall = true;
                 }
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
-                firstFrame = false;
                 yield return null;
             }
             _anim.Play("Idle", 0, 0);
@@ -175,14 +169,9 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
             bool playedFall = false;
-            bool firstFrame = true;
 
             while (normalizedBeat < 1f)
             {
-                if (_game.IsExpectingInputNow(Minigame.InputAction_BasicPress) && PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !firstFrame)
-                {
-                    yield break;
-                }
                 transform.position = GetPathPositionFromBeat(_path, Math.Clamp(Conductor.instance.songPositionInBeatsAsDouble, beat, beat + _path.positions[0].duration), beat);
 
                 if (normalizedBeat >= 0.5f && !playedFall)
@@ -192,7 +181,6 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 }
 
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
-                firstFrame = false;
                 yield return null;
             }
             _anim.Play("Idle", 0, 0);
@@ -239,14 +227,9 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
             bool playedFall = false;
-            bool firstFrame = true;
 
             while (normalizedBeat < 1f)
             {
-                if (_game.IsExpectingInputNow(Minigame.InputAction_BasicPress) && PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !firstFrame)
-                {
-                    yield break;
-                }
                 transform.position = GetPathPositionFromBeat(_path, Math.Clamp(Conductor.instance.songPositionInBeatsAsDouble, beat, beat + _path.positions[0].duration), beat);
 
                 if (normalizedBeat >= 0.5f && !playedFall)
@@ -256,7 +239,6 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 }
 
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
-                firstFrame = false;
                 yield return null;
             }
             _anim.Play("Idle", 0, 0);
@@ -266,17 +248,12 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         private IEnumerator HoldCo(double beat)
         {
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, 2 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 2)));
+            float normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, 2);
             Transform dragonPoint = _game.GetDragonPointAtBeat(beat);
             bool canUnHold = true;
             while (normalizedBeat < 1f)
             {
-                if (_game.IsExpectingInputNow(Minigame.InputAction_FlickRelease) && PlayerInput.GetIsAction(Minigame.InputAction_FlickRelease))
-                {
-                    yield break;
-                }
-
-                normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, 1);
+                normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, 2);
                 transform.position = dragonPoint.position;
 
                 if (!_game.IsExpectingInputNow(Minigame.InputAction_FlickRelease) 
