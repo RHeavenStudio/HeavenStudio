@@ -22,6 +22,8 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private double _startBeat;
         private double _onPlayBeat;
 
+        private IEnumerator _currentStateCo;
+
         private void Awake()
         {
             _anim = GetComponent<Animator>();
@@ -60,7 +62,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         {
             bool nextIsTriple = _game.IsTripleBeat(beat + 1);
             bool nextIsHigh = _game.IsHighBeat(beat + 1);
-            StartCoroutine(JumpCo(beat, miss, nearMiss));
+            SwitchToNextState(JumpCo(beat, miss, nearMiss));
             if (beat + 1 >= _game.EndBeat) return;
             if (nextIsHigh)
             {
@@ -74,7 +76,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         {
             bool nextIsTriple = _game.IsTripleBeat(beat + 2);
             bool nextIsHigh = _game.IsHighBeat(beat + 2);
-            StartCoroutine(JumpHighCo(beat, miss));
+            SwitchToNextState(JumpHighCo(beat, miss));
             if (beat + 2 >= _game.EndBeat) return;
             if (nextIsHigh)
             {
@@ -86,7 +88,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         public void TripleJumping(double beat, bool enter, bool miss = false, bool nearMiss = false)
         {
-            StartCoroutine(JumpTripleCo(beat, enter, miss, nearMiss));
+            SwitchToNextState(JumpTripleCo(beat, enter, miss, nearMiss));
             if (beat + 0.5 >= _game.EndBeat) return;
             _game.ScheduleInput(beat, 0.5, Minigame.InputAction_BasicPress, enter ? JustTripleExit : Just, enter ? MissTripleExit : Miss, Empty);
         }
@@ -296,6 +298,13 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             }
         }
 
+        private void SwitchToNextState(IEnumerator coroutine)
+        {
+            if (_currentStateCo != null) StopCoroutine(_currentStateCo);
+            _currentStateCo = coroutine;
+            StartCoroutine(_currentStateCo);
+        }
+
         private void Just(PlayerActionEvent caller, float state)
         {
             bool isTriple = _game.IsTripleBeat(caller.startBeat + caller.timer);
@@ -341,7 +350,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         {
             if (caller.startBeat + caller.timer >= _onPlayBeat) SoundByte.PlayOneShotGame("totemClimb/chargejump");
             _game.HoldDragonAtBeat(caller.startBeat + caller.timer);
-            StartCoroutine(HoldCo(caller.startBeat + caller.timer));
+            SwitchToNextState(HoldCo(caller.startBeat + caller.timer));
             _anim.DoScaledAnimationAsync("Hold", 0.5f);
             if (state >= 1f || state <= -1f)
             {
