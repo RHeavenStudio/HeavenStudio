@@ -106,7 +106,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 _path.positions = new PathPos[2];
                 _path.positions[0] = new PathPos()
                 {
-                    duration = 1 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 1)),
+                    duration = (_game.EndBeat <= beat + 1) ? 1 : 1 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 1)),
                     height = _jumpHeight,
                     target = _game.IsTripleBeat(beat) ? _game.GetJumperFrogPointAtBeat(beat, 1) : _game.GetJumperPointAtBeat(beat)
                 };
@@ -145,6 +145,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 yield return null;
             }
             _anim.Play("Idle", 0, 0);
+            if (beat + 1 >= _onPlayBeat && _game.EndBeat <= beat + 1) SoundByte.PlayOneShotGame("totemClimb/totemland");
         }
 
         private IEnumerator JumpTripleCo(double beat, bool enter, bool miss, bool nearMiss)
@@ -194,7 +195,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 _path.positions = new PathPos[2];
                 _path.positions[0] = new PathPos()
                 {
-                    duration = 2 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 2)),
+                    duration = (_game.EndBeat <= beat + 2) ? 2 : 2 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat + 2)),
                     height = _jumpHighHeight,
                     target = _game.GetDragonPointAtBeat(beat)
                 };
@@ -244,6 +245,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _anim.Play("Idle", 0, 0);
             _highParticle.Stop();
             _highMissParticle.Stop();
+            if (beat + 2 >= _onPlayBeat && _game.EndBeat <= beat + 2) SoundByte.PlayOneShotGame("totemClimb/totemland");
         }
 
         private IEnumerator HoldCo(double beat)
@@ -342,13 +344,13 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         {
             HighJump(caller.startBeat + caller.timer, state >= 1f && state <= -1f);
             _game.ReleaseDragonAtBeat(caller.startBeat + caller.timer);
+            if (caller.startBeat + caller.timer >= _onPlayBeat) SoundByte.PlayOneShotGame("totemClimb/superjumpgood");
             if (state >= 1f || state <= -1f)
             {
                 if (caller.startBeat + caller.timer >= _onPlayBeat) SoundByte.PlayOneShot("nearMiss");
                 return;
             }
             _jumpParticle.PlayScaledAsync(0.5f);
-            if (caller.startBeat + caller.timer >= _onPlayBeat) SoundByte.PlayOneShotGame("totemClimb/superjumpgood");
         }
 
         private void Miss(PlayerActionEvent caller)
