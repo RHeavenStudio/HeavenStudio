@@ -90,7 +90,7 @@ namespace HeavenStudio.Games
             GetTripleEvents();
             HandleBopsOnStart(beat);
             _totemManager.InitBeats(_startBeat);
-            _jumper.InitPath(_startBeat);
+            _jumper.InitPath(_startBeat, beat);
         }
 
         public override void OnPlay(double beat)
@@ -104,7 +104,7 @@ namespace HeavenStudio.Games
             GetTripleEvents();
             HandleBopsOnStart(beat);
             _totemManager.InitBeats(_startBeat);
-            _jumper.InitPath(_startBeat);
+            _jumper.InitPath(_startBeat, beat);
         }
 
         private void CalculateStartAndEndBeat(double beat)
