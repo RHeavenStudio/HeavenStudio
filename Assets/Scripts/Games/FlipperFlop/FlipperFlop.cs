@@ -98,7 +98,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f
                 }
             },
-            new List<string>() { "ntr", "keep" },
+            new List<string>() { "rvl", "keep" },
             "rvlseal", "en",
             new List<string>() { "en" }
             );
