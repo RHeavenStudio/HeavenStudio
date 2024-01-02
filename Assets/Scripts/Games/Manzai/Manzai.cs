@@ -45,11 +45,12 @@ namespace HeavenStudio.Games.Loaders
                         }),
                         new Param("pun", Manzai.Puns.FutongaFuttonda, "Which Pun?", "Which pun will Kosuke say?"),
                         new Param("unused", false, "Include Unused", "Will unused puns be picked?"),
+                        new Param("pitch", true, "Pitch Voiceline", "Will the pun pitch with the tempo?"),
                     }
                 },
                 new GameAction("customBoing", "Custom Boing")
                 {
-                    //function = delegate {},
+                    function = delegate { Manzai.instance.CustomBoing(eventCaller.currentEntity.beat); },
                     defaultLength = 0.5f,
                 },
             });
@@ -178,16 +179,23 @@ namespace HeavenStudio.Games
 
         public void DoPun(double beat, int isBoing)
         {
-            Debug.Log(isBoing);
-            if(isBoing == (int)Manzai.BoingType.Normal);
+            int punOrBoing = isBoing;
+
+            if(isBoing == (int)Manzai.BoingType.Random)
+            {
+                punOrBoing = UnityEngine.Random.Range(0, 5) % 2;
+            }
+
+            if(punOrBoing == (int)Manzai.BoingType.Normal)
             {
                 DoPunHai(beat);
             }
 
-            if(isBoing == (int)Manzai.BoingType.Boing);
+            if(punOrBoing == (int)Manzai.BoingType.Boing)
             {
                 DoPunBoing(beat);
             }
+            Debug.Log(punOrBoing);
         }
 
         public void DoPunHai(double beat)
@@ -195,6 +203,7 @@ namespace HeavenStudio.Games
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
 
             SoundByte.PlayOneShotGame("manzai/"+sfxDefs[0].sfx, pitch: Conductor.instance.songBpm/98);
+
             ScheduleInput(beat, 2.5f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustL : HaiJustR, HaiMiss, Nothing);
             ScheduleInput(beat, 3.0f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustR : HaiJustL, HaiMiss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
@@ -244,6 +253,7 @@ namespace HeavenStudio.Games
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
 
             SoundByte.PlayOneShotGame("manzai/"+sfxDefs[1].sfx, pitch: Conductor.instance.songBpm/98);
+
             ScheduleInput(beat, 2.5f, InputAction_BasicPress, BoingJust, BoingMiss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
@@ -254,6 +264,8 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
 
                 new BeatAction.Action(beat + 1.25f, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
+
+                new BeatAction.Action(beat + 2.00f, delegate { RavenAnim.DoScaledAnimationAsync("Ready", 0.5f); }),
             });
         }
 
@@ -261,13 +273,19 @@ namespace HeavenStudio.Games
         {
             SoundByte.PlayOneShotGame("manzai/donaiyanen", pitch: Conductor.instance.songBpm/98);
             SoundByte.PlayOneShotGame("manzai/donaiyanenAccent");
-            //RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
-            //VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            RavenAnim.DoScaledAnimationAsync("Attack", 0.5f);
+            VultureAnim.DoScaledAnimationAsync("Damage", 0.5f);
         }
 
         public void BoingMiss(PlayerActionEvent caller)
         {
 
+        }
+
+        public void CustomBoing(double beat)
+        {
+            SoundByte.PlayOneShotGame("manzai/Boing", pitch: Conductor.instance.songBpm/98);
+            VultureAnim.DoScaledAnimationAsync("Boing", 0.5f);
         }
 
         public void Nothing(PlayerActionEvent caller)
