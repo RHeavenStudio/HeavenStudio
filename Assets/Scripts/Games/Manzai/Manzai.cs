@@ -53,6 +53,16 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { Manzai.instance.CustomBoing(eventCaller.currentEntity.beat); },
                     defaultLength = 0.5f,
                 },
+                new GameAction("slidein", "Slide In")
+                {
+                    function = delegate { Manzai.instance.BirdsSlideIn(eventCaller.currentEntity.beat); },
+                    defaultLength = 0.5f,
+                },
+                new GameAction("slideout", "Slide Out")
+                {
+                    function = delegate { Manzai.instance.BirdsSlideOut(eventCaller.currentEntity.beat); },
+                    defaultLength = 0.5f,
+                },
             });
         }
     }
@@ -85,6 +95,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator RavenAnim;
         [SerializeField] Animator HaiBubbleL;
         [SerializeField] Animator HaiBubbleR;
+        [SerializeField] Animator BothBirdsAnim;
 
         bool ravenBop = true;
         bool vultureBop = true;
@@ -241,7 +252,7 @@ namespace HeavenStudio.Games
 
         public void HaiMiss(PlayerActionEvent caller)
         {
-            //SoundByte.PlayOneShotGame("manzai/audienceSad");
+            SoundByte.PlayOneShotGame("manzai/disappointed");
             
             //SoundByte.PlayOneShotGame("manzai/hai");
             //RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
@@ -279,7 +290,7 @@ namespace HeavenStudio.Games
 
         public void BoingMiss(PlayerActionEvent caller)
         {
-
+            SoundByte.PlayOneShotGame("manzai/disappointed");
         }
 
         public void CustomBoing(double beat)
@@ -290,7 +301,17 @@ namespace HeavenStudio.Games
 
         public void Nothing(PlayerActionEvent caller)
         {
-            
+
+        }
+
+        public void BirdsSlideIn(double beat)
+        {
+            BothBirdsAnim.DoScaledAnimationAsync("SlideIn", 0.5f);
+        }
+
+        public void BirdsSlideOut(double beat)
+        {
+            BothBirdsAnim.DoScaledAnimationAsync("SlideOut", 0.5f);
         }
     }
 }
