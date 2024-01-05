@@ -221,7 +221,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                 }
             },
-            new List<string>() { "rvl", "normal" },
+            new List<string>() { "rvl", "keep" },
             "rvlbadminton", "en",
             new List<string>() { "en" }
             );
