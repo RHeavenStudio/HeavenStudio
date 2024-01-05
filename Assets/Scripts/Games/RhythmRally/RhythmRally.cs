@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyBezierCurves;
-using DG.Tweening;
 
 using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
+
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -88,18 +89,32 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        var rotation = new Vector3(0, e["valA"], 0);
-                        RhythmRally.instance.ChangeCameraAngle(rotation, e["valB"], e.length, (Ease)e["type"], (RotateMode)e["type2"]);
+                        // var rotation = new Vector3(0, e["valA"], 0);
+                        RhythmRally.instance.ChangeCameraAngle(e.beat, e["valA"], e["valB"], e.length, (Util.EasingFunction.Ease)e["type"]);
                     },
                     defaultLength = 4,
                     resizable = true,
                     parameters = new List<Param>() {
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Angle", "The rotation of the camera around the center of the table"),
                         new Param("valB", new EntityTypes.Float(0.5f, 4f, 1), "Zoom", "The camera's level of zoom (Lower value = Zoomed in)"),
-                        new Param("type", Ease.Linear, "Ease", "The easing function to use"),
-                        new Param("type2", RotateMode.Fast, "Rotation Mode", "The rotation mode to use")
+                        new Param("type", Util.EasingFunction.Ease.Linear, "Ease", "The easing function to use"),
+                        // new Param("type2", RotateMode.Fast, "Rotation Mode", "The rotation mode to use")
                     }
                 },
+                // todo: background recolouring
+                // new GameAction("bg colour", "Background Colour")
+                // {
+                //     function = delegate {
+                //         var e = eventCaller.currentEntity;
+                //     },
+                //     defaultLength = 1,
+                //     resizable = true,
+                //     parameters = new List<Param>() {
+                //         new Param("bottomColour", new Color(0,0,0,0), "Bottom Colour", "The colour at the bottom of the skybox"),
+                //         new Param("topColour", new Color(1,1,1,1), "Top Colour", "The colour at the top of the skybox"),
+                //         new Param("type", Util.EasingFunction.Ease.Linear, "Ease", "The easing function to use"),
+                //     }
+                // },
             },
             new List<string>() { "ntr", "keep" },
             "ntrpingpong", "en",
@@ -125,7 +140,7 @@ namespace HeavenStudio.Games
         [Header("Ball and curve info")]
         public GameObject ball;
         public GameObject ballShadow;
-        public TrailRenderer ballTrail;
+        public ParticleSystem ballTrail;
         public BezierCurve3D serveCurve;
         public BezierCurve3D returnCurve;
         public BezierCurve3D tossCurve;
@@ -167,8 +182,19 @@ namespace HeavenStudio.Games
             SetupBopRegion("rhythmRally", "bop", "bopAuto");
         }
 
+        private void Start()
+        {
+            EntityPreCheck(Conductor.instance.songPositionInBeatsAsDouble);
+        }
+
         const float tableHitTime = 0.58f;
         bool opponentServing = false; // Opponent serving this frame?
+        double cameraRotateBeat = double.MaxValue;
+        double cameraRotateLength;
+        Util.EasingFunction.Ease cameraRotateEase;
+        float cameraRotateLast = 0, cameraScaleLast = 1;
+        float cameraRotateNext = 0, cameraScaleNext = 1;
+
         void Update()
         {
             var cond = Conductor.instance;
@@ -274,9 +300,7 @@ namespace HeavenStudio.Games
                     }
                 }
 
-                // TODO: Make conditional so ball shadow only appears when over table.
                 ballShadow.transform.position = new Vector3(ball.transform.position.x, -0.399f, ball.transform.position.z);
-
 
                 var timeBeforeNextHit = hitBeat + beatDur1 + beatDur2 - currentBeat;
 
@@ -342,7 +366,8 @@ namespace HeavenStudio.Games
                         }
 
                         // If player never swung and is still in ready state, snap them out of it.
-                        if (missed && playerState.IsName("Ready1"))
+                        // only if they're not manually preparing via touch controls
+                        if (missed && playerState.IsName("Ready1") && (!paddlers.PlayerDown))
                             playerAnim.Play("Beat");
                     }
                 }
@@ -358,6 +383,47 @@ namespace HeavenStudio.Games
             opponentServing = false;
 
             //update camera
+            UpdateCamera(currentBeat);
+        }
+
+        public override void OnPlay(double beat)
+        {
+            EntityPreCheck(beat);
+        }
+
+        void EntityPreCheck(double beat)
+        {
+            cameraRotateBeat = double.MaxValue;
+            cameraRotateLength = 0;
+            cameraRotateEase = Util.EasingFunction.Ease.Linear;
+            cameraRotateLast = 0; cameraScaleLast = 1;
+            cameraRotateNext = 0; cameraScaleNext = 1;
+
+            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat < beat && c.datamodel.Split(0) == "rhythmRally");
+            RiqEntity lastGameSwitch = GameManager.instance.Beatmap.Entities.FindLast(c => c.beat <= beat && c.datamodel == "gameManager/switchGame/rhythmRally");
+
+            if (lastGameSwitch == null) return;
+            List<RiqEntity> cameraEntities = prevEntities.FindAll(c => c.beat >= lastGameSwitch.beat && c.datamodel == "rhythmRally/camera");
+
+            foreach (var entity in cameraEntities)
+            {
+                ChangeCameraAngle(entity.beat, entity["valA"], entity["valB"], entity.length, (Util.EasingFunction.Ease)entity["type"]);
+            }
+
+            UpdateCamera(beat);
+        }
+
+        void UpdateCamera(double beat)
+        {
+            if (beat >= cameraRotateBeat)
+            {
+                Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(cameraRotateEase);
+                float rotProg = Conductor.instance.GetPositionFromBeat(cameraRotateBeat, cameraRotateLength, true);
+                float rot = func(cameraRotateLast, cameraRotateNext, rotProg);
+                cameraPivot.rotation = Quaternion.Euler(0, rot, 0);
+                cameraPivot.localScale = Vector3.one * func(cameraScaleLast, cameraScaleNext, rotProg);
+            }
+
             GameCamera.AdditionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
             GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
             GameCamera.AdditionalFoV = cameraFOV;
@@ -395,10 +461,10 @@ namespace HeavenStudio.Games
 
             bool playerPrepping = false; // Player using prep animation?
             bool opponentPrepping = false; // Opponent using prep animation?
-            if (!playerPrepping && (playerAnim.IsAnimationNotPlaying() || playerState.IsName("Idle") || playerState.IsName("Beat")))
+            if ((!playerPrepping) && (!paddlers.PlayerDown) && (playerAnim.IsAnimationNotPlaying() || playerState.IsName("Idle") || playerState.IsName("Beat")))
                 playerAnim.DoScaledAnimationAsync("Beat", 0.5f);
 
-            if (!opponentPrepping && !opponentServing && !tossing && (opponentAnim.IsAnimationNotPlaying() || opponentState.IsName("Idle") || opponentState.IsName("Beat")))
+            if ((!opponentPrepping) && (!opponentServing) && (!tossing) && (opponentAnim.IsAnimationNotPlaying() || opponentState.IsName("Idle") || opponentState.IsName("Beat")))
                 opponentAnim.DoScaledAnimationAsync("Beat", 0.5f);
         }
 
@@ -492,11 +558,15 @@ namespace HeavenStudio.Games
             inPose = true;
         }
 
-        public void ChangeCameraAngle(Vector3 rotation, float camZoom, float length, Ease ease, RotateMode rotateMode)
+        public void ChangeCameraAngle(double beat, float rotation, float camZoom, double length, Util.EasingFunction.Ease ease)
         {
-            var len = length * Conductor.instance.secPerBeat;
-            cameraPivot.DORotate(rotation, len, rotateMode).SetEase(ease);
-            cameraPivot.DOScale(camZoom, len).SetEase(ease);
+            cameraRotateBeat = beat;
+            cameraRotateLength = length;
+            cameraRotateEase = ease;
+            cameraRotateLast = cameraRotateNext;
+            cameraScaleLast = cameraScaleNext;
+            cameraRotateNext = rotation;
+            cameraScaleNext = camZoom;
         }
 
         public void PrepareFastRally(double beat, RallySpeed speedChange, bool muteAudio = false)
