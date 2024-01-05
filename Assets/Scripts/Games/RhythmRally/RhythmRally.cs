@@ -101,6 +101,20 @@ namespace HeavenStudio.Games.Loaders
                         // new Param("type2", RotateMode.Fast, "Rotation Mode", "The rotation mode to use")
                     }
                 },
+                // todo: background recolouring
+                // new GameAction("bg colour", "Background Colour")
+                // {
+                //     function = delegate {
+                //         var e = eventCaller.currentEntity;
+                //     },
+                //     defaultLength = 1,
+                //     resizable = true,
+                //     parameters = new List<Param>() {
+                //         new Param("bottomColour", new Color(0,0,0,0), "Bottom Colour", "The colour at the bottom of the skybox"),
+                //         new Param("topColour", new Color(1,1,1,1), "Top Colour", "The colour at the top of the skybox"),
+                //         new Param("type", Util.EasingFunction.Ease.Linear, "Ease", "The easing function to use"),
+                //     }
+                // },
             },
             new List<string>() { "ntr", "keep" },
             "ntrpingpong", "en",
