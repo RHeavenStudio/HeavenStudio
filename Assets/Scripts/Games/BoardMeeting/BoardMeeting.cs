@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("bop", true, "Bop", "Toggle if the pigs & assistant should bop for the duration of this event."),
-                        new Param("auto", false, "Bop (Auto)", "Toggle if the pigs & assistant should automatically bop until another Bop event is placed.")
+                        new Param("auto", false, "Bop (Auto)", "Toggle if the pigs & assistant should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("prepare", "Prepare")

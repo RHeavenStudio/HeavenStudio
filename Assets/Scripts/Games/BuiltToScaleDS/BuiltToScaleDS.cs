@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("light", false, "Lights", "Toggle if the lights should activate for the duration of this event."),
-                        new Param("auto", true, "Lights (Auto)", "Toggle if the lights should automatically activate until the next Lights event.")
+                        new Param("auto", true, "Lights (Auto)", "Toggle if the lights should automatically activate until the another Lights event is reached.")
                     }
                 }
             }, new List<string>() { "ntr", "normal" }, "ntrassembly", "en", new List<string>() { });
