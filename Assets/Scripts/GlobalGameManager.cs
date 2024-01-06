@@ -115,7 +115,7 @@ namespace HeavenStudio
 
             Application.targetFrameRate = -1;
             QualitySettings.vSyncCount = 0;
-            QualitySettings.maxQueuedFrames = 1;
+            QualitySettings.maxQueuedFrames = 2;
             if (PersistentDataManager.gameSettings.isFullscreen)
             {
                 Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
