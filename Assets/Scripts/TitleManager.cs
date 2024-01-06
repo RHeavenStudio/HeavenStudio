@@ -141,14 +141,26 @@ namespace HeavenStudio
                             pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
                             SoundByte.PlayOneShot("ui/UIEnter");
 
+                            var nextController = newController;
+
+                            if (newController is InputMouse)
+                            {
+                                Debug.Log("Mouse used, selecting keyboard instead");
+                                nextController = controllers[0];
+                            }
                             Debug.Log("Assigning controller: " + newController.GetDeviceName());
 
                             var lastController = PlayerInput.GetInputController(1);
-                            if (lastController != newController)
+                            if (lastController != nextController)
                             {
+                                if (nextController == null)
+                                {
+                                    Debug.Log("invalid controller, using keyboard");
+                                    nextController = controllers[0];
+                                }
                                 lastController.SetPlayer(null);
-                                newController.SetPlayer(1);
-                                PlayerInput.CurrentControlStyle = newController.GetDefaultStyle();
+                                nextController.SetPlayer(1);
+                                PlayerInput.CurrentControlStyle = nextController.GetDefaultStyle();
                                 usingMouse = PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch;
                                 selectedDisplayIcon.SetActive(!usingMouse);
 
@@ -157,10 +169,10 @@ namespace HeavenStudio
                                     (lastController as InputJoyshock)?.UnAssignOtherHalf();
                                 }
 
-                                if ((newController as InputJoyshock) != null)
+                                if ((nextController as InputJoyshock) != null)
                                 {
-                                    newController.OnSelected();
-                                    (newController as InputJoyshock)?.UnAssignOtherHalf();
+                                    nextController.OnSelected();
+                                    (nextController as InputJoyshock)?.UnAssignOtherHalf();
                                 }
                             }
                         }
