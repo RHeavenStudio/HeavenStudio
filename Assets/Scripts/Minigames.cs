@@ -325,6 +325,8 @@ namespace HeavenStudio
                     {
                         if (data.properties[prop.Key].GetType() == typeof(string))
                             data.properties[prop.Key] = Enum.Parse(mType, (string)data.properties[prop.Key]);
+                        else
+                            data.properties[prop.Key] = Enum.ToObject(mType, data.properties[prop.Key]);
                     }
                     // convert all JObjects to their respective types
                     else if (data.properties[prop.Key].GetType() == typeof(Newtonsoft.Json.Linq.JObject))
