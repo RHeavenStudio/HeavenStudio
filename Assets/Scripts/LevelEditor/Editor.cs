@@ -131,6 +131,7 @@ namespace HeavenStudio.Editor
 
         public void ShowQuitPopUp(bool show)
         {
+            if (fullscreen) Fullscreen();
             _confirmQuitMain.SetActive(show);
             SetAuthoritiveMenu(show);
         }
@@ -167,12 +168,12 @@ namespace HeavenStudio.Editor
                     Fullscreen();
                 }
 
-                if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
+                if ((Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace)) && !fullscreen)
                 {
                     CommandManager.Instance.AddCommand(new Commands.Delete(Selections.instance.eventsSelected.Select(c => c.entity.guid).ToList()));
                 }
 
-                if (Input.GetKey(KeyCode.LeftControl))
+                if (Input.GetKey(KeyCode.LeftControl) && !fullscreen)
                 {
                     if (Input.GetKeyDown(KeyCode.Z))
                     {
@@ -193,20 +194,13 @@ namespace HeavenStudio.Editor
                     {
                         Timeline.instance.Paste();
                     }
-
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-                        if (Input.GetKeyDown(KeyCode.D))
-                        {
-                            ToggleDebugCam();
-                        }
-                    }
                 }
 
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
                     if (Input.GetKeyDown(KeyCode.N))
                     {
+                        if (fullscreen) Fullscreen();
                         NewBTN.onClick.Invoke();
                     }
                     else if (Input.GetKeyDown(KeyCode.O))
@@ -223,6 +217,14 @@ namespace HeavenStudio.Editor
                     else if (Input.GetKeyDown(KeyCode.S))
                     {
                         SaveRemix(false);
+                    }
+
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            ToggleDebugCam();
+                        }
                     }
                 }
             }
@@ -247,33 +249,6 @@ namespace HeavenStudio.Editor
                 PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
-
-
-            if (Timeline.instance.timelineState.selected && Editor.instance.canSelect)
-            {
-                /*
-                if (Input.GetMouseButtonUp(0))
-                {
-                    List<TimelineEventObj> selectedEvents = Timeline.instance.eventObjs.FindAll(c => c.selected == true && c.eligibleToMove == true);
-
-                    if (selectedEvents.Count > 0)
-                    {
-                        List<TimelineEventObj> result = new List<TimelineEventObj>();
-
-                        for (int i = 0; i < selectedEvents.Count; i++)
-                        {
-                            //TODO: this is in LateUpdate, so this will never run! change this to something that works properly
-                            if (!(selectedEvents[i].isCreating || selectedEvents[i].wasDuplicated))
-                            {
-                                result.Add(selectedEvents[i]);
-                            }
-                            selectedEvents[i].OnUp();
-                        }
-                        CommandManager.instance.Execute(new Commands.Move(result));
-                    }
-                }
-                */
-            }
         }
 
         public static Sprite GameIcon(string name)
@@ -360,6 +335,7 @@ namespace HeavenStudio.Editor
                 {
                     if (dialog.GetType() == typeof(RemixPropertiesDialog))
                     {
+                        if (fullscreen) Fullscreen();
                         GlobalGameManager.ShowErrorMessage("Set Remix Properties", "Set remix properties before saving.");
                         (dialog as RemixPropertiesDialog).SwitchPropertiesDialog();
                         (dialog as RemixPropertiesDialog).SetSaveOnClose(true, saveAs);
@@ -431,6 +407,7 @@ namespace HeavenStudio.Editor
 
         public void LoadRemix(bool create = false)
         {
+            if (fullscreen) Fullscreen();
             if (create)
             {
                 GameManager.instance.NewRemix();
@@ -446,6 +423,7 @@ namespace HeavenStudio.Editor
 
         public void OpenRemix()
         {
+            if (fullscreen) Fullscreen();
             var extensions = new[]
             {
                 new ExtensionFilter("Heaven Studio Remix File ", new string[] { "riq" }),
