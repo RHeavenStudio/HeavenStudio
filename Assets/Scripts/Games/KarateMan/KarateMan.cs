@@ -202,7 +202,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.KarateManFaces.Happy, "Success Expression", "The facial expression to set Joe to on hit"),
-                        new Param("pitchVoice", false, "Pitch Voice", "Pitch the voice of this cue?", new List<Param.CollapseParam>()
+                        new Param("pitchVoice", false, "Pitch Voice", "Pitch the voice of this cue", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "forcePitch" }),
                         }),
@@ -222,11 +222,11 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("whichWarning", KarateMan.HitThree.HitThree, "Which Warning", "The warning text to show and the sfx to play"),
-                        new Param("pitchVoice", false, "Auto Pitch Voice", "Pitch the voice of this cue depending on the BPM", new List<Param.CollapseParam>()
+                        new Param("pitchVoice", false, "Pitch Voice", "Pitch the voice of this cue", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "forcePitch" }),
                         }),
-                        new Param("forcePitch", new EntityTypes.Float(0.5f, 2f, 1f), "Force Pitch", "Pitch the voice of this cue depending on the value"),
+                        new Param("forcePitch", new EntityTypes.Float(0.5f, 2f, 1f), "Force Pitch", "Override the automatic pitching if not set to 1"),
                         new Param("customLength", false, "Custom Length", "Have the warning text appear for the length of the block"),
                         new Param("cutOut", true, "Cut Out Voice", "Will this cue be cut out by another voice?"),
                     },
@@ -238,8 +238,8 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("special camera", "Special Camera")
                 {
                     function = delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera(e.beat, e.length, e["toggle"]); },
-                    defaultLength = 8f, 
-                    resizable = true, 
+                    defaultLength = 8f,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Return Camera", "Camera zooms back in?"),
@@ -248,7 +248,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("prepare", "Preparation Stance")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Prepare(e.beat, e.length);}, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Prepare(e.beat, e.length);},
                     resizable = true,
                 },
                 new GameAction("set gameplay modifiers", "Flow/Gameplay Modifiers")
@@ -260,7 +260,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("fxType", KarateMan.BackgroundFXType.None, "FX Type", "The background effect to be displayed"),
                         new Param("type", KarateMan.NoriMode.None, "Flow Bar type", "The type of Flow bar to use", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam((x, _) => (int)x != (int)KarateMan.NoriMode.None, new string[] { "type" })
+                            new Param.CollapseParam((x, _) => (int)x != (int)KarateMan.NoriMode.None, new string[] { "hitsPerHeart" })
                         }),
                         new Param("hitsPerHeart", new EntityTypes.Float(0f, 20f, 0f), "Hits Per Heart", "How many hits will it take for each heart to light up? (0 will do it automatically.)"),
                         new Param("toggle", true, "Enable Combos", "Allow the player to combo? (Contextual combos will still be allowed even when off)"),
