@@ -90,7 +90,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {
                         var e = eventCaller.currentEntity;
                         // var rotation = new Vector3(0, e["valA"], 0);
-                        RhythmRally.instance.ChangeCameraAngle(e.beat, e["valA"], e["valB"], e.length, (Util.EasingFunction.Ease)e["type"]);
+                        RhythmRally.instance.ChangeCameraAngle(e.beat, e["valA"], e["valB"], e.length, (Util.EasingFunction.Ease)e["type"], e["additive"]);
                     },
                     defaultLength = 4,
                     resizable = true,
@@ -98,7 +98,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Angle", "The rotation of the camera around the center of the table"),
                         new Param("valB", new EntityTypes.Float(0.5f, 4f, 1), "Zoom", "The camera's level of zoom (Lower value = Zoomed in)"),
                         new Param("type", Util.EasingFunction.Ease.Linear, "Ease", "The easing function to use"),
-                        // new Param("type2", RotateMode.Fast, "Rotation Mode", "The rotation mode to use")
+                        new Param("additive", true, "Additive Rotation", "Add to current angle instead of setting target angle")
                     }
                 },
                 // todo: background recolouring
@@ -407,7 +407,7 @@ namespace HeavenStudio.Games
 
             foreach (var entity in cameraEntities)
             {
-                ChangeCameraAngle(entity.beat, entity["valA"], entity["valB"], entity.length, (Util.EasingFunction.Ease)entity["type"]);
+                ChangeCameraAngle(entity.beat, entity["valA"], entity["valB"], entity.length, (Util.EasingFunction.Ease)entity["type"], entity["additive"]);
             }
 
             UpdateCamera(beat);
@@ -419,6 +419,7 @@ namespace HeavenStudio.Games
             {
                 Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(cameraRotateEase);
                 float rotProg = Conductor.instance.GetPositionFromBeat(cameraRotateBeat, cameraRotateLength, true);
+                rotProg = Mathf.Clamp01(rotProg);
                 float rot = func(cameraRotateLast, cameraRotateNext, rotProg);
                 cameraPivot.rotation = Quaternion.Euler(0, rot, 0);
                 cameraPivot.localScale = Vector3.one * func(cameraScaleLast, cameraScaleNext, rotProg);
@@ -558,15 +559,22 @@ namespace HeavenStudio.Games
             inPose = true;
         }
 
-        public void ChangeCameraAngle(double beat, float rotation, float camZoom, double length, Util.EasingFunction.Ease ease)
+        public void ChangeCameraAngle(double beat, float rotation, float camZoom, double length, Util.EasingFunction.Ease ease, bool additive = true)
         {
             cameraRotateBeat = beat;
             cameraRotateLength = length;
             cameraRotateEase = ease;
-            cameraRotateLast = cameraRotateNext;
+            cameraRotateLast = cameraRotateNext % 360f;
             cameraScaleLast = cameraScaleNext;
-            cameraRotateNext = rotation;
             cameraScaleNext = camZoom;
+            if (additive)
+            {
+                cameraRotateNext = cameraRotateLast + rotation;
+            }
+            else
+            {
+                cameraRotateNext = rotation;
+            }
         }
 
         public void PrepareFastRally(double beat, RallySpeed speedChange, bool muteAudio = false)
