@@ -428,21 +428,23 @@ namespace HeavenStudio
 
         public static void UpdateDiscordStatus(string details, bool editor = false, bool updateTime = false)
         {
-            if (discordDuringTesting || !Application.isEditor)
-            {
-                if (PersistentDataManager.gameSettings.discordRPCEnable)
-                {
-                    try
-                    {
-                        DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
-                        Debug.Log("Discord status updated");
-                    }
-                    catch (System.Exception e)
-                    {
-                        Debug.Log("Discord status update failed: " + e.Message);
-                    }
-                }
-            }
+            Debug.Log("Discord Rich Presence temporarily disabled");
+            return;
+            // if (discordDuringTesting || !Application.isEditor)
+            // {
+            //     if (PersistentDataManager.gameSettings.discordRPCEnable)
+            //     {
+            //         try
+            //         {
+            //             DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
+            //             Debug.Log("Discord status updated");
+            //         }
+            //         catch (System.Exception e)
+            //         {
+            //             Debug.Log("Discord status update failed: " + e.Message);
+            //         }
+            //     }
+            // }
         }
 
         private static void OnQuitting()
