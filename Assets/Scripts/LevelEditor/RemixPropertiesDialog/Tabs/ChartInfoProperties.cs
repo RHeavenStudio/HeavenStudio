@@ -25,10 +25,15 @@ namespace HeavenStudio.Editor
 
         public void AddParam(RemixPropertiesDialog diag, string propertyName, object type, string caption, bool isReadOnly = false, string tooltip = "")
         {
+            if (!Minigames.propertiesModel.ContainsKey(propertyName))
+            {
+                Debug.LogError("Property " + propertyName + " does not exist!");
+                return;
+            }
             GameObject prefab = diag.IntegerP;
             GameObject input;
 
-            var objType = type.GetType();
+            var objType = Minigames.propertiesModel[propertyName].GetType();
 
             if (objType == typeof(EntityTypes.Integer))
             {
@@ -83,13 +88,13 @@ namespace HeavenStudio.Editor
                         property.SetProperties(diag, propertyName, type, caption);
                         break;
                     default:
-                        Debug.LogError("Can't make property interface of type: " + type.GetType());
+                        Debug.LogError("Can't make property interface of type: " + objType);
                         return;
                 }
             }
             else
             {
-                Debug.LogError("Can't make property interface of type: " + type.GetType());
+                Debug.LogError("Can't make property interface of type: " + objType);
                 return;
             }
         }

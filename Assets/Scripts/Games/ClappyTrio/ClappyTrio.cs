@@ -42,11 +42,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sign", "Sign Enter")
                 {
-                    function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign(e.beat, e.length, e["ease"], e["down"]); },
+                    function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign(e.beat, e.length, e["ease"], e["down"], e["sfx"]); },
                     parameters = new List<Param>()
                     {
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the sign move with?"),
-                        new Param("down", true, "Down", "Should the sign go down?")
+                        new Param("down", true, "Down", "Should the sign go down?"),
+                        new Param("sfx", true, "Play SFX", "Should the sign play a sound effect"),
                     },
                     resizable = true
                 },
@@ -156,9 +157,9 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Sign(double beat, float length, int ease, bool down)
+        public void Sign(double beat, float length, int ease, bool down, bool playSfx)
         {
-            SoundByte.PlayOneShotGame("clappyTrio/sign");
+            if (playSfx) SoundByte.PlayOneShotGame("clappyTrio/sign");
             signStartBeat = beat;
             signLength = length;
             lastEase = (Util.EasingFunction.Ease)ease;

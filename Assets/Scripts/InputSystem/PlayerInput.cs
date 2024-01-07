@@ -47,7 +47,7 @@ namespace HeavenStudio
 
         public static InputController.ControlStyles CurrentControlStyle = InputController.ControlStyles.Pad;
 
-        static List<InputController> inputDevices;
+        static List<InputController> inputDevices = new List<InputController>();
 
         public delegate InputController[] InputControllerInitializer();
 
@@ -121,22 +121,12 @@ namespace HeavenStudio
 
         public static InputController GetInputController(int player)
         {
-            // Needed so Keyboard works on MacOS and Linux
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            inputDevices = new List<InputController>();
-            if(inputDevices.Count < 1)
-            {
-                InputKeyboard keyboard = new InputKeyboard();
-                keyboard.SetPlayer(1);
-                keyboard.InitializeController();
-                inputDevices.Add(keyboard);
-            }
-#endif
             //select input controller that has player field set to player
             //this will return the first controller that has that player number in the case of controller pairs (eg. Joy-Cons)
             //so such controllers should have a reference to the other controller in the pair
             foreach (InputController i in inputDevices)
             {
+                if (i == null) continue;
                 if (i.GetPlayer() == player)
                 {
                     return i;
@@ -151,21 +141,9 @@ namespace HeavenStudio
             //this will return the first controller that has that player number in the case of controller pairs (eg. Joy-Cons)
             //so such controllers should have a reference to the other controller in the pair
             //controller IDs are determined by connection order (the Keyboard is always first)
-
-
-            // Needed so Keyboard works on MacOS and Linux
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            inputDevices = new List<InputController>();
-            if(inputDevices.Count < 1)
-            {
-                InputKeyboard keyboard = new InputKeyboard();
-                keyboard.SetPlayer(1);
-                keyboard.InitializeController();
-                inputDevices.Add(keyboard);
-            }
-#endif
             for (int i = 0; i < inputDevices.Count; i++)
             {
+                if (inputDevices[i] == null) continue;
                 if (inputDevices[i].GetPlayer() == player)
                 {
                     return i;
@@ -176,19 +154,10 @@ namespace HeavenStudio
 
         public static void UpdateInputControllers()
         {
-            // Needed so Keyboard works on MacOS and Linux
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            inputDevices = new List<InputController>();
-            if(inputDevices.Count < 1)
-            {
-                InputKeyboard keyboard = new InputKeyboard();
-                keyboard.SetPlayer(1);
-                keyboard.InitializeController();
-                inputDevices.Add(keyboard);
-            }
-#endif
+            if (inputDevices == null) return;
             foreach (InputController i in inputDevices)
             {
+                if (i == null) continue;
                 i.UpdateState();
             }
         }

@@ -20,12 +20,24 @@ namespace HeavenStudio.Editor
         public RectTransform ColorTable;
         public bool colorTableActive;
         public ColorPreview colorPreview;
+        public TMP_InputField hex;
 
         private Color _defaultColor;
 
         new public void SetProperties(string propertyName, object type, string caption)
         {
             InitProperties(propertyName, caption);
+
+            hex.onSelect.AddListener(
+                _ =>
+                    Editor.instance.editingInputField = true
+            );
+            hex.onEndEdit.AddListener(
+                _ =>
+                {;
+                    Editor.instance.editingInputField = false;
+                }
+            );
 
             colorPreview.colorPicker.onColorChanged += _ => 
             {
@@ -78,6 +90,7 @@ namespace HeavenStudio.Editor
                     {
                         ColorTable.gameObject.SetActive(false);
                         colorTableActive = false;
+                        Editor.instance.editingInputField = false;
                     }
                 }
             }
