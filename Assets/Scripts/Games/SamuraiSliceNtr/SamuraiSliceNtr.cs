@@ -229,6 +229,7 @@ namespace HeavenStudio.Games
         {
             player.Step(true);
             launcher.GetComponent<Animator>().Play("UnStep", -1, 0);
+            player.GetComponent<Animator>().Play("UnStep", -1, 0);
         }
 
         public void DoSlice()
