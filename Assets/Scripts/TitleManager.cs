@@ -142,15 +142,15 @@ namespace HeavenStudio
                             SoundByte.PlayOneShot("ui/UIEnter");
 
                             var nextController = newController;
+                            var lastController = PlayerInput.GetInputController(1);
 
-                            if (newController is InputMouse)
+                            if ((newController is InputMouse) && (lastController is not InputMouse))
                             {
                                 Debug.Log("Mouse used, selecting keyboard instead");
                                 nextController = controllers[0];
                             }
                             Debug.Log("Assigning controller: " + newController.GetDeviceName());
 
-                            var lastController = PlayerInput.GetInputController(1);
                             if (lastController != nextController)
                             {
                                 if (nextController == null)
