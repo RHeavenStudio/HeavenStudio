@@ -47,7 +47,7 @@ namespace HeavenStudio
 
         public static InputController.ControlStyles CurrentControlStyle = InputController.ControlStyles.Pad;
 
-        static List<InputController> inputDevices;
+        static List<InputController> inputDevices = new List<InputController>();
 
         public delegate InputController[] InputControllerInitializer();
 
@@ -126,6 +126,7 @@ namespace HeavenStudio
             //so such controllers should have a reference to the other controller in the pair
             foreach (InputController i in inputDevices)
             {
+                if (i == null) continue;
                 if (i.GetPlayer() == player)
                 {
                     return i;
@@ -142,6 +143,7 @@ namespace HeavenStudio
             //controller IDs are determined by connection order (the Keyboard is always first)
             for (int i = 0; i < inputDevices.Count; i++)
             {
+                if (inputDevices[i] == null) continue;
                 if (inputDevices[i].GetPlayer() == player)
                 {
                     return i;
@@ -152,8 +154,10 @@ namespace HeavenStudio
 
         public static void UpdateInputControllers()
         {
+            if (inputDevices == null) return;
             foreach (InputController i in inputDevices)
             {
+                if (i == null) continue;
                 i.UpdateState();
             }
         }
