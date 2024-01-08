@@ -1180,10 +1180,16 @@ namespace HeavenStudio
             }
 
             BuildLoadRunnerList();
+            Debug.Log($"Running {loadRunners.Count} game loaders...");
             foreach (var load in loadRunners)
             {
                 Debug.Log("Running game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name);
                 Minigame game = load(eventCaller);
+                if (game == null)
+                {
+                    Debug.LogError("Game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name + " failed!");
+                    continue;
+                }
                 eventCaller.minigames.Add(game.name, game);
             }
         }
