@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
         [Header("Transforms")]
         public Transform doubleLaunchPos;
         public Transform heldPos;
-        
+
         public double startBeat;
         public int type;
         public bool isDebris = false;
@@ -39,13 +39,13 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             {
                 switch (type)
                 {
-                    case (int) SamuraiSliceNtr.ObjectType.Fish:
+                    case (int)SamuraiSliceNtr.ObjectType.Fish:
                         anim.Play("ObjFishDebris");
                         break;
-                    case (int) SamuraiSliceNtr.ObjectType.Demon:
+                    case (int)SamuraiSliceNtr.ObjectType.Demon:
                         anim.Play("ObjDemonDebris02");
                         break;
-                    case (int) SamuraiSliceNtr.ObjectType.Melon2B2T:
+                    case (int)SamuraiSliceNtr.ObjectType.Melon2B2T:
                         anim.Play("ObjMelonPickelDebris02");
                         break;
                     default:
@@ -62,19 +62,19 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             {
                 switch (type)
                 {
-                    case (int) SamuraiSliceNtr.ObjectType.Fish:
+                    case (int)SamuraiSliceNtr.ObjectType.Fish:
                         anim.Play("ObjFish");
                         break;
-                    case (int) SamuraiSliceNtr.ObjectType.Demon:
+                    case (int)SamuraiSliceNtr.ObjectType.Demon:
                         anim.Play("ObjDemon");
 
-                        MultiSound.Play(new MultiSound.Sound[] { 
-                            new MultiSound.Sound("samuraiSliceNtr/ntrSamurai_in01", startBeat + 1f, 1.5f), 
+                        MultiSound.Play(new MultiSound.Sound[] {
+                            new MultiSound.Sound("samuraiSliceNtr/ntrSamurai_in01", startBeat + 1f, 1.5f),
                             new MultiSound.Sound("samuraiSliceNtr/ntrSamurai_in01", startBeat + 1.5f, 1.25f),
                             new MultiSound.Sound("samuraiSliceNtr/ntrSamurai_in01", startBeat + 2f),
                         });
                         break;
-                    case (int) SamuraiSliceNtr.ObjectType.Melon2B2T:
+                    case (int)SamuraiSliceNtr.ObjectType.Melon2B2T:
                         anim.Play("ObjMelonPickel");
                         break;
                     default:
@@ -89,7 +89,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat, 1.75f, SamuraiSliceNtr.InputAction_AltUp, DoUnStepAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
 
                 currentCurve = SamuraiSliceNtr.instance.InCurve;
-                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * (float) startBeat));
+                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * (float)startBeat));
 
                 var cond = Conductor.instance;
                 float flyPos = cond.GetPositionFromBeat(launchProg.startBeat, 3f);
@@ -113,6 +113,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
                         if (flyPos > 1f)
                         {
+                            // TODO: splat
                             GameObject.Destroy(gameObject);
                             return;
                         }
@@ -124,12 +125,12 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                             GameObject.Destroy(gameObject);
                             return;
                         }
-                        transform.position = heldPos.position;
+                        // transform.position = heldPos.position;
                         break;
                     case -1:    // sliced by samurai, falling towards child
                         flyPos = cond.GetPositionFromBeat(startBeat, 1f);
                         transform.position = currentCurve.GetPoint(flyPos);
-                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + ((isDebris? 360f : -360f) * Time.deltaTime));
+                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + ((isDebris ? 360f : -360f) * Time.deltaTime));
 
                         if (flyPos > 1f)
                         {
@@ -138,7 +139,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                             {
                                 NtrSamuraiChild child = SamuraiSliceNtr.instance.CreateChild(startBeat + 1f);
                                 heldPos = child.DebrisPosR;
+                                transform.parent = child.DebrisPosR;
                                 secondHalf.heldPos = child.DebrisPosL;
+                                secondHalf.transform.parent = child.DebrisPosL;
                             }
                             flyProg = -2;
                             GetComponent<SpriteRenderer>().sortingOrder = 7;
@@ -148,13 +151,14 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                     case 2:     // fish first bounce
                         float jumpPos = cond.GetPositionFromBeat(launchProg.startBeat, 2f);
                         float yMul = jumpPos * 2f - 1f;
-                        float yWeight = -(yMul*yMul) + 1f;
+                        float yWeight = -(yMul * yMul) + 1f;
                         transform.position = doubleLaunchPos.position + new Vector3(0, 4.5f * yWeight);
                         transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-2 * 360f * Time.deltaTime));
-                        
+
                         if (jumpPos > 2f)
                         {
                             // missed...
+                            // TODO: splat
                             GameObject.Destroy(gameObject);
                             return;
                         }
@@ -163,7 +167,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                         float flyDur = 3f;
                         switch (type)
                         {
-                            case (int) SamuraiSliceNtr.ObjectType.Demon:
+                            case (int)SamuraiSliceNtr.ObjectType.Demon:
                                 flyDur = 5f;
                                 break;
                             default:
@@ -177,6 +181,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                         if (flyPos > 1f)
                         {
                             // missed...
+                            // TODO: splat
                             GameObject.Destroy(gameObject);
                             return;
                         }
@@ -190,6 +195,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                         if (flyPos > 1f)
                         {
                             // missed...
+                            // TODO: splat
                             GameObject.Destroy(gameObject);
                             return;
                         }
@@ -202,7 +208,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
         {
             switch (type)
             {
-                case (int) SamuraiSliceNtr.ObjectType.Fish:
+                case (int)SamuraiSliceNtr.ObjectType.Fish:
                     if (flyProg == 2)
                     {
                         flyProg = 1;
@@ -210,9 +216,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                         SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 4f, 2f, SamuraiSliceNtr.InputAction_FlickPress, DoSliceAutoplay, LaunchThrough, LaunchThrough);
                         currentCurve = SamuraiSliceNtr.instance.LaunchCurve;
 
-                        SoundByte.PlayOneShotGame("samuraiSliceNtr/holy_mackerel" + UnityEngine.Random.Range(1, 4), pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 1f/4);
+                        SoundByte.PlayOneShotGame("samuraiSliceNtr/holy_mackerel" + UnityEngine.Random.Range(1, 4), pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 1f / 4);
                     }
-                    else 
+                    else
                     {
                         flyProg = 2;
                         launchProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat + 2f, 2f, SamuraiSliceNtr.InputAction_AltDown, LaunchSuccess, LaunchMiss, LaunchThrough);
@@ -224,7 +230,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                         SoundByte.PlayOneShotGame("samuraiSliceNtr/holy_mackerel" + UnityEngine.Random.Range(1, 4), pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 0.8f);
                     }
                     break;
-                case (int) SamuraiSliceNtr.ObjectType.Demon:
+                case (int)SamuraiSliceNtr.ObjectType.Demon:
                     flyProg = 1;
                     hitProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat + 2f, 4f, SamuraiSliceNtr.InputAction_FlickPress, HitSuccess, HitMiss, LaunchThrough);
                     SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 4f, SamuraiSliceNtr.InputAction_FlickPress, DoSliceAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
@@ -279,7 +285,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             missedLaunch = true;
         }
 
-        public void LaunchThrough(PlayerActionEvent caller) {}
+        public void LaunchThrough(PlayerActionEvent caller) { }
 
         public void HitSuccess(PlayerActionEvent caller, float state)
         {
@@ -316,9 +322,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             secondHalf = mobjDat;
 
             this.startBeat = caller.startBeat + caller.timer;
-            if (type == (int) SamuraiSliceNtr.ObjectType.Demon)
+            if (type == (int)SamuraiSliceNtr.ObjectType.Demon)
                 anim.Play("ObjDemonDebris01");
-            else if (type == (int) SamuraiSliceNtr.ObjectType.Melon2B2T)
+            else if (type == (int)SamuraiSliceNtr.ObjectType.Melon2B2T)
             {
                 SoundByte.PlayOneShotGame("samuraiSliceNtr/melon_dig");
                 pickelBurst.Play();

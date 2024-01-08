@@ -15,7 +15,7 @@ AnimatorStateTransition:
   m_IsExit: 0
   serializedVersion: 3
   m_TransitionDuration: 0
-  m_TransitionOffset: 15
+  m_TransitionOffset: 0
   m_ExitTime: 1
   m_HasExitTime: 1
   m_HasFixedDuration: 1
@@ -48,7 +48,7 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-2793958347424135821
+--- !u!1102 &-3167391570579844052
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
@@ -148,8 +148,8 @@ AnimatorStateMachine:
     m_State: {fileID: -5563777372090574972}
     m_Position: {x: 300, y: 290, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -2793958347424135821}
-    m_Position: {x: 335, y: 355, z: 0}
+    m_State: {fileID: -3167391570579844052}
+    m_Position: {x: 300, y: 350, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
