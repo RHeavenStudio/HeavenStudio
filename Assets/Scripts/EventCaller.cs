@@ -2,9 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using Jukebox;
-using Jukebox.Legacy;
 
 namespace HeavenStudio
 {
@@ -18,11 +16,15 @@ namespace HeavenStudio
 
         public static EventCaller instance { get; private set; }
 
-        public List<Minigames.Minigame> minigames = new List<Minigames.Minigame>();
+        public Dictionary<string, Minigames.Minigame> minigames = new();
 
         public Minigames.Minigame GetMinigame(string gameName)
         {
-            return minigames.Find(c => c.name == gameName);
+            if (!minigames.ContainsKey(gameName))
+            {
+                return null;
+            }
+            return minigames[gameName];
         }
 
         public Minigames.GameAction GetGameAction(Minigames.Minigame game, string action)
@@ -30,9 +32,27 @@ namespace HeavenStudio
             return game.actions.Find(c => c.actionName == action);
         }
 
+        public Minigames.GameAction GetGameAction(string gameName, string action)
+        {
+            if (minigames.ContainsKey(gameName))
+            {
+                return minigames[gameName].actions.Find(c => c.actionName == action);
+            }
+            else
+            {
+                Debug.LogWarning($"Game {gameName} not found!");
+                return null;
+            }
+        }
+
         public Minigames.Param GetGameParam(Minigames.Minigame game, string action, string param)
         {
             return GetGameAction(game, action).parameters.Find(c => c.propertyName == param);
+        }
+
+        public Minigames.Param GetGameParam(string gameName, string action, string param)
+        {
+            return GetGameAction(gameName, action).parameters.Find(c => c.propertyName == param);
         }
 
         public void Init()
@@ -68,7 +88,7 @@ namespace HeavenStudio
         public void CallEvent(RiqEntity entity, bool gameActive)
         {
             string[] details = entity.datamodel.Split('/');
-            Minigames.Minigame game = minigames.Find(c => c.name == details[0]);
+            Minigames.Minigame game = minigames[details[0]];
             try
             {
                 currentEntity = entity;
@@ -94,7 +114,7 @@ namespace HeavenStudio
         public void CallPreEvent(RiqEntity entity)
         {
             string[] details = entity.datamodel.Split('/');
-            Minigames.Minigame game = minigames.Find(c => c.name == details[0]);
+            Minigames.Minigame game = minigames[details[0]];
             try
             {
                 currentEntity = entity;
@@ -153,7 +173,7 @@ namespace HeavenStudio
 
         public static List<Minigames.Minigame> FXOnlyGames()
         {
-            return instance.minigames.FindAll(c => c.fxOnly == true).ToList();
+            return instance.minigames.Values.ToList().FindAll(c => c.fxOnly);
         }
     }
 }

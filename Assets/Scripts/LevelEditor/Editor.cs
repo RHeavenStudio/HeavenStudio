@@ -104,7 +104,7 @@ namespace HeavenStudio.Editor
             GameManager.instance.Init();
             Timeline.Init();
 
-            foreach (var minigame in EventCaller.instance.minigames)
+            foreach (var minigame in EventCaller.instance.minigames.Values)
                 AddIcon(minigame);
                 
             UpdateEditorStatus(true);

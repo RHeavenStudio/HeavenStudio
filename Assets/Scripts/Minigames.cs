@@ -192,16 +192,18 @@ namespace HeavenStudio
             System.Type type, pType;
             if (EventCaller.instance != null)
             {
+                string[] split;
                 foreach (var e in data.entities)
                 {
-                    var gameName = e.datamodel.Split(0);
-                    var actionName = e.datamodel.Split(1);
+                    split = e.datamodel.Split('/');
+                    var gameName = split[0];
+                    var actionName = split[1];
                     game = EventCaller.instance.GetMinigame(gameName);
                     if (game == null)
                     {
                         Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
                         game = new Minigames.Minigame(gameName, gameName.DisplayName() + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
-                        EventCaller.instance.minigames.Add(game);
+                        EventCaller.instance.minigames.Add(gameName, game);
                         if (Editor.Editor.instance != null)
                             Editor.Editor.instance.AddIcon(game);
                     }
@@ -646,9 +648,6 @@ namespace HeavenStudio
                 this.preFunction = prescheduleFunction ?? delegate { };
                 this.priority = priority;
                 this.preFunctionLength = preFunctionLength;
-
-
-                //todo: converting to new versions of GameActions
             }
 
             /// <summary>
@@ -728,7 +727,7 @@ namespace HeavenStudio
 
         public static void Init(EventCaller eventCaller)
         {
-            eventCaller.minigames = new List<Minigame>()
+            List<Minigame> defaultGames = new()
             {
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
@@ -1175,11 +1174,17 @@ namespace HeavenStudio
                 }),
             };
 
+            foreach (var game in defaultGames)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+
             BuildLoadRunnerList();
             foreach (var load in loadRunners)
             {
                 Debug.Log("Running game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name);
-                eventCaller.minigames.Add(load(eventCaller));
+                Minigame game = load(eventCaller);
+                eventCaller.minigames.Add(game.name, game);
             }
         }
     }

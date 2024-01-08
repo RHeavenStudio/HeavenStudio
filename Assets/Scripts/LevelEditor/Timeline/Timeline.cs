@@ -873,10 +873,8 @@ namespace HeavenStudio.Editor.Track
 
         public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), RiqEntity entity = null, bool addEvent = false)
         {
-            var game = EventCaller.instance.GetMinigame(eventName.Split(0));
-            var action = EventCaller.instance.GetGameAction(game, eventName.Split(1));
-
-            var gameAction = EventCaller.instance.GetGameAction(EventCaller.instance.GetMinigame(eventName.Split(0)), eventName.Split(1));
+            string[] split = eventName.Split('/');
+            var action = EventCaller.instance.GetGameAction(split[0], split[1]);
 
             if (addEvent)
             {
@@ -884,7 +882,7 @@ namespace HeavenStudio.Editor.Track
 
                 if (entity == null)
                 {
-                    RiqEntity en = GameManager.instance.Beatmap.AddNewEntity(eventName, 0, gameAction.defaultLength);
+                    RiqEntity en = GameManager.instance.Beatmap.AddNewEntity(eventName, 0, action.defaultLength);
 
                     tempEntity = en;
 
