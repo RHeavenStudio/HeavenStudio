@@ -202,7 +202,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.KarateManFaces.Happy, "Success Expression", "The facial expression to set Joe to on hit"),
-                        new Param("pitchVoice", false, "Pitch Voice", "Pitch the voice of this cue?", new List<Param.CollapseParam>()
+                        new Param("pitchVoice", false, "Pitch Voice", "Pitch the voice of this cue", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "forcePitch" }),
                         }),
@@ -222,11 +222,11 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("whichWarning", KarateMan.HitThree.HitThree, "Which Warning", "The warning text to show and the sfx to play"),
-                        new Param("pitchVoice", false, "Auto Pitch Voice", "Pitch the voice of this cue depending on the BPM", new List<Param.CollapseParam>()
+                        new Param("pitchVoice", false, "Pitch Voice", "Pitch the voice of this cue", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "forcePitch" }),
                         }),
-                        new Param("forcePitch", new EntityTypes.Float(0.5f, 2f, 1f), "Force Pitch", "Pitch the voice of this cue depending on the value"),
+                        new Param("forcePitch", new EntityTypes.Float(0.5f, 2f, 1f), "Force Pitch", "Override the automatic pitching if not set to 1"),
                         new Param("customLength", false, "Custom Length", "Have the warning text appear for the length of the block"),
                         new Param("cutOut", true, "Cut Out Voice", "Will this cue be cut out by another voice?"),
                     },
@@ -238,8 +238,8 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("special camera", "Special Camera")
                 {
                     function = delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera(e.beat, e.length, e["toggle"]); },
-                    defaultLength = 8f, 
-                    resizable = true, 
+                    defaultLength = 8f,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Return Camera", "Camera zooms back in?"),
@@ -248,23 +248,23 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("prepare", "Preparation Stance")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Prepare(e.beat, e.length);}, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Prepare(e.beat, e.length);},
                     resizable = true,
                 },
                 new GameAction("set gameplay modifiers", "Flow/Gameplay Modifiers")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["fxType"], e["type"], e["toggle"]); },
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        KarateMan.instance.SetGameplayMods(e.beat, e["fxType"], e["type"], e["toggle"]);
+                    },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("fxType", KarateMan.BackgroundFXType.None, "FX Type", "The background effect to be displayed"),
-                        new Param("type", KarateMan.NoriMode.None, "Flow Bar type", "The type of Flow bar to use", new List<Param.CollapseParam>()
-                        {
-                            new Param.CollapseParam((x, _) => (int)x != (int)KarateMan.NoriMode.None, new string[] { "type" })
-                        }),
-                        new Param("hitsPerHeart", new EntityTypes.Float(0f, 20f, 0f), "Hits Per Heart", "How many hits will it take for each heart to light up? (0 will do it automatically.)"),
+                        new Param("type", KarateMan.NoriMode.None, "Flow Bar type", "The type of Flow bar to use"),
+                        // new Param("hitsPerHeart", new EntityTypes.Float(0f, 20f, 0f), "Hits Per Heart", "How many hits it will take for each heart to light up (0 will do it automatically.)"),
                         new Param("toggle", true, "Enable Combos", "Allow the player to combo? (Contextual combos will still be allowed even when off)"),
-                        //new Param("toggle2", true, "Enable Kicks", "Allow the player to kick? (Contextual kicks will still be allowed even when off)"),
+                        // new Param("toggle2", true, "Enable Kicks", "Allow the player to kick? (Contextual kicks will still be allowed even when off)"),
                     },
                 },
                 new GameAction("background appearance", "Background Appearance")
@@ -272,13 +272,11 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {
                         var e = eventCaller.currentEntity;
                         KarateMan.instance.BackgroundColor(
-                            e.beat, e.length,
+                            e.beat, e.length, e["fxType"],
                             e["presetBg"], e["startColor"], e["endColor"], e["ease"],
                             e["shadowType"], e["shadowStart"], e["shadowEnd"],
                             e["textureType"], e["autoColor"], e["startTexture"], e["endTexture"]
                         );
-                        // backwards compatibility
-                        if (e["fxType"] != 3) KarateMan.instance.currentBgEffect = e["fxType"];
                     },
                     defaultLength = 0.5f,
                     resizable = true,
@@ -298,6 +296,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("shadowStart", new Color(), "Start Shadow Color", "The shadow color to start with"),
                         new Param("shadowEnd", new Color(), "End Shadow Color", "The shadow color to end with"),
                         
+                        new Param("fxType", KarateMan.BackgroundFXType.None, "FX Type", "The background effect to be displayed"),
+
                         new Param("textureType", KarateMan.BackgroundTextureType.Plain, "Texture", "The type of background texture to use", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (int)x != (int)KarateMan.BackgroundTextureType.Plain, new string[] { "startTexture", "endTexture" })
@@ -308,10 +308,6 @@ namespace HeavenStudio.Games.Loaders
                         }),
                         new Param("startTexture", new Color(), "Start Texture Color", "The texture color to start with"),
                         new Param("endTexture", new Color(), "End Texture Color", "The texture color to end with"),
-                        new Param("fxType", new EntityTypes.Integer(0, 3, 3), "Check Tooltip", "Ping @AstrlJelly on discord if you see this; it should be hidden.", new List<Param.CollapseParam>()
-                        {
-                            new Param.CollapseParam((x, _) => false, new string[] { "fxType" })
-                        }),
                     },
                 },
                 // new GameAction("set background effects", "Background Appearance (OLD)")
@@ -531,6 +527,7 @@ namespace HeavenStudio.Games
 
         static List<RiqEntity> queuedCues = new();
         public static bool IsComboEnable = true; //only stops Out combo inputs, this basically makes combo contextual
+        // public static bool IsKickEnable = true; //same as above, except with kick inputs
         public bool IsNoriActive { get { return Nori.MaxNori > 0; } }
         public float NoriPerformance { get { if (IsNoriActive) return Nori.Nori / Nori.MaxNori; else return 1f; } }
 
@@ -760,15 +757,14 @@ namespace HeavenStudio.Games
             
             if (bg != null) {
                 BackgroundColor(
-                    bg.beat, bg.length,
+                    bg.beat, bg.length, bg["fxType"],
                     bg["presetBg"], bg["startColor"], bg["endColor"], bg["ease"],
                     bg["shadowType"], bg["shadowStart"], bg["shadowEnd"],
                     bg["textureType"], bg["autoColor"], bg["startTexture"], bg["endTexture"]
                 );
-                if (bg["fxType"] != 3) currentBgEffect = bg["fxType"];
             } else {
                 var c = new Color();
-                BackgroundColor(0, 0, 0, c, c, (int)Util.EasingFunction.Ease.Instant, 0, c, c, 0, true, c, c);
+                BackgroundColor(0, 0, 0, 0, c, c, (int)Util.EasingFunction.Ease.Instant, 0, c, c, 0, true, c, c);
             }
             
             if (obj != null) {
@@ -779,7 +775,14 @@ namespace HeavenStudio.Games
 
             // init modifier(s)
             RiqEntity bop = prevEntities.FindLast(c => c.beat < beat && c.datamodel == "karateman/bop");
+            RiqEntity flow = prevEntities.FindLast(c => c.beat < beat && c.datamodel == "karateman/set gameplay modifiers");
+
             ToggleBop(0, 0, false, bop?["toggle"] ?? true);
+
+            if (flow != null) {
+                int fxType = bg == null || flow.beat > bg.beat ? flow["fxType"] : bg["fxType"];
+                SetGameplayMods(beat, fxType, flow["type"], flow["toggle"]);
+            }
 
             // get all entities to later check against eachother to cut out voices
             voiceEntities = prevEntities.FindAll(c => c.beat > beat && (c.datamodel is "karateman/kick" or "karateman/combo"));
@@ -1081,8 +1084,10 @@ namespace HeavenStudio.Games
             return mobjDat;
         }
 
-        public void BackgroundColor(double beat, float length, int presetBG, Color colorStart, Color colorEnd, int colorEaseSet, int shadowType, Color shadowStart, Color shadowEnd, int textureType, bool autoColor, Color filterStart, Color filterEnd)
+        public void BackgroundColor(double beat, float length, int fxType, int presetBG, Color colorStart, Color colorEnd, int colorEaseSet, int shadowType, Color shadowStart, Color shadowEnd, int textureType, bool autoColor, Color filterStart, Color filterEnd)
         {
+            currentBgEffect = fxType;
+            
             for (int i = 0; i < colorStarts.Length; i++) {
                 colorStartBeats[i] = beat;
                 colorLengths[i] = length;
@@ -1144,6 +1149,7 @@ namespace HeavenStudio.Games
             Nori.SetNoriMode(beat, mode);
             currentBgEffect = fxType;
             IsComboEnable = combo;
+            // IsKickEnable = kick;
         }
 
         public enum StarColorOption

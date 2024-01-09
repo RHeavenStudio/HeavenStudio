@@ -1,14 +1,9 @@
+using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using System;
 using System.Linq;
 using TMPro;
-using Starpelly;
-
-using HeavenStudio.Util;
-using HeavenStudio.Editor;
 
 namespace HeavenStudio.Editor
 {
@@ -22,9 +17,9 @@ namespace HeavenStudio.Editor
         {
             InitProperties(diag, propertyName, caption);
 
-            var enumType = type.GetType();
-            var enumVals = Enum.GetValues(enumType);
-            var enumNames = Enum.GetNames(enumType).ToList();
+            Type enumType = type.GetType();
+            Array enumVals = Enum.GetValues(enumType);
+            List<string> enumNames = Enum.GetNames(enumType).ToList();
 
             // Can we assume non-holey enum?
             // If we can we can simplify to dropdown.value = (int) parameterManager.chart[propertyName]
@@ -38,7 +33,7 @@ namespace HeavenStudio.Editor
             dropdown.value = selected;
 
             dropdown.onValueChanged.AddListener(_ =>
-                parameterManager.chart[propertyName] = (int) enumVals.GetValue(dropdown.value)
+                parameterManager.chart[propertyName] = Enum.ToObject(enumType, (int) enumVals.GetValue(dropdown.value))
             );
         }
 

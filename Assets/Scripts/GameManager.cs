@@ -469,8 +469,7 @@ namespace HeavenStudio
 
                 string[] seekEntityDatamodel = seekEntity.datamodel.Split('/');
 
-                float seekTime = eventCaller.GetGameAction(
-                    eventCaller.GetMinigame(seekEntityDatamodel[0]), seekEntityDatamodel[1]).preFunctionLength;
+                float seekTime = eventCaller.GetGameAction(seekEntityDatamodel[0], seekEntityDatamodel[1]).preFunctionLength;
 
                 if (start + seekTime >= eventBeats[currentPreSequence])
                 {
@@ -904,10 +903,8 @@ namespace HeavenStudio
                 xDatamodel = x.datamodel.Split('/');
                 yDatamodel = y.datamodel.Split('/');
 
-                Minigames.Minigame xGame = eventCaller.GetMinigame(xDatamodel[0]);
-                Minigames.GameAction xAction = eventCaller.GetGameAction(xGame, xDatamodel[1]);
-                Minigames.Minigame yGame = eventCaller.GetMinigame(yDatamodel[0]);
-                Minigames.GameAction yAction = eventCaller.GetGameAction(yGame, yDatamodel[1]);
+                Minigames.GameAction xAction = eventCaller.GetGameAction(xDatamodel[0], xDatamodel[1]);
+                Minigames.GameAction yAction = eventCaller.GetGameAction(yDatamodel[0], yDatamodel[1]);
 
                 return yAction.priority.CompareTo(xAction.priority);
             });
@@ -1196,7 +1193,7 @@ namespace HeavenStudio
 
         public Minigames.Minigame GetGameInfo(string name)
         {
-            return eventCaller.minigames.Find(c => c.name == name);
+            return eventCaller.GetMinigame(name);
         }
 
         Color colMain;

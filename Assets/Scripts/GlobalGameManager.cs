@@ -115,7 +115,7 @@ namespace HeavenStudio
 
             Application.targetFrameRate = -1;
             QualitySettings.vSyncCount = 0;
-            QualitySettings.maxQueuedFrames = 1;
+            QualitySettings.maxQueuedFrames = 2;
             if (PersistentDataManager.gameSettings.isFullscreen)
             {
                 Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
@@ -428,21 +428,23 @@ namespace HeavenStudio
 
         public static void UpdateDiscordStatus(string details, bool editor = false, bool updateTime = false)
         {
-            if (discordDuringTesting || !Application.isEditor)
-            {
-                if (PersistentDataManager.gameSettings.discordRPCEnable)
-                {
-                    try
-                    {
-                        DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
-                        Debug.Log("Discord status updated");
-                    }
-                    catch (System.Exception e)
-                    {
-                        Debug.Log("Discord status update failed: " + e.Message);
-                    }
-                }
-            }
+            Debug.Log("Discord Rich Presence temporarily disabled");
+            return;
+            // if (discordDuringTesting || !Application.isEditor)
+            // {
+            //     if (PersistentDataManager.gameSettings.discordRPCEnable)
+            //     {
+            //         try
+            //         {
+            //             DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
+            //             Debug.Log("Discord status updated");
+            //         }
+            //         catch (System.Exception e)
+            //         {
+            //             Debug.Log("Discord status update failed: " + e.Message);
+            //         }
+            //     }
+            // }
         }
 
         private static void OnQuitting()
@@ -453,8 +455,8 @@ namespace HeavenStudio
                 PlayerInput.CleanUp();
                 Debug.Log("Clearing RIQ Cache...");
                 Jukebox.RiqFileHandler.ClearCache();
-                Debug.Log("Closing Discord GameSDK...");
-                DiscordRPC.DiscordController.instance?.Disconnect();
+                // Debug.Log("Closing Discord GameSDK...");
+                // DiscordRPC.DiscordController.instance?.Disconnect();
 
                 HasShutDown = true;
             }
