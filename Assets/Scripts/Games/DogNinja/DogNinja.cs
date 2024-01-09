@@ -21,8 +21,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Enable Bopping", "Whether to bop to the beat or not"),
-                        new Param("auto", false, "Enable Bopping (Auto)", "Whether to bop to the beat or not automatically"),
+                        new Param("toggle", true, "Bop", "Toggle if Dog Ninja should bop for the duration of this event."),
+                        new Param("auto", false, "Bop (Auto)", "Toggle if Dog Ninja should automatically bop until another Bop event is reached."),
                     }
                 },
                 new GameAction("Prepare", "Prepare")
@@ -37,21 +37,21 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
-                        new Param("direction", DogNinja.ObjectDirection.Left, "Which Side", "Whether the object should come from the left, right, or both sides"),
-                        new Param("typeL", DogNinja.ObjectType.Random, "Left \nObject", "The object to be thrown from the left"),
-                        new Param("typeR", DogNinja.ObjectType.Random, "Right Object", "The object to be thrown from the right"),
-                        new Param("shouldPrepare", true, "Prepare?", "Should the dog prepare?"),
-                        new Param("muteThrow", false, "Mute", "Mute the throw? (ONLY WHEN INACTIVE)"),
+                        new Param("direction", DogNinja.ObjectDirection.Left, "Which Side", "Choose the side(s) the object(s) should be thrown from."),
+                        new Param("typeL", DogNinja.ObjectType.Random, "Left Object", "Choose the object to be thrown from the left."),
+                        new Param("typeR", DogNinja.ObjectType.Random, "Right Object", "Choose the object to be thrown from the right."),
+                        new Param("shouldPrepare", true, "Prepare", "Toggle if Dog Ninja should automatically prepare for this cue."),
+                        new Param("muteThrow", false, "Mute", "Toggle if the cue should be muted. This only applies when the cue is started from another game."),
                     },
                 },
-                new GameAction("CutEverything", "Cut Everything!")
+                new GameAction("CutEverything", "Mister Eagle's Sign")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.CutEverything(e.beat, e["toggle"], e["text"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Play Sound", "Whether to play the 'FlyIn' SFX or not"),
-                        new Param("text", "Cut everything!", "Custom Text", "What text should the sign display?")
+                        new Param("toggle", true, "Play Sound", "Toggle if the sound effect should play for flying in and out."),
+                        new Param("text", "Cut everything!", "Sign Text", "Set the text to be displayed on the sign.")
                     }
                 },
                 new GameAction("HereWeGo", "Here We Go!")
