@@ -250,7 +250,7 @@ namespace HeavenStudio.Games
                     if ((PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
                         || (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !IsExpectingInputNow(InputAction_Alt)))
                     {
-                        Ringside.instance.ScoreMiss(0.5);
+                        Ringside.instance.ScoreMiss(0.5f);
 
                         wrestlerAnim.DoScaledAnimationAsync("YeMiss", 0.25f);
                         SoundByte.PlayOneShotGame($"ringside/confusedanswer");
@@ -260,7 +260,7 @@ namespace HeavenStudio.Games
                 if ( PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch
                     && PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress) && !shouldNotInput)
                 {
-                    Ringside.instance.ScoreMiss(0.5);
+                    Ringside.instance.ScoreMiss(0.5f);
                     
                     SoundByte.PlayOneShotGame($"ringside/muscles2");
                     wrestlerAnim.DoScaledAnimationAsync("BigGuyTwo", 0.5f);
@@ -270,7 +270,7 @@ namespace HeavenStudio.Games
                 }
                 if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt) && !shouldNotInput)
                 {
-                    Ringside.instance.ScoreMiss(0.5);
+                    Ringside.instance.ScoreMiss(0.5f);
                     
                     int randomPose = UnityEngine.Random.Range(1, 7);
                     wrestlerAnim.Play($"Pose{randomPose}", 0, 0);

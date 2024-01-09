@@ -167,7 +167,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 Nori -= 1;
                 if (Nori < 0) Nori = 0;
-                NoriHeartAnimators[(int) Nori].Play("NoriNone", -1, (Time.time * PeriodLow) % 1f);
+                NoriHeartAnimators[(int)Nori].Play("NoriNone", -1, (Time.time * PeriodLow) % 1f);
             }
             else
             {

@@ -274,7 +274,7 @@ namespace HeavenStudio.Games
         public override void OnPlay(double beat)
         {
             crHandlerInstance = null;
-            PersistColor(beat);
+            PersistBlocks(beat);
         }
 
         private void OnDestroy()
@@ -562,15 +562,18 @@ namespace HeavenStudio.Games
         }
 
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)
-        private void PersistColor(double beat)
+        private void PersistBlocks(double beat)
         {
-            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("rhythmTweezers", new string[] { "fade background color" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+            var allEventsBeforeBeat = GameManager.instance.Beatmap.Entities.FindAll(x => x.datamodel.Split('/')[0] == "rhythmTweezers" && x.beat < beat);
+            var allColorEventsBeforeBeat = allEventsBeforeBeat.FindAll(x => x.datamodel == "rhythmTweezers/fade background color");
+            if (allColorEventsBeforeBeat.Count > 0)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
+                allColorEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allColorEventsBeforeBeat[^1];
                 BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorA"], lastEvent["colorB"], lastEvent["ease"]);
             }
+            var allAltFaceEventsBeforeBeat = allEventsBeforeBeat.FindAll(x => x.datamodel == "rhythmTweezers/altSmile");
+            VegetableAnimator.SetBool("UseAltSmile", allAltFaceEventsBeforeBeat.Count % 2 == 1);
         }
 
         public static void PreNoPeeking(double beat, float length, int type)
@@ -635,7 +638,7 @@ namespace HeavenStudio.Games
                     queuedIntervals.Clear();
                 }
             }
-            PersistColor(beat);
+            PersistBlocks(beat);
         }
 
         private void ResetVegetable()
