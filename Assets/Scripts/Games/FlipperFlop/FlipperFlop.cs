@@ -13,22 +13,32 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("flipperFlop", "Flipper-Flop", "ffc3fc", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("whoBops", FlipperFlop.WhoBops.Both, "Bop", "Set the character(s) to bop for the duration of this event."),
+                        new Param("whoBopsAuto", FlipperFlop.WhoBops.None, "Bop (Auto)", "Set the character(s) to automatically bop until another Bop event is reached."),
+                    }
+                },
                 new GameAction("attentionCompany", "Attention Company!")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat, e["toggle"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Mute VoiceLine", "Mute Captain Tuck's voiceline?")
+                        new Param("toggle", false, "Mute", "Toggle if Captain Tuck's voice line should be muted.")
                     }
                 },
-                new GameAction("attentionCompanyAlt", "Attention Company! (Remix 5)")
+                new GameAction("attentionCompanyAlt", "Attention Company! (Remix 5 Wii)")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat, e["toggle"], true); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Mute VoiceLine", "Mute Captain Tuck's voiceline?")
+                        new Param("toggle", false, "Mute", "Toggle if Captain Tuck's voice line should be muted.")
                     }
                 },
                 new GameAction("flipping", "Flipping")
@@ -47,8 +57,8 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.FlipperRollVoiceLine(e.beat, e["amount"], e["toggle"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("amount", new EntityTypes.Integer(1, 10, 1), "Amount", "1, 2, 3... etc. - flipper rolls"),
-                        new Param("toggle", false, "Now", "Whether Captain Tuck should say -Now!- instead of numbers.")
+                        new Param("amount", new EntityTypes.Integer(1, 10, 1), "Amount", "Set the number that Captain Tuck should announce."),
+                        new Param("toggle", false, "Now", "Toggle if Captain Tuck should say \"Now\" instead of a number.")
                     },
                     defaultLength = 2f
                 },
@@ -57,30 +67,20 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.Flipping(e.beat, e.length, true, e["uh"], e["thatsIt"], e["appreciation"], e["heart"], e["barber"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("uh", new EntityTypes.Integer(0, 3, 0), "Uh Count", "How many Uhs should Captain Tuck say after the flippers roll?"),
-                        new Param("appreciation", FlipperFlop.AppreciationType.None, "Appreciation", "Which appreciation line should Captain Tuck say?", new List<Param.CollapseParam>()
+                        new Param("uh", new EntityTypes.Integer(0, 3, 0), "Grunt Count", "Choose how many grunts Captain Tuck should say after the flipper-rolls."),
+                        new Param("appreciation", FlipperFlop.AppreciationType.None, "Appreciation", "Choose the appreciation voice line that Captain Tuck should say if the flipper-roll is carried out successfully.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (int)x != (int)FlipperFlop.AppreciationType.None, new string[] { "heart" })
                         }),
-                        new Param("heart", false, "Hearts", "Should Captain Tuck blush and make hearts appear when he expresses his appreciation?"),
-                        new Param("thatsIt", false, "That's it!", "Whether or not Captain Tuck should say -That's it!- on the final flipper roll.", new List<Param.CollapseParam>()
+                        new Param("heart", false, "Hearts", "Toggle if Captain Tuck should blush and make hearts appear when he expresses his appreciation."),
+                        new Param("thatsIt", false, "That's it!", "Toggle if Captain Tuck should say \"That's it!\" after the flipper-rolls. This is usually used for the end of a level or segment.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "barber" })
                         }),
-                        new Param("barber", false, "Barbershop that's it variant", "Should captain tuck use the Barbershop remix variant of that's it?")
+                        new Param("barber", false, "Barbershop", "Toggle if Captain Tuck should use the variant of \"That's it!\" seen in Barbershop Remix (3DS).")
                     },
                     defaultLength = 4f,
                     resizable = true
-                },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("whoBops", FlipperFlop.WhoBops.Both, "Who Bops?", "Who will bop?"),
-                        new Param("whoBopsAuto", FlipperFlop.WhoBops.None, "Who Bops? (Auto)", "Who will auto bop?"),
-                    }
                 },
                 new GameAction("walk", "Captain Tuck Walk")
                 {
@@ -89,7 +89,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the animation be played at?")
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing for the action.")
                     }
                 },
                 new GameAction("toggleCaptain", "Disable/Enable Captain Tuck")

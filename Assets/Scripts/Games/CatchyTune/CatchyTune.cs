@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("bop", CatchyTune.WhoBops.Both, "Bop", "Set the character(s) to bop for the duration of this event."),
-                        new Param("bopAuto", CatchyTune.WhoBops.None, "Bop", "Set the character(s) to automatically bop until another Bop event is reached."),
+                        new Param("bopAuto", CatchyTune.WhoBops.None, "Bop (Auto)", "Set the character(s) to automatically bop until another Bop event is reached."),
                     },
                 },
 
