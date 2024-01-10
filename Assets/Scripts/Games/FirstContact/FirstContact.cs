@@ -23,8 +23,8 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { var e = eventCaller.currentEntity; FirstContact.PreInterval(e.beat, e.length, e["dialogue"], e["auto"]);   },
                     parameters = new List<Param>()
                     {
-                        new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "The line to use when messing up the translation"),
-                        new Param("auto", true, "Auto Pass Turn")
+                        new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "Set the line to use when messing up the translation."),
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically pass the turn at the end of the start interval.")
                     },
                     defaultLength = 3f,
                     resizable = true,
@@ -35,9 +35,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("spaceNum", new EntityTypes.Integer(0, 12, 0), "Amount of spaces", "Spaces to add before the untranslated icon"),
-                        new Param("dotdotdot", false, "Has ellipses?", "Will the man symbol be proceeded by a <...>?"),
-                        new Param("dialogue", "", "Dialogue", "What should this sound translate to?")
+                        new Param("spaceNum", new EntityTypes.Integer(0, 12, 0), "Amount Of Spaces", "Choose the amount of spaces to add before the icon."),
+                        new Param("dotdotdot", false, "Ellipses", "Toggle if the symbol should have \"...\" before it."),
+                        new Param("dialogue", "", "Translation", "Set the text that this syllable will translate to. Spaces will not be automatically added.")
                     },
                     priority = 1
                 },
@@ -56,26 +56,26 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>
                     {
-                        new Param("toggle", false, "Stay", "If it's the end of the remix/song")
+                        new Param("toggle", false, "Stay", "Toggle if the camera should stay on mission control even after the event has ended. This is usually used for the end of a level.")
                     }
                 },
-                new GameAction("look at", "Look At")
+                new GameAction("look at", "Look")
                 {
                     function = delegate { FirstContact.instance.LookAtDirection(eventCaller.currentEntity["type"], eventCaller.currentEntity["type2"]);  },
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", FirstContact.alienLookAt.lookAtAlien, "Bob look at what", "[Bob] will look at what"),
-                        new Param("type2", FirstContact.translatorLookAt.lookAtBob, "Alien look at what", "[Alien] will look at what"),
+                        new Param("type", FirstContact.alienLookAt.lookAtAlien, "Farmer Bob", "Set where Farmer Bob will look."),
+                        new Param("type2", FirstContact.translatorLookAt.lookAtBob, "Alien", "Set where the alien will look."),
                     }
                 },
-                new GameAction("live bar beat", "Live Bar Beat")
+                new GameAction("live bar beat", "\"Live\" Bar")
                 {
                     function = delegate { FirstContact.instance.LiveBarBeat(eventCaller.currentEntity["toggle"]);  },
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "On Beat", "If the live bar animation will be on beat or not")
+                        new Param("toggle", true, "On Beat", "Toggle if the \"Live\" bar in the top-left will animate on onbeats or offbeats.")
                     }
                 }
             },
