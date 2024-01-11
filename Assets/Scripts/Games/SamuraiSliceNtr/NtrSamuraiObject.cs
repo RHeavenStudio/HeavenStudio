@@ -10,9 +10,10 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
     public class NtrSamuraiObject : MonoBehaviour
     {
         [Header("Objects")]
-        public ParticleSystem moneyBurst;
-        public ParticleSystem pickelBurst;
-        public Animator anim;
+        [SerializeField] ParticleSystem moneyBurst;
+        [SerializeField] ParticleSystem pickelBurst;
+        [SerializeField] ParticleSystem pickelBurstSplat;
+        [SerializeField] Animator anim;
         public NtrSamuraiObject secondHalf;
 
         [Header("Transforms")]
@@ -108,15 +109,11 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 {
                     case -3:    // near miss on board launch
                         flyPos = cond.GetPositionFromBeat(startBeat, 2f);
-                        transform.position = currentCurve.GetPoint(flyPos);
-                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (180f * Time.deltaTime));
-
-                        if (flyPos > 1f)
-                        {
-                            // TODO: splat
-                            GameObject.Destroy(gameObject);
-                            return;
-                        }
+                        transform.position = currentCurve.GetPoint(Mathf.Clamp01(flyPos));
+                        if (flyPos >= 1)
+                            transform.rotation = Quaternion.identity;
+                        else
+                            transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (180f * Time.deltaTime * cond.SongPitch));
                         break;
                     case -2:    // being carried by a child
                         flyPos = cond.GetPositionFromBeat(startBeat + 2f, 4f);
@@ -130,9 +127,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                     case -1:    // sliced by samurai, falling towards child
                         flyPos = cond.GetPositionFromBeat(startBeat, 1f);
                         transform.position = currentCurve.GetPoint(flyPos);
-                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + ((isDebris ? 360f : -360f) * Time.deltaTime));
+                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + ((isDebris ? 360f : -360f) * Time.deltaTime * cond.SongPitch));
 
-                        if (flyPos > 1f)
+                        if (flyPos >= 1f)
                         {
                             SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_catch");
                             if (!isDebris)
@@ -144,24 +141,20 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                                 secondHalf.transform.parent = child.DebrisPosL;
                             }
                             flyProg = -2;
-                            GetComponent<SpriteRenderer>().sortingOrder = 7;
+                            anim.GetComponent<SpriteRenderer>().sortingOrder = 7;
                             return;
                         }
                         break;
                     case 2:     // fish first bounce
                         float jumpPos = cond.GetPositionFromBeat(launchProg.startBeat, 2f);
+                        jumpPos = Mathf.Min(jumpPos, 1.215f);
                         float yMul = jumpPos * 2f - 1f;
                         float yWeight = -(yMul * yMul) + 1f;
                         transform.position = doubleLaunchPos.position + new Vector3(0, 4.5f * yWeight);
-                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-2 * 360f * Time.deltaTime));
-
-                        if (jumpPos > 2f)
-                        {
-                            // missed...
-                            // TODO: splat
-                            GameObject.Destroy(gameObject);
-                            return;
-                        }
+                        if (jumpPos >= 1.215f)
+                            transform.rotation = Quaternion.identity;
+                        else
+                            transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-2 * 360f * Time.deltaTime * cond.SongPitch));
                         break;
                     case 1:     // launched from board to samurai
                         float flyDur = 3f;
@@ -175,33 +168,53 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                                 break;
                         }
                         flyPos = cond.GetPositionFromBeat(hitProg.startBeat, flyDur);
-                        transform.position = currentCurve.GetPoint(flyPos);
-                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (3 * 360f * Time.deltaTime));
-
-                        if (flyPos > 1f)
-                        {
-                            // missed...
-                            // TODO: splat
-                            GameObject.Destroy(gameObject);
-                            return;
-                        }
+                        transform.position = currentCurve.GetPoint(Mathf.Clamp01(flyPos));
+                        if (flyPos >= 1)
+                            transform.rotation = Quaternion.identity;
+                        else
+                            transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (3 * 360f * Time.deltaTime * cond.SongPitch));
                         break;
 
                     default:    // object initial spawn, flying towards board
                         flyPos = cond.GetPositionFromBeat(launchProg.startBeat, 3f);
-                        transform.position = currentCurve.GetPoint(flyPos);
-                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-360f * Time.deltaTime));
-
-                        if (flyPos > 1f)
-                        {
-                            // missed...
-                            // TODO: splat
-                            GameObject.Destroy(gameObject);
-                            return;
-                        }
+                        Debug.Log(flyPos);
+                        transform.position = currentCurve.GetPoint(Mathf.Clamp01(flyPos));
+                        if (flyPos >= 1)
+                            transform.rotation = Quaternion.identity;
+                        else
+                            transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-360f * Time.deltaTime * cond.SongPitch));
                         break;
                 }
             }
+        }
+
+        void DoSplat(double beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("samuraiSliceNtr/item_splat", beat)
+            });
+            BeatAction.New(this, new()
+            {
+                new BeatAction.Action(beat, delegate {
+                switch (type)
+                {
+                    case (int)SamuraiSliceNtr.ObjectType.Fish:
+                        anim.Play("ObjFishSplat");
+                        break;
+                    case (int)SamuraiSliceNtr.ObjectType.Demon:
+                        anim.Play("ObjDemonSplat");
+                        break;
+                    case (int)SamuraiSliceNtr.ObjectType.Melon2B2T:
+                        anim.Play("ObjMelonPickelSplat");
+                        pickelBurstSplat.transform.position = transform.position;
+                        pickelBurstSplat.Play();
+                        break;
+                    default:
+                        anim.Play("ObjMelonSplat");
+                        break;
+                }}),
+                new BeatAction.Action(beat + 3, delegate { Destroy(gameObject); })
+            });
         }
 
         void DoLaunch()
@@ -272,6 +285,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 flyProg = -3;
                 SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchImpact", pitch: 2f);
                 launchProg.Disable();
+                DoSplat(startBeat + 2);
                 return;
             }
             launchProg.Disable();
@@ -283,6 +297,15 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
         public void LaunchMiss(PlayerActionEvent caller)
         {
             missedLaunch = true;
+            switch (flyProg)
+            {
+                case 2:
+                    DoSplat(caller.startBeat + 2.215);
+                    break;
+                default:
+                    DoSplat(caller.startBeat + 3);
+                    break;
+            }
         }
 
         public void LaunchThrough(PlayerActionEvent caller) { }
@@ -296,6 +319,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 flyProg = -3;
                 SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_ng");
                 hitProg.Disable();
+                DoSplat(startBeat + 2);
                 return;
             }
             flyProg = -1;
@@ -316,7 +340,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
             mobj.transform.position = transform.position;
             mobj.transform.rotation = transform.rotation;
-            mobj.GetComponent<SpriteRenderer>().sortingOrder = 4;
+            // mobj.GetComponent<SpriteRenderer>().sortingOrder = 4;
             mobj.SetActive(true);
 
             secondHalf = mobjDat;
@@ -340,6 +364,17 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
         public void HitMiss(PlayerActionEvent caller)
         {
+            double flyDur;
+            switch (type)
+            {
+                case (int)SamuraiSliceNtr.ObjectType.Demon:
+                    flyDur = 5;
+                    break;
+                default:
+                    flyDur = 3;
+                    break;
+            }
+            DoSplat(caller.startBeat + flyDur);
             missedHit = true;
         }
     }
