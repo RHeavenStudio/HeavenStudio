@@ -122,7 +122,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                             GameObject.Destroy(gameObject);
                             return;
                         }
-                        // transform.position = heldPos.position;
+                        transform.position = heldPos.position;
                         break;
                     case -1:    // sliced by samurai, falling towards child
                         flyPos = cond.GetPositionFromBeat(startBeat, 1f);
