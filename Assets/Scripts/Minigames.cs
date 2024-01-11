@@ -151,9 +151,14 @@ namespace HeavenStudio
 
         public static string JukeboxAudioConverter(string filePath, AudioType audioType, string specificType)
         {
-            if (Directory.Exists(Path.Combine(Application.temporaryCachePath, "/savewav")))
+            string wavCachePath = Path.Combine(Application.temporaryCachePath, "savewav");
+            if (Directory.Exists(wavCachePath))
             {
-                Directory.Delete(Path.Combine(Application.temporaryCachePath, "/savewav"), true);
+                Directory.Delete(wavCachePath, true);
+            }
+            if (!Directory.Exists(wavCachePath))
+            {
+                Directory.CreateDirectory(wavCachePath);
             }
             if (audioType == AudioType.MPEG)
             {
@@ -172,8 +177,8 @@ namespace HeavenStudio
                     }
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
                     string fileName = Path.GetFileNameWithoutExtension(filePath);
-                    SavWav.Save("/savewav/" + fileName, clip, true);
-                    filePath = Path.Combine(Application.temporaryCachePath, "/savewav/" + fileName + ".wav");
+                    SavWav.Save(fileName, clip, true);
+                    filePath = Path.Combine(wavCachePath, $"{fileName}.wav");
 
                     clip = null;
                 }
@@ -192,16 +197,18 @@ namespace HeavenStudio
             System.Type type, pType;
             if (EventCaller.instance != null)
             {
+                string[] split;
                 foreach (var e in data.entities)
                 {
-                    var gameName = e.datamodel.Split(0);
-                    var actionName = e.datamodel.Split(1);
+                    split = e.datamodel.Split('/');
+                    var gameName = split[0];
+                    var actionName = split[1];
                     game = EventCaller.instance.GetMinigame(gameName);
                     if (game == null)
                     {
                         Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
                         game = new Minigames.Minigame(gameName, gameName.DisplayName() + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
-                        EventCaller.instance.minigames.Add(game);
+                        EventCaller.instance.minigames.Add(gameName, game);
                         if (Editor.Editor.instance != null)
                             Editor.Editor.instance.AddIcon(game);
                     }
@@ -646,9 +653,6 @@ namespace HeavenStudio
                 this.preFunction = prescheduleFunction ?? delegate { };
                 this.priority = priority;
                 this.preFunctionLength = preFunctionLength;
-
-
-                //todo: converting to new versions of GameActions
             }
 
             /// <summary>
@@ -728,7 +732,7 @@ namespace HeavenStudio
 
         public static void Init(EventCaller eventCaller)
         {
-            eventCaller.minigames = new List<Minigame>()
+            List<Minigame> defaultGames = new()
             {
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
@@ -1175,11 +1179,23 @@ namespace HeavenStudio
                 }),
             };
 
+            foreach (var game in defaultGames)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+
             BuildLoadRunnerList();
+            Debug.Log($"Running {loadRunners.Count} game loaders...");
             foreach (var load in loadRunners)
             {
                 Debug.Log("Running game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name);
-                eventCaller.minigames.Add(load(eventCaller));
+                Minigame game = load(eventCaller);
+                if (game == null)
+                {
+                    Debug.LogError("Game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name + " failed!");
+                    continue;
+                }
+                eventCaller.minigames.Add(game.name, game);
             }
         }
     }

@@ -98,7 +98,6 @@ namespace HeavenStudio
             CustomScreenWidth = PersistentDataManager.gameSettings.resolutionWidth;
             CustomScreenHeight = PersistentDataManager.gameSettings.resolutionHeight;
 
-
             if (PersistentDataManager.gameSettings.dspSize == 0)
                 PersistentDataManager.gameSettings.dspSize = 512;
             if (PersistentDataManager.gameSettings.sampleRate == 0)
@@ -108,7 +107,6 @@ namespace HeavenStudio
 
             // ChangeAudioSettings(currentDspSize, currentSampleRate);
             AudioConfiguration config = AudioSettings.GetConfiguration();
-            if (currentDspSize == config.dspBufferSize && currentSampleRate == config.sampleRate) return;
             config.dspBufferSize = currentDspSize;
             config.sampleRate = currentSampleRate;
             AudioSettings.Reset(config);
@@ -118,7 +116,7 @@ namespace HeavenStudio
             QualitySettings.maxQueuedFrames = 2;
             if (PersistentDataManager.gameSettings.isFullscreen)
             {
-                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
                 Screen.fullScreen = true;
             }
             else

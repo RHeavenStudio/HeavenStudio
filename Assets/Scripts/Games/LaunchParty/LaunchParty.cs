@@ -1,15 +1,7 @@
 using HeavenStudio.Util;
 using HeavenStudio.Common;
-using JetBrains.Annotations;
-using Starpelly.Transformer;
-using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static HeavenStudio.EntityTypes;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
@@ -115,30 +107,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
                     }
                 },
-                new GameAction("toggleStars", "Toggle Falling Stars")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles(e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle", true, "Stars Enabled", "Starfall Or No?", new List<Param.CollapseParam>()
-                        {
-                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "valA", "valB", "valC"})
-                        }),
-                        new Param("valA", new EntityTypes.Float(0.1f, 10f, 1f), "Star Density", "How many stars are on the screen"),
-                        new Param("valB", new EntityTypes.Float(0.01f, 5f, 0.1f), "Front Star Fall Speed", "How fast the front stars fall to the edge of the screen"),
-                        new Param("valC", new EntityTypes.Float(0.01f, 5f, 0.1f), "Back Star Fall Speed", "How fast the stars fall to the edge of the screen")
-                    }
-                },
-                new GameAction("scrollSpeed", "Change Scroll Speed")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.UpdateScrollSpeed(e["speed"]); },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("speed", new EntityTypes.Float(0, 100, 0.5f), "Scroll Speed", "How fast will the background scroll down?"),
-                    }
-                }
             },
             new List<string>() {"rvl", "normal"},
             "rvlrocket", "en",
@@ -160,14 +128,11 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject bowlingPin;
 
         [Header("Components")]
-        [SerializeField] ParticleSystem fallingStars;
-        [SerializeField] ParticleSystem fallingStarsBack;
         [SerializeField] Transform launchPad;
         [SerializeField] Transform launchPadRotatable;
         [SerializeField] Transform spawnPad;
-        [SerializeField] Scroll scrollScript;
-        [SerializeField] Animator lensFlareAnim;
         public Animator launchPadSpriteAnim;
+        [SerializeField] private SpriteRenderer _bgWhiteOverlay;
 
         [Header("Variables")]
         private float currentRotBeat;
@@ -200,9 +165,11 @@ namespace HeavenStudio.Games
 
         private int currentRotIndex;
 
-        private List<RiqEntity> allPosEvents = new List<RiqEntity>();
+        private List<RiqEntity> allPosEvents = new();
 
-        private List<RiqEntity> allRotEvents = new List<RiqEntity>();
+        private List<RiqEntity> allRotEvents = new();
+
+        private List<RiqEntity> _allOverlayEvents = new();
 
         public static LaunchParty instance;
 
@@ -218,33 +185,16 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
-            lensFlareAnim.Play("Flashing", 0, 0);
-            var posEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "posMove" });
-            List<RiqEntity> tempPosEvents = new List<RiqEntity>();
-            for (int i = 0; i < posEvents.Count; i++)
-            {
-                if (posEvents[i].beat + posEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
-                {
-                    tempPosEvents.Add(posEvents[i]);
-                }
-            }
+        }
 
-            allPosEvents = tempPosEvents;
+        public override void OnGameSwitch(double beat)
+        {
+            HandleLaunchPadMoveEvents(beat);
+        }
 
-            var rotEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "rotMove" });
-            List<RiqEntity> tempRotEvents = new List<RiqEntity>();
-            for (int i = 0; i < rotEvents.Count; i++)
-            {
-                if (rotEvents[i].beat + rotEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
-                {
-                    tempRotEvents.Add(rotEvents[i]);
-                }
-            }
-
-            allRotEvents = tempRotEvents;
-
-            UpdateLaunchPadPos();
-            UpdateLaunchPadRot();
+        public override void OnPlay(double beat)
+        {
+            HandleLaunchPadMoveEvents(beat);
         }
 
         void Update()
@@ -261,6 +211,31 @@ namespace HeavenStudio.Games
                     queuedRockets.Clear();
                 }
             }
+            LaunchPadPositionAndRotationUpdate(cond);
+        }
+
+        private void UpdateOverlay(Conductor cond)
+        {
+
+        }
+
+        #region Launch Pad Position and Rotation
+
+        private void HandleLaunchPadMoveEvents(double beat)
+        {
+            var posEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "posMove" });
+            allPosEvents = posEvents;
+
+            var rotEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "rotMove" });
+            allRotEvents = rotEvents;
+
+            UpdateLaunchPadPos();
+            UpdateLaunchPadRot();
+            LaunchPadPositionAndRotationUpdate(Conductor.instance);
+        }
+
+        private void LaunchPadPositionAndRotationUpdate(Conductor cond)
+        {
             if (allPosEvents.Count > 0)
             {
                 if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
@@ -335,11 +310,6 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void UpdateScrollSpeed(float speed)
-        {
-            scrollScript.scrollSpeedY = speed * -1;
-        } 
-
         private void UpdateLaunchPadPos()
         {
             if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
@@ -363,6 +333,10 @@ namespace HeavenStudio.Games
                 lastRotEase = (Util.EasingFunction.Ease)allRotEvents[currentRotIndex]["ease"];
             }
         }
+
+        #endregion
+
+        #region Rockets
 
         public void SpawnRocket(double beat, float beatOffset, RocketType type, List<int> notes)
         {
@@ -506,30 +480,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CreateParticles(double beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
-        {
-            ParticleSystem.EmissionModule emm;
-            ParticleSystem.EmissionModule emm2;
-            switch (toggle)
-            {
-                case true:
-                    var emmrate = fallingStars.velocityOverLifetime;
-                    var emmrate2 = fallingStarsBack.velocityOverLifetime;
-                    emmrate.speedModifier = starSpeed;
-                    emmrate2.speedModifier = starSpeedBack;
-                    emm = fallingStars.emission;
-                    emm2 = fallingStarsBack.emission;
-                    emm.rateOverTime = starDensity * 6f;
-                    emm2.rateOverTime = starDensity * 6f;
-                    fallingStars.Play();
-                    fallingStarsBack.Play();
-                    break;
-                default:
-                    fallingStars.Stop();
-                        fallingStarsBack.Stop();
-                    break;
-            }
-        }
+        #endregion
     }
 }
 

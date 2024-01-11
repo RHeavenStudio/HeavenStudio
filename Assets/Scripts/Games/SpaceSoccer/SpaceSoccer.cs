@@ -13,12 +13,17 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("ball dispense", "Ball Dispense")
                 {
-                    function = delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat, !eventCaller.currentEntity["toggle"], false, eventCaller.currentEntity["down"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.Dispense(e.beat, !e["toggle"], false, e["down"], e["auto"], e["interval"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", false, "Disable Sound", "Disables the dispense sound"),
-                        new Param("down", false, "Down Sound", "Will the Down sound be played?")
+                        new Param("down", false, "Down Sound", "Will the Down sound be played?"),
+                        new Param("auto", true, "Auto Redispense", "", new()
+                        {
+                            new((x, _) => (bool)x, new string[] { "interval" })
+                        }),
+                        new("interval", new EntityTypes.Integer(2, 20, 2), "Redispense Interval")
                     },
                     inactiveFunction = delegate
                     {
@@ -163,6 +168,7 @@ namespace HeavenStudio.Games
     using HeavenStudio.Common;
     using UnityEngine.Rendering;
     using UnityEngine.UI;
+    using System;
 
     public class SpaceSoccer : Minigame
     {
@@ -214,6 +220,12 @@ namespace HeavenStudio.Games
         float yScrollMultiplier = 0.3f;
         [SerializeField] private float xBaseSpeed = 1;
         [SerializeField] private float yBaseSpeed = 1;
+
+        private List<double> _highKickToeBeats = new();
+        private List<double> _stopBeats = new();
+
+        [NonSerialized] public List<double> hitBeats = new();
+
         #region Space Kicker Position Easing
         float easeBeat;
         float easeLength;
@@ -234,6 +246,11 @@ namespace HeavenStudio.Games
             instance = this;
             colorStart = defaultBGColor;
             colorEnd = defaultBGColor;
+            var allHighKickToeEvents = EventCaller.GetAllInGameManagerList("spaceSoccer", new string[] { "high kick-toe!" });
+            foreach (var e in allHighKickToeEvents)
+            {
+                _highKickToeBeats.Add(e.beat);
+            }
         }
 
         new void OnDrawGizmos()
@@ -273,6 +290,31 @@ namespace HeavenStudio.Games
                 float newPosY = func(lastPosP.y, currentPosP.y, normalizedPBeat);
                 float newPosZ = func(lastPosP.z, currentPosP.z, normalizedPBeat);
                 kickers[0].transform.parent.position = new Vector3(3.384f - newPosX, newPosY, newPosZ);
+            }
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (!ballDispensed) return;
+
+            double offsetBeat = beat + (lastDispensedBeat % 1);
+
+            if (_stopBeats.Exists(x => offsetBeat >= x) || offsetBeat < lastDispensedBeat + 2) return;
+
+            if (_highKickToeBeats.Exists(x => offsetBeat >= x + 1 && offsetBeat < x + 3))
+            {
+                if (_highKickToeBeats.Exists(x => offsetBeat == x + 2) && !IsExpectingInputNow(InputAction_FlickRelease))
+                {
+                    if (hitBeats.Exists(x => x == offsetBeat - 0.5)) return;
+                    ScoreMiss();
+                    Debug.Log("Miss toe");
+                }
+            }
+            else if (!IsExpectingInputNow(InputAction_BasicPress))
+            {
+                if (hitBeats.Exists(x => offsetBeat == x)) return;
+                ScoreMiss();
+                Debug.Log("Miss");
             }
         }
 
@@ -329,12 +371,12 @@ namespace HeavenStudio.Games
                     continue;
                 }
                 bool isOnGameSwitchBeat = entity.beat == beat;
-                Debug.Log(isOnGameSwitchBeat);
-                Dispense(entity.beat, isOnGameSwitchBeat && !entity["toggle"], false, isOnGameSwitchBeat && entity["down"]);
+                Dispense(entity.beat, isOnGameSwitchBeat && !entity["toggle"], false, isOnGameSwitchBeat && entity["down"], entity["auto"], entity["interval"]);
                 break;
             }
 
             PersistColor(beat);
+            AddStopEvents(beat);
         }
 
         public SuperCurveObject.Path GetPath(string name)
@@ -348,6 +390,8 @@ namespace HeavenStudio.Games
             }
             return default(SuperCurveObject.Path);
         }
+
+        #region VisualInterpolation
 
         public void UpdateScrollSpeed(float scrollSpeedX, float scrollSpeedY) 
         {
@@ -452,10 +496,35 @@ namespace HeavenStudio.Games
                 kickers.Add(spawnedKicker);
                 kickerHolder.gameObject.SetActive(true);
             }
-            if (ballDispensed) Dispense(lastDispensedBeat, false, true);
+            if (ballDispensed) Dispense(lastDispensedBeat, false, true, false, false);
         }
 
-        public void Dispense(double beat, bool playSound = true, bool ignorePlayer = false, bool playDown = false)
+        #endregion
+
+        public void Dispense(double beat, bool playSound = true, bool ignorePlayer = false, bool playDown = false, bool autoDispense = true, int autoInterval = 2)
+        {
+            DispenseExec(beat, playSound, ignorePlayer, playDown);
+
+            if (!autoDispense) return;
+
+            DispenseRecursion(beat + 2, autoInterval);
+        }
+
+        private void DispenseRecursion(double beat, int interval)
+        {
+            double dispenseBeat = beat + interval;
+            if (_stopBeats.Exists(x => dispenseBeat + 2 >= x)) return;
+            BeatAction.New(this, new()
+            {
+                new(dispenseBeat, delegate
+                {
+                    if (!_highKickToeBeats.Exists(x => dispenseBeat + 2 > x && dispenseBeat + 2 < x + 3)) DispenseExec(dispenseBeat);
+                    DispenseRecursion(dispenseBeat + 2, interval);
+                })
+            });
+        }
+
+        private void DispenseExec(double beat, bool playSound = true, bool ignorePlayer = false, bool playDown = false)
         {
             if (!ballDispensed) lastDispensedBeat = beat;
             ballDispensed = true;
@@ -494,6 +563,15 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("spaceSoccer/dispenseTumble6", beat + 1.5f),
                 new MultiSound.Sound("spaceSoccer/dispenseTumble6B",beat + 1.75f),
                 }, forcePlay:true);
+        }
+
+        private void AddStopEvents(double beat)
+        {
+            var allStopEvents = EventCaller.GetAllInGameManagerList("spaceSoccer", new string[] { "stopBall" }).FindAll(x => x.beat >= beat);
+            foreach (var e in allStopEvents)
+            {
+                _stopBeats.Add(e.beat);
+            }
         }
 
         private double colorStartBeat = -1;
@@ -550,6 +628,7 @@ namespace HeavenStudio.Games
         public override void OnPlay(double beat)
         {
             PersistColor(beat);
+            AddStopEvents(beat);
         }
     }
 }
