@@ -16,13 +16,17 @@ namespace HeavenStudio.Games.Scripts_TrickClass
         [SerializeField] public byte flyType;
         [SerializeField] float flyBeats;
         [SerializeField] float dodgeBeats;
+        [SerializeField] float gravity;
+        [SerializeField] int hitLayer;
         [SerializeField] TrickClass.TrickObjType type;
         [SerializeField] string justSound;
         [SerializeField] string missSound;
+        [SerializeField] SpriteRenderer spriteRenderer;
 
         [NonSerialized] public BezierCurve3D curve;
 
         private TrickClass game;
+        private float grav;
 
         private void Awake()
         {
@@ -41,35 +45,43 @@ namespace HeavenStudio.Games.Scripts_TrickClass
             var cond = Conductor.instance;
             float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
 
-            if (flyPos <= 1f)
+            if (curve == null)
             {
-                if (!miss)
-                {
-                    flyPos *= 0.95f;
-                }
-                Vector3 lastPos = transform.position;
-                Vector3 nextPos = curve.GetPoint(flyPos);
-
-                switch (flyType)
-                {
-                    case 1:
-                        Vector3 direction = (nextPos - lastPos).normalized;
-                        float rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                        transform.eulerAngles = new Vector3(0, 0, rotation);
-                        break;
-                    case 2:
-                        transform.rotation = Quaternion.identity;
-                        break;
-                    default:
-                        transform.eulerAngles = new Vector3(0, 0, transform.rotation.eulerAngles.z + (360f * Time.deltaTime * cond.SongPitch));
-                        break;
-                }
-
-                transform.position = nextPos;
+                grav += gravity * Time.deltaTime * cond.SongPitch;
+                transform.position += new Vector3(0, -grav * Time.deltaTime * cond.SongPitch, 0);
             }
             else
             {
-                transform.position = curve.GetPoint(miss ? 1f : 0.95f);
+                if (flyPos <= 1f)
+                {
+                    if (!miss)
+                    {
+                        flyPos *= 0.95f;
+                    }
+                    Vector3 lastPos = transform.position;
+                    Vector3 nextPos = curve.GetPoint(flyPos);
+
+                    switch (flyType)
+                    {
+                        case 1:
+                            Vector3 direction = (nextPos - lastPos).normalized;
+                            float rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                            transform.eulerAngles = new Vector3(0, 0, rotation);
+                            break;
+                        case 2:
+                            transform.rotation = Quaternion.identity;
+                            break;
+                        default:
+                            transform.eulerAngles = new Vector3(0, 0, transform.rotation.eulerAngles.z + (360f * Time.deltaTime * cond.SongPitch));
+                            break;
+                    }
+
+                    transform.position = nextPos;
+                }
+                else
+                {
+                    transform.position = curve.GetPoint(miss ? 1f : 0.95f);
+                }
             }
 
             if (flyPos > 1f)
@@ -145,11 +157,22 @@ namespace HeavenStudio.Games.Scripts_TrickClass
             else
             {
                 //just
-                game.PlayerDodge();
+                bool phone = type is TrickClass.TrickObjType.Phone;
+                game.PlayerDodge(phone, phone);
                 SoundByte.PlayOneShotGame(GetJustSound(), volume: 0.8f, pitch: UnityEngine.Random.Range(0.85f, 1.15f));
                 MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound(GetMissSound(), startBeat + flyBeats, volume: 0.4f),
                 });
+
+                if (phone)
+                {
+                    transform.position = curve.GetPoint(0.5f);
+                    curve = null;
+                    grav = 0f;
+                    startBeat = Conductor.instance.songPositionInBeatsAsDouble;
+                    flyBeats = 1f;
+                    spriteRenderer.sortingOrder = hitLayer;
+                }
             }
         }
 

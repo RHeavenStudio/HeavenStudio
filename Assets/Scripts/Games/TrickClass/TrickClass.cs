@@ -39,6 +39,14 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 2,
                 },
+                new GameAction("phone", "Phone")
+                {
+                    preFunction = delegate
+                    {
+                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Phone);
+                    },
+                    defaultLength = 2,
+                },
                 new GameAction("shock", "Lightning Bolt")
                 {
                     preFunction = delegate
@@ -79,7 +87,8 @@ namespace HeavenStudio.Games
             Ball,
             Plane,
             Chair,
-            Shock
+            Shock,
+            Phone
         }
         public struct QueuedObject
         {
@@ -298,16 +307,15 @@ namespace HeavenStudio.Games
             mobj.SetActive(true);
         }
 
-        public void PlayerDodge(bool slow = false)
+        public void PlayerDodge(bool slow = false, bool type = false)
         {
             if (playerCanDodge > Conductor.instance.songPositionInBeatsAsDouble) return;
 
             //anim
             SoundByte.PlayOneShotGame("trickClass/player_dodge");
-            playerAnim.DoScaledAnimationAsync("Dodge", slow ? 0.6f : 1f);
+            playerAnim.DoScaledAnimationAsync(type ? "DodgeAlt" : "Dodge", slow ? 0.6f : 1f);
             playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
             playerReady = false;
-            
         }
 
         public void PlayerDodgeNg(bool shock = false)
