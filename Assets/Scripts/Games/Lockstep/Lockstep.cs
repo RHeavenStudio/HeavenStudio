@@ -465,12 +465,12 @@ namespace HeavenStudio.Games
 
         public static void HaiSound(double beat)
         {
-            SoundByte.PlayOneShot("games/lockstep/hai", beat, 1, 1, false, null, 0.02314814814f);
+            SoundByte.PlayOneShot("games/lockstep/hai", beat, 1, 1, false, null, 0.018);
         }
         
         public static void HoSound(double beat)
         {
-            SoundByte.PlayOneShot("games/lockstep/ho", beat, 1, 1, false, null, 0.03086419753);
+            SoundByte.PlayOneShot("games/lockstep/ho", beat, 1, 1, false, null, 0.015);
         }
 
         public static void OnbeatSwitchSound(double beat, int hais, bool sound)
@@ -479,10 +479,10 @@ namespace HeavenStudio.Games
             {
                 MultiSound.Play(new MultiSound.Sound[]
                 {
-                new MultiSound.Sound("lockstep/nha1", beat, 1, 1, false, 0.03086419753),
-                new MultiSound.Sound("lockstep/nha2", beat + 0.5f, 1, 1, false, 0.04629629629),
-                new MultiSound.Sound("lockstep/nha1", beat + 1f, 1, 1, false, 0.03086419753),
-                new MultiSound.Sound("lockstep/nha2", beat + 1.5f, 1, 1, false, 0.04629629629)
+                new MultiSound.Sound("lockstep/nha1", beat, 1, 1, false, 0),
+                new MultiSound.Sound("lockstep/nha2", beat + 0.5f, 1, 1, false, 0.01),
+                new MultiSound.Sound("lockstep/nha1", beat + 1f, 1, 1, false, 0),
+                new MultiSound.Sound("lockstep/nha2", beat + 1.5f, 1, 1, false, 0.01)
                 }, forcePlay: true);
             }
 
@@ -492,7 +492,7 @@ namespace HeavenStudio.Games
 
                 for (int i = 0; i < hais; i++)
                 {
-                    haisList.Add(new MultiSound.Sound("lockstep/hai", beat + 2 + i, 1, 1, false, 0.02314814814));
+                    haisList.Add(new MultiSound.Sound("lockstep/hai", beat + 2 + i, 1, 1, false, 0.018));
                 }
 
                 double nextOffBeat = double.MaxValue;
@@ -544,21 +544,21 @@ namespace HeavenStudio.Games
             {
                 MultiSound.Play(new MultiSound.Sound[]
                 {
-                    new MultiSound.Sound("lockstep/hai", beat, 1, 1, false, 0.02314814814),
-                    new MultiSound.Sound("lockstep/hai", beat + 1f, 1, 1, false, 0.02314814814),
-                    new MultiSound.Sound("lockstep/hai", beat + 2f, 1, 1, false, 0.02314814814),
-                    new MultiSound.Sound("lockstep/hahai1", beat + 3f, 1, 1, false, 0.03086419753),
-                    new MultiSound.Sound("lockstep/hahai2", beat + 3.5f, 1, 1, false, 0.03086419753),
+                    new MultiSound.Sound("lockstep/hai", beat, 1, 1, false, 0.018),
+                    new MultiSound.Sound("lockstep/hai", beat + 1f, 1, 1, false, 0.018),
+                    new MultiSound.Sound("lockstep/hai", beat + 2f, 1, 1, false, 0.018),
+                    new MultiSound.Sound("lockstep/hahai1", beat + 3f, 1, 1, false, 0),
+                    new MultiSound.Sound("lockstep/hahai2", beat + 3.5f, 1, 1, false, 0.014),
                 }, forcePlay: true);
             }
             if (hoSound)
             {
                 List<MultiSound.Sound> hos = new List<MultiSound.Sound>
                 {
-                    new MultiSound.Sound("lockstep/ho", beat + 4.5f, 1, 1, false, 0.03086419753),
-                    new MultiSound.Sound("lockstep/ho", beat + 5.5f, 1, 0.6835514f, false, 0.03086419753),
-                    new MultiSound.Sound("lockstep/ho", beat + 6.5f, 1, 0.3395127f, false, 0.03086419753),
-                    new MultiSound.Sound("lockstep/ho", beat + 7.5f, 1, 0.1200322f, false, 0.03086419753),
+                    new MultiSound.Sound("lockstep/ho", beat + 4.5f, 1, 1, false, 0.015),
+                    new MultiSound.Sound("lockstep/ho", beat + 5.5f, 1, 0.6835514f, false, 0.015),
+                    new MultiSound.Sound("lockstep/ho", beat + 6.5f, 1, 0.3395127f, false, 0.015),
+                    new MultiSound.Sound("lockstep/ho", beat + 7.5f, 1, 0.1200322f, false, 0.015),
                 };
 
                 double nextOnBeat = double.MaxValue;
@@ -645,7 +645,7 @@ namespace HeavenStudio.Games
                 MultiSound.Sound[] sounds = new MultiSound.Sound[amount];
                 for (int i = 0; i < amount; i++)
                 {
-                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.03086419753 : 0.02314814814);
+                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.015 : 0.018);
                 }
                 MultiSound.Play(sounds, true, true);
             }
@@ -688,7 +688,7 @@ namespace HeavenStudio.Games
                 MultiSound.Sound[] sounds = new MultiSound.Sound[amount];
                 for (int i = 0; i < amount; i++)
                 {
-                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.03086419753 : 0.02314814814);
+                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.015 : 0.018);
                 }
                 MultiSound.Play(sounds, true, true);
             }
