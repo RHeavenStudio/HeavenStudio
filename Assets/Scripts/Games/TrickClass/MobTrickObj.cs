@@ -37,6 +37,12 @@ namespace HeavenStudio.Games.Scripts_TrickClass
             float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
             transform.position = curve.GetPoint(flyPos);
             game.ScheduleInput(startBeat, dodgeBeats, TrickClass.InputAction_FlickPress, DodgeJustOrNg, DodgeMiss, DodgeThrough, CanDodge);
+
+            if (type is not TrickClass.TrickObjType.Shock or TrickClass.TrickObjType.Plane)
+            {
+                transform.eulerAngles = new Vector3(0, 0, UnityEngine.Random.Range(0f, 360f));
+            }
+            Update();
         }
 
         // Update is called once per frame

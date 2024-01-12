@@ -12,7 +12,8 @@ namespace HeavenStudio.Games.Loaders
     using static Minigames;
     public static class MobTrickLoader
     {
-        public static Minigame AddGame(EventCaller eventCaller) {
+        public static Minigame AddGame(EventCaller eventCaller)
+        {
             return new Minigame("trickClass", "Trick on the Class", "ecede4", false, false, new List<GameAction>()
             {
                 new GameAction("toss", "Paper Ball")
@@ -20,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate
                     {
                         TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Ball);
-                    }, 
+                    },
                     defaultLength = 2,
                 },
                 new GameAction("plane", "Plane")
@@ -43,9 +44,13 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate
                     {
-                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Phone);
+                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Phone, eventCaller.currentEntity["nx"]);
                     },
                     defaultLength = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("nx", false, "Switch", "Replace the phone with a Switch"),
+                    }
                 },
                 new GameAction("shock", "Lightning Bolt")
                 {
@@ -55,10 +60,18 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 2,
                 },
+                new GameAction("blast", "Optic Blast")
+                {
+                    preFunction = delegate
+                    {
+                        TrickClass.PreBlast(eventCaller.currentEntity.beat);
+                    },
+                    defaultLength = 3,
+                },
                 new GameAction("bop", "Bop")
                 {
                     function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
-                    resizable = true, 
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("bop", true, "Bop", "Should the girl and boy bop?"),
@@ -66,9 +79,9 @@ namespace HeavenStudio.Games.Loaders
                     }
                 },
             },
-            new List<string>() {"mob", "normal"},
+            new List<string>() { "mob", "normal" },
             "mobtrick", "en",
-            new List<string>() {}
+            new List<string>() { }
             );
         }
     }
@@ -83,7 +96,8 @@ namespace HeavenStudio.Games
     using Scripts_TrickClass;
     public class TrickClass : Minigame
     {
-        public enum TrickObjType {
+        public enum TrickObjType
+        {
             Ball,
             Plane,
             Chair,
@@ -94,6 +108,7 @@ namespace HeavenStudio.Games
         {
             public double beat;
             public int type;
+            public bool variant;
         }
         public static List<QueuedObject> queuedInputs = new List<QueuedObject>();
 
@@ -104,7 +119,9 @@ namespace HeavenStudio.Games
 
         [Header("References")]
         public GameObject[] objPrefab;
+        public GameObject[] objPrefabVariant;
         public string[] objWarnAnim;
+        public string[] objWarnAnimVariant;
         public string[] objThrowAnim;
         public Transform objHolder;
 
@@ -168,16 +185,16 @@ namespace HeavenStudio.Games
                         {
                             new BeatAction.Action(input.beat - 1f, delegate
                             {
-                                warnAnim.Play(objWarnAnim[input.type], 0, 0);
+                                warnAnim.Play(input.variant ? objWarnAnimVariant[input.type] : objWarnAnim[input.type], 0, 0);
                             }),
-                            new BeatAction.Action(input.beat, delegate 
+                            new BeatAction.Action(input.beat, delegate
                             {
                                 warnAnim.Play("NoPose", 0, 0);
-                                TossObject(input.beat, input.type); 
+                                TossObject(input.beat, input.type, input.variant);
                             })
                         });
                     }
-                    queuedInputs.Clear();  
+                    queuedInputs.Clear();
                 }
             }
 
@@ -226,24 +243,24 @@ namespace HeavenStudio.Games
         {
             instance.showBubble = !instance.showBubble;
         }
-        
-        public static void PreTossObject(double beat, int type)
+
+        public static void PreTossObject(double beat, int type, bool variant = false)
         {
             if (GameManager.instance.currentGame == "trickClass")
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat - 1, delegate 
+                    new BeatAction.Action(beat - 1, delegate
                 {
                     if (instance.showBubble == true)
                     {
-                        instance.warnAnim.Play(instance.objWarnAnim[type], 0, 0);
+                        instance.warnAnim.Play(variant ? instance.objWarnAnimVariant[type] : instance.objWarnAnim[type], 0, 0);
                     }
                 }),
-                    new BeatAction.Action(beat, delegate 
+                    new BeatAction.Action(beat, delegate
                     {
                         instance.warnAnim.Play("NoPose", 0, 0);
-                        instance.TossObject(beat, type); 
+                        instance.TossObject(beat, type, variant);
                     })
                 });
             }
@@ -253,18 +270,22 @@ namespace HeavenStudio.Games
                 {
                     beat = beat,
                     type = type,
+                    variant = variant
                 });
             }
             switch (type)
             {
-                case (int) TrickObjType.Plane:
+                case (int)TrickObjType.Plane:
                     PlaySoundSequence("trickClass", "planeThrow", beat);
                     break;
-                case (int) TrickObjType.Chair:
+                case (int)TrickObjType.Chair:
                     PlaySoundSequence("trickClass", "chairThrow", beat);
                     break;
-                case (int) TrickObjType.Shock:
+                case (int)TrickObjType.Shock:
                     PlaySoundSequence("trickClass", "shockThrow", beat);
+                    break;
+                case (int)TrickObjType.Phone:
+                    PlaySoundSequence("trickClass", "phoneThrow", beat);
                     break;
                 default:
                     PlaySoundSequence("trickClass", "ballThrow", beat);
@@ -272,31 +293,31 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void TossObject(double beat, int type)
+        public void TossObject(double beat, int type, bool variant = false)
         {
-            SpawnObject(beat, type);
+            SpawnObject(beat, type, variant);
 
             girlAnim.DoScaledAnimationAsync(objThrowAnim[type]);
             girlBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
         }
 
-        public void SpawnObject(double beat, int type)
+        public void SpawnObject(double beat, int type, bool variant = false)
         {
             GameObject objectToSpawn;
             BezierCurve3D curve;
             switch (type)
             {
-                case (int) TrickObjType.Plane:
+                case (int)TrickObjType.Plane:
                     curve = planeTossCurve;
                     break;
-                case (int) TrickObjType.Shock:
+                case (int)TrickObjType.Shock:
                     curve = shockTossCurve;
                     break;
                 default:
                     curve = ballTossCurve;
                     break;
             }
-            objectToSpawn = objPrefab[type];
+            objectToSpawn = variant ? objPrefabVariant[type] : objPrefab[type];
             var mobj = Instantiate(objectToSpawn, objHolder);
             var thinker = mobj.GetComponent<MobTrickObj>();
 
@@ -305,6 +326,11 @@ namespace HeavenStudio.Games
             // thinker.type = type;
 
             mobj.SetActive(true);
+        }
+
+        public static void PreBlast(double beat)
+        {
+            PlaySoundSequence("trickClass", "girlCharge", beat);
         }
 
         public void PlayerDodge(bool slow = false, bool type = false)
