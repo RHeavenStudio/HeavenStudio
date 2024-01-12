@@ -310,9 +310,9 @@ namespace HeavenStudio.Games
             
         }
 
-        public void PlayerDodgeNg()
+        public void PlayerDodgeNg(bool shock = false)
         {
-            playerAnim.DoScaledAnimationAsync("DodgeNg");
+            playerAnim.DoScaledAnimationAsync(shock ? "DodgeNgShock" : "DodgeNg");
             playerReady = false;
             playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
             playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.15f;

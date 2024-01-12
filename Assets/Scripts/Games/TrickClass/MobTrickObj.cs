@@ -111,10 +111,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
                     transform.position = nextPos;
                     break;
                 case TrickClass.TrickObjType.Shock:
-                    if (!ng)
-                    {
-                        Destroy(gameObject);
-                    }
+                    Destroy(gameObject);
                     break;
                 default:
                     startBeat += dodgeBeats;
@@ -134,10 +131,13 @@ namespace HeavenStudio.Games.Scripts_TrickClass
             if (state <= -1f || state >= 1f)
             {
                 //NG
-                game.PlayerDodgeNg();
-                MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound(GetMissSound(), startBeat + flyBeats, volume: 0.4f),
-                });
+                game.PlayerDodgeNg(type is TrickClass.TrickObjType.Shock);
+                if (type is not TrickClass.TrickObjType.Shock)
+                {
+                    MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound(GetMissSound(), startBeat + flyBeats, volume: 0.4f),
+                    });
+                }
                 SoundByte.PlayOneShotGame(GetMissSound(), volume: 0.6f);
                 SoundByte.PlayOneShot("miss");
                 DoObjMiss(true);
@@ -157,7 +157,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
         {
             SoundByte.PlayOneShotGame(GetMissSound());
             DoObjMiss(false);
-            game.PlayerThrough(type == TrickClass.TrickObjType.Shock);
+            game.PlayerThrough(type is TrickClass.TrickObjType.Shock);
         }
 
         public void DodgeThrough(PlayerActionEvent caller) { }
