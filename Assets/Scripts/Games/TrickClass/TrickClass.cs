@@ -31,6 +31,22 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 3,
                 },
+                new GameAction("chair", "Chair")
+                {
+                    preFunction = delegate
+                    {
+                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Chair);
+                    },
+                    defaultLength = 2,
+                },
+                new GameAction("shock", "Lightning Bolt")
+                {
+                    preFunction = delegate
+                    {
+                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Shock);
+                    },
+                    defaultLength = 2,
+                },
                 new GameAction("bop", "Bop")
                 {
                     function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
@@ -62,6 +78,8 @@ namespace HeavenStudio.Games
         public enum TrickObjType {
             Ball,
             Plane,
+            Chair,
+            Shock
         }
         public struct QueuedObject
         {
@@ -76,9 +94,9 @@ namespace HeavenStudio.Games
         public Animator warnAnim;
 
         [Header("References")]
-        public GameObject ballPrefab;
-        public GameObject planePrefab;
-        public GameObject shockPrefab;
+        public GameObject[] objPrefab;
+        public string[] objWarnAnim;
+        public string[] objThrowAnim;
         public Transform objHolder;
 
         [Header("Curves")]
@@ -141,15 +159,7 @@ namespace HeavenStudio.Games
                         {
                             new BeatAction.Action(input.beat - 1f, delegate
                             {
-                                switch (input.type)
-                                {
-                                    case (int)TrickClass.TrickObjType.Ball:
-                                        warnAnim.Play("WarnBall", 0, 0);
-                                        break;
-                                    case (int)TrickClass.TrickObjType.Plane:
-                                        warnAnim.Play("WarnPlane", 0, 0);
-                                        break;
-                                }
+                                warnAnim.Play(objWarnAnim[input.type], 0, 0);
                             }),
                             new BeatAction.Action(input.beat, delegate 
                             {
@@ -218,15 +228,7 @@ namespace HeavenStudio.Games
                 {
                     if (instance.showBubble == true)
                     {
-                        switch (type)
-                        {
-                            case (int)TrickClass.TrickObjType.Ball:
-                                instance.warnAnim.Play("WarnBall", 0, 0);
-                                break;
-                            case (int)TrickClass.TrickObjType.Plane:
-                                instance.warnAnim.Play("WarnPlane", 0, 0);
-                                break;
-                        }
+                        instance.warnAnim.Play(instance.objWarnAnim[type], 0, 0);
                     }
                 }),
                     new BeatAction.Action(beat, delegate 
@@ -244,22 +246,28 @@ namespace HeavenStudio.Games
                     type = type,
                 });
             }
+            switch (type)
+            {
+                case (int) TrickObjType.Plane:
+                    PlaySoundSequence("trickClass", "planeThrow", beat);
+                    break;
+                case (int) TrickObjType.Chair:
+                    PlaySoundSequence("trickClass", "chairThrow", beat);
+                    break;
+                case (int) TrickObjType.Shock:
+                    PlaySoundSequence("trickClass", "shockThrow", beat);
+                    break;
+                default:
+                    PlaySoundSequence("trickClass", "ballThrow", beat);
+                    break;
+            }
         }
 
         public void TossObject(double beat, int type)
         {
-            switch (type)
-            {
-                case (int) TrickObjType.Plane:
-                    SoundByte.PlayOneShotGame("trickClass/girl_toss_plane");
-                    break;
-                default:
-                    SoundByte.PlayOneShotGame("trickClass/girl_toss_ball");
-                    break;
-            }
             SpawnObject(beat, type);
 
-            girlAnim.DoScaledAnimationAsync("Throw");
+            girlAnim.DoScaledAnimationAsync(objThrowAnim[type]);
             girlBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
         }
 
@@ -267,26 +275,25 @@ namespace HeavenStudio.Games
         {
             GameObject objectToSpawn;
             BezierCurve3D curve;
-            bool isPlane = false;
             switch (type)
             {
                 case (int) TrickObjType.Plane:
-                    objectToSpawn = planePrefab;
                     curve = planeTossCurve;
-                    isPlane = true;
+                    break;
+                case (int) TrickObjType.Shock:
+                    curve = shockTossCurve;
                     break;
                 default:
-                    objectToSpawn = ballPrefab;
                     curve = ballTossCurve;
                     break;
             }
-            var mobj = GameObject.Instantiate(objectToSpawn, objHolder);
+            objectToSpawn = objPrefab[type];
+            var mobj = Instantiate(objectToSpawn, objHolder);
             var thinker = mobj.GetComponent<MobTrickObj>();
 
             thinker.startBeat = beat;
-            thinker.flyType = isPlane;
             thinker.curve = curve;
-            thinker.type = type;
+            // thinker.type = type;
 
             mobj.SetActive(true);
         }
@@ -311,9 +318,9 @@ namespace HeavenStudio.Games
             playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.15f;
         }
 
-        public void PlayerThrough()
+        public void PlayerThrough(bool shock = false)
         {
-            playerAnim.DoScaledAnimationAsync("Through");
+            playerAnim.DoScaledAnimationAsync(shock ? "ThroughShock" : "Through");
             playerReady = false;
             playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
             playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.15f;

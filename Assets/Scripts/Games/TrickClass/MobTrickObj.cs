@@ -10,13 +10,15 @@ namespace HeavenStudio.Games.Scripts_TrickClass
 {
     public class MobTrickObj : MonoBehaviour
     {
-        public bool flyType;
-        public double startBeat;
+        [NonSerialized] public double startBeat;
         bool miss = false;
 
-        float flyBeats;
-        float dodgeBeats;
-        public int type;
+        [SerializeField] public byte flyType;
+        [SerializeField] float flyBeats;
+        [SerializeField] float dodgeBeats;
+        [SerializeField] TrickClass.TrickObjType type;
+        [SerializeField] string justSound;
+        [SerializeField] string missSound;
 
         [NonSerialized] public BezierCurve3D curve;
 
@@ -25,8 +27,6 @@ namespace HeavenStudio.Games.Scripts_TrickClass
         private void Awake()
         {
             game = TrickClass.instance;
-            flyBeats = flyType ? 4f : 2f;
-            dodgeBeats = flyType ? 2f : 1f;
 
             var cond = Conductor.instance;
 
@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
             var cond = Conductor.instance;
             float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
 
-            if (flyPos <= 1f) 
+            if (flyPos <= 1f)
             {
                 if (!miss)
                 {
@@ -50,15 +50,19 @@ namespace HeavenStudio.Games.Scripts_TrickClass
                 Vector3 lastPos = transform.position;
                 Vector3 nextPos = curve.GetPoint(flyPos);
 
-                if (flyType)
+                switch (flyType)
                 {
-                    Vector3 direction = (nextPos - lastPos).normalized;
-                    float rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                    this.transform.eulerAngles = new Vector3(0, 0, rotation);
-                }
-                else
-                {
-                    transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * Time.deltaTime));
+                    case 1:
+                        Vector3 direction = (nextPos - lastPos).normalized;
+                        float rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                        transform.eulerAngles = new Vector3(0, 0, rotation);
+                        break;
+                    case 2:
+                        transform.rotation = Quaternion.identity;
+                        break;
+                    default:
+                        transform.eulerAngles = new Vector3(0, 0, transform.rotation.eulerAngles.z + (360f * Time.deltaTime * cond.SongPitch));
+                        break;
                 }
 
                 transform.position = nextPos;
@@ -72,27 +76,29 @@ namespace HeavenStudio.Games.Scripts_TrickClass
             {
                 if (Conductor.instance.GetPositionFromBeat(startBeat, flyBeats + 1f) >= 1f)
                 {
-                    GameObject.Destroy(gameObject);
+                    Destroy(gameObject);
                     return;
                 }
             }
         }
 
-        public string GetDodgeSound()
+        public string GetMissSound()
         {
-            switch (type)
-            {
-                default:
-                    return "trickClass/ball_impact";
-            }
+            return $"trickClass/{missSound}";
         }
 
-        public void DoObjMiss()
+        public string GetJustSound()
+        {
+            return $"trickClass/{justSound}";
+        }
+
+        public void DoObjMiss(bool ng = false)
         {
             miss = true;
             switch (type)
             {
-                case (int) TrickClass.TrickObjType.Plane:
+                case TrickClass.TrickObjType.Plane:
+                    startBeat += dodgeBeats;
                     curve = game.planeMissCurve;
                     flyBeats = 4f;
 
@@ -104,12 +110,18 @@ namespace HeavenStudio.Games.Scripts_TrickClass
 
                     transform.position = nextPos;
                     break;
+                case TrickClass.TrickObjType.Shock:
+                    if (!ng)
+                    {
+                        Destroy(gameObject);
+                    }
+                    break;
                 default:
+                    startBeat += dodgeBeats;
                     curve = game.ballMissCurve;
                     flyBeats = 1.25f;
                     break;
             }
-            startBeat += dodgeBeats;
         }
 
         public bool CanDodge()
@@ -123,31 +135,31 @@ namespace HeavenStudio.Games.Scripts_TrickClass
             {
                 //NG
                 game.PlayerDodgeNg();
-                MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound(GetDodgeSound(), startBeat + flyBeats, volume: 0.4f), 
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound(GetMissSound(), startBeat + flyBeats, volume: 0.4f),
                 });
-                SoundByte.PlayOneShotGame(GetDodgeSound(), volume: 0.6f);
+                SoundByte.PlayOneShotGame(GetMissSound(), volume: 0.6f);
                 SoundByte.PlayOneShot("miss");
-                DoObjMiss();
+                DoObjMiss(true);
             }
             else
             {
                 //just
                 game.PlayerDodge();
-                SoundByte.PlayOneShotGame("trickClass/player_dodge_success", volume: 0.8f, pitch: UnityEngine.Random.Range(0.85f, 1.15f));
-                MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound(GetDodgeSound(), startBeat + flyBeats, volume: 0.4f), 
+                SoundByte.PlayOneShotGame(GetJustSound(), volume: 0.8f, pitch: UnityEngine.Random.Range(0.85f, 1.15f));
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound(GetMissSound(), startBeat + flyBeats, volume: 0.4f),
                 });
             }
         }
 
         public void DodgeMiss(PlayerActionEvent caller)
         {
-            SoundByte.PlayOneShotGame(GetDodgeSound());
-            DoObjMiss();
-            game.PlayerThrough();
+            SoundByte.PlayOneShotGame(GetMissSound());
+            DoObjMiss(false);
+            game.PlayerThrough(type == TrickClass.TrickObjType.Shock);
         }
 
-        public void DodgeThrough(PlayerActionEvent caller) {}
+        public void DodgeThrough(PlayerActionEvent caller) { }
     }
 }
