@@ -20,7 +20,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("forceOnbeat", false, "Mr. Downbeat", "Force Mr. Upbeat to step on the beat of the block instead of on the offbeat (only use this if you know what you're doing)"),
+                        new Param("forceOnbeat", false, "Mr. Downbeat", "Toggle if Mr. Upbeat should step on the beat of the block instead of on the offbeat. Only use this if you know what you're doing."),
                     },
                     preFunctionLength = 0.5f,
                     defaultLength = 4f,
@@ -35,13 +35,13 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Applause", "Plays an applause sound effect."),
-                        new Param("stopBlipping", true, "Stop Blipping", "When the stepping stops, should the blipping stop too?"),
-                        new Param("playDing", true, "Play Ding", "Should this block play a ding?"),
+                        new Param("toggle", false, "Applause", "Toggle if applause should be played."),
+                        new Param("stopBlipping", true, "Stop Blipping", "Toggle if the blipping should stop too."),
+                        new Param("playDing", true, "Play Ding", "Toggle if this block should play a ding?"),
                     },
                     preFunctionLength = 0.5f,
                 },
-                new GameAction("changeBG", "Change Background Color")
+                new GameAction("changeBG", "Background Appearance")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
@@ -50,9 +50,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("start", new Color(0.878f, 0.878f, 0.878f), "Start Color", "The start color for the fade"),
-                        new Param("end", new Color(0.878f, 0.878f, 0.878f), "End Color", "The end color for the fade or the color that will be switched to if -instant- is ticked on"),
-                        new Param("toggle", false, "Instant", "Should the background instantly change color?")
+                        new Param("start", new Color(0.878f, 0.878f, 0.878f), "Start Color", "Set the color at the start of the event."),
+                        new Param("end", new Color(0.878f, 0.878f, 0.878f), "End Color", "Set the color at the start of the event."),
+                        new Param("toggle", false, "Instant", "Toggle if the background should jump to it's end state.")
                     }
                 },
                 new GameAction("upbeatColors", "Upbeat Colors")
@@ -64,9 +64,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("blipColor", new Color(0, 1f, 0), "Blip Color", "Change blip color"),
-                        new Param("setShadow", false, "Set Shadow Color", "Should Mr. Upbeat's shadow be custom?"),
-                        new Param("shadowColor", new Color(1f, 1f, 1f, 0), "Shadow Color", "If \"Set Shadow Color\" is checked, this will set the shadow's color"),
+                        new Param("blipColor", new Color(0, 1f, 0), "Blip Color", "Set the blip color."),
+                        new Param("setShadow", false, "Custom Shadow Color", "Toggle if Mr. Upbeat's shadow should be custom."),
+                        new Param("shadowColor", new Color(1f, 1f, 1f, 0), "Shadow Color", "Set the shadow color."),
                     }
                 },
                 new GameAction("blipEvents", "Blip Events")
@@ -78,10 +78,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("letter", "", "Letter To Appear", "Which letter to appear on the blip"),
-                        new Param("shouldGrow", true, "Grow Antenna", "Should Mr. Upbeat's antenna grow every blip?"),
-                        new Param("resetBlip", false, "Reset Antenna", "Should Mr. Upbeat's antenna reset?"),
-                        new Param("shouldBlip", true, "Should Blip", "Should Mr. Upbeat blip every offbeat?"),
+                        new Param("letter", "", "Letter To Appear", "Set the letter to appear on the blip."),
+                        new Param("shouldGrow", true, "Grow Antenna", "Toggle if Mr. Upbeat's antennashould grow on every blip"),
+                        new Param("resetBlip", false, "Reset Antenna", "Toggle if Mr. Upbeat's antenna should reset"),
+                        new Param("shouldBlip", true, "Should Blip", "Toggle if Mr. Upbeat's antenna should blip every offbeat."),
                     }
                 },
                 new GameAction("fourBeatCountInOffbeat", "4 Beat Count-In")
@@ -92,7 +92,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("a", true, "A", "A"),
+                        new Param("a", true, "A", "Toggle if numbers should be preceded with \"A-\"."),
                     },
                     defaultLength = 4f,
                     resizable = true,
@@ -102,7 +102,7 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { MrUpbeat.Count(eventCaller.currentEntity["number"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("number", MrUpbeat.Counts.One, "Number", "The sound to play"),
+                        new Param("number", MrUpbeat.Counts.One, "Type", "Set the number to say."),
                     },
                 },
                 new GameAction("forceStepping", "Force Stepping")
