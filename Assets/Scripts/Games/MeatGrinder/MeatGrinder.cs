@@ -33,8 +33,8 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Boss Bops?", "Does Boss bop?"),
-                        new Param("bossBop", false, "Boss Bops? (Auto)", "Does Boss Auto bop?"),
+                        new Param("bop", true, "Bop", "Toggle if Boss should bop for the duration of this event."),
+                        new Param("bossBop", false, "Bop (Auto)", "Toggle if Boss should automatically bop until another Bop event is reached."),
                     },
                     resizable = true,
                     priority = 1,
@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                     priority = 2,
                     parameters = new List<Param>()
                     {
-                        new Param("bacon", false, "Bacon Ball", "Throw a bacon ball instead of the typical meat"),
+                        new Param("bacon", false, "Bacon Ball", "Toggle if a bacon ball should be thrown instead of the typical meat"),
                     }.Concat(reactionParams).ToList(), // doing this because i want these params to always be the same
                 },
                 new GameAction("StartInterval", "Start Interval")
@@ -68,7 +68,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     },
                     preFunctionLength = 1
                 },
@@ -92,8 +92,8 @@ namespace HeavenStudio.Games.Loaders
                         MeatGrinder.instance.DoExpressions(e["tackExpression"], e["bossExpression"]);
                     },
                     parameters = new List<Param>() {
-                        new Param("tackExpression", MeatGrinder.TackExpressions.Content, "Tack Expression", "The expression Tack will display"),
-                        new Param("bossExpression", MeatGrinder.BossExpressions.None, "Boss Expression", "The expression Boss will display"),
+                        new Param("tackExpression", MeatGrinder.TackExpressions.Content, "Tack", "Set the expression Tack will display."),
+                        new Param("bossExpression", MeatGrinder.BossExpressions.None, "Boss", "Set the expression Boss will display."),
                     }
                 },
                 new GameAction("cartGuy", "Cart Guy")
@@ -105,9 +105,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     defaultLength = 16,
                     parameters = new List<Param>() {
-                        new Param("spider", false, "On Phone", "Put a spider in the box?"),
-                        new Param("direction", MeatGrinder.CartGuyDirection.Right, "Direction", "The direction the cart will be carted to."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "What ease will the cart use?"),
+                        new Param("spider", false, "On Phone", "Toggle if Cart Guy should be on his phone."),
+                        new Param("direction", MeatGrinder.CartGuyDirection.Right, "Direction", "Set the direction the cart will be moved to."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                     }
                 },
                 new GameAction("gears", "Gears")
@@ -119,8 +119,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     defaultLength = 1,
                     parameters = new List<Param>() {
-                        new Param("speed", new EntityTypes.Float(0, 10, 1), "Speed", "How fast will the gears go?"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "What ease will the gears speed up/slow down with?"),
+                        new Param("speed", new EntityTypes.Float(0, 10, 1), "Speed", "Set the speed of the gears."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action"),
                     }
                 },
             }

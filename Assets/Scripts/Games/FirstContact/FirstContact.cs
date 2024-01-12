@@ -24,7 +24,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "Set the line to use when messing up the translation."),
-                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically pass the turn at the end of the start interval.")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     },
                     defaultLength = 3f,
                     resizable = true,
