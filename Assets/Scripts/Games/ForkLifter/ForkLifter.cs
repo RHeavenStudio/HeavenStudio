@@ -47,7 +47,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { SoundByte.PlayOneShot("games/forkLifter/sigh"); }
                 },
-                new GameAction("color", "Background Color")
+                new GameAction("color", "Background Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
                     parameters = new List<Param>()
@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true
                 },
-                new GameAction("colorGrad", "Gradient Color")
+                new GameAction("colorGrad", "Gradient Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColorGrad(e.beat, e.length, e["start"], e["end"], e["ease"]); },
                     parameters = new List<Param>()

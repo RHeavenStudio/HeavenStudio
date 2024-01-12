@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Audience Reaction", "Toggle if there should be cheering or booing after the cue."),
                     }
                 },
-                new GameAction("fade background color", "Background Color")
+                new GameAction("fade background color", "Background Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity;
                         CoinToss.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["colorStartF"], e["colorEndF"], e["ease"]); },

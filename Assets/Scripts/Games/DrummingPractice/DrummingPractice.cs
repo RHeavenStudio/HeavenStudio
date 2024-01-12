@@ -59,7 +59,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
-                new GameAction("set background color", "Background Color")
+                new GameAction("set background color", "Background Appearance")
                 {
                     function = delegate {var e = eventCaller.currentEntity;
                     DrummingPractice.instance.BackgroundColor(e.beat, e.length, e["colorAStart"], e["colorA"], e["colorBStart"], e["colorB"], e["colorC"], e["ease"]); }, 
