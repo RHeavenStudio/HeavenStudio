@@ -22,8 +22,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("whoBops", SamuraiSliceNtr.WhoBops.Both, "Who Bops?", "Who will bop?"),
-                        new Param("whoBopsAuto", SamuraiSliceNtr.WhoBops.None, "Who Bops? (Auto)", "Who will automatically begin bopping?")
+                        new Param("whoBops", SamuraiSliceNtr.WhoBops.Both, "Bop", "Toggle if the child should bop for the duration of this event."),
+                        new Param("whoBopsAuto", SamuraiSliceNtr.WhoBops.None, "Bop (Auto)", "Toggle if the child should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("melon", "Melon")
@@ -35,8 +35,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 5,
                     parameters = new List<Param>()
                     {
-                        new Param("2b2t", false, "Melon2B2T", "Should the melon be reskinned as the 2B2T melon?"),
-                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the melon spills out when sliced"),
+                        new Param("2b2t", false, "Voxel Melon", "Toggle if the melon should be reskinned as a melon from a certain game."),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "Set the amount of coins the melon spills out when sliced."),
                     }
                 },
                 new GameAction("fish", "Fish")
@@ -48,7 +48,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 7,
                     parameters = new List<Param>()
                     {
-                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the fish spills out when sliced"),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "Set the amount of coins the fish spills out when sliced."),
                     }
                 },
                 new GameAction("demon", "Demon")
@@ -60,7 +60,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 7,
                     parameters = new List<Param>()
                     {
-                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the demon spills out when sliced"),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "Set the amount of coins the demon spills out when sliced."),
                     }
                 },
                 //backwards compatibility
