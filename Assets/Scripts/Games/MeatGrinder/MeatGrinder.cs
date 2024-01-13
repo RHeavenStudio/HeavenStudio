@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                     priority = 2,
                     parameters = new List<Param>()
                     {
-                        new Param("bacon", false, "Bacon Ball", "Toggle if a bacon ball should be thrown instead of the typical meat"),
+                        new Param("bacon", false, "Bacon Ball", "Toggle if a bacon ball should be thrown instead of the typical dark meat"),
                     }.Concat(reactionParams).ToList(), // doing this because i want these params to always be the same
                 },
                 new GameAction("StartInterval", "Start Interval")
