@@ -21,8 +21,8 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Monk Bops?", "Does the monk bop?"),
-                        new Param("autoBop", false, "Monk Bops? (Auto)", "Does the monk auto bop?"),
+                        new Param("bop", true, "Bop", "Toggle if Munchy Monk should bop for the duration of this event."),
+                        new Param("autoBop", false, "Bop (Auto)", "Toggle if Munchy Monk should automatically bop until another Bop event is reached."),
                     },
                     resizable = true
                 },
@@ -36,8 +36,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("goToSide", MunchyMonk.WhichSide.Right, "Go to Which Side?", "Which side the Monk will move to"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?"),
+                        new Param("goToSide", MunchyMonk.WhichSide.Right, "Side", "Choose the side that Munchy Monk will move to."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                     },
                 },
                 new GameAction("One", "One")
@@ -53,7 +53,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("oneColor", new Color(1, 1, 1, 1), "Color", "Change the color of the dumpling")
+                        new Param("oneColor", new Color(1, 1, 1, 1), "Color", "Set the color of the dumpling.")
                     },
                 },
                 new GameAction("TwoTwo", "Two Two")
@@ -61,8 +61,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("twoColor1", new Color(1, 0.51f, 0.45f, 1), "1st Dumpling Color", "Change the color of the first dumpling"),
-                        new Param("twoColor2", new Color(1, 0.51f, 0.45f, 1), "2nd Dumpling Color", "Change the color of the second dumpling"),
+                        new Param("twoColor1", new Color(1, 0.51f, 0.45f, 1), "1st Dumpling Color", "Set the color of the first dumpling."),
+                        new Param("twoColor2", new Color(1, 0.51f, 0.45f, 1), "2nd Dumpling Color", "Set the color of the second dumpling."),
                     },
                     preFunctionLength = 0.5f,
                     preFunction = delegate {
@@ -83,9 +83,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("threeColor1", new Color(0.34f, 0.77f, 0.36f, 1), "1st Dumpling Color", "Change the color of the first dumpling"),
-                        new Param("threeColor2", new Color(0.34f, 0.77f, 0.36f, 1), "2nd Dumpling Color", "Change the color of the second dumpling"),
-                        new Param("threeColor3", new Color(0.34f, 0.77f, 0.36f, 1), "3rd Dumpling Color", "Change the color of the third dumpling"),
+                        new Param("threeColor1", new Color(0.34f, 0.77f, 0.36f, 1), "1st Dumpling Color", "Set the color of the first dumpling."),
+                        new Param("threeColor2", new Color(0.34f, 0.77f, 0.36f, 1), "2nd Dumpling Color", "Set the color of the second dumpling."),
+                        new Param("threeColor3", new Color(0.34f, 0.77f, 0.36f, 1), "3rd Dumpling Color", "Set the color of the third dumpling."),
                     },
                 },
                 new GameAction("Modifiers", "Modifiers")
@@ -97,11 +97,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("inputsTil", new EntityTypes.Integer(0, 50, 10), "How Many 'til Growth?", "How many dumplings are needed to grow the stache?"),
-                        new Param("resetLevel", false, "Remove Hair", "Instantly remove all hair"),
-                        new Param("setLevel", new EntityTypes.Integer(0, 4, 0), "Set Growth Level", "Instantly grow hair"),
-                        new Param("disableBaby", false, "Disable Baby?", "Make baby active or not"),
-                        new Param("shouldBlush", true, "Should Monk Blush?", "Makes the Monk blush or not after eating"),
+                        new Param("inputsTil", new EntityTypes.Integer(0, 50, 10), "Moustache Growth Requirement", "Set how many dumplings Munchy Monk needs to eat for his moustache to grow."),
+                        new Param("resetLevel", false, "Reset Hair Growth", "Toggle if the current amount of moustache growth should be reset."),
+                        new Param("setLevel", new EntityTypes.Integer(0, 4, 0), "Instant Growth", "Set how much hair Munchy Monk should instantly grow at the start of this event."),
+                        new Param("disableBaby", false, "Disable Baby", "Toggle if the baby should appear or not."),
+                        new Param("shouldBlush", true, "Blush", "Toggle if Munchy Monk should blush after eating a dumpling."),
                     },
                 },
                 new GameAction("MonkAnimation", "Monk Animations")
@@ -116,8 +116,8 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("whichAnim", MunchyMonk.WhichMonkAnim.Stare, "Which Animation", "Which animation will the Monk play?"),
-                        new Param("vineBoom", false, "Vine Boom", "Just guess with this one."),
+                        new Param("whichAnim", MunchyMonk.WhichMonkAnim.Stare, "Animation", "Set the animation to play."),
+                        new Param("vineBoom", false, "Vine Boom", "Toggle if a certain sound effect should play."),
                     }
                 },
                 new GameAction("ScrollBackground", "Scroll Background")
@@ -130,8 +130,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("scrollSpeed", new EntityTypes.Float(0, 20, 5), "Scroll Speed", "What should the scroll speed be?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the scroll ramp up have?"),
+                        new Param("scrollSpeed", new EntityTypes.Float(0, 20, 5), "Speed", "Set the speed that the background should scroll."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                     }
                 },
                 new GameAction("CloudMonkey", "Cloud Monkey")
@@ -142,8 +142,8 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("start", true, "Start Moving", "Start moving the monkey"),
-                        new Param("direction", MunchyMonk.WhichSide.Right, "Direction", "The direction the monkey will move."),
+                        new Param("start", true, "Start", "Toggle if the monkey should start moving."),
+                        new Param("direction", MunchyMonk.WhichSide.Right, "Direction", "Set the direction that the monkey will move."),
                     },
                     defaultLength = 8f,
                     resizable = true,
