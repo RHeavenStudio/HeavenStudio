@@ -178,7 +178,7 @@ namespace HeavenStudio
                         }
                         else
                         {
-                            SkipToBeat(5);
+                            SkipToBeat(3.5);
                         }
                     }
                 }
@@ -186,7 +186,7 @@ namespace HeavenStudio
 
             if (loops == 0 && !logoRevealed)
             {
-                float normalizedBeat = GetPositionFromBeat(4, 1);
+                float normalizedBeat = GetPositionFromBeat(3, 1);
                 if (normalizedBeat > 0 && normalizedBeat <= 1f)
                 {
                     logoAnim.DoNormalizedAnimation("Reveal", normalizedBeat);
@@ -219,7 +219,7 @@ namespace HeavenStudio
                         star.Play("StarBop", 0, 0);
                     }
                 }
-                if (targetBopBeat > 3 || loops > 0)
+                if (targetBopBeat > 2 || loops > 0)
                 {
                     logoAnim.Play(altBop ? "LogoBop2" : "LogoBop", 0, 0);
                     altBop = !altBop;
