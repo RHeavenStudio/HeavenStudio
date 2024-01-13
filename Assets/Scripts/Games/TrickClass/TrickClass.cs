@@ -16,13 +16,22 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("trickClass", "Trick on the Class", "ecede4", false, false, new List<GameAction>()
             {
-                new GameAction("toss", "Paper Ball")
+                new GameAction("toss", "Toss Object")
                 {
                     preFunction = delegate
                     {
-                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Ball);
+                        var e = eventCaller.currentEntity;
+                        TrickClass.PreTossObject(e.beat, (int)e["obj"], e["nx"]);
                     },
                     defaultLength = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("obj", TrickClass.TrickObjTypeEditor.PaperBall, "Object", "Changes the object thrown at the player", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (int)x == (int)TrickClass.TrickObjTypeEditor.Phone, new string[] { "nx" }),
+                        }),
+                        new Param("nx", false, "Switch", "Replace the phone with a Switch"),
+                    }
                 },
                 new GameAction("plane", "Plane")
                 {
@@ -32,6 +41,24 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 3,
                 },
+                new GameAction("blast", "Optic Blast")
+                {
+                    preFunction = delegate
+                    {
+                        TrickClass.PreBlast(eventCaller.currentEntity.beat);
+                    },
+                    defaultLength = 4,
+                },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Should the girl and boy bop?"),
+                        new Param("autoBop", false, "Bop (Auto)", "Should the girl and boy auto bop?")
+                    }
+                },
                 new GameAction("chair", "Chair")
                 {
                     preFunction = delegate
@@ -39,6 +66,7 @@ namespace HeavenStudio.Games.Loaders
                         TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Chair);
                     },
                     defaultLength = 2,
+                    hidden = true,
                 },
                 new GameAction("phone", "Phone")
                 {
@@ -47,6 +75,7 @@ namespace HeavenStudio.Games.Loaders
                         TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Phone, eventCaller.currentEntity["nx"]);
                     },
                     defaultLength = 2,
+                    hidden = true,
                     parameters = new List<Param>()
                     {
                         new Param("nx", false, "Switch", "Replace the phone with a Switch"),
@@ -59,24 +88,7 @@ namespace HeavenStudio.Games.Loaders
                         TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Shock);
                     },
                     defaultLength = 2,
-                },
-                new GameAction("blast", "Optic Blast")
-                {
-                    preFunction = delegate
-                    {
-                        TrickClass.PreBlast(eventCaller.currentEntity.beat);
-                    },
-                    defaultLength = 3,
-                },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Bop", "Should the girl and boy bop?"),
-                        new Param("autoBop", false, "Bop (Auto)", "Should the girl and boy auto bop?")
-                    }
+                    hidden = true,
                 },
             },
             new List<string>() { "mob", "normal" },
@@ -96,13 +108,21 @@ namespace HeavenStudio.Games
     using Scripts_TrickClass;
     public class TrickClass : Minigame
     {
-        public enum TrickObjType
+        public enum TrickObjTypeEditor : int
+        {
+            PaperBall,
+            Chair,
+            Lightning,
+            Phone,
+        }
+        public enum TrickObjType : int
         {
             Ball,
-            Plane,
             Chair,
             Shock,
-            Phone
+            Phone,
+            Plane,
+            Blast
         }
         public struct QueuedObject
         {
@@ -110,6 +130,7 @@ namespace HeavenStudio.Games
             public int type;
             public bool variant;
         }
+
         public static List<QueuedObject> queuedInputs = new List<QueuedObject>();
 
         [Header("Objects")]
@@ -140,7 +161,7 @@ namespace HeavenStudio.Games
         double playerBopStart = double.MinValue;
         double girlBopStart = double.MinValue;
         bool showBubble = true;
-        bool playerReady;
+        bool playerReady, girlBopEnable;
 
         public static PlayerInput.InputAction InputAction_TouchPressing =
             new("PcoTrickTouching", new int[] { IAEmptyCat, IAPressingCat, IAEmptyCat },
@@ -159,6 +180,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             SetupBopRegion("trickClass", "bop", "autoBop");
+            girlBopEnable = true;
         }
 
         public override void OnBeatPulse(double beat)
@@ -168,7 +190,7 @@ namespace HeavenStudio.Games
             if ((!playerReady) && cond.songPositionInBeatsAsDouble > playerBopStart)
                 playerAnim.DoScaledAnimationAsync("Bop");
 
-            if (cond.songPositionInBeatsAsDouble > girlBopStart)
+            if (cond.songPositionInBeatsAsDouble > girlBopStart && girlBopEnable)
                 girlAnim.DoScaledAnimationAsync("Bop");
         }
 
@@ -331,7 +353,103 @@ namespace HeavenStudio.Games
         public static void PreBlast(double beat)
         {
             PlaySoundSequence("trickClass", "girlCharge", beat);
+            if (GameManager.instance.currentGame == "trickClass")
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate
+                    {
+                        instance.DoBlast(beat);
+                    })
+                });
+            }
+            else
+            {
+                queuedInputs.Add(new QueuedObject
+                {
+                    beat = beat,
+                    type = (int)TrickObjType.Blast,
+                    variant = false
+                });
+            }
         }
+
+        public void DoBlast(double beat)
+        {
+            ScheduleInput(beat, 2, InputAction_FlickPress, BlastJustOrNg, BlastMiss, Through, CanDodge);
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    girlBopEnable = false;
+                    girlAnim.DoScaledAnimationAsync("Charge0");
+                }),
+                new BeatAction.Action(beat + 0.75, delegate
+                {
+                    girlAnim.DoScaledAnimationAsync("Charge1");
+                }),
+                new BeatAction.Action(beat + 1.5, delegate
+                {
+                    girlAnim.DoScaledAnimationAsync("Charge1");
+                }),
+                new BeatAction.Action(beat + 2, delegate
+                {
+                    //test
+                    // girlAnim.DoScaledAnimationAsync("BlastDodged", 0.5f);
+                }),
+                new BeatAction.Action(beat + 4, delegate
+                {
+                   girlBopEnable = true;
+                }),
+            });
+        }
+
+        public bool CanDodge()
+        {
+            return playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble;
+        }
+
+        public void BlastJustOrNg(PlayerActionEvent caller, float state)
+        {
+            if (state <= -1f || state >= 1f)
+            {
+                SoundByte.PlayOneShotGame("trickClass/shock_impact");
+                girlAnim.DoScaledAnimationAsync("BlastNg", 0.5f);
+                PlayerDodgeNg(true);
+                return;
+            }
+            girlAnim.DoScaledAnimationAsync("BlastDodged", 0.5f);
+            if (playerCanDodge > Conductor.instance.songPositionInBeatsAsDouble) return;
+
+            SoundByte.PlayOneShotGame("trickClass/blast_dodge");
+            playerAnim.DoScaledAnimationAsync("DodgeBlast0", 1f);
+            playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 1.25;
+            playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 1;
+            playerReady = false;
+
+            SoundByte.PlayOneShotGame("trickClass/blast_dodge_return", caller.startBeat + caller.timer + 1f);
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.startBeat + caller.timer + 1, delegate
+                {
+                    playerAnim.DoScaledAnimationAsync("DodgeBlast1", 1f);
+                }),
+            });
+        }
+
+        public void BlastMiss(PlayerActionEvent caller)
+        {
+            girlAnim.DoScaledAnimationAsync("BlastNg", 0.5f);
+
+            SoundByte.PlayOneShotGame("trickClass/blast_miss");
+
+            playerAnim.DoScaledAnimationAsync("ThroughBlast");
+            playerReady = false;
+            playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 1.5f;
+            playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.5f;
+        }
+
+        public void Through(PlayerActionEvent caller) { }
 
         public void PlayerDodge(bool slow = false, bool type = false)
         {
