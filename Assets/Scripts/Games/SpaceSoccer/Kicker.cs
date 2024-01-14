@@ -253,9 +253,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
                     if (ball)
                     {
-                        ball.highKickSwing = highKicks[i]["swing"];
-                        if (ball.highKickSwing == 0f)
-                            ball.highKickSwing = 0.5f;
+                        ball.highKickSwing = 0.5f;
                     }
                     break;
                 }
