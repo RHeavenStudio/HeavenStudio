@@ -31,8 +31,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("duration", new EntityTypes.Float(0, 8, 2), "Fade Duration", "The duration of the volume fade in beats"),
-                        new Param("volume", new EntityTypes.Float(0, 200, 10), "Volume", "The volume to fade to"),
+                        new Param("duration", new EntityTypes.Float(0, 8, 2), "Fade Duration", "Set how long it takes for the volume to fade."),
+                        new Param("volume", new EntityTypes.Float(0, 200, 10), "Volume", "Set the volume to fade to while in the tunnel."),
                     }
                 },
                 new GameAction("countin", "Count In")
