@@ -37,6 +37,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("spaceNum", new EntityTypes.Integer(0, 12, 0), "Amount of spaces", "Spaces to add before the untranslated icon"),
                         new Param("dotdotdot", false, "Has ellipses?", "Will the man symbol be proceeded by a <...>?"),
+                        new Param("newline", false, "New line?", "Should this text start a new line?"),
                         new Param("dialogue", "", "Dialogue", "What should this sound translate to?")
                     },
                     priority = 1
@@ -79,9 +80,9 @@ namespace HeavenStudio.Games.Loaders
                     }
                 }
             },
-            new List<string>() {"ctr", "repeat"},
+            new List<string>() { "ctr", "repeat" },
             "ctrinterpreter", "en",
-            new List<string>() {}
+            new List<string>() { }
             );
         }
     }
@@ -130,7 +131,7 @@ namespace HeavenStudio.Games
         string onOutDialogue = "YOU SUCK AT CHARTING";
         string callDiagBuffer = "";
         string respDiagBuffer = "";
-        List<string> callDiagList = new List<string>();
+        List<(string, bool)> callDiagList = new();
         int callDiagIndex = 0;
         private struct QueuedInterval
         {
@@ -416,7 +417,7 @@ namespace HeavenStudio.Games
                 var input = inputs[i];
                 double relativeBeat = input.beat - intervalBeat;
                 ScheduleInput(beat, length + relativeBeat, InputAction_Press, AlienTapping, AlienOnMiss, AlienEmpty);
-                callDiagList.Add(input["dialogue"]);
+                callDiagList.Add((input["dialogue"], input["newline"]));
             }
             BeatAction.New(this, new List<BeatAction.Action>()
             {
@@ -427,9 +428,9 @@ namespace HeavenStudio.Games
                     alienTextbox.SetActive(false);
                     alien.Play("alien_point", 0, 0);
                 }),
-                new BeatAction.Action(beat + (length / 2), delegate 
-                { 
-                    alien.Play("alien_idle", 0, 0); 
+                new BeatAction.Action(beat + (length / 2), delegate
+                {
+                    alien.Play("alien_idle", 0, 0);
                 })
             });
         }
@@ -481,24 +482,43 @@ namespace HeavenStudio.Games
             alienText.text = callDiagBuffer;
         }
 
+        string GetMessageFromCallDialogue(int callDiagIndex = 0)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = callDiagIndex; i < callDiagList.Count; i++)
+            {
+                (string s, bool showNewline) = callDiagList[i];
+                if (showNewline && callDiagIndex != i)
+                {
+                    break;
+                }
+                sb.Append(s);
+            }
+            return sb.ToString();
+        }
+
         void UpdateTranslateTextbox()
         {
             if (callDiagIndex == 0 && !hasMissed && !noHitOnce)
             {
-                // shift the textbox to centre the message
-                StringBuilder sb = new StringBuilder();
-                foreach (string s in callDiagList)
-                {
-                    sb.Append(s);
-                }
-                string fullMsg = sb.ToString();
-
-                // many hardcoded values there'll be a better way to do this
-                Vector2 size = translateText.GetPreferredValues(fullMsg, 10.95f, 2);
-                translateText.rectTransform.anchoredPosition = new Vector2(Mathf.Max((10.95f/2f) + (-size.x / 2 - 0.25f), -0.25f), Mathf.Max((2.11f / 2f) + (-size.y / 2) + 0.2f, 0.2f));
+                ResetTranslateTextbox();
             }
             translateText.text = respDiagBuffer;
             translateFailText.text = respDiagBuffer;
+        }
+
+        void ResetTranslateTextbox(bool destroyText = false)
+        {
+            // shift the textbox to centre the message
+            string message = GetMessageFromCallDialogue(callDiagIndex);
+            // many hardcoded values there'll be a better way to do this
+            Vector2 size = translateText.GetPreferredValues(message, 10.95f, 2);
+            translateText.rectTransform.anchoredPosition = new Vector2(Mathf.Max((10.95f / 2f) + (-size.x / 2 - 0.25f), -0.25f), Mathf.Max((2.11f / 2f) + (-size.y / 2) + 0.2f, 0.2f));
+            if (destroyText)
+            {
+                respDiagBuffer = "";
+                translateText.text = "";
+            }
         }
 
         public void MissionControlDisplay(double beat, bool stay, float length)
@@ -599,7 +619,12 @@ namespace HeavenStudio.Games
             }
             else
             {
-                respDiagBuffer += callDiagList[callDiagIndex];
+                (string dialogue, bool showNewline) = callDiagList[callDiagIndex];
+                if (showNewline)
+                {
+                    ResetTranslateTextbox(true);
+                }
+                respDiagBuffer += dialogue;
                 translateTextbox.SetActive(true);
                 UpdateTranslateTextbox();
                 callDiagIndex++;
