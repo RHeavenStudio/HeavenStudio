@@ -19,11 +19,11 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("toggle", false, "Disable Sound", "Toggle if the dispense sound should be disabled."),
                         new Param("down", false, "Down Sound", "Toggle if the \"Down!\" cue from Remix 9 (DS) should be played."),
-                        new Param("auto", true, "Auto Redispense", "", new()
+                        new Param("auto", true, "Auto Redispense", "Toggle if a ball should automatically be redispensed if the player lets it fall.", new()
                         {
                             new((x, _) => (bool)x, new string[] { "interval" })
                         }),
-                        new("interval", new EntityTypes.Integer(2, 20, 2), "Redispense Interval")
+                        new("interval", new EntityTypes.Integer(2, 20, 2), "Redispense Interval", "Set how many beats it should take for a ball to be redispensed.")
                     },
                     inactiveFunction = delegate
                     {

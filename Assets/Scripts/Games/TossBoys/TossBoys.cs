@@ -35,13 +35,13 @@ namespace HeavenStudio.Games.Loaders
                         new Param("who", TossBoys.KidChoice.Akachan, "Target", "Set who will receive the ball."),
                         new Param("call", false, "Name Call", "Toggle if the non-recieving kids should call the reciever's name."),
                         //auto dispense stuff
-                        new Param("auto", true, "Auto Redispense", "", new()
+                        new Param("auto", true, "Auto Redispense", "Toggle if a ball should automatically be redispensed if the player lets it pop prematurely.", new()
                         {
                             new((x, _) => (bool)x, new string[] { "interval", "ignore", "callAuto" })
                         }),
-                        new Param("interval", new EntityTypes.Integer(1, 20, 2), "Redispense Interval", "Based on passes and not beats"),
-                        new Param("ignore", true, "Ignore Special Passes"),
-                        new Param("callAuto", false, "Name Call On Redispense")
+                        new Param("interval", new EntityTypes.Integer(1, 20, 2), "Redispense Interval", "Set how many passes it should take for a ball to be redispensed."),
+                        new Param("ignore", true, "Ignore Special Passes", "Toggle if the redispense interval should ignore special passes."),
+                        new Param("callAuto", false, "Name Call On Redispense", "Toggle if the recieving kid's name should be called out when a ball is redispensed.")
                     }
                 },
                 new GameAction("pass", "Normal Toss")
