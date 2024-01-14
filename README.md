@@ -11,8 +11,6 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-[YouTube Channel](https://www.youtube.com/channel/UCAb3R-5qyXWOEj8B4vibhxQ)
-
 [itch.io Page](https://rheavenstudio.itch.io/heaven-studio)
 
 [Documentation](https://rheavenstudio.github.io/)

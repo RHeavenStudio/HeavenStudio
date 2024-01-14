@@ -936,6 +936,7 @@ namespace HeavenStudio.Editor.Track
             {
                 Selections.instance.ClickSelect(marker);
                 marker.moving = true;
+                marker.entity.beat = Mathf.Max(MousePos2BeatSnap, 0);
             }
             else
             {

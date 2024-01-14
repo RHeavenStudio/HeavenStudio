@@ -1,4 +1,3 @@
-using DG.Tweening;
 using NaughtyBezierCurves;
 using System;
 using System.Collections;
@@ -169,7 +168,7 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (queuedInputs.Count > 0) queuedInputs.Clear();
+            queuedInputs.Clear();
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
@@ -194,14 +193,29 @@ namespace HeavenStudio.Games
                 girlAnim.DoScaledAnimationAsync("Bop");
         }
 
-        private void Update()
+        public override void OnPlay(double beat)
         {
-            var cond = Conductor.instance;
-            if (cond.isPlaying && !cond.isPaused)
+            queuedInputs.Clear();
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            if (!Conductor.instance.isPlaying) return;
+            if (queuedInputs.Count > 0)
             {
-                if (queuedInputs.Count > 0)
+                foreach (var input in queuedInputs)
                 {
-                    foreach (var input in queuedInputs)
+                    if (input.type is (int)TrickObjType.Blast)
+                    {
+                        BeatAction.New(instance, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(input.beat, delegate
+                            {
+                                instance.DoBlast(input.beat);
+                            })
+                        });
+                    }
+                    else
                     {
                         BeatAction.New(instance, new List<BeatAction.Action>()
                         {
@@ -216,10 +230,13 @@ namespace HeavenStudio.Games
                             })
                         });
                     }
-                    queuedInputs.Clear();
                 }
             }
+            queuedInputs.Clear();
+        }
 
+        private void Update()
+        {
             if (PlayerInput.GetIsAction(InputAction_TouchPressing) && (!playerReady) && (playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble))
             {
                 playerAnim.DoScaledAnimationAsync("Prepare");
@@ -391,11 +408,6 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1.5, delegate
                 {
                     girlAnim.DoScaledAnimationAsync("Charge1");
-                }),
-                new BeatAction.Action(beat + 2, delegate
-                {
-                    //test
-                    // girlAnim.DoScaledAnimationAsync("BlastDodged", 0.5f);
                 }),
                 new BeatAction.Action(beat + 4, delegate
                 {

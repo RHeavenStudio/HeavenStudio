@@ -72,7 +72,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("amount", new EntityTypes.Integer(3, 5, 3), "Amount")
                     }
                 }
-            });
+            },
+            new List<string>() { "ntr", "normal" },
+            "ntrdiving", "en",
+            new List<string>() { "en" }
+            );
         }
     }
 }

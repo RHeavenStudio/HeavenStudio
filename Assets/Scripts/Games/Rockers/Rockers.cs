@@ -285,7 +285,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("gcS", false, "Glee Club Guitar (Soshi)", "Will Soshi use the same guitar as in the glee club lessons?")
                     }
                 },
-            });
+            },
+            new List<string>() { "ntr", "repeat" },
+            "ntrrockers", "en",
+            new List<string>() { "en" }
+            );
         }
     }
 }

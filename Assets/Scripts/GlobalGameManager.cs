@@ -37,6 +37,7 @@ namespace HeavenStudio
         public static string PlayOpenFile = null;
 
         public static string buildTime = "00/00/0000 00:00:00";
+        public static string friendlyReleaseName = "Heaven Studio (1.0 Lush)";
 
         public static bool HasShutDown = false;
         public static bool discordDuringTesting = false;
@@ -127,12 +128,15 @@ namespace HeavenStudio
             }
             ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
             PlayerInput.InitInputControllers();
-#if UNITY_EDITOR
+#if HEAVENSTUDIO_PROD
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio");
+            buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+#elif UNITY_EDITOR
             Starpelly.OS.ChangeWindowTitle("Heaven Studio UNITYEDITOR ");
             buildTime = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
 #else
-                Starpelly.OS.ChangeWindowTitle("Heaven Studio (INDEV) " + Application.buildGUID.Substring(0, 8));
-                buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio (INDEV) " + Application.buildGUID.Substring(0, 8));
+            buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
 #endif
         }
 

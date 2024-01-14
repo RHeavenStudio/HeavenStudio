@@ -472,8 +472,6 @@ namespace HeavenStudio.Games
                         }
                     }
 
-
-
                     if (thatsIt && i + 1 == length)
                     {
                         int noiseToPlay = (flopCount == 4) ? 2 : flopCount;
@@ -613,7 +611,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < uh; i++)
                 {
-                    int voiceLineIndex = i + 1;
+                    int voiceLineIndex = 3 - uh + i + 1;
                     string voiceLine = $"flipperFlop/uh{voiceLineIndex}";
                     string failVoiceLine = $"flipperFlop/uhfail{voiceLineIndex}";
 

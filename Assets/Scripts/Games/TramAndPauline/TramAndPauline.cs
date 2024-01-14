@@ -68,7 +68,10 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.Linear, "Ease")
                     }
                 }
-            }
+            },
+            new List<string>() {"agb", "normal"},
+            "agbtrampoline", "jp",
+            new List<string>() {}
             );
         }
     }
