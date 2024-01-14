@@ -7,6 +7,7 @@ using HeavenStudio.Common;
 using HeavenStudio.InputSystem;
 using System;
 using System.Linq;
+using Jukebox;
 
 namespace HeavenStudio.Games
 {
@@ -23,6 +24,8 @@ namespace HeavenStudio.Games
         public static double ngLateTime => ngLateTimeBase * Conductor.instance?.SongPitch ?? 1;
 
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
+
+        [NonSerialized] public string minigameName;
 
         #region Premade Input Actions
         protected const int IAEmptyCat = -1;
@@ -125,6 +128,11 @@ namespace HeavenStudio.Games
             PlayerActionEvent.ActionEventHittableQuery HittableQuery = null
             )
         {
+            // List<RiqEntity> gameSwitches = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= startBeat + timer && c.datamodel.Split("/")[0] == "switchGame");
+            // if (gameSwitches != null && gameSwitches[^1].datamodel.Split("/")[1] != gameObject.name)
+            // {
+            //     return null;
+            // }
 
             GameObject evtObj = new("ActionEvent" + (startBeat + timer));
 
@@ -145,6 +153,8 @@ namespace HeavenStudio.Games
 
             evt.transform.parent = this.transform.parent;
 
+            evt.minigame = minigameName;
+
             evtObj.SetActive(true);
 
             scheduledInputs.Add(evt);
@@ -161,6 +171,7 @@ namespace HeavenStudio.Games
         {
             PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank);
             evt.autoplayOnly = true;
+            evt.minigame = minigameName;
             return evt;
         }
 
@@ -174,82 +185,7 @@ namespace HeavenStudio.Games
         {
             PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank, HittableQuery);
             evt.noAutoplay = true;
-            return evt;
-        }
-
-        /// <summary>
-        /// Schedule an Input for a later time in the minigame. Executes the methods put in parameters
-        /// </summary>
-        /// <param name="startBeat">When the scheduling started (in beats)</param>
-        /// <param name="timer">How many beats later should the input be expected</param>
-        /// <param name="inputType">The type of the input that's expected (Press, Release, A, B, Directions>)</param>
-        /// <param name="OnHit">Method to run if the Input has been Hit</param>
-        /// <param name="OnMiss">Method to run if the Input has been Missed</param>
-        /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
-        /// <returns></returns>
-        [Obsolete("Use Input Action ScheduleInput instead")]
-        public PlayerActionEvent ScheduleInput(
-            double startBeat,
-            double timer,
-            InputType inputType,
-            PlayerActionEvent.ActionEventCallbackState OnHit,
-            PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank,
-            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null
-            )
-        {
-
-            GameObject evtObj = new GameObject("ActionEvent" + (startBeat + timer));
-            evtObj.AddComponent<PlayerActionEvent>();
-
-            PlayerActionEvent evt = evtObj.GetComponent<PlayerActionEvent>();
-
-            evt.startBeat = startBeat;
-            evt.timer = timer;
-            evt.inputType = inputType;
-            evt.OnHit = OnHit;
-            evt.OnMiss = OnMiss;
-            evt.OnBlank = OnBlank;
-            evt.IsHittable = HittableQuery;
-
-            evt.OnDestroy = RemoveScheduledInput;
-
-            evt.canHit = true;
-            evt.enabled = true;
-
-            evt.transform.parent = this.transform.parent;
-
-            evtObj.SetActive(true);
-
-            scheduledInputs.Add(evt);
-
-            return evt;
-        }
-
-        [Obsolete("Use Input Action ScheduleInput instead")]
-        public PlayerActionEvent ScheduleAutoplayInput(double startBeat,
-            double timer,
-            InputType inputType,
-            PlayerActionEvent.ActionEventCallbackState OnHit,
-            PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank)
-        {
-            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputType, OnHit, OnMiss, OnBlank);
-            evt.autoplayOnly = true;
-            return evt;
-        }
-
-        [Obsolete("Use Input Action ScheduleInput instead")]
-        public PlayerActionEvent ScheduleUserInput(double startBeat,
-            double timer,
-            InputType inputType,
-            PlayerActionEvent.ActionEventCallbackState OnHit,
-            PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank,
-            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null)
-        {
-            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputType, OnHit, OnMiss, OnBlank, HittableQuery);
-            evt.noAutoplay = true;
+            evt.minigame = minigameName;
             return evt;
         }
 
@@ -401,18 +337,6 @@ namespace HeavenStudio.Games
 
         public virtual void OnGameSwitch(double beat)
         {
-            //Below is a template that can be used for handling previous entities.
-            //section below is if you only want to look at entities that overlap the game switch
-            /*
-            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
-            foreach(RiqEntity entity in prevEntities)
-            {
-                if(entity.beat + entity.length >= beat)
-                {
-                    EventCaller.instance.CallEvent(entity, true);
-                }
-            }
-            */
         }
 
         public virtual void OnTimeChange()

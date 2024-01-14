@@ -108,8 +108,11 @@ namespace HeavenStudio.Editor
                 AddIcon(minigame);
                 
             UpdateEditorStatus(true);
-
+#if HEAVENSTUDIO_PROD
+            BuildDateDisplay.text = GlobalGameManager.friendlyReleaseName;
+#else
             BuildDateDisplay.text = GlobalGameManager.buildTime;
+#endif
             isCursorEnabled = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
             GameManager.instance.CursorCam.enabled = isCursorEnabled;

@@ -32,6 +32,7 @@ namespace HeavenStudio.Games
         public bool canHit = true; //Indicates if you can still hit the cue or not. If set to false, it'll guarantee a miss
         public bool enabled = true; //Indicates if the PlayerActionEvent is enabled. If set to false, it'll not trigger any events and destroy itself AFTER it's not relevant anymore
         public bool triggersAutoplay = true;
+        public string minigame;
         bool lockedByEvent = false;
         bool markForDeletion = false;
 
@@ -89,15 +90,17 @@ namespace HeavenStudio.Games
         public void Update()
         {
             Conductor cond = Conductor.instance;
+            GameManager gm = GameManager.instance;
             if (markForDeletion) CleanUp();
             if (!cond.NotStopped()) CleanUp(); // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
 
             if (noAutoplay && autoplayOnly) autoplayOnly = false;
             if (noAutoplay && triggersAutoplay) triggersAutoplay = false;
             if (!enabled) return;
+            if (minigame != GameManager.instance.currentGame) return;
 
             double normalizedTime = GetNormalizedTime();
-            if (GameManager.instance.autoplay)
+            if (gm.autoplay && gm.canInput)
             {
                 AutoplayInput(normalizedTime);
                 return;
@@ -179,7 +182,7 @@ namespace HeavenStudio.Games
 
         private void AutoplayInput(double normalizedTime, bool autoPlay = false)
         {
-            if (triggersAutoplay && (GameManager.instance.autoplay || autoPlay) && GameManager.instance.canInput && normalizedTime >= 1f - (Time.deltaTime * 0.5f))
+            if (triggersAutoplay && (GameManager.instance.autoplay || autoPlay) && normalizedTime >= 1f - (Time.deltaTime * 0.5f))
             {
                 AutoplayEvent();
                 if (!autoPlay)
@@ -191,6 +194,7 @@ namespace HeavenStudio.Games
         private void TimelineAutoplay()
         {
             if (Editor.Editor.instance == null) return;
+            if (!GameManager.instance.canInput) return;
             if (Editor.Track.Timeline.instance != null && !Editor.Editor.instance.fullscreen)
             {
                 Editor.Track.Timeline.instance.AutoplayBTN.GetComponent<Animator>().Play("Ace", 0, 0);
@@ -223,6 +227,11 @@ namespace HeavenStudio.Games
         //For the Autoplay
         public void AutoplayEvent()
         {
+            if (!GameManager.instance.canInput)
+            {
+                CleanUp();
+                return;
+            }
             if (EnableAutoplayCheat)
             {
                 Hit(0f, 1f);
@@ -238,6 +247,7 @@ namespace HeavenStudio.Games
         //The state parameter is either -1 -> Early, 0 -> Perfect, 1 -> Late
         public void Hit(double state, double time)
         {
+            GameManager gm = GameManager.instance;
             if (OnHit != null && enabled)
             {
                 if (canHit)
@@ -246,12 +256,15 @@ namespace HeavenStudio.Games
                     pitchWhenHit = Conductor.instance.SongPitch;
                     double normalized = time - 1f;
                     int offset = Mathf.CeilToInt((float)normalized * 1000);
-                    GameManager.instance.AvgInputOffset = offset;
+                    if (gm.canInput)
+                    {
+                        gm.AvgInputOffset = offset;
+                    }
                     state = System.Math.Max(-1.0, System.Math.Min(1.0, state));
 
-                    if (countsForAccuracy && !(noAutoplay || autoplayOnly) && isEligible)
+                    if (countsForAccuracy && gm.canInput && !(noAutoplay || autoplayOnly) && isEligible)
                     {
-                        GameManager.instance.ScoreInputAccuracy(startBeat + timer, TimeToAccuracy(time, pitchWhenHit), time > 1.0, time, weight, true);
+                        gm.ScoreInputAccuracy(startBeat + timer, TimeToAccuracy(time, pitchWhenHit), time > 1.0, time, weight, true);
                         if (state >= 1f || state <= -1f)
                         {
                             GoForAPerfect.instance.Miss();
@@ -319,15 +332,16 @@ namespace HeavenStudio.Games
 
         public void Miss()
         {
+            GameManager gm = GameManager.instance;
             CleanUp();
             if (OnMiss != null && enabled && !autoplayOnly)
             {
                 OnMiss(this);
             }
 
-            if (countsForAccuracy && !(noAutoplay || autoplayOnly))
+            if (countsForAccuracy && gm.canInput && !(noAutoplay || autoplayOnly))
             {
-                GameManager.instance.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, weight, false);
+                gm.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, weight, false);
                 GoForAPerfect.instance.Miss();
                 SectionMedalsManager.instance.MakeIneligible();
             }

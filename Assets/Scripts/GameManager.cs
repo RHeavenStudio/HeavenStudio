@@ -336,6 +336,10 @@ namespace HeavenStudio
 
         public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, float weight = 1, bool doDisplay = true)
         {
+            // push the hit event to the timing display
+            if (doDisplay)
+                TimingAccuracyDisplay.instance.MakeAccuracyVfx(time, late);
+
             if (weight > 0 && MarkerWeight > 0)
             {
                 totalInputs += weight * MarkerWeight;
@@ -361,10 +365,6 @@ namespace HeavenStudio
                 if (SkillStarManager.instance.DoStarJust())
                     skillStarCollected = true;
             }
-
-            // push the hit event to the timing display
-            if (doDisplay)
-                TimingAccuracyDisplay.instance.MakeAccuracyVfx(time, late);
         }
 
         public void DoSectionCompletion(double beat, bool clear, string name, double score)
@@ -731,6 +731,7 @@ namespace HeavenStudio
 
             if (!paused)
             {
+                Conductor.instance.PlaySetup(beat);
                 Minigame miniGame = null;
                 if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
                 {
@@ -1120,6 +1121,7 @@ namespace HeavenStudio
             if (currentGameO.TryGetComponent<Minigame>(out var minigame))
             {
                 _currentMinigame = minigame;
+                minigame.minigameName = game;
             }
             Vector3 originalScale = currentGameO.transform.localScale;
             currentGameO.transform.parent = eventCaller.GamesHolder.transform;

@@ -123,11 +123,10 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action"),
                     }
                 },
-            }
-            // ,
-            // new List<string>() { "pco", "normal", "repeat" },
-            // "pcomeat", "en",
-            // new List<string>() { }
+            },
+            new List<string>() { "pco", "normal", "repeat" },
+            "pcomeat", "en",
+            new List<string>() { }
             );
         }
     }

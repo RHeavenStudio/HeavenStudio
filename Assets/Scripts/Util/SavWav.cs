@@ -49,17 +49,18 @@ public static class SavWav
 
     public static void Save(string filename, AudioClip clip, bool trim = false)
     {
+        string wavCachePath = Path.Combine(Application.temporaryCachePath, "savewav");
         if (!filename.ToLower().EndsWith(".wav"))
         {
             filename += ".wav";
         }
 
-        var filepath = Path.Combine(Application.temporaryCachePath, filename);
+        var filepath = Path.Combine(wavCachePath, filename);
 
         // Make sure directory exists if user is saving to sub dir.
-        if (!Directory.Exists(Path.GetDirectoryName(filepath)))
+        if (!Directory.Exists(Path.GetDirectoryName(wavCachePath)))
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(filepath));
+            Directory.CreateDirectory(Path.GetDirectoryName(wavCachePath));
         }
 
         using (var fileStream = new FileStream(filepath, FileMode.Create))
@@ -67,6 +68,8 @@ public static class SavWav
         {
             var wav = GetWav(clip, out var length, trim);
             writer.Write(wav, 0, (int)length);
+            fileStream.Close();
+            fileStream.Dispose();
         }
     }
 

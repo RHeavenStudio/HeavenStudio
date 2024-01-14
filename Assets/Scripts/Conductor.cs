@@ -50,6 +50,7 @@ namespace HeavenStudio
         double dspSizeSeconds;
         double dspMargin = 128 / 44100.0;
         bool deferTimeKeeping = false;
+        public bool WaitingForDsp => deferTimeKeeping;
 
         // the dspTime we started at
         private double dspStart;
@@ -163,6 +164,12 @@ namespace HeavenStudio
             GameManager.instance.SetCurrentEventToClosest(beat);
         }
 
+        public void PlaySetup(double beat)
+        {
+            deferTimeKeeping = true;
+            songPosBeat = beat;
+        }
+
         public void Play(double beat)
         {
             if (isPlaying) return;
@@ -220,7 +227,7 @@ namespace HeavenStudio
 
             startTime = DateTime.Now;
             absTimeAdjust = 0;
-            deferTimeKeeping = (musicSource.clip != null);
+            deferTimeKeeping = musicSource.clip != null;
 
             isPlaying = true;
             isPaused = false;

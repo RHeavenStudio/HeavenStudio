@@ -367,9 +367,12 @@ namespace HeavenStudio.Games
                         }
                     }
                 }),
+                new BeatAction.Action(beat, delegate
+                {
+                    if (gandwHasEntered && !bgDisabled) gandwAnim.Play("MrGameAndWatchLeverDown", 0, 0);
+                }),
                 new BeatAction.Action(beat + 1, delegate 
                 { 
-                    if (gandwHasEntered && !bgDisabled) gandwAnim.Play("MrGameAndWatchLeverDown", 0, 0);
                     if (beat + 1 > GetLastIntervalBeforeBeat(beat + 1).beat + GetLastIntervalBeforeBeat(beat + 1).length) 
                     {
                         ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0);

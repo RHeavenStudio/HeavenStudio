@@ -13,7 +13,8 @@ namespace HeavenStudio.Games.Loaders
     using static Minigames;
     public static class NtrSamuraiLoader
     {
-        public static Minigame AddGame(EventCaller eventCaller) {
+        public static Minigame AddGame(EventCaller eventCaller)
+        {
             return new Minigame("samuraiSliceNtr", "Samurai Slice (DS)", "b6b5b6", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
@@ -31,7 +32,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Melon, (int) eventCaller.currentEntity["valA"], eventCaller.currentEntity["2b2t"]);
-                    }, 
+                    },
                     defaultLength = 5,
                     parameters = new List<Param>()
                     {
@@ -79,9 +80,9 @@ namespace HeavenStudio.Games.Loaders
                     hidden = true
                 },
             },
-            new List<string>() {"ntr", "normal"},
+            new List<string>() { "ntr", "normal" },
             "ntrsamurai", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
@@ -94,7 +95,8 @@ namespace HeavenStudio.Games
 
     public class SamuraiSliceNtr : Minigame
     {
-        public enum ObjectType {
+        public enum ObjectType
+        {
             Melon,
             Fish,
             Demon,
@@ -182,7 +184,7 @@ namespace HeavenStudio.Games
         {
             if (PlayerInput.GetIsAction(InputAction_AltDown))
                 DoStep();
-            if (PlayerInput.GetIsAction(InputAction_AltUp) && player.isStepping())
+            if (PlayerInput.GetIsAction(InputAction_AltUp) && player.IsStepping())
                 DoUnStep();
             if (PlayerInput.GetIsAction(InputAction_FlickPress))
                 DoSlice();
@@ -233,7 +235,7 @@ namespace HeavenStudio.Games
 
         public void DoSlice()
         {
-            if (player.isStepping())
+            if (player.IsStepping())
             {
                 launcher.GetComponent<Animator>().Play("UnStep", -1, 0);
             }
@@ -241,13 +243,13 @@ namespace HeavenStudio.Games
             player.Slash();
         }
 
-        public void Bop(double beat, float length) 
+        public void Bop(double beat, float length)
         {
             bop.length = length;
             bop.startBeat = beat;
         }
 
-        public void ObjectIn(double beat, int type = (int) ObjectType.Melon, int value = 1, bool funnyMinecraft = false)
+        public void ObjectIn(double beat, int type = (int)ObjectType.Melon, int value = 1, bool funnyMinecraft = false)
         {
             var mobj = GameObject.Instantiate(objectPrefab, objectHolder);
             var mobjDat = mobj.GetComponent<NtrSamuraiObject>();

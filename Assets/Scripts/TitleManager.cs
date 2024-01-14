@@ -44,6 +44,7 @@ namespace HeavenStudio
         [SerializeField] private GameObject playPanel;
         [SerializeField] private TMP_Text chartTitleText;
         [SerializeField] private TMP_Text chartMapperText;
+        [SerializeField] private TMP_Text chartIdolText;
         [SerializeField] private TMP_Text chartDescText;
         [SerializeField] private TMP_Text chartStyleText;
 
@@ -51,6 +52,7 @@ namespace HeavenStudio
         [SerializeField] private Selectable defaultSelectable;
         [SerializeField] private RectTransform selectedDisplayRect;
         [SerializeField] private GameObject selectedDisplayIcon;
+        [SerializeField] private GameObject[] otherHiddenOnMouse;
 
         private AudioSource musicSource;
 
@@ -91,7 +93,9 @@ namespace HeavenStudio
                 selectedDisplayAnim = anim;
             }
 
-#if UNITY_EDITOR
+#if HEAVENSTUDIO_PROD
+            versionText.text = GlobalGameManager.friendlyReleaseName;
+#elif UNITY_EDITOR
             versionText.text = "EDITOR";
 #else
             versionText.text = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
@@ -163,6 +167,10 @@ namespace HeavenStudio
                                 PlayerInput.CurrentControlStyle = nextController.GetDefaultStyle();
                                 usingMouse = PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch;
                                 selectedDisplayIcon.SetActive(!usingMouse);
+                                foreach (var obj in otherHiddenOnMouse)
+                                {
+                                    obj.SetActive(!usingMouse);
+                                }
 
                                 if ((lastController as InputJoyshock) != null)
                                 {
@@ -178,7 +186,7 @@ namespace HeavenStudio
                         }
                         else
                         {
-                            SkipToBeat(5);
+                            SkipToBeat(3.5);
                         }
                     }
                 }
@@ -186,7 +194,7 @@ namespace HeavenStudio
 
             if (loops == 0 && !logoRevealed)
             {
-                float normalizedBeat = GetPositionFromBeat(4, 1);
+                float normalizedBeat = GetPositionFromBeat(3, 1);
                 if (normalizedBeat > 0 && normalizedBeat <= 1f)
                 {
                     logoAnim.DoNormalizedAnimation("Reveal", normalizedBeat);
@@ -219,7 +227,7 @@ namespace HeavenStudio
                         star.Play("StarBop", 0, 0);
                     }
                 }
-                if (targetBopBeat > 3 || loops > 0)
+                if (targetBopBeat > 2 || loops > 0)
                 {
                     logoAnim.Play(altBop ? "LogoBop2" : "LogoBop", 0, 0);
                     altBop = !altBop;
@@ -300,6 +308,10 @@ namespace HeavenStudio
                             {
                                 usingMouse = false;
                                 selectedDisplayIcon.SetActive(true);
+                                foreach (var obj in otherHiddenOnMouse)
+                                {
+                                    obj.SetActive(true);
+                                }
                             }
                             currentSelectable.GetComponent<Button>()?.onClick.Invoke();
                         }
@@ -311,6 +323,10 @@ namespace HeavenStudio
                             {
                                 usingMouse = false;
                                 selectedDisplayIcon.SetActive(true);
+                                foreach (var obj in otherHiddenOnMouse)
+                                {
+                                    obj.SetActive(true);
+                                }
                                 currentSelectable = currentSelectable.FindSelectableOnUp();
                                 currentSelectable.Select();
                                 SetSelectableRectTarget(currentSelectable);
@@ -329,6 +345,10 @@ namespace HeavenStudio
                             {
                                 usingMouse = false;
                                 selectedDisplayIcon.SetActive(true);
+                                foreach (var obj in otherHiddenOnMouse)
+                                {
+                                    obj.SetActive(true);
+                                }
                                 currentSelectable = currentSelectable.FindSelectableOnDown();
                                 currentSelectable.Select();
                                 SetSelectableRectTarget(currentSelectable);
@@ -347,6 +367,10 @@ namespace HeavenStudio
                             {
                                 usingMouse = false;
                                 selectedDisplayIcon.SetActive(true);
+                                foreach (var obj in otherHiddenOnMouse)
+                                {
+                                    obj.SetActive(true);
+                                }
                                 currentSelectable = currentSelectable.FindSelectableOnLeft();
                                 currentSelectable.Select();
                                 SetSelectableRectTarget(currentSelectable);
@@ -365,6 +389,10 @@ namespace HeavenStudio
                             {
                                 usingMouse = false;
                                 selectedDisplayIcon.SetActive(true);
+                                foreach (var obj in otherHiddenOnMouse)
+                                {
+                                    obj.SetActive(true);
+                                }
                                 currentSelectable = currentSelectable.FindSelectableOnRight();
                                 currentSelectable.Select();
                                 SetSelectableRectTarget(currentSelectable);
@@ -388,6 +416,10 @@ namespace HeavenStudio
                         mouseSelectable = selectable;
                         usingMouse = true;
                         selectedDisplayIcon.SetActive(false);
+                        foreach (var obj in otherHiddenOnMouse)
+                        {
+                            obj.SetActive(false);
+                        }
                     }
                     if (currentSelectable != selectable && usingMouse)
                     {
@@ -490,6 +522,7 @@ namespace HeavenStudio
                     chartTitleText.text = beatmap["remixtitle"];
                     chartMapperText.text = beatmap["remixauthor"];
                     chartDescText.text = beatmap["remixdesc"];
+                    chartIdolText.text = "♪ " + beatmap["idolcredit"];
                     chartStyleText.text = $"Recommended Control Style: {beatmap["playstyle"].ToString()}";
 
                     playPanel.SetActive(true);
@@ -524,10 +557,15 @@ namespace HeavenStudio
 
         public void SocialsPressed()
         {
-            snsRevealed = true;
-            snsVersionText.text = GlobalGameManager.buildTime;
-            snsPanel.SetActive(true);
+//             snsRevealed = true;
+// #if HEAVENSTUDIO_PROD
+//             snsVersionText.text = GlobalGameManager.friendlyReleaseName;
+// #else
+//             snsVersionText.text = GlobalGameManager.buildTime;
+// #endif
+//             snsPanel.SetActive(true);
             SoundByte.PlayOneShot("ui/UISelect");
+            Application.OpenURL("https://github.com/RHeavenStudio/HeavenStudio");
             // show a panel with our SNS links
         }
 
