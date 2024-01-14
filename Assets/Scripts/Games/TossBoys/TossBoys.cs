@@ -14,6 +14,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("tossBoys", "Toss Boys", "9cfff7", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Bop(e.beat, e.length, e["auto"], e["bop"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Toggle if the toss boys should bop for the duration of this event."),
+                        new Param("auto", false, "Bop (Auto)", "Toggle if the toss boys should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("dispense", "Dispense")
                 {
                     function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense(e.beat, e.length, e["who"], e["call"]); },
@@ -21,8 +31,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?"),
-                        new Param("call", false, "Name Call", "Should the other kids than the receiver call their name?")
+                        new Param("who", TossBoys.KidChoice.Akachan, "Target", "Set who will receive the ball."),
+                        new Param("call", false, "Name Call", "Toggle if the non-recieving kids should call the reciever's name.")
                     }
                 },
                 new GameAction("pass", "Normal Toss")
@@ -31,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Aokun, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Aokun, "Target", "Set who will receive the ball.")
                     }
                 },
                 new GameAction("dual", "Dual Toss")
@@ -40,7 +50,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Akachan, "Target", "Set who will receive the ball.")
                     }
                 },
                 new GameAction("high", "High Toss")
@@ -49,7 +59,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Kiiyan, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Kiiyan, "Target", "Set who will receive the ball.")
                     }
                 },
                 new GameAction("lightning", "Lightning Toss")
@@ -58,7 +68,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Aokun, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Aokun, "Target", "Set who will receive the ball.")
                     }
                 },
                 new GameAction("blur", "Blur Toss")
@@ -69,16 +79,6 @@ namespace HeavenStudio.Games.Loaders
                 {
                     defaultLength = 1f,
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Bop(e.beat, e.length, e["auto"], e["bop"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Bop", "Should the toss boys bop to the beat?"),
-                        new Param("auto", false, "Bop (Auto)", "Should the toss boys auto bop to the beat?")
-                    }
-                },
                 new GameAction("changeBG", "Change Background Color")
                 {
                     function = delegate {var e = eventCaller.currentEntity; TossBoys.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
@@ -86,9 +86,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("start", TossBoys.defaultBGColor, "Start Color", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
-                        new Param("end", TossBoys.defaultBGColor, "End Color", "The end color for the fade."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("start", TossBoys.defaultBGColor, "Start Color", "Set the color at the start of the event."),
+                        new Param("end", TossBoys.defaultBGColor, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
             },
