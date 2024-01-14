@@ -109,7 +109,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("toggleStars", "Falling Stars")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles(e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
+                    // function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles(e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
+                    hidden = true,
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -124,7 +125,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("scrollSpeed", "Scroll Speed")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.UpdateScrollSpeed(e["speed"]); },
+                    // function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.UpdateScrollSpeed(e["speed"]); },
+                    hidden = true,
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {

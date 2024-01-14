@@ -33,10 +33,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("who", TossBoys.KidChoice.Akachan, "Target", "Set who will receive the ball."),
-                        new Param("call", false, "Name Call", "Toggle if the non-recieving kids should call the reciever's name.")
-
-                        //auto dispense stuff
-                        new Param("auto", true, "Auto Redispense"
+                        new Param("call", false, "Name Call", "Toggle if the non-recieving kids should call the reciever's name."),
                         //auto dispense stuff
                         new Param("auto", true, "Auto Redispense", "", new()
                         {

@@ -18,9 +18,8 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("toggle", false, "Disable Sound", "Toggle if the dispense sound should be disabled."),
-                        new Param("down", false, "Down Sound", "Toggle if the \"Down!\" cue from Remix 9 (DS) should be played.")
+                        new Param("down", false, "Down Sound", "Toggle if the \"Down!\" cue from Remix 9 (DS) should be played."),
                         new Param("auto", true, "Auto Redispense", "", new()
-                                               new Param("auto", true, "Auto Redispense", "", new()
                         {
                             new((x, _) => (bool)x, new string[] { "interval" })
                         }),
