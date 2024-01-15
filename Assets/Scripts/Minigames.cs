@@ -963,8 +963,8 @@ namespace HeavenStudio
                         new List<Param>()
                         {
                             new Param("easedA", new EntityTypes.Float(0, 10, 0), "Start Horizontal Intensity", "Set the horizontal intensity of the screen shake at the start of the event."),
-                            new Param("easedB", new EntityTypes.Float(0, 10, 0.5f), "Start Vertical Intensity", "Set the vertical intensity of the screen shake at the start of the event."),
                             new Param("valA", new EntityTypes.Float(0, 10, 0), "End Horizontal Intensity", "Set the horizontal intensity of the screen shake at the end of the event."),
+                            new Param("easedB", new EntityTypes.Float(0, 10, 0.5f), "Start Vertical Intensity", "Set the vertical intensity of the screen shake at the start of the event."),
                             new Param("valB", new EntityTypes.Float(0, 10, 0.5f), "End Vertical Intensity", "Set the vertical intensity of the screen shake at the end of the event."),
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
