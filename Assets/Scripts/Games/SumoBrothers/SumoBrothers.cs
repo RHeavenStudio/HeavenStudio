@@ -12,6 +12,41 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("sumoBrothers", "Sumo Brothers \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "EDED15", false, false, new List<GameAction>()
             {
+                
+                 new GameAction("stompSignal", "Stomp Signal")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.StompSignal(e.beat, e["mute"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to stomping.")
+                    },
+                    defaultLength = 4f,
+                    priority = 4
+                },
+
+                 new GameAction("slapSignal", "Slap Signal")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.SlapSignal(e.beat, e["mute"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to slapping.")
+                    },
+                    defaultLength = 4f,
+                    priority = 3
+                },
+
+                new GameAction("endPose", "End Pose")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.EndPose(e.beat); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", SumoBrothers.PoseType.Crouching, "Pose", "The pose that the Sumo Brothers will make."),
+                        new Param("bg", SumoBrothers.BGType.TheGreatWave, "Background", "The background that appears on a successful input.")
+                    },
+                    defaultLength = 5f,
+                    priority = 2
+                },
+
                  new GameAction("bop", "Bop")
                 {
                     function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Bop(e.beat, e.length, e["bopInu"], e["bopSumo"], e["bopInuAuto"], e["bopSumoAuto"]); },
@@ -37,37 +72,6 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     resizable = true
                 },
-
-                 new GameAction("stompSignal", "Stomp")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.StompSignal(e.beat, e["mute"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to stomping.")
-                    },
-                    defaultLength = 4f
-                },
-
-                 new GameAction("slapSignal", "Slap")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.SlapSignal(e.beat, e["mute"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to slapping.")
-                    },
-                    defaultLength = 4f
-                },
-
-                new GameAction("endPose", "End Pose")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.EndPose(e.beat); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", SumoBrothers.PoseType.Crouching, "Pose", "The pose that the Sumo Brothers will make."),
-                        new Param("bg", SumoBrothers.BGType.TheGreatWave, "Background", "The background that appears on a successful input.")
-                    },
-                    defaultLength = 5f
-                }
 
             });
         }
@@ -102,6 +106,8 @@ namespace HeavenStudio.Games
 
         private double lastReportedBeat = 0f;
 
+        private bool cueCurrentlyActive = false; 
+
         public static SumoBrothers instance;
 
         public enum PoseType
@@ -117,6 +123,15 @@ namespace HeavenStudio.Games
             TheGreatWave,
             OtaniOniji
         }
+
+        private enum SumoState
+        {
+            Idle,
+            Slap,
+            Stomp,
+            Pose
+        }
+        private SumoState sumoState = SumoState.Idle;
 
         // Start is called before the first frame update
         void Awake()
@@ -177,6 +192,8 @@ namespace HeavenStudio.Games
                     }
                     
                 }
+
+                print(sumoState);
         }
 
         public void Bop(double beat, float length, bool inu, bool sumo, bool inuAuto, bool sumoAuto)
@@ -208,7 +225,14 @@ namespace HeavenStudio.Games
         }
 
         public void StompSignal(double beat, bool mute)
-        {
+        {     
+            if (sumoState == SumoState.Stomp || cueCurrentlyActive)
+            {
+                return;
+            }
+
+            CueRunning(beat + 4);
+
             if (mute == false)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
@@ -225,21 +249,41 @@ namespace HeavenStudio.Games
             
             }
 
-            StompRecursive(beat + 4);
+            sumoState = SumoState.Stomp;
+            StompRecursive(beat + 4, 2);
         }
 
-        private void StompRecursive(double beat)
+        private void StompRecursive(double beat, double remaining)
         {
+
+            if (sumoState != SumoState.Stomp) {
+
+                remaining -= 1;
+
+            }
+
+            if (remaining <= 0) {
+                
+                return;
+            }
+
             ScheduleInput(beat - 1, 1, InputAction_BasicPress, StompHit, StompMiss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                new BeatAction.Action(beat, delegate { StompRecursive(beat + 2); })
+                new BeatAction.Action(beat, delegate { StompRecursive(beat + 2, remaining); })
                 });
             
         }
 
         public void SlapSignal(double beat, bool mute)
         {
+            if (sumoState == SumoState.Slap || cueCurrentlyActive)
+            {
+                return;
+            }
+
+            CueRunning(beat + 4);
+
             if (mute == false)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
@@ -259,16 +303,29 @@ namespace HeavenStudio.Games
                 }, forcePlay: true);
             }
 
-            SlapRecursive(beat + 4);
+            sumoState = SumoState.Slap;
+            SlapRecursive(beat + 4, 4);
 
         }
 
-        private void SlapRecursive(double beat)
+        private void SlapRecursive(double beat, double remaining)
         {
+
+            if (sumoState != SumoState.Slap) {
+
+                remaining -= 1;
+
+            }
+
+            if (remaining <= 0) {
+
+                return;
+            }
+
             ScheduleInput(beat - 1, 1, InputAction_BasicPress, SlapHit, SlapMiss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                new BeatAction.Action(beat, delegate { SlapRecursive(beat + 1); })
+                new BeatAction.Action(beat, delegate { SlapRecursive(beat + 1, remaining); })
                 });
             
         }
@@ -299,6 +356,12 @@ namespace HeavenStudio.Games
 
         public void EndPose(double beat)
         {
+            if (cueCurrentlyActive)
+            { return; }
+
+            CueRunning(beat + 4);
+            sumoState = SumoState.Pose;
+
             var cond = Conductor.instance;
 
             ScheduleInput(beat, 4f, InputAction_FlickPress, PoseHit, PoseMiss, Nothing);
@@ -314,6 +377,16 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 3, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); })
             });
 
+        }
+
+        public void CueRunning(double beat)
+        {
+            cueCurrentlyActive = true;
+
+            BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                new BeatAction.Action(beat, delegate { cueCurrentlyActive = false; })
+                });
         }
 
         void PoseHit(PlayerActionEvent caller, float state)
