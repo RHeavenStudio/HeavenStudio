@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("mute", false, "Mute", "Toggle if the mole laugh sound should be muted.")
                     },
-                    preFunctionLength = 6
+                    preFunctionLength = 3
                 },
                 new GameAction("end", "End")
                 {
