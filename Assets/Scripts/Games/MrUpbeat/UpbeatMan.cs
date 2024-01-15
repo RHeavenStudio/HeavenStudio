@@ -27,12 +27,14 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         void Awake()
         {
             game = MrUpbeat.instance;
+
+            canStep = false;
         }
 
         void Update()
         {
             blipText.transform.localPosition = new Vector3(antennaLight.position.x, antennaLight.position.y + 0.7f);
-            
+
             if (PlayerInput.GetIsAction(MrUpbeat.InputAction_BasicPress) && !game.IsExpectingInputNow(MrUpbeat.InputAction_BasicPress)
                 && canStep && canStepFromAnim) {
                 Step(true);
