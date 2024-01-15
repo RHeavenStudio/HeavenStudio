@@ -19,12 +19,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SamuraiSliceNtr.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SamuraiSliceNtr.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("whoBops", SamuraiSliceNtr.WhoBops.Both, "Bop", "Toggle if the child should bop for the duration of this event."),
-                        new Param("whoBopsAuto", SamuraiSliceNtr.WhoBops.None, "Bop (Auto)", "Toggle if the child should automatically bop until another Bop event is reached.")
+                        new Param("bop", true, "Bop", "Toggle if the child should bop for the duration of this event."),
+                        new Param("bopAuto", false, "Bop (Auto)", "Toggle if the child should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("melon", "Melon")
@@ -167,17 +167,12 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            SetupBopRegion("samuraiSliceNtr", "bop", "whoBopsAuto", false);
+            SetupBopRegion("samuraiSliceNtr", "bop", "bopAuto", false);
         }
 
         public override void OnBeatPulse(double beat)
         {
-            int whoBopsAuto = BeatIsInBopRegionInt(beat);
-            bool goBopSamurai = whoBopsAuto == (int)WhoBops.Samurai || whoBopsAuto == (int)WhoBops.Both;
-            bool goBopChild = whoBopsAuto == (int)WhoBops.Children || whoBopsAuto == (int)WhoBops.Both;
-
-            if (goBopSamurai) player.Bop();
-            if (goBopChild) childParent.GetComponent<NtrSamuraiChild>().Bop();
+            if (BeatIsInBopRegion(beat)) childParent.GetComponent<NtrSamuraiChild>().Bop();
         }
 
         void Update()
@@ -190,7 +185,7 @@ namespace HeavenStudio.Games
                 DoSlice();
         }
 
-        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
+        public void Bop(double beat, float length, bool whoBops, bool whoBopsAuto)
         {
             for (int i = 0; i < length; i++)
             {
@@ -201,22 +196,11 @@ namespace HeavenStudio.Games
             }
         }
 
-        void BopSingle(int whoBops)
+        void BopSingle(bool whoBops)
         {
-            switch (whoBops)
+            if (whoBops)
             {
-                case (int)WhoBops.Samurai:
-                    player.Bop();
-                    break;
-                case (int)WhoBops.Children:
-                    childParent.GetComponent<NtrSamuraiChild>().Bop();
-                    break;
-                case (int)WhoBops.Both:
-                    player.Bop();
-                    childParent.GetComponent<NtrSamuraiChild>().Bop();
-                    break;
-                default:
-                    break;
+                childParent.GetComponent<NtrSamuraiChild>().Bop();
             }
         }
 
