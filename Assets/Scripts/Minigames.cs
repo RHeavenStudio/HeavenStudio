@@ -962,8 +962,14 @@ namespace HeavenStudio
                     new GameAction("screen shake", "Screen Shake", 1f, true,
                         new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Float(0, 10, 0), "Horizontal Intensity", "Set the horizontal intensity of the screen shake."),
-                            new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity", "Set the vertical intensity of the screen shake.")
+                            new Param("easedA", new EntityTypes.Float(0, 10, 0), "Start Horizontal Intensity", "Set the horizontal intensity of the screen shake at the start of the event."),
+                            new Param("easedB", new EntityTypes.Float(0, 10, 0.5f), "Start Vertical Intensity", "Set the vertical intensity of the screen shake at the start of the event."),
+                            new Param("valA", new EntityTypes.Float(0, 10, 0), "End Horizontal Intensity", "Set the horizontal intensity of the screen shake at the end of the event."),
+                            new Param("valB", new EntityTypes.Float(0, 10, 0.5f), "End Vertical Intensity", "Set the vertical intensity of the screen shake at the end of the event."),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "easedA", "easedB" })
+                            }),
                         }
                     ),
                     new GameAction("display textbox", "Display Textbox", 1f, true, new List<Param>()
