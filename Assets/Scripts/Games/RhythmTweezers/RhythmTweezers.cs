@@ -274,6 +274,11 @@ namespace HeavenStudio.Games
         public override void OnPlay(double beat)
         {
             crHandlerInstance = null;
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            queuedIntervals.Clear();
             PersistBlocks(beat);
         }
 
