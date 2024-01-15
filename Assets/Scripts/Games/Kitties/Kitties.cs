@@ -21,10 +21,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", Kitties.SpawnType.Straight, "Spawn", "The way in which the kitties will spawn"),
-                        new Param("toggle", false, "Mice", "Replaces kitties as mice"),
-                        new Param("toggle1", false, "Invert Direction", "Inverts the direction they clap in"),
-                        new Param("toggle2", false, "Keep Cats Spawned", "Sets whether or not cats stay spawned after their cue"),
+                        new Param("type", Kitties.SpawnType.Straight, "Direction", "Choose the direction that the kitties will spawn in."),
+                        new Param("toggle", false, "Mice", "Toggle if the non-player kitties should be replaced with mice."),
+                        new Param("toggle1", false, "Invert Direction", "Toggle if the spawn direction should be inverted."),
+                        new Param("toggle2", false, "Keep Cats Spawned", "Toggle if the kitties should stay spawned after their cue. This is required for some other events."),
                     }
                 },
 
@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
 
                         parameters = new List<Param>()
                         {
-                            new Param("toggle", false, "Keep Cats spawned", "Sets whether or not cats stay spawned after their cue"),
+                            new Param("toggle", false, "Keep Cats Spawned", "Toggle if the kitties should stay spawned after their cue. This is required for some other events."),
                         }
                     },
 
@@ -54,14 +54,14 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", Kitties.SpawnType.Straight, "Spawn", "The way in which the kitties will spawn"),
-                        new Param("toggle", false, "Mice", "Replaces kitties as mice"),
-                        new Param("toggle1", false, "Invert Direction", "Inverts the direction they clap in"),
-                        new Param("toggle2", false, "Keep Cats Spawned", "Sets whether or not cats stay spawned after their cue"),
+                        new Param("type", Kitties.SpawnType.Straight, "Direction", "Choose the direction that the kitties will spawn in."),
+                        new Param("toggle", false, "Mice", "Toggle if the non-player kitties should be replaced with mice."),
+                        new Param("toggle1", false, "Invert Direction", "Toggle if the spawn direction should be inverted."),
+                        new Param("toggle2", false, "Keep Cats Spawned", "Toggle if the kitties should stay spawned after their cue. This is required for some other events."),
                     }
                 },
 
-                new GameAction("bgcolor", "Background Color")
+                new GameAction("bgcolor", "Background Appearance")
                 {
                     function = delegate
                     {
@@ -72,9 +72,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorStart", Color.white, "Start Color"),
-                        new Param("colorEnd", Color.white, "End Color"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("colorStart", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("colorEnd", Color.white, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 }
             },

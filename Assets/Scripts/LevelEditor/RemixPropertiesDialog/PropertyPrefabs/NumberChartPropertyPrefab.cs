@@ -41,17 +41,11 @@ namespace HeavenStudio.Editor
                         }
                     );
 
-                    inputField.onSelect.AddListener(
-                        _ =>
-                            Editor.instance.editingInputField = true
-                    );
-
                     inputField.onEndEdit.AddListener(
                         _ =>
                         {
                             slider.value = Convert.ToSingle(inputField.text);
                             parameterManager.chart[propertyName] = (int) slider.value;
-                            Editor.instance.editingInputField = false;
                         }
                     );
                     break;
@@ -72,17 +66,11 @@ namespace HeavenStudio.Editor
                         }
                     );
 
-                    inputField.onSelect.AddListener(
-                        _ =>
-                            Editor.instance.editingInputField = true
-                    );
-
                     inputField.onEndEdit.AddListener(
                         _ =>
                         {
                             slider.value = (float) Math.Round(Convert.ToSingle(inputField.text), 4);
                             parameterManager.chart[propertyName] = slider.value;
-                            Editor.instance.editingInputField = false;
                         }
                     );
                     break;

@@ -63,8 +63,6 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
 
-        [SerializeField] private GameObject DebugHolder;
-
         [Header("Dialogs")]
         [SerializeField] private Dialog[] Dialogs;
 
@@ -106,30 +104,15 @@ namespace HeavenStudio.Editor
             GameManager.instance.Init();
             Timeline.Init();
 
-            foreach (var minigame in EventCaller.instance.minigames)
+            foreach (var minigame in EventCaller.instance.minigames.Values)
                 AddIcon(minigame);
-
-            Tooltip.AddTooltip(NewBTN.gameObject, "New <color=#adadad>[Ctrl+N]</color>");
-            Tooltip.AddTooltip(OpenBTN.gameObject, "Open <color=#adadad>[Ctrl+O]</color>");
-            Tooltip.AddTooltip(SaveBTN.gameObject, "Save Project <color=#adadad>[Ctrl+S]</color>\nSave Project As <color=#adadad>[Ctrl+Alt+S]</color>");
-            Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
-            Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
-            Tooltip.AddTooltip(CopyBTN.gameObject, "Copy <color=#adadad>[Ctrl+C]</color>");
-            Tooltip.AddTooltip(PasteBTN.gameObject, "Paste <color=#adadad>[Ctrl+V]</color>");
-            Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
-            Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
-            Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
-            Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
-            Tooltip.AddTooltip(ChartParamBTN.gameObject, "Remix Properties");
-            Tooltip.AddTooltip(SortAlphabetBTN.gameObject, "Sort Alphabetically");
-            Tooltip.AddTooltip(SortFavoritesBTN.gameObject, "Sort By Favorite");
-            Tooltip.AddTooltip(SortChronologicBTN.gameObject, "Sort Chronologically");
-            Tooltip.AddTooltip(SearchBar.gameObject, "Search Games");
-
-            Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
+                
             UpdateEditorStatus(true);
-
+#if HEAVENSTUDIO_PROD
+            BuildDateDisplay.text = GlobalGameManager.friendlyReleaseName;
+#else
             BuildDateDisplay.text = GlobalGameManager.buildTime;
+#endif
             isCursorEnabled = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
             GameManager.instance.CursorCam.enabled = isCursorEnabled;
@@ -151,7 +134,9 @@ namespace HeavenStudio.Editor
 
         public void ShowQuitPopUp(bool show)
         {
+            if (fullscreen) Fullscreen();
             _confirmQuitMain.SetActive(show);
+            SetAuthoritiveMenu(show);
         }
 
         public bool ShouldQuit = false;
@@ -186,12 +171,12 @@ namespace HeavenStudio.Editor
                     Fullscreen();
                 }
 
-                if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
+                if ((Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace)) && !fullscreen)
                 {
                     CommandManager.Instance.AddCommand(new Commands.Delete(Selections.instance.eventsSelected.Select(c => c.entity.guid).ToList()));
                 }
 
-                if (Input.GetKey(KeyCode.LeftControl))
+                if (Input.GetKey(KeyCode.LeftControl) && !fullscreen)
                 {
                     if (Input.GetKeyDown(KeyCode.Z))
                     {
@@ -212,20 +197,13 @@ namespace HeavenStudio.Editor
                     {
                         Timeline.instance.Paste();
                     }
-
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-                        if (Input.GetKeyDown(KeyCode.D))
-                        {
-                            ToggleDebugCam();
-                        }
-                    }
                 }
 
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
                     if (Input.GetKeyDown(KeyCode.N))
                     {
+                        if (fullscreen) Fullscreen();
                         NewBTN.onClick.Invoke();
                     }
                     else if (Input.GetKeyDown(KeyCode.O))
@@ -243,11 +221,14 @@ namespace HeavenStudio.Editor
                     {
                         SaveRemix(false);
                     }
-                }
 
-                if (Input.GetKeyDown(KeyCode.F12))
-                {
-                    DebugHolder.gameObject.SetActive(!DebugHolder.activeInHierarchy);
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            ToggleDebugCam();
+                        }
+                    }
                 }
             }
             #endregion
@@ -271,33 +252,6 @@ namespace HeavenStudio.Editor
                 PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
-
-
-            if (Timeline.instance.timelineState.selected && Editor.instance.canSelect)
-            {
-                /*
-                if (Input.GetMouseButtonUp(0))
-                {
-                    List<TimelineEventObj> selectedEvents = Timeline.instance.eventObjs.FindAll(c => c.selected == true && c.eligibleToMove == true);
-
-                    if (selectedEvents.Count > 0)
-                    {
-                        List<TimelineEventObj> result = new List<TimelineEventObj>();
-
-                        for (int i = 0; i < selectedEvents.Count; i++)
-                        {
-                            //TODO: this is in LateUpdate, so this will never run! change this to something that works properly
-                            if (!(selectedEvents[i].isCreating || selectedEvents[i].wasDuplicated))
-                            {
-                                result.Add(selectedEvents[i]);
-                            }
-                            selectedEvents[i].OnUp();
-                        }
-                        CommandManager.instance.Execute(new Commands.Move(result));
-                    }
-                }
-                */
-            }
         }
 
         public static Sprite GameIcon(string name)
@@ -377,19 +331,37 @@ namespace HeavenStudio.Editor
 
         public void SaveRemix(bool saveAs = true)
         {
-            if (saveAs == true)
+            Debug.Log(GameManager.instance.Beatmap["propertiesmodified"]);
+            if (!(bool)GameManager.instance.Beatmap["propertiesmodified"])
             {
-                SaveRemixFilePanel();
+                foreach (var dialog in Dialogs)
+                {
+                    if (dialog.GetType() == typeof(RemixPropertiesDialog))
+                    {
+                        if (fullscreen) Fullscreen();
+                        GlobalGameManager.ShowErrorMessage("Set Remix Properties", "Set remix properties before saving.");
+                        (dialog as RemixPropertiesDialog).SwitchPropertiesDialog();
+                        (dialog as RemixPropertiesDialog).SetSaveOnClose(true, saveAs);
+                        return;
+                    }
+                }
             }
             else
             {
-                if (currentRemixPath == string.Empty || currentRemixPath == null)
+                if (saveAs)
                 {
                     SaveRemixFilePanel();
                 }
                 else
                 {
-                    SaveRemixFile(currentRemixPath);
+                    if (currentRemixPath is "" or null)
+                    {
+                        SaveRemixFilePanel();
+                    }
+                    else
+                    {
+                        SaveRemixFile(currentRemixPath);
+                    }
                 }
             }
         }
@@ -406,6 +378,7 @@ namespace HeavenStudio.Editor
                 if (path != String.Empty)
                 {
                     SaveRemixFile(path);
+                    currentRemixPath = path;
                 }
             });
         }
@@ -414,7 +387,6 @@ namespace HeavenStudio.Editor
         {
             try
             {
-                RiqFileHandler.UnlockCache();
                 RiqFileHandler.WriteRiq(GameManager.instance.Beatmap);
                 RiqFileHandler.PackRiq(path, true);
                 Debug.Log("Packed RIQ successfully!");
@@ -438,6 +410,7 @@ namespace HeavenStudio.Editor
 
         public void LoadRemix(bool create = false)
         {
+            if (fullscreen) Fullscreen();
             if (create)
             {
                 GameManager.instance.NewRemix();
@@ -453,6 +426,7 @@ namespace HeavenStudio.Editor
 
         public void OpenRemix()
         {
+            if (fullscreen) Fullscreen();
             var extensions = new[]
             {
                 new ExtensionFilter("Heaven Studio Remix File ", new string[] { "riq" }),
@@ -465,7 +439,6 @@ namespace HeavenStudio.Editor
 
                 try
                 {
-                    RiqFileHandler.UnlockCache();
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
                     Debug.Log("Imported RIQ successfully!");
                     LoadRemix();
@@ -535,6 +508,16 @@ namespace HeavenStudio.Editor
         public static bool MouseInRectTransform(RectTransform rectTransform)
         {
             return (rectTransform.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera));
+        }
+
+        public void ReturnToTitle()
+        {
+            GlobalGameManager.LoadScene("Title");
+        }
+
+        public void SetAuthoritiveMenu(bool state)
+        {
+            inAuthorativeMenu = state;
         }
 
         public void ToggleDebugCam()

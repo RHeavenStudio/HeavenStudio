@@ -113,7 +113,7 @@ namespace HeavenStudio.Games.Global
 
         private void Update()
         {
-            var songPosBeat = Conductor.instance.songPositionInBeatsAsDouble;
+            var songPosBeat = Math.Max(Conductor.instance.songPositionInBeatsAsDouble, 0);
 
             foreach (var e in allFilterEvents)
             {

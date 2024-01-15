@@ -27,8 +27,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 6f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Count", "Make Forthington Count"),
-                        new Param("toggle2", false, "Alternate Voiceline")
+                        new Param("toggle", true, "Count", "Toggle if Forthington should count after the event."),
+                        new Param("toggle2", false, "Alternate Voice Line", "Toggle if Forthington should use an alternate voice line.")
                     },
                     preFunctionLength = 1
                 },
@@ -37,8 +37,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { AirRally.instance.SetDistance(e.currentEntity.beat, e.currentEntity["type"], e.currentEntity["ease"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?"),
-                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease")
+                        new Param("type", AirRally.DistanceSound.close, "Type", "Set Forthington's distance."),
+                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("catch", "Catch Birdie"),
@@ -52,10 +52,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease")
+                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease", "Set the easing of the action.")
                     }
                 },
-                new GameAction("forward", "Animals Look Forward")
+                new GameAction("forward", "Look Forward")
                 {
                     function = delegate
                     {
@@ -63,7 +63,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("reset", false, "Reset", "Reset to Idle pose?")
+                        new Param("reset", false, "Reset", "Toggle this to reset the animals to their idle pose.")
                     }
                 },
                 new GameAction("4beat", "4 Beat Count-In")
@@ -98,7 +98,7 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { AirRally.ForthVoice(e.currentEntity.beat, e.currentEntity["type"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("type", AirRally.CountSound.one, "Type", "The number Forthington will say"),
+                        new Param("type", AirRally.CountSound.one, "Type", "Set the number Forthington will say."),
                     },
                 },
                 new GameAction("spawnBird", "Spawn Birds")
@@ -110,14 +110,14 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("type", AirRally.BirdType.Pterosaurs, "Type"),
-                        new Param("xSpeed", new EntityTypes.Float(-10, 10, 1), "X Speed Multiplier"),
-                        new Param("zSpeed", new EntityTypes.Float(-10, 10, 1), "Z Speed Multiplier"),
-                        new Param("startZ", new EntityTypes.Float(0, 1000, 200), "Z Start Position"),
-                        new Param("invert", false, "Invert X Direction")
+                        new Param("type", AirRally.BirdType.Pterosaurs, "Type", "Choose the type of bird to spawn."),
+                        new Param("xSpeed", new EntityTypes.Float(-10, 10, 1), "X Speed", "Change the horizontal speed of the birds."),
+                        new Param("zSpeed", new EntityTypes.Float(-10, 10, 1), "Z Speed", "Change how fast the birds approach the camera."),
+                        new Param("startZ", new EntityTypes.Float(0, 1000, 200), "Z Start Position", "Change how close to the camera the birds spawn."),
+                        new Param("invert", false, "Flip Horizontally", "Toggle if the birds should fly left to right.")
                     }
                 },
-                new GameAction("rainbow", "Rainbow")
+                new GameAction("rainbow", "Spawn Rainbow")
                 {
                     function = delegate
                     {
@@ -125,11 +125,11 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("start", new EntityTypes.Float(0, 500, 100), "Start Position"),
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier")
+                        new Param("start", new EntityTypes.Float(0, 500, 100), "Start Position", "Change how close to the camera the rainbow spawns."),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed", "Change how fast the rainbow approaches the camera.")
                     }
                 },
-                new GameAction("day", "Day/Night Cycle")
+                new GameAction("day", "Time Of Day")
                 {
                     function = delegate
                     {
@@ -140,9 +140,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("start", AirRally.DayNightCycle.Day, "Start Time"),
-                        new Param("end", AirRally.DayNightCycle.Noon, "End Time"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("start", AirRally.DayNightCycle.Day, "Start Time", "Set the time of day for the start of the event."),
+                        new Param("end", AirRally.DayNightCycle.Noon, "End Time", "Set the time of day for the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("cloud", "Cloud Density")
@@ -155,12 +155,12 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("main", new EntityTypes.Integer(0, 300, 30), "Main Clouds", "How many clouds per second?"),
-                        new Param("side", new EntityTypes.Integer(0, 100, 10), "Side Clouds", "How many clouds per second?"),
-                        new Param("top", new EntityTypes.Integer(0, 100, 0), "Top Clouds", "How many clouds per second?"),
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier"),
-                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed Multiplier"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("main", new EntityTypes.Integer(0, 300, 30), "Main Clouds", "Set how many clouds per second should be spawned in the center."),
+                        new Param("side", new EntityTypes.Integer(0, 100, 10), "Side Clouds", "Set how many clouds per second should be spawned on the sides."),
+                        new Param("top", new EntityTypes.Integer(0, 100, 0), "Top Clouds", "Set how many clouds per second should be spawned on the top."),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Start Speed", "Change how fast the clouds are moving at the start of the event."),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed", "Change how fast the clouds are moving at the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("snowflake", "Snowflake Density")
@@ -173,10 +173,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("cps", new EntityTypes.Integer(0, 200, 0), "Snowflakes per Second"),
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier"),
-                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed Multiplier"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("cps", new EntityTypes.Integer(0, 200, 0), "Snowflakes Amount", "Set how many snowflakes should be spawned per second."),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Start Speed", "Change fow fast the snowflakes are moving at the start of the event."),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed", "Change how fast the snowflakes are moving at the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("tree", "Trees")
@@ -189,18 +189,18 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("enable", true, "Enable", "", new List<Param.CollapseParam>()
+                        new Param("enable", true, "Enable", "Toggle if the trees are enabled.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "main", "side", "speed", "endSpeed", "ease" })
                         }),
-                        new Param("main", new EntityTypes.Integer(0, 300, 50), "Main Trees", "How many trees per second?"),
-                        new Param("side", new EntityTypes.Integer(0, 100, 30), "Side Trees", "How many trees per second?"),
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier"),
-                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed Multiplier"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("main", new EntityTypes.Integer(0, 300, 50), "Main Trees", "Set how many trees per second should be spawned in the center."),
+                        new Param("side", new EntityTypes.Integer(0, 100, 30), "Side Trees", "Set how many trees per second should be spawned on the sides."),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Start Speed", "Change how fast the trees are moving at the start of the event."),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed", "Change how fast the trees are moving at the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
-                new GameAction("islandSpeed", "Islands Speed")
+                new GameAction("islandSpeed", "Island Speed")
                 {
                     function = delegate
                     {
@@ -210,9 +210,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed"),
-                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Start Speed", "Change how fast the islands are moving at the start of the event."),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed", "Change how fast the islands are moving at the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("silence", "Silence")
@@ -221,7 +221,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                 }
             },
-            new List<string>() { "rvl", "normal" },
+            new List<string>() { "rvl", "keep" },
             "rvlbadminton", "en",
             new List<string>() { "en" }
             );

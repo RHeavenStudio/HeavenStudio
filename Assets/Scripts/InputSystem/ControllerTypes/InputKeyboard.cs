@@ -136,7 +136,7 @@ namespace HeavenStudio.InputSystem
             return false;
         }
 
-        public override int GetLastButtonDown()
+        public override int GetLastButtonDown(bool strict = false)
         {
             if (Input.anyKeyDown)
             {
@@ -151,7 +151,7 @@ namespace HeavenStudio.InputSystem
 
         public override int GetLastActionDown()
         {
-            for (int i = 0; i < BINDS_MAX; i++)
+            for (int i = 0; i < currentBindings.Pad.Length; i++)
             {
                 if (Input.GetKeyDown((KeyCode)currentBindings.Pad[i]))
                     return i;

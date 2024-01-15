@@ -157,6 +157,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                             if (!hasChangedAnimMidAir) anim.Play("Jump_InOut_Tuck", 0, 0);
                             hasChangedAnimMidAir = true;
                         }
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         break;
                     case JumpState.HighInIn:
                         if (currentBeat >= startBeat + 1 && !hasChangedAnimMidAir && see)

@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3,
                     parameters = new List<Param>()
                     {
-                        new Param("type", ForkLifter.FlickType.Pea, "Object", "The object to be flicked")
+                        new Param("type", ForkLifter.FlickType.Pea, "Object", "Choose the object to be flicked.")
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity;
@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("mute", false, "Mute Prepare")
+                        new Param("mute", false, "Mute", "Toggle if the prepare sound effect should play.")
                     }
                 },
                 new GameAction("gulp", "Swallow")
@@ -47,25 +47,25 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { SoundByte.PlayOneShot("games/forkLifter/sigh"); }
                 },
-                new GameAction("color", "Background Color")
+                new GameAction("color", "Background Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("start", Color.white, "Start Color", "The color to start fading from."),
-                        new Param("end", Color.white, "End Color", "The color to end the fade."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("start", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("end", Color.white, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     },
                     resizable = true
                 },
-                new GameAction("colorGrad", "Gradient Color")
+                new GameAction("colorGrad", "Gradient Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColorGrad(e.beat, e.length, e["start"], e["end"], e["ease"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("start", Color.white, "Start Color", "The color to start fading from."),
-                        new Param("end", Color.white, "End Color", "The color to end the fade."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("start", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("end", Color.white, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     },
                     resizable = true
                 },

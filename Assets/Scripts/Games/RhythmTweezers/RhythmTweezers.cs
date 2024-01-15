@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn", "Will the turn automatically be passed at the end of this event?")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     }
                 },
                 new GameAction("short hair", "Short Hair")
@@ -48,10 +48,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f, 
                     parameters = new List<Param>() 
                     {
-                        new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
-                        new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
-                        new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato"),
-                        new Param("instant", false, "Instant", "Instantly change vegetable?")
+                        new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "Set the vegetable to switch to."),
+                        new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "Set the color of the onion."),
+                        new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "Set the color of the potato."),
+                        new Param("instant", false, "Instant", "Toggle if the vegetable should skip the moving animation and instantly swap.")
                     },
                     priority = 3
                 },
@@ -62,10 +62,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("type", RhythmTweezers.NoPeekSignType.Full, "Sign Type", "Which sign will be used?")
+                        new Param("type", RhythmTweezers.NoPeekSignType.Full, "Side", "Set the side for the sign to appear on.")
                     }
                 },
-                new GameAction("fade background color", "Background Color")
+                new GameAction("fade background color", "Background Appearance")
                 {
                     function = delegate 
                     { 
@@ -75,9 +75,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true, 
                     parameters = new List<Param>() 
                     {
-                        new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
-                        new Param("colorB", RhythmTweezers.defaultBgColor, "End Color", "The ending color in the fade"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("colorA", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("colorB", RhythmTweezers.defaultBgColor, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     } 
                 },
                 new GameAction("altSmile", "Use Alt Smile")
@@ -274,7 +274,12 @@ namespace HeavenStudio.Games
         public override void OnPlay(double beat)
         {
             crHandlerInstance = null;
-            PersistColor(beat);
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            queuedIntervals.Clear();
+            PersistBlocks(beat);
         }
 
         private void OnDestroy()
@@ -562,15 +567,18 @@ namespace HeavenStudio.Games
         }
 
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)
-        private void PersistColor(double beat)
+        private void PersistBlocks(double beat)
         {
-            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("rhythmTweezers", new string[] { "fade background color" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+            var allEventsBeforeBeat = GameManager.instance.Beatmap.Entities.FindAll(x => x.datamodel.Split('/')[0] == "rhythmTweezers" && x.beat < beat);
+            var allColorEventsBeforeBeat = allEventsBeforeBeat.FindAll(x => x.datamodel == "rhythmTweezers/fade background color");
+            if (allColorEventsBeforeBeat.Count > 0)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
+                allColorEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allColorEventsBeforeBeat[^1];
                 BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorA"], lastEvent["colorB"], lastEvent["ease"]);
             }
+            var allAltFaceEventsBeforeBeat = allEventsBeforeBeat.FindAll(x => x.datamodel == "rhythmTweezers/altSmile");
+            VegetableAnimator.SetBool("UseAltSmile", allAltFaceEventsBeforeBeat.Count % 2 == 1);
         }
 
         public static void PreNoPeeking(double beat, float length, int type)
@@ -635,7 +643,7 @@ namespace HeavenStudio.Games
                     queuedIntervals.Clear();
                 }
             }
-            PersistColor(beat);
+            PersistBlocks(beat);
         }
 
         private void ResetVegetable()

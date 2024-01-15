@@ -13,17 +13,18 @@ namespace HeavenStudio.Games.Loaders
     using static Minigames;
     public static class NtrSamuraiLoader
     {
-        public static Minigame AddGame(EventCaller eventCaller) {
+        public static Minigame AddGame(EventCaller eventCaller)
+        {
             return new Minigame("samuraiSliceNtr", "Samurai Slice (DS)", "b6b5b6", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SamuraiSliceNtr.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SamuraiSliceNtr.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("whoBops", SamuraiSliceNtr.WhoBops.Both, "Who Bops?", "Who will bop?"),
-                        new Param("whoBopsAuto", SamuraiSliceNtr.WhoBops.None, "Who Bops? (Auto)", "Who will automatically begin bopping?")
+                        new Param("bop", true, "Bop", "Toggle if the child should bop for the duration of this event."),
+                        new Param("bopAuto", false, "Bop (Auto)", "Toggle if the child should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("melon", "Melon")
@@ -31,12 +32,12 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Melon, (int) eventCaller.currentEntity["valA"], eventCaller.currentEntity["2b2t"]);
-                    }, 
+                    },
                     defaultLength = 5,
                     parameters = new List<Param>()
                     {
-                        new Param("2b2t", false, "Melon2B2T", "Should the melon be reskinned as the 2B2T melon?"),
-                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the melon spills out when sliced"),
+                        new Param("2b2t", false, "Voxel Melon", "Toggle if the melon should be reskinned as a melon from a certain game."),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "Set the amount of coins the melon spills out when sliced."),
                     }
                 },
                 new GameAction("fish", "Fish")
@@ -48,7 +49,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 7,
                     parameters = new List<Param>()
                     {
-                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the fish spills out when sliced"),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "Set the amount of coins the fish spills out when sliced."),
                     }
                 },
                 new GameAction("demon", "Demon")
@@ -60,7 +61,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 7,
                     parameters = new List<Param>()
                     {
-                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the demon spills out when sliced"),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "Set the amount of coins the demon spills out when sliced."),
                     }
                 },
                 //backwards compatibility
@@ -79,9 +80,9 @@ namespace HeavenStudio.Games.Loaders
                     hidden = true
                 },
             },
-            new List<string>() {"ntr", "normal"},
+            new List<string>() { "ntr", "normal" },
             "ntrsamurai", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
@@ -94,7 +95,8 @@ namespace HeavenStudio.Games
 
     public class SamuraiSliceNtr : Minigame
     {
-        public enum ObjectType {
+        public enum ObjectType
+        {
             Melon,
             Fish,
             Demon,
@@ -165,30 +167,25 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            SetupBopRegion("samuraiSliceNtr", "bop", "whoBopsAuto", false);
+            SetupBopRegion("samuraiSliceNtr", "bop", "bopAuto", false);
         }
 
         public override void OnBeatPulse(double beat)
         {
-            int whoBopsAuto = BeatIsInBopRegionInt(beat);
-            bool goBopSamurai = whoBopsAuto == (int)WhoBops.Samurai || whoBopsAuto == (int)WhoBops.Both;
-            bool goBopChild = whoBopsAuto == (int)WhoBops.Children || whoBopsAuto == (int)WhoBops.Both;
-
-            if (goBopSamurai) player.Bop();
-            if (goBopChild) childParent.GetComponent<NtrSamuraiChild>().Bop();
+            if (BeatIsInBopRegion(beat)) childParent.GetComponent<NtrSamuraiChild>().Bop();
         }
 
         void Update()
         {
             if (PlayerInput.GetIsAction(InputAction_AltDown))
                 DoStep();
-            if (PlayerInput.GetIsAction(InputAction_AltUp) && player.isStepping())
+            if (PlayerInput.GetIsAction(InputAction_AltUp) && player.IsStepping())
                 DoUnStep();
             if (PlayerInput.GetIsAction(InputAction_FlickPress))
                 DoSlice();
         }
 
-        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
+        public void Bop(double beat, float length, bool whoBops, bool whoBopsAuto)
         {
             for (int i = 0; i < length; i++)
             {
@@ -199,22 +196,11 @@ namespace HeavenStudio.Games
             }
         }
 
-        void BopSingle(int whoBops)
+        void BopSingle(bool whoBops)
         {
-            switch (whoBops)
+            if (whoBops)
             {
-                case (int)WhoBops.Samurai:
-                    player.Bop();
-                    break;
-                case (int)WhoBops.Children:
-                    childParent.GetComponent<NtrSamuraiChild>().Bop();
-                    break;
-                case (int)WhoBops.Both:
-                    player.Bop();
-                    childParent.GetComponent<NtrSamuraiChild>().Bop();
-                    break;
-                default:
-                    break;
+                childParent.GetComponent<NtrSamuraiChild>().Bop();
             }
         }
 
@@ -233,7 +219,7 @@ namespace HeavenStudio.Games
 
         public void DoSlice()
         {
-            if (player.isStepping())
+            if (player.IsStepping())
             {
                 launcher.GetComponent<Animator>().Play("UnStep", -1, 0);
             }
@@ -241,13 +227,13 @@ namespace HeavenStudio.Games
             player.Slash();
         }
 
-        public void Bop(double beat, float length) 
+        public void Bop(double beat, float length)
         {
             bop.length = length;
             bop.startBeat = beat;
         }
 
-        public void ObjectIn(double beat, int type = (int) ObjectType.Melon, int value = 1, bool funnyMinecraft = false)
+        public void ObjectIn(double beat, int type = (int)ObjectType.Melon, int value = 1, bool funnyMinecraft = false)
         {
             var mobj = GameObject.Instantiate(objectPrefab, objectHolder);
             var mobjDat = mobj.GetComponent<NtrSamuraiObject>();

@@ -15,13 +15,23 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("theDazzles", "The Dazzles", "9cfff7", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; TheDazzles.instance.Bop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle2", true, "Bop", "Toggle if the dazzles should bop for the duration of this event."),
+                        new Param("toggle", false, "Bop (Auto)", "Toggle if the dazzles should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("crouch", "Crouch")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PreCrouch(e.beat, e.length, e["countIn"]);  },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Should the count-In be from megamix, DS or random?")
+                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Set if the count-in should be from Megamix, DS or random.")
                     }
                 },
                 new GameAction("crouchStretch", "Crouch (Stretchable)")
@@ -31,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Should the count-In be from megamix, DS or random?")
+                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Set if the count-in should be from Megamix, DS or random.")
                     }
                 },
                 new GameAction("poseThree", "Pose Horizontal")
@@ -40,8 +50,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", false, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("poseTwo", "Pose Vertical")
@@ -50,8 +60,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", true, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("poseSixDiagonal", "Pose Diagonal")
@@ -60,8 +70,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", false, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("poseSixColumns", "Pose Rows")
@@ -70,8 +80,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", false, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("poseSix", "Pose Six")
@@ -80,8 +90,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", true, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("customPose", "Custom Pose")
@@ -91,14 +101,14 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("upLeft", new EntityTypes.Float(0, 30f, 0f), "Up Left Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("upMiddle", new EntityTypes.Float(0, 30f, 1f), "Up Middle Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("upRight", new EntityTypes.Float(0, 30f, 2f), "Up Right Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("downLeft", new EntityTypes.Float(0, 30f, 0f), "Down Left Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("downMiddle", new EntityTypes.Float(0, 30f, 1f), "Down Middle Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("player", new EntityTypes.Float(0, 30f, 2f), "Player Pose Beat", "How many beats after the event has started should the player pose?"),
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("upLeft", new EntityTypes.Float(0, 30f, 0f), "Up Left Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("upMiddle", new EntityTypes.Float(0, 30f, 1f), "Up Middle Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("upRight", new EntityTypes.Float(0, 30f, 2f), "Up Right Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("downLeft", new EntityTypes.Float(0, 30f, 0f), "Down Left Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("downMiddle", new EntityTypes.Float(0, 30f, 1f), "Down Middle Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("player", new EntityTypes.Float(0, 30f, 2f), "Player Pose Beat", "Set how many beats after the event has started the player will pose."),
+                        new Param("toggle", false, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("forceHold", "Force Hold")
@@ -106,17 +116,6 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { TheDazzles.instance.ForceHold(); },
                     defaultLength = 0.5f
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; TheDazzles.instance.Bop(e.beat, e.length, e["toggle2"], e["toggle"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle2", true, "Should bop?", "Should the dazzles bop?"),
-                        new Param("toggle", false, "Should auto bop?", "Should the dazzles auto bop?")
-                    }
-                },
-
             },
             new List<string>() {"ntr", "normal"},
             "ntrboxshow", "en",
