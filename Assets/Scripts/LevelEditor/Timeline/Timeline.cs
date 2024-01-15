@@ -338,7 +338,6 @@ namespace HeavenStudio.Editor.Track
 
         public void CreateWaveform()
         {
-            Debug.Log("what");
             // DrawWaveform();
             // StartCoroutine(DrawWaveformRealtime());
         }

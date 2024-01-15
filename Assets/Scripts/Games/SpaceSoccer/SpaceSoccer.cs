@@ -302,14 +302,12 @@ namespace HeavenStudio.Games
                 {
                     if (hitBeats.Exists(x => x == offsetBeat - 0.5)) return;
                     ScoreMiss();
-                    Debug.Log("Miss toe");
                 }
             }
             else if (!IsExpectingInputNow(InputAction_BasicPress))
             {
                 if (hitBeats.Exists(x => offsetBeat == x)) return;
                 ScoreMiss();
-                Debug.Log("Miss");
             }
         }
 

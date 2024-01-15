@@ -285,7 +285,6 @@ namespace HeavenStudio.Games
 
         private void GrabJumpEvents(double beat)
         {
-            Debug.Log("Beat: " + beat);
             var jumpEvents = EventCaller.GetAllInGameManagerList("seeSaw", new string[] { "longLong", "longShort", "shortLong", "shortShort" });
             List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < jumpEvents.Count; i++)

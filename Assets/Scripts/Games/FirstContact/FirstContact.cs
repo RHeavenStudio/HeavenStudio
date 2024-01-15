@@ -345,8 +345,6 @@ namespace HeavenStudio.Games
 
         public void LookAtDirection(int alienLookAt, int translatorLookAt)
         {
-            Debug.Log(alienLookAt);
-            Debug.Log(translatorLookAt);
             switch (alienLookAt)
             {
                 case 0:

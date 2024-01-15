@@ -298,7 +298,7 @@ namespace HeavenStudio.Games
             }
 
             if (CartGuyParentAnim.gameObject.activeSelf) {
-                Debug.Log(cartPhone ? "PhoneBop" : "Bop");
+                // Debug.Log(cartPhone ? "PhoneBop" : "Bop");
                 if (cartPhone) {
                     CartGuyAnim.DoScaledAnimationAsync("PhoneBop", 0.5f);
                 } else {

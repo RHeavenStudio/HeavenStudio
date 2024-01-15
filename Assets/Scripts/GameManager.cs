@@ -464,7 +464,6 @@ namespace HeavenStudio
                         double seekTime = eventCaller.GetGameAction(entityDatamodel[0], entityDatamodel[1]).preFunctionLength;
                         if (entity.beat - seekTime == preSequenceBeats[currentPreSequence])
                         {
-                            Debug.Log($"Calling pre-event for {entity.datamodel} at beat {entity.beat - seekTime} (prefunction length {seekTime})");
                             entitiesInRange.Add(entity);
                         }
                     }

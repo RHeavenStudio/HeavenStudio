@@ -159,7 +159,6 @@ namespace HeavenStudio.Games
 
                     if (stepsPassed > 1000)
                     {
-                        Debug.Log("Loop broke!");
                         return;
                     }
                 }

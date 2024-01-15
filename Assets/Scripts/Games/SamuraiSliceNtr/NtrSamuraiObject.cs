@@ -177,7 +177,6 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
                     default:    // object initial spawn, flying towards board
                         flyPos = cond.GetPositionFromBeat(launchProg.startBeat, 3f);
-                        Debug.Log(flyPos);
                         transform.position = currentCurve.GetPoint(Mathf.Clamp01(flyPos));
                         if (flyPos >= 1)
                             transform.rotation = Quaternion.identity;

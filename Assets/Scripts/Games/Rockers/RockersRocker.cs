@@ -126,7 +126,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
                     float pitch = SoundByte.GetPitchFromSemiTones(pitches[i], true);
                     float volume = GetVolumeBasedOnAmountOfStrings(pitches.Length);
                     string soundName = "rockers/strings/" + (gleeClub ? "gleeClub/" : "normal/" + (i + 1));
-                    Debug.Log("Pitch: " + pitch + " Volume: " + volume + " Name: " + soundName);
+                    // Debug.Log("Pitch: " + pitch + " Volume: " + volume + " Name: " + soundName);
                     stringSounds[i] = SoundByte.PlayOneShotGame(soundName, -1, pitch, volume, true);
                 }
             }

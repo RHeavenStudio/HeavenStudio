@@ -298,7 +298,6 @@ namespace HeavenStudio.Games
                 }
                 if (isBig) hasBigBall = true;
             }
-            Debug.Log(autoPassTurn);
             if (autoPassTurn)
             {
                 PassTurn(beat + interval, interval, beat);

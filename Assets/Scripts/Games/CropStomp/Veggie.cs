@@ -214,8 +214,6 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             }
             gotStomped = true;
 
-            Debug.Log("Stomped!");
-
             var cond = Conductor.instance;
 
             ParticleSystem spawnedHit = Instantiate(game.hitParticle, game.hitParticle.transform.parent);
