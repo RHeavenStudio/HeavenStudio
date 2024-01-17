@@ -22,8 +22,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3,
                     parameters = new()
                     {
-                        new("long", false, "Mouth Hold"),
-                        new("open", true, "Should Open Mouth")
+                        new("long", false, "Mouth Hold", "Toggle if Beary should keep his mouth and neck extended after catching the treat."),
+                        new("open", true, "Open Mouth", "Toggle if Beary should open his mouth in preparation for the treat.")
                     }
                 },
                 new GameAction("cake", "Cake")
@@ -33,18 +33,22 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4,
                     parameters = new()
                     {
-                        new("long", false, "Mouth Hold"),
-                        new("open", true, "Should Open Mouth")
+                        new("long", false, "Mouth Hold", "Toggle if Beary should keep his mouth and neck extended after catching the treat."),
+                        new("open", true, "Open Mouth", "Toggle if Beary should open his mouth in preparation for the treat.")
                     }
                 },
                 new GameAction("stretchEmotion", "Emotion")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; if (BlueBear.IsInstantEmotion(e["type"])) BlueBear.instance.SetEmotion(e.beat, e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; if (e["instant"] || e["type"] == (int)BlueBear.EmotionStretchType.NoEmotion) BlueBear.instance.SetEmotion(e.beat, e["type"]); },
                     defaultLength = 4,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("type", BlueBear.EmotionStretchType.NoEmotion, "Emotion", "Which emotion should the blue bear use?"),
+                        new Param("type", BlueBear.EmotionStretchType.NoEmotion, "Emotion", "Set the emotion animation Beary should play.", new()
+                        {
+                            new((x, _) => (int)x != (int)BlueBear.EmotionStretchType.NoEmotion, new string[] { "instant" })
+                        }),
+                        new Param("instant", false, "Instant", "Toggle if the emotion should jump to it's end state. Making \"LookUp\" instant will cause Beary to keep his head down."),
                     }
                 },
                 new GameAction("wind", "Wind")
@@ -62,25 +66,25 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { BlueBear.instance.OpenMouth(); },
                     defaultLength = 0.5f
                 },
-                new GameAction("story", "Story")
+                new GameAction("story", "Memory Drawing")
                 {
                     defaultLength = 4,
                     parameters = new List<Param>()
                     {
-                        new Param("story", BlueBear.StoryType.Date, "Story"),
-                        new Param("enter", true, "Enter")
+                        new Param("story", BlueBear.StoryType.Date, "Memory", "Set the memory that should appear."),
+                        new Param("enter", true, "Enter", "Toggle if the memory should enter or exit the scene.")
                     },
                     resizable = true
                 },
-                new GameAction("crumb", "Set Crumb Threshold")
+                new GameAction("crumb", "Set Crumb Thresholds")
                 {
                     function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetCrumbThreshold(e["right"], e["left"], e["reset"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("right", new EntityTypes.Integer(0, 500, 15), "Right Crumb", "How many treats should the bear eat before the right crumb can appear on his face?"),
-                        new Param("left", new EntityTypes.Integer(0, 500, 30), "Left Crumb", "How many treats should the bear eat before the left crumb can appear on his face?"),
-                        new Param("reset", false, "Reset Treats Eaten", "Should the numbers of treats eaten be reset?")
+                        new Param("right", new EntityTypes.Integer(0, 500, 15), "Right Crumb", "Set how many treats Beary needs to eat for the right crumb to appear."),
+                        new Param("left", new EntityTypes.Integer(0, 500, 30), "Left Crumb", "Set how many treats Beary needs to eat for the left crumb to appear."),
+                        new Param("reset", false, "Reset Treats Eaten", "Toggle if the current amount of treats eaten (and crumbs) should be reset.")
                     }
                 }
             },

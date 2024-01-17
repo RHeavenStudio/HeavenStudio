@@ -23,8 +23,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Bop", "Will the paddlers bop?"),
-                        new Param("bopAuto", false, "Bop (Auto)", "Will the paddlers auto bop?")
+                        new Param("bop", true, "Bop", "Toggle if the paddlers should bop for the duration of this event."),
+                        new Param("bopAuto", false, "Bop (Auto)", "Toggle if the paddlers should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("whistle", "Whistle")
@@ -56,7 +56,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 6f,
                     parameters = new List<Param>()
                     {
-                        new Param("muteAudio", false, "Mute Cowbell", "Whether the cowbell sound should play or not.")
+                        new Param("muteAudio", false, "Mute Cowbell", "Toggle if the cowbell \"tonk-tink-tonk\" sound should be muted.")
                     }
                 },
                 new GameAction("superfast rally", "Superfast Rally")
@@ -65,7 +65,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 12f,
                     parameters = new List<Param>()
                     {
-                        new Param("muteAudio", false, "Mute Cowbell", "Whether the cowbell sound should play or not.")
+                        new Param("muteAudio", false, "Mute Cowbell", "Toggle if the cowbell \"tonk-tink-tonk\" sound should be muted.")
                     }
                 },
                 new GameAction("tonktinktonk", "Tonk-Tink-Tonk (Stretchable)")
@@ -95,10 +95,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4,
                     resizable = true,
                     parameters = new List<Param>() {
-                        new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Angle", "The rotation of the camera around the center of the table"),
-                        new Param("valB", new EntityTypes.Float(0.5f, 4f, 1), "Zoom", "The camera's level of zoom (Lower value = Zoomed in)"),
-                        new Param("type", Util.EasingFunction.Ease.Linear, "Ease", "The easing function to use"),
-                        new Param("additive", true, "Additive Rotation", "Add to current angle instead of setting target angle")
+                        new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Rotation", "Set the rotation of the camera around the center of the table."),
+                        new Param("valB", new EntityTypes.Float(0.5f, 4f, 1), "Zoom", "Set the camera's level of zoom."),
+                        new Param("type", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                        new Param("additive", true, "Additive Rotation", "Toggle if the above rotation should be added to the current angle instead of setting the target angle to travel to.")
                     }
                 },
                 // todo: background recolouring

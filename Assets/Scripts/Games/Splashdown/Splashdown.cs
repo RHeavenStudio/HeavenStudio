@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("type", new EntityTypes.Integer(1, 3, 1), "Type")
+                        new Param("type", new EntityTypes.Integer(1, 3, 1), "Type", "Set the type of animation to play when surfacing.")
                     }
                 },
                 new GameAction("jump", "Jump")
@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("dolphin", true, "Dolphin")
+                        new Param("dolphin", true, "Dolphin", "Toggle if the dolphin should be used.")
                     }
                 },
                 new GameAction("together", "Together Jump")
@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("al", false, "Alley-Oop!")
+                        new Param("al", false, "Alley-Oop!", "Toggle if the \"Alley-Oop!\" sound effect and animation should be used.")
                     }
                 },
                 new GameAction("togetherR9", "Together Jump (Remix 9)")
@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("al", false, "Alley-Oop!")
+                        new Param("al", false, "Alley-Oop!", "Toggle if the \"Alley-Oop!\" sound effect and animation should be used.")
                     }
                 },
                 new GameAction("intro", "Intro")
@@ -63,13 +63,13 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     defaultLength = 8
                 },
-                new GameAction("amount", "Synchrette Amount")
+                new GameAction("amount", "Change Synchrette Number")
                 {
                     function = delegate { Splashdown.instance.SpawnSynchrettes(eventCaller.currentEntity["amount"], eventCaller.currentEntity.beat); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("amount", new EntityTypes.Integer(3, 5, 3), "Amount")
+                        new Param("amount", new EntityTypes.Integer(3, 5, 3), "Synchrettes", "Set how many synchrettes there will be. The player is always the rightmost synchrette.")
                     }
                 }
             },

@@ -1097,7 +1097,6 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public bool CanKick()
         {
             var joe = KarateMan.instance.Joe;
-            Debug.Log(joe.inKick);
             return status == FlyStatus.Fly && joe.inKick;
         }
 

@@ -15,13 +15,23 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("ringside", "Ringside", "6bdfe7", false, false, new List<GameAction>()
             {
+                new GameAction("toggleBop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleBop(e.beat, e.length, e["bop2"], e["bop"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop2", true, "Bop", "Toggle if the wrestler should bop for the duration of this event."),
+                        new Param("bop", false, "Bop (Auto)", "Toggle if the wrestler should automatically bop until another Bop event is reached."),
+                    },
+                    resizable = true,
+                },
                 new GameAction("question", "Question")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Ringside.instance.Question(e.beat, e["alt"], e["variant"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("alt", false, "Alt", "Whether the alt voice line should be used or not."),
-                        new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Which variant of the cue do you wish to play.")
+                        new Param("alt", false, "Alternate Voice Line", "Toggle if the reporter should use an alternate voice line."),
+                        new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Choose the variant of the cue.")
                     },
                     defaultLength = 4f
                 },
@@ -30,7 +40,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {var e = eventCaller.currentEntity; Ringside.instance.BigGuy(e.beat, e["variant"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Which variant of the cue do you wish to play.")
+                        new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Choose the variant of the cue.")
                     },
                     defaultLength = 4f
                 },
@@ -39,30 +49,20 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; Ringside.PoseForTheFans(e.beat, e["and"], e["variant"], e["keepZoomedOut"], e["newspaperBeats"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("and", false, "And", "Whether the And voice line should be said or not."),
-                        new Param("variant", Ringside.PoseForTheFansVariant.Random, "Variant", "Which variant of the cue do you wish to play."),
-                        new Param("keepZoomedOut", false, "Keep Zoomed Out", "Whether the camera should keep being zoomed out after the event has completed."),
-                        new Param("newspaperBeats", new EntityTypes.Float(0, 80, 0), "Newspaper Beats", "How many beats should the newspaper stay for?"),
-                        new Param("ease", Util.EasingFunction.Ease.EaseOutQuad, "Camera Ease", "What ease should the camera use?"),
+                        new Param("and", false, "And", "Toggle if the camera crew should say \"And\" before saying the rest of the cue."),
+                        new Param("variant", Ringside.PoseForTheFansVariant.Random, "Variant", "Choose the variant of the cue."),
+                        new Param("keepZoomedOut", false, "Stay Zoomed Out", "Toggle if the camera should stay zoomed out after the event."),
+                        new Param("newspaperBeats", new EntityTypes.Float(0, 80, 0), "Newspaper Beats", "Set how many beats the newspaper should be visible for."),
+                        new Param("ease", Util.EasingFunction.Ease.EaseOutQuad, "Ease", "Set the easing of the action."),
                     },
                     defaultLength = 4f
-                },
-                new GameAction("toggleBop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleBop(e.beat, e.length, e["bop2"], e["bop"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop2", true, "Bop?", "Whether the wrestler should bop or not."),
-                        new Param("bop", false, "Bop? (Auto)", "Whether the wrestler should bop automatically or not."),
-                    },
-                    resizable = true,
                 },
                 new GameAction("toggleSweat", "Toggle Sweat")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleSweat(e["sweat"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("sweat", false, "Sweat?", "Whether the wrestler should sweat or not."),
+                        new Param("sweat", false, "Sweat", "Toggle if the wrestler should sweat."),
                     },
                     defaultLength = 0.5f
                 },
@@ -72,8 +72,8 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {if (Ringside.instance == null) return; var e = eventCaller.currentEntity; Ringside.instance.PreQuestion(e.beat, e["variant"], e.length); },
                     parameters = new List<Param>()
                     {
-                        new Param("alt", false, "Alt", "Whether the alt voice line should be used or not."),
-                        new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Which variant of the cue do you wish to play.")
+                        new Param("alt", false, "Alternate Voice Line", "Toggle if the reporter should use an alternate voice line."),
+                        new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Choose the variant of the cue.")
                     },
                     defaultLength = 4f,
                     resizable = true

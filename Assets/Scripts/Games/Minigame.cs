@@ -377,7 +377,7 @@ namespace HeavenStudio.Games
             {
                 if (pair.name == name)
                 {
-                    Debug.Log($"Playing sound sequence {pair.name} at beat {startBeat}");
+                    // Debug.Log($"Playing sound sequence {pair.name} at beat {startBeat}");
                     return pair.sequence.Play(startBeat);
                 }
             }
@@ -446,7 +446,7 @@ namespace HeavenStudio.Games
             {
                 if (bopRegion.ContainsKey(e.beat))
                 {
-                    Debug.Log("Two bops on the same beat, ignoring this one");
+                    // Debug.Log("Two bops on the same beat, ignoring this one");
                     continue;
                 }
                 if (isBool)

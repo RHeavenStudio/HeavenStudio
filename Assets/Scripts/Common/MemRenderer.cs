@@ -17,7 +17,6 @@ public class MemRenderer : MonoBehaviour
 
     public void ChangeMem()
     {
-        Debug.Log("ChangeMem");
         Destroy(_instance);
         _instance = Instantiate(prefabs[UnityEngine.Random.Range(0, prefabs.Length)], transform);
     }

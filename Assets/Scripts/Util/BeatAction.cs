@@ -26,8 +26,8 @@ namespace HeavenStudio.Util
         {
             if (behaviour == null)
             {
-                Debug.LogWarning("Starting a BeatAction with no assigned behaviour. The Conductor will be used instead.");
-                behaviour = Conductor.instance;
+                Debug.LogWarning("Starting a BeatAction with no assigned behaviour. The Game Manager will be used instead.");
+                behaviour = GameManager.instance;
             }
             CancellationTokenSource cancelToken = new CancellationTokenSource();
             RunAsync(behaviour, actions, cancelToken.Token).Forget();

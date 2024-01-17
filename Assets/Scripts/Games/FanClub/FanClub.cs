@@ -20,8 +20,8 @@ namespace HeavenStudio.Games.Loaders
                         resizable = true,
                         parameters = new List<Param>()
                         {
-                            new Param("type", FanClub.IdolBopType.Both, "Bop target", "Who to make bop"),
-                            new Param("type2", FanClub.IdolBopType.None, "Bop target (Auto)", "Who to make auto bop"),
+                            new Param("type", FanClub.IdolBopType.Both, "Bop", "Set the character(s) to bop for the duration of this event."),
+                            new Param("type2", FanClub.IdolBopType.None, "Bop", "Set the character(s) to automatically bop until another Bop event is reached."),
                         }
                     },
                     new GameAction("yeah, yeah, yeah", "Yeah, Yeah, Yeah!")
@@ -30,8 +30,8 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 8,
                         parameters = new List<Param>()
                         {
-                            new Param("toggle", false, "Disable call", "Disable the idol's call"),
-                            new Param("toggle2", false, "Disable response SFX", "Disable the monkeys's response")
+                            new Param("toggle", false, "Mute Arisa", "Toggle if Arisa's cue should be muted."),
+                            new Param("toggle2", false, "Mute Monkey SFX", "Toggle if the monkey's (including the player's) sound effects should be muted.")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e["toggle"]);},
                         preFunction = delegate { var e = eventCaller.currentEntity; FanClub.HaiSound(e.beat, e["toggle"], e["toggle2"]); }
@@ -43,9 +43,9 @@ namespace HeavenStudio.Games.Loaders
                         parameters = new List<Param>()
                         {
                             new Param("type", FanClub.KamoneResponseType.Through, "Response type", "Type of response to use"),
-                            new Param("toggle", false, "Disable call", "Disable the idol's call"),
-                            new Param("toggle2", false, "Disable response SFX", "Disable the monkeys's response"),
-                            new Param("alt", false, "Alternate cue", "Use an alternate cue")
+                            new Param("toggle", false, "Mute Arisa", "Toggle if Arisa's cue should be muted."),
+                            new Param("toggle2", false, "Mute Monkey SFX", "Toggle if the monkey's (including the player's) sound effects should be muted."),
+                            new Param("alt", false, "Alternate cue", "Toggle if Arisa should use the \"Wonderful\" (iina) cue.")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]);},
                         preFunction = delegate { var e = eventCaller.currentEntity; FanClub.KamoneSound(e.beat, e["toggle"], e["toggle2"], 0, e["type"], e["alt"]); }
@@ -56,7 +56,7 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 4,
                         parameters = new List<Param>()
                         {
-                            new Param("toggle", false, "Disable call", "Disable the call")
+                            new Param("toggle", false, "Disable Call", "Toggle if the monkey's \"Ooh!\" cue should play.")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady(e.beat, e["toggle"]); },
                         preFunction = delegate { var e = eventCaller.currentEntity; FanClub.BigReadySound(e.beat, e["toggle"]); }
@@ -67,28 +67,28 @@ namespace HeavenStudio.Games.Loaders
                         resizable = true,
                         parameters = new List<Param>()
                         {
-                            new Param("type", FanClub.IdolAnimations.Bop, "Animation", "Animation to play"),
-                            new Param("who", FanClub.IdolType.All, "Target Idol", "Target to play the animation on")
+                            new Param("type", FanClub.IdolAnimations.Bop, "Animation", "Set the animation to play."),
+                            new Param("who", FanClub.IdolType.All, "Target Idol", "Set the character to perform the above animation.")
                         }
                     },
-                    new GameAction("play stage animation", "Stage Coreography")
+                    new GameAction("play stage animation", "Stage Effects")
                     {
                         function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnimStage(e.beat, e["type"]); },
                         resizable = true,
                         parameters = new List<Param>()
                         {
-                            new Param("type", FanClub.StageAnimations.Flash, "Animation", "Animation to play")
+                            new Param("type", FanClub.StageAnimations.Flash, "Effect", "Set the effect to play.")
                         }
                     },
-                    new GameAction("friend walk", "Backup Dancers Entrance")
+                    new GameAction("friend walk", "Backup Dancers")
                     {
                         function = delegate { var e = eventCaller.currentEntity; FanClub.instance.DancerTravel(e.beat, e.length, e["exit"], e["instant"]); },
                         defaultLength = 16f,
                         resizable = true,
                         parameters = new List<Param>()
                         {
-                            new Param("exit", false, "Exit", "Backup dancers exit instead"),
-                            new Param("instant", false, "Instant Travel", "Backup dancers instantly finish their travel"),
+                            new Param("exit", false, "Exit", "Toggle if the backup dancers should enter or exit the scene."),
+                            new Param("instant", false, "Instant", "Toggle if the backup dancers should instantly finish their enter/exit."),
                         }
                     },
                     new GameAction("set performance type", "Coreography Type")
@@ -98,7 +98,7 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 0.5f,
                         parameters = new List<Param>()
                         {
-                            new Param("type", FanClub.IdolPerformanceType.Normal, "Performance Type", "Set of animations for the idol to use")
+                            new Param("type", FanClub.IdolPerformanceType.Normal, "Performance Type", "Set the type animations for Arisa to use.")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e["type"]); }
                     },

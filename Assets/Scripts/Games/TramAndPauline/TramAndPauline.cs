@@ -11,35 +11,35 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("tramAndPauline", "Tram & Pauline", "adb5e7", "ca8b17", "c14fae", false, false, new List<GameAction>()
+            return new Minigame("tramAndPauline", "Tram & Pauline \n<color=#adadad>(Toran to Porin)</color>", "adb5e7", "ca8b17", "c14fae", false, false, new List<GameAction>()
             {
                 new GameAction("prepare", "Prepare")
                 {
                     function = delegate { TramAndPauline.instance.Prepare(eventCaller.currentEntity.beat, (TramAndPauline.TramOrPauline)eventCaller.currentEntity["who"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("who", TramAndPauline.TramOrPauline.Pauline, "Who Prepares?")
+                        new Param("who", TramAndPauline.TramOrPauline.Pauline, "Target", "Toggle who should prepare to jump.")
                     }
                 },
-                new GameAction("pauline", "Pauline")
-                {
-                    function = delegate { TramAndPauline.instance.Jump(eventCaller.currentEntity.beat, TramAndPauline.TramOrPauline.Pauline, eventCaller.currentEntity["toggle"]); },
-                    defaultLength = 2f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle", false, "Audience Reaction")
-                    }
-                },
-                new GameAction("tram", "Tram")
+                new GameAction("tram", "Tram Jump")
                 {
                     function = delegate { TramAndPauline.instance.Jump(eventCaller.currentEntity.beat, TramAndPauline.TramOrPauline.Tram, eventCaller.currentEntity["toggle"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Audience Reaction")
+                        new Param("toggle", false, "Audience Reaction", "Toggle if the audience should react on a sucessful hit.")
                     }
                 },
-                new GameAction("shape", "Change Transformation")
+                new GameAction("pauline", "Pauline Jump")
+                {
+                    function = delegate { TramAndPauline.instance.Jump(eventCaller.currentEntity.beat, TramAndPauline.TramOrPauline.Pauline, eventCaller.currentEntity["toggle"]); },
+                    defaultLength = 2f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Audience Reaction", "Toggle if the audience should react on a sucessful hit.")
+                    }
+                },
+                new GameAction("shape", "Set Transformation")
                 {
                     function = delegate 
                     {
@@ -49,8 +49,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("pauline", true, "Pauline is a Fox?"),
-                        new Param("tram", true, "Tram is a Fox?")
+                        new Param("tram", true, "Fox Tram", "Toggle if Tram should be set to his fox transformation."),
+                        new Param("pauline", true, "Fox Pauline", "Toggle if Pauline should be set to her fox transformation.")
                     }
                 },
                 new GameAction("curtains", "Curtains")
@@ -64,8 +64,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Going Up?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("toggle", false, "Rise", "Toggle if the curtains should rise or fall."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 }
             },

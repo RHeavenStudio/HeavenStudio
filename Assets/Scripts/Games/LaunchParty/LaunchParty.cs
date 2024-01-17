@@ -19,11 +19,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("offset", new EntityTypes.Float(-1, 2, -1), "Spawn Offset", "When should the rocket rise up?"),
-                        new Param("note1", new EntityTypes.Integer(-24, 24, 2), "1st Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note2", new EntityTypes.Integer(-24, 24, 4), "2nd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note3", new EntityTypes.Integer(-24, 24, 5), "3rd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note4", new EntityTypes.Integer(-24, 24, 7), "4th Note", "The number of semitones up or down this note should be pitched")
+                        new Param("offset", new EntityTypes.Float(-1, 2, -1), "Spawn Offset", "Set when the rocket should rise up."),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 2), "1st Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, 4), "2nd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 5), "3rd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, 7), "4th Note", "Set the number of semitones up or down this note should be pitched.")
                     }
                 },
                 new GameAction("partyCracker", "Party-Popper")
@@ -32,13 +32,13 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "When should the rocket rise up?"),
-                        new Param("note1", new EntityTypes.Integer(-24, 24, 4), "1st Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note2", new EntityTypes.Integer(-24, 24, 5), "2nd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note3", new EntityTypes.Integer(-24, 24, 7), "3rd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note4", new EntityTypes.Integer(-24, 24, 9), "4th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note5", new EntityTypes.Integer(-24, 24, 11), "5th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note6", new EntityTypes.Integer(-24, 24, 12), "6th Note", "The number of semitones up or down this note should be pitched")
+                        new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "Set when the rocket should rise up."),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 4), "1st Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, 5), "2nd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 7), "3rd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, 9), "4th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note5", new EntityTypes.Integer(-24, 24, 11), "5th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note6", new EntityTypes.Integer(-24, 24, 12), "6th Note", "Set the number of semitones up or down this note should be pitched.")
                     }
                 },
                 new GameAction("bell", "Bell")
@@ -48,16 +48,16 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "When should the rocket rise up?"),
-                        new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note3", new EntityTypes.Integer(-24, 24, 4), "3rd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note4", new EntityTypes.Integer(-24, 24, 5), "4th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note5", new EntityTypes.Integer(-24, 24, 7), "5th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note6", new EntityTypes.Integer(-24, 24, 9), "6th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note7", new EntityTypes.Integer(-24, 24, 11), "7th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note8", new EntityTypes.Integer(-24, 24, 12), "8th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note9", new EntityTypes.Integer(-24, 24, 0), "9th Note (Launch)", "The number of semitones up or down this note should be pitched"),
+                        new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "Set when the rocket should rise up."),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 4), "3rd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, 5), "4th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note5", new EntityTypes.Integer(-24, 24, 7), "5th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note6", new EntityTypes.Integer(-24, 24, 9), "6th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note7", new EntityTypes.Integer(-24, 24, 11), "7th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note8", new EntityTypes.Integer(-24, 24, 12), "8th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note9", new EntityTypes.Integer(-24, 24, 0), "9th Note (Launch)", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
                 new GameAction("bowlingPin", "Bowling Pin")
@@ -67,21 +67,21 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "When should the rocket rise up?"),
-                        new Param("note1", new EntityTypes.Integer(-24, 24, 5), "1st Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note2", new EntityTypes.Integer(-24, 24, -1), "2nd Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note3", new EntityTypes.Integer(-24, 24, 0), "3rd Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note4", new EntityTypes.Integer(-24, 24, -1), "4th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note5", new EntityTypes.Integer(-24, 24, 0), "5th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note6", new EntityTypes.Integer(-24, 24, -1), "6th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note7", new EntityTypes.Integer(-24, 24, 0), "7th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note8", new EntityTypes.Integer(-24, 24, -1), "8th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note9", new EntityTypes.Integer(-24, 24, 0), "9th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note10", new EntityTypes.Integer(-24, 24, -1), "10th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note11", new EntityTypes.Integer(-24, 24, 0), "11th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note12", new EntityTypes.Integer(-24, 24, -1), "12th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note13", new EntityTypes.Integer(-24, 24, 0), "13th Note (Flute)", "The number of semitones up or down this note should be pitched"),
-                        new Param("note14", new EntityTypes.Integer(-24, 24, 7), "14th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "Set when the rocket should rise up."),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 5), "1st Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, -1), "2nd Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 0), "3rd Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, -1), "4th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note5", new EntityTypes.Integer(-24, 24, 0), "5th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note6", new EntityTypes.Integer(-24, 24, -1), "6th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note7", new EntityTypes.Integer(-24, 24, 0), "7th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note8", new EntityTypes.Integer(-24, 24, -1), "8th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note9", new EntityTypes.Integer(-24, 24, 0), "9th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note10", new EntityTypes.Integer(-24, 24, -1), "10th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note11", new EntityTypes.Integer(-24, 24, 0), "11th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note12", new EntityTypes.Integer(-24, 24, -1), "12th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note13", new EntityTypes.Integer(-24, 24, 0), "13th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note14", new EntityTypes.Integer(-24, 24, 7), "14th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
                         new Param("note15", new EntityTypes.Integer(-24, 24, 7), "15th Note", "The number of semitones up or down this note should be pitched")
                     }
                 },
@@ -91,10 +91,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("xPos", new EntityTypes.Float(-40f, 40f, 0f), "X Position", "Which position on the X axis should the Launch Pad travel to?"),
-                        new Param("yPos", new EntityTypes.Float(-30f, 30f, 0f), "Y Position", "Which position on the Y axis should the Launch Pad travel to?"),
-                        new Param("zPos", new EntityTypes.Float(-90f, 90f, 0f), "Z Position", "Which position on the Z axis should the Launch Pad travel to?"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
+                        new Param("xPos", new EntityTypes.Float(-40f, 40f, 0f), "X Position", "Set the position on the X axis that the Launch Pad should travel to."),
+                        new Param("yPos", new EntityTypes.Float(-30f, 30f, 0f), "Y Position", "Set the position on the Y axis that the Launch Pad should travel to."),
+                        new Param("zPos", new EntityTypes.Float(-90f, 90f, 0f), "Z Position", "Set the position on the Z axis that the Launch Pad should travel to."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("rotMove", "Change Launch Pad Rotation")
@@ -104,9 +104,35 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("rot", new EntityTypes.Float(-360, 360, 0), "Angle", "Which angle of rotation should the Launch Pad rotate towards?"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
+                new GameAction("toggleStars", "Falling Stars")
+                {
+                    // function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles(e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
+                    hidden = true,
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Stars", "Toggle if stars should fall from the top of the screen.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "valA", "valB", "valC"})
+                        }),
+                        new Param("valA", new EntityTypes.Float(0.1f, 10f, 1f), "Star Density", "Set how many stars are spawned."),
+                        new Param("valB", new EntityTypes.Float(0.01f, 5f, 0.1f), "Front Star Fall Speed", "Set how fast the front stars fall to the bottom edge of the screen."),
+                        new Param("valC", new EntityTypes.Float(0.01f, 5f, 0.1f), "Back Star Fall Speed", "Set how fast the stars fall to the bottom edge of the screen.")
+                    }
+                },
+                new GameAction("scrollSpeed", "Scroll Speed")
+                {
+                    // function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.UpdateScrollSpeed(e["speed"]); },
+                    hidden = true,
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("speed", new EntityTypes.Float(0, 100, 0.5f), "Scroll Speed", "Set how fast the background will scroll down."),
+                    }
+                }
             },
             new List<string>() {"rvl", "normal"},
             "rvlrocket", "en",

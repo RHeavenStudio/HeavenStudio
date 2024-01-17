@@ -2,7 +2,7 @@ using System;
 
 public static class AppInfo {
     public const string Version = "0.0.1018";
-    public static readonly DateTime Date = new DateTime(2023, 12, 21, 03, 53, 15, 934, DateTimeKind.Utc);
+    public static readonly DateTime Date = new DateTime(2024, 01, 15, 19, 39, 36, 317, DateTimeKind.Utc);
 }
 
 
@@ -56,7 +56,9 @@ public class BuildNumberUpdater : UnityEditor.Build.IPreprocessBuild
             int.TryParse(bundleVersionSplit[1], out minor);
         if (bundleVersionSplit.Length >= 3)
             int.TryParse(bundleVersionSplit[2], out subVersion);
+#if !HEAVENSTUDIO_PROD
         ++subVersion;
+#endif
         string version = string.Format("{0}.{1}.{2}", major, minor, subVersion);
         var bundleVersionCode = (major * 100000) + (minor * 1000) + subVersion;
 

@@ -29,20 +29,15 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("slowDown", true, "Slowdown Effect", "Should there be a slowdown effect when the ghost is hit?"),
-                        new Param("volume1", new EntityTypes.Integer(0, 100, 100), "Move Volume 1", "What height and what volume should this move be at?"),
-                        new Param("volume2", new EntityTypes.Integer(0, 100, 100), "Move Volume 2", "What height and what volume should this move be at?"),
-                        new Param("volume3", new EntityTypes.Integer(0, 100, 100), "Move Volume 3", "What height and what volume should this move be at?"),
-                        new Param("volume4", new EntityTypes.Integer(0, 100, 100), "Move Volume 4", "What height and what volume should this move be at?"),
-                        new Param("volume5", new EntityTypes.Integer(0, 100, 100), "Move Volume 5", "What height and what volume should this move be at?"),
-                        new Param("volume6", new EntityTypes.Integer(0, 100, 100), "Move Volume 6", "What height and what volume should this move be at?"),
-                        new Param("volume7", new EntityTypes.Integer(0, 100, 100), "Move Volume 7", "What height and what volume should this move be at?"),
+                        new Param("slowDown", true, "Slowdown Effect", "Toggle if there should be a slowdown effect when the ghost is hit."),
+                        new Param("volume1", new EntityTypes.Integer(0, 100, 100), "Move Volume 1", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume2", new EntityTypes.Integer(0, 100, 100), "Move Volume 2", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume3", new EntityTypes.Integer(0, 100, 100), "Move Volume 3", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume4", new EntityTypes.Integer(0, 100, 100), "Move Volume 4", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume5", new EntityTypes.Integer(0, 100, 100), "Move Volume 5", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume6", new EntityTypes.Integer(0, 100, 100), "Move Volume 6", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume7", new EntityTypes.Integer(0, 100, 100), "Move Volume 7", "Set the height and volume the ghost should have at this position."),
                     }
-                },
-                new GameAction("forceReload", "Bow Force Reload")
-                {
-                    function = delegate { SneakySpirits.instance.ForceReload(); },
-                    defaultLength = 1f,
                 },
                 new GameAction("movebow", "Bow Enter or Exit")
                 {
@@ -51,9 +46,14 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("exit", true, "Enter?", "Should the bow exit or enter?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
+                        new Param("exit", true, "Enter", "Toggle if the bow should enter or exit the scene."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
+                },
+                new GameAction("forceReload", "Bow Force Reload")
+                {
+                    function = delegate { SneakySpirits.instance.ForceReload(); },
+                    defaultLength = 1f,
                 },
             },
             new List<string>() {"agb", "aim"},

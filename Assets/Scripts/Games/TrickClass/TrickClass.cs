@@ -15,6 +15,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("trickClass", "Trick on the Class", "ecede4", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Toggle if the girl and boy should bop for the duration of this event."),
+                        new Param("autoBop", false, "Bop (Auto)", "Toggle if the girl and boy should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("toss", "Toss Object")
                 {
                     preFunction = delegate
@@ -25,11 +35,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
-                        new Param("obj", TrickClass.TrickObjTypeEditor.PaperBall, "Object", "Changes the object thrown at the player", new List<Param.CollapseParam>()
+                        new Param("obj", TrickClass.TrickObjTypeEditor.PaperBall, "Object", "Choose the object that the girl should throw.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (int)x == (int)TrickClass.TrickObjTypeEditor.Phone, new string[] { "nx" }),
                         }),
-                        new Param("nx", false, "Switch", "Replace the phone with a Switch"),
+                        new Param("nx", false, "Switch", "Toggle if the phone should be replaced with a Nintendo Switch."),
                     }
                 },
                 new GameAction("plane", "Plane")
@@ -47,16 +57,6 @@ namespace HeavenStudio.Games.Loaders
                         TrickClass.PreBlast(eventCaller.currentEntity.beat);
                     },
                     defaultLength = 4,
-                },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Bop", "Should the girl and boy bop?"),
-                        new Param("autoBop", false, "Bop (Auto)", "Should the girl and boy auto bop?")
-                    }
                 },
                 new GameAction("chair", "Chair")
                 {

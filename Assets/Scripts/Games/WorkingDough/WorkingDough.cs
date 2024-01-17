@@ -20,7 +20,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn", "Will the turn automatically be passed at the end of this event?")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     }
                 },
                 new GameAction("small ball", "Small Ball")
@@ -34,7 +34,7 @@ namespace HeavenStudio.Games.Loaders
                     priority = 1,
                     parameters = new List<Param>()
                     {
-                        new Param("hasGandw", false, "Has Mr. Game & Watch")
+                        new Param("hasGandw", false, "Mr. Game & Watch", "Toggle if Mr. Game & Watch should be riding on the ball.")
                     }
                 },
                 new GameAction("passTurn", "Pass Turn")
@@ -42,16 +42,16 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { WorkingDough.PrePassTurn(eventCaller.currentEntity.beat); },
                     preFunctionLength = 1
                 },
-                new GameAction("launch spaceship", "Launch Spaceship")
+                new GameAction("rise spaceship", "Rise Up Spaceship")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip(e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip(e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
                     priority = 0
                 },
-                new GameAction("rise spaceship", "Rise Up Spaceship")
+                new GameAction("launch spaceship", "Launch Spaceship")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip(e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip(e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
                     priority = 0
@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                    new Param("toggle", false, "Go Up?", "Toggle to go Up or Down.")
+                    new Param("toggle", false, "Up", "Toggle if the dough dudes should go up or down.")
                     },
                     resizable = true,
                     priority = 0
@@ -72,7 +72,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.InstantElevation(e["toggle"]);  },
                     parameters = new List<Param>()
                     {
-                    new Param("toggle", true, "Go Up?", "Toggle to go Up or Down.")
+                    new Param("toggle", true, "Up", "Toggle if the dough dudes should go up or down.")
                     },
                     defaultLength = 0.5f,
                     priority = 0
@@ -83,7 +83,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                    new Param("toggle", false, "Should exit?", "Toggle to make him leave or enter.")
+                    new Param("toggle", false, "Exit", "Toggle if Mr. Game & Watch should exit or enter the scene.")
                     },
                     resizable = true,
                     priority = 0
@@ -93,7 +93,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.InstantGANDWEnterOrExit(e["toggle"]);  },
                     parameters = new List<Param>()
                     {
-                    new Param("toggle", false, "Exit?", "Toggle to make him leave or enter.")
+                    new Param("toggle", false, "Exit", "Toggle if Mr. Game & Watch should exit or enter the scene.")
                     },
                     defaultLength = 0.5f,
                     priority = 0
@@ -104,7 +104,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("ship", false, "Spaceship Only", "Will only the spaceship be affected by this event?")
+                        new Param("ship", false, "Spaceship Only", "Toggle if the only the spaceship should be toggled.")
                     }
                 }
             },
@@ -263,15 +263,8 @@ namespace HeavenStudio.Games
         private List<RiqEntity> GetAllBallsInBetweenBeat(double beat, double endBeat)
         {
             List<RiqEntity> ballEvents = EventCaller.GetAllInGameManagerList("workingDough", new string[] { "small ball", "big ball" });
-            List<RiqEntity> tempEvents = new();
-
-            foreach (var entity in ballEvents)
-            {
-                if (entity.beat >= beat && entity.beat < endBeat)
-                {
-                    tempEvents.Add(entity);
-                }
-            }
+            List<RiqEntity> tempEvents = ballEvents.FindAll(x => x.beat >= beat && x.beat < endBeat);
+            tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
             return tempEvents;
         }
 
@@ -298,7 +291,6 @@ namespace HeavenStudio.Games
                 }
                 if (isBig) hasBigBall = true;
             }
-            Debug.Log(autoPassTurn);
             if (autoPassTurn)
             {
                 PassTurn(beat + interval, interval, beat);
@@ -427,6 +419,7 @@ namespace HeavenStudio.Games
 
         public void SpawnPlayerBall(double beat, bool isBig, bool hasGandw)
         {
+            Debug.Log($"Spawned player ball for beat {beat} (big: {isBig})");
             var objectToSpawn = isBig ? playerEnterBigBall : playerEnterSmallBall;
             var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
 
@@ -480,6 +473,12 @@ namespace HeavenStudio.Games
                     queuedIntervals.Clear();
                 }
             }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            queuedIntervals.Clear();
+            passedTurns.Clear();
         }
 
         void Update()

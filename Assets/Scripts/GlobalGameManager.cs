@@ -114,7 +114,7 @@ namespace HeavenStudio
 
             Application.targetFrameRate = -1;
             QualitySettings.vSyncCount = 0;
-            QualitySettings.maxQueuedFrames = 2;
+            QualitySettings.maxQueuedFrames = 1;
             if (PersistentDataManager.gameSettings.isFullscreen)
             {
                 Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
@@ -128,7 +128,7 @@ namespace HeavenStudio
             }
             ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
             PlayerInput.InitInputControllers();
-#if HEAVENSTUDIO_PROD
+#if HEAVENSTUDIO_PROD && !UNITY_EDITOR
             Starpelly.OS.ChangeWindowTitle("Heaven Studio");
             buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
 #elif UNITY_EDITOR

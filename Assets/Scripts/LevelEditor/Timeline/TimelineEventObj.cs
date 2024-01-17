@@ -60,11 +60,11 @@ namespace HeavenStudio.Editor.Track
         private bool altWhenClicked = false;
         private bool dragging = false;
 
-        private float initMoveX = 0.0f;
-        private float initMoveY = 0.0f;
+        private double initMoveX = 0;
+        private float initMoveY = 0;
 
         private bool movedEntity = false;
-        private float lastBeat = 0.0f;
+        private double lastBeat = 0;
         private int lastLayer = 0;
 
         private int lastSiblingIndex;
@@ -125,6 +125,12 @@ namespace HeavenStudio.Editor.Track
             SetColor((int)entity["track"]);
             SetWidthHeight();
             selectedImage.gameObject.SetActive(false);
+
+            lastBeat = entity.beat;
+            initMoveX = 0.0f;
+            initMoveY = 0.0f;
+            lastResizeBeat = 0;
+            lastResizeLength = 0;
         }
 
         public void SetEntity(RiqEntity entity)
@@ -232,7 +238,7 @@ namespace HeavenStudio.Editor.Track
                 {
                     foreach (var marker in Selections.instance.eventsSelected)
                     {
-                        marker.entity.beat = Mathf.Max(Timeline.instance.MousePos2BeatSnap - marker.initMoveX, 0);
+                        marker.entity.beat = System.Math.Max(Timeline.instance.MousePos2BeatSnap - marker.initMoveX, 0);
                         marker.entity["track"] = Mathf.Clamp(Timeline.instance.MousePos2Layer - marker.initMoveY, 0, Timeline.instance.LayerCount - 1);
                         marker.SetColor((int)entity["track"]);
                         marker.SetWidthHeight();
@@ -281,10 +287,10 @@ namespace HeavenStudio.Editor.Track
             foreach (var marker in Selections.instance.eventsSelected)
             {
                 if (setMovedEntity) marker.movedEntity = true;
-                marker.lastBeat = (float)marker.entity.beat;
+                marker.lastBeat = marker.entity.beat;
                 marker.lastLayer = (int)marker.entity["track"];
 
-                marker.initMoveX = Timeline.instance.MousePos2BeatSnap - (float)marker.entity.beat;
+                marker.initMoveX = Timeline.instance.MousePos2BeatSnap - marker.entity.beat;
                 marker.initMoveY = Timeline.instance.MousePos2Layer - (int)marker.entity["track"];
             }
         }

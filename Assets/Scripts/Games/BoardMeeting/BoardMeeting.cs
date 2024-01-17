@@ -15,6 +15,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("boardMeeting", "Board Meeting", "d37912", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Bop(e.beat, e.length, e["bop"], e["auto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Toggle if the pigs & assistant should bop for the duration of this event."),
+                        new Param("auto", false, "Bop (Auto)", "Toggle if the pigs & assistant should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("prepare", "Prepare")
                 {
                     function = delegate { BoardMeeting.instance.Prepare(); }
@@ -30,8 +40,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {var e = eventCaller.currentEntity; BoardMeeting.instance.Spin(e["start"], e["end"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("start", new EntityTypes.Integer(1, 6, 1), "Starting Pig", "Which pig from the far left (1) or far right (4) should be the first to spin?"),
-                        new Param("end", new EntityTypes.Integer(1, 6, 4), "Ending Pig", "Which pig from the far left (1) or far right (4) should be the last to spin?")
+                        new Param("start", new EntityTypes.Integer(1, 6, 1), "Starting Pig", "Choose the leftmost pig in the range to start spinning."),
+                        new Param("end", new EntityTypes.Integer(1, 6, 4), "Ending Pig", "Choose the rightmost pig in the range to start spinning.")
                     },
                     priority = 2
                 },
@@ -46,23 +56,13 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.AssistantStop(e.beat); },
                     defaultLength = 3f
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Bop(e.beat, e.length, e["bop"], e["auto"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Bop", "Should the executives and assistant bop?"),
-                        new Param("auto", false, "Bop (Auto)", "Should the executives and assistant auto bop?")
-                    }
-                },
-                new GameAction("changeCount", "Change Executives")
+                new GameAction("changeCount", "Change Pig Number")
                 {
                     function = delegate { BoardMeeting.instance.ChangeExecutiveCount(eventCaller.currentEntity["amount"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("amount", new EntityTypes.Integer(3, 5, 4), "Amount", "How many executives will there be?")
+                        new Param("amount", new EntityTypes.Integer(3, 5, 4), "Pigs", "Set how many pigs there will be. The player is always the rightmost pig.")
                     }
                 }
             },
