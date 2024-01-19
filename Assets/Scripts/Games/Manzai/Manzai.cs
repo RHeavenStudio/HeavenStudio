@@ -31,10 +31,15 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("pun", "Pun")
                 {
+                    preFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"]); },
+
                     function = delegate { 
                         var e = eventCaller.currentEntity;
                         Manzai.instance.DoPun(e.beat, e["boing"]); },
                     defaultLength = 4,
+
                     parameters = new List<Param>()
                     {
                         new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
@@ -112,45 +117,45 @@ namespace HeavenStudio.Games
         {
             Normal,
             Boing,
-            Random,
+            //Random,
         }
 
         public enum Puns
         {
-            AichiniAichinna,
-            AmmeteAmena,
-            ChainaniNichaina,
-            DenwariDenwa,                    //short animation
+            // AichiniAichinna,
+            // AmmeteAmena,
+            // ChainaniNichaina,
+            // DenwariDenwa,                    //short animation
             FutongaFuttonda,
-            HiromegaHirameida,
-            IkagariKatta,
-            IkugawaIkura,                    //short animation (boing unused)
-            KaeruBurikaeru,
-            KarewaKare,
-            KouchagaKouchou,
-            KusagaKusai,                     //short animation (boing unused)
-            MegaminiwaMegane,
+            // HiromegaHirameida,
+            // IkagariKatta,
+            // IkugawaIkura,                    //short animation (boing unused)
+            // KaeruBurikaeru,
+            // KarewaKare,
+            // KouchagaKouchou,
+            // KusagaKusai,                     //short animation (boing unused)
+            // MegaminiwaMegane,
             MikangaMikannai,
-            NekogaNekoronda,
+            // NekogaNekoronda,
             OkanewaOkkane,
-            OkurezeKitteOkure,
-            OmochinoKimochi,
-            OmoinoHokaOmoi,
-            PuringaTappurin,
-            RakudawaRakugana,
-            RoukadaKatarouka,
-            SaiyoMinasai,
-            SakanaKanaMasakana,
-            SarugaSaru,                      //short animation (boing unused)
-            ShaiinniNanariNashain_Unused,    //fully unused
-            SuikawaYasuika,
-            TaigaTabetaina,
-            TaininiKittai,
-            TaiyoGamiTaiyou,
-            ToiletNiIttoire,
-            TonakaiyoOtonokoi,
-            TorinikugaTorininkui,
-            UmetteUmena,
+            // OkurezeKitteOkure,
+            // OmochinoKimochi,
+            // OmoinoHokaOmoi,
+            // PuringaTappurin,
+            // RakudawaRakugana,
+            // RoukadaKatarouka,
+            // SaiyoMinasai,
+            // SakanaKanaMasakana,
+            // SarugaSaru,                      //short animation (boing unused)
+            // ShaiinniNanariNashain_Unused,    //fully unused
+            // SuikawaYasuika,
+            // TaigaTabetaina,
+            // TaininiKittai,
+            // TaiyoGamiTaiyou,
+            // ToiletNiIttoire,
+            // TonakaiyoOtonokoi,
+            // TorinikugaTorininkui,
+            // UmetteUmena,
         }
 
 
@@ -192,10 +197,10 @@ namespace HeavenStudio.Games
         {
             int punOrBoing = isBoing;
 
-            if(isBoing == (int)Manzai.BoingType.Random)
-            {
-                punOrBoing = UnityEngine.Random.Range(0, 5) % 2;
-            }
+            //if(isBoing == (int)Manzai.BoingType.Random)
+            //{
+            //    punOrBoing = UnityEngine.Random.Range(0, 5) % 2;
+            //}
 
             if(punOrBoing == (int)Manzai.BoingType.Normal)
             {
@@ -206,14 +211,31 @@ namespace HeavenStudio.Games
             {
                 DoPunBoing(beat);
             }
-            Debug.Log(punOrBoing);
+            //Debug.Log(punOrBoing);
+        }
+
+        public static void PunSFX(double beat, int whichPun, bool isPitched)
+        {
+
+            var punName= Enum.GetName(typeof(Puns), whichPun);
+            float pitch = isPitched ? Conductor.instance.songBpm/98 : 1;
+
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound($"manzai/{punName}1", beat + 0.00f, pitch, offset: 0.05),
+                new MultiSound.Sound($"manzai/{punName}2", beat + 0.25f, pitch),
+                new MultiSound.Sound($"manzai/{punName}3", beat + 0.50f, pitch),
+                new MultiSound.Sound($"manzai/{punName}4", beat + 0.75f, pitch),
+                new MultiSound.Sound($"manzai/{punName}5", beat + 1.00f, pitch),
+                new MultiSound.Sound($"manzai/{punName}6", beat + 1.25f, pitch),
+                new MultiSound.Sound($"manzai/{punName}7", beat + 1.50f, pitch),
+                new MultiSound.Sound($"manzai/{punName}8", beat + 1.75f, pitch),
+                new MultiSound.Sound($"manzai/{punName}9", beat + 2.00f, pitch),
+            }, forcePlay: true);
         }
 
         public void DoPunHai(double beat)
         {
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
-
-            SoundByte.PlayOneShotGame("manzai/"+sfxDefs[0].sfx, pitch: Conductor.instance.songBpm/98);
 
             ScheduleInput(beat, 2.5f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustL : HaiJustR, HaiMiss, Nothing);
             ScheduleInput(beat, 3.0f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustR : HaiJustL, HaiMiss, Nothing);
@@ -263,7 +285,7 @@ namespace HeavenStudio.Games
         {
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
 
-            SoundByte.PlayOneShotGame("manzai/"+sfxDefs[1].sfx, pitch: Conductor.instance.songBpm/98);
+            //SoundByte.PlayOneShotGame("manzai/"+sfxDefs[1].sfx, pitch: Conductor.instance.songBpm/98);
 
             ScheduleInput(beat, 2.5f, InputAction_BasicPress, BoingJust, BoingMiss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
