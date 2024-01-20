@@ -266,6 +266,17 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader NtrBackbeatLoader failed!");
             }
 
+            Debug.Log("Running game loader RvlManzaiLoader");
+            game = RvlManzaiLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader RvlManzaiLoader failed!");
+            }
+
             Debug.Log("Running game loader AgbMarcherLoader");
             game = AgbMarcherLoader.AddGame(eventCaller);
             if (game != null)

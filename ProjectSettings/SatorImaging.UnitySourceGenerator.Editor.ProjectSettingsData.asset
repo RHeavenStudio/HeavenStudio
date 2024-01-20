@@ -24,5 +24,10 @@ MonoBehaviour:
   - Assets/Scripts/Games/FanClub/FanClub.cs
   - Assets/Scripts/GameManager.cs
   - Assets/Editor/SpritesheetScaler.cs
+  - Assets/Scripts/SourceGenerators/ControllerLoaderGenerator.cs
+  - Assets/Scripts/USG.g/LoadMinigames.Minigames.MinigameLoaderGenerator.g.cs
+  - Assets/Scripts/Games/Manzai/Manzai.cs
+  - Assets/Scripts/InputSystem/USG.g/InitInputControllers.PlayerInput.ControllerLoaderGenerator.g.cs
+  - Assets/Scripts/SourceGenerators/MinigameLoaderGenerator.cs
   PathsToSkipImportEvent: []
   PathsToIgnoreOverwriteSettingOnAttribute: []
