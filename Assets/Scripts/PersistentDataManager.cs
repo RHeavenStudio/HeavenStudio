@@ -30,7 +30,7 @@ namespace HeavenStudio.Common
                 GlobalGameManager.DEFAULT_SCREEN_SIZES[1].height,
                 0.8f,
                 512,
-                44100,
+                48000,
                 true,
                 true,
                 PerfectChallengeType.On,

@@ -263,15 +263,8 @@ namespace HeavenStudio.Games
         private List<RiqEntity> GetAllBallsInBetweenBeat(double beat, double endBeat)
         {
             List<RiqEntity> ballEvents = EventCaller.GetAllInGameManagerList("workingDough", new string[] { "small ball", "big ball" });
-            List<RiqEntity> tempEvents = new();
-
-            foreach (var entity in ballEvents)
-            {
-                if (entity.beat >= beat && entity.beat < endBeat)
-                {
-                    tempEvents.Add(entity);
-                }
-            }
+            List<RiqEntity> tempEvents = ballEvents.FindAll(x => x.beat >= beat && x.beat < endBeat);
+            tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
             return tempEvents;
         }
 
@@ -426,6 +419,7 @@ namespace HeavenStudio.Games
 
         public void SpawnPlayerBall(double beat, bool isBig, bool hasGandw)
         {
+            Debug.Log($"Spawned player ball for beat {beat} (big: {isBig})");
             var objectToSpawn = isBig ? playerEnterBigBall : playerEnterSmallBall;
             var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
 
@@ -479,6 +473,12 @@ namespace HeavenStudio.Games
                     queuedIntervals.Clear();
                 }
             }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            queuedIntervals.Clear();
+            passedTurns.Clear();
         }
 
         void Update()

@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("tunnel", "Tunnel \n<color=#eb5454>[WIP]</color>", "c00000", false, false, new List<GameAction>()
+            return new Minigame("tunnel", "Tunnel", "c00000", false, false, new List<GameAction>()
             {
                 new GameAction("cowbell", "Start Cowbell")
                 {
@@ -124,6 +124,11 @@ namespace HeavenStudio.Games
                 tunnelSoundMiddle?.Stop();
                 tunnelSoundLeft?.Stop();
             }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            queuedInputs.Clear();
         }
 
         private void Start()

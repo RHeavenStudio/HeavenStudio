@@ -47,12 +47,16 @@ namespace HeavenStudio
         [SerializeField] private TMP_Text chartIdolText;
         [SerializeField] private TMP_Text chartDescText;
         [SerializeField] private TMP_Text chartStyleText;
+        [SerializeField] private Image campaignOption;
+        [SerializeField] private Sprite campaignOn;
+        [SerializeField] private Sprite campaignOff;
 
         [SerializeField] private Selectable[] mainSelectables;
         [SerializeField] private Selectable defaultSelectable;
         [SerializeField] private RectTransform selectedDisplayRect;
         [SerializeField] private GameObject selectedDisplayIcon;
         [SerializeField] private GameObject[] otherHiddenOnMouse;
+        static bool firstBoot = true;
 
         private AudioSource musicSource;
 
@@ -76,6 +80,7 @@ namespace HeavenStudio
         private Selectable currentSelectable, mouseSelectable;
         private RectTransform currentSelectableRect, lastSelectableRect;
         private float selectableLerpTimer;
+
 
         private void Start()
         {
@@ -148,15 +153,16 @@ namespace HeavenStudio
                             var nextController = newController;
                             var lastController = PlayerInput.GetInputController(1);
 
-                            if ((newController is InputMouse) && (lastController is not InputMouse))
+                            if ((newController is InputMouse) && !(lastController is InputMouse))
                             {
                                 Debug.Log("Mouse used, selecting keyboard instead");
                                 nextController = controllers[0];
                             }
                             Debug.Log("Assigning controller: " + newController.GetDeviceName());
 
-                            if (lastController != nextController)
+                            if (lastController != nextController && !firstBoot)
                             {
+                                firstBoot = false;
                                 if (nextController == null)
                                 {
                                     Debug.Log("invalid controller, using keyboard");
@@ -249,6 +255,9 @@ namespace HeavenStudio
                                 break;
                             case (int)InputController.ActionsPad.South:
                                 PlayPanelBack();
+                                break;
+                            case (int)InputController.ActionsPad.North:
+                                ToggleCampaign();
                                 break;
                         }
                     }
@@ -504,18 +513,14 @@ namespace HeavenStudio
             };
 
 #if HEAVENSTUDIO_PROD && !UNITY_EDITOR
-            string lvpath = Application.dataPath;
-            if (Application.platform == RuntimePlatform.OSXPlayer)
+            string lvpath = "";
+            if (Application.platform != RuntimePlatform.OSXPlayer)
             {
-                lvpath += "/../../Levels/";
-            }
-            else 
-            {
-                lvpath += "/../Levels/";
-            }
-            if (!Directory.Exists(lvpath))
-            {
-                Directory.CreateDirectory(lvpath);
+                lvpath = Application.dataPath + "/../Levels/";
+                if (!Directory.Exists(lvpath))
+                {
+                    Directory.CreateDirectory(lvpath);
+                }
             }
             StandaloneFileBrowser.OpenFilePanelAsync("Open Remix", lvpath, extensions, false, (string[] paths) =>
 #else
@@ -542,6 +547,15 @@ namespace HeavenStudio
                     chartIdolText.text = "♪ " + beatmap["idolcredit"];
                     chartStyleText.text = $"Recommended Control Style: {beatmap["playstyle"].ToString()}";
 
+                    if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.On)
+                    {
+                        campaignOption.sprite = campaignOn;
+                    }
+                    else
+                    {
+                        campaignOption.sprite = campaignOff;
+                    }
+
                     playPanel.SetActive(true);
                     playMenuRevealed = true;
                     SoundByte.PlayOneShot("ui/UISelect");
@@ -561,6 +575,7 @@ namespace HeavenStudio
             if (exiting) return;
             exiting = true;
             SoundByte.PlayOneShot("ui/UIEnter");
+            PersistentDataManager.SaveSettings();
             GlobalGameManager.LoadScene("Game", 0.35f, -1);
         }
 
@@ -568,8 +583,24 @@ namespace HeavenStudio
         {
             RiqFileHandler.ClearCache();
             SoundByte.PlayOneShot("ui/UICancel");
+            PersistentDataManager.SaveSettings();
             playPanel.SetActive(false);
             playMenuRevealed = false;
+        }
+
+        public void ToggleCampaign()
+        {
+            SoundByte.PlayOneShot("ui/UIOption");
+            if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.On)
+            {
+                PersistentDataManager.gameSettings.perfectChallengeType = PersistentDataManager.PerfectChallengeType.Off;
+                campaignOption.sprite = campaignOff;
+            }
+            else
+            {
+                PersistentDataManager.gameSettings.perfectChallengeType = PersistentDataManager.PerfectChallengeType.On;
+                campaignOption.sprite = campaignOn;
+            }
         }
 
         public void SocialsPressed()
@@ -582,7 +613,7 @@ namespace HeavenStudio
 // #endif
 //             snsPanel.SetActive(true);
             SoundByte.PlayOneShot("ui/UISelect");
-            Application.OpenURL("https://github.com/RHeavenStudio/HeavenStudio");
+            Application.OpenURL("https://linktr.ee/RHeavenStudio");
             // show a panel with our SNS links
         }
 
@@ -617,6 +648,7 @@ namespace HeavenStudio
         public void QuitPressed()
         {
             SoundByte.PlayOneShot("ui/PauseQuit");
+            PersistentDataManager.SaveSettings();
             Application.Quit();
         }
     }

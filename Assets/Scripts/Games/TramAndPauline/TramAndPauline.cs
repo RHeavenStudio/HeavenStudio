@@ -283,14 +283,14 @@ namespace HeavenStudio.Games
 
         private void TramJump(double beat, bool audienceReact)
         {
-            SoundByte.PlayOneShotGame("tramAndPauline/jump" + UnityEngine.Random.Range(1, 3));
+            SoundByte.PlayOneShotGame("tramAndPauline/jumpL" + UnityEngine.Random.Range(1, 3));
             tram.Jump(beat);
             ScheduleInput(beat, 1, InputAction_Left, audienceReact ? TramJustAudience : TramJust, Empty, Empty);
         }
 
         private void PaulineJump(double beat, bool audienceReact)
         {
-            SoundByte.PlayOneShotGame("tramAndPauline/jump" + UnityEngine.Random.Range(1, 3));
+            SoundByte.PlayOneShotGame("tramAndPauline/jumpR" + UnityEngine.Random.Range(1, 3));
             pauline.Jump(beat);
             ScheduleInput(beat, 1, InputAction_Right, audienceReact ? PaulineJustAudience : PaulineJust, Empty, Empty);
         }

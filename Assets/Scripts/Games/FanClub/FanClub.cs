@@ -305,7 +305,7 @@ namespace HeavenStudio.Games
             var amieWalkEvts = EventCaller.GetAllInGameManagerList("fanClub", new string[] { "friend walk" });
             foreach (var e in amieWalkEvts)
             {
-                if (e.beat <= Conductor.instance.songPositionInBeatsAsDouble)
+                if (e.beat <= conductor.songPositionInBeatsAsDouble)
                 {
                     DancerTravel(e.beat, e.length, e["exit"], e["instant"]);
                 }
@@ -315,7 +315,7 @@ namespace HeavenStudio.Games
             var choreoTypeEvts = EventCaller.GetAllInGameManagerList("fanClub", new string[] { "set performance type" });
             foreach (var e in choreoTypeEvts)
             {
-                if (e.beat <= Conductor.instance.songPositionInBeatsAsDouble)
+                if (e.beat <= conductor.songPositionInBeatsAsDouble)
                 {
                     FanClub.SetPerformanceType(e["type"]);
                 }
@@ -363,13 +363,12 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            var cond = Conductor.instance;
             int whoBops = BeatIsInBopRegionInt(beat);
             bool goBopIdol = whoBops == (int)IdolBopType.Both || whoBops == (int)IdolBopType.Idol;
             bool goBopSpec = whoBops == (int)IdolBopType.Both || whoBops == (int)IdolBopType.Spectators;
             if (goBopIdol)
             {
-                if (!(cond.songPositionInBeatsAsDouble >= noBop.startBeat && cond.songPositionInBeatsAsDouble < noBop.startBeat + noBop.length))
+                if (!(conductor.songPositionInBeatsAsDouble >= noBop.startBeat && conductor.songPositionInBeatsAsDouble < noBop.startBeat + noBop.length))
                 {
                     idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
                     Blue.PlayAnimState("Beat");
@@ -378,19 +377,17 @@ namespace HeavenStudio.Games
             }
             if (goBopSpec)
             {
-                if (!(cond.songPositionInBeatsAsDouble >= noSpecBop.startBeat && cond.songPositionInBeatsAsDouble < noSpecBop.startBeat + noSpecBop.length))
+                if (!(conductor.songPositionInBeatsAsDouble >= noSpecBop.startBeat && conductor.songPositionInBeatsAsDouble < noSpecBop.startBeat + noSpecBop.length))
                     BopAll();
             }
         }
 
         private void Update()
         {
-            var cond = Conductor.instance;
-
             //idol jumping physics
-            float jumpPos = cond.GetPositionFromBeat(idolJumpStartTime, 1f);
+            float jumpPos = conductor.GetPositionFromBeat(idolJumpStartTime, 1f);
             float IDOL_SHADOW_SCALE = 1.18f;
-            if (cond.songPositionInBeatsAsDouble >= idolJumpStartTime && cond.songPositionInBeatsAsDouble < idolJumpStartTime + 1f)
+            if (conductor.songPositionInBeatsAsDouble >= idolJumpStartTime && conductor.songPositionInBeatsAsDouble < idolJumpStartTime + 1f)
             {
                 hasJumped = true;
                 float yMul = jumpPos * 2f - 1f;
@@ -460,7 +457,7 @@ namespace HeavenStudio.Games
 
         private void DisableSpecBop(double beat, float length)
         {
-            double bt = Conductor.instance.songPositionInBeatsAsDouble;
+            double bt = conductor.songPositionInBeatsAsDouble;
             if (bt >= noSpecBop.startBeat && bt < noSpecBop.startBeat + noSpecBop.length)
             {
                 double thisStToNextSt = beat - noSpecBop.startBeat;
@@ -594,7 +591,7 @@ namespace HeavenStudio.Games
         {
             if (!responseToggle)
             {
-                if (!(Conductor.instance.songPositionInBeatsAsDouble >= noResponse.startBeat && Conductor.instance.songPositionInBeatsAsDouble < noResponse.startBeat + noResponse.length))
+                if (!(conductor.songPositionInBeatsAsDouble >= noResponse.startBeat && conductor.songPositionInBeatsAsDouble < noResponse.startBeat + noResponse.length))
                 {
                     idolAnimator.Play("IdolCrap" + GetPerformanceSuffix(), -1, 0);
                     Blue.PlayAnimState("Crap");
@@ -605,7 +602,7 @@ namespace HeavenStudio.Games
 
         private void DoIdolPeace(bool sync = true)
         {
-            if (!(Conductor.instance.songPositionInBeatsAsDouble >= noCall.startBeat && Conductor.instance.songPositionInBeatsAsDouble < noCall.startBeat + noCall.length))
+            if (!(conductor.songPositionInBeatsAsDouble >= noCall.startBeat && conductor.songPositionInBeatsAsDouble < noCall.startBeat + noCall.length))
             {
                 if (sync)
                     idolAnimator.Play("IdolPeace" + GetPerformanceSuffix(), -1, 0);
@@ -620,14 +617,14 @@ namespace HeavenStudio.Games
         {
             if (responseToggle)
             {
-                if (!(Conductor.instance.songPositionInBeatsAsDouble >= noResponse.startBeat && Conductor.instance.songPositionInBeatsAsDouble < noResponse.startBeat + noResponse.length))
+                if (!(conductor.songPositionInBeatsAsDouble >= noResponse.startBeat && conductor.songPositionInBeatsAsDouble < noResponse.startBeat + noResponse.length))
                     idolAnimator.Play("IdolResponse" + GetPerformanceSuffix(), -1, 0);
             }
         }
 
         private void DoIdolCall(int part = 0, bool big = false)
         {
-            if (!(Conductor.instance.songPositionInBeatsAsDouble >= noCall.startBeat && Conductor.instance.songPositionInBeatsAsDouble < noCall.startBeat + noCall.length))
+            if (!(conductor.songPositionInBeatsAsDouble >= noCall.startBeat && conductor.songPositionInBeatsAsDouble < noCall.startBeat + noCall.length))
             {
                 if (big)
                 {
@@ -846,7 +843,7 @@ namespace HeavenStudio.Games
             {
                 if (who == 3)
                 {
-                    if (GameManager.instance.autoplay)
+                    if (gameManager.autoplay)
                     {
                         Player.ClapStart(true, false, 0.1f);
                     }

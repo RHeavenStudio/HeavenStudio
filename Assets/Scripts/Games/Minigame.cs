@@ -27,6 +27,9 @@ namespace HeavenStudio.Games
 
         [NonSerialized] public string minigameName;
 
+        [NonSerialized] public GameManager gameManager;
+        [NonSerialized] public Conductor conductor;
+
         #region Premade Input Actions
         protected const int IAEmptyCat = -1;
         protected const int IAPressCat = 0;

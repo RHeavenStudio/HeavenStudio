@@ -12,6 +12,8 @@ using HeavenStudio.Editor.Track;
 using HeavenStudio.Games;
 using Jukebox;
 
+using SatorImaging.UnitySourceGenerator;
+
 using System;
 using System.Linq;
 using System.Reflection;
@@ -19,8 +21,8 @@ using System.IO;
 
 namespace HeavenStudio
 {
-
-    public class Minigames
+    [UnitySourceGenerator(typeof(MinigameLoaderGenerator), OverwriteIfFileExists = true)]
+    public partial class Minigames
     {
         public enum RecommendedControlStyle
         {
@@ -82,9 +84,9 @@ namespace HeavenStudio
             {"resultcat3_hi", "You followed the example well."},                                                                // "Superb" message for input category 3 "repeat" (two-liner)
             {"resultcat3_ng", "Next time, follow the example better."},                                                         // "Try Again" message for input category 3 "repeat" (two-liner)
 
-            {"epilogue_hi", "Superb picture"},                                                                                  // epilogue "Superb" message
-            {"epilogue_ok", "OK picture"},                                                                                      // epilogue "OK" message
-            {"epilogue_ng", "Try Again picture"},                                                                               // epilogue "Try Again" message
+            {"epilogue_hi", "Superb"},                                                                                          // epilogue "Superb" message
+            {"epilogue_ok", "OK"},                                                                                              // epilogue "OK" message
+            {"epilogue_ng", "Try Again"},                                                                                       // epilogue "Try Again" message
 
             {"epilogue_hi_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Hi")},   // epilogue "Superb" image resource path
             {"epilogue_ok_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ok")},   // epilogue "OK" image resource path
@@ -712,24 +714,6 @@ namespace HeavenStudio
         public delegate void EventCallback();
         public delegate void ParamChangeCallback(string paramName, object paramValue, RiqEntity entity);
 
-        // overengineered af but it's a modified version of
-        // https://stackoverflow.com/a/19877141
-        static List<Func<EventCaller, Minigame>> loadRunners;
-        static void BuildLoadRunnerList()
-        {
-            loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(x => x.Namespace == "HeavenStudio.Games.Loaders" && x.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static) != null)
-            .Select(t => (Func<EventCaller, Minigame>)Delegate.CreateDelegate(
-                typeof(Func<EventCaller, Minigame>),
-                null,
-                t.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static),
-                false
-                ))
-            .ToList();
-
-        }
-
         public static void Init(EventCaller eventCaller)
         {
             List<Minigame> defaultGames = new()
@@ -1188,19 +1172,7 @@ namespace HeavenStudio
                 eventCaller.minigames.Add(game.name, game);
             }
 
-            BuildLoadRunnerList();
-            Debug.Log($"Running {loadRunners.Count} game loaders...");
-            foreach (var load in loadRunners)
-            {
-                Debug.Log("Running game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name);
-                Minigame game = load(eventCaller);
-                if (game == null)
-                {
-                    Debug.LogError("Game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name + " failed!");
-                    continue;
-                }
-                eventCaller.minigames.Add(game.name, game);
-            }
+            LoadMinigames(eventCaller);
         }
     }
 }

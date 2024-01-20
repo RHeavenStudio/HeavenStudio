@@ -215,8 +215,9 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (!BeatIsInBopRegion(beat)) return;
-            DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            if (BeatIsInBopRegion(beat) && DogAnim.IsAnimationNotPlaying() || DogAnim.IsPlayingAnimationNames("Idle")) {
+                DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            }
         }
 
         private void Update()

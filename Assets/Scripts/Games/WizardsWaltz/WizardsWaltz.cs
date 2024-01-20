@@ -94,6 +94,8 @@ namespace HeavenStudio.Games
         {
             SetWizardOffset(beat);
             crHandlerInstance = null;
+            queuedIntervals.Clear();
+            passedTurns.Clear();
         }
 
         public override void OnGameSwitch(double beat)
