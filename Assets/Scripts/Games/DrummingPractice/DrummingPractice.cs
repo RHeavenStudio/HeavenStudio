@@ -20,8 +20,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Bop", "Should the drummers bop?"),
-                        new Param("autoBop", false, "Bop (Auto)", "Should the drummers auto bop?")
+                        new Param("bop", true, "Bop", "Toggle if the drummers should bop for the duration of this event."),
+                        new Param("autoBop", false, "Bop (Auto)", "Toggle if the drummers should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("drum", "Hit Drum")
@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f, 
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Applause", "Whether or not an applause should be played on a successful hit")
+                        new Param("toggle", true, "Applause", "Toggle if applause should be played on a successful hit.")
                     }
                 },
                 new GameAction("set mii", "Set Miis")
@@ -39,27 +39,27 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f, 
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Set All to Player", "Sets all Miis to the Player's Mii", new List<Param.CollapseParam>()
+                        new Param("toggle", false, "Set All To Player", "Toggle if all Miis should be set to the player's (middle) Mii.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => !(bool)x, new string[] { "type", "type2", "type3" })
                         }),
-                        new Param("type", DrummingPractice.MiiType.Random, "Player Mii", "The Mii that the player will control"),
-                        new Param("type2", DrummingPractice.MiiType.Random, "Left Mii", "The Mii on the left"),
-                        new Param("type3", DrummingPractice.MiiType.Random, "Right Mii", "The Mii on the right"),
+                        new Param("type", DrummingPractice.MiiType.Random, "Player Mii", "Set the Mii that the player will control."),
+                        new Param("type2", DrummingPractice.MiiType.Random, "Left Mii", "Set the Mii on the left."),
+                        new Param("type3", DrummingPractice.MiiType.Random, "Right Mii", "Set the Mii on the right."),
                     }
                 },
-                new GameAction("move npc drummers", "NPC Drummers Enter or Exit")
+                new GameAction("move npc drummers", "NPC Drummers")
                 {
                     function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.NPCDrummersEnterOrExit(e.beat, e.length, e["exit"], e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("exit", false, "Exit?", "Should the NPC drummers exit or enter?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
+                        new Param("exit", false, "Exit", "Toggle if the NPC drummers should enter or exit the scene."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
-                new GameAction("set background color", "Background Color")
+                new GameAction("set background color", "Background Appearance")
                 {
                     function = delegate {var e = eventCaller.currentEntity;
                     DrummingPractice.instance.BackgroundColor(e.beat, e.length, e["colorAStart"], e["colorA"], e["colorBStart"], e["colorB"], e["colorC"], e["ease"]); }, 
@@ -67,12 +67,12 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorAStart", new Color(43/255f, 207/255f, 51/255f), "Color A Start", "The top-most color of the background gradient"),
-                        new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Color A End", "The top-most color of the background gradient"),
-                        new Param("colorBStart", new Color(1, 1, 1), "Color B Start", "The bottom-most color of the background gradient"),
-                        new Param("colorB", new Color(1, 1, 1), "Color B End", "The bottom-most color of the background gradient"),
-                        new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "The color of streaks that appear on a successful hit"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("colorAStart", new Color(43/255f, 207/255f, 51/255f), "Color A Start", "Set the top-most color of the background gradient at the start of the event."),
+                        new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Color A End", "Set the top-most color of the background gradient at the end of the event."),
+                        new Param("colorBStart", new Color(1, 1, 1), "Color B Start", "Set the bottom-most color of the background gradient at the start of the event."),
+                        new Param("colorB", new Color(1, 1, 1), "Color B End", "Set the bottom-most color of the background gradient at the end of the event."),
+                        new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "Set the color of the streaks that appear upon a successful hit."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 }
             },

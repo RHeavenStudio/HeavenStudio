@@ -1,4 +1,3 @@
-## This project is still in development. There are NO public compiled releases (yet).
 # Heaven Studio
 
 (WIP) A tool to create playable Rhythm Heaven custom remixes, with many customization options.
@@ -11,8 +10,6 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-[YouTube Channel](https://www.youtube.com/channel/UCAb3R-5qyXWOEj8B4vibhxQ)
-
 [itch.io Page](https://rheavenstudio.itch.io/heaven-studio)
 
 [Documentation](https://rheavenstudio.github.io/)
@@ -22,13 +19,13 @@
 
 
 ## Prebuilt Binaries
-This project is still in development, so there are currently no release builds yet. GitHub Actions creates experimental builds on each commmit, but minimal support will be provided.
+Full releases are published on our [itch.io page](https://rheavenstudio.itch.io/heaven-studio). GitHub Actions creates experimental builds on each commmit, but minimal support will be provided.
 
-### Release 1 alpha builds
-These builds do not include some of the features from Nightly, instead focusing on stability. These builds will eventually culminate in the first stable release of Heaven Studio.
-- [Windows](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/release_1/StandaloneWindows64-build.zip)
-- [Linux](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/release_1/StandaloneLinux64-build.zip)
-- [MacOS](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/release_1/StandaloneOSX-build.zip)
+### Release 1.0.1 alpha builds
+These builds do not include some of the features from Nightly, instead focusing on stability.
+- [Windows](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/release_1_patches/StandaloneWindows64-build.zip)
+- [Linux](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/release_1_patches/StandaloneLinux64-build.zip)
+- [MacOS](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/release_1_patches/StandaloneOSX-build.zip)
 
 ### Nightly builds
 These builds include experimental new features that will not be included in Release 1
@@ -39,7 +36,6 @@ These builds include experimental new features that will not be included in Rele
 
 #### Important Notes:
 - On MacOS and Linux builds you may [experience bugs with audio-related tasks](https://github.com/RHeavenStudio/HeavenStudio/issues/72), but in most cases Heaven Studio works perfectly.
-- On MacOS you'll need to have Discord open in the background for now, there's a bug that causes the DiscordSDK library to crash when the rich presence is updated while Discord is not open in the background.
 
 
 ## Self-Building

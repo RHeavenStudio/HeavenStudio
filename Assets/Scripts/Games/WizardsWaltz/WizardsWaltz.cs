@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     },
                     preFunctionLength = 1
                 },
@@ -94,6 +94,8 @@ namespace HeavenStudio.Games
         {
             SetWizardOffset(beat);
             crHandlerInstance = null;
+            queuedIntervals.Clear();
+            passedTurns.Clear();
         }
 
         public override void OnGameSwitch(double beat)

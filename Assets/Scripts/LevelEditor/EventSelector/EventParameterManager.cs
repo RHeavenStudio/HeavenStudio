@@ -81,8 +81,9 @@ namespace HeavenStudio.Editor
 
         private void AddParams(RiqEntity entity)
         {
-            var minigame = EventCaller.instance.GetMinigame(entity.datamodel.Split(0));
-            int actionIndex = minigame.actions.IndexOf(minigame.actions.Find(c => c.actionName == entity.datamodel.Split(1)));
+            string[] split = entity.datamodel.Split('/');
+            var minigame = EventCaller.instance.GetMinigame(split[0]);
+            int actionIndex = minigame.actions.IndexOf(minigame.actions.Find(c => c.actionName == split[1]));
             Minigames.GameAction action = minigame.actions[actionIndex];
 
             if (action.parameters != null)

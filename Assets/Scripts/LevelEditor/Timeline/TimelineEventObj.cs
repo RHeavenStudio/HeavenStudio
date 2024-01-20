@@ -60,11 +60,11 @@ namespace HeavenStudio.Editor.Track
         private bool altWhenClicked = false;
         private bool dragging = false;
 
-        private float initMoveX = 0.0f;
-        private float initMoveY = 0.0f;
+        private double initMoveX = 0;
+        private float initMoveY = 0;
 
         private bool movedEntity = false;
-        private float lastBeat = 0.0f;
+        private double lastBeat = 0;
         private int lastLayer = 0;
 
         private int lastSiblingIndex;
@@ -87,32 +87,31 @@ namespace HeavenStudio.Editor.Track
 
             var eventName = entity.datamodel;
 
-            var game = EventCaller.instance.GetMinigame(eventName.Split(0));
-            var action = EventCaller.instance.GetGameAction(game, eventName.Split(1));
-            var gameAction = EventCaller.instance.GetGameAction(EventCaller.instance.GetMinigame(eventName.Split(0)), eventName.Split(1));
+            string[] split = eventName.Split('/');
+            var action = EventCaller.instance.GetGameAction(split[0], split[1]);
 
-            if (eventName.Split(1) == "switchGame")
-                Icon.sprite = Editor.GameIcon(eventName.Split(2));
+            if (split[1] == "switchGame")
+                Icon.sprite = Editor.GameIcon(split[2]);
             else
-                Icon.sprite = Editor.GameIcon(eventName.Split(0));
+                Icon.sprite = Editor.GameIcon(split[0]);
 
-            if (gameAction != null)
+            if (action != null)
             {
-                this.resizable = gameAction.resizable;
-                if (gameAction.resizable == false)
+                this.resizable = action.resizable;
+                if (action.resizable == false)
                 {
-                    rectTransform.sizeDelta = new Vector2(gameAction.defaultLength * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
-                    this.length = gameAction.defaultLength;
+                    rectTransform.sizeDelta = new Vector2(action.defaultLength * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
+                    this.length = action.defaultLength;
                 }
                 else
                 {
-                    if (entity != null && gameAction.defaultLength != entity.length)
+                    if (entity != null && action.defaultLength != entity.length)
                     {
                         rectTransform.sizeDelta = new Vector2(entity.length * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
                     }
                     else
                     {
-                        rectTransform.sizeDelta = new Vector2(gameAction.defaultLength * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
+                        rectTransform.sizeDelta = new Vector2(action.defaultLength * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
                     }
                 }
             }
@@ -126,6 +125,12 @@ namespace HeavenStudio.Editor.Track
             SetColor((int)entity["track"]);
             SetWidthHeight();
             selectedImage.gameObject.SetActive(false);
+
+            lastBeat = entity.beat;
+            initMoveX = 0.0f;
+            initMoveY = 0.0f;
+            lastResizeBeat = 0;
+            lastResizeLength = 0;
         }
 
         public void SetEntity(RiqEntity entity)
@@ -233,7 +238,7 @@ namespace HeavenStudio.Editor.Track
                 {
                     foreach (var marker in Selections.instance.eventsSelected)
                     {
-                        marker.entity.beat = Mathf.Max(Timeline.instance.MousePos2BeatSnap - marker.initMoveX, 0);
+                        marker.entity.beat = System.Math.Max(Timeline.instance.MousePos2BeatSnap - marker.initMoveX, 0);
                         marker.entity["track"] = Mathf.Clamp(Timeline.instance.MousePos2Layer - marker.initMoveY, 0, Timeline.instance.LayerCount - 1);
                         marker.SetColor((int)entity["track"]);
                         marker.SetWidthHeight();
@@ -282,10 +287,10 @@ namespace HeavenStudio.Editor.Track
             foreach (var marker in Selections.instance.eventsSelected)
             {
                 if (setMovedEntity) marker.movedEntity = true;
-                marker.lastBeat = (float)marker.entity.beat;
+                marker.lastBeat = marker.entity.beat;
                 marker.lastLayer = (int)marker.entity["track"];
 
-                marker.initMoveX = Timeline.instance.MousePos2BeatSnap - (float)marker.entity.beat;
+                marker.initMoveX = Timeline.instance.MousePos2BeatSnap - marker.entity.beat;
                 marker.initMoveY = Timeline.instance.MousePos2Layer - (int)marker.entity["track"];
             }
         }
@@ -383,13 +388,13 @@ namespace HeavenStudio.Editor.Track
             }
             else if (Input.GetMouseButton(2))
             {
-                var mgs = EventCaller.instance.minigames;
+                // var mgs = EventCaller.instance.minigames;
                 string[] datamodels = entity.datamodel.Split('/');
                 Debug.Log("Selected entity's datamodel : " + entity.datamodel);
 
                 bool isSwitchGame = datamodels[1] == "switchGame";
-                int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
-                int block = isSwitchGame ? 0 : mgs[gameIndex].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
+                // int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
+                int block = isSwitchGame ? 0 : EventCaller.instance.minigames[datamodels[isSwitchGame ? 2 : 0]].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
 
                 if (!isSwitchGame)
                 {

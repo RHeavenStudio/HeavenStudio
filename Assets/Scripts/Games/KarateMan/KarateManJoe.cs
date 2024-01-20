@@ -153,7 +153,6 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
                 {
-                    Debug.Log("Touch charge");
                     inTouchCharge = true;
                     anim.DoScaledAnimationAsync("ManChargeOut", 0.5f);
                 }

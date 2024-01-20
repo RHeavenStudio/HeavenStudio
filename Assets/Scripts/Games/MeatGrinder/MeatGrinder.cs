@@ -33,8 +33,8 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Boss Bops?", "Does Boss bop?"),
-                        new Param("bossBop", false, "Boss Bops? (Auto)", "Does Boss Auto bop?"),
+                        new Param("bop", true, "Bop", "Toggle if Boss should bop for the duration of this event."),
+                        new Param("bossBop", false, "Bop (Auto)", "Toggle if Boss should automatically bop until another Bop event is reached."),
                     },
                     resizable = true,
                     priority = 1,
@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                     priority = 2,
                     parameters = new List<Param>()
                     {
-                        new Param("bacon", false, "Bacon Ball", "Throw a bacon ball instead of the typical meat"),
+                        new Param("bacon", false, "Bacon Ball", "Toggle if a bacon ball should be thrown instead of the typical dark meat"),
                     }.Concat(reactionParams).ToList(), // doing this because i want these params to always be the same
                 },
                 new GameAction("StartInterval", "Start Interval")
@@ -68,7 +68,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     },
                     preFunctionLength = 1
                 },
@@ -92,8 +92,8 @@ namespace HeavenStudio.Games.Loaders
                         MeatGrinder.instance.DoExpressions(e["tackExpression"], e["bossExpression"]);
                     },
                     parameters = new List<Param>() {
-                        new Param("tackExpression", MeatGrinder.TackExpressions.Content, "Tack Expression", "The expression Tack will display"),
-                        new Param("bossExpression", MeatGrinder.BossExpressions.None, "Boss Expression", "The expression Boss will display"),
+                        new Param("tackExpression", MeatGrinder.TackExpressions.Content, "Tack", "Set the expression Tack will display."),
+                        new Param("bossExpression", MeatGrinder.BossExpressions.None, "Boss", "Set the expression Boss will display."),
                     }
                 },
                 new GameAction("cartGuy", "Cart Guy")
@@ -105,9 +105,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     defaultLength = 16,
                     parameters = new List<Param>() {
-                        new Param("spider", false, "On Phone", "Put a spider in the box?"),
-                        new Param("direction", MeatGrinder.CartGuyDirection.Right, "Direction", "The direction the cart will be carted to."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "What ease will the cart use?"),
+                        new Param("spider", false, "On Phone", "Toggle if Cart Guy should be on his phone."),
+                        new Param("direction", MeatGrinder.CartGuyDirection.Right, "Direction", "Set the direction the cart will be moved to."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                     }
                 },
                 new GameAction("gears", "Gears")
@@ -119,15 +119,14 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     defaultLength = 1,
                     parameters = new List<Param>() {
-                        new Param("speed", new EntityTypes.Float(0, 10, 1), "Speed", "How fast will the gears go?"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "What ease will the gears speed up/slow down with?"),
+                        new Param("speed", new EntityTypes.Float(0, 10, 1), "Speed", "Set the speed of the gears."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action"),
                     }
                 },
-            }
-            // ,
-            // new List<string>() { "pco", "normal", "repeat" },
-            // "pcomeat", "en",
-            // new List<string>() { }
+            },
+            new List<string>() { "pco", "normal", "repeat" },
+            "pcomeat", "en",
+            new List<string>() { }
             );
         }
     }
@@ -160,7 +159,8 @@ namespace HeavenStudio.Games
         {
             public int expression;
             public double beat;
-            public Reaction(int expression, double beat) {
+            public Reaction(int expression, double beat)
+            {
                 this.expression = expression;
                 this.beat = beat;
             }
@@ -178,7 +178,7 @@ namespace HeavenStudio.Games
         public Animator TackAnim;
         [SerializeField] Animator CartGuyParentAnim;
         [SerializeField] Animator CartGuyAnim;
-        
+
         [Header("Variables")]
         private bool bossBop = true;
         public bool bossAnnoyed = false;
@@ -261,7 +261,7 @@ namespace HeavenStudio.Games
                 float normalizedBeat = cond.GetPositionFromBeat(gearEase.beat, gearEase.length);
                 Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(gearEase.ease);
                 currentGearSpeed = func(oldGearSpeed, newGearSpeed, normalizedBeat);
-                if (normalizedBeat >= 1) cartEase.length = 0;
+                if (normalizedBeat >= 1) gearEase.length = 0;
             }
 
             if (cartEase.length != 0)
@@ -275,18 +275,25 @@ namespace HeavenStudio.Games
 
             CartGuyParentAnim.gameObject.SetActive(cartEase.length != 0);
 
-            if (cond.isPlaying && !cond.isPaused) {
-                foreach (Transform gear in Gears) {
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                foreach (Transform gear in Gears)
+                {
                     double newZ = Time.deltaTime * currentGearSpeed * 50 * (gear.name == "Big" ? -1 : 1) / cond.pitchedSecPerBeat;
                     gear.Rotate(new Vector3(0, 0, (float)newZ));
                 }
             }
-            
-            if (cond.isPlaying) {
+
+            if (cond.isPlaying)
+            {
                 MeatSplash.Play();
-            } else if (cond.isPaused) {
+            }
+            else if (cond.isPaused)
+            {
                 MeatSplash.Pause();
-            } else {
+            }
+            else
+            {
                 MeatSplash.Stop();
             }
         }
@@ -298,11 +305,15 @@ namespace HeavenStudio.Games
                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
             }
 
-            if (CartGuyParentAnim.gameObject.activeSelf) {
-                Debug.Log(cartPhone ? "PhoneBop" : "Bop");
-                if (cartPhone) {
+            if (CartGuyParentAnim.gameObject.activeSelf)
+            {
+                // Debug.Log(cartPhone ? "PhoneBop" : "Bop");
+                if (cartPhone)
+                {
                     CartGuyAnim.DoScaledAnimationAsync("PhoneBop", 0.5f);
-                } else {
+                }
+                else
+                {
                     CartGuyAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 }
             }
@@ -327,15 +338,18 @@ namespace HeavenStudio.Games
         {
             List<RiqEntity> allEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == "meatGrinder");
             RiqEntity cg = allEntities.Find(c => c.datamodel == "meatGrinder/cartGuy");
-            if (cg != null) {
+            if (cg != null)
+            {
                 CartGuy(cg.beat, cg.length, cg["spider"], cg["direction"], cg["ease"]);
             }
             RiqEntity gr = allEntities.Find(c => c.datamodel == "meatGrinder/gears");
-            if (gr != null) {
+            if (gr != null)
+            {
                 ChangeGears(gr.beat, gr.length, gr["ease"], gr["speed"]);
             }
             List<RiqEntity> meats = allEntities.FindAll(c => c.datamodel == "meatGrinder/MeatToss" && beat > c.beat && beat < c.beat + 1);
-            foreach (var meat in meats) {
+            foreach (var meat in meats)
+            {
                 MeatToss(meat.beat, meat["bacon"], meat["tackReaction"], meat["tackReactionBeats"], meat["bossReaction"], meat["bossReactionBeats"]);
             }
         }
@@ -353,8 +367,10 @@ namespace HeavenStudio.Games
                 var actions = new List<BeatAction.Action>();
                 for (int i = 0; i < length; i++)
                 {
-                    actions.Add(new BeatAction.Action(beat + i, delegate {
-                        if (!BossAnim.IsPlayingAnimationNames("BossCall", "BossSignal")) {
+                    actions.Add(new BeatAction.Action(beat + i, delegate
+                    {
+                        if (!BossAnim.IsPlayingAnimationNames("BossCall", "BossSignal"))
+                        {
                             BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
                         }
                     }));
@@ -365,11 +381,13 @@ namespace HeavenStudio.Games
 
         public void DoExpressions(int tackExpression, int bossExpression = 0)
         {
-            if (tackExpression != (int)TackExpressions.None) {
+            if (tackExpression != (int)TackExpressions.None)
+            {
                 string tackAnim = ((TackExpressions)tackExpression).ToString();
                 TackAnim.DoScaledAnimationAsync("Tack" + tackAnim, 0.5f);
             }
-            if (bossExpression != (int)BossExpressions.None) {
+            if (bossExpression != (int)BossExpressions.None)
+            {
                 string bossAnim = ((BossExpressions)bossExpression).ToString();
                 BossAnim.DoScaledAnimationAsync("Boss" + bossAnim, 0.5f);
             }
@@ -377,21 +395,24 @@ namespace HeavenStudio.Games
 
         public void CartGuy(double beat, float length, bool spider, int direction, int ease)
         {
-            cartEase = new() {
+            cartPhone = spider;
+            cartDir = direction == 0 ? "Right" : "Left";
+            if (cartPhone)
+            {
+                CartGuyAnim.Play("Phone", 0, 0);
+            }
+            cartEase = new()
+            {
                 beat = beat,
                 length = length,
                 ease = (Util.EasingFunction.Ease)ease,
             };
-            cartPhone = spider;
-            cartDir = direction == 0 ? "Right" : "Left";
-            if (cartPhone) {
-                CartGuyAnim.Play("Phone", 0, 0);
-            }
         }
 
         public void ChangeGears(double beat, float length, int ease, float speed)
         {
-            gearEase = new() {
+            gearEase = new()
+            {
                 beat = beat,
                 length = length,
                 ease = (Util.EasingFunction.Ease)ease,
@@ -488,7 +509,8 @@ namespace HeavenStudio.Games
 
         private void PassTurn(double beat, double intervalBeat, float intervalLength, List<RiqEntity> allCallEvents = null)
         {
-            if (allCallEvents == null) {
+            if (allCallEvents == null)
+            {
                 allCallEvents = GetRelevantMeatCallsBetweenBeat(intervalBeat, intervalBeat + intervalLength);
                 allCallEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
             }

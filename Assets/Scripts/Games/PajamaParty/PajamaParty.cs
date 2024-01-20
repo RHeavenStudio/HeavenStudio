@@ -23,8 +23,8 @@ namespace HeavenStudio.Games.Loaders
                         function = delegate { var e = eventCaller.currentEntity; PajamaParty.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
                         parameters = new List<Param>()
                         {
-                            new Param("bop", true, "Keep Bopping", "Should Mako and the monkeys bop for the duration of the block?"),
-                            new Param("autoBop", false, "Keep Bopping (Auto)", "Should Mako and the monkeys bop indefinitely?"),
+                            new Param("bop", true, "Bop", "Toggle if Mako and the monkeys should bop for the duration of this event."),
+                            new Param("autoBop", false, "Bop (Auto)", "Toggle if Mako and the monkeys should automatically bop until another Bop event is reached."),
                         },
                         resizable = true,
                     },
@@ -48,8 +48,8 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 8f,
                         parameters = new List<Param>()
                         {
-                            new Param("type", PajamaParty.SleepType.Normal, "Sleep Type", "Type of sleep action to use"),
-                            new Param("toggle", false, "Alt. Animation", "Use an alternate animation for Mako")
+                            new Param("type", PajamaParty.SleepType.Normal, "Type", "Set the type of sleep action to use."),
+                            new Param("toggle", false, "Alternate Animation", "Toggle if Mako should sleep using an alternate \"stretching\" animation.")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; PajamaParty.WarnSleepSequence(e.beat, e["toggle"], e["type"]); }
                     },
@@ -60,7 +60,7 @@ namespace HeavenStudio.Games.Loaders
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; PajamaParty.WarnThrowSequence(e.beat, e["high"]); },
                         parameters = new List<Param>()
                         {
-                            new Param("high", false, "Change Costumes", "Change character costumes"),
+                            new Param("high", false, "Change Costumes", "Toggle if the character costumes should change on a successful throw."),
                         },
                     },
                     new GameAction("open background", "Open / Close Background")
@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
                         resizable = true,
                         parameters = new List<Param>()
                         {
-                            new Param("instant", false, "Instant", "Instantly open / close the background"),
+                            new Param("instant", false, "Instant", "Toggle if the background should be instantly opened or closed."),
                         },
                     },
                     new GameAction("dream boats", "Background Boats")
@@ -84,7 +84,7 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 0.5f,
                         parameters = new List<Param>()
                         {
-                            new Param("toggle", true, "Change Costumes", "Enable / disable costumes"),
+                            new Param("toggle", true, "Change Costumes", "Toggle if the character costumes should change."),
                         },
                         priority = 5,
                     },
@@ -96,7 +96,7 @@ namespace HeavenStudio.Games.Loaders
                         resizable = true,
                         parameters = new List<Param>()
                         {
-                            new Param("type", PajamaParty.SleepType.Normal, "Sleep Type", "Type of sleep action to use"),
+                            new Param("type", PajamaParty.SleepType.Normal, "Type", "Set the type of sleep action to use."),
                         },
                         priority = 5,
                     },

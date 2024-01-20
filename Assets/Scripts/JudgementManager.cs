@@ -99,8 +99,10 @@ namespace HeavenStudio
 
         [SerializeField] TMP_Text epilogueMessage;
         [SerializeField] Image epilogueImage;
+        [SerializeField] Image epilogueFrame;
         [SerializeField] AspectRatioFitter epilogueFitter;
         [SerializeField] Sprite epilogueNg, epilogueOk, epilogueHi;
+        [SerializeField] Sprite epilogueFrmNg, epilogueFrmOk, epilogueFrmHi;
 
         [SerializeField] GameObject bg;
         [SerializeField] GameObject rankLogo;
@@ -132,6 +134,21 @@ namespace HeavenStudio
             barSlider.fillRect.GetComponent<Image>().color = barColourNg;
 
             string propSuffix = "ng";
+            double inputs = 0, score = 0;
+            foreach (var input in judgementInfo.inputs)
+            {
+                inputs += input.weight;
+                score += Math.Clamp(input.accuracyState, 0, 1) * input.weight;
+            }
+            if (inputs > 0)
+            {
+                score /= inputs;
+            }
+            else
+            {
+                score = 0;
+            }
+            judgementInfo.finalScore = score;
             if (judgementInfo.finalScore < Minigame.rankOkThreshold)
             {
                 rank = Rank.Ng;
@@ -293,6 +310,13 @@ namespace HeavenStudio
             {
                 imageResource = playedBeatmap != null ? playedBeatmap["epilogue_hi_res"] : null;
             }
+
+            epilogueFrame.sprite = rank switch
+            {
+                Rank.Ok => epilogueFrmOk,
+                Rank.Hi => epilogueFrmHi,
+                _ => epilogueFrmNg
+            };
 
             if (imageResource != null)
             {

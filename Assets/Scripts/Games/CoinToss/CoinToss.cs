@@ -18,11 +18,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 7,
                     parameters = new List<Param>()
                     {
-                        new Param("type", CoinToss.CoinVariation.Default, "Variation", "Special Coin Variations"),
-                        new Param("toggle", false, "Audience Reaction", "Enable Audience Reaction"),
+                        new Param("type", CoinToss.CoinVariation.Default, "Variation", "Choose the version of the cue to play."),
+                        new Param("toggle", false, "Audience Reaction", "Toggle if there should be cheering or booing after the cue."),
                     }
                 },
-                new GameAction("fade background color", "Background Color")
+                new GameAction("fade background color", "Background Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity;
                         CoinToss.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["colorStartF"], e["colorEndF"], e["ease"]); },
@@ -30,11 +30,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("colorStart", CoinToss.defaultBgColor, "BG Start Color", "The starting color in the fade"),
-                        new Param("colorEnd", CoinToss.defaultBgColor, "BG End Color", "The ending color in the fade"),
-                        new Param("colorStartF", CoinToss.defaultBgColor, "FG Start Color", "The starting color in the fade"),
-                        new Param("colorEndF", CoinToss.defaultBgColor, "FG End Color", "The ending color in the fade"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("colorStart", CoinToss.defaultBgColor, "BG Start Color", "Set the color for the outer ring at the start of the event."),
+                        new Param("colorEnd", CoinToss.defaultBgColor, "BG End Color", "Set the color for the outer ring at the end of the event."),
+                        new Param("colorStartF", CoinToss.defaultBgColor, "FG Start Color", "Set the color for the inner oval at the start of the event."),
+                        new Param("colorEndF", CoinToss.defaultBgColor, "FG End Color", "Set the color for the inner oval at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing for the action.")
                     }
                 },
 

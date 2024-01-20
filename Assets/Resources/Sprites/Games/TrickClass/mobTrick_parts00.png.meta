@@ -101,12 +101,12 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 73.1
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -124,7 +124,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -165,16 +165,16 @@ TextureImporter:
       name: mobTrick_parts01_0
       rect:
         serializedVersion: 2
-        x: 340
-        y: 4625
-        width: 1042
-        height: 1102
+        x: 445
+        y: 3233
+        width: 655
+        height: 700
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 482bd3edad0489300800000000000000
       internalID: 259028287349437060
@@ -186,16 +186,16 @@ TextureImporter:
       name: mobTrick_parts01_1
       rect:
         serializedVersion: 2
-        x: 2146
-        y: 4625
-        width: 1042
-        height: 1102
+        x: 1626
+        y: 3258
+        width: 657
+        height: 657
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f41bd82f31a50f870800000000000000
       internalID: 8714564320682160463
@@ -207,16 +207,16 @@ TextureImporter:
       name: mobTrick_parts01_2
       rect:
         serializedVersion: 2
-        x: 3864
-        y: 4625
-        width: 1042
-        height: 1102
+        x: 2884
+        y: 3296
+        width: 597
+        height: 573
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 561d39581c9ee8f10800000000000000
       internalID: 2274011879247696229
@@ -228,16 +228,16 @@ TextureImporter:
       name: mobTrick_parts01_3
       rect:
         serializedVersion: 2
-        x: 520
-        y: 3567
-        width: 608
-        height: 745
+        x: 632
+        y: 2419
+        width: 347
+        height: 442
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 99edd69e82be0a400800000000000000
       internalID: 333524933372927641
@@ -249,16 +249,16 @@ TextureImporter:
       name: mobTrick_parts01_4
       rect:
         serializedVersion: 2
-        x: 2215
-        y: 3558
-        width: 736
-        height: 814
+        x: 1854
+        y: 2411
+        width: 437
+        height: 494
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e9dc444b6521e2ae0800000000000000
       internalID: -1572299056304829026
@@ -270,16 +270,16 @@ TextureImporter:
       name: mobTrick_parts01_5
       rect:
         serializedVersion: 2
-        x: 304
-        y: 2590
-        width: 450
-        height: 611
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 479
+        y: 1692
+        width: 274
+        height: 417
+      alignment: 9
+      pivot: {x: 0.4452555, y: 0.4940048}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b94b8664cc22ec060800000000000000
       internalID: 6975551133593416859
@@ -291,16 +291,16 @@ TextureImporter:
       name: mobTrick_parts01_6
       rect:
         serializedVersion: 2
-        x: 768
-        y: 2590
-        width: 404
-        height: 611
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 767
+        y: 1670
+        width: 242
+        height: 435
+      alignment: 9
+      pivot: {x: 0.58677685, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b59af6afbad3f22c0800000000000000
       internalID: -4454273697595807397
@@ -312,16 +312,16 @@ TextureImporter:
       name: mobTrick_parts01_7
       rect:
         serializedVersion: 2
-        x: 2146
-        y: 2590
-        width: 883
-        height: 675
+        x: 1804
+        y: 1715
+        width: 542
+        height: 394
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 32e9bb34561809020800000000000000
       internalID: 2346517677788077603
@@ -333,16 +333,16 @@ TextureImporter:
       name: mobTrick_parts01_8
       rect:
         serializedVersion: 2
-        x: 275
-        y: 1563
-        width: 425
-        height: 434
+        x: 618
+        y: 999
+        width: 214
+        height: 219
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 086178435dfe6e770800000000000000
       internalID: 8639856634145216128
@@ -354,16 +354,16 @@ TextureImporter:
       name: mobTrick_parts01_9
       rect:
         serializedVersion: 2
-        x: 309
-        y: 831
-        width: 368
-        height: 333
+        x: 643
+        y: 472
+        width: 171
+        height: 145
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: efe6e4b97c7c69200800000000000000
       internalID: 186556094700482302
@@ -375,16 +375,16 @@ TextureImporter:
       name: mobTrick_parts01_10
       rect:
         serializedVersion: 2
-        x: 1229
-        y: 194
-        width: 246
-        height: 258
+        x: 2354
+        y: 414
+        width: 82
+        height: 92
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: daafa97acc08e9290800000000000000
       internalID: -7881720681378153811
@@ -396,16 +396,16 @@ TextureImporter:
       name: mobTrick_parts01_11
       rect:
         serializedVersion: 2
-        x: 1171
-        y: 1486
-        width: 463
-        height: 577
+        x: 1264
+        y: 943
+        width: 239
+        height: 322
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b923159669b2c2980800000000000000
       internalID: -8562420866526137701
@@ -417,16 +417,16 @@ TextureImporter:
       name: mobTrick_parts01_12
       rect:
         serializedVersion: 2
-        x: 1143
-        y: 667
-        width: 494
-        height: 566
+        x: 1245
+        y: 353
+        width: 259
+        height: 314
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 78f0f814cafeb59d0800000000000000
       internalID: -2784368421485211769
@@ -438,16 +438,16 @@ TextureImporter:
       name: mobTrick_parts01_13
       rect:
         serializedVersion: 2
-        x: 1958
-        y: 693
-        width: 408
-        height: 505
+        x: 1831
+        y: 371
+        width: 200
+        height: 272
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d5eeaa068b3254520800000000000000
       internalID: 2685592027599138397
@@ -459,16 +459,16 @@ TextureImporter:
       name: mobTrick_parts01_14
       rect:
         serializedVersion: 2
-        x: 1973
-        y: 154
-        width: 324
-        height: 338
+        x: 2690
+        y: 392
+        width: 138
+        height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 335d5bfb21a2becf0800000000000000
       internalID: -222037496610564813
@@ -480,16 +480,16 @@ TextureImporter:
       name: mobTrick_parts01_15
       rect:
         serializedVersion: 2
-        x: 2039
-        y: 1627
-        width: 295
-        height: 246
+        x: 1889
+        y: 1045
+        width: 119
+        height: 82
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: cf80fab494376cf00800000000000000
       internalID: 1136722714597198076
@@ -501,16 +501,16 @@ TextureImporter:
       name: mobTrick_parts01_16
       rect:
         serializedVersion: 2
-        x: 2875
-        y: 1209
-        width: 630
-        height: 750
+        x: 6468
+        y: 2183
+        width: 548
+        height: 650
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e39606c64780bbef0800000000000000
       internalID: -91470071303476930
@@ -522,16 +522,16 @@ TextureImporter:
       name: mobTrick_parts01_17
       rect:
         serializedVersion: 2
-        x: 2861
-        y: 194
-        width: 644
-        height: 618
+        x: 4568
+        y: 1231
+        width: 370
+        height: 351
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0ebb890991c305ba0800000000000000
       internalID: -6102311414589244448
@@ -543,10 +543,31 @@ TextureImporter:
       name: mobTrick_parts01_18
       rect:
         serializedVersion: 2
-        x: 4118
-        y: 1535
-        width: 967
-        height: 416
+        x: 7322
+        y: 2481
+        width: 607
+        height: 205
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 510262817ac178360800000000000000
+      internalID: 7171732435601072149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_0
+      rect:
+        serializedVersion: 2
+        x: 7105
+        y: 1261
+        width: 305
+        height: 442
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -554,8 +575,638 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 510262817ac178360800000000000000
-      internalID: 7171732435601072149
+      spriteID: f0fcf81f8097b2740903b8e90101c0b0
+      internalID: 1967864003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_1
+      rect:
+        serializedVersion: 2
+        x: 6378
+        y: 1262
+        width: 343
+        height: 310
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf5ca1914ae32674e948382ce82c17b5
+      internalID: 1376003920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_2
+      rect:
+        serializedVersion: 2
+        x: 8297
+        y: 1254
+        width: 358
+        height: 338
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28e36512b1bb49c4ab12f345dfa6f6b6
+      internalID: 762809910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_3
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 920
+        width: 237
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3d31ca7ff98cd046af4ae3181c2ce9e
+      internalID: 1153043952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_4
+      rect:
+        serializedVersion: 2
+        x: 2780
+        y: 920
+        width: 225
+        height: 317
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 72ad8845baebee344bcbe2668b97a31c
+      internalID: -1496263572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_5
+      rect:
+        serializedVersion: 2
+        x: 3197
+        y: 920
+        width: 310
+        height: 265
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff3b3d4bd909daf438dfe31286b91a6b
+      internalID: 472591993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_6
+      rect:
+        serializedVersion: 2
+        x: 3965
+        y: 958
+        width: 138
+        height: 398
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dca1fe650ae146d46b4b96c220df337c
+      internalID: -323518427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_7
+      rect:
+        serializedVersion: 2
+        x: 4019
+        y: 3233
+        width: 656
+        height: 700
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d483240c2f01d242bfed6c91287b402
+      internalID: -2051166924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_8
+      rect:
+        serializedVersion: 2
+        x: 5279
+        y: 3233
+        width: 655
+        height: 700
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fc003b99e5a9914ead9fa39f6eefa4d
+      internalID: 279802810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_9
+      rect:
+        serializedVersion: 2
+        x: 6525
+        y: 3233
+        width: 655
+        height: 700
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8372b144e2e403a4395a2ba4c619e21b
+      internalID: 998617573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_10
+      rect:
+        serializedVersion: 2
+        x: 7732
+        y: 3233
+        width: 655
+        height: 700
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40bfe1da652fe324296e0b4e69194ce2
+      internalID: 1776469214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_11
+      rect:
+        serializedVersion: 2
+        x: 2739
+        y: 1914
+        width: 555
+        height: 945
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1fde0766c858f448972412388c5f296
+      internalID: 10917297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_12
+      rect:
+        serializedVersion: 2
+        x: 3524
+        y: 1910
+        width: 314
+        height: 411
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68cf2fedba9dc3644a8566bd187ec04a
+      internalID: -1517405632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_13
+      rect:
+        serializedVersion: 2
+        x: 3574
+        y: 2557
+        width: 205
+        height: 221
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 72e4897d5a8cf584cb0e728ce10d9d36
+      internalID: -1969113684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_14
+      rect:
+        serializedVersion: 2
+        x: 4052
+        y: 2549
+        width: 258
+        height: 251
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 850472be1664aa94198d8b302732fd9f
+      internalID: 2050626870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_15
+      rect:
+        serializedVersion: 2
+        x: 4052
+        y: 2015
+        width: 321
+        height: 339
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7352be19c8f720942b39a4df5ed7dcbb
+      internalID: 1790970992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_16
+      rect:
+        serializedVersion: 2
+        x: 4547
+        y: 2058
+        width: 684
+        height: 762
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f7060e1e061614479392e7b26442283
+      internalID: 1714369722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_17
+      rect:
+        serializedVersion: 2
+        x: 5349
+        y: 2513
+        width: 386
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d28aa70e615b354da2baae68f705be3
+      internalID: -618648720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_18
+      rect:
+        serializedVersion: 2
+        x: 5364
+        y: 2131
+        width: 397
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b08b5a983f694344c9c45eb8fd02c2db
+      internalID: 1927548367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_19
+      rect:
+        serializedVersion: 2
+        x: 5931
+        y: 2343
+        width: 199
+        height: 352
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 42, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33794920e816db04d811c093e7c0aa89
+      internalID: -926227626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_20
+      rect:
+        serializedVersion: 2
+        x: 3662
+        y: 949
+        width: 184
+        height: 141
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 309a75d4f03ab10439b222b0e56e1a74
+      internalID: 1495041153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_21
+      rect:
+        serializedVersion: 2
+        x: 3504
+        y: 535
+        width: 159
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd4dc6df6ed05524db08700ef713dc32
+      internalID: -812056761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_22
+      rect:
+        serializedVersion: 2
+        x: 3708
+        y: 468
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 005d59b01d87ddc4eb2c5779903b166e
+      internalID: -796366642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_23
+      rect:
+        serializedVersion: 2
+        x: 3708
+        y: 569
+        width: 39
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d089bf01de1ba94d8bc71d6e6ff4956
+      internalID: 1223630407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_24
+      rect:
+        serializedVersion: 2
+        x: 3784
+        y: 566
+        width: 47
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4509367f5754fa4a8e655cb029a1f4a
+      internalID: -1673927433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_25
+      rect:
+        serializedVersion: 2
+        x: 3870
+        y: 561
+        width: 57
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63dd6080d68835b4d88e179d502eb506
+      internalID: 743142775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_26
+      rect:
+        serializedVersion: 2
+        x: 3784
+        y: 463
+        width: 47
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bf3ba381d555e142b92f825ac337e76
+      internalID: 1133343569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_27
+      rect:
+        serializedVersion: 2
+        x: 3870
+        y: 459
+        width: 57
+        height: 56
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b12e78b7e53034f479db6e705146a57d
+      internalID: -2009408569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_28
+      rect:
+        serializedVersion: 2
+        x: 3026
+        y: 416
+        width: 309
+        height: 265
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84fa8b4e7d869cb41a1a19b09de21fe9
+      internalID: -370572045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_29
+      rect:
+        serializedVersion: 2
+        x: 3988
+        y: 579
+        width: 48
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6458b612f3c4ac42bbd6db43c040aaf
+      internalID: -1954232948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mobTrick_parts00_30
+      rect:
+        serializedVersion: 2
+        x: 7770
+        y: 1262
+        width: 275
+        height: 401
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a4a8b265b40e3749a7720acda66717c
+      internalID: 1468769834
       vertices: []
       indices: 
       edges: []
@@ -571,6 +1222,37 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      mobTrick_parts00_0: 1967864003
+      mobTrick_parts00_1: 1376003920
+      mobTrick_parts00_10: 1776469214
+      mobTrick_parts00_11: 10917297
+      mobTrick_parts00_12: -1517405632
+      mobTrick_parts00_13: -1969113684
+      mobTrick_parts00_14: 2050626870
+      mobTrick_parts00_15: 1790970992
+      mobTrick_parts00_16: 1714369722
+      mobTrick_parts00_17: -618648720
+      mobTrick_parts00_18: 1927548367
+      mobTrick_parts00_19: -926227626
+      mobTrick_parts00_2: 762809910
+      mobTrick_parts00_20: 1495041153
+      mobTrick_parts00_21: -812056761
+      mobTrick_parts00_22: -796366642
+      mobTrick_parts00_23: 1223630407
+      mobTrick_parts00_24: -1673927433
+      mobTrick_parts00_25: 743142775
+      mobTrick_parts00_26: 1133343569
+      mobTrick_parts00_27: -2009408569
+      mobTrick_parts00_28: -370572045
+      mobTrick_parts00_29: -1954232948
+      mobTrick_parts00_3: 1153043952
+      mobTrick_parts00_30: 1468769834
+      mobTrick_parts00_4: -1496263572
+      mobTrick_parts00_5: 472591993
+      mobTrick_parts00_6: -323518427
+      mobTrick_parts00_7: -2051166924
+      mobTrick_parts00_8: 279802810
+      mobTrick_parts00_9: 998617573
       mobTrick_parts01_0: 259028287349437060
       mobTrick_parts01_1: 8714564320682160463
       mobTrick_parts01_10: -7881720681378153811

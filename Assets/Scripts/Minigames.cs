@@ -12,6 +12,8 @@ using HeavenStudio.Editor.Track;
 using HeavenStudio.Games;
 using Jukebox;
 
+using SatorImaging.UnitySourceGenerator;
+
 using System;
 using System.Linq;
 using System.Reflection;
@@ -19,8 +21,8 @@ using System.IO;
 
 namespace HeavenStudio
 {
-
-    public class Minigames
+    [UnitySourceGenerator(typeof(MinigameLoaderGenerator), OverwriteIfFileExists = true)]
+    public partial class Minigames
     {
         public enum RecommendedControlStyle
         {
@@ -82,9 +84,9 @@ namespace HeavenStudio
             {"resultcat3_hi", "You followed the example well."},                                                                // "Superb" message for input category 3 "repeat" (two-liner)
             {"resultcat3_ng", "Next time, follow the example better."},                                                         // "Try Again" message for input category 3 "repeat" (two-liner)
 
-            {"epilogue_hi", "Superb picture"},                                                                                  // epilogue "Superb" message
-            {"epilogue_ok", "OK picture"},                                                                                      // epilogue "OK" message
-            {"epilogue_ng", "Try Again picture"},                                                                               // epilogue "Try Again" message
+            {"epilogue_hi", "Superb"},                                                                                          // epilogue "Superb" message
+            {"epilogue_ok", "OK"},                                                                                              // epilogue "OK" message
+            {"epilogue_ng", "Try Again"},                                                                                       // epilogue "Try Again" message
 
             {"epilogue_hi_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Hi")},   // epilogue "Superb" image resource path
             {"epilogue_ok_res", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Epilogue/", "Ok")},   // epilogue "OK" image resource path
@@ -151,9 +153,14 @@ namespace HeavenStudio
 
         public static string JukeboxAudioConverter(string filePath, AudioType audioType, string specificType)
         {
-            if (Directory.Exists(Path.Combine(Application.temporaryCachePath, "/savewav")))
+            string wavCachePath = Path.Combine(Application.temporaryCachePath, "savewav");
+            if (Directory.Exists(wavCachePath))
             {
-                Directory.Delete(Path.Combine(Application.temporaryCachePath, "/savewav"), true);
+                Directory.Delete(wavCachePath, true);
+            }
+            if (!Directory.Exists(wavCachePath))
+            {
+                Directory.CreateDirectory(wavCachePath);
             }
             if (audioType == AudioType.MPEG)
             {
@@ -172,8 +179,8 @@ namespace HeavenStudio
                     }
                     AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
                     string fileName = Path.GetFileNameWithoutExtension(filePath);
-                    SavWav.Save("/savewav/" + fileName, clip, true);
-                    filePath = Path.Combine(Application.temporaryCachePath, "/savewav/" + fileName + ".wav");
+                    SavWav.Save(fileName, clip, true);
+                    filePath = Path.Combine(wavCachePath, $"{fileName}.wav");
 
                     clip = null;
                 }
@@ -192,16 +199,18 @@ namespace HeavenStudio
             System.Type type, pType;
             if (EventCaller.instance != null)
             {
+                string[] split;
                 foreach (var e in data.entities)
                 {
-                    var gameName = e.datamodel.Split(0);
-                    var actionName = e.datamodel.Split(1);
+                    split = e.datamodel.Split('/');
+                    var gameName = split[0];
+                    var actionName = split[1];
                     game = EventCaller.instance.GetMinigame(gameName);
                     if (game == null)
                     {
                         Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
                         game = new Minigames.Minigame(gameName, gameName.DisplayName() + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
-                        EventCaller.instance.minigames.Add(game);
+                        EventCaller.instance.minigames.Add(gameName, game);
                         if (Editor.Editor.instance != null)
                             Editor.Editor.instance.AddIcon(game);
                     }
@@ -325,6 +334,8 @@ namespace HeavenStudio
                     {
                         if (data.properties[prop.Key].GetType() == typeof(string))
                             data.properties[prop.Key] = Enum.Parse(mType, (string)data.properties[prop.Key]);
+                        else
+                            data.properties[prop.Key] = Enum.ToObject(mType, data.properties[prop.Key]);
                     }
                     // convert all JObjects to their respective types
                     else if (data.properties[prop.Key].GetType() == typeof(Newtonsoft.Json.Linq.JObject))
@@ -644,9 +655,6 @@ namespace HeavenStudio
                 this.preFunction = prescheduleFunction ?? delegate { };
                 this.priority = priority;
                 this.preFunctionLength = preFunctionLength;
-
-
-                //todo: converting to new versions of GameActions
             }
 
             /// <summary>
@@ -706,27 +714,9 @@ namespace HeavenStudio
         public delegate void EventCallback();
         public delegate void ParamChangeCallback(string paramName, object paramValue, RiqEntity entity);
 
-        // overengineered af but it's a modified version of
-        // https://stackoverflow.com/a/19877141
-        static List<Func<EventCaller, Minigame>> loadRunners;
-        static void BuildLoadRunnerList()
-        {
-            loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(x => x.Namespace == "HeavenStudio.Games.Loaders" && x.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static) != null)
-            .Select(t => (Func<EventCaller, Minigame>)Delegate.CreateDelegate(
-                typeof(Func<EventCaller, Minigame>),
-                null,
-                t.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static),
-                false
-                ))
-            .ToList();
-
-        }
-
         public static void Init(EventCaller eventCaller)
         {
-            eventCaller.minigames = new List<Minigame>()
+            List<Minigame> defaultGames = new()
             {
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
@@ -734,7 +724,7 @@ namespace HeavenStudio
                         function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); },
                         parameters: new List<Param>()
                             {
-                                new Param("toggle", true, "Black Flash", "Enable or disable the black screen for this Game Switch")
+                                new Param("toggle", true, "Black Flash", "Toggle if there should be a blck flash before the game is switched. You should only disable this if you know what you're doing.")
                             },
                         inactiveFunction: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }
                     ),
@@ -758,7 +748,7 @@ namespace HeavenStudio
                     new GameAction("toggle inputs", "Toggle Inputs", 0.5f, true,
                         new List<Param>()
                         {
-                            new Param("toggle", true, "Enable Inputs")
+                            new Param("toggle", true, "Allow Inputs", "Toggle if the player is able to input. Any missed cues while this is disabled will not be counted as a miss and will not break a perfect.")
                         },
                         delegate
                         {
@@ -801,22 +791,22 @@ namespace HeavenStudio
                     new GameAction("4 beat count-in", "4 Beat Count-In", 4f, true,
                         new List<Param>()
                         {
-                            new Param("type", SoundEffects.CountInType.Normal, "Type", "The sounds to play for the count-in")
+                            new Param("type", SoundEffects.CountInType.Normal, "Type", "Set the type of sounds to use for the count-in.")
                         },
                         delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn(e.beat, e.length / 4f, e["type"]); }
                     ),
                     new GameAction("8 beat count-in", "8 Beat Count-In", 8f, true,
                         new List<Param>()
                         {
-                            new Param("type", SoundEffects.CountInType.Normal, "Type", "The sounds to play for the count-in")
+                            new Param("type", SoundEffects.CountInType.Normal, "Type", "Set the type of sounds to use for the count-in.")
                         },
                         delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn(e.beat, e.length / 8f, e["type"]); }
                     ),
                     new GameAction("count", "Count", 1f, false,
                         new List<Param>()
                         {
-                            new Param("type", SoundEffects.CountNumbers.One, "Number", "The sound to play"),
-                            new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
+                            new Param("type", SoundEffects.CountNumbers.One, "Type", "Set the number to say."),
+                            new Param("toggle", false, "Alt", "Toggle if the alternate version of this voice line should be used.")
                         },
                         delegate { var e = eventCaller.currentEntity; SoundEffects.Count(e["type"], e["toggle"]); }
                     ),
@@ -832,7 +822,7 @@ namespace HeavenStudio
                     new GameAction("go!", "Go!", 1f, false,
                         new List<Param>()
                         {
-                            new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
+                            new Param("toggle", false, "Alt", "Toggle if the alternate version of this voice line should be used.")
                         },
                         function: delegate { SoundEffects.Go(eventCaller.currentEntity["toggle"]); }
                     ),
@@ -859,11 +849,11 @@ namespace HeavenStudio
                     new GameAction("flash", "Flash", 1f, true,
                         new List<Param>()
                         {
-                            new Param("colorA", Color.white, "Start Color"),
-                            new Param("colorB", Color.white, "End Color"),
-                            new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
-                            new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new Param("colorA", Color.white, "Start Color", "Set the color at the start of the event."),
+                            new Param("colorB", Color.white, "End Color", "Set the color at the end of the event."),
+                            new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity", "Set the opacity at the start of the event."),
+                            new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity", "Set the opacity at the end of the event."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "colorA", "valA" })
                             })
@@ -872,7 +862,7 @@ namespace HeavenStudio
                     new GameAction("filter", "Filter", 1f, true,
                         new List<Param>()
                         {
-                            new Param("filter", Games.Global.Filter.FilterType.grayscale, "Filter"),
+                            new Param("filter", Games.Global.Filter.FilterType.grayscale, "Type", "Set the type of filter to use."),
                             // old
 
                             /*new Param("inten", new EntityTypes.Float(0, 100, 100), "Intensity"),
@@ -880,10 +870,10 @@ namespace HeavenStudio
                             new Param("fadeout", new EntityTypes.Float(0, 100, 0), "Fade Out")*/
 
                             // new
-                            new Param("slot", new EntityTypes.Integer(1, 10, 1), "Slot", "Slot 1 is activated first and slot 10 last."),
-                            new Param("start", new EntityTypes.Float(0, 1, 1), "Start Intensity"),
-                            new Param("end", new EntityTypes.Float(0, 1, 1), "End Intensity"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new Param("slot", new EntityTypes.Integer(1, 10, 1), "Slot", "Set the slot for the filter. Higher slots are applied first. There can only be one filter per slot."),
+                            new Param("start", new EntityTypes.Float(0, 1, 1), "Start Intensity", "Set the intensity at the start of the event."),
+                            new Param("end", new EntityTypes.Float(0, 1, 1), "End Intensity", "Set the intensity at the end of the event."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "start" })
                             }),
@@ -891,20 +881,42 @@ namespace HeavenStudio
                     ),
                     new GameAction("move camera", "Move Camera", 1f, true, new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
-                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
-                            new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out", "Next position on the Z axis"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
-                            new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
+                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Set the position on the X axis."),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Set the position on the Y axis."),
+                            new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out", "Set the position on the Z axis."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                            new Param("axis", GameCamera.CameraAxis.All, "Axis", "Set if only a specific axis should be modified." )
                         }
                     ),
                     new GameAction("rotate camera", "Rotate Camera", 1f, true, new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch", "Next rotation on the X axis"),
-                            new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw", "Next rotation on the Y axis"),
-                            new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll", "Next rotation on the Z axis"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
-                            new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
+                            new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch", "Set the up/down rotation."),
+                            new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw", "Set the left/right rotation."),
+                            new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll", "Set the clockwise/counterclockwise rotation."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                            new Param("axis", GameCamera.CameraAxis.All, "Axis", "Set if only a specific axis should be modified." )
+                        }
+                    ),
+                     new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Set the position on the X axis."),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Set the position on the Y axis."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "Set if only a specific axis should be modified." )
+                        }
+                    ),
+                    new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(-360, 360, 0), "Rotation", "Set the clockwise/counterclockwise rotation."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                        }
+                    ),
+                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Set the width of the viewport."),
+                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Set the height of the viewport."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "Set if only a specific axis should be modified." )
                         }
                     ),
                     new("stretch camera", "Stretch Camera")
@@ -912,87 +924,77 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("x1", new EntityTypes.Float(0f, 50f, 1f), "Start Width"),
-                            new("y1", new EntityTypes.Float(0f, 50f, 1f), "Start Height"),
-                            new("x2", new EntityTypes.Float(0f, 50f, 1f), "End Width"),
-                            new("y2", new EntityTypes.Float(0f, 50f, 1f), "End Height"),
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new("x1", new EntityTypes.Float(0f, 50f, 1f), "Start Width", "Set the width at the start of the event."),
+                            new("x2", new EntityTypes.Float(0f, 50f, 1f), "End Width", "Set the width at the end of the event."),
+                            new("y1", new EntityTypes.Float(0f, 50f, 1f), "Start Height", "Set the height at the start of the event."),
+                            new("y2", new EntityTypes.Float(0f, 50f, 1f), "End Height", "Set the height at the end of the event."),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "x1", "y1" })
                             }),
-                            new Param("axis", GameCamera.CameraAxis.All, "Axis")
+                            new Param("axis", GameCamera.CameraAxis.All, "Axis", "Set if only a specific axis should be modified.")
                         }
                     },
-                    new GameAction("camera background color", "Camera Background Color", 1, true, new List<Param>()
+                    new GameAction("fitScreen", "Force Game Stretching To Window")
+                    {
+                        defaultLength = 0.5f,
+                        parameters = new()
                         {
-                            new Param("color", Color.black, "Start Color"),
-                            new Param("color2", Color.black, "End Color"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
+                            new("enable", true, "Enabled", "Toggle if the game should be forced to stretch to the window size, removing the letterbox.")
                         }
-                    ),
-                    new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>()
-                        {
-                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
-                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
-                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in" )
-                        }
-                    ),
-                    new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>()
-                        {
-                            new Param("valA", new EntityTypes.Float(-360, 360, 0), "Rotation", "Next viewport rotation"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
-                        }
-                    ),
-                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>()
-                        {
-                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
-                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
-                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
-                        }
-                    ),
-
+                    },
                     new GameAction("screen shake", "Screen Shake", 1f, true,
                         new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Float(0, 10, 0), "Horizontal Intensity"),
-                            new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity")
+                            new Param("easedA", new EntityTypes.Float(0, 10, 0), "Start Horizontal Intensity", "Set the horizontal intensity of the screen shake at the start of the event."),
+                            new Param("valA", new EntityTypes.Float(0, 10, 0), "End Horizontal Intensity", "Set the horizontal intensity of the screen shake at the end of the event."),
+                            new Param("easedB", new EntityTypes.Float(0, 10, 0.5f), "Start Vertical Intensity", "Set the vertical intensity of the screen shake at the start of the event."),
+                            new Param("valB", new EntityTypes.Float(0, 10, 0.5f), "End Vertical Intensity", "Set the vertical intensity of the screen shake at the end of the event."),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "easedA", "easedB" })
+                            }),
                         }
                     ),
-
                     new GameAction("display textbox", "Display Textbox", 1f, true, new List<Param>()
                         {
-                            new Param("text1", "", "Text", "The text to display in the textbox (Rich Text is supported!)"),
-                            new Param("type", Games.Global.Textbox.TextboxAnchor.TopMiddle, "Anchor", "Where to anchor the textbox"),
-                            new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Textbox Width", "Textbox width multiplier"),
-                            new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Textbox Height", "Textbox height multiplier")
+                            new Param("text1", "", "Text", "Set the text to display in the textbox. Rich text is supported."),
+                            new Param("type", Games.Global.Textbox.TextboxAnchor.TopMiddle, "Anchor", "Set where to anchor the textbox."),
+                            new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Width", "Set the width of the textbox."),
+                            new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Height", "Set the height of the textbox.")
                         }
                     ),
                     new GameAction("display open captions", "Display Open Captions", 1f, true,
                         new List<Param>()
                         {
-                            new Param("text1", "", "Text", "The text to display in the captions (Rich Text is supported!)"),
-                            new Param("type", Games.Global.Textbox.TextboxAnchor.BottomMiddle, "Anchor", "Where to anchor the captions"),
-                            new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Captions Width", "Captions width multiplier"),
-                            new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Captions Height", "Captions height multiplier")
+                            new Param("text1", "", "Text", "Set the text to display in the captions. Rich text is supported."),
+                            new Param("type", Games.Global.Textbox.TextboxAnchor.BottomMiddle, "Anchor", "Set where to anchor the captions."),
+                            new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Width", "Set the width of the captions."),
+                            new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Height", "Set the height of the captions.")
                         }
                     ),
                     new GameAction("display closed captions", "Display Closed Captions", 1f, true,
                         new List<Param>()
                         {
-                            new Param("text1", "", "Text", "The text to display in the captions (Rich Text is supported!)"),
-                            new Param("type", Games.Global.Textbox.ClosedCaptionsAnchor.Top, "Anchor", "Where to anchor the captions"),
-                            new Param("valA", new EntityTypes.Float(0.5f, 4, 1), "Captions Height", "Captions height multiplier")
+                            new Param("text1", "", "Text", "Set the text to display in the captions. Rich text is supported."),
+                            new Param("type", Games.Global.Textbox.ClosedCaptionsAnchor.Top, "Anchor", "Set where to anchor the captions."),
+                            new Param("valA", new EntityTypes.Float(0.5f, 4, 1), "Height", "Set the height of the captions.")
                         }
                     ),
                     new GameAction("display song artist", "Display Song Info", 1f, true,
                         new List<Param>()
                         {
-                            new Param("text1", "", "Title", "Text to display in the upper label (Rich Text is supported!)"),
-                            new Param("text2", "", "Artist", "Text to display in the lower label (Rich Text is supported!)"),
-                            new Param("instantOn", false, "Instant Show", "Skip the show animation?"),
-                            new Param("instantOff", false, "Instant Hide", "Skip the hide animation?"),
+                            new Param("text1", "", "Title", "Set the text to display in the upper label. Rich text is supported."),
+                            new Param("text2", "", "Artist", "Set the text to display in the lower label. Rich text is supported."),
+                            new Param("instantOn", false, "Instant Show", "Toggle if the slide-in animation should be skipped."),
+                            new Param("instantOff", false, "Instant Hide", "Toggle if the slide-out animation should be skipped."),
+                        }
+                    ),
+                    new GameAction("camera background color", "Camera Background Color", 1, true, new List<Param>()
+                        {
+                            new Param("color", Color.black, "Start Color", "Set the color at the start of the event."),
+                            new Param("color2", Color.black, "End Color", "Set the color at the end of the event."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                         }
                     ),
 
@@ -1002,20 +1004,20 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
-                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
+                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity", "Set the intensity at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity", "Set the intensity at the end of the event."),
 
-                            new("colorStart", Color.black, "Start Color"),
-                            new("colorEnd", Color.black, "End Color"),
+                            new("colorStart", Color.black, "Start Color", "Set the color at the start of the event."),
+                            new("colorEnd", Color.black, "End Color", "Set the color at the end of the event."),
 
-                            new("smoothStart", new EntityTypes.Float(0.01f, 1f, 0.2f), "Start Smoothness"),
-                            new("smoothEnd", new EntityTypes.Float(0.01f, 1f, 0.2f), "End Smoothness"),
+                            new("smoothStart", new EntityTypes.Float(0.01f, 1f, 0.2f), "Start Smoothness", "Set the smoothness at the start of the event."),
+                            new("smoothEnd", new EntityTypes.Float(0.01f, 1f, 0.2f), "End Smoothness", "Set the smoothness at the end of the event."),
 
-                            new("roundStart", new EntityTypes.Float(0f, 1f, 1f), "Start Roundness"),
-                            new("roundEnd", new EntityTypes.Float(0f, 1f, 1f), "End Roundness"),
-                            new("rounded", false, "Rounded"),
+                            new("roundStart", new EntityTypes.Float(0f, 1f, 1f), "Start Roundness", "Set the roundness at the start of the event."),
+                            new("roundEnd", new EntityTypes.Float(0f, 1f, 1f), "End Roundness", "Set the roundness at the end of the event."),
+                            new("rounded", false, "Rounded", "Toggle if the vignette should be equal on all sides."),
 
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "colorStart", "smoothStart", "roundStart" })
                             }),
@@ -1026,9 +1028,9 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
-                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity", "Set the intensity at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity", "Set the intensity at the end of the event."),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart" })
                             }),
@@ -1039,22 +1041,22 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("intenStart", new EntityTypes.Float(0f, 100f, 0f), "Start Intensity"),
-                            new("intenEnd", new EntityTypes.Float(0f, 100f, 1f), "End Intensity"),
+                            new("intenStart", new EntityTypes.Float(0f, 100f, 0f), "Start Intensity", "Set the intensity at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 100f, 1f), "End Intensity", "Set the intensity at the end of the event."),
 
-                            new("colorStart", Color.white, "Start Tint"),
-                            new("colorEnd", Color.white, "End Tint"),
+                            new("colorStart", Color.white, "Start Tint", "Set the tint at the start of the event."),
+                            new("colorEnd", Color.white, "End Tint", "Set the tint at the end of the event."),
 
-                            new("thresholdStart", new EntityTypes.Float(0f, 100f, 1f), "Start Threshold"),
-                            new("thresholdEnd", new EntityTypes.Float(0f, 100f, 1f), "End Threshold"),
+                            new("thresholdStart", new EntityTypes.Float(0f, 100f, 1f), "Start Threshold", "Set the threshold at the start of the event."),
+                            new("thresholdEnd", new EntityTypes.Float(0f, 100f, 1f), "End Threshold", "Set the threshold at the end of the event."),
 
-                            new("softKneeStart", new EntityTypes.Float(0f, 1f, 0.5f), "Start Soft Knee"),
-                            new("softKneeEnd", new EntityTypes.Float(0f, 1f, 0.5f), "End Soft Knee"),
+                            new("softKneeStart", new EntityTypes.Float(0f, 1f, 0.5f), "Start Soft Knee", "Set the soft knee at the start of the event."),
+                            new("softKneeEnd", new EntityTypes.Float(0f, 1f, 0.5f), "End Soft Knee", "Set the soft knee at the end of the event."),
 
-                            new("anaStart", new EntityTypes.Float(-1f, 1f, 0f), "Start Anamorphic Ratio"),
-                            new("anaEnd", new EntityTypes.Float(-1f, 1f, 0f), "End Anamorphic Ratio"),
+                            new("anaStart", new EntityTypes.Float(-1f, 1f, 0f), "Start Anamorphic Ratio", "Set the anamorphic ratio at the start of the event."),
+                            new("anaEnd", new EntityTypes.Float(-1f, 1f, 0f), "End Anamorphic Ratio", "Set the anamorphic ratio at the end of the event."),
 
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "colorStart", "thresholdStart", "softKneeStart", "anaStart" })
                             }),
@@ -1065,15 +1067,15 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("intenStart", new EntityTypes.Float(-100f, 100f, 0f), "Start Intensity"),
-                            new("intenEnd", new EntityTypes.Float(-100f, 100f, 1f), "End Intensity"),
+                            new("intenStart", new EntityTypes.Float(-100f, 100f, 0f), "Start Intensity", "Set the intensity at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(-100f, 100f, 1f), "End Intensity", "Set the intensity at the end of the event."),
 
-                            new("xStart", new EntityTypes.Float(0f, 1f, 1f), "Start X Multiplier"),
-                            new("yStart", new EntityTypes.Float(0f, 1f, 1f), "Start Y Multiplier"),
-                            new("xEnd", new EntityTypes.Float(0f, 1f, 1f), "End X Multiplier"),
-                            new("yEnd", new EntityTypes.Float(0f, 1f, 1f), "End Y Multiplier"),
+                            new("xStart", new EntityTypes.Float(0f, 1f, 1f), "Start X Multiplier", "Set the X multiplier at the start of the event."),
+                            new("xEnd", new EntityTypes.Float(0f, 1f, 1f), "End X Multiplier", "Set the X multiplier at the end of the event."),
+                            new("yStart", new EntityTypes.Float(0f, 1f, 1f), "Start Y Multiplier", "Set the Y multiplier at the start of the event."),
+                            new("yEnd", new EntityTypes.Float(0f, 1f, 1f), "End Y Multiplier", "Set the Y multiplier at the end of the event."),
 
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "xStart", "yStart" })
                             }),
@@ -1084,15 +1086,15 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity"),
-                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity"),
+                            new("intenStart", new EntityTypes.Float(0f, 1f), "Start Intensity", "Set the intensity at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 1f), "End Intensity", "Set the intensity at the end of the event."),
 
-                            new("sizeStart", new EntityTypes.Float(0.3f, 3f, 1f), "Start Size"),
-                            new("sizeEnd", new EntityTypes.Float(0.3f, 3f, 1f), "End Size"),
+                            new("sizeStart", new EntityTypes.Float(0.3f, 3f, 1f), "Start Size", "Set the size at the start of the event."),
+                            new("sizeEnd", new EntityTypes.Float(0.3f, 3f, 1f), "End Size", "Set the size at the end of the event."),
 
-                            new("colored", true, "Colored"),
+                            new("colored", true, "Colored", "Toggle if the grain will be colored."),
 
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "sizeStart" })
                             }),
@@ -1103,39 +1105,31 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("tempStart", new EntityTypes.Float(-100f, 100f), "Start Temperature"),
-                            new("tempEnd", new EntityTypes.Float(-100f, 100f), "End Temperature"),
+                            new("tempStart", new EntityTypes.Float(-100f, 100f), "Start Temperature", "Set the temperature at the start of the event."),
+                            new("tempEnd", new EntityTypes.Float(-100f, 100f), "End Temperature", "Set the temperature at the end of the event."),
 
-                            new("tintStart", new EntityTypes.Float(-100f, 100f), "Start Tint"),
-                            new("tintEnd", new EntityTypes.Float(-100f, 100f), "End Tint"),
+                            new("tintStart", new EntityTypes.Float(-100f, 100f), "Start Tint", "Set the tint at the start of the event."),
+                            new("tintEnd", new EntityTypes.Float(-100f, 100f), "End Tint", "Set the tint at the end of the event."),
 
-                            new("colorStart", Color.white, "Start Color Filter"),
-                            new("colorEnd", Color.white, "End Color Filter"),
+                            new("colorStart", Color.white, "Start Color Filter", "Set the color filter at the start of the event."),
+                            new("colorEnd", Color.white, "End Color Filter", "Set the color filter at the end of the event."),
 
-                            new("hueShiftStart", new EntityTypes.Float(-180f, 180f), "Start Hue Shift"),
-                            new("hueShiftEnd", new EntityTypes.Float(-180f, 180f), "End Hue Shift"),
+                            new("hueShiftStart", new EntityTypes.Float(-180f, 180f), "Start Hue Shift", "Set the hue shift at the start of the event."),
+                            new("hueShiftEnd", new EntityTypes.Float(-180f, 180f), "End Hue Shift", "Set the hue shift at the end of the event."),
 
-                            new("satStart", new EntityTypes.Float(-100f, 100f), "Start Saturation"),
-                            new("satEnd", new EntityTypes.Float(-100f, 100f), "End Saturation"),
+                            new("satStart", new EntityTypes.Float(-100f, 100f), "Start Saturation", "Set the saturation at the start of the event."),
+                            new("satEnd", new EntityTypes.Float(-100f, 100f), "End Saturation", "Set the saturation at the end of the event."),
 
-                            new("brightStart", new EntityTypes.Float(-100f, 100f), "Start Brightness"),
-                            new("brightEnd", new EntityTypes.Float(-100f, 100f), "End Brightness"),
+                            new("brightStart", new EntityTypes.Float(-100f, 100f), "Start Brightness", "Set the brightness at the start of the event."),
+                            new("brightEnd", new EntityTypes.Float(-100f, 100f), "End Brightness", "Set the brightness at the end of the event."),
 
-                            new("conStart", new EntityTypes.Float(-100f, 100f), "Start Contrast"),
-                            new("conEnd", new EntityTypes.Float(-100f, 100f), "End Contrast"),
+                            new("conStart", new EntityTypes.Float(-100f, 100f), "Start Contrast", "Set the contrast at the start of the event."),
+                            new("conEnd", new EntityTypes.Float(-100f, 100f), "End Contrast", "Set the contrast at the end of the event."),
 
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "tempStart", "tintStart", "colorStart", "hueShiftStart", "satStart", "brightStart", "conStart" })
                             }),
-                        }
-                    },
-                    new GameAction("fitScreen", "Fit Game To Screen")
-                    {
-                        defaultLength = 0.5f,
-                        parameters = new()
-                        {
-                            new("enable", true, "Enabled")
                         }
                     },
                     new GameAction("screenTiling", "Tile Screen")
@@ -1143,12 +1137,12 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("xStart", new EntityTypes.Float(1, 100, 1), "Start Horizontal Tiles"),
-                            new("yStart", new EntityTypes.Float(1, 100, 1), "Start Vertical Tiles"),
-                            new("xEnd", new EntityTypes.Float(1, 100, 1), "End Horizontal Tiles"),
-                            new("yEnd", new EntityTypes.Float(1, 100, 1), "End Vertical Tiles"),
-                            new Param("axis", StaticCamera.ViewAxis.All, "Axis"),
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new("xStart", new EntityTypes.Float(1, 100, 1), "Start Horizontal Tiles", "Set the amount of horizontal tiles at the start of the event."),
+                            new("xEnd", new EntityTypes.Float(1, 100, 1), "End Horizontal Tiles", "Set the amount of horizontal tiles at the end of the event."),
+                            new("yStart", new EntityTypes.Float(1, 100, 1), "Start Vertical Tiles", "Set the amount of vertical tiles at the start of the event."),
+                            new("yEnd", new EntityTypes.Float(1, 100, 1), "End Vertical Tiles", "Set the amount of vertical tiles at the end of the event."),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "Set if only a specific axis should be modified."),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xStart", "yStart" })
                             }),
@@ -1159,12 +1153,12 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("xScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Horizontal Scroll"),
-                            new("yScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Vertical Scroll"),
-                            new("xScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Horizontal Scroll"),
-                            new("yScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Vertical Scroll"),
-                            new Param("axis", StaticCamera.ViewAxis.All, "Axis"),
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "", new()
+                            new("xScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Horizontal Scroll", "Set the horizontal scroll at the start of the event."),
+                            new("xScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Horizontal Scroll", "Set the horizontal scroll at the end of the event."),
+                            new("yScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Vertical Scroll", "Set the vertical scroll at the start of the event."),
+                            new("yScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Vertical Scroll", "Set the vertical scroll at the end of the event."),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "Set if only a specific axis should be modified."),
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xScrollStart", "yScrollStart" })
                             }),
@@ -1173,12 +1167,12 @@ namespace HeavenStudio
                 }),
             };
 
-            BuildLoadRunnerList();
-            foreach (var load in loadRunners)
+            foreach (var game in defaultGames)
             {
-                Debug.Log("Running game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name);
-                eventCaller.minigames.Add(load(eventCaller));
+                eventCaller.minigames.Add(game.name, game);
             }
+
+            LoadMinigames(eventCaller);
         }
     }
 }

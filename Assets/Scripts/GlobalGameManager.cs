@@ -37,6 +37,7 @@ namespace HeavenStudio
         public static string PlayOpenFile = null;
 
         public static string buildTime = "00/00/0000 00:00:00";
+        public static string friendlyReleaseName = "Heaven Studio (1.0 Lush)";
 
         public static bool HasShutDown = false;
         public static bool discordDuringTesting = false;
@@ -98,7 +99,6 @@ namespace HeavenStudio
             CustomScreenWidth = PersistentDataManager.gameSettings.resolutionWidth;
             CustomScreenHeight = PersistentDataManager.gameSettings.resolutionHeight;
 
-
             if (PersistentDataManager.gameSettings.dspSize == 0)
                 PersistentDataManager.gameSettings.dspSize = 512;
             if (PersistentDataManager.gameSettings.sampleRate == 0)
@@ -108,7 +108,6 @@ namespace HeavenStudio
 
             // ChangeAudioSettings(currentDspSize, currentSampleRate);
             AudioConfiguration config = AudioSettings.GetConfiguration();
-            if (currentDspSize == config.dspBufferSize && currentSampleRate == config.sampleRate) return;
             config.dspBufferSize = currentDspSize;
             config.sampleRate = currentSampleRate;
             AudioSettings.Reset(config);
@@ -118,7 +117,7 @@ namespace HeavenStudio
             QualitySettings.maxQueuedFrames = 1;
             if (PersistentDataManager.gameSettings.isFullscreen)
             {
-                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
                 Screen.fullScreen = true;
             }
             else
@@ -129,12 +128,15 @@ namespace HeavenStudio
             }
             ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
             PlayerInput.InitInputControllers();
-#if UNITY_EDITOR
+#if HEAVENSTUDIO_PROD && !UNITY_EDITOR
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio");
+            buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+#elif UNITY_EDITOR
             Starpelly.OS.ChangeWindowTitle("Heaven Studio UNITYEDITOR ");
             buildTime = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
 #else
-                Starpelly.OS.ChangeWindowTitle("Heaven Studio (INDEV) " + Application.buildGUID.Substring(0, 8));
-                buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio (INDEV) " + Application.buildGUID.Substring(0, 8));
+            buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
 #endif
         }
 
@@ -428,21 +430,23 @@ namespace HeavenStudio
 
         public static void UpdateDiscordStatus(string details, bool editor = false, bool updateTime = false)
         {
-            if (discordDuringTesting || !Application.isEditor)
-            {
-                if (PersistentDataManager.gameSettings.discordRPCEnable)
-                {
-                    try
-                    {
-                        DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
-                        Debug.Log("Discord status updated");
-                    }
-                    catch (System.Exception e)
-                    {
-                        Debug.Log("Discord status update failed: " + e.Message);
-                    }
-                }
-            }
+            Debug.Log("Discord Rich Presence temporarily disabled");
+            return;
+            // if (discordDuringTesting || !Application.isEditor)
+            // {
+            //     if (PersistentDataManager.gameSettings.discordRPCEnable)
+            //     {
+            //         try
+            //         {
+            //             DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
+            //             Debug.Log("Discord status updated");
+            //         }
+            //         catch (System.Exception e)
+            //         {
+            //             Debug.Log("Discord status update failed: " + e.Message);
+            //         }
+            //     }
+            // }
         }
 
         private static void OnQuitting()
@@ -453,8 +457,8 @@ namespace HeavenStudio
                 PlayerInput.CleanUp();
                 Debug.Log("Clearing RIQ Cache...");
                 Jukebox.RiqFileHandler.ClearCache();
-                Debug.Log("Closing Discord GameSDK...");
-                DiscordRPC.DiscordController.instance?.Disconnect();
+                // Debug.Log("Closing Discord GameSDK...");
+                // DiscordRPC.DiscordController.instance?.Disconnect();
 
                 HasShutDown = true;
             }
