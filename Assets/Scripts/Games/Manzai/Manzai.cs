@@ -58,15 +58,19 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { Manzai.instance.CustomBoing(eventCaller.currentEntity.beat); },
                     defaultLength = 0.5f,
                 },
-                new GameAction("slidein", "Slide In")
+                new GameAction("slide", "Birds Slide")
                 {
-                    function = delegate { Manzai.instance.BirdsSlideIn(eventCaller.currentEntity.beat); },
-                    defaultLength = 0.5f,
-                },
-                new GameAction("slideout", "Slide Out")
-                {
-                    function = delegate { Manzai.instance.BirdsSlideOut(eventCaller.currentEntity.beat); },
-                    defaultLength = 0.5f,
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        Manzai.instance.BirdsSlide(e.beat, e.length, e["goToSide"], e["ease"]); 
+                    },
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("goToSide", Manzai.WhichSide.Inside, "Go to Which Side?", "Which side of the stage the birds will move to?"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?"),
+                    },
                 },
             });
         }
@@ -104,6 +108,12 @@ namespace HeavenStudio.Games
 
         bool ravenBop = true;
         bool vultureBop = true;
+
+        bool isMoving;
+        double movingStartBeat;
+        double movingLength;
+        string moveAnim;
+        EasingFunction.Ease lastEase;
 
 
         public enum WhoBops
@@ -156,6 +166,12 @@ namespace HeavenStudio.Games
             // TonakaiyoOtonokoi,
             // TorinikugaTorininkui,
             // UmetteUmena,
+        }
+
+        public enum WhichSide
+        {
+            Inside,
+            Outside,
         }
 
 
@@ -326,14 +342,24 @@ namespace HeavenStudio.Games
 
         }
 
-        public void BirdsSlideIn(double beat)
+        public void BirdsSlide(double beat, double length, int goToSide, int ease)
         {
-            BothBirdsAnim.DoScaledAnimationAsync("SlideIn", 0.5f);
+            movingStartBeat = beat;
+            movingLength = length;
+            moveAnim = (goToSide == 0 ? "SlideIn" : "SlideOut");
+            isMoving = true;
+            lastEase = (EasingFunction.Ease)ease;
         }
 
-        public void BirdsSlideOut(double beat)
+        private void Update()
         {
-            BothBirdsAnim.DoScaledAnimationAsync("SlideOut", 0.5f);
+            if (isMoving) {
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(movingStartBeat, movingLength);
+                EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                float newPos = func(0f, 1f, normalizedBeat);
+                BothBirdsAnim.DoNormalizedAnimation(moveAnim, newPos);
+                if (normalizedBeat >= 1f) isMoving = false;
+            }
         }
     }
 }

@@ -1484,7 +1484,6 @@ Transform:
   - {fileID: 609423043376221866}
   - {fileID: 5850002581442868008}
   - {fileID: 7879640242725009620}
-  - {fileID: 5881063490390799054}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1506,7 +1505,7 @@ MonoBehaviour:
   RavenAnim: {fileID: 7204459476474823181}
   HaiBubbleL: {fileID: 8456601383015447979}
   HaiBubbleR: {fileID: 2672010817748250556}
-  BothBirdsAnim: {fileID: 0}
+  BothBirdsAnim: {fileID: 4047821211562032729}
 --- !u!1 &3161037767898396668
 GameObject:
   m_ObjectHideFlags: 0
@@ -3007,6 +3006,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5721729477846433201}
+  - {fileID: 5881063490390799054}
   m_Father: {fileID: 7879640242725009620}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4522,15 +4522,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8452936147525436988}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.3555557, y: 0.44444448, z: 0}
+  m_LocalScale: {x: 1.1111112, y: 1.1111112, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2929667954241189041}
   - {fileID: 433795689448701314}
-  m_Father: {fileID: 3661019275362709209}
-  m_RootOrder: 3
+  m_Father: {fileID: 4470941884995114579}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8627201407586870289
 GameObject:
