@@ -56,8 +56,8 @@ namespace Rellac.Windows
 			//register to pointer events
 			onPointerDown.AddListener(SetIsGrabbed);
 			onPointerDown.AddListener(parentWindow.SetAsLastSibling);
-			// onPointerEnter.AddListener(ShowCursor);
-			// onPointerExit.AddListener(ResetCursor);
+			onPointerEnter.AddListener(ShowCursor);
+			onPointerExit.AddListener(ResetCursor);
 
 			// find what direction we're pulling with this handle
 			switch (axis)
@@ -129,8 +129,9 @@ namespace Rellac.Windows
 			}
 
 			Vector2 scaleOffset = (Vector2.one - (Vector2)transform.lossyScale) + Vector2.one;
-			Vector2 parentScale = parentWindow.transform.parent.GetComponent<RectTransform>().rect.size;
-			Vector2 mouseDelta = Vector2.Scale((Vector2)Camera.main.ScreenToWorldPoint(GUIWindowUtils.MousePosition()) - initialMousePos, scaleOffset*parentScale);
+			Vector3 anchoredPosition = Input.mousePosition;
+			anchoredPosition.z = 0;
+			Vector2 mouseDelta = Vector2.Scale((Vector2)anchoredPosition - initialMousePos, scaleOffset) * 0.5f;
 			Vector2 size = initialSize;
 
 			switch (direction)
@@ -199,7 +200,9 @@ namespace Rellac.Windows
 			if (isLocked) return;
 			isGrabbed = true;
 
-			initialMousePos = Camera.main.ScreenToWorldPoint(GUIWindowUtils.MousePosition());
+			Vector3 anchoredPosition = Input.mousePosition;
+			anchoredPosition.z = 0;
+			initialMousePos = anchoredPosition;
 			initialSize = parentWindow.sizeDelta;
 			initialPivot = parentWindow.pivot;
 

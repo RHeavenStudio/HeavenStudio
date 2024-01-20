@@ -60,9 +60,9 @@ namespace HeavenStudio.Games.Loaders
                         resizable = true,
                         parameters = new List<Param>()
                         {
-                            new Param("bop", true, "Bop", "Should the cadets bop?"),
-                            new Param("autoBop", false, "Bop (Auto)", "Should the cadets auto bop?"),
-                            new Param("clap", false, "Clap", "Should the cadets clap instead of bop?"),
+                            new Param("bop", true, "Bop", "Toggle if the cadets should bop for the duration of this event."),
+                            new Param("autoBop", false, "Bop (Auto)", "Toggle if the cadets should automatically bop until another Bop event is reached."),
+                            new Param("clap", false, "Clap", "Toggle if the cadets should clap instead of bop."),
                         }
                     },
                     new GameAction("attention", "Attention...")
@@ -78,8 +78,8 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 2f,
                         parameters = new List<Param>
                         {
-                            new Param("disableVoice", false, "Disable Voice", "Disable the Drill Sergeant's call"),
-                            new Param("shouldMarch", true, "March", "Disable automatic marching"),
+                            new Param("disableVoice", false, "Mute Voice", "Toggle if the Sergeant's cue should play."),
+                            new Param("shouldMarch", true, "March", "Toggle if the cadets should automatically march. If not, you should use a \"Force Marching\" event."),
                         },
                         priority = 5,
                     },
@@ -92,8 +92,8 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 4f,
                         parameters = new List<Param>()
                         {
-                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "The direction for the cadets to face."),
-                            new Param("point", false, "Point", "Point and face a direction instead of just facing a direction."),
+                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "Choose the direction for the cadets to face."),
+                            new Param("point", false, "Point", "Toggle if the cadets should both point and face the direction."),
                         }
                     },
                     new GameAction("faceTurnFast", "Fast Face Turn")
@@ -105,8 +105,8 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 3f,
                         parameters = new List<Param>()
                         {
-                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "The direction for the cadets to face."),
-                            new Param("point", false, "Point", "Point and face a direction instead of just facing a direction."),
+                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "Choose the direction for the cadets to face."),
+                            new Param("point", false, "Point", "Toggle if the cadets should both point and face the direction."),
                         }
                     },
                     new GameAction("halt", "Halt!")
@@ -123,13 +123,13 @@ namespace HeavenStudio.Games.Loaders
                         },
                         parameters = new List<Param>()
                         {
-                            new Param("start", true, "Start Moving", "Start moving the conveyor"),
-                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "The direction the cadets will move"),
+                            new Param("start", true, "Start Moving", "Toggle if the conveyor should start moving."),
+                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "Set the direction the conveyor will move."),
                         },
                         defaultLength = 7f,
                         resizable = true,
                     },
-                    new GameAction("background", "Background Colors")
+                    new GameAction("background", "Background Appearance")
                     {
                         function = delegate {
                             var e = eventCaller.currentEntity;
@@ -138,16 +138,16 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 0.5f,
                         parameters = new List<Param>()
                         {
-                            new Param("preset", MarchingOrders.BackgroundColor.Yellow, "Color", "Choose from a preset, or choose custom and set colors below"),
-                            new Param("colorFill", new Color(0.259f, 0.353f, 0.404f), "Wall Color", "Sets the color of the wall"),
-                            new Param("colorTiles1", new Color(1f, 0.76f, 0.52f), "Tile Outline Color", "Sets the color of the tile outline"),
-                            new Param("colorTiles2", new Color(1f, 0.6f, 0.2f), "Tile Shading Color", "Sets the color of the tile shading"),
-                            new Param("colorTiles3", new Color(1f, 0.675f, 0f), "Tile Fill Color", "Sets the color of the tile's main color"),
-                            new Param("colorPipes1", new Color(0.41f, 0.54f, 0.34f), "Pipe Outline Color", "Sets the color of the pipes' outline"),
-                            new Param("colorPipes2", new Color(0.43f, 0.8f, 0.45f), "Pipe Shading Color", "Sets the color of the pipes' shading"),
-                            new Param("colorPipes3", new Color(0.48f, 0.89f, 0.54f), "Pipe Fill Color", "Sets the color of the pipes"),
-                            new Param("colorConveyor1", new Color(0.157f, 0.25f, 0.3f), "Conveyor Fill Color", "Sets the color of the conveyer belt"),
-                            new Param("colorConveyor2", new Color(0.55f, 0.57f, 0.04f), "Conveyor Trim Color", "Sets the conveyor's trim color"),
+                            new Param("preset", MarchingOrders.BackgroundColor.Yellow, "Color", "Set the color of the background."),
+                            new Param("colorFill", new Color(0.259f, 0.353f, 0.404f), "Wall Color", "Set the color of the wall."),
+                            new Param("colorTiles1", new Color(1f, 0.76f, 0.52f), "Tile Outline Color", "Set the color of the tile outline."),
+                            new Param("colorTiles2", new Color(1f, 0.6f, 0.2f), "Tile Shading Color", "Set the color of the tile shading."),
+                            new Param("colorTiles3", new Color(1f, 0.675f, 0f), "Tile Fill Color", "Set the color of the tile's main color."),
+                            new Param("colorPipes1", new Color(0.41f, 0.54f, 0.34f), "Pipe Outline Color", "Set the color of the pipes' outline."),
+                            new Param("colorPipes2", new Color(0.43f, 0.8f, 0.45f), "Pipe Shading Color", "Set the color of the pipes' shading."),
+                            new Param("colorPipes3", new Color(0.48f, 0.89f, 0.54f), "Pipe Fill Color", "Set the color of the pipes."),
+                            new Param("colorConveyor1", new Color(0.157f, 0.25f, 0.3f), "Conveyor Fill Color", "Set the color of the conveyer belt."),
+                            new Param("colorConveyor2", new Color(0.55f, 0.57f, 0.04f), "Conveyor Trim Color", "Set the conveyor's trim color."),
                         }
                     },
 

@@ -63,8 +63,6 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
 
-        [SerializeField] private GameObject DebugHolder;
-
         [Header("Dialogs")]
         [SerializeField] private Dialog[] Dialogs;
 
@@ -106,12 +104,15 @@ namespace HeavenStudio.Editor
             GameManager.instance.Init();
             Timeline.Init();
 
-            foreach (var minigame in EventCaller.instance.minigames)
+            foreach (var minigame in EventCaller.instance.minigames.Values)
                 AddIcon(minigame);
                 
             UpdateEditorStatus(true);
-
+#if HEAVENSTUDIO_PROD
+            BuildDateDisplay.text = GlobalGameManager.friendlyReleaseName;
+#else
             BuildDateDisplay.text = GlobalGameManager.buildTime;
+#endif
             isCursorEnabled = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
             GameManager.instance.CursorCam.enabled = isCursorEnabled;
@@ -133,7 +134,9 @@ namespace HeavenStudio.Editor
 
         public void ShowQuitPopUp(bool show)
         {
+            if (fullscreen) Fullscreen();
             _confirmQuitMain.SetActive(show);
+            SetAuthoritiveMenu(show);
         }
 
         public bool ShouldQuit = false;
@@ -168,12 +171,12 @@ namespace HeavenStudio.Editor
                     Fullscreen();
                 }
 
-                if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
+                if ((Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace)) && !fullscreen)
                 {
                     CommandManager.Instance.AddCommand(new Commands.Delete(Selections.instance.eventsSelected.Select(c => c.entity.guid).ToList()));
                 }
 
-                if (Input.GetKey(KeyCode.LeftControl))
+                if (Input.GetKey(KeyCode.LeftControl) && !fullscreen)
                 {
                     if (Input.GetKeyDown(KeyCode.Z))
                     {
@@ -194,20 +197,13 @@ namespace HeavenStudio.Editor
                     {
                         Timeline.instance.Paste();
                     }
-
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-                        if (Input.GetKeyDown(KeyCode.D))
-                        {
-                            ToggleDebugCam();
-                        }
-                    }
                 }
 
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
                     if (Input.GetKeyDown(KeyCode.N))
                     {
+                        if (fullscreen) Fullscreen();
                         NewBTN.onClick.Invoke();
                     }
                     else if (Input.GetKeyDown(KeyCode.O))
@@ -225,11 +221,14 @@ namespace HeavenStudio.Editor
                     {
                         SaveRemix(false);
                     }
-                }
 
-                if (Input.GetKeyDown(KeyCode.F12))
-                {
-                    DebugHolder.gameObject.SetActive(!DebugHolder.activeInHierarchy);
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            ToggleDebugCam();
+                        }
+                    }
                 }
             }
             #endregion
@@ -253,33 +252,6 @@ namespace HeavenStudio.Editor
                 PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
-
-
-            if (Timeline.instance.timelineState.selected && Editor.instance.canSelect)
-            {
-                /*
-                if (Input.GetMouseButtonUp(0))
-                {
-                    List<TimelineEventObj> selectedEvents = Timeline.instance.eventObjs.FindAll(c => c.selected == true && c.eligibleToMove == true);
-
-                    if (selectedEvents.Count > 0)
-                    {
-                        List<TimelineEventObj> result = new List<TimelineEventObj>();
-
-                        for (int i = 0; i < selectedEvents.Count; i++)
-                        {
-                            //TODO: this is in LateUpdate, so this will never run! change this to something that works properly
-                            if (!(selectedEvents[i].isCreating || selectedEvents[i].wasDuplicated))
-                            {
-                                result.Add(selectedEvents[i]);
-                            }
-                            selectedEvents[i].OnUp();
-                        }
-                        CommandManager.instance.Execute(new Commands.Move(result));
-                    }
-                }
-                */
-            }
         }
 
         public static Sprite GameIcon(string name)
@@ -359,19 +331,37 @@ namespace HeavenStudio.Editor
 
         public void SaveRemix(bool saveAs = true)
         {
-            if (saveAs == true)
+            Debug.Log(GameManager.instance.Beatmap["propertiesmodified"]);
+            if (!(bool)GameManager.instance.Beatmap["propertiesmodified"])
             {
-                SaveRemixFilePanel();
+                foreach (var dialog in Dialogs)
+                {
+                    if (dialog.GetType() == typeof(RemixPropertiesDialog))
+                    {
+                        if (fullscreen) Fullscreen();
+                        GlobalGameManager.ShowErrorMessage("Set Remix Properties", "Set remix properties before saving.");
+                        (dialog as RemixPropertiesDialog).SwitchPropertiesDialog();
+                        (dialog as RemixPropertiesDialog).SetSaveOnClose(true, saveAs);
+                        return;
+                    }
+                }
             }
             else
             {
-                if (currentRemixPath == string.Empty || currentRemixPath == null)
+                if (saveAs)
                 {
                     SaveRemixFilePanel();
                 }
                 else
                 {
-                    SaveRemixFile(currentRemixPath);
+                    if (currentRemixPath is "" or null)
+                    {
+                        SaveRemixFilePanel();
+                    }
+                    else
+                    {
+                        SaveRemixFile(currentRemixPath);
+                    }
                 }
             }
         }
@@ -388,6 +378,7 @@ namespace HeavenStudio.Editor
                 if (path != String.Empty)
                 {
                     SaveRemixFile(path);
+                    currentRemixPath = path;
                 }
             });
         }
@@ -396,7 +387,6 @@ namespace HeavenStudio.Editor
         {
             try
             {
-                RiqFileHandler.UnlockCache();
                 RiqFileHandler.WriteRiq(GameManager.instance.Beatmap);
                 RiqFileHandler.PackRiq(path, true);
                 Debug.Log("Packed RIQ successfully!");
@@ -420,6 +410,7 @@ namespace HeavenStudio.Editor
 
         public void LoadRemix(bool create = false)
         {
+            if (fullscreen) Fullscreen();
             if (create)
             {
                 GameManager.instance.NewRemix();
@@ -435,6 +426,7 @@ namespace HeavenStudio.Editor
 
         public void OpenRemix()
         {
+            if (fullscreen) Fullscreen();
             var extensions = new[]
             {
                 new ExtensionFilter("Heaven Studio Remix File ", new string[] { "riq" }),
@@ -447,7 +439,6 @@ namespace HeavenStudio.Editor
 
                 try
                 {
-                    RiqFileHandler.UnlockCache();
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
                     Debug.Log("Imported RIQ successfully!");
                     LoadRemix();
@@ -517,6 +508,16 @@ namespace HeavenStudio.Editor
         public static bool MouseInRectTransform(RectTransform rectTransform)
         {
             return (rectTransform.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera));
+        }
+
+        public void ReturnToTitle()
+        {
+            GlobalGameManager.LoadScene("Title");
+        }
+
+        public void SetAuthoritiveMenu(bool state)
+        {
+            inAuthorativeMenu = state;
         }
 
         public void ToggleDebugCam()

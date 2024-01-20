@@ -1,15 +1,12 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using System.IO;
-using System.Collections;
+
 using System.Collections.Generic;
-using UnityEngine;
+
 using HeavenStudio.InputSystem;
 
-using static JSL;
-using HeavenStudio.Games;
-using System.Diagnostics.Contracts;
+using SatorImaging.UnitySourceGenerator;
 
 namespace HeavenStudio.InputSystem
 {
@@ -25,7 +22,8 @@ namespace HeavenStudio.InputSystem
 
 namespace HeavenStudio
 {
-    public class PlayerInput
+    [UnitySourceGenerator(typeof(ControllerLoaderGenerator), OverwriteIfFileExists = false)]
+    public partial class PlayerInput
     {
         public class InputAction
         {
@@ -45,15 +43,9 @@ namespace HeavenStudio
             }
         }
 
-        //Clockwise
-        public const int UP = 0;
-        public const int RIGHT = 1;
-        public const int DOWN = 2;
-        public const int LEFT = 3;
-
         public static InputController.ControlStyles CurrentControlStyle = InputController.ControlStyles.Pad;
 
-        static List<InputController> inputDevices;
+        static List<InputController> inputDevices = new List<InputController>();
 
         public delegate InputController[] InputControllerInitializer();
 
@@ -63,40 +55,40 @@ namespace HeavenStudio
         public delegate InputController[] InputControllerRefresh();
         public static List<InputControllerRefresh> PlayerInputRefresh;
 
-        static List<InputControllerInitializer> loadRunners;
-        static void BuildLoadRunnerList()
-        {
-            PlayerInputRefresh = new();
-            loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(x => x.Namespace == "HeavenStudio.InputSystem.Loaders" && x.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static) != null)
-            .Select(t => (InputControllerInitializer)Delegate.CreateDelegate(
-                typeof(InputControllerInitializer),
-                null,
-                t.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static),
-                false
-                ))
-            .ToList();
+        // static List<InputControllerInitializer> loadRunners;
+        // static void BuildLoadRunnerList()
+        // {
+        //     PlayerInputRefresh = new();
+        //     loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
+        //     .GetTypes()
+        //     .Where(x => x.Namespace == "HeavenStudio.InputSystem.Loaders" && x.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static) != null)
+        //     .Select(t => (InputControllerInitializer)Delegate.CreateDelegate(
+        //         typeof(InputControllerInitializer),
+        //         null,
+        //         t.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static),
+        //         false
+        //         ))
+        //     .ToList();
 
-            loadRunners.Sort((x, y) => x.Method.GetCustomAttribute<LoadOrder>().Order.CompareTo(y.Method.GetCustomAttribute<LoadOrder>().Order));
-        }
+        //     loadRunners.Sort((x, y) => x.Method.GetCustomAttribute<LoadOrder>().Order.CompareTo(y.Method.GetCustomAttribute<LoadOrder>().Order));
+        // }
 
-        public static int InitInputControllers()
-        {
-            inputDevices = new List<InputController>();
+        // public static int InitInputControllers()
+        // {
+        //     inputDevices = new List<InputController>();
 
-            BuildLoadRunnerList();
-            foreach (InputControllerInitializer runner in loadRunners)
-            {
-                InputController[] controllers = runner();
-                if (controllers != null)
-                {
-                    inputDevices.AddRange(controllers);
-                }
-            }
+        //     BuildLoadRunnerList();
+        //     foreach (InputControllerInitializer runner in loadRunners)
+        //     {
+        //         InputController[] controllers = runner();
+        //         if (controllers != null)
+        //         {
+        //             inputDevices.AddRange(controllers);
+        //         }
+        //     }
 
-            return inputDevices.Count;
-        }
+        //     return inputDevices.Count;
+        // }
 
         public static int RefreshInputControllers()
         {
@@ -127,22 +119,12 @@ namespace HeavenStudio
 
         public static InputController GetInputController(int player)
         {
-            // Needed so Keyboard works on MacOS and Linux
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            inputDevices = new List<InputController>();
-            if(inputDevices.Count < 1)
-            {
-                InputKeyboard keyboard = new InputKeyboard();
-                keyboard.SetPlayer(1);
-                keyboard.InitializeController();
-                inputDevices.Add(keyboard);
-            }
-#endif
             //select input controller that has player field set to player
             //this will return the first controller that has that player number in the case of controller pairs (eg. Joy-Cons)
             //so such controllers should have a reference to the other controller in the pair
             foreach (InputController i in inputDevices)
             {
+                if (i == null) continue;
                 if (i.GetPlayer() == player)
                 {
                     return i;
@@ -157,21 +139,9 @@ namespace HeavenStudio
             //this will return the first controller that has that player number in the case of controller pairs (eg. Joy-Cons)
             //so such controllers should have a reference to the other controller in the pair
             //controller IDs are determined by connection order (the Keyboard is always first)
-
-
-            // Needed so Keyboard works on MacOS and Linux
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            inputDevices = new List<InputController>();
-            if(inputDevices.Count < 1)
-            {
-                InputKeyboard keyboard = new InputKeyboard();
-                keyboard.SetPlayer(1);
-                keyboard.InitializeController();
-                inputDevices.Add(keyboard);
-            }
-#endif
             for (int i = 0; i < inputDevices.Count; i++)
             {
+                if (inputDevices[i] == null) continue;
                 if (inputDevices[i].GetPlayer() == player)
                 {
                     return i;
@@ -182,19 +152,10 @@ namespace HeavenStudio
 
         public static void UpdateInputControllers()
         {
-            // Needed so Keyboard works on MacOS and Linux
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            inputDevices = new List<InputController>();
-            if(inputDevices.Count < 1)
-            {
-                InputKeyboard keyboard = new InputKeyboard();
-                keyboard.SetPlayer(1);
-                keyboard.InitializeController();
-                inputDevices.Add(keyboard);
-            }
-#endif
+            if (inputDevices == null) return;
             foreach (InputController i in inputDevices)
             {
+                if (i == null) continue;
                 i.UpdateState();
             }
         }
@@ -209,6 +170,7 @@ namespace HeavenStudio
         // The GameManager allows you to Input
         public static bool PlayerHasControl()
         {
+            if (GameManager.instance == null || Conductor.instance == null) return true;
             return !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
 
@@ -388,166 +350,5 @@ namespace HeavenStudio
             bool a = GetInputController(1).GetFlick(out dt);
             return a && PlayerHasControl();
         }
-
-        #region Deprecated Input Methods
-        [Obsolete("Use GetPadDown instead")]
-        public static bool Pressed()
-        {
-            bool keyDown = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out _);
-            return keyDown && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadDown instead")]
-        public static bool Pressed(out double dt)
-        {
-            bool keyDown = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out dt);
-            return keyDown && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadUp instead")]
-        public static bool PressedUp()
-        {
-            bool keyUp = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out _);
-            return keyUp && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadUp instead")]
-        public static bool PressedUp(out double dt)
-        {
-            bool keyUp = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out dt);
-            return keyUp && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPad instead")]
-        public static bool Pressing()
-        {
-            bool pressing = GetInputController(1).GetAction(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East);
-            return pressing && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadDown instead")]
-        public static bool AltPressed()
-        {
-            bool down = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.South, out _);
-            return down && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadDown instead")]
-        public static bool AltPressed(out double dt)
-        {
-            bool down = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.South, out dt);
-            return down && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadUp instead")]
-        public static bool AltPressedUp()
-        {
-            bool up = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.South, out _);
-            return up && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadUp instead")]
-        public static bool AltPressedUp(out double dt)
-        {
-            bool up = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.South, out dt);
-            return up && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPad instead")]
-        public static bool AltPressing()
-        {
-            bool pressing = GetInputController(1).GetAction(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.South);
-            return pressing && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadDown instead")]
-        public static bool GetAnyDirectionDown()
-        {
-            InputController c = GetInputController(1);
-            return (c.GetHatDirectionDown((InputController.InputDirection)UP, out _)
-            || c.GetHatDirectionDown((InputController.InputDirection)DOWN, out _)
-            || c.GetHatDirectionDown((InputController.InputDirection)LEFT, out _)
-            || c.GetHatDirectionDown((InputController.InputDirection)RIGHT, out _)
-            ) && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadDown instead")]
-        public static bool GetAnyDirectionDown(out double dt)
-        {
-            InputController c = GetInputController(1);
-            bool r1 = c.GetHatDirectionDown((InputController.InputDirection)UP, out double d1);
-            bool r2 = c.GetHatDirectionDown((InputController.InputDirection)DOWN, out double d2);
-            bool r3 = c.GetHatDirectionDown((InputController.InputDirection)LEFT, out double d3);
-            bool r4 = c.GetHatDirectionDown((InputController.InputDirection)RIGHT, out double d4);
-            bool r = (r1 || r2 || r3 || r4) && PlayerHasControl();
-            dt = Math.Max(Math.Max(Math.Max(d1, d2), d3), d4);
-            return r;
-        }
-
-        [Obsolete("Use GetPadUp instead")]
-        public static bool GetAnyDirectionUp()
-        {
-            InputController c = GetInputController(1);
-            return (c.GetHatDirectionUp((InputController.InputDirection)UP, out _)
-            || c.GetHatDirectionUp((InputController.InputDirection)DOWN, out _)
-            || c.GetHatDirectionUp((InputController.InputDirection)LEFT, out _)
-            || c.GetHatDirectionUp((InputController.InputDirection)RIGHT, out _)
-            ) && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadUp instead")]
-        public static bool GetAnyDirectionUp(out double dt)
-        {
-            InputController c = GetInputController(1);
-            bool r1 = c.GetHatDirectionUp((InputController.InputDirection)UP, out double d1);
-            bool r2 = c.GetHatDirectionUp((InputController.InputDirection)DOWN, out double d2);
-            bool r3 = c.GetHatDirectionUp((InputController.InputDirection)LEFT, out double d3);
-            bool r4 = c.GetHatDirectionUp((InputController.InputDirection)RIGHT, out double d4);
-            bool r = (r1 || r2 || r3 || r4) && PlayerHasControl();
-            dt = Math.Max(Math.Max(Math.Max(d1, d2), d3), d4);
-            return r;
-        }
-
-        [Obsolete("Use GetPad instead")]
-        public static bool GetAnyDirection()
-        {
-            InputController c = GetInputController(1);
-            return (c.GetHatDirection((InputController.InputDirection)UP)
-            || c.GetHatDirection((InputController.InputDirection)DOWN)
-            || c.GetHatDirection((InputController.InputDirection)LEFT)
-            || c.GetHatDirection((InputController.InputDirection)RIGHT)
-            ) && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPad instead")]
-        public static bool GetSpecificDirection(int direction)
-        {
-            return GetInputController(1).GetHatDirection((InputController.InputDirection)direction) && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadDown instead")]
-        public static bool GetSpecificDirectionDown(int direction)
-        {
-            return GetInputController(1).GetHatDirectionDown((InputController.InputDirection)direction, out _) && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadUp instead")]
-        public static bool GetSpecificDirectionUp(int direction)
-        {
-            return GetInputController(1).GetHatDirectionUp((InputController.InputDirection)direction, out _) && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadDown instead")]
-        public static bool GetSpecificDirectionDown(int direction, out double dt)
-        {
-            return GetInputController(1).GetHatDirectionDown((InputController.InputDirection)direction, out dt) && PlayerHasControl();
-        }
-
-        [Obsolete("Use GetPadUp instead")]
-        public static bool GetSpecificDirectionUp(int direction, out double dt)
-        {
-            return GetInputController(1).GetHatDirectionUp((InputController.InputDirection)direction, out dt) && PlayerHasControl();
-        }
-        #endregion
     }
 }

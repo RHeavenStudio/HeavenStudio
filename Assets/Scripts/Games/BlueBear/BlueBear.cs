@@ -22,8 +22,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3,
                     parameters = new()
                     {
-                        new("long", false, "Mouth Hold"),
-                        new("open", true, "Should Open Mouth")
+                        new("long", false, "Mouth Hold", "Toggle if Beary should keep his mouth and neck extended after catching the treat."),
+                        new("open", true, "Open Mouth", "Toggle if Beary should open his mouth in preparation for the treat.")
                     }
                 },
                 new GameAction("cake", "Cake")
@@ -33,8 +33,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4,
                     parameters = new()
                     {
-                        new("long", false, "Mouth Hold"),
-                        new("open", true, "Should Open Mouth")
+                        new("long", false, "Mouth Hold", "Toggle if Beary should keep his mouth and neck extended after catching the treat."),
+                        new("open", true, "Open Mouth", "Toggle if Beary should open his mouth in preparation for the treat.")
                     }
                 },
                 new GameAction("stretchEmotion", "Emotion")
@@ -44,11 +44,11 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("type", BlueBear.EmotionStretchType.NoEmotion, "Emotion", "Which emotion should the blue bear use?", new()
+                        new Param("type", BlueBear.EmotionStretchType.NoEmotion, "Emotion", "Set the emotion animation Beary should play.", new()
                         {
                             new((x, _) => (int)x != (int)BlueBear.EmotionStretchType.NoEmotion, new string[] { "instant" })
                         }),
-                        new Param("instant", false, "Instant"),
+                        new Param("instant", false, "Instant", "Toggle if the emotion should jump to it's end state. Making \"LookUp\" instant will cause Beary to keep his head down."),
                     }
                 },
                 new GameAction("wind", "Wind")
@@ -66,25 +66,25 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { BlueBear.instance.OpenMouth(); },
                     defaultLength = 0.5f
                 },
-                new GameAction("story", "Story")
+                new GameAction("story", "Memory Drawing")
                 {
                     defaultLength = 4,
                     parameters = new List<Param>()
                     {
-                        new Param("story", BlueBear.StoryType.Date, "Story"),
-                        new Param("enter", true, "Enter")
+                        new Param("story", BlueBear.StoryType.Date, "Memory", "Set the memory that should appear."),
+                        new Param("enter", true, "Enter", "Toggle if the memory should enter or exit the scene.")
                     },
                     resizable = true
                 },
-                new GameAction("crumb", "Set Crumb Threshold")
+                new GameAction("crumb", "Set Crumb Thresholds")
                 {
                     function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetCrumbThreshold(e["right"], e["left"], e["reset"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("right", new EntityTypes.Integer(0, 500, 15), "Right Crumb", "How many treats should the bear eat before the right crumb can appear on his face?"),
-                        new Param("left", new EntityTypes.Integer(0, 500, 30), "Left Crumb", "How many treats should the bear eat before the left crumb can appear on his face?"),
-                        new Param("reset", false, "Reset Treats Eaten", "Should the numbers of treats eaten be reset?")
+                        new Param("right", new EntityTypes.Integer(0, 500, 15), "Right Crumb", "Set how many treats Beary needs to eat for the right crumb to appear."),
+                        new Param("left", new EntityTypes.Integer(0, 500, 30), "Left Crumb", "Set how many treats Beary needs to eat for the left crumb to appear."),
+                        new Param("reset", false, "Reset Treats Eaten", "Toggle if the current amount of treats eaten (and crumbs) should be reset.")
                     }
                 }
             },
@@ -109,7 +109,16 @@ namespace HeavenStudio.Games
             LookUp = 0,
             Smile = 1, 
             StartCrying = 2,
+            ClosedEyes = 3,
+            SmileInstant = 4,
+            CryingInstant
         }
+
+        public static bool IsInstantEmotion(int emotion)
+        {
+            return emotion is (int)EmotionStretchType.NoEmotion or (int)EmotionStretchType.ClosedEyes or (int)EmotionStretchType.SmileInstant or (int)EmotionStretchType.CryingInstant;
+        }
+
         public enum StoryType
         {
             Date,
@@ -367,21 +376,27 @@ namespace HeavenStudio.Games
 
         private void HandleEmotions(double beat)
         {
-            _allEmotionsStretch = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => !(x["instant"] || x["type"] == (int)EmotionStretchType.NoEmotion));
-            if (_allEmotionsStretch.Count == 0) return;
-            UpdateEmotions();
-            var allEmosBeforeBeat = _allEmotionsStretch.FindAll(x => x.beat < beat);
-            if (allEmosBeforeBeat.Count != 0)
+            _allEmotionsStretch = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => !IsInstantEmotion(x["type"]));
+            if (_allEmotionsStretch.Count != 0)
             {
-                if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.StartCrying)
+                UpdateEmotions();
+                var allEmosBeforeBeat = _allEmotionsStretch.FindAll(x => x.beat < beat);
+                if (allEmosBeforeBeat.Count != 0)
                 {
-                    headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
-                }
-                else if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.Smile)
-                {
-                    headAndBodyAnim.DoScaledAnimationAsync("SmileIdle", 0.5f);
+                    if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.StartCrying)
+                    {
+                        headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
+                    }
+                    else if ((EmotionStretchType)allEmosBeforeBeat[^1]["type"] == EmotionStretchType.Smile)
+                    {
+                        headAndBodyAnim.DoScaledAnimationAsync("SmileIdle", 0.5f);
+                    }
                 }
             }
+            var allSetEmotionsBeforeBeat = EventCaller.GetAllInGameManagerList("blueBear", new string[] { "stretchEmotion" }).FindAll(x => IsInstantEmotion(x["type"]) && x.beat < beat);
+            if (allSetEmotionsBeforeBeat.Count == 0) return;
+            var lastEvent = allSetEmotionsBeforeBeat[^1];
+            SetEmotion(lastEvent.beat, lastEvent["type"]);
         }
 
         public override void OnPlay(double beat)
@@ -497,7 +512,7 @@ namespace HeavenStudio.Games
 
         private bool _wantMouthOpen = false;
 
-        public void SetEmotion(double beat, int emotion, bool ableToStopSmile = true)
+        public void SetEmotion(double beat, int emotion)
         {
             _emotionCancelledBeat = beat;
             _wantMouthOpen = false;
@@ -507,14 +522,14 @@ namespace HeavenStudio.Games
                 case (int)EmotionStretchType.NoEmotion:
                     headAndBodyAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     break;
-                case (int)EmotionStretchType.LookUp:
+                case (int)EmotionStretchType.ClosedEyes:
                     headAndBodyAnim.DoScaledAnimationAsync("EyesClosed", 0.5f);
                     break;
-                case (int)EmotionStretchType.StartCrying:
+                case (int)EmotionStretchType.CryingInstant:
                     headAndBodyAnim.DoScaledAnimationAsync("CryIdle", 0.5f);
                     crying = true;
                     break;
-                case (int)EmotionStretchType.Smile:
+                case (int)EmotionStretchType.SmileInstant:
                     headAndBodyAnim.DoScaledAnimationAsync("SmileIdle", 0.5f);
                     break;
                 default:

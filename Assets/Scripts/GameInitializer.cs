@@ -51,24 +51,24 @@ namespace HeavenStudio
                     }
                 }
             }
-            else if (OpeningManager.OnOpenFile is not null or "")
+            else if (GlobalGameManager.PlayOpenFile is not null or "")
             {
-                if (editorGO == null && OpeningManager.OnOpenFile.IndexOfAny(Path.GetInvalidPathChars()) == -1)
+                if (editorGO == null && GlobalGameManager.PlayOpenFile.IndexOfAny(Path.GetInvalidPathChars()) == -1)
                 {
-                    if (File.Exists(OpeningManager.OnOpenFile) && Path.GetExtension(OpeningManager.OnOpenFile) == ".riq")
+                    if (File.Exists(GlobalGameManager.PlayOpenFile) && Path.GetExtension(GlobalGameManager.PlayOpenFile) == ".riq")
                     {
-                        input = OpeningManager.OnOpenFile;
+                        input = GlobalGameManager.PlayOpenFile;
                         fromCmd = true;
                         playOnStart = true;
                     }
                 }
-                OpeningManager.OnOpenFile = null;
+                GlobalGameManager.PlayOpenFile = null;
             }
 
             GameObject Games = new GameObject();
             Games.name = "Games";
 
-            gameManager.playOnStart = playOnStart;
+            gameManager.playMode = playOnStart;
 
             gameManager.GamesHolder = Games;
             gameManager.CircleCursor = Cursor.transform.GetChild(0).GetComponent<CircleCursor>();

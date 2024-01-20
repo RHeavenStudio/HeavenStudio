@@ -175,7 +175,7 @@ namespace HeavenStudio
 
             UpdateCameraTranslate();
             UpdateCameraRotate();
-            SetShakeIntensity();
+            UpdateShakeIntensity();
             UpdateCameraColor();
         }
 
@@ -183,7 +183,7 @@ namespace HeavenStudio
         {
             UpdateCameraTranslate();
             UpdateCameraRotate();
-            SetShakeIntensity();
+            UpdateShakeIntensity();
             UpdateCameraColor();
         }
 
@@ -323,19 +323,20 @@ namespace HeavenStudio
             }
         }
 
-        private void SetShakeIntensity()
+        private void UpdateShakeIntensity()
         {
             foreach (var e in shakeEvents)
             {
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
+                float fac = Mathf.Cos(Time.time * 80f) * 0.5f;
                 if (prog >= 0f)
                 {
-                    float fac = Mathf.Cos(Time.time * 80f) * 0.5f;
-                    ShakeResult = new Vector3(fac * e["valA"], fac * e["valB"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
+                    ShakeResult = new Vector3(fac * func(e["easedA"], e["valA"], Mathf.Min(prog, 1f)), fac * func(e["easedB"], e["valB"], Mathf.Min(prog, 1f)));
                 }
                 if (prog > 1f)
                 {
-                    ShakeResult = new Vector3(0, 0);
+                    ShakeResult = new Vector3(fac * e["valA"], fac * e["valB"]);
                 }
             }
         }

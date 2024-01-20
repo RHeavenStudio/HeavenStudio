@@ -310,6 +310,7 @@ namespace HeavenStudio.Editor
                 new List<RectTransform>(),
                 new List<RectTransform>(),
                 new List<RectTransform>(),
+                new List<RectTransform>(),
             };
             for (int i = 0; i < mgs.Count; i++)
             {
@@ -321,10 +322,11 @@ namespace HeavenStudio.Editor
                         "ntr" => 1,
                         "rvl" => 2,
                         "ctr" => 3,
-                        _     => 4,
+                        "mob" => 4,
+                        _     => 5,
                     }].Add(mgs[i]);
                 } else if (mg.inferred) {
-                    systems[4].Add(mgs[i]);
+                    systems[^1].Add(mgs[i]);
                 } else {
                     Debug.LogWarning($"Chronological sorting has failed, does \"{mg.displayName}\" ({mg.name}) have an asset bundle assigned to it?");
                 }

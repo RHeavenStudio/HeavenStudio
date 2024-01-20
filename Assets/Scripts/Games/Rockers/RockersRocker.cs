@@ -99,9 +99,21 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
         }
 
+        private bool lastGleeClub = false;
+        private Rockers.PremadeSamples lastSample;
+        private int lastSampleTones;
+
+        public void StrumStringsLast(bool disableStrumEffect = false, bool jump = false, bool barely = false)
+        {
+            StrumStrings(lastGleeClub, lastPitches, lastSample, lastSampleTones, disableStrumEffect, jump, barely);
+        }
+
         public void StrumStrings(bool gleeClub, int[] pitches, Rockers.PremadeSamples sample, int sampleTones, bool disableStrumEffect = false, bool jump = false, bool barely = false)
         {
             if (strumming) return;
+            lastGleeClub = gleeClub;
+            lastSample = sample;
+            lastSampleTones = sampleTones;
             muted = false;
             strumming = true;
             StopSounds();
@@ -114,7 +126,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
                     float pitch = SoundByte.GetPitchFromSemiTones(pitches[i], true);
                     float volume = GetVolumeBasedOnAmountOfStrings(pitches.Length);
                     string soundName = "rockers/strings/" + (gleeClub ? "gleeClub/" : "normal/" + (i + 1));
-                    Debug.Log("Pitch: " + pitch + " Volume: " + volume + " Name: " + soundName);
+                    // Debug.Log("Pitch: " + pitch + " Volume: " + volume + " Name: " + soundName);
                     stringSounds[i] = SoundByte.PlayOneShotGame(soundName, -1, pitch, volume, true);
                 }
             }

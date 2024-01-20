@@ -52,10 +52,10 @@ namespace HeavenStudio.InputSystem
                         (int)KeyCode.D,
                         (int)KeyCode.J,
                         (int)KeyCode.K,
+                        (int)KeyCode.U,
                         (int)KeyCode.I,
-                        (int)KeyCode.U,
                         (int)KeyCode.E,
-                        (int)KeyCode.U,
+                        (int)KeyCode.O,
                         (int)KeyCode.Escape,
                     },
                     PointerSensitivity = 3,
@@ -136,7 +136,7 @@ namespace HeavenStudio.InputSystem
             return false;
         }
 
-        public override int GetLastButtonDown()
+        public override int GetLastButtonDown(bool strict = false)
         {
             if (Input.anyKeyDown)
             {
@@ -151,7 +151,7 @@ namespace HeavenStudio.InputSystem
 
         public override int GetLastActionDown()
         {
-            for (int i = 0; i < BINDS_MAX; i++)
+            for (int i = 0; i < currentBindings.Pad.Length; i++)
             {
                 if (Input.GetKeyDown((KeyCode)currentBindings.Pad[i]))
                     return i;

@@ -11,6 +11,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         [Header("References")]
         [SerializeField] Animator anim;
         [SerializeField] Animator blipAnim;
+        [SerializeField] Transform antennaLight;
         [SerializeField] GameObject[] shadows;
         [SerializeField] TMP_Text blipText;
 
@@ -18,19 +19,24 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         public bool shouldGrow;
         public bool shouldBlip = true;
         public string blipString = "M";
+        public bool canStep = false; // just disabled when you normally couldn't step, which is anything less than 2 beats before you would start stepping and any time after the Ding!
+        public bool canStepFromAnim = true; // disabled when stepping, then reenabled in the animation events. you can step JUST BARELY before the animation ends in fever
 
-        static MrUpbeat game; 
+        private static MrUpbeat game;
 
         void Awake()
         {
             game = MrUpbeat.instance;
+
+            canStep = false;
         }
 
-        void Update() 
+        void Update()
         {
-            blipText.transform.localScale = Vector3.one;
-            
-            if (PlayerInput.GetIsAction(MrUpbeat.InputAction_BasicPress) && !game.IsExpectingInputNow(MrUpbeat.InputAction_BasicPress)) {
+            blipText.transform.localPosition = new Vector3(antennaLight.position.x, antennaLight.position.y + 0.7f);
+
+            if (PlayerInput.GetIsAction(MrUpbeat.InputAction_BasicPress) && !game.IsExpectingInputNow(MrUpbeat.InputAction_BasicPress)
+                && canStep && canStepFromAnim) {
                 Step(true);
             }
         }
@@ -42,27 +48,29 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
                 return;
             }
             if (shouldBlip) {
-                Blipping(beat);
+                Blipping();
             }
             BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 1, delegate { RecursiveBlipping(beat + 1); })
             });
         }
 
-        public void Blipping(double beat)
+        public void Blipping()
         {
             SoundByte.PlayOneShotGame("mrUpbeat/blip");
-            blipAnim.Play("Blip"+(blipSize+1), 0, 0);
-            blipText.text = (blipSize == 4 && blipString != "") ? blipString : "";
+            blipAnim.Play("Blip" + (blipSize + 1), 0, 0);
+            blipText.gameObject.SetActive(blipSize >= 4);
+            
+            blipText.text = blipString != "" ? blipString : "";
             if (shouldGrow && blipSize < 4) blipSize++;
         }
 
         public void Step(bool isInput = false)
         {
-            if (isInput || ((game.stepIterate % 2 == 0) == IsMirrored())) {
-                shadows[0].SetActive(IsMirrored());
-                shadows[1].SetActive(!IsMirrored());
-                transform.localScale = new Vector3((IsMirrored() ? 1 : -1), 1, 1);
+            if (isInput || FacingCorrectly()) {
+                shadows[0].SetActive(transform.localScale.x < 0);
+                shadows[1].SetActive(transform.localScale.x > 0);
+                Flip();
             }
             
             anim.DoScaledAnimationAsync("Step", 0.5f);
@@ -71,16 +79,25 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
 
         public void Fall()
         {
-            anim.DoScaledAnimationAsync((game.stepIterate % 2 == 0) == IsMirrored() ? "FallR" : "FallL", 1f);
+            anim.DoScaledAnimationAsync(FacingCorrectly() ? "FallR" : "FallL", 1f);
             SoundByte.PlayOneShot("miss");
             shadows[0].SetActive(false);
             shadows[1].SetActive(false);
-            transform.localScale = new Vector3((IsMirrored() ? 1 : -1), 1, 1);
+            Flip();
         }
 
-        bool IsMirrored()
+        void Flip() {
+            var scale = transform.localScale;
+            transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
+        }
+
+
+        public bool FacingCorrectly() => (game.stepIterate % 2 == 0) == (transform.localScale.x < 0);
+
+        // animation event
+        public void ToggleStepping(int canStep) // why do unity animation events not support booleans??? this is a 1 for true or 0 for false
         {
-            return transform.localScale != Vector3.one;
+            canStepFromAnim = canStep == 1;
         }
     }
 }

@@ -18,8 +18,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle2", true, "Bop", "Whether both will bop to the beat or not"),
-                        new Param("toggle", false, "Bop (Auto)", "Whether both will auto bop to the beat or not")
+                        new Param("toggle2", true, "Bop", "Toggle if the the DJs should bop for the duration of this event."),
+                        new Param("toggle", false, "Bop (Auto)", "Toggle if the DJs should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("and stop ooh", "And Stop!")
@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { var e = eventCaller.currentEntity; DJSchool.WarnAndStop(e.beat, e["toggle"]);  },
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Ooh", "Whether or not the \"ooh\" sound should be played")
+                        new Param("toggle", true, "Ooh", "Toggle if DJ Yellow should say \"Ooh!\"")
                     }
                 },
                 new GameAction("break c'mon ooh", "Break, C'mon!")
@@ -39,8 +39,8 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { var e = eventCaller.currentEntity; DJSchool.WarnBreakCmon(e.beat, e["type"], e["toggle"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
-                        new Param("toggle", true, "Ooh", "Whether or not the \"ooh\" sound should be played")
+                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "Choose the type of voice for DJ Yellow to use."),
+                        new Param("toggle", true, "Ooh", "Toggle if DJ Yellow should say \"Ooh!\"")
                     }
                 },
                 new GameAction("scratch-o hey", "Scratch-o")
@@ -49,9 +49,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
-                        new Param("toggle2", true, "Cheering", "Should cheering play when successfully hitting this cue?"),
-                        new Param("toggle", false, "Fast Hey", "Activate Remix 4 (DS) beat")
+                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "Choose the type of voice for DJ Yellow to use."),
+                        new Param("toggle2", true, "Cheering", "Toggle if cheering should play if you successfully hit this cue."),
+                        new Param("toggle", false, "Fast Hey", "Toggle if this cue should use the faster timing from Remix 4 (DS).")
                     }
                 },
                 new GameAction("dj voice lines", "DJ Yellow Banter")
@@ -61,16 +61,16 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { DJSchool.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  },
                     parameters = new List<Param>()
                     {
-                        new Param("type", DJSchool.DJVoiceLines.CheckItOut, "Voice Lines", "The voice line to play"),
+                        new Param("type", DJSchool.DJVoiceLines.CheckItOut, "Voice Line", "Choose what DJ Yellow should say."),
                     }
                 },
-                new GameAction("sound FX", "Scratchy Music")
+                new GameAction("sound FX", "Set Radio FX")
                 {
                     function = delegate { DJSchool.SoundFX(eventCaller.currentEntity["toggle"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Radio FX", "Toggle on and off for Radio Effects")
+                        new Param("toggle", true, "Radio FX", "Toggle if holding down the record will trigger scratchy radio effects like in the original game.")
                     }
                 },
                 new GameAction("forceHold", "Force Hold")

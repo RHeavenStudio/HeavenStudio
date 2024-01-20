@@ -7,6 +7,7 @@ namespace HeavenStudio.Util
     {
         public static bool IsAnimationNotPlaying(this Animator anim)
         {
+            if (anim == null) return true;
             var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
             return (stateInfo.normalizedTime >= stateInfo.speed || stateInfo.loop) && !anim.IsInTransition(0);
         }
@@ -17,6 +18,7 @@ namespace HeavenStudio.Util
         /// <param name="animNames">name(s) of animation to look out for</param>
         public static bool IsPlayingAnimationNames(this Animator anim, params string[] animNames)
         {
+            if (anim == null) return false;
             var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
             var isPlaying = Array.Exists(animNames, animName => stateInfo.IsName(animName));
             return (stateInfo.normalizedTime < stateInfo.speed || stateInfo.loop) && isPlaying;
@@ -32,8 +34,9 @@ namespace HeavenStudio.Util
         /// <param name="length">duration of animation (progress 1.0)</param>
         /// <param name="timeScale">multiplier for animation progress (smaller values make animation slower)</param>
         /// <param name="animLayer">animator layer to play animation on</param>
-        public static void DoScaledAnimation(this Animator anim, string animName, double startTime, float length = 1f, float timeScale = 1f, int animLayer = -1, bool clamp = false)
+        public static void DoScaledAnimation(this Animator anim, string animName, double startTime, double length = 1, float timeScale = 1f, int animLayer = -1, bool clamp = false)
         {
+            if (anim == null) return;
             float pos = Conductor.instance.GetPositionFromBeat(startTime, length) * timeScale;
             if (clamp) pos = Mathf.Clamp01(pos);
             anim.Play(animName, animLayer, pos);
@@ -49,6 +52,7 @@ namespace HeavenStudio.Util
         /// <param name="animLayer">animator layer to play animation on</param>
         public static void DoNormalizedAnimation(this Animator anim, string animName, float pos = 0f, int animLayer = -1)
         {
+            if (anim == null) return;
             anim.Play(animName, animLayer, pos);
             anim.speed = 1f;
         }
@@ -64,6 +68,7 @@ namespace HeavenStudio.Util
         /// <param name="animLayer">animator layer to play animation on</param>
         public static void DoScaledAnimationFromBeatAsync(this Animator anim, string animName, float timeScale = 1f, double startBeat = 0, int animLayer = -1)
         {
+            if (anim == null) return;
             float pos = 0;
             if (!double.IsNaN(startBeat)) {
                 var cond = Conductor.instance;
@@ -87,12 +92,14 @@ namespace HeavenStudio.Util
         /// <param name="animLayer">animator layer to play animation on</param>
         public static void DoScaledAnimationAsync(this Animator anim, string animName, float timeScale = 1f, float startPos = 0f, int animLayer = -1)
         {
+            if (anim == null) return;
             anim.Play(animName, animLayer, startPos);
             anim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * timeScale;
         }
 
         public static void SetScaledAnimationSpeed(this Animator anim, float timeScale = 0.5f)
         {
+            if (anim == null) return;
             anim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * timeScale;
         }
 
@@ -106,6 +113,7 @@ namespace HeavenStudio.Util
         /// <param name="animLayer">animator layer to play animation on</param>
         public static void DoUnscaledAnimation(this Animator anim, string animName, float startPos = 0f, int animLayer = -1)
         {
+            if (anim == null) return;
             anim.Play(animName, animLayer, startPos);
             anim.speed = 1f;
         }

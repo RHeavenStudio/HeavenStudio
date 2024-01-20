@@ -18,6 +18,8 @@ namespace HeavenStudio
         [Header("Loading Screen")]
         [SerializeField] Image fadeImage;
         [SerializeField] TMP_Text loadingText;
+        [SerializeField] GameObject memPanel;
+        [SerializeField] MemRenderer memRenderer;
 
         [Header("Dialog Box")]
         [SerializeField] GameObject messagePanel;
@@ -27,16 +29,22 @@ namespace HeavenStudio
         [SerializeField] Button errorOkButton;
         [SerializeField] Button errorLogButton;
         [SerializeField] Slider dialogProgress;
+
+        [Header("Debug")]
+        [SerializeField] private GameObject DebugHolder;
+
         public static bool IsShowingDialog;
+        public static string PlayOpenFile = null;
 
         public static string buildTime = "00/00/0000 00:00:00";
+        public static string friendlyReleaseName = "Heaven Studio (1.0 Lush)";
 
         public static bool HasShutDown = false;
         public static bool discordDuringTesting = false;
 
         static string loadedScene;
         static string lastLoadedScene;
-        static AsyncOperation asyncLoad;
+        static AsyncOperation asyncLoad, asyncFree;
 
         public static string levelLocation;
         public static bool officialLevel;
@@ -46,7 +54,7 @@ namespace HeavenStudio
         public static int CustomScreenWidth = 1280;
         public static int CustomScreenHeight = 720;
 
-        public static readonly (int width, int height)[] DEFAULT_SCREEN_SIZES = new[] { (1280, 720), (1920, 1080), (2560, 1440), (3840, 2160)};
+        public static readonly (int width, int height)[] DEFAULT_SCREEN_SIZES = new[] { (1280, 720), (1920, 1080), (2560, 1440), (3840, 2160) };
         public static readonly string[] DEFAULT_SCREEN_SIZES_STRING = new[] { "1280x720", "1920x1080", "2560x1440", "3840x2160", "Custom" };
         public static int ScreenSizeIndex = 0;
 
@@ -91,8 +99,6 @@ namespace HeavenStudio
             CustomScreenWidth = PersistentDataManager.gameSettings.resolutionWidth;
             CustomScreenHeight = PersistentDataManager.gameSettings.resolutionHeight;
 
-            ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
-            
             if (PersistentDataManager.gameSettings.dspSize == 0)
                 PersistentDataManager.gameSettings.dspSize = 512;
             if (PersistentDataManager.gameSettings.sampleRate == 0)
@@ -100,14 +106,18 @@ namespace HeavenStudio
             currentDspSize = PersistentDataManager.gameSettings.dspSize;
             currentSampleRate = PersistentDataManager.gameSettings.sampleRate;
 
-            ChangeAudioSettings(currentDspSize, currentSampleRate);
+            // ChangeAudioSettings(currentDspSize, currentSampleRate);
+            AudioConfiguration config = AudioSettings.GetConfiguration();
+            config.dspBufferSize = currentDspSize;
+            config.sampleRate = currentSampleRate;
+            AudioSettings.Reset(config);
 
             Application.targetFrameRate = -1;
             QualitySettings.vSyncCount = 0;
             QualitySettings.maxQueuedFrames = 1;
             if (PersistentDataManager.gameSettings.isFullscreen)
             {
-                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
                 Screen.fullScreen = true;
             }
             else
@@ -116,14 +126,18 @@ namespace HeavenStudio
                 Screen.fullScreen = false;
                 ChangeScreenSize();
             }
+            ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
             PlayerInput.InitInputControllers();
-            #if UNITY_EDITOR
-                Starpelly.OS.ChangeWindowTitle("Heaven Studio UNITYEDITOR ");
-                buildTime = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
-            #else
-                Starpelly.OS.ChangeWindowTitle("Heaven Studio (INDEV) " + Application.buildGUID.Substring(0, 8));
-                buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
-            #endif          
+#if HEAVENSTUDIO_PROD && !UNITY_EDITOR
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio");
+            buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+#elif UNITY_EDITOR
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio UNITYEDITOR ");
+            buildTime = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
+#else
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio (INDEV) " + Application.buildGUID.Substring(0, 8));
+            buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+#endif
         }
 
         public void Awake()
@@ -132,12 +146,13 @@ namespace HeavenStudio
             instance = this;
             fadeImage.gameObject.SetActive(false);
             loadingText.enabled = false;
+            memPanel.SetActive(false);
 
             messagePanel.SetActive(false);
             IsShowingDialog = false;
         }
 
-        private void Update() 
+        private void Update()
         {
             PlayerInput.UpdateInputControllers();
         }
@@ -145,27 +160,50 @@ namespace HeavenStudio
         IEnumerator LoadSceneAsync(string scene, float fadeOut)
         {
             Application.backgroundLoadingPriority = ThreadPriority.Normal;
-            //TODO: create flow mem loading icon
+
+            asyncFree = Resources.UnloadUnusedAssets();
+            while (!asyncFree.isDone)
+            {
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(0.5f);
+
             asyncLoad = SceneManager.LoadSceneAsync(scene);
             while (!asyncLoad.isDone)
             {
                 yield return null;
             }
 
-            //TODO: fade out flow mem loading icon
             instance.fadeImage.DOKill();
             instance.loadingText.enabled = false;
-            instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
+            memPanel.SetActive(false);
+            if (fadeOut < 0)
             {
+            }
+            else if (fadeOut == 0)
+            {
+                instance.fadeImage.color = new Color(0, 0, 0, 0);
                 instance.fadeImage.gameObject.SetActive(false);
-            });
+            }
+            else
+            {
+                instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
+                {
+                    instance.fadeImage.gameObject.SetActive(false);
+                });
+            }
         }
 
         IEnumerator ForceFadeAsync(float hold, float fadeOut)
         {
-            yield return new WaitForSeconds(hold);
+            if (hold > 0)
+            {
+                yield return new WaitForSeconds(hold);
+            }
             instance.fadeImage.DOKill();
             instance.loadingText.enabled = false;
+            memPanel.SetActive(false);
             instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
             {
                 instance.fadeImage.gameObject.SetActive(false);
@@ -211,24 +249,53 @@ namespace HeavenStudio
 
             instance.fadeImage.DOKill();
             instance.fadeImage.gameObject.SetActive(true);
-            instance.fadeImage.color = new Color(0, 0, 0, 0);
-            instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+            // instance.loadingText.enabled = true;
+            instance.memPanel.SetActive(true);
+            instance.memRenderer.ChangeMem();
+            if (fadeIn <= 0)
             {
+                instance.fadeImage.color = new Color(0, 0, 0, 1);
+                AssetBundle.UnloadAllAssetBundles(true);
                 instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
-                instance.loadingText.enabled = true;
-            });
+            }
+            else
+            {
+                instance.fadeImage.color = new Color(0, 0, 0, 0);
+                instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+                {
+                    AssetBundle.UnloadAllAssetBundles(true);
+                    instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
+                });
+            }
         }
 
         public static void ForceFade(float fadeIn, float hold, float fadeOut)
         {
             instance.fadeImage.DOKill();
             instance.fadeImage.gameObject.SetActive(true);
-            instance.fadeImage.color = new Color(0, 0, 0, 0);
             instance.loadingText.enabled = false;
-            instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+            instance.memPanel.SetActive(false);
+            if (fadeIn > 0)
             {
-                instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
-            });
+                instance.fadeImage.color = new Color(0, 0, 0, 0);
+                instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+                {
+                    instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
+                });
+            }
+            else
+            {
+                if (hold > 0 || fadeOut >= 0)
+                {
+                    instance.fadeImage.color = new Color(0, 0, 0, 1);
+                    instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
+                }
+                else
+                {
+                    instance.fadeImage.color = new Color(0, 0, 0, 1);
+                    instance.fadeImage.gameObject.SetActive(true);
+                }
+            }
         }
 
         public static void ShowErrorMessage(string header, string message)
@@ -244,11 +311,11 @@ namespace HeavenStudio
             instance.dialogProgress.gameObject.SetActive(false);
 
             instance.errorBuild.gameObject.SetActive(true);
-            #if UNITY_EDITOR
-                instance.errorBuild.text = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
-            #else
+#if UNITY_EDITOR
+            instance.errorBuild.text = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
+#else
                 instance.errorBuild.text = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
-            #endif
+#endif
 
             instance.messagePanel.SetActive(true);
         }
@@ -287,7 +354,7 @@ namespace HeavenStudio
             if (!Screen.fullScreen)
             {
                 // Set the resolution to the display's current resolution
-                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
                 Screen.fullScreen = true;
                 PersistentDataManager.gameSettings.isFullscreen = true;
             }
@@ -356,30 +423,30 @@ namespace HeavenStudio
 
         public static void ChangeAudioSettings(int dspSize, int sampleRate)
         {
-            // don't reset audio if no changes are done
-            AudioConfiguration config = AudioSettings.GetConfiguration();
-            if (dspSize == config.dspBufferSize && sampleRate == config.sampleRate) return;
-            currentDspSize = dspSize;
-            currentSampleRate = sampleRate;
-
-            config.dspBufferSize = currentDspSize;
-            config.sampleRate = currentSampleRate;
-            AudioSettings.Reset(config);
-
-            PersistentDataManager.gameSettings.dspSize = currentDspSize;
-            PersistentDataManager.gameSettings.sampleRate = currentSampleRate;
+            // this will apply on next boot
+            PersistentDataManager.gameSettings.dspSize = dspSize;
+            PersistentDataManager.gameSettings.sampleRate = sampleRate;
         }
 
         public static void UpdateDiscordStatus(string details, bool editor = false, bool updateTime = false)
         {
-            if (discordDuringTesting || !Application.isEditor)
-            {
-                if (PersistentDataManager.gameSettings.discordRPCEnable)
-                {   
-                    DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
-                    Debug.Log("Discord status updated");
-                }
-            }
+            Debug.Log("Discord Rich Presence temporarily disabled");
+            return;
+            // if (discordDuringTesting || !Application.isEditor)
+            // {
+            //     if (PersistentDataManager.gameSettings.discordRPCEnable)
+            //     {
+            //         try
+            //         {
+            //             DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
+            //             Debug.Log("Discord status updated");
+            //         }
+            //         catch (System.Exception e)
+            //         {
+            //             Debug.Log("Discord status update failed: " + e.Message);
+            //         }
+            //     }
+            // }
         }
 
         private static void OnQuitting()
@@ -390,8 +457,8 @@ namespace HeavenStudio
                 PlayerInput.CleanUp();
                 Debug.Log("Clearing RIQ Cache...");
                 Jukebox.RiqFileHandler.ClearCache();
-                Debug.Log("Closing Discord GameSDK...");
-                DiscordRPC.DiscordController.instance?.Disconnect();
+                // Debug.Log("Closing Discord GameSDK...");
+                // DiscordRPC.DiscordController.instance?.Disconnect();
 
                 HasShutDown = true;
             }

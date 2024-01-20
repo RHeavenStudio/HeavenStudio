@@ -104,8 +104,6 @@ namespace HeavenStudio.Editor.Track
         {
             if (first) return;
             CommandManager.Instance.AddCommand(new Commands.DeleteMarker(chartEntity.guid, type));
-            // transform.parent.GetComponent<SpecialTimeline>().specialTimelineObjs.Remove(this);
-            // Destroy(this.gameObject);
         }
 
         //events

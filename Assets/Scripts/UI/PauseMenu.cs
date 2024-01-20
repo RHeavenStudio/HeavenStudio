@@ -46,6 +46,7 @@ namespace HeavenStudio.Common
         {
             if (GlobalGameManager.IsShowingDialog) return;
             if (!Conductor.instance.isPlaying) return;
+            GameManager.instance.CircleCursor.LockCursor(true);
             Conductor.instance.Pause();
             pauseBeat = Conductor.instance.songPositionInBeatsAsDouble;
             chartTitleText.text = GameManager.instance.Beatmap["remixtitle"].ToString();
@@ -56,11 +57,13 @@ namespace HeavenStudio.Common
             isPaused = true;
             canPick = false;
             optionSelected = 0;
+            ChooseCurrentOption();
         }
 
         void UnPause(bool instant = false)
         {
             if ((!instant) && (!Conductor.instance.isPaused)) return;
+            // GameManager.instance.CircleCursor.LockCursor(true);
             Conductor.instance.Play(pauseBeat);
             if (instant)
             {
@@ -110,7 +113,7 @@ namespace HeavenStudio.Common
 
             if (isQuitting) return;
 
-            if (PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btPause, out _))
+            if (PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btPause, out _) && !settingsDialog.IsOpen)
             {
                 if (isPaused)
                 {
@@ -123,6 +126,19 @@ namespace HeavenStudio.Common
             }
             else if (isPaused && canPick && !settingsDialog.IsOpen)
             {
+                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                {
+                    foreach (Transform t in optionHolder.transform)
+                    {
+                        if (t.TryGetComponent<Collider2D>(out Collider2D c) && c.OverlapPoint(PlayerInput.GetInputController(1).GetPointer()))
+                        {
+                            int idx = t.GetSiblingIndex();
+                            ChooseOption((Options)idx, idx != optionSelected);
+                            optionSelected = idx;
+                            break;
+                        }
+                    }
+                }
                 if (Input.GetKeyDown(KeyCode.UpArrow) || PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btUp, out _))
                 {
                     optionSelected--;
@@ -143,7 +159,17 @@ namespace HeavenStudio.Common
                 }
                 else if (Input.GetKeyDown(KeyCode.Return) || PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btConfirm, out _))
                 {
-                    UseOption((Options)optionSelected);
+                    if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                    {
+                        if (optionHolder.transform.GetChild(optionSelected).GetComponent<Collider2D>().OverlapPoint(PlayerInput.GetInputController(1).GetPointer()))
+                        {
+                            UseOption((Options)optionSelected);
+                        }
+                    }
+                    else
+                    {
+                        UseOption((Options)optionSelected);
+                    }
                 }
             }
 
@@ -200,8 +226,8 @@ namespace HeavenStudio.Common
         void OnRestart()
         {
             UnPause(true);
-            GlobalGameManager.ForceFade(0, 1f, 0.5f);
-            GameManager.instance.Stop(0, true, 1.5f);
+            GlobalGameManager.ForceFade(0, 0f, -1f);
+            GameManager.instance.Stop(0, true, 1f);
             SoundByte.PlayOneShot("ui/UIEnter");
         }
 
@@ -209,11 +235,13 @@ namespace HeavenStudio.Common
         {
             isQuitting = true;
             SoundByte.PlayOneShot("ui/PauseQuit");
-            GlobalGameManager.LoadScene("Editor", 0, 0.1f);
+            GameManager.instance.CircleCursor.LockCursor(false);
+            GlobalGameManager.LoadScene("Title", 0, 0.35f);
         }
 
         void OnSettings()
         {
+            GameManager.instance.CircleCursor.LockCursor(false);
             settingsDialog.SwitchSettingsDialog();
         }
     }
