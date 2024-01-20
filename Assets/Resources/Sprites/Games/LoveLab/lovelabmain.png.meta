@@ -1,0 +1,1418 @@
+fileFormatVersion: 2
+guid: 32b8969086bedeb45b1cb9a4a9c5cddb
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: lovelabmain_0
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 3586
+        width: 344
+        height: 347
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbfa017e92ce44342931f07eb3d1ac60
+      internalID: 1927635308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_1
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 3587
+        width: 377
+        height: 349
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6535aa594475ac42bcbf5648398ef6f
+      internalID: -44668223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_2
+      rect:
+        serializedVersion: 2
+        x: 1186
+        y: 3516
+        width: 414
+        height: 418
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fc1d23e9a519ca4f8a962c07b7dfb85
+      internalID: 1996454645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_3
+      rect:
+        serializedVersion: 2
+        x: 1843
+        y: 3349
+        width: 270
+        height: 619
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8d1b1f26fd45414d853070ed781f68b
+      internalID: -326556908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_4
+      rect:
+        serializedVersion: 2
+        x: 2291
+        y: 3349
+        width: 326
+        height: 619
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a153b68e531ed949a571a11e0280d85
+      internalID: 710432525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_5
+      rect:
+        serializedVersion: 2
+        x: 2742
+        y: 3343
+        width: 330
+        height: 618
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36553440221fedd4fa0cffd4de7680b7
+      internalID: 723917083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_6
+      rect:
+        serializedVersion: 2
+        x: 3222
+        y: 3340
+        width: 293
+        height: 619
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9a3252d21a22124485d8672bed73915
+      internalID: -852264175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_7
+      rect:
+        serializedVersion: 2
+        x: 3663
+        y: 3345
+        width: 301
+        height: 619
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e30a23989901f054db32c92d02c9cb28
+      internalID: 1654810390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_8
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 3094
+        width: 311
+        height: 343
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ac866c064fc06c4881ad4b817391014
+      internalID: -2127009915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_9
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 3082
+        width: 377
+        height: 349
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19da9c4cd3b91734593059a35ada4d5c
+      internalID: -976223148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_10
+      rect:
+        serializedVersion: 2
+        x: 1274
+        y: 3037
+        width: 244
+        height: 262
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a2b783bcef4eb64bb1f19654dab6966
+      internalID: -219204103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_11
+      rect:
+        serializedVersion: 2
+        x: 1752
+        y: 3028
+        width: 142
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 351a4fa81869bc04ba976b4607986901
+      internalID: -15382815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_12
+      rect:
+        serializedVersion: 2
+        x: 1995
+        y: 3006
+        width: 172
+        height: 174
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 685ca198dbad45b46b13e3b034384ae1
+      internalID: 48438958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_13
+      rect:
+        serializedVersion: 2
+        x: 2287
+        y: 3026
+        width: 177
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9dba7aecf540477469a3f95b947b5c72
+      internalID: -688337667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_14
+      rect:
+        serializedVersion: 2
+        x: 2575
+        y: 3017
+        width: 139
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21bde83ee0312304280c90afebcae703
+      internalID: -249312096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_15
+      rect:
+        serializedVersion: 2
+        x: 2827
+        y: 3020
+        width: 180
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bf74eebcfc08d643b4c002980964bcf
+      internalID: 1094174352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_16
+      rect:
+        serializedVersion: 2
+        x: 3127
+        y: 3019
+        width: 147
+        height: 127
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e5af0950a8025f479e2684d5c4b3df8
+      internalID: 1271851030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_17
+      rect:
+        serializedVersion: 2
+        x: 3375
+        y: 3018
+        width: 137
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc9921108d8fa5a4b9f12f5d62d39527
+      internalID: 1306806546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_18
+      rect:
+        serializedVersion: 2
+        x: 3669
+        y: 2972
+        width: 277
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2020c1349b6f59b43ba8764339b194c6
+      internalID: 222083959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_19
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 2591
+        width: 377
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96ba0c683dc7196448919faff17caa23
+      internalID: 568610653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_20
+      rect:
+        serializedVersion: 2
+        x: 1769
+        y: 2517
+        width: 324
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a8855d3b5e6cf24eb00a30003af4678
+      internalID: 1476451571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_21
+      rect:
+        serializedVersion: 2
+        x: 2277
+        y: 2517
+        width: 321
+        height: 295
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a2167fd4d6ed4940a65007d544f5f52
+      internalID: 1475790553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_22
+      rect:
+        serializedVersion: 2
+        x: 2768
+        y: 2437
+        width: 222
+        height: 419
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95ccda0fa0c40404ab3d74c1f775174b
+      internalID: 1490662234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_23
+      rect:
+        serializedVersion: 2
+        x: 3169
+        y: 2560
+        width: 322
+        height: 163
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b3e5b16835dfca44be1c8418c8efb93
+      internalID: -134353524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_24
+      rect:
+        serializedVersion: 2
+        x: 3678
+        y: 2498
+        width: 232
+        height: 242
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e906d8f26de5b05489e26b08a743bbdf
+      internalID: -301642990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_25
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 2023
+        width: 295
+        height: 328
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c145b548af2513c46bff8ef795d6c224
+      internalID: -1141716655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_26
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 1996
+        width: 354
+        height: 335
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ae739b7d59d3964f824a4a7a47e4171
+      internalID: -1034487796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_27
+      rect:
+        serializedVersion: 2
+        x: 1126
+        y: 1925
+        width: 255
+        height: 392
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c6f5e6d1f4740548a2d7d2885ea2ac9
+      internalID: -46811366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_28
+      rect:
+        serializedVersion: 2
+        x: 1602
+        y: 1649
+        width: 203
+        height: 599
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1808bbfde129ae0449b8747aeda42388
+      internalID: 1569128153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_33
+      rect:
+        serializedVersion: 2
+        x: 2642
+        y: 1801
+        width: 298
+        height: 480
+      alignment: 9
+      pivot: {x: 0.53222, y: 0.43332392}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f37897cccd2755441bfe1e3da2fe5529
+      internalID: -1657199552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_35
+      rect:
+        serializedVersion: 2
+        x: 3098
+        y: 1798
+        width: 313
+        height: 486
+      alignment: 9
+      pivot: {x: 0.49696267, y: 0.43719634}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db01e9ce8f1a3eb42bc82bdaff2ce970
+      internalID: -888992340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_42
+      rect:
+        serializedVersion: 2
+        x: 3568
+        y: 1808
+        width: 288
+        height: 401
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b424a260095e8748b40ec345fabaa8f
+      internalID: -1142424825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_43
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 1600
+        width: 287
+        height: 321
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c811950c76d22741b65542dedb0d8aa
+      internalID: -159048702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_44
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 1595
+        width: 349
+        height: 326
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 773eaec2796e8ed428a196d2046c9f45
+      internalID: -876980906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_49
+      rect:
+        serializedVersion: 2
+        x: 2862
+        y: 1470
+        width: 99
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a222af634cd8082408230308eb854de9
+      internalID: 1401819112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_50
+      rect:
+        serializedVersion: 2
+        x: 3019
+        y: 1468
+        width: 102
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0ccbc5dfb5c0f844b303bd6199a8b12
+      internalID: -1069325851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_51
+      rect:
+        serializedVersion: 2
+        x: 3171
+        y: 1472
+        width: 126
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 688e381a2b973fe4a9207a4719f9ba71
+      internalID: 1446481999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_52
+      rect:
+        serializedVersion: 2
+        x: 3341
+        y: 1486
+        width: 105
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12dafc9102931fa46a19d517d68493ff
+      internalID: 1381030318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_53
+      rect:
+        serializedVersion: 2
+        x: 3473
+        y: 1449
+        width: 177
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddab94c99b8ac8b47b6b5b5231233604
+      internalID: 1805536216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_54
+      rect:
+        serializedVersion: 2
+        x: 3695
+        y: 1472
+        width: 121
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 047f06318ba8e9c4581fcfee7baceb16
+      internalID: 1132562254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_55
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 764
+        width: 178
+        height: 594
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4836655c6a73ae41a82506714627675
+      internalID: -1814033573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_56
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 764
+        width: 240
+        height: 599
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f01ba460aab4f74bbbe6ab97a022076
+      internalID: 768371453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_57
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 758
+        width: 236
+        height: 596
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3dbec7e5273c13448f6f14e8de38f03
+      internalID: -208363643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_58
+      rect:
+        serializedVersion: 2
+        x: 1450
+        y: 762
+        width: 211
+        height: 601
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f7dd756487a954409859722c4bbb426
+      internalID: -1273092126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_59
+      rect:
+        serializedVersion: 2
+        x: 1932
+        y: 1148
+        width: 344
+        height: 179
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61efac26d8122fa4fab89ae1ede0dd82
+      internalID: 312562086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_65
+      rect:
+        serializedVersion: 2
+        x: 1943
+        y: 697
+        width: 314
+        height: 370
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7f1a82e740c9ec4ea1c70d820dc6a2c
+      internalID: 1882915025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_89
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 150
+        width: 419
+        height: 379
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cde7729d0b154724895b067a4885b259
+      internalID: -375670432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_90
+      rect:
+        serializedVersion: 2
+        x: 703
+        y: 150
+        width: 426
+        height: 378
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6851c30cbb5e0f442a512f287f88c826
+      internalID: -1637955904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_93
+      rect:
+        serializedVersion: 2
+        x: 1970
+        y: 184
+        width: 252
+        height: 228
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 240b9e72a730ec846927d974dd709936
+      internalID: -1257110429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_37
+      rect:
+        serializedVersion: 2
+        x: 2049
+        y: 1599
+        width: 422
+        height: 524
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d7f09e2e9281ec41a753ddd3419b1c3
+      internalID: 210991397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_29
+      rect:
+        serializedVersion: 2
+        x: 2441
+        y: 704
+        width: 509
+        height: 493
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd5949fb69c196744b42c0b8616e64d1
+      internalID: -1474664537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_30
+      rect:
+        serializedVersion: 2
+        x: 3011
+        y: 700
+        width: 465
+        height: 503
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 293ec48567902004b9c09643ba7fa775
+      internalID: -807391840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_31
+      rect:
+        serializedVersion: 2
+        x: 3540
+        y: 671
+        width: 432
+        height: 621
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2ebdb7578a113b4eab36f555da243cf
+      internalID: -126145706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_32
+      rect:
+        serializedVersion: 2
+        x: 1183
+        y: 167
+        width: 661
+        height: 311
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50b03d9bd2fb10e46abaeed8880ce6a4
+      internalID: 2021974042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_34
+      rect:
+        serializedVersion: 2
+        x: 2443
+        y: 91
+        width: 322
+        height: 517
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74ce4e83442d0164ea01e29b291a40ea
+      internalID: 1332450749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_36
+      rect:
+        serializedVersion: 2
+        x: 1303
+        y: 2617
+        width: 225
+        height: 193
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b98a95237e16bb478f799c36cbb7b48
+      internalID: -887965596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lovelabmain_38
+      rect:
+        serializedVersion: 2
+        x: 2306
+        y: 191
+        width: 94
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01169eaa4ab67a84c97971b1f36dd82a
+      internalID: -54758947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      lovelabmain_0: 1927635308
+      lovelabmain_1: -44668223
+      lovelabmain_10: -219204103
+      lovelabmain_11: -15382815
+      lovelabmain_12: 48438958
+      lovelabmain_13: -688337667
+      lovelabmain_14: -249312096
+      lovelabmain_15: 1094174352
+      lovelabmain_16: 1271851030
+      lovelabmain_17: 1306806546
+      lovelabmain_18: 222083959
+      lovelabmain_19: 568610653
+      lovelabmain_2: 1996454645
+      lovelabmain_20: 1476451571
+      lovelabmain_21: 1475790553
+      lovelabmain_22: 1490662234
+      lovelabmain_23: -134353524
+      lovelabmain_24: -301642990
+      lovelabmain_25: -1141716655
+      lovelabmain_26: -1034487796
+      lovelabmain_27: -46811366
+      lovelabmain_28: 1569128153
+      lovelabmain_29: -1474664537
+      lovelabmain_3: -326556908
+      lovelabmain_30: -807391840
+      lovelabmain_31: -126145706
+      lovelabmain_32: 2021974042
+      lovelabmain_33: -1657199552
+      lovelabmain_34: 1332450749
+      lovelabmain_35: -888992340
+      lovelabmain_36: -887965596
+      lovelabmain_37: 210991397
+      lovelabmain_38: -54758947
+      lovelabmain_39: -1844023469
+      lovelabmain_4: 710432525
+      lovelabmain_40: 1707862032
+      lovelabmain_41: -1924987999
+      lovelabmain_42: -1142424825
+      lovelabmain_43: -159048702
+      lovelabmain_44: -876980906
+      lovelabmain_45: -855009444
+      lovelabmain_46: -1607859135
+      lovelabmain_47: -335014508
+      lovelabmain_48: -1105464220
+      lovelabmain_49: 1401819112
+      lovelabmain_5: 723917083
+      lovelabmain_50: -1069325851
+      lovelabmain_51: 1446481999
+      lovelabmain_52: 1381030318
+      lovelabmain_53: 1805536216
+      lovelabmain_54: 1132562254
+      lovelabmain_55: -1814033573
+      lovelabmain_56: 768371453
+      lovelabmain_57: -208363643
+      lovelabmain_58: -1273092126
+      lovelabmain_59: 312562086
+      lovelabmain_6: -852264175
+      lovelabmain_60: -312669342
+      lovelabmain_61: 436360029
+      lovelabmain_62: -1394911460
+      lovelabmain_63: 118080730
+      lovelabmain_64: -2133326490
+      lovelabmain_65: 1882915025
+      lovelabmain_66: -1331647819
+      lovelabmain_67: 793746314
+      lovelabmain_68: 1478765769
+      lovelabmain_69: 1315626549
+      lovelabmain_7: 1654810390
+      lovelabmain_70: 2042723945
+      lovelabmain_71: -232683816
+      lovelabmain_72: -794741346
+      lovelabmain_73: -87176501
+      lovelabmain_74: 452234076
+      lovelabmain_75: -160564560
+      lovelabmain_76: -2013365981
+      lovelabmain_77: 990929772
+      lovelabmain_78: 541915864
+      lovelabmain_79: 1502144128
+      lovelabmain_8: -2127009915
+      lovelabmain_80: 1189237041
+      lovelabmain_81: -1561958350
+      lovelabmain_82: 869288141
+      lovelabmain_83: 269919285
+      lovelabmain_84: 1009493770
+      lovelabmain_85: -316115281
+      lovelabmain_86: 560324283
+      lovelabmain_87: 1948110415
+      lovelabmain_88: 2021007866
+      lovelabmain_89: -375670432
+      lovelabmain_9: -976223148
+      lovelabmain_90: -1637955904
+      lovelabmain_91: -1955567745
+      lovelabmain_92: 696375601
+      lovelabmain_93: -1257110429
+      lovelabmain_94: 1642932288
+      lovelabmain_95: -666558294
+      lovelabmain_96: 19266151
+      lovelabmain_97: 139958940
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

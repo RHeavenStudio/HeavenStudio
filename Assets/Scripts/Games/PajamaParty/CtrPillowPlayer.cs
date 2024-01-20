@@ -238,8 +238,11 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                         beat + 2,
                         delegate
                         {
-                            anim.DoUnscaledAnimation("MakoThrow" + animSuffix, 1);
-                            game.PrepareHighState();
+                            if (hit && !ng)
+                            {
+                                anim.DoUnscaledAnimation("MakoThrow" + animSuffix, 1);
+                                game.PrepareHighState();
+                            }
                         }
                     )
                 });

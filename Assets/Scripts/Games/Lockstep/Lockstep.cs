@@ -280,6 +280,7 @@ namespace HeavenStudio.Games
             {
                 rt.Release();
             }
+            queuedInputs.Clear();
         }
 
         private static bool ForceStepOnBeat(double beat)
@@ -310,6 +311,7 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
+            queuedInputs.Clear();
             QueueSwitchBGs(beat);
             PersistColors(beat);
         }

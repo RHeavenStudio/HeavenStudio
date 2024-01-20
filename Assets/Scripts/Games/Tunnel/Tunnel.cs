@@ -126,6 +126,11 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnPlay(double beat)
+        {
+            queuedInputs.Clear();
+        }
+
         private void Start()
         {
             handStart = -1f;

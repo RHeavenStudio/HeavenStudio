@@ -104,16 +104,6 @@ namespace HeavenStudio
         }
 
         // input accuracy (%)
-        double totalInputs = 0;
-        double totalPlayerAccuracy = 0;
-        public double PlayerAccuracy
-        {
-            get
-            {
-                if (totalInputs == 0) return 0;
-                return totalPlayerAccuracy / totalInputs;
-            }
-        }
         bool skillStarCollected = false;
 
         // cleared sections
@@ -342,9 +332,6 @@ namespace HeavenStudio
 
             if (weight > 0 && MarkerWeight > 0)
             {
-                totalInputs += weight * MarkerWeight;
-                totalPlayerAccuracy += Math.Abs(accuracy) * weight * MarkerWeight;
-
                 judgementInfo.inputs.Add(new JudgementManager.InputInfo
                 {
                     beat = beat,
@@ -675,9 +662,6 @@ namespace HeavenStudio
                 inputOffsetSamples.Clear();
                 averageInputOffset = 0;
 
-                totalInputs = 0;
-                totalPlayerAccuracy = 0;
-
                 TimingAccuracyDisplay.instance.ResetArrow();
                 SkillStarManager.instance.Reset();
                 skillStarCollected = false;
@@ -807,7 +791,6 @@ namespace HeavenStudio
             }
             else if (playMode)
             {
-                judgementInfo.finalScore = (float)PlayerAccuracy;
                 judgementInfo.star = skillStarCollected;
                 judgementInfo.perfect = GoForAPerfect.instance.perfect;
                 judgementInfo.time = DateTime.Now;
@@ -1126,6 +1109,8 @@ namespace HeavenStudio
             {
                 _currentMinigame = minigame;
                 minigame.minigameName = game;
+                minigame.gameManager = this;
+                minigame.conductor = Conductor.instance;
             }
             Vector3 originalScale = currentGameO.transform.localScale;
             currentGameO.transform.parent = eventCaller.GamesHolder.transform;

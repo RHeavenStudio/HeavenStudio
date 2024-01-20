@@ -55,7 +55,7 @@ namespace HeavenStudio.InputSystem
                         (int)KeyCode.U,
                         (int)KeyCode.I,
                         (int)KeyCode.E,
-                        (int)KeyCode.U,
+                        (int)KeyCode.O,
                         (int)KeyCode.Escape,
                     },
                     PointerSensitivity = 3,
