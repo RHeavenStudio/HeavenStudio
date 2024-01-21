@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
 
                     function = delegate { 
                         var e = eventCaller.currentEntity;
-                        Manzai.instance.DoPun(e.beat, e["boing"]); },
+                        Manzai.instance.DoPun(e.beat, e["boing"], e["pun"]); },
                     defaultLength = 4,
 
                     parameters = new List<Param>()
@@ -222,7 +222,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void DoPun(double beat, int isBoing)
+        public void DoPun(double beat, int isBoing, int whichPun)
         {
             int punOrBoing = isBoing;
 
@@ -231,14 +231,14 @@ namespace HeavenStudio.Games
             //    punOrBoing = UnityEngine.Random.Range(0, 5) % 2;
             //}
 
-            if(punOrBoing == (int)Manzai.BoingType.Normal)
+            if (punOrBoing == (int)Manzai.BoingType.Normal)
             {
-                DoPunHai(beat);
+                DoPunHai(beat, whichPun);
             }
 
-            if(punOrBoing == (int)Manzai.BoingType.Boing)
+            if (punOrBoing == (int)Manzai.BoingType.Boing)
             {
-                DoPunBoing(beat);
+                DoPunBoing(beat, whichPun);
             }
             //Debug.Log(punOrBoing);
         }
@@ -249,35 +249,49 @@ namespace HeavenStudio.Games
             float pitch = isPitched ? Conductor.instance.songBpm/98 : 1;
             var sounds = new List<MultiSound.Sound>();
             int boing  = isBoing;
+            int length = boingLengths.GetValueOrDefault(punName);
+            int syllables = boing == 0 ? 9 : (length != 0 ? length : 4);
 
-            Debug.Log(boingLengths[punName]);
+            Debug.Log(length);
 
-            for (int i = 0; i < (boing == 1 ? 9 : (boingLengths[punName])); i++) {
+            for (int i = 0; i < syllables; i++) {
                 sounds.Add(new MultiSound.Sound($"manzai/{punName}{i + 1}", beat + (i * 0.25), pitch, offset: i == 0 ? 0.05 : 0));
-                Debug.Log(punName + i);
             }
 
-            sounds.Add(new MultiSound.Sound("manzai/boing", boingLengths[punName] == 6 ? beat + 1.50 : beat + 1.25 , pitch));
+            if (isBoing == 1)
+            {
+                sounds.Add(new MultiSound.Sound("manzai/boing", syllables == 6 ? beat + 1.50 : beat + 1.25 , pitch));
+            }
 
             MultiSound.Play(sounds.ToArray(), forcePlay: true);
         }
 
-        public void DoPunHai(double beat)
+        public void DoPunHai(double beat, int whichPun)
         {
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
+            var punName= Enum.GetName(typeof(Puns), whichPun);
 
             ScheduleInput(beat, 2.5f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustL : HaiJustR, HaiMiss, Nothing);
             ScheduleInput(beat, 3.0f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustR : HaiJustL, HaiMiss, Nothing);
-            BeatAction.New(instance, new List<BeatAction.Action>()
+
+            if ((punName == "DenwariDenwa") || (punName == "IkugawaIkura") || (punName == "KusagaKusai") || (punName == "SarugaSaru"))
             {
-                new BeatAction.Action(beat + 0.0f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-
-                new BeatAction.Action(beat + 0.5f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-
-                new BeatAction.Action(beat + 1.0f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-
-                new BeatAction.Action(beat + 1.5f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-            });
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.0f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 0.5f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                });
+            }
+            else
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.0f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 0.5f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 1.0f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 1.5f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                });
+            }
         }
 
         public void HaiJustFull()
@@ -310,25 +324,34 @@ namespace HeavenStudio.Games
             //VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
-        public void DoPunBoing(double beat)
+        public void DoPunBoing(double beat, int whichPun)
         {
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
-
-            //SoundByte.PlayOneShotGame("manzai/"+sfxDefs[1].sfx, pitch: Conductor.instance.songBpm/98);
+            var punName= Enum.GetName(typeof(Puns), whichPun);
 
             ScheduleInput(beat, 2.5f, InputAction_BasicPress, BoingJust, BoingMiss, Nothing);
-            BeatAction.New(instance, new List<BeatAction.Action>()
+
+            if ((punName == "DenwariDenwa") || (punName == "IkugawaIkura") || (punName == "KusagaKusai") || (punName == "SarugaSaru"))
             {
-                new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-
-                new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-
-                new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-
-                new BeatAction.Action(beat + 1.25f, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
-
-                new BeatAction.Action(beat + 2.00f, delegate { RavenAnim.DoScaledAnimationAsync("Ready", 0.5f); }),
-            });
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 1.25f, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
+                    new BeatAction.Action(beat + 2.00f, delegate { RavenAnim.DoScaledAnimationAsync("Ready", 0.5f); }),
+                });
+            }
+            else
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 1.25f, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
+                    new BeatAction.Action(beat + 2.00f, delegate { RavenAnim.DoScaledAnimationAsync("Ready", 0.5f); }),
+                });
+            }
         }
 
         public void BoingJust(PlayerActionEvent caller, float state)
