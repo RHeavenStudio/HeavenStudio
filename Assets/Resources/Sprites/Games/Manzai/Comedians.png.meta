@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 400
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -67,7 +67,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -108,18 +108,18 @@ TextureImporter:
       name: Comedians_0
       rect:
         serializedVersion: 2
-        x: 20
-        y: 914
-        width: 56
-        height: 93
+        x: 70
+        y: 3646
+        width: 244
+        height: 392
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: d55ff93c4bfc049459ecfad0cc884d94
+      spriteID: 0cb6138dffffffff0800000000000000
       internalID: -667849792
       vertices: []
       indices: 
@@ -129,18 +129,18 @@ TextureImporter:
       name: Comedians_1
       rect:
         serializedVersion: 2
-        x: 112
-        y: 964
-        width: 48
-        height: 43
+        x: 438
+        y: 3846
+        width: 212
+        height: 192
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: e96aff213742bd84bbcba5beda3675c0
+      spriteID: fe6d97e0000000000800000000000000
       internalID: 242865903
       vertices: []
       indices: 
@@ -150,18 +150,18 @@ TextureImporter:
       name: Comedians_2
       rect:
         serializedVersion: 2
-        x: 195
-        y: 979
-        width: 26
-        height: 24
+        x: 770
+        y: 3906
+        width: 124
+        height: 116
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8c50862591dca86478d7d84a753de8ef
+      spriteID: 56e2ede4000000000800000000000000
       internalID: 1323183717
       vertices: []
       indices: 
@@ -171,18 +171,18 @@ TextureImporter:
       name: Comedians_3
       rect:
         serializedVersion: 2
-        x: 258
-        y: 960
-        width: 59
-        height: 47
+        x: 1022
+        y: 3830
+        width: 256
+        height: 208
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 47279ccff430e1048b6fc80428646db0
+      spriteID: 9a968291000000000800000000000000
       internalID: 422078889
       vertices: []
       indices: 
@@ -192,18 +192,18 @@ TextureImporter:
       name: Comedians_4
       rect:
         serializedVersion: 2
-        x: 355
-        y: 963
-        width: 59
-        height: 42
+        x: 1410
+        y: 3842
+        width: 256
+        height: 188
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 33edf8749bb8cce42903841a730fc80a
+      spriteID: 340cb267000000000800000000000000
       internalID: 1982578755
       vertices: []
       indices: 
@@ -213,18 +213,18 @@ TextureImporter:
       name: Comedians_5
       rect:
         serializedVersion: 2
-        x: 449
-        y: 964
-        width: 30
-        height: 42
+        x: 1786
+        y: 3846
+        width: 140
+        height: 188
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 98367b6669737bc42a9ed62fbc821815
+      spriteID: a281781cffffffff0800000000000000
       internalID: -1048111062
       vertices: []
       indices: 
@@ -234,18 +234,18 @@ TextureImporter:
       name: Comedians_6
       rect:
         serializedVersion: 2
-        x: 521
-        y: 934
-        width: 63
-        height: 73
+        x: 2074
+        y: 3726
+        width: 272
+        height: 312
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 866b51cbfbe90504c89d742bee8a20b1
+      spriteID: 5ba4360fffffffff0800000000000000
       internalID: -261928267
       vertices: []
       indices: 
@@ -255,18 +255,18 @@ TextureImporter:
       name: Comedians_7
       rect:
         serializedVersion: 2
-        x: 620
-        y: 962
-        width: 49
-        height: 45
+        x: 2470
+        y: 3838
+        width: 216
+        height: 200
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 5ee5116efdace2e4898a4b1e0062f8e3
+      spriteID: 66db1451000000000800000000000000
       internalID: 356629862
       vertices: []
       indices: 
@@ -276,18 +276,18 @@ TextureImporter:
       name: Comedians_8
       rect:
         serializedVersion: 2
-        x: 706
-        y: 1001
-        width: 5
-        height: 5
+        x: 2814
+        y: 3994
+        width: 40
+        height: 40
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 1cd05a602e5108b43a4f75b7cd3de575
+      spriteID: c12edb1effffffff0800000000000000
       internalID: -507649508
       vertices: []
       indices: 
@@ -297,18 +297,18 @@ TextureImporter:
       name: Comedians_9
       rect:
         serializedVersion: 2
-        x: 832
-        y: 680
-        width: 192
-        height: 344
+        x: 3318
+        y: 2710
+        width: 744
+        height: 1376
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 4ec159cecd489614fb7156bd6588f127
+      spriteID: df23abc8ffffffff0800000000000000
       internalID: -1933954307
       vertices: []
       indices: 
@@ -318,18 +318,18 @@ TextureImporter:
       name: Comedians_10
       rect:
         serializedVersion: 2
-        x: 112
-        y: 897
-        width: 50
-        height: 29
+        x: 438
+        y: 3578
+        width: 220
+        height: 136
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 6f0042038b7f455468dd86562b7afb74
+      spriteID: a5d3b321000000000800000000000000
       internalID: 305872218
       vertices: []
       indices: 
@@ -339,18 +339,18 @@ TextureImporter:
       name: Comedians_11
       rect:
         serializedVersion: 2
-        x: 196
-        y: 905
-        width: 24
-        height: 38
+        x: 774
+        y: 3610
+        width: 116
+        height: 172
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 9abc1d5565f5c564586f96578aa843c3
+      spriteID: 250aa48affffffff0800000000000000
       internalID: -1471504302
       vertices: []
       indices: 
@@ -360,18 +360,18 @@ TextureImporter:
       name: Comedians_12
       rect:
         serializedVersion: 2
-        x: 265
-        y: 873
-        width: 46
-        height: 54
+        x: 1050
+        y: 3482
+        width: 204
+        height: 236
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 555f3444a02f11347a323672000ddf6b
+      spriteID: 8d0a6666000000000800000000000000
       internalID: 1718001880
       vertices: []
       indices: 
@@ -381,18 +381,18 @@ TextureImporter:
       name: Comedians_13
       rect:
         serializedVersion: 2
-        x: 348
-        y: 892
-        width: 49
-        height: 34
+        x: 1382
+        y: 3558
+        width: 216
+        height: 156
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 9dc7b5766fd45ef4a94a0fc85c0aa281
+      spriteID: c2c82bcdffffffff0800000000000000
       internalID: -592278484
       vertices: []
       indices: 
@@ -402,18 +402,18 @@ TextureImporter:
       name: Comedians_14
       rect:
         serializedVersion: 2
-        x: 442
-        y: 882
-        width: 44
-        height: 44
+        x: 1758
+        y: 3518
+        width: 196
+        height: 196
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: b2e7bdb3a0dca764ea88d9368c5cad32
+      spriteID: b474c336000000000800000000000000
       internalID: 1664894795
       vertices: []
       indices: 
@@ -423,18 +423,18 @@ TextureImporter:
       name: Comedians_15
       rect:
         serializedVersion: 2
-        x: 616
-        y: 883
-        width: 39
-        height: 44
+        x: 2454
+        y: 3522
+        width: 176
+        height: 196
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 91b4855310c2b4a4da7281d8c8a43964
+      spriteID: 98b47b6affffffff0800000000000000
       internalID: -1497937015
       vertices: []
       indices: 
@@ -444,18 +444,18 @@ TextureImporter:
       name: Comedians_16
       rect:
         serializedVersion: 2
-        x: 19
-        y: 865
-        width: 18
-        height: 14
+        x: 66
+        y: 3450
+        width: 92
+        height: 76
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 6a8629a87e78da94490379f89a786a2a
+      spriteID: 44906508ffffffff0800000000000000
       internalID: -2141845180
       vertices: []
       indices: 
@@ -465,18 +465,18 @@ TextureImporter:
       name: Comedians_17
       rect:
         serializedVersion: 2
-        x: 192
-        y: 836
-        width: 33
-        height: 34
+        x: 758
+        y: 3334
+        width: 152
+        height: 156
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8fba98645eaad5f4ba222640434d4bb8
+      spriteID: ef40ca65000000000800000000000000
       internalID: 1454114046
       vertices: []
       indices: 
@@ -486,18 +486,18 @@ TextureImporter:
       name: Comedians_18
       rect:
         serializedVersion: 2
-        x: 521
-        y: 823
-        width: 62
-        height: 71
+        x: 2074
+        y: 3282
+        width: 268
+        height: 304
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8780cb76bbcb1e542849475490f85017
+      spriteID: 8068e106000000000800000000000000
       internalID: 1612613128
       vertices: []
       indices: 
@@ -507,18 +507,18 @@ TextureImporter:
       name: Comedians_19
       rect:
         serializedVersion: 2
-        x: 112
-        y: 838
-        width: 51
-        height: 25
+        x: 438
+        y: 3342
+        width: 224
+        height: 120
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 1862b225900e2ea4aa1135b0aa8642c1
+      spriteID: cae0878fffffffff0800000000000000
       internalID: -126349652
       vertices: []
       indices: 
@@ -528,18 +528,18 @@ TextureImporter:
       name: Comedians_20
       rect:
         serializedVersion: 2
-        x: 268
-        y: 792
-        width: 58
-        height: 47
+        x: 1062
+        y: 3158
+        width: 252
+        height: 208
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 919fcca4f16f0514cbb570f49c787fcf
+      spriteID: f1afd951000000000800000000000000
       internalID: 362674719
       vertices: []
       indices: 
@@ -549,18 +549,18 @@ TextureImporter:
       name: Comedians_21
       rect:
         serializedVersion: 2
-        x: 362
-        y: 812
-        width: 45
-        height: 41
+        x: 1438
+        y: 3238
+        width: 200
+        height: 184
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8a0dd3a935646a94a8eacf8ea52a882b
+      spriteID: bc57cb14000000000800000000000000
       internalID: 1102869963
       vertices: []
       indices: 
@@ -570,18 +570,18 @@ TextureImporter:
       name: Comedians_22
       rect:
         serializedVersion: 2
-        x: 442
-        y: 803
-        width: 27
-        height: 44
+        x: 1758
+        y: 3202
+        width: 128
+        height: 196
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 7a7d4fa5ac4feb34da3918c5b1c574b5
+      spriteID: b0f7a268ffffffff0800000000000000
       internalID: -2044035317
       vertices: []
       indices: 
@@ -591,18 +591,18 @@ TextureImporter:
       name: Comedians_23
       rect:
         serializedVersion: 2
-        x: 617
-        y: 784
-        width: 63
-        height: 63
+        x: 2458
+        y: 3126
+        width: 272
+        height: 272
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 35c0cc55dbde6e9479193e67dda3eb7b
+      spriteID: c436b367000000000800000000000000
       internalID: 1983603532
       vertices: []
       indices: 
@@ -612,18 +612,18 @@ TextureImporter:
       name: Comedians_24
       rect:
         serializedVersion: 2
-        x: 20
-        y: 817
-        width: 17
-        height: 13
+        x: 70
+        y: 3258
+        width: 88
+        height: 72
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 60f5a3bf67cb4364c86c5be973f7b53e
+      spriteID: 37d4ce22000000000800000000000000
       internalID: 585911667
       vertices: []
       indices: 
@@ -633,18 +633,18 @@ TextureImporter:
       name: Comedians_25
       rect:
         serializedVersion: 2
-        x: 20
-        y: 704
-        width: 33
-        height: 69
+        x: 70
+        y: 2806
+        width: 152
+        height: 296
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 11a86c10b474caf40a999990c9c388a8
+      spriteID: a3224847000000000800000000000000
       internalID: 1954816570
       vertices: []
       indices: 
@@ -654,18 +654,18 @@ TextureImporter:
       name: Comedians_26
       rect:
         serializedVersion: 2
-        x: 89
-        y: 706
-        width: 56
-        height: 93
+        x: 346
+        y: 2814
+        width: 244
+        height: 392
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a5b062dc4fb43db40aaafd02bc9d4867
+      spriteID: df0eaeaaffffffff0800000000000000
       internalID: -1427447555
       vertices: []
       indices: 
@@ -675,18 +675,18 @@ TextureImporter:
       name: Comedians_27
       rect:
         serializedVersion: 2
-        x: 176
-        y: 706
-        width: 56
-        height: 92
+        x: 694
+        y: 2814
+        width: 244
+        height: 388
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 86ea1f2c18e0973458a2e981de5de0a1
+      spriteID: d9d1bfa9ffffffff0800000000000000
       internalID: -1694818915
       vertices: []
       indices: 
@@ -696,18 +696,18 @@ TextureImporter:
       name: Comedians_28
       rect:
         serializedVersion: 2
-        x: 264
-        y: 712
-        width: 40
-        height: 47
+        x: 1046
+        y: 2838
+        width: 180
+        height: 208
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: c30fc77692d5dc34ea977ebdcdbf6d46
+      spriteID: fdac8f53000000000800000000000000
       internalID: 905497311
       vertices: []
       indices: 
@@ -717,18 +717,18 @@ TextureImporter:
       name: Comedians_29
       rect:
         serializedVersion: 2
-        x: 366
-        y: 723
-        width: 41
-        height: 50
+        x: 1454
+        y: 2882
+        width: 184
+        height: 220
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 6a0fffee92b5bbe4c9e83a91ba4bb887
+      spriteID: 0f321adeffffffff0800000000000000
       internalID: -308206608
       vertices: []
       indices: 
@@ -738,18 +738,18 @@ TextureImporter:
       name: Comedians_30
       rect:
         serializedVersion: 2
-        x: 440
-        y: 709
-        width: 46
-        height: 58
+        x: 1750
+        y: 2826
+        width: 204
+        height: 252
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: caf9676723a5de445ad90a4141531dc8
+      spriteID: 3e0f586cffffffff0800000000000000
       internalID: -964300573
       vertices: []
       indices: 
@@ -759,18 +759,18 @@ TextureImporter:
       name: Comedians_31
       rect:
         serializedVersion: 2
-        x: 521
-        y: 723
-        width: 54
-        height: 66
+        x: 2074
+        y: 2882
+        width: 236
+        height: 284
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 7d651660d3866a345b22b23b4f9497ee
+      spriteID: b9bad784000000000800000000000000
       internalID: 1216195483
       vertices: []
       indices: 
@@ -780,18 +780,18 @@ TextureImporter:
       name: Comedians_32
       rect:
         serializedVersion: 2
-        x: 610
-        y: 693
-        width: 70
-        height: 58
+        x: 2430
+        y: 2762
+        width: 300
+        height: 252
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: ec64335d6962028488c81b3f94142eeb
+      spriteID: 184bffceffffffff0800000000000000
       internalID: -318786431
       vertices: []
       indices: 
@@ -801,18 +801,18 @@ TextureImporter:
       name: Comedians_33
       rect:
         serializedVersion: 2
-        x: 19
-        y: 617
-        width: 66
-        height: 49
+        x: 66
+        y: 2458
+        width: 284
+        height: 216
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: e1efa3209222472449104b4cdddf95c5
+      spriteID: 6d62cf85000000000800000000000000
       internalID: 1492920022
       vertices: []
       indices: 
@@ -822,18 +822,18 @@ TextureImporter:
       name: Comedians_34
       rect:
         serializedVersion: 2
-        x: 176
-        y: 578
-        width: 56
-        height: 92
+        x: 694
+        y: 2302
+        width: 244
+        height: 388
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: eda8c83242d2df940b8ae10c2657232b
+      spriteID: 0a1012deffffffff0800000000000000
       internalID: -316604000
       vertices: []
       indices: 
@@ -843,18 +843,18 @@ TextureImporter:
       name: Comedians_35
       rect:
         serializedVersion: 2
-        x: 266
-        y: 633
-        width: 46
-        height: 45
+        x: 1054
+        y: 2522
+        width: 204
+        height: 200
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: d08ba7a57d0fbfc488558605eae339fa
+      spriteID: 83476b62000000000800000000000000
       internalID: 649491512
       vertices: []
       indices: 
@@ -864,18 +864,18 @@ TextureImporter:
       name: Comedians_36
       rect:
         serializedVersion: 2
-        x: 347
-        y: 626
-        width: 59
-        height: 61
+        x: 1378
+        y: 2494
+        width: 256
+        height: 264
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 398560e54456bf942a17193f6e3da8c8
+      spriteID: 7d7c58c8ffffffff0800000000000000
       internalID: -1937389609
       vertices: []
       indices: 
@@ -885,18 +885,18 @@ TextureImporter:
       name: Comedians_37
       rect:
         serializedVersion: 2
-        x: 615
-        y: 586
-        width: 66
-        height: 70
+        x: 2450
+        y: 2334
+        width: 284
+        height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 9ada234c125e4964fbbe9c8a944d210d
+      spriteID: 69a33fcaffffffff0800000000000000
       internalID: -1393345898
       vertices: []
       indices: 
@@ -906,18 +906,18 @@ TextureImporter:
       name: Comedians_38
       rect:
         serializedVersion: 2
-        x: 18
-        y: 546
-        width: 62
-        height: 38
+        x: 62
+        y: 2174
+        width: 268
+        height: 172
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 07214ea76fb5cf7468e3f21b1bf29428
+      spriteID: 9d5a18adffffffff0800000000000000
       internalID: -629037607
       vertices: []
       indices: 
@@ -927,18 +927,18 @@ TextureImporter:
       name: Comedians_39
       rect:
         serializedVersion: 2
-        x: 266
-        y: 579
-        width: 18
-        height: 18
+        x: 1054
+        y: 2306
+        width: 92
+        height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 97ff3e81cd2dcbe4986b7da066e041f5
+      spriteID: a5f41770000000000800000000000000
       internalID: 124866394
       vertices: []
       indices: 
@@ -948,18 +948,18 @@ TextureImporter:
       name: Comedians_40
       rect:
         serializedVersion: 2
-        x: 321
-        y: 571
-        width: 23
-        height: 17
+        x: 1274
+        y: 2274
+        width: 112
+        height: 88
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: ad3934eaa45888d4bbf62b718d346a8b
+      spriteID: fbef4595000000000800000000000000
       internalID: 1498742463
       vertices: []
       indices: 
@@ -969,18 +969,18 @@ TextureImporter:
       name: Comedians_41
       rect:
         serializedVersion: 2
-        x: 19
-        y: 464
-        width: 60
-        height: 45
+        x: 66
+        y: 1846
+        width: 260
+        height: 200
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 938c4a44ab5cb284eb72f705522de6d5
+      spriteID: c205e9e6000000000800000000000000
       internalID: 1855868972
       vertices: []
       indices: 
@@ -990,18 +990,18 @@ TextureImporter:
       name: Comedians_42
       rect:
         serializedVersion: 2
-        x: 122
-        y: 457
-        width: 65
-        height: 60
+        x: 478
+        y: 1818
+        width: 280
+        height: 260
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 4d455d58d6171a24e8af56e4b6e1aa37
+      spriteID: 43fc93b2000000000800000000000000
       internalID: 725208884
       vertices: []
       indices: 
@@ -1011,18 +1011,18 @@ TextureImporter:
       name: Comedians_43
       rect:
         serializedVersion: 2
-        x: 225
-        y: 457
-        width: 51
-        height: 43
+        x: 890
+        y: 1818
+        width: 224
+        height: 192
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 878e22885dbeb064595bf4e6abbd7756
+      spriteID: 6f06673fffffffff0800000000000000
       internalID: -210345738
       vertices: []
       indices: 
@@ -1032,18 +1032,18 @@ TextureImporter:
       name: Comedians_44
       rect:
         serializedVersion: 2
-        x: 462
-        y: 447
-        width: 218
-        height: 104
+        x: 1838
+        y: 1778
+        width: 892
+        height: 436
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 126c8b7332356994390c49830c3d9459
+      spriteID: 1af38a22000000000800000000000000
       internalID: 581451681
       vertices: []
       indices: 
@@ -1053,18 +1053,18 @@ TextureImporter:
       name: Comedians_45
       rect:
         serializedVersion: 2
-        x: 19
-        y: 403
-        width: 27
-        height: 27
+        x: 66
+        y: 1602
+        width: 128
+        height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 745b5e1a45de5eb4d83f3cba34c9b9f4
+      spriteID: 5fcf15d2000000000800000000000000
       internalID: 760347893
       vertices: []
       indices: 
@@ -1074,18 +1074,18 @@ TextureImporter:
       name: Comedians_46
       rect:
         serializedVersion: 2
-        x: 82
-        y: 401
-        width: 20
-        height: 21
+        x: 318
+        y: 1594
+        width: 100
+        height: 104
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 9ff9a15f42fac56409eb9049891fef62
+      spriteID: 164e7735000000000800000000000000
       internalID: 1400366177
       vertices: []
       indices: 
@@ -1095,18 +1095,18 @@ TextureImporter:
       name: Comedians_47
       rect:
         serializedVersion: 2
-        x: 138
-        y: 401
-        width: 20
-        height: 21
+        x: 542
+        y: 1594
+        width: 100
+        height: 104
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: c8927a4a4ece3da4ba50fc69d88f456b
+      spriteID: a9a988f2000000000800000000000000
       internalID: 797481626
       vertices: []
       indices: 
@@ -1116,18 +1116,18 @@ TextureImporter:
       name: Comedians_48
       rect:
         serializedVersion: 2
-        x: 194
-        y: 401
-        width: 20
-        height: 21
+        x: 766
+        y: 1594
+        width: 100
+        height: 104
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 7e652c14638764f4dadb26898af7effb
+      spriteID: c1aba7c9ffffffff0800000000000000
       internalID: -1669678564
       vertices: []
       indices: 
@@ -1137,18 +1137,18 @@ TextureImporter:
       name: Comedians_49
       rect:
         serializedVersion: 2
-        x: 250
-        y: 401
-        width: 20
-        height: 21
+        x: 990
+        y: 1594
+        width: 100
+        height: 104
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: eef0c35d213ef344cb4e2cf6abdf2e66
+      spriteID: 25e9efceffffffff0800000000000000
       internalID: -318857646
       vertices: []
       indices: 
@@ -1158,18 +1158,18 @@ TextureImporter:
       name: Comedians_50
       rect:
         serializedVersion: 2
-        x: 305
-        y: 401
-        width: 28
-        height: 21
+        x: 1210
+        y: 1594
+        width: 132
+        height: 104
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: c74e7989528d8c248b9bbcd221dbec88
+      spriteID: b1936a30000000000800000000000000
       internalID: 61225243
       vertices: []
       indices: 
@@ -1179,18 +1179,18 @@ TextureImporter:
       name: Comedians_51
       rect:
         serializedVersion: 2
-        x: 19
-        y: 297
-        width: 42
-        height: 66
+        x: 66
+        y: 1178
+        width: 188
+        height: 284
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8053017052f13c84388f24fbdcb53b74
+      spriteID: f244aa3bffffffff0800000000000000
       internalID: -1280687057
       vertices: []
       indices: 
@@ -1200,18 +1200,18 @@ TextureImporter:
       name: Comedians_52
       rect:
         serializedVersion: 2
-        x: 98
-        y: 298
-        width: 61
-        height: 57
+        x: 382
+        y: 1182
+        width: 264
+        height: 248
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: b40fda99026de994c81a5ef5a1e4f102
+      spriteID: 9743850dffffffff0800000000000000
       internalID: -799525767
       vertices: []
       indices: 
@@ -1221,18 +1221,18 @@ TextureImporter:
       name: Comedians_53
       rect:
         serializedVersion: 2
-        x: 195
-        y: 296
-        width: 60
-        height: 65
+        x: 770
+        y: 1174
+        width: 260
+        height: 280
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 6fa2938efa4de8d4a8c7c629c74f6893
+      spriteID: 75977270000000000800000000000000
       internalID: 120027479
       vertices: []
       indices: 
@@ -1242,18 +1242,18 @@ TextureImporter:
       name: Comedians_54
       rect:
         serializedVersion: 2
-        x: 289
-        y: 275
-        width: 38
-        height: 82
+        x: 1146
+        y: 1090
+        width: 172
+        height: 348
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: b3b0bdeb6d7489845b370e79dfe1784f
+      spriteID: dda9d7ebffffffff0800000000000000
       internalID: -1099064611
       vertices: []
       indices: 
@@ -1263,18 +1263,18 @@ TextureImporter:
       name: Comedians_55
       rect:
         serializedVersion: 2
-        x: 369
-        y: 271
-        width: 14
-        height: 98
+        x: 1466
+        y: 1074
+        width: 76
+        height: 412
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: e284124eab26b7b4bb6177cb5cd701f2
+      spriteID: ed310f86000000000800000000000000
       internalID: 1760564190
       vertices: []
       indices: 
@@ -1284,18 +1284,18 @@ TextureImporter:
       name: Comedians_56
       rect:
         serializedVersion: 2
-        x: 420
-        y: 218
-        width: 106
-        height: 133
+        x: 1670
+        y: 862
+        width: 444
+        height: 552
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: daae76090cbb19b489fcfaaced5e072a
+      spriteID: 75435727000000000800000000000000
       internalID: 1920283735
       vertices: []
       indices: 
@@ -1305,18 +1305,18 @@ TextureImporter:
       name: Comedians_57
       rect:
         serializedVersion: 2
-        x: 666
-        y: 112
-        width: 358
-        height: 190
+        x: 2654
+        y: 438
+        width: 825
+        height: 780
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 4db22c5d58df9234e856387850b49db9
+      spriteID: 2e5c2ea7000000000800000000000000
       internalID: 2061682146
       vertices: []
       indices: 
@@ -1326,18 +1326,18 @@ TextureImporter:
       name: Comedians_58
       rect:
         serializedVersion: 2
-        x: 18
-        y: 162
-        width: 85
-        height: 100
+        x: 62
+        y: 638
+        width: 360
+        height: 420
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8d65af1f68af9fa4aafefdd3111d1766
+      spriteID: d436da88ffffffff0800000000000000
       internalID: -2001902771
       vertices: []
       indices: 
@@ -1347,18 +1347,18 @@ TextureImporter:
       name: Comedians_59
       rect:
         serializedVersion: 2
-        x: 610
-        y: 209
-        width: 22
-        height: 22
+        x: 2430
+        y: 826
+        width: 108
+        height: 108
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 7186a97622a5ae94d9454af60bdfc227
+      spriteID: 8755c20cffffffff0800000000000000
       internalID: -1070836360
       vertices: []
       indices: 
@@ -1368,18 +1368,18 @@ TextureImporter:
       name: Comedians_60
       rect:
         serializedVersion: 2
-        x: 162
-        y: 112
-        width: 44
-        height: 49
+        x: 638
+        y: 438
+        width: 196
+        height: 216
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 5708581b583fddd4394ca41e89735164
+      spriteID: 39c6f60effffffff0800000000000000
       internalID: -529568621
       vertices: []
       indices: 
@@ -1389,18 +1389,18 @@ TextureImporter:
       name: Comedians_61
       rect:
         serializedVersion: 2
-        x: 436
-        y: 17
-        width: 98
-        height: 161
+        x: 1734
+        y: 58
+        width: 412
+        height: 664
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: e6178903675d2d34f908971c24a284bb
+      spriteID: 13604290000000000800000000000000
       internalID: 153355825
       vertices: []
       indices: 
@@ -1410,18 +1410,18 @@ TextureImporter:
       name: Comedians_62
       rect:
         serializedVersion: 2
-        x: 609
-        y: 154
-        width: 22
-        height: 22
+        x: 2426
+        y: 606
+        width: 108
+        height: 108
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: b6e947af71139bb4a856893f91a49b33
+      spriteID: 3fc244b8ffffffff0800000000000000
       internalID: -1958466317
       vertices: []
       indices: 
@@ -1431,18 +1431,18 @@ TextureImporter:
       name: Comedians_63
       rect:
         serializedVersion: 2
-        x: 16
-        y: 17
-        width: 111
-        height: 111
+        x: 54
+        y: 58
+        width: 464
+        height: 464
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: c0ee4a48e9ec92e42a5f042906a063d2
+      spriteID: 83b9c39effffffff0800000000000000
       internalID: -381904072
       vertices: []
       indices: 
@@ -1452,18 +1452,18 @@ TextureImporter:
       name: Comedians_64
       rect:
         serializedVersion: 2
-        x: 250
-        y: 106
-        width: 61
-        height: 34
+        x: 990
+        y: 414
+        width: 264
+        height: 156
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 6d4486b08231b0f4f8ca35465df5f04e
+      spriteID: 869dd2e9ffffffff0800000000000000
       internalID: -1641162392
       vertices: []
       indices: 
@@ -1473,18 +1473,18 @@ TextureImporter:
       name: Comedians_65
       rect:
         serializedVersion: 2
-        x: 347
-        y: 104
-        width: 36
-        height: 40
+        x: 1378
+        y: 406
+        width: 164
+        height: 180
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 85e839b32218f9a41a20753bfdfe8d23
+      spriteID: 8c4bae9cffffffff0800000000000000
       internalID: -907365176
       vertices: []
       indices: 
@@ -1494,18 +1494,18 @@ TextureImporter:
       name: Comedians_66
       rect:
         serializedVersion: 2
-        x: 575
-        y: 64
-        width: 57
-        height: 56
+        x: 2290
+        y: 246
+        width: 248
+        height: 244
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: f187776e7f2ed3a4cadc2599b53c08ad
+      spriteID: 38f06167000000000800000000000000
       internalID: 1981157251
       vertices: []
       indices: 
@@ -1515,18 +1515,18 @@ TextureImporter:
       name: Comedians_67
       rect:
         serializedVersion: 2
-        x: 160
-        y: 17
-        width: 56
-        height: 61
+        x: 630
+        y: 58
+        width: 244
+        height: 264
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: fe34b4f99ae67114a899ce602f975620
+      spriteID: a9a0710effffffff0800000000000000
       internalID: -535360870
       vertices: []
       indices: 
@@ -1536,18 +1536,18 @@ TextureImporter:
       name: Comedians_68
       rect:
         serializedVersion: 2
-        x: 248
-        y: 17
-        width: 63
-        height: 54
+        x: 982
+        y: 58
+        width: 272
+        height: 236
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8213b68b19c16524eba65d9bf750827b
+      spriteID: 04a93d84000000000800000000000000
       internalID: 1221827136
       vertices: []
       indices: 
@@ -1557,18 +1557,18 @@ TextureImporter:
       name: Comedians_69
       rect:
         serializedVersion: 2
-        x: 348
-        y: 18
-        width: 49
-        height: 49
+        x: 1382
+        y: 62
+        width: 216
+        height: 216
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 3bef063e30d83c547abb5ebf72c5a591
+      spriteID: 062f7481000000000800000000000000
       internalID: 407368288
       vertices: []
       indices: 
@@ -1578,18 +1578,18 @@ TextureImporter:
       name: Comedians_70
       rect:
         serializedVersion: 2
-        x: 666
-        y: 17
-        width: 61
-        height: 57
+        x: 2654
+        y: 58
+        width: 264
+        height: 248
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: e4df7144658784a49a707ec6b225f514
+      spriteID: e5402644000000000800000000000000
       internalID: 1147274334
       vertices: []
       indices: 
@@ -1599,18 +1599,18 @@ TextureImporter:
       name: Comedians_71
       rect:
         serializedVersion: 2
-        x: 761
-        y: 18
-        width: 55
-        height: 61
+        x: 3034
+        y: 62
+        width: 240
+        height: 264
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: bb443784f00f40741bd484924e0e36e7
+      spriteID: 9e0a71fdffffffff0800000000000000
       internalID: -552099607
       vertices: []
       indices: 
@@ -1620,18 +1620,18 @@ TextureImporter:
       name: Comedians_72
       rect:
         serializedVersion: 2
-        x: 849
-        y: 17
-        width: 55
-        height: 57
+        x: 3386
+        y: 58
+        width: 240
+        height: 248
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a3eeaeedd2efe254c9a9d87a230c798b
+      spriteID: 1b6fe5e0000000000800000000000000
       internalID: 241104561
       vertices: []
       indices: 
