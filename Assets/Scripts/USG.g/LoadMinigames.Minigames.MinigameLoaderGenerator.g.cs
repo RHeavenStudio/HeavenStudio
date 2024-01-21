@@ -420,6 +420,17 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader RvlSeeSawLoader failed!");
             }
 
+            Debug.Log("Running game loader NtrSlotMonsterLoader");
+            game = NtrSlotMonsterLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader NtrSlotMonsterLoader failed!");
+            }
+
             Debug.Log("Running game loader AgbGhostLoader");
             game = AgbGhostLoader.AddGame(eventCaller);
             if (game != null)
