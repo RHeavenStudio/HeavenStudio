@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        SlotMonster.instance.StartInterval(e.beat, e.length, e["auto"], e, e.beat);
+                        SlotMonster.instance.StartInterval(e.beat, e.length, e["auto"], e, 0);
                     },
                     defaultLength = 3f,
                     resizable = true,
@@ -35,10 +35,18 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("slot", "Slot")
                 {
                     defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("drum", SlotMonster.DrumTypes.Default, "Drum SFX", "Set the drum SFX to be used. Default is Bass on the beat, and Snare off the beat.")
+                    },
                     priority = 1,
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        SlotMonster.instance.PassTurn(e.beat, e.length);
+                    },
                     defaultLength = 1f,
                     priority = 1,
                 },
@@ -52,6 +60,13 @@ namespace HeavenStudio.Games
 {
     public class SlotMonster : Minigame
     {
+        public enum DrumTypes
+        {
+            Default,
+            Bass,
+            Snare,
+        }
+
         [Header("Animators")]
         [SerializeField] Animator smAnim;
         [SerializeField] Animator[] eyeAnims;
@@ -86,6 +101,11 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnPlay(double beat)
+        {
+            OnGameSwitch(beat);
+        }
+
         // make sure the current button is always between 0 and 2 (buttons 1-3)
         private int GetCurrentButton() => currentButton %= 3;
 
@@ -105,48 +125,64 @@ namespace HeavenStudio.Games
 
         public void StartInterval(double beat, float length, bool autoPass, RiqEntity startInterval, double gameSwitchBeat)
         {
-            List<RiqEntity> slotActions = gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat > startInterval.beat && e.beat < startInterval.beat + startInterval.length);
+            List<RiqEntity> slotActions = gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat >= startInterval.beat && e.beat < startInterval.beat + startInterval.length);
 
             smAnim.DoScaledAnimationFromBeatAsync("Prepare", 0.5f, beat);
             SoundByte.PlayOneShotGame("slotMonster/start_touch", forcePlay: true);
+
+                Debug.Log(Mathf.Min(slotActions.Count, 3));
+            List<MultiSound.Sound> sounds = new();
+            List<BeatAction.Action> actions = new();
+            for (int i = 0; i < Mathf.Min(slotActions.Count, 3); i++) // limit to 3 actions
+            {
+                int whichSlot = i;
+                RiqEntity slot = slotActions[whichSlot];
+                if (slot.beat < gameSwitchBeat) continue;
+                string sfx = "";
+                if (slot["drum"] == (int)DrumTypes.Default) {
+                    sfx = slot.beat % 1 == 0 ? "bass" : "snare";
+                } else {
+                    sfx = Enum.GetName(typeof(DrumTypes), (int)slot["drum"]).ToLower();
+                }
+                Debug.Log(sfx);
+                sounds.Add(new(sfx + "DrumNTR", slot.beat));
+                actions.Add(new(slot.beat, delegate {
+                    buttonAnims[whichSlot].DoScaledAnimationAsync("Flash", 0.5f);
+                }));
+            }
+            MultiSound.Play(sounds.ToArray(), false);
+            BeatAction.New(this, actions);
+
+            if (autoPass) {
+                BeatAction.New(this, new() { new(beat + length, delegate { PassTurn(beat + length, 1, beat, slotActions); }) });
+            }
+        }
+
+        public void PassTurn(double beat, float length, double startBeat = -1, List<RiqEntity> slotActions = null)
+        {
+            smAnim.DoScaledAnimationFromBeatAsync("Release", 0.5f, beat);
             foreach (var eye in eyeAnims)
             {
                 eye.DoScaledAnimationAsync("Spin", 0.5f);
             }
-
-            List<BeatAction.Action> actions = new();
-            for (int i = 0; i < Mathf.Min(slotActions.Count, 3); i++) // limit to 3 actions
-            {
-                double slotBeat = slotActions[i].beat;
-                if (slotBeat > gameSwitchBeat) continue;
-                actions.Add(new(slotBeat, delegate {
-                    buttonAnims[i].DoScaledAnimationAsync("Flash", 0.5f);
-                }));
-            }
-            BeatAction.New(this, actions);
-
-            if (autoPass) {
-                PassTurn(beat + length, slotActions);
-            }
-        }
-
-        public void PassTurn(double beat, List<RiqEntity> slotActions = null)
-        {
             SoundByte.PlayOneShotGame("slotMonster/start_rolling", forcePlay: true);
             rollingSound = SoundByte.PlayOneShotGame("slotMonster/rolling", looping: true, forcePlay: true);
             if (slotActions == null) {
                 var startInterval = gameEntities.FindLast(e => e.datamodel == "slotMonster/startInterval" && e.beat + e.length < beat);
-                slotActions = gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat > startInterval.beat && e.beat < startInterval.beat + startInterval.length);
+                if (startBeat < 0) startBeat = startInterval.beat;
+                slotActions = gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat >= startInterval.beat && e.beat < startInterval.beat + startInterval.length);
             }
 
             List<BeatAction.Action> actions = new();
             for (int i = 0; i < Mathf.Min(slotActions.Count, 3); i++) // limit to 3 actions
             {
                 int whichSlot = i;
+                double slotBeat = slotActions[i].beat;
 
-                actions.Add(new(slotActions[whichSlot].beat, delegate { buttonAnims[whichSlot].DoScaledAnimationAsync("Flash"); }));
+                actions.Add(new(slotBeat + beat, delegate { buttonAnims[whichSlot].DoScaledAnimationAsync("Flash"); }));
 
-                PlayerActionEvent input = ScheduleInput(beat, slotActions[i].beat, InputAction_BasicPress, ButtonHit, null, null);
+                Debug.Log("input scheduled at : " + (beat + slotBeat - startBeat + 1));
+                PlayerActionEvent input = ScheduleInput(beat, slotBeat - startBeat + 1, InputAction_BasicPress, ButtonHit, null, null);
                 input.IsHittable = () => GetCurrentButton() == whichSlot;
             }
             BeatAction.New(this, actions);
@@ -154,7 +190,11 @@ namespace HeavenStudio.Games
 
         private void ButtonHit(PlayerActionEvent caller, float state)
         {
-            HitButton(true);
+            bool isWin = HitButton(true);
+            if (isWin) {
+                if (rollingSound != null) rollingSound.Stop();
+                smAnim.DoScaledAnimationAsync("Win", 0.5f);
+            }
             if (state is >= 1f or <= -1f) SoundByte.PlayOneShot("nearMiss");
         }
 
