@@ -7,15 +7,15 @@ using UnityEngine;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    public static class MobRhythmCanneryLoader
+    public static class MobCanneryLoader
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("rhythmCannery", "Rhythm Cannery", "554899", false, false, new List<GameAction>()
+            return new Minigame("cannery", "The Cannery", "554899", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { RhythmCannery.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["auto"], eventCaller.currentEntity["toggle"]); },
+                    function = delegate { Cannery.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["auto"], eventCaller.currentEntity["toggle"]); },
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Bop", "Toggle if the alarm should bop for the duration of this event."),
@@ -25,16 +25,16 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("can", "Can")
                 {
                     preFunction = delegate {
-                        RhythmCannery.CanSFX(eventCaller.currentEntity.beat);
-                        if (GameManager.instance.currentGame == "rhythmCannery") {
-                            RhythmCannery.instance.SendCan(eventCaller.currentEntity.beat);
+                        Cannery.CanSFX(eventCaller.currentEntity.beat);
+                        if (GameManager.instance.currentGame == "cannery") {
+                            Cannery.instance.SendCan(eventCaller.currentEntity.beat);
                         }
                     },
                     defaultLength = 2,
                 },
                 new GameAction("blackout", "Blackout")
                 {
-                    function = delegate { RhythmCannery.instance.Blackout(); },
+                    function = delegate { Cannery.instance.Blackout(); },
                     defaultLength = 0.5f,
                 },
             }
@@ -50,8 +50,8 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Jukebox;
-    using Scripts_RhythmCannery;
-    public class RhythmCannery : Minigame
+    using Scripts_Cannery;
+    public class Cannery : Minigame
     {
         [Header("Objects")]
         [SerializeField] GameObject canGO;
@@ -65,7 +65,7 @@ namespace HeavenStudio.Games
 
         private bool alarmBop = true;
 
-        public static RhythmCannery instance;
+        public static Cannery instance;
 
         void Awake()
         {
@@ -80,7 +80,7 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
-            List<RiqEntity> cans = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel == "rhythmCannery/can" && beat > e.beat && beat < e.beat + 1);
+            List<RiqEntity> cans = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel == "cannery/can" && beat > e.beat && beat < e.beat + 1);
             foreach (var can in cans) {
                 SendCan(can.beat);
             }
@@ -101,27 +101,25 @@ namespace HeavenStudio.Games
         public void Bop(double beat, float length, bool auto, bool bop)
         {
             alarmBop = auto;
-            if (!bop) return;
-            List<BeatAction.Action> actions = new();
-
-            for (int i = 0; i < length; i++)
-            {
-                actions.Add(new(beat + i, delegate { alarmAnim.DoScaledAnimationAsync("Bop", 0.5f); }));
+            if (bop) {
+                List<BeatAction.Action> actions = new();
+                for (int i = 0; i < length; i++) {
+                    actions.Add(new(beat + i, delegate { alarmAnim.DoScaledAnimationAsync("Bop", 0.5f); }));
+                }
+                if (actions.Count > 0) BeatAction.New(this, actions);
             }
-
-            if (actions.Count > 0) BeatAction.New(this, actions);
         }
 
         public static void CanSFX(double beat)
         {
-            SoundByte.PlayOneShotGame("rhythmCannery/ding", beat);
+            SoundByte.PlayOneShotGame("cannery/ding", beat);
         }
 
         public void SendCan(double beat)
         {
             // dingAnim.DoScaledAnimationFromBeatAsync("Ding", 0.5f, beat);
             // do the ding animation on the beat
-            BeatAction.New(this, new() { new(beat, delegate { dingAnim.DoScaledAnimationAsync("Ding", 0.5f); }) });
+            BeatAction.New(this, new() { new(beat, delegate { dingAnim.DoScaledAnimationFromBeatAsync("Ding", 0.5f, beat); }) });
 
             Can newCan = Instantiate(canGO, transform).GetComponent<Can>();
             newCan.startBeat = beat;

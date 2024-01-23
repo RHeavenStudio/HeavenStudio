@@ -343,8 +343,8 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader AgbQuizShowLoader failed!");
             }
 
-            Debug.Log("Running game loader MobRhythmCanneryLoader");
-            game = MobRhythmCanneryLoader.AddGame(eventCaller);
+            Debug.Log("Running game loader MobCanneryLoader");
+            game = MobCanneryLoader.AddGame(eventCaller);
             if (game != null)
             {
                 eventCaller.minigames.Add(game.name, game);

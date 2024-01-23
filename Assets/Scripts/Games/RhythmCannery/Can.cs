@@ -5,7 +5,7 @@ using NaughtyBezierCurves;
 
 using HeavenStudio.Util;
 
-namespace HeavenStudio.Games.Scripts_RhythmCannery
+namespace HeavenStudio.Games.Scripts_Cannery
 {
     public class Can : MonoBehaviour
     {
@@ -19,11 +19,11 @@ namespace HeavenStudio.Games.Scripts_RhythmCannery
         [SerializeField] Sprite[] canSprites;
         [SerializeField] Sprite cannedSprite;
 
-        RhythmCannery game;
+        Cannery game;
 
         private void Awake()
         {
-            game = RhythmCannery.instance;
+            game = Cannery.instance;
             int random = Random.Range(0, 2);
             Debug.Log(random);
             sr.sprite = canSprites[random];
@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Scripts_RhythmCannery
         private void Hit(PlayerActionEvent caller, float state)
         {
             game.cannerAnim.DoScaledAnimationAsync("Can", 0.5f);
-            SoundByte.PlayOneShotGame("rhythmCannery/can");
+            SoundByte.PlayOneShotGame("cannery/can");
             sr.sprite = cannedSprite;
         }
     }
