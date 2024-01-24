@@ -40,6 +40,10 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 4f           
                 },
+                new("above", "Pillar End")
+                {
+
+                },
                 new("stop", "Stop Jumping")
                 {
 
@@ -70,8 +74,13 @@ namespace HeavenStudio.Games
         [SerializeField] private float _scrollSpeedY = 1.45f;
 
         private double _startBeat = double.MaxValue;
+        public double StartBeat => _startBeat;
+
         private double _endBeat = double.MaxValue;
         public double EndBeat => _endBeat;
+
+        private double _pillarEndBeat = double.MaxValue;
+        public double PillarEndBeat => _pillarEndBeat;
 
         [NonSerialized] public List<RiqEntity> _tripleEvents = new();
         [NonSerialized] public List<RiqEntity> _highJumpEvents = new();
@@ -124,6 +133,9 @@ namespace HeavenStudio.Games
             {
                 new(_startBeat - 1, delegate { _jumper.StartJumping(_startBeat - 1); })
             });
+
+            var allPillarEnds = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "above" }).FindAll(x => x.beat >= _startBeat && x.beat < nextGameSwitchBeat);
+            if (allPillarEnds.Count > 0) _pillarEndBeat = allPillarEnds[0].beat;
 
             var allStops = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "stop" }).FindAll(x => x.beat > _startBeat && x.beat < nextGameSwitchBeat);
             if (allStops.Count == 0) return;
