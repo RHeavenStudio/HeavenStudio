@@ -10,11 +10,15 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
     {
         private const int PILLAR_AMOUNT_X = 12;
         private const int PILLAR_AMOUNT_Y = 3;
+        private const int BACKGROUND_OBJECT_AMOUNT = 10;
 
         [Header("Components")]
         [SerializeField] private Transform _pillarFirst;
         [SerializeField] private Transform _pillarSecond;
         [SerializeField] private Transform _pillarUp;
+        [SerializeField] private Transform _backgroundObjectsParent;
+        [SerializeField] private List<BackgroundScrollPair> _backgroundObjects;
+
 
         private List<List<Transform>> _pillars = new();
         private Transform _scrollTransform;
@@ -30,6 +34,8 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         private float _endDistance = float.MaxValue;
         private bool _hasReachedEnd = false;
+
+        private bool _endDistanceSet = false;
 
         private void Awake()
         {
@@ -58,7 +64,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 _pillarUp.GetChild(0).gameObject.SetActive(true);
             }
 
-                for (int i = 0; i < PILLAR_AMOUNT_Y; i++)
+            for (int i = 0; i < PILLAR_AMOUNT_Y; i++)
             {
                 if (_hasReachedEnd) break;
                 for (int j = 0; j < PILLAR_AMOUNT_X; j++)
@@ -75,13 +81,34 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     }
                 }
             }
+
+            if (_endDistanceSet)
+            {
+                _backgroundObjectsParent.gameObject.SetActive(true);
+                _backgroundObjectsParent.localPosition = new Vector3(0, _endDistance);
+
+                foreach (var b in _backgroundObjects)
+                {
+                    b.InitClones(_backgroundObjectsParent);
+                }
+            }
         }
 
         private void Update()
         {
+            PillarUpdate();
+            if (!_endDistanceSet) return;
+            foreach (var b in _backgroundObjects)
+            {
+                b.ScrollClones(_scrollTransform.localPosition.x);
+            }
+        }
+
+        private void PillarUpdate()
+        {
             float currentScrollX = _scrollTransform.localPosition.x;
             float currentDistanceX = _pillarStartX + (_pillarDistanceX * _pillarIndexX);
-            
+
             if (currentScrollX >= currentDistanceX + (_pillarDistanceX * PILLAR_AMOUNT_X / 2))
             {
                 foreach (var pillarRow in _pillars)
@@ -92,11 +119,11 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     p.localPosition = new Vector3(p.localPosition.x + (_pillarDistanceX * PILLAR_AMOUNT_X), p.localPosition.y);
                 }
                 _pillarIndexX++;
-                Update();
+                PillarUpdate();
             }
 
             if (_hasReachedEnd) return;
-            
+
             float currentScrollY = _scrollTransform.localPosition.y;
             float currentDistanceY = _pillarStartY + (_pillarDistanceY * _pillarIndexY) + (_pillarDistanceY * PILLAR_AMOUNT_Y / 2);
 
@@ -115,7 +142,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 }
 
                 _pillarIndexY++;
-                Update();
+                PillarUpdate();
             }
         }
 
@@ -139,8 +166,56 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
             var allPillarEnds = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "above" }).FindAll(x => x.beat >= startBeat && x.beat < nextGameSwitchBeat);
             if (allPillarEnds.Count == 0) return double.MaxValue;
-
+            _endDistanceSet = true;
             return allPillarEnds[0].beat - startBeat;
+        }
+
+        [System.Serializable]
+        private class BackgroundScrollPair
+        {
+            public Transform first;
+            public Transform second;
+
+            private List<Transform> _objects = new();
+
+            private int _index = 0;
+
+            private float _startX;
+            private float _xDistance;
+
+            private float GetDistance()
+            {
+                return second.localPosition.x - first.localPosition.x;
+            }
+
+            public void InitClones(Transform parent)
+            {
+                _xDistance = GetDistance();
+                _startX = first.localPosition.x;
+                _objects.Add(first);
+                _objects.Add(second);
+
+                for (int i = 0; i < BACKGROUND_OBJECT_AMOUNT; i++)
+                {
+                    Transform spawnedObject = Instantiate(first, parent);
+                    spawnedObject.localPosition = new Vector3(second.localPosition.x + (_xDistance * (i + 1)), first.localPosition.y, first.localPosition.z);
+                    _objects.Add(spawnedObject);
+                }
+            }
+
+            public void ScrollClones(float currentScrollX)
+            {
+                float currentDistanceX = _startX + (_xDistance * _index) + (_xDistance * (BACKGROUND_OBJECT_AMOUNT + 2) / 2);
+
+                if (currentScrollX >= currentDistanceX)
+                {
+                    var b = _objects[_index % BACKGROUND_OBJECT_AMOUNT];
+                    b.localPosition += new Vector3(_xDistance * BACKGROUND_OBJECT_AMOUNT, 0);
+
+                    _index++;
+                    ScrollClones(currentScrollX);
+                }
+            }
         }
     }
 }
