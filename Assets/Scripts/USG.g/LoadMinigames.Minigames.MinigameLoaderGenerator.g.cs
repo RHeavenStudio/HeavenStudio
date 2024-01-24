@@ -343,6 +343,17 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader AgbQuizShowLoader failed!");
             }
 
+            Debug.Log("Running game loader _______________");
+            game = _______________.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader _______________ failed!");
+            }
+
             Debug.Log("Running game loader NtrPingpongLoader");
             game = NtrPingpongLoader.AddGame(eventCaller);
             if (game != null)
