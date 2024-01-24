@@ -11,6 +11,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private const int PILLAR_AMOUNT_X = 12;
         private const int PILLAR_AMOUNT_Y = 3;
         private const int BACKGROUND_OBJECT_AMOUNT = 10;
+        private const float CLOUD_MOVE_SPEED = 0.75f;
 
         [Header("Components")]
         [SerializeField] private Transform _pillarFirst;
@@ -175,6 +176,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         {
             public Transform first;
             public Transform second;
+            public bool isCloud;
 
             private List<Transform> _objects = new();
 
@@ -182,6 +184,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
             private float _startX;
             private float _xDistance;
+            private float _moveX;
 
             private float GetDistance()
             {
@@ -205,7 +208,15 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
             public void ScrollClones(float currentScrollX)
             {
-                float currentDistanceX = _startX + (_xDistance * _index) + (_xDistance * (BACKGROUND_OBJECT_AMOUNT + 2) / 2);
+                if (isCloud)
+                {
+                    foreach (var b in _objects)
+                    {
+                        b.localPosition += new Vector3(-Time.deltaTime * CLOUD_MOVE_SPEED, 0);
+                    }
+                    _moveX -= Time.deltaTime * CLOUD_MOVE_SPEED;
+                }
+                float currentDistanceX = _startX + (_xDistance * _index) + (_xDistance * (BACKGROUND_OBJECT_AMOUNT + 2) / 2) + _moveX;
 
                 if (currentScrollX >= currentDistanceX)
                 {
