@@ -141,7 +141,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("start", AirRally.DayNightCycle.Day, "Start Time", "Set the time of day for the start of the event."),
-                        new Param("end", AirRally.DayNightCycle.Noon, "End Time", "Set the time of day for the end of the event."),
+                        new Param("end", AirRally.DayNightCycle.Twilight, "End Time", "Set the time of day for the end of the event."),
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
@@ -643,22 +643,22 @@ namespace HeavenStudio.Games
                 bgMat.SetColor("_Color", bgColorFrom);
                 cloudMat.SetColor("_Color", cloudColorFrom);
                 objectMat.SetColor("_Color", objectsColorFrom);
-                lightsColor = (lastTime == DayNightCycle.Twilight) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
+                lightsColor = (lastTime == DayNightCycle.Night) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
             }
             else if (normalizedBeat >= 0 && normalizedBeat <= 1f)
             {
                 bgMat.SetColor("_Color", GetEasedColor(bgColorFrom, bgColorTo));
                 cloudMat.SetColor("_Color", GetEasedColor(cloudColorFrom, cloudColorTo));
                 objectMat.SetColor("_Color", GetEasedColor(objectsColorFrom, objectsColorTo));
-                lightsColor = GetEasedColor((lastTime == DayNightCycle.Twilight) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0),
-                    (currentTime == DayNightCycle.Twilight) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0));
+                lightsColor = GetEasedColor((lastTime == DayNightCycle.Night) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0),
+                    (currentTime == DayNightCycle.Night) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0));
             }
             else if (normalizedBeat > 1)
             {
                 bgMat.SetColor("_Color", bgColorTo);
                 cloudMat.SetColor("_Color", cloudColorTo);
                 objectMat.SetColor("_Color", objectsColorTo);
-                lightsColor = (currentTime == DayNightCycle.Twilight) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
+                lightsColor = (currentTime == DayNightCycle.Night) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
             }
 
             island2Lights.color = lightsColor;
@@ -684,45 +684,45 @@ namespace HeavenStudio.Games
             timeEase = ease;
             objectsColorFrom = lastTime switch
             {
-                DayNightCycle.Noon => Color.black,
+                DayNightCycle.Twilight => Color.black,
                 _ => Color.white,
             };
 
             objectsColorTo = currentTime switch
             {
-                DayNightCycle.Noon => Color.black,
+                DayNightCycle.Twilight => Color.black,
                 _ => Color.white,
             };
 
             bgColorFrom = lastTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColor,
-                DayNightCycle.Twilight => nightColor,
+                DayNightCycle.Twilight => noonColor,
+                DayNightCycle.Night => nightColor,
                 _ => throw new System.NotImplementedException()
             };
 
             bgColorTo = currentTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColor,
-                DayNightCycle.Twilight => nightColor,
+                DayNightCycle.Twilight => noonColor,
+                DayNightCycle.Night => nightColor,
                 _ => throw new System.NotImplementedException()
             };
 
             cloudColorFrom = lastTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColorCloud,
-                DayNightCycle.Twilight => nightColorCloud,
+                DayNightCycle.Twilight => noonColorCloud,
+                DayNightCycle.Night => nightColorCloud,
                 _ => throw new System.NotImplementedException()
             };
 
             cloudColorTo = currentTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColorCloud,
-                DayNightCycle.Twilight => nightColorCloud,
+                DayNightCycle.Twilight => noonColorCloud,
+                DayNightCycle.Night => nightColorCloud,
                 _ => throw new System.NotImplementedException()
             };
             DayNightCycleUpdate();
@@ -759,8 +759,8 @@ namespace HeavenStudio.Games
         public enum DayNightCycle
         {
             Day = 0,
-            Noon = 1,
-            Twilight = 2
+            Twilight = 1,
+            Night = 2
         }
 
         public void ServeObject(double beat, double targetBeat, bool type)

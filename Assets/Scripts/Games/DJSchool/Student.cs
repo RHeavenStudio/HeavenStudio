@@ -48,36 +48,6 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
         }
 
-        #region old hold
-        //public void Hold(bool ace)
-        //{
-        //    isHolding = true;
-
-        //    if (ace)
-        //    {
-        //        missed = false;
-        //        shouldBeHolding = true;
-        //        game.SetDJYellowHead(1);
-        //    }
-
-        //    Jukebox.PlayOneShotGame("djSchool/recordStop");
-
-        //    anim.Play("Hold", 0, 0);
-        //    tableAnim.Play("Student_Turntable_Hold", 0, 0);
-        //    if (ace)
-        //    {
-        //        if (soundFX)
-        //        {
-        //            Conductor.instance.djSchoolHold.TransitionTo(.01f);
-        //        }
-
-        //        FlashFX(true);
-        //    }
-
-        //    // Settings.GetMusicMixer().audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(0.15f);
-        //}
-        #endregion
-
         public void ForceHold()
         {
             isHolding = true;
@@ -90,7 +60,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             if (soundFX)
             {
-                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.01f);
+                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.1f);
             }
         }
 
@@ -114,7 +84,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             if (soundFX)
             {
-                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.01f);
+                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.1f);
             }
             FlashFX(true);
         }
@@ -149,6 +119,10 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             anim.DoScaledAnimationAsync("Hold", 0.5f);
             tableAnim.DoScaledAnimationAsync("Student_Turntable_StartHold", 0.5f);
+            if (soundFX)
+            {
+                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.1f);
+            }
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
             {
                 game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
@@ -176,7 +150,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 Invoke("EnableBoo", 1f);
             }
             missed = true;
-            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
             tableAnim.DoScaledAnimationAsync("Student_Turntable_Idle", 0.5f);
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
             {
@@ -220,7 +194,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
 
                 //Instantiate(slamFX, this.transform.parent).SetActive(true);
-                mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+                mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
             }
             else
             {
@@ -236,7 +210,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
 
                 //Instantiate(slamFX, this.transform.parent).SetActive(true);
-                mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+                mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
             }
 
         }
@@ -246,7 +220,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             isHolding = false;
             //swiping = false;
             missed = true;
-            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+            // mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
             if (canBoo)
             {
                 Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", caller.timer + caller.startBeat + 1f, 1, 0.8f);
@@ -273,6 +247,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             isHolding = false;
 
             missed = true;
+            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
 
             BeatAction.New(game, new List<BeatAction.Action>()
             {
@@ -297,58 +272,10 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             isHolding = false;
 
             missed = true;
-            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
 
             OnMissSwipeForPlayerInput(Conductor.instance.songPositionAsDouble + 1);
             SoundByte.PlayOneShotGame("djSchool/recordSwipe");
         }
-
-        #endregion
-
-        #region old swipe
-        //public void Swipe(bool ace)
-        //{
-        //    isHolding = false;
-
-        //    if (ace)
-        //    {
-        //        missed = false;
-        //        shouldBeHolding = false;
-        //        Jukebox.PlayOneShotGame("djSchool/recordSwipe");
-        //        FlashFX(false);
-        //        swiping = true;
-        //    }
-        //    else
-        //    {
-        //        // Missed record swipe sound should play here.
-        //    }
-
-        //    anim.Play("Swipe", 0, 0);
-
-        //    tableAnim.speed = 1;
-        //    tableAnim.Play("Student_Turntable_Swipe", 0, 0);
-
-        //    Instantiate(slamFX).SetActive(true);
-        //    Conductor.instance.normal.TransitionTo(.01f);
-        //    // Settings.GetMusicMixer().audioMixer.FindSnapshot("Main").TransitionTo(0.15f);
-        //    swiping = false;
-
-        //}
-
-        //public override void OnAce()
-        //{
-        //    if (!shouldBeHolding)
-        //    {
-        //        //Hold(true);
-        //    }
-        //    else
-        //    {
-        //        Conductor.instance.normal.TransitionTo(.01f);
-        //        //Swipe(true);
-        //    }
-
-        //    eligible = false;
-        //}
 
         #endregion
 
@@ -381,7 +308,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         //Not sure but will do?
         private void OnDestroy()
         {
-            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
         }
     }
 }

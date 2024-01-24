@@ -70,6 +70,7 @@ namespace HeavenStudio
 
         private double lastAbsTime;
         private double startTime;
+        private float playPanelRevealTime;
 
         private bool altBop;
 
@@ -568,7 +569,8 @@ namespace HeavenStudio
                         campaignOption.sprite = campaignOff;
                     }
 
-                    waitingForButtonUp = true;
+                    // waitingForButtonUp = true;
+                    playPanelRevealTime = Time.realtimeSinceStartup + 0.2f;
                     playPanel.SetActive(true);
                     playMenuRevealed = true;
                     SoundByte.PlayOneShot("ui/UISelect");
@@ -585,7 +587,7 @@ namespace HeavenStudio
 
         public void PlayPanelAccept()
         {
-            if (waitingForButtonUp) return;
+            if (playPanelRevealTime > Time.realtimeSinceStartup) return;
             if (exiting) return;
             exiting = true;
             SoundByte.PlayOneShot("ui/UIEnter");

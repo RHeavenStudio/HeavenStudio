@@ -37,7 +37,7 @@ namespace HeavenStudio
         public static string PlayOpenFile = null;
 
         public static string buildTime = "00/00/0000 00:00:00";
-        public static string friendlyReleaseName = "Heaven Studio (1.0 Lush)";
+        public static string friendlyReleaseName = "Heaven Studio (1.0.1 Lush)";
 
         public static bool HasShutDown = false;
         public static bool discordDuringTesting = false;
