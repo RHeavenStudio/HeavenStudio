@@ -106,6 +106,9 @@ namespace HeavenStudio.Games
         [SerializeField] Animator HaiBubbleR;
         [SerializeField] Animator BothBirdsAnim;
 
+        [SerializeField] Transform PivotL;
+        [SerializeField] Transform PivotR;
+
         bool ravenBop = true;
         bool vultureBop = true;
 
@@ -166,6 +169,7 @@ namespace HeavenStudio.Games
             TonakaiyoOtonokoi,
             TorinikugaTorininkui,
             UmetteUmena,
+            Muted,
         }
 
         static readonly Dictionary<string, int> boingLengths = new() {
@@ -304,6 +308,10 @@ namespace HeavenStudio.Games
 
         public void HaiJustL(PlayerActionEvent caller, float state)
         {
+            // var euler = PivotL.eulerAngles;
+            // euler.z = UnityEngine.Random.Range(0, 100);
+            
+
             HaiBubbleL.DoScaledAnimationAsync("HaiL", 0.5f);
             HaiJustFull();
         }
@@ -400,6 +408,24 @@ namespace HeavenStudio.Games
                 float newPos = func(0f, 1f, normalizedBeat);
                 BothBirdsAnim.DoNormalizedAnimation(moveAnim, newPos);
                 if (normalizedBeat >= 1f) isMoving = false;
+            }
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            foreach(var entity in GameManager.instance.Beatmap.Entities)
+            {
+                if(entity.beat > beat) //the list is sorted based on the beat of the entity, so this should work fine.
+                {
+                    break;
+                }
+                if(entity.datamodel != "manzai/pun" || entity.beat + entity.length <= beat) //check for dispenses that happen right before the switch
+                {
+                    continue;
+                }
+                bool isOnGameSwitchBeat = entity.beat == beat;
+                DoPun(entity.beat, entity["boing"], entity["pun"]);
+                break;
             }
         }
     }
