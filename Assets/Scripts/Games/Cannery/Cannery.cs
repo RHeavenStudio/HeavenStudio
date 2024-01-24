@@ -37,6 +37,35 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { Cannery.instance.Blackout(); },
                     defaultLength = 0.5f,
                 },
+                new GameAction("backgroundColor", "Background Color")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        Cannery.instance.BackgroundColorChange(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
+                    },
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("startColor", new Color(1, 1, 1), "Start Color", "Set the color at the start of the event."),
+                        new Param("endColor",   new Color(1, 1, 1), "End Color",   "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Instant, "Ease", "Set the easing of the action."),
+                    },
+                },
+                new GameAction("alarmColor", "Alarm Color")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        Cannery.instance.AlarmColor(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
+                    },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("startColor", new Color(0.8627f, 0.3725f, 0.0313f), "Start Color", "Set the color at the start of the event."),
+                        new Param("endColor",   new Color(0.8627f, 0.3725f, 0.0313f), "End Color",   "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Instant, "Ease", "Set the easing of the action."),
+                    }
+                },
             }
             // ,
             // new List<string>() { "mob", "normal" },
@@ -56,6 +85,8 @@ namespace HeavenStudio.Games
         [Header("Objects")]
         [SerializeField] GameObject canGO;
         [SerializeField] GameObject blackout;
+        [SerializeField] Material alarmMat;
+        [SerializeField] SpriteRenderer bgPlaneSR;
 
         [Header("Animators")]
         [SerializeField] Animator conveyorBeltAnim;
@@ -63,26 +94,47 @@ namespace HeavenStudio.Games
         public Animator dingAnim;
         public Animator cannerAnim;
 
+        private ColorEase bgColorEase;
+        private ColorEase alarmColorEase;
+
         private bool alarmBop = true;
 
         public static Cannery instance;
 
-        void Awake()
+        private void Awake()
         {
             instance = this;
             canGO.SetActive(false);
         }
 
-        void Update()
+        private void Update()
         {
             conveyorBeltAnim.DoNormalizedAnimation("Move", (Conductor.instance.songPositionInBeats / 2) % 1);
+
+            bgPlaneSR.color = GetNewColor(bgColorEase);
+            alarmMat.SetColor("_ColorAlpha", GetNewColor(alarmColorEase));
         }
 
         public override void OnGameSwitch(double beat)
         {
-            List<RiqEntity> cans = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel == "cannery/can" && beat > e.beat && beat < e.beat + 1);
+            List<RiqEntity> events = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] == "cannery");
+            List<RiqEntity> cans = events.FindAll(e => e.datamodel == "cannery/can" && beat > e.beat && beat < e.beat + 1);
             foreach (var can in cans) {
                 SendCan(can.beat);
+            }
+            RiqEntity bgEvent = events.FindLast(e => e.datamodel == "cannery/backgroundColor" && e.beat < beat);
+            if (bgEvent != null) {
+                var e = bgEvent;
+                BackgroundColorChange(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
+            } else {
+                BackgroundColorChange(0, 0, new Color(0.8627f, 0.3725f, 0.0313f), new Color(0.8627f, 0.3725f, 0.0313f), 0);
+            }
+            RiqEntity alarmEvent = events.FindLast(e => e.datamodel == "cannery/alarmColor" && e.beat < beat);
+            if (alarmEvent != null) {
+                var e = alarmEvent;
+                BackgroundColorChange(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
+            } else {
+                BackgroundColorChange(0, 0, Color.white, Color.white, 0);
             }
         }
 
@@ -110,6 +162,16 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void AlarmColor(double beat, float length, Color startColor, Color endColor, int ease)
+        {
+            alarmColorEase = new(beat, length, startColor, endColor, ease);
+        }
+
+        public void BackgroundColorChange(double beat, float length, Color startColor, Color endColor, int ease)
+        {
+            bgColorEase = new(beat, length, startColor, endColor, ease);
+        }
+
         public static void CanSFX(double beat)
         {
             SoundByte.PlayOneShotGame("cannery/ding", beat);
@@ -117,7 +179,6 @@ namespace HeavenStudio.Games
 
         public void SendCan(double beat)
         {
-            // dingAnim.DoScaledAnimationFromBeatAsync("Ding", 0.5f, beat);
             // do the ding animation on the beat
             BeatAction.New(this, new() { new(beat, delegate { dingAnim.DoScaledAnimationFromBeatAsync("Ding", 0.5f, beat); }) });
 

@@ -12,21 +12,19 @@ namespace HeavenStudio.Games.Scripts_Cannery
         public double startBeat;
 
         [Header("Components")]
+        [SerializeField] Animator parentAnim;
         [SerializeField] Animator anim;
-        [SerializeField] SpriteRenderer sr;
-
-        [Header("Sprites")]
-        [SerializeField] Sprite[] canSprites;
-        [SerializeField] Sprite cannedSprite;
+        // [SerializeField] SpriteRenderer sr;
 
         Cannery game;
 
         private void Awake()
         {
             game = Cannery.instance;
-            int random = Random.Range(0, 2);
+            int random = Random.Range(-1, 1);
             Debug.Log(random);
-            sr.sprite = canSprites[random];
+            var pos = transform.position;
+            pos.x *= random;
 
             game.ScheduleInput(startBeat, 1, Minigame.InputAction_BasicPress, Hit, null, null);
         }
@@ -36,14 +34,14 @@ namespace HeavenStudio.Games.Scripts_Cannery
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 2);
             Debug.Log(normalizedBeat);
             if (normalizedBeat > 1) Destroy(gameObject);
-            anim.DoNormalizedAnimation("Move", normalizedBeat);
+            parentAnim.DoNormalizedAnimation("Move", normalizedBeat);
         }
 
         private void Hit(PlayerActionEvent caller, float state)
         {
             game.cannerAnim.DoScaledAnimationAsync("Can", 0.5f);
             SoundByte.PlayOneShotGame("cannery/can");
-            sr.sprite = cannedSprite;
+            anim.DoScaledAnimationAsync("Canned", 0.5f);
         }
     }
 }

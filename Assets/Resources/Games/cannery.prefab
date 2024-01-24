@@ -661,7 +661,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 100, y: 0.47}
+  m_Size: {x: 100, y: 0.45}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -761,6 +761,8 @@ MonoBehaviour:
   scheduledInputs: []
   canGO: {fileID: 8575099813453766973}
   blackout: {fileID: 6779319467216197044}
+  alarmMat: {fileID: 2100000, guid: cffd715f1564d4440881c6fe148baa9c, type: 2}
+  bgPlaneSR: {fileID: 5948254459511631684}
   conveyorBeltAnim: {fileID: 3839135881600344077}
   alarmAnim: {fileID: 3637100343128600021}
   dingAnim: {fileID: 7386547292618809648}
@@ -1087,12 +1089,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startBeat: 0
+  parentAnim: {fileID: 0}
   anim: {fileID: 5817211847633092072}
-  sr: {fileID: 8380232789943656751}
-  canSprites:
-  - {fileID: 947544752, guid: 5a8f2715082952e4b804a4b950cf25d4, type: 3}
-  - {fileID: -1665090095, guid: 5a8f2715082952e4b804a4b950cf25d4, type: 3}
-  cannedSprite: {fileID: 1930332746, guid: 5a8f2715082952e4b804a4b950cf25d4, type: 3}
 --- !u!95 &5817211847633092072
 Animator:
   serializedVersion: 5
