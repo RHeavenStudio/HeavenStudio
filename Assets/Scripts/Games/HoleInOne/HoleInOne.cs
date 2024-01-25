@@ -21,6 +21,10 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("testanims", "Test Animation")
                 {
                     function = delegate { HoleInOne.instance.DoTestAnim(eventCaller.currentEntity.beat); },
+                },
+                new GameAction("mandrill", "Mandrill (no visuals)")
+                {
+                    function = delegate { HoleInOne.instance.DoMandrill(eventCaller.currentEntity.beat); },
                 }
             }//,
             // new List<string>() { "rvl", "normal" },
@@ -56,10 +60,47 @@ namespace HeavenStudio.Games
         {
             SoundByte.PlayOneShotGame("holeInOne/whale");
 
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+            new BeatAction.Action(beat,     delegate { Monkey.DoScaledAnimationAsync("MonkeySpin", 0.5f);}),
+            });  
+        }
+
+        
+
+        public void DoMandrill(double beat)
+        {
+            //Far Drop Multisound
+            ScheduleInput(beat, 3f, InputAction_BasicPress, CatchSuccess, CatchSuccess1, CatchSuccess2);
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("holeInOne/mandrill1", beat),
+                new MultiSound.Sound("holeInOne/mandrill2", beat + 1f),
+                new MultiSound.Sound("holeInOne/mandrill3", beat + 2f),
+                new MultiSound.Sound("holeInOne/mandrill4", beat + 3f),
+            });
+
             // BeatAction.New(instance, new List<BeatAction.Action>()
-            // {
-            // new BeatAction.Action(beat,     delegate { Monkey.DoScaledAnimationAsync("MonkeySpin", 0.5f);}),
-            // });  
+            //     {
+            //     new BeatAction.Action(beat,     delegate { FarCrane.DoScaledAnimationAsync("Drop", 0.5f);}),
+            //     new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.DoScaledAnimationAsync("Open", 0.5f);}),
+            //     new BeatAction.Action(beat + 1.5f,     delegate { FarCrane.DoScaledAnimationAsync("Lift", 0.5f);}),
+            //     });
+
+        }
+
+        public void CatchSuccess(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("holeInOne/whale");
+        }
+
+        public void CatchSuccess1(PlayerActionEvent caller)
+        {
+            SoundByte.PlayOneShotGame("holeInOne/whale");
+        }
+
+        public void CatchSuccess2(PlayerActionEvent caller)
+        {
+            SoundByte.PlayOneShotGame("holeInOne/whale");
         }
     }
 }
