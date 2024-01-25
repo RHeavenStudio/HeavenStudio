@@ -25,6 +25,12 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("mandrill", "Mandrill (no visuals)")
                 {
                     function = delegate { HoleInOne.instance.DoMandrill(eventCaller.currentEntity.beat); },
+                    defaultLength = 4.0f,
+                },
+                new GameAction("monkey", "Monkey (sound only)")
+                {
+                    function = delegate { HoleInOne.instance.DoMonkey(eventCaller.currentEntity.beat); },
+                    defaultLength = 3.0f,
                 }
             }//,
             // new List<string>() { "rvl", "normal" },
@@ -66,17 +72,34 @@ namespace HeavenStudio.Games
             });  
         }
 
-        
-
         public void DoMandrill(double beat)
         {
-            //Far Drop Multisound
+            //Mandrill Multisound
             ScheduleInput(beat, 3f, InputAction_BasicPress, CatchSuccess, CatchSuccess1, CatchSuccess2);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("holeInOne/mandrill1", beat),
                 new MultiSound.Sound("holeInOne/mandrill2", beat + 1f),
                 new MultiSound.Sound("holeInOne/mandrill3", beat + 2f),
                 new MultiSound.Sound("holeInOne/mandrill4", beat + 3f),
+            });
+
+            // BeatAction.New(instance, new List<BeatAction.Action>()
+            //     {
+            //     new BeatAction.Action(beat,     delegate { FarCrane.DoScaledAnimationAsync("Drop", 0.5f);}),
+            //     new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.DoScaledAnimationAsync("Open", 0.5f);}),
+            //     new BeatAction.Action(beat + 1.5f,     delegate { FarCrane.DoScaledAnimationAsync("Lift", 0.5f);}),
+            //     });
+
+        }
+
+        public void DoMonkey(double beat)
+        {
+            //Monkey Multisound
+            ScheduleInput(beat, 2f, InputAction_BasicPress, CatchSuccess, CatchSuccess1, CatchSuccess2);
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("holeInOne/monkey1", beat),
+                new MultiSound.Sound("holeInOne/monkey2", beat + 1f),
+                new MultiSound.Sound("holeInOne/hole1", beat + 2f),
             });
 
             // BeatAction.New(instance, new List<BeatAction.Action>()
