@@ -40,6 +40,20 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 4f           
                 },
+                new("bird", "Bird")
+                {
+                    function = delegate 
+                    {
+                        var e = eventCaller.currentEntity;
+                        TotemClimb.instance.SpawnBird(e["speed"], (TotemClimb.BirdType)e["type"] == TotemClimb.BirdType.Penguin, e["amount"]); 
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new("speed", new EntityTypes.Float(1, 100, 3), "Speed Multiplier"),
+                        new("type", TotemClimb.BirdType.KingFisher, "Type"),
+                        new("amount", new EntityTypes.Integer(1, 3, 1), "Amount")
+                    }
+                },
                 new("above", "Pillar End")
                 {
 
@@ -63,11 +77,18 @@ namespace HeavenStudio.Games
 {
     public class TotemClimb : Minigame
     {
+        public enum BirdType
+        {
+            KingFisher,
+            Penguin
+        }
+
         [Header("Components")]
         [SerializeField] private Transform _cameraTransform;
         [SerializeField] private Transform _scrollTransform;
         [SerializeField] private TCJumper _jumper;
         [SerializeField] private TCTotemManager _totemManager;
+        [SerializeField] private TCBirdManager _birdManager;
 
         [Header("Properties")]
         [SerializeField] private float _scrollSpeedX = 3.838f;
@@ -90,6 +111,11 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+        }
+
+        public void SpawnBird(float speed, bool penguin, int amount)
+        {
+            _birdManager.AddBird(speed, penguin, amount);
         }
 
         public override void OnGameSwitch(double beat)
