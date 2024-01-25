@@ -24,6 +24,16 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         public Transform JumperPointRight => _jumperPointRight;
 
         private bool _hasWings = false;
+        private bool _flapSet = false; // I hate unity
+
+        private void Update()
+        {
+            if (!_anim.GetCurrentAnimatorStateInfo(0).IsName("Wings") && _hasWings && !_flapSet)
+            {
+                _anim.Play("Wings", 0, 0);
+                _flapSet = true;
+            }
+        }
 
         public void FallPiece(int part)
         {
@@ -45,7 +55,6 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         public void SetHasWings()
         {
             _hasWings = true;
-            _anim.Play("Wings", 0, 0);
         }
     }
 }
