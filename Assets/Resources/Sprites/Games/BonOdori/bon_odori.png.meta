@@ -491,7 +491,7 @@ TextureImporter:
         width: 26
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -499,6 +499,69 @@ TextureImporter:
       bones: []
       spriteID: 981195388be2a8f439e1b02892d0ebf8
       internalID: -36717029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bon_odori_2
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 152
+        width: 44
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2d7bd7e76b9b5845b9becc986d1a009
+      internalID: 629234624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bon_odori_3
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 154
+        width: 56
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a239c8ee6d27a9f4e94eb0b54e225093
+      internalID: 616323414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bon_odori_4
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 150
+        width: 50
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69317f0c0a631a44fa6759d4d8188b29
+      internalID: -1823065352
       vertices: []
       indices: 
       edges: []
@@ -516,6 +579,9 @@ TextureImporter:
     nameFileIdTable:
       bon_odori_0: 1931037481
       bon_odori_1: -1278074751
+      bon_odori_2: 629234624
+      bon_odori_3: 616323414
+      bon_odori_4: -1823065352
       bon_odori_body_1: 1318838821
       bon_odori_body_2: 1324151927
       bon_odori_body_5: 712589279
