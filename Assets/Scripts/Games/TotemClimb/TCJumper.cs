@@ -111,7 +111,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     target = _game.IsTripleBeat(beat) ? _game.GetJumperFrogPointAtBeat(beat, 1) : _game.GetJumperPointAtBeat(beat)
                 };
                 
-                if (beat + 1 >= _onPlayBeat && _game.EndBeat <= beat + 1)
+                if (beat + 1 >= _onPlayBeat && _game.EndBeat <= beat + 1 && _game.UseEndTotem)
                 {
                     _path.positions[1] = new PathPos()
                     {
@@ -215,7 +215,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     target = _game.GetDragonPointAtBeat(beat)
                 };
 
-                if (beat + 2 >= _onPlayBeat && _game.EndBeat <= beat + 2)
+                if (beat + 2 >= _onPlayBeat && _game.EndBeat <= beat + 2 && _game.UseEndTotem)
                 {
                     _path.positions[1] = new PathPos()
                     {
