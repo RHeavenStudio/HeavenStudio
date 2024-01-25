@@ -13,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         [SerializeField] private Animator _animLeft;
         [SerializeField] private Animator _animMiddle;
         [SerializeField] private Animator _animRight;
+        [SerializeField] private Animator _anim;
 
         [SerializeField] private Transform _jumperPointLeft;
         [SerializeField] private Transform _jumperPointMiddle;
@@ -22,8 +23,11 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         public Transform JumperPointMiddle => _jumperPointMiddle;
         public Transform JumperPointRight => _jumperPointRight;
 
+        private bool _hasWings = false;
+
         public void FallPiece(int part)
         {
+            if (_hasWings) _anim.Play("WingsNoFlap", 0, 0);
             switch (part)
             {
                 case -1:
@@ -36,6 +40,12 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     _animRight.DoScaledAnimationAsync("Fall", 0.5f);
                     break;
             }
+        }
+
+        public void SetHasWings()
+        {
+            _hasWings = true;
+            _anim.Play("Wings", 0, 0);
         }
     }
 }

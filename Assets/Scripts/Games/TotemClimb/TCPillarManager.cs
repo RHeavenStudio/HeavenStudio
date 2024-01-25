@@ -33,8 +33,6 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private float _endDistance = float.MaxValue;
         private bool _hasReachedEnd = false;
 
-        private bool _endDistanceSet = false;
-
         private void Awake()
         {
             _scrollTransform = transform.parent;
@@ -148,7 +146,6 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
             var allPillarEnds = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "above" }).FindAll(x => x.beat >= startBeat && x.beat < nextGameSwitchBeat);
             if (allPillarEnds.Count == 0) return double.MaxValue;
-            _endDistanceSet = true;
             return allPillarEnds[0].beat - startBeat;
         }
     }

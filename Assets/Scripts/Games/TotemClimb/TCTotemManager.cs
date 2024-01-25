@@ -14,6 +14,9 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         [SerializeField] private float _yDistance;
         [SerializeField] private int _totemAmount = 12;
 
+        [SerializeField] private Transform _pillarFirst;
+        [SerializeField] private Transform _pillarSecond;
+
         private Transform _scrollTransform;
         private float _totemStartX;
         private float _totemStartY;
@@ -22,6 +25,9 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private List<TCDragon> _dragons = new();
 
         private int _totemIndex = 0;
+
+        private float _pillarEndDistance;
+
         private TotemClimb _game;
 
         private void Awake()
@@ -30,6 +36,12 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _scrollTransform = transform.parent;
             _totemStartX = _totemTransform.localPosition.x;
             _totemStartY = _totemTransform.localPosition.y;
+
+            var pillarYStart = _pillarFirst.localPosition.y;
+            var pillarYDistance = _pillarSecond.localPosition.y - _pillarFirst.localPosition.y;
+            var pillarEnd = GetPillarEndBeatDistance();
+
+            _pillarEndDistance = pillarEnd + pillarYStart + ((pillarEnd + pillarYStart) % pillarYDistance);
 
             _totems.Add(_totemTransform.GetComponent<TCTotem>());
 
@@ -56,6 +68,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     double beat = e.beat + i;
                     Transform spawnedFrog = Instantiate(_frogTransform, transform);
                     spawnedFrog.transform.localPosition += new Vector3(_xDistance * (float)(beat - startBeat), _yDistance * (float)(beat - startBeat));
+                    if (spawnedFrog.transform.localPosition.y >= _pillarEndDistance) spawnedFrog.GetComponent<TCFrog>().SetHasWings();
                     spawnedFrog.gameObject.SetActive(true);
                     spawnedFrog.GetComponent<TCFrog>().beat = beat;
                     _frogs.Add(spawnedFrog.GetComponent<TCFrog>());
@@ -170,6 +183,29 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 t.transform.gameObject.SetActive(t.beat - 1 < _game.EndBeat && !_game.IsTripleOrHighBeat(t.beat));
                 _totemIndex++;
             }
+        }
+
+        private float GetPillarEndBeatDistance()
+        {
+            var allGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat <= Conductor.instance.songPositionInBeatsAsDouble && x.datamodel is "gameManager/switchGame/totemClimb");
+            double lastGameSwitchBeat = 0;
+            if (allGameSwitches.Count > 0) lastGameSwitchBeat = allGameSwitches[^1].beat;
+
+            var nextGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat > lastGameSwitchBeat && x.datamodel != "gameManager/switchGame/totemClimb");
+            double nextGameSwitchBeat = double.MaxValue;
+            if (nextGameSwitches.Count > 0)
+            {
+                nextGameSwitchBeat = nextGameSwitches[0].beat;
+            }
+
+            var allStarts = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "start" }).FindAll(x => x.beat >= lastGameSwitchBeat && x.beat < nextGameSwitchBeat);
+            if (allStarts.Count == 0) return float.MaxValue;
+
+            double startBeat = allStarts[0].beat;
+
+            var allPillarEnds = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "above" }).FindAll(x => x.beat >= startBeat && x.beat < nextGameSwitchBeat);
+            if (allPillarEnds.Count == 0) return float.MaxValue;
+            return (float)(allPillarEnds[0].beat - startBeat) * 1.45f;
         }
     }
 }
