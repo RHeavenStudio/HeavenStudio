@@ -470,7 +470,7 @@ TextureImporter:
         width: 128
         height: 124
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -491,7 +491,7 @@ TextureImporter:
         width: 81
         height: 96
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -512,7 +512,7 @@ TextureImporter:
         width: 51
         height: 86
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -533,7 +533,7 @@ TextureImporter:
         width: 103
         height: 100
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -554,7 +554,7 @@ TextureImporter:
         width: 114
         height: 105
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -562,6 +562,132 @@ TextureImporter:
       bones: []
       spriteID: 403802eb2fc88a047b259c1ed4bdc890
       internalID: 1511125928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: totemclimb_0
+      rect:
+        serializedVersion: 2
+        x: 1787
+        y: 2324
+        width: 318
+        height: 167
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0aec637a506ff04d95c9e8236a289da
+      internalID: -1668053100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: totemclimb_1
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 1852
+        width: 370
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0730594305e970745be382bf6efdacf7
+      internalID: 989580983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: totemclimb_2
+      rect:
+        serializedVersion: 2
+        x: 806
+        y: 1925
+        width: 177
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22678479ff6868844bf7e4f7936d3b45
+      internalID: 111976072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: totemclimb_3
+      rect:
+        serializedVersion: 2
+        x: 1461
+        y: 921
+        width: 1176
+        height: 475
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9187592046c53840a701166fcea7914
+      internalID: 748892238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: totemclimb_4
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 276
+        width: 1249
+        height: 549
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbd7acc4bcce2754481c46d10fafaa7d
+      internalID: 574925212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: totemclimb_5
+      rect:
+        serializedVersion: 2
+        x: 1424
+        y: 275
+        width: 1249
+        height: 508
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 255356bc8ef80944fb6f69aef56b4963
+      internalID: 1437042686
       vertices: []
       indices: 
       edges: []
@@ -596,6 +722,12 @@ TextureImporter:
       totem0: 1921032003
       totem1: 1031057130
       totem2: 2141254573
+      totemclimb_0: -1668053100
+      totemclimb_1: 989580983
+      totemclimb_2: 111976072
+      totemclimb_3: 748892238
+      totemclimb_4: 574925212
+      totemclimb_5: 1437042686
       wing2: -500930693
       wingleft: -591290891
       wingright: -470877788

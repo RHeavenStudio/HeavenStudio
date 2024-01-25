@@ -35,6 +35,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
         private void Awake()
         {
+            gameObject.SetActive(!GetStartBeatParam());
             _scrollTransform = transform.parent;
             _endDistance = ((float)GetBeatDistance() * 1.45f) + _pillarStartY;
 
@@ -147,6 +148,25 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             var allPillarEnds = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "above" }).FindAll(x => x.beat >= startBeat && x.beat < nextGameSwitchBeat);
             if (allPillarEnds.Count == 0) return double.MaxValue;
             return allPillarEnds[0].beat - startBeat;
+        }
+
+        private bool GetStartBeatParam()
+        {
+            var allGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat <= Conductor.instance.songPositionInBeatsAsDouble && x.datamodel is "gameManager/switchGame/totemClimb");
+            double lastGameSwitchBeat = 0;
+            if (allGameSwitches.Count > 0) lastGameSwitchBeat = allGameSwitches[^1].beat;
+
+            var nextGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat > lastGameSwitchBeat && x.datamodel != "gameManager/switchGame/totemClimb");
+            double nextGameSwitchBeat = double.MaxValue;
+            if (nextGameSwitches.Count > 0)
+            {
+                nextGameSwitchBeat = nextGameSwitches[0].beat;
+            }
+
+            var allStarts = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "start" }).FindAll(x => x.beat >= lastGameSwitchBeat && x.beat < nextGameSwitchBeat);
+            if (allStarts.Count == 0) return false;
+
+            return allStarts[0]["hide"];
         }
     }
 }

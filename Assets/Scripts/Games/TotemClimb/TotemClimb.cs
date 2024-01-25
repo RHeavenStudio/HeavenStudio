@@ -18,7 +18,10 @@ namespace HeavenStudio.Games.Loaders
             {
                 new("start", "Start Jumping")
                 {
-
+                    parameters = new List<Param>()
+                    {
+                        new("hide", false, "Hide Pillars")
+                    }
                 },
                 new("triple", "Triple Jumping")
                 {
@@ -60,7 +63,10 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new("stop", "Stop Jumping")
                 {
-
+                    parameters = new List<Param>()
+                    {
+                        new("anim", true, "Has Ending Animation")
+                    }
                 },
                 new("bop", "Bop")
                 {
