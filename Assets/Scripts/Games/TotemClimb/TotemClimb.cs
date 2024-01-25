@@ -290,7 +290,7 @@ namespace HeavenStudio.Games
             _cameraTransform.localPosition = new Vector3(_scrollTransform.localPosition.x * -2, _scrollTransform.localPosition.y * -2);
         }
 
-        private bool IsOnBeat(double startBeat, double targetBeat)
+        private static bool IsOnBeat(double startBeat, double targetBeat)
         {
             return (targetBeat - startBeat) % 1 == 0;
         }
@@ -326,15 +326,139 @@ namespace HeavenStudio.Games
 
         public static void TripleJumpSound(double beat, float length)
         {
+            List<RiqEntity> triplesGlobal = new();
+            List<RiqEntity> highsGlobal = new();
+
             length = Mathf.Max(length, 2f);
-            MultiSound.Play(new MultiSound.Sound[]
+
+            List<MultiSound.Sound> soundsEnter = new()
             {
                 new("totemClimb/beatchange", beat - 2),
                 new("totemClimb/beatchange", beat - 1.5f),
                 new("totemClimb/beatchange", beat - 1f),
+            };
+
+            List<MultiSound.Sound> soundsExit = new()
+            {
                 new("totemClimb/beatchange", beat + length - 2),
                 new("totemClimb/beatchange", beat + length - 1),
-            }, true, true);
+            };
+
+            List<MultiSound.Sound> soundsToPlay = new();
+
+            var allGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat <= beat && x.datamodel is "gameManager/switchGame/totemClimb");
+            double lastGameSwitchBeat = 0;
+            if (allGameSwitches.Count > 0) lastGameSwitchBeat = allGameSwitches[^1].beat;
+
+            SetUpEvents(lastGameSwitchBeat);
+
+            if (triplesGlobal.Count == 0 || highsGlobal.Count == 0) return;
+
+            bool doEnterSound = true;
+            double checkBeatEnter = beat - 1;
+            while (IsHighBeat(checkBeatEnter))
+            {
+                checkBeatEnter -= 4;
+
+                if (IsTripleBeat(checkBeatEnter))
+                {
+                    doEnterSound = false;
+                }
+            }
+            if (doEnterSound) soundsToPlay.AddRange(soundsEnter);
+
+            bool doExitSound = true;
+            double checkBeatExit = beat + length;
+            while (IsHighBeat(checkBeatExit))
+            {
+                checkBeatExit += 4;
+
+                if (IsTripleBeat(checkBeatExit))
+                {
+                    doExitSound = false;
+                }
+            }
+            if (doExitSound) soundsToPlay.AddRange(soundsExit);
+
+            if (soundsToPlay.Count > 0) MultiSound.Play(soundsToPlay.ToArray(), true, true);
+
+            void SetUpEvents(double beat)
+            {
+                double startBeat = double.MaxValue;
+                double endBeat = double.MaxValue;
+
+                var nextGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat > beat && x.datamodel != "gameManager/switchGame/totemClimb");
+                double nextGameSwitchBeat = double.MaxValue;
+                if (nextGameSwitches.Count > 0)
+                {
+                    nextGameSwitchBeat = nextGameSwitches[0].beat;
+                }
+
+                var allStarts = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "start" }).FindAll(x => x.beat >= beat && x.beat < nextGameSwitchBeat);
+                if (allStarts.Count > 0)
+                {
+                    startBeat = allStarts[0].beat;
+                }
+
+                var allStops = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "stop" }).FindAll(x => x.beat > startBeat && x.beat < nextGameSwitchBeat);
+                if (allStops.Count > 0)
+                {
+                    endBeat = allStops[0].beat;
+                }
+
+                var highs = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "high" }).FindAll(x => x.beat >= startBeat && x.beat < endBeat);
+                if (highs.Count == 0) return;
+
+                highs.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+                var tempHighs = new List<RiqEntity>();
+
+                double goodAfterBeat = startBeat;
+
+                foreach (var h in highs)
+                {
+                    if (h.beat >= goodAfterBeat && IsOnBeat(startBeat, h.beat))
+                    {
+                        tempHighs.Add(h);
+                        goodAfterBeat = h.beat + 4;
+                    }
+                }
+
+                highsGlobal = tempHighs;
+
+                var triples = EventCaller.GetAllInGameManagerList("totemClimb", new string[] { "triple" }).FindAll(x => x.beat >= startBeat && x.beat + x.length <= endBeat);
+                if (triples.Count == 0) return;
+
+                triples.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+                var tempTriples = new List<RiqEntity>();
+
+                double lastLengthBeat = startBeat;
+
+                foreach (var t in triples)
+                {
+                    if (t.beat >= lastLengthBeat && IsOnBeat(startBeat, t.beat))
+                    {
+                        if (highsGlobal.Find(x => x.beat + 4f > t.beat && x.beat + 4 < t.beat + t.length + 4) != null) continue;
+                        tempTriples.Add(t);
+                        lastLengthBeat = t.beat + t.length;
+                    }
+                }
+
+                triplesGlobal = tempTriples;
+            }
+
+            bool IsTripleBeat(double beat)
+            {
+                if (triplesGlobal.Count == 0) return false;
+                return triplesGlobal.Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
+            }
+
+            bool IsHighBeat(double beat)
+            {
+                if (highsGlobal.Count == 0) return false;
+                return highsGlobal.Find(x => beat >= x.beat && beat < x.beat + 4) != null;
+            }
         }
     }
 }
