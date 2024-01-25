@@ -109,7 +109,7 @@ namespace HeavenStudio.Games
         private double _pillarEndBeat = double.MaxValue;
         public double PillarEndBeat => _pillarEndBeat;
 
-        private bool _useEndTotem = true;
+        private bool _useEndTotem = false;
         public bool UseEndTotem => _useEndTotem;
 
         [NonSerialized] public List<RiqEntity> _tripleEvents = new();
