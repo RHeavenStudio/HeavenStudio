@@ -46,6 +46,17 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader RvlBoardMeetingLoader failed!");
             }
 
+            Debug.Log("Running game loader AgbBonOdoriLoader");
+            game = AgbBonOdoriLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbBonOdoriLoader failed!");
+            }
+
             Debug.Log("Running game loader NtrFlickLoader");
             game = NtrFlickLoader.AddGame(eventCaller);
             if (game != null)
