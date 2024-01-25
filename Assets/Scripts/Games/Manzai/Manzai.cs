@@ -124,6 +124,10 @@ namespace HeavenStudio.Games
         bool isPreparingForBoing = false;
         bool missedWithWrongButton = false;
 
+        bool hitHaiL = false;
+        bool hitHaiR = false;
+        bool hitDonaiyanen = false;
+
 
 
         public enum WhoBops
@@ -330,6 +334,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
+                    new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat); }),
                 });
             }
             else
@@ -342,11 +347,12 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 1.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
+                    new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat); }),
                 });
             }
         }
 
-        public void HaiJustFull(float state)
+        public void HaiJustFull(float state, int side)
         {
             SoundByte.PlayOneShotGame("manzai/hai", pitch: Conductor.instance.songBpm/98);
             if (state >= 1f || state <= -1f)
@@ -357,6 +363,14 @@ namespace HeavenStudio.Games
             else
             {
                 SoundByte.PlayOneShotGame("manzai/HaiAccent");
+                if (side == 0)
+                {
+                    hitHaiL = true;
+                }
+                if (side == 1)
+                {
+                    hitHaiR = true;
+                }
             }
             RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
             VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
@@ -366,16 +380,18 @@ namespace HeavenStudio.Games
         {
             // var euler = PivotL.eulerAngles;
             // euler.z = UnityEngine.Random.Range(0, 100);
-            
+            int side = 0;
 
             HaiBubbleL.DoScaledAnimationAsync("HaiL", 0.5f);
-            HaiJustFull(state);
+            HaiJustFull(state, side);
         }
 
         public void HaiJustR(PlayerActionEvent caller, float state)
         {
+            int side = 1;
+
             HaiBubbleR.DoScaledAnimationAsync("HaiR", 0.5f);
-            HaiJustFull(state);
+            HaiJustFull(state, side);
         }
 
 
@@ -401,6 +417,8 @@ namespace HeavenStudio.Games
             vultureCanBop = false;
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
             var punName= Enum.GetName(typeof(Puns), whichPun);
+            int length = boingLengths.GetValueOrDefault(punName);
+            int syllables = length != 0 ? length : 4;
 
             ScheduleInput(beat, 2.5f, InputAction_Alt, BoingJust, BoingMiss, Nothing);
 
@@ -410,10 +428,11 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 1.25f, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(beat + 1.25f, delegate { isPreparingForBoing = true; }),
+                    new BeatAction.Action(syllables == 6 ? beat + 1.50 : beat + 1.25, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
                     new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
+                    new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat); }),
                     new BeatAction.Action(beat + 3.20f, delegate { isPreparingForBoing = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                 });
@@ -425,14 +444,36 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 1.25f, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(beat + 1.25f, delegate { isPreparingForBoing = true; }),
+                    new BeatAction.Action(syllables == 6 ? beat + 1.50 : beat + 1.25, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
                     new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
+                    new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat); }),
                     new BeatAction.Action(beat + 3.20f, delegate { isPreparingForBoing = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                 });
             }
+        }
+
+        public void audienceRespond(double beat)
+        {
+            if (hitHaiL && hitHaiR)
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 3.50f, delegate { SoundByte.PlayOneShotGame("manzai/haiClap"); }),
+                });
+            }
+            if (hitDonaiyanen)
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 3.00f, delegate { SoundByte.PlayOneShotGame("manzai/donaiyanenLaugh"); }),
+                });
+            }
+            hitHaiL = false;
+            hitHaiR = false;
+            hitDonaiyanen = false;
         }
 
         public void BoingJust(PlayerActionEvent caller, float state)
@@ -446,6 +487,7 @@ namespace HeavenStudio.Games
             else
             {
                 SoundByte.PlayOneShotGame("manzai/donaiyanenAccent");
+                hitDonaiyanen = true;
             }
             RavenAnim.DoScaledAnimationAsync("Attack", 0.5f);
             VultureAnim.DoScaledAnimationAsync("Damage", 0.5f);
