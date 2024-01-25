@@ -9346,6 +9346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7844333623642782309}
   - component: {fileID: 882449378495216115}
+  - component: {fileID: 6680257999378264794}
   m_Layer: 0
   m_Name: Water
   m_TagString: Untagged
@@ -9420,6 +9421,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6680257999378264794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7109454805972067665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf9f4378f696e54199e67826811b1a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SoundSequences: []
+  scheduledInputs: []
+  Monkey: {fileID: 0}
 --- !u!1 &7115749403813548106
 GameObject:
   m_ObjectHideFlags: 0

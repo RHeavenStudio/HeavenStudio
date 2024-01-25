@@ -222,15 +222,15 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader NtrGleeClubLoader failed!");
             }
 
-            Debug.Log("Running game loader RvlGolfLoader");
-            game = RvlGolfLoader.AddGame(eventCaller);
+            Debug.Log("Running game loader RvlHoleInOneLoader");
+            game = RvlHoleInOneLoader.AddGame(eventCaller);
             if (game != null)
             {
                 eventCaller.minigames.Add(game.name, game);
             }
             else
             {
-                Debug.LogWarning("Game loader RvlGolfLoader failed!");
+                Debug.LogWarning("Game loader RvlHoleInOneLoader failed!");
             }
 
             Debug.Log("Running game loader RvlNewKarateLoader");

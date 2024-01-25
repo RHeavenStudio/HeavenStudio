@@ -12,7 +12,7 @@ using Jukebox;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    public static class RvlGolfLoader
+    public static class RvlHoleInOneLoader
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
@@ -44,7 +44,7 @@ namespace HeavenStudio.Games
         // Awake is called before the first frame update
         void Awake()
         {
-            instance = this;
+            HoleInOne.instance = this;
         }
 
         void Update()
@@ -59,8 +59,7 @@ namespace HeavenStudio.Games
             // BeatAction.New(instance, new List<BeatAction.Action>()
             // {
             // new BeatAction.Action(beat,     delegate { Monkey.DoScaledAnimationAsync("MonkeySpin", 0.5f);}),
-            // });
-
+            // });  
         }
     }
 }
