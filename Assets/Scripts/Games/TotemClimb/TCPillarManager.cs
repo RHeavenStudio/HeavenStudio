@@ -10,15 +10,12 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
     {
         private const int PILLAR_AMOUNT_X = 12;
         private const int PILLAR_AMOUNT_Y = 3;
-        private const int BACKGROUND_OBJECT_AMOUNT = 10;
-        private const float CLOUD_MOVE_SPEED = 0.75f;
+        
 
         [Header("Components")]
         [SerializeField] private Transform _pillarFirst;
         [SerializeField] private Transform _pillarSecond;
         [SerializeField] private Transform _pillarUp;
-        [SerializeField] private Transform _backgroundObjectsParent;
-        [SerializeField] private List<BackgroundScrollPair> _backgroundObjects;
 
 
         private List<List<Transform>> _pillars = new();
@@ -82,27 +79,11 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     }
                 }
             }
-
-            if (_endDistanceSet)
-            {
-                _backgroundObjectsParent.gameObject.SetActive(true);
-                _backgroundObjectsParent.localPosition = new Vector3(0, _endDistance);
-
-                foreach (var b in _backgroundObjects)
-                {
-                    b.InitClones(_backgroundObjectsParent);
-                }
-            }
         }
 
         private void Update()
         {
             PillarUpdate();
-            if (!_endDistanceSet) return;
-            foreach (var b in _backgroundObjects)
-            {
-                b.ScrollClones(_scrollTransform.localPosition.x);
-            }
         }
 
         private void PillarUpdate()
@@ -169,64 +150,6 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             if (allPillarEnds.Count == 0) return double.MaxValue;
             _endDistanceSet = true;
             return allPillarEnds[0].beat - startBeat;
-        }
-
-        [System.Serializable]
-        private class BackgroundScrollPair
-        {
-            public Transform first;
-            public Transform second;
-            public bool isCloud;
-
-            private List<Transform> _objects = new();
-
-            private int _index = 0;
-
-            private float _startX;
-            private float _xDistance;
-            private float _moveX;
-
-            private float GetDistance()
-            {
-                return second.localPosition.x - first.localPosition.x;
-            }
-
-            public void InitClones(Transform parent)
-            {
-                _xDistance = GetDistance();
-                _startX = first.localPosition.x;
-                _objects.Add(first);
-                _objects.Add(second);
-
-                for (int i = 0; i < BACKGROUND_OBJECT_AMOUNT; i++)
-                {
-                    Transform spawnedObject = Instantiate(first, parent);
-                    spawnedObject.localPosition = new Vector3(second.localPosition.x + (_xDistance * (i + 1)), first.localPosition.y, first.localPosition.z);
-                    _objects.Add(spawnedObject);
-                }
-            }
-
-            public void ScrollClones(float currentScrollX)
-            {
-                if (isCloud)
-                {
-                    foreach (var b in _objects)
-                    {
-                        b.localPosition += new Vector3(-Time.deltaTime * CLOUD_MOVE_SPEED, 0);
-                    }
-                    _moveX -= Time.deltaTime * CLOUD_MOVE_SPEED;
-                }
-                float currentDistanceX = _startX + (_xDistance * _index) + (_xDistance * (BACKGROUND_OBJECT_AMOUNT + 2) / 2) + _moveX;
-
-                if (currentScrollX >= currentDistanceX)
-                {
-                    var b = _objects[_index % BACKGROUND_OBJECT_AMOUNT];
-                    b.localPosition += new Vector3(_xDistance * BACKGROUND_OBJECT_AMOUNT, 0);
-
-                    _index++;
-                    ScrollClones(currentScrollX);
-                }
-            }
         }
     }
 }
