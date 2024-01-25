@@ -73,6 +73,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("animation", true, "Play Animation?", "Whether the birds will use the slide animation"),
                     },
                 },
+                new GameAction("lights", "Toggle Lights")
+                {
+                function = delegate {
+                    var e = eventCaller.currentEntity; 
+                    Manzai.instance.ToggleLights(e.beat); 
+                },
+                defaultLength = 0.5f,
+                },
             });
         }
     }
@@ -105,6 +113,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator HaiBubbleL;
         [SerializeField] Animator HaiBubbleR;
         [SerializeField] Animator BothBirdsAnim;
+        [SerializeField] Animator StageAnim;
 
         [SerializeField] Transform PivotL;
         [SerializeField] Transform PivotR;
@@ -127,6 +136,8 @@ namespace HeavenStudio.Games
         bool hitHaiL = false;
         bool hitHaiR = false;
         bool hitDonaiyanen = false;
+
+        public bool lights = false;
 
 
 
@@ -531,6 +542,22 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat + 0.75f, delegate { vultureCanBop = true; ravenCanBop = true; }),
             });
+        }
+
+        public void ToggleLights(double beat)
+        {
+            if(lights == true)
+            {
+                StageAnim.DoScaledAnimationAsync("LightsOff", 0.5f);
+                lights = false;
+                return;
+            }
+            if(lights == false)
+            {
+                StageAnim.DoScaledAnimationAsync("LightsOn", 0.5f);
+                lights = true;
+                return;
+            }
         }
 
         private void Update()
