@@ -109,6 +109,9 @@ namespace HeavenStudio.Games
         private double _pillarEndBeat = double.MaxValue;
         public double PillarEndBeat => _pillarEndBeat;
 
+        private bool _useEndTotem = true;
+        public bool UseEndTotem => _useEndTotem;
+
         [NonSerialized] public List<RiqEntity> _tripleEvents = new();
         [NonSerialized] public List<RiqEntity> _highJumpEvents = new();
 
@@ -130,7 +133,7 @@ namespace HeavenStudio.Games
             GetHighJumpEvents();
             GetTripleEvents();
             HandleBopsOnStart(beat);
-            _totemManager.InitBeats(_startBeat);
+            _totemManager.InitBeats(_startBeat, _endBeat, _useEndTotem);
             _jumper.InitPath(_startBeat, beat);
         }
 
@@ -144,7 +147,7 @@ namespace HeavenStudio.Games
             GetHighJumpEvents();
             GetTripleEvents();
             HandleBopsOnStart(beat);
-            _totemManager.InitBeats(_startBeat);
+            _totemManager.InitBeats(_startBeat, _endBeat, _useEndTotem);
             _jumper.InitPath(_startBeat, beat);
         }
 
@@ -173,6 +176,7 @@ namespace HeavenStudio.Games
             if (allStops.Count == 0) return;
 
             _endBeat = allStops[0].beat;
+            _useEndTotem = allStops[0]["anim"];
         }
 
         private void HandleBopsOnStart(double beat)
@@ -355,6 +359,23 @@ namespace HeavenStudio.Games
         {
             return IsHighBeat(beat) || IsTripleBeat(beat);
         }
+
+        public void DoEndTotemEvents(double beat)
+        {
+            SoundByte.PlayOneShotGame("totemClimb/finallanding", beat);
+            _totemManager.EndTotemAnimator.DoScaledAnimationAsync("Land", 0.5f);
+            SoundByte.PlayOneShotGame("totemClimb/openwings", beat + 1);
+
+            BeatAction.New(this, new()
+            {
+                new(beat + 1, delegate
+                {
+                    _totemManager.EndTotemAnimator.DoScaledAnimationAsync("OpenWings", 0.5f);
+                })
+            });
+        }
+
+        public Transform EndJumperPoint => _totemManager.EndJumperPoint;
 
         public static void TripleJumpSound(double beat, float length)
         {

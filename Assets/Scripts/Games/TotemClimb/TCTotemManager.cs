@@ -9,6 +9,11 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
     {
         [SerializeField] private Transform _totemTransform;
         [SerializeField] private Transform _frogTransform;
+        [SerializeField] private Transform _endTotemTransform;
+        [SerializeField] private Animator _endTotemAnimator;
+        [SerializeField] private Transform _endJumperPoint;
+        [SerializeField] private ParticleSystem _endParticleLeft;
+        [SerializeField] private ParticleSystem _endParticleRight;
         [SerializeField] private TCDragon _dragon;
         [SerializeField] private float _xDistance;
         [SerializeField] private float _yDistance;
@@ -27,6 +32,11 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
         private int _totemIndex = 0;
 
         private float _pillarEndDistance;
+
+        private bool _usingEndTotem = false;
+
+        public Transform EndJumperPoint => _endJumperPoint;
+        public Animator EndTotemAnimator => _endTotemAnimator;
 
         private TotemClimb _game;
 
@@ -53,12 +63,13 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             }
         }
 
-        public void InitBeats(double startBeat)
+        public void InitBeats(double startBeat, double endBeat, bool useEndTotem)
         {
+            _usingEndTotem = useEndTotem;
             for (int i = 0; i < _totems.Count; i++)
             {
                 _totems[i].beat = startBeat + i;
-                _totems[i].transform.gameObject.SetActive(_totems[i].beat - 1 < _game.EndBeat && !_game.IsTripleOrHighBeat(_totems[i].beat));
+                _totems[i].transform.gameObject.SetActive(_totems[i].beat - (_usingEndTotem ? 0 : 1) < _game.EndBeat && !_game.IsTripleOrHighBeat(_totems[i].beat));
             }
 
             foreach (var e in _game._tripleEvents) 
@@ -84,6 +95,18 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 spawnedDragon.beat = beat;
                 _dragons.Add(spawnedDragon);
             }
+
+            if (useEndTotem)
+            {
+                _endTotemTransform.gameObject.SetActive(true);
+                _endTotemTransform.localPosition += new Vector3(_xDistance * (float)(endBeat - startBeat), _yDistance * (float)(endBeat - startBeat));
+            }
+        }
+
+        public void ActivateEndParticles()
+        {
+            _endParticleLeft.PlayScaledAsync(0.5f);
+            _endParticleRight.PlayScaledAsync(0.5f);
         }
 
         public void BopTotemAtBeat(double beat)
@@ -180,7 +203,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
 
                 t.transform.localPosition = new Vector3(t.transform.localPosition.x + (_xDistance * _totemAmount), t.transform.localPosition.y + (_yDistance * _totemAmount));
                 t.beat += _totemAmount;
-                t.transform.gameObject.SetActive(t.beat - 1 < _game.EndBeat && !_game.IsTripleOrHighBeat(t.beat));
+                t.transform.gameObject.SetActive(t.beat - (_usingEndTotem ? 0 : 1) < _game.EndBeat && !_game.IsTripleOrHighBeat(t.beat));
                 _totemIndex++;
             }
         }

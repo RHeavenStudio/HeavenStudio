@@ -111,7 +111,14 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     target = _game.IsTripleBeat(beat) ? _game.GetJumperFrogPointAtBeat(beat, 1) : _game.GetJumperPointAtBeat(beat)
                 };
                 
-                if (_game.IsHighBeat(beat + 1))
+                if (beat + 1 >= _onPlayBeat && _game.EndBeat <= beat + 1)
+                {
+                    _path.positions[1] = new PathPos()
+                    {
+                        target = _game.EndJumperPoint
+                    };
+                }
+                else if (_game.IsHighBeat(beat + 1))
                 {
                     _path.positions[1] = new PathPos()
                     {
@@ -145,7 +152,15 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 yield return null;
             }
             _anim.Play("Idle", 0, 0);
-            if (beat + 1 >= _onPlayBeat && _game.EndBeat <= beat + 1) SoundByte.PlayOneShotGame("totemClimb/totemland");
+            if (beat + 1 >= _onPlayBeat && _game.EndBeat <= beat + 1)
+            {
+                SoundByte.PlayOneShotGame("totemClimb/totemland");
+                if (_game.UseEndTotem)
+                {
+                    _game.DoEndTotemEvents(beat + 1);
+                    gameObject.SetActive(false);
+                }
+            }
         }
 
         private IEnumerator JumpTripleCo(double beat, bool enter, bool miss, bool nearMiss)
@@ -200,7 +215,14 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     target = _game.GetDragonPointAtBeat(beat)
                 };
 
-                if (_game.IsHighBeat(beat + 2))
+                if (beat + 2 >= _onPlayBeat && _game.EndBeat <= beat + 2)
+                {
+                    _path.positions[1] = new PathPos()
+                    {
+                        target = _game.EndJumperPoint
+                    };
+                }
+                else if (_game.IsHighBeat(beat + 2))
                 {
                     _path.positions[1] = new PathPos()
                     {
@@ -245,7 +267,15 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _anim.Play("Idle", 0, 0);
             _highParticle.Stop();
             _highMissParticle.Stop();
-            if (beat + 2 >= _onPlayBeat && _game.EndBeat <= beat + 2) SoundByte.PlayOneShotGame("totemClimb/totemland");
+            if (beat + 2 >= _onPlayBeat && _game.EndBeat <= beat + 2)
+            {
+                SoundByte.PlayOneShotGame("totemClimb/totemland");
+                if (_game.UseEndTotem)
+                {
+                    _game.DoEndTotemEvents(beat + 2);
+                    gameObject.SetActive(false);
+                }
+            }
         }
 
         private IEnumerator HoldCo(double beat)
