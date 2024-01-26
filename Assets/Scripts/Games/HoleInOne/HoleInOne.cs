@@ -56,7 +56,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             HoleInOne.instance = this;
-            MonkeyAnimator = GetComponent<Animator>();
+            MonkeyAnimator = Monkey.GetComponent<Animator>();
         }
 
         public void DoTestAnim(double beat)
