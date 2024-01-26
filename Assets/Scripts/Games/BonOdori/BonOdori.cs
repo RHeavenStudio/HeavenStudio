@@ -228,6 +228,7 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound("bonOdori/do_n1", beat + 1, offset: 0.01f)});
                 break;
                 case (int)variationDo_n.variation1:
+                
                         MultiSound.Play(new MultiSound.Sound[] {
                         new MultiSound.Sound("bonOdori/do_n2", beat + 1, offset: 0.01f)});
                 break;
