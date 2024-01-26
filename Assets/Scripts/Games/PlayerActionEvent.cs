@@ -42,8 +42,6 @@ namespace HeavenStudio.Games
 
         public bool noAutoplay = false; //Indicates if this PlayerActionEvent is recognized by the autoplay. /!\ Overrides autoPlayOnly /!\
 
-        public InputType inputType; //The type of input. Check the InputType class to see a list of all of them
-
         public bool perfectOnly = false; //Indicates that the input only recognize perfect inputs.
 
         public bool countsForAccuracy = true; //Indicates if the input counts for the accuracy or not. If set to false, it'll not be counted in the accuracy calculation
@@ -159,11 +157,6 @@ namespace HeavenStudio.Games
                     int catIdx = (int)PlayerInput.CurrentControlStyle;
                     if (toCompare.InputAction != null
                         && toCompare.InputAction.inputLockCategory[catIdx] != InputAction.inputLockCategory[catIdx]) continue;
-                }
-                else
-                {
-                    if ((toCompare.inputType & this.inputType) == 0) continue;
-                    if (!toCompare.IsExpectingInputNow()) continue;
                 }
 
                 double t1 = this.startBeat + this.timer;

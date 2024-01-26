@@ -177,29 +177,23 @@ namespace HeavenStudio.Games
         protected static bool IA_TouchNrm(out double dt)
         {
             return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && (instance.currentReceiver is WhichTossKid.Akachan
-                    || (instance.lastReceiver is WhichTossKid.Akachan or WhichTossKid.None
-                        && instance.currentReceiver is WhichTossKid.None)
-                    || (instance.IsExpectingInputNow(InputAction_Aka)
-                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii))));
+                && ((instance.currentReceiver is WhichTossKid.Akachan or WhichTossKid.None)
+                    || instance.IsExpectingInputNow(InputAction_Aka))
+                && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii));
         }
         protected static bool IA_TouchDir(out double dt)
         {
             return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && (instance.currentReceiver is WhichTossKid.Kiiyan
-                    || (instance.lastReceiver is WhichTossKid.Kiiyan
-                        && instance.currentReceiver is WhichTossKid.None)
-                    || (instance.IsExpectingInputNow(InputAction_Kii)
-                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Aka))));
+                && ((instance.currentReceiver is WhichTossKid.Kiiyan)
+                    || instance.IsExpectingInputNow(InputAction_Kii))
+                && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Aka));
         }
         protected static bool IA_TouchAlt(out double dt)
         {
             return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && (instance.currentReceiver is WhichTossKid.Aokun
-                    || (instance.lastReceiver is WhichTossKid.Aokun
-                        && instance.currentReceiver is WhichTossKid.None)
-                    || (instance.IsExpectingInputNow(InputAction_Ao)
-                        && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii))));
+                && ((instance.currentReceiver is WhichTossKid.Aokun)
+                    || instance.IsExpectingInputNow(InputAction_Ao))
+                && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii));
         }
 
         protected static bool IA_BatonNrm(out double dt)
