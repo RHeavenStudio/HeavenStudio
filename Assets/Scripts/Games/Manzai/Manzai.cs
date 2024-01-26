@@ -75,11 +75,15 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("lights", "Toggle Lights")
                 {
-                function = delegate {
-                    var e = eventCaller.currentEntity; 
-                    Manzai.instance.ToggleLights(e.beat); 
-                },
-                defaultLength = 0.5f,
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        Manzai.instance.ToggleLights(e["lightsEnabled"]); 
+                    },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("lightsEnabled", false, "Spotlights", "Whether the spotlights will be turned on"),
+                    },
                 },
             });
         }
@@ -112,17 +116,22 @@ namespace HeavenStudio.Games
         [SerializeField] Animator RavenAnim;
         [SerializeField] Animator HaiBubbleL;
         [SerializeField] Animator HaiBubbleR;
+        [SerializeField] Animator DonaiyanenBubble;
         [SerializeField] Animator BothBirdsAnim;
         [SerializeField] Animator StageAnim;
 
         [SerializeField] Transform PivotL;
         [SerializeField] Transform PivotR;
+        [SerializeField] Transform PivotD;
 
         bool ravenBop = true;
         bool vultureBop = true;
 
         bool ravenCanBop = true;
         bool vultureCanBop = true;
+
+        bool ravenCanBopTemp = true;
+        bool vultureCanBopTemp = true;
 
         bool isMoving;
         double movingStartBeat;
@@ -137,7 +146,8 @@ namespace HeavenStudio.Games
         bool hitHaiR = false;
         bool hitDonaiyanen = false;
 
-        public bool lights = false;
+        double lastWhiffBeat = double.MinValue;
+        bool canDodge = true;
 
 
 
@@ -274,13 +284,13 @@ namespace HeavenStudio.Games
 
         public void BopAnimationRaven()
         {
-            if (ravenCanBop)
+            if (ravenCanBop && ravenCanBopTemp)
                 RavenAnim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
         public void BopAnimationVulture()
         {
-            if (vultureCanBop)
+            if (vultureCanBop && vultureCanBopTemp)
                 VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
@@ -331,6 +341,7 @@ namespace HeavenStudio.Games
         public void DoPunHai(double beat, int whichPun)
         {
             vultureCanBop = false;
+            canDodge = false;
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
             var punName= Enum.GetName(typeof(Puns), whichPun);
 
@@ -343,7 +354,7 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
+                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                     new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat); }),
                 });
@@ -356,7 +367,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 1.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
+                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                     new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat); }),
                 });
@@ -426,6 +437,7 @@ namespace HeavenStudio.Games
         public void DoPunBoing(double beat, int whichPun)
         {
             vultureCanBop = false;
+            canDodge = false;
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
             var punName= Enum.GetName(typeof(Puns), whichPun);
             int length = boingLengths.GetValueOrDefault(punName);
@@ -442,7 +454,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 1.25f, delegate { isPreparingForBoing = true; }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.50 : beat + 1.25, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
+                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; }),
                     new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat); }),
                     new BeatAction.Action(beat + 3.20f, delegate { isPreparingForBoing = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
@@ -458,7 +470,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 1.25f, delegate { isPreparingForBoing = true; }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.50 : beat + 1.25, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
+                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; }),
                     new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat); }),
                     new BeatAction.Action(beat + 3.20f, delegate { isPreparingForBoing = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
@@ -502,6 +514,9 @@ namespace HeavenStudio.Games
             }
             RavenAnim.DoScaledAnimationAsync("Attack", 0.5f);
             VultureAnim.DoScaledAnimationAsync("Damage", 0.5f);
+
+            int bubbleAnimation = UnityEngine.Random.Range(0, 2);
+            DonaiyanenBubble.DoScaledAnimationAsync(bubbleAnimation == 1 ? "DonaiyanenL" : "DonaiyanenR", 0.5f);
         }
 
         public void BoingMiss(PlayerActionEvent caller)
@@ -536,6 +551,14 @@ namespace HeavenStudio.Games
             movingStartBeat = beat;
             movingLength = length;
             moveAnim = (goToSide == 0 ? "SlideIn" : "SlideOut");
+            if (goToSide == 0)
+            {
+                canDodge = true;
+            }
+            else
+            {
+                canDodge = false;
+            }
             isMoving = true;
             lastEase = (EasingFunction.Ease)ease;
             BeatAction.New(instance, new List<BeatAction.Action>()
@@ -544,20 +567,9 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void ToggleLights(double beat)
+        public void ToggleLights(bool lightsEnabled)
         {
-            if(lights == true)
-            {
-                StageAnim.DoScaledAnimationAsync("LightsOff", 0.5f);
-                lights = false;
-                return;
-            }
-            if(lights == false)
-            {
-                StageAnim.DoScaledAnimationAsync("LightsOn", 0.5f);
-                lights = true;
-                return;
-            }
+            StageAnim.DoScaledAnimationAsync(lightsEnabled ? "LightsOff" : "LightsOn", 0.5f);
         }
 
         private void Update()
@@ -584,6 +596,8 @@ namespace HeavenStudio.Games
                         SoundByte.PlayOneShotGame("manzai/hai");
                         RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
                         VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                        lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
+                        ravenCanBopTemp = false;
                     }
                 }
                 else
@@ -591,6 +605,8 @@ namespace HeavenStudio.Games
                     SoundByte.PlayOneShotGame("manzai/hai");
                     RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
                     VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                    lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
+                    ravenCanBopTemp = false;
                 }
             }
             if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && PlayerInput.GetIsAction(InputAction_BasicRelease) && isPreparingForBoing)
@@ -602,7 +618,13 @@ namespace HeavenStudio.Games
             {
                 SoundByte.PlayOneShotGame("manzai/miss2");
                 RavenAnim.DoScaledAnimationAsync("Spin", 0.5f);
-                VultureAnim.DoScaledAnimationAsync("Dodge", 0.5f);
+                lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
+                ravenCanBopTemp = false;
+                if (canDodge)
+                {
+                    VultureAnim.DoScaledAnimationAsync("Dodge", 0.5f);
+                    vultureCanBopTemp = false;
+                }
             }
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && IsExpectingInputNow(InputAction_Alt) && PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
             {
@@ -612,6 +634,21 @@ namespace HeavenStudio.Games
                 VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 missedWithWrongButton = true;
             }
+            if ((lastWhiffBeat + 1) < conductor.songPositionInBeatsAsDouble)
+            {
+                ravenCanBopTemp = true;
+                vultureCanBopTemp = true;
+            }
+            if (canDodge == false)
+            {
+                vultureCanBopTemp = true;
+            }
+        }
+
+        public void LateUpdate()
+        {
+            var rot = PivotL.eulerAngles;
+            rot.z = 50;
         }
 
         public override void OnGameSwitch(double beat)
