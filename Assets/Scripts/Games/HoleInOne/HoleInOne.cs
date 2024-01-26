@@ -47,29 +47,22 @@ namespace HeavenStudio.Games
     /// Minigame inherits directly from MonoBehaviour, and adds Heaven Studio specific methods to override.
     public class HoleInOne : Minigame
     {
-        public Animator Monkey;
+        public Animator MonkeyAnimator;
+        public GameObject Monkey;
 
         public static HoleInOne instance;
 
-        // Awake is called before the first frame update
+        // Start is called before the first frame update
         void Awake()
         {
             HoleInOne.instance = this;
-        }
-
-        void Update()
-        {
-
+            MonkeyAnimator = GetComponent<Animator>();
         }
 
         public void DoTestAnim(double beat)
         {
             SoundByte.PlayOneShotGame("holeInOne/whale");
-
-            BeatAction.New(instance, new List<BeatAction.Action>()
-            {
-            new BeatAction.Action(beat,     delegate { Monkey.DoScaledAnimationAsync("MonkeySpin", 0.5f);}),
-            });  
+            MonkeyAnimator.Play("MonkeySpin");
         }
 
         public void DoMandrill(double beat)
