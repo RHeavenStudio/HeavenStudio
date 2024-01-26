@@ -54,6 +54,22 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 4f           
                 },
+                new("startCue", "Normal Jump Cue")
+                {
+                    preFunction = delegate
+                    {
+                        TotemClimb.StartCueIn(eventCaller.currentEntity.beat + 2);
+                    },
+                    defaultLength = 2f
+                },
+                new("tripleCue", "Triple Jump Cue")
+                {
+                    preFunction = delegate
+                    {
+                        TotemClimb.TripleCueIn(eventCaller.currentEntity.beat + 2);
+                    },
+                    defaultLength = 2f
+                },
                 new("bird", "Bird")
                 {
                     function = delegate 
@@ -394,7 +410,17 @@ namespace HeavenStudio.Games
             {
                 new("totemClimb/beatchange", beat - 2),
                 new("totemClimb/beatchange", beat - 1),
-            });
+            }, true, true);
+        }
+
+        public static void TripleCueIn(double beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new("totemClimb/beatchange", beat - 2),
+                new("totemClimb/beatchange", beat - 1.5),
+                new("totemClimb/beatchange", beat - 1),
+            }, true, true);
         }
 
         public static void TripleJumpSound(double beat, float length, bool enterSound, bool exitSound)
