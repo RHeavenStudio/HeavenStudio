@@ -141,7 +141,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("start", AirRally.DayNightCycle.Day, "Start Time", "Set the time of day for the start of the event."),
-                        new Param("end", AirRally.DayNightCycle.Noon, "End Time", "Set the time of day for the end of the event."),
+                        new Param("end", AirRally.DayNightCycle.Twilight, "End Time", "Set the time of day for the end of the event."),
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
@@ -684,20 +684,20 @@ namespace HeavenStudio.Games
             timeEase = ease;
             objectsColorFrom = lastTime switch
             {
-                DayNightCycle.Noon => Color.black,
+                DayNightCycle.Twilight => Color.black,
                 _ => Color.white,
             };
 
             objectsColorTo = currentTime switch
             {
-                DayNightCycle.Noon => Color.black,
+                DayNightCycle.Twilight => Color.black,
                 _ => Color.white,
             };
 
             bgColorFrom = lastTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColor,
+                DayNightCycle.Twilight => noonColor,
                 DayNightCycle.Night => nightColor,
                 _ => throw new System.NotImplementedException()
             };
@@ -705,7 +705,7 @@ namespace HeavenStudio.Games
             bgColorTo = currentTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColor,
+                DayNightCycle.Twilight => noonColor,
                 DayNightCycle.Night => nightColor,
                 _ => throw new System.NotImplementedException()
             };
@@ -713,7 +713,7 @@ namespace HeavenStudio.Games
             cloudColorFrom = lastTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColorCloud,
+                DayNightCycle.Twilight => noonColorCloud,
                 DayNightCycle.Night => nightColorCloud,
                 _ => throw new System.NotImplementedException()
             };
@@ -721,7 +721,7 @@ namespace HeavenStudio.Games
             cloudColorTo = currentTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColorCloud,
+                DayNightCycle.Twilight => noonColorCloud,
                 DayNightCycle.Night => nightColorCloud,
                 _ => throw new System.NotImplementedException()
             };
@@ -759,7 +759,7 @@ namespace HeavenStudio.Games
         public enum DayNightCycle
         {
             Day = 0,
-            Noon = 1,
+            Twilight = 1,
             Night = 2
         }
 

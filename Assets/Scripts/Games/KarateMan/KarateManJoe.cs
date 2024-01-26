@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         double lastChargeTime = double.MinValue;
         double unPrepareTime = double.MinValue;
         double noNuriJabTime = double.MinValue;
-        bool canEmote = false;
+        bool canEmote = false, justPunched = false;
         public int wantFace = 0;
 
         public bool inSpecial
@@ -137,7 +137,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 }
             }
 
-            if (PlayerInput.GetIsAction(KarateMan.InputAction_Press) && !inSpecial)
+            if (PlayerInput.GetIsAction(KarateMan.InputAction_Press) && !(inSpecial || justPunched))
             {
                 if (!KarateMan.instance.IsExpectingInputNow(KarateMan.InputAction_Press))
                 {
@@ -204,7 +204,11 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     }
                 }
             }
+        }
 
+        void LateUpdate() 
+        {
+            justPunched = false;
         }
 
         public void Bop()
@@ -230,19 +234,6 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
             switch (forceHand)
             {
-                case 0:
-                    if (cond.songPositionInBeatsAsDouble - lastPunchTime < 0.25f + (Minigame.JustLateTime() - 1f))
-                    {
-                        lastPunchTime = double.MinValue;
-                        anim.DoScaledAnimationAsync("Straight", 0.5f);
-                        straight = true;
-                    }
-                    else
-                    {
-                        lastPunchTime = cond.songPositionInBeatsAsDouble;
-                        anim.DoScaledAnimationAsync("Jab", 0.5f);
-                    }
-                    break;
                 case 1:
                     anim.DoScaledAnimationAsync("Jab", 0.5f);
                     break;
@@ -255,6 +246,19 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     anim.DoNormalizedAnimation("JabNoNuri");
                     noNuriJabTime = cond.songPositionInBeatsAsDouble;
                     break;
+                default:
+                    if (cond.songPositionInBeatsAsDouble <= cond.GetBeatFromSongPos(lastPunchTime + Minigame.NgLateTime() - 1) + 0.25)
+                    {
+                        lastPunchTime = double.MinValue;
+                        anim.DoScaledAnimationAsync("Straight", 0.5f);
+                        straight = true;
+                    }
+                    else
+                    {
+                        lastPunchTime = cond.songPositionAsDouble;
+                        anim.DoScaledAnimationAsync("Jab", 0.5f);
+                    }
+                    break;
             }
             if (touchCharge)
             {
@@ -265,6 +269,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 bop.startBeat = cond.songPositionInBeatsAsDouble + 0.5f;
             }
+            justPunched = true;
             return straight;    //returns what hand was used to punch the object
         }
 
@@ -382,6 +387,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void UpdateJoeColour()
         {
+            Material mappingMat = KarateMan.instance.MappingMaterial;
+            if (mappingMat == null) return;
             Color mainCol = KarateMan.instance.BodyColor;
             Color highlightCol = KarateMan.instance.HighlightColor;
 
@@ -391,9 +398,9 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 mainCol = Color.LerpUnclamped(mainCol, BombGlowTint, bombGlowIntensity * bombGlowRatio);
             }
 
-            KarateMan.instance.MappingMaterial.SetColor("_ColorAlpha", mainCol);
-            KarateMan.instance.MappingMaterial.SetColor("_ColorBravo", new Color(1, 0, 0, 1));
-            KarateMan.instance.MappingMaterial.SetColor("_ColorDelta", highlightCol);
+            mappingMat.SetColor("_ColorAlpha", mainCol);
+            mappingMat.SetColor("_ColorBravo", new Color(1, 0, 0, 1));
+            mappingMat.SetColor("_ColorDelta", highlightCol);
         }
 
         public void Prepare(double beat, float length)

@@ -46,6 +46,7 @@ namespace HeavenStudio
         [SerializeField] private TMP_Text chartMapperText;
         [SerializeField] private TMP_Text chartIdolText;
         [SerializeField] private TMP_Text chartDescText;
+        [SerializeField] private GameObject flashWarning;
         [SerializeField] private TMP_Text chartStyleText;
         [SerializeField] private Image campaignOption;
         [SerializeField] private Sprite campaignOn;
@@ -69,12 +70,13 @@ namespace HeavenStudio
 
         private double lastAbsTime;
         private double startTime;
+        private float playPanelRevealTime;
 
         private bool altBop;
 
         private bool logoRevealed;
 
-        private bool menuMode, snsRevealed, playMenuRevealed, exiting, firstPress, usingMouse;
+        private bool menuMode, snsRevealed, playMenuRevealed, exiting, firstPress, usingMouse, waitingForButtonUp;
 
         private Animator menuAnim, selectedDisplayAnim;
         private Selectable currentSelectable, mouseSelectable;
@@ -241,9 +243,9 @@ namespace HeavenStudio
                 targetBopBeat += 1;
             }
 
-            if (menuMode && !(exiting || GlobalGameManager.IsShowingDialog))
+            var controller = PlayerInput.GetInputController(1);
+            if (menuMode && !(exiting || GlobalGameManager.IsShowingDialog || waitingForButtonUp))
             {
-                var controller = PlayerInput.GetInputController(1);
                 if (playMenuRevealed)
                 {
                     if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
@@ -285,6 +287,16 @@ namespace HeavenStudio
                 else if (!firstPress)
                 {
                     UpdateSelectable(controller);
+                }
+            }
+            if (waitingForButtonUp)
+            {
+                if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                {
+                    if (controller.GetActionUp(PlayerInput.CurrentControlStyle, (int)InputController.ActionsPad.East, out _))
+                    {
+                        waitingForButtonUp = false;
+                    }
                 }
             }
             if (firstPress) firstPress = false;
@@ -546,6 +558,7 @@ namespace HeavenStudio
                     chartDescText.text = beatmap["remixdesc"];
                     chartIdolText.text = "♪ " + beatmap["idolcredit"];
                     chartStyleText.text = $"Recommended Control Style: {beatmap["playstyle"].ToString()}";
+                    flashWarning.SetActive(beatmap["accessiblewarning"]);
 
                     if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.On)
                     {
@@ -556,6 +569,8 @@ namespace HeavenStudio
                         campaignOption.sprite = campaignOff;
                     }
 
+                    // waitingForButtonUp = true;
+                    playPanelRevealTime = Time.realtimeSinceStartup + 0.2f;
                     playPanel.SetActive(true);
                     playMenuRevealed = true;
                     SoundByte.PlayOneShot("ui/UISelect");
@@ -572,6 +587,7 @@ namespace HeavenStudio
 
         public void PlayPanelAccept()
         {
+            if (playPanelRevealTime > Time.realtimeSinceStartup) return;
             if (exiting) return;
             exiting = true;
             SoundByte.PlayOneShot("ui/UIEnter");
@@ -586,6 +602,7 @@ namespace HeavenStudio
             PersistentDataManager.SaveSettings();
             playPanel.SetActive(false);
             playMenuRevealed = false;
+            waitingForButtonUp = false;
         }
 
         public void ToggleCampaign()

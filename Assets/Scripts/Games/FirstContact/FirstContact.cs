@@ -316,17 +316,24 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.GetIsAction(InputAction_Press) && !IsExpectingInputNow(InputAction_Press))
             {
-                translator.DoScaledAnimationAsync("translator_eh", 0.5f);
                 if (isSpeaking)
                 {
-                    if (callDiagIndex == 0)
+                    if (noHitOnce || callDiagIndex == 0)
+                    {
                         FailContact();
+                    }
                     else
+                    {
+                        SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
                         TrailingContact();
+                        ScoreMiss();
+                    }
                 }
                 else if (!noHitOnce && !missionControl.activeInHierarchy)
                 {
+                    translator.DoScaledAnimationAsync("translator_eh", 0.5f);
                     SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_MISS2_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-2, 1), false));
+                    ScoreMiss();
                 }
             }
         }
@@ -414,7 +421,7 @@ namespace HeavenStudio.Games
             {
                 var input = inputs[i];
                 double relativeBeat = input.beat - intervalBeat;
-                ScheduleInput(beat, length + relativeBeat, InputAction_Press, AlienTapping, AlienOnMiss, AlienEmpty);
+                ScheduleInput(beat, length + relativeBeat, InputAction_Press, AlienTapping, AlienOnMiss, AlienEmpty, CanAlienTapping);
                 callDiagList.Add((input["dialogue"], input["newline"]));
             }
             BeatAction.New(this, new List<BeatAction.Action>()
@@ -422,6 +429,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate
                 {
                     isSpeaking = true;
+                    hasMissed = false;
                     SoundByte.PlayOneShotGame("firstContact/turnover");
                     alienTextbox.SetActive(false);
                     alien.Play("alien_point", 0, 0);
@@ -582,56 +590,38 @@ namespace HeavenStudio.Games
             hasMissed = true;
         }
 
+        public bool CanAlienTapping()
+        {
+            return !(hasMissed || noHitOnce);
+        }
+
         public void AlienTapping(PlayerActionEvent caller, float state) //OnHit
         {
-            if (hasMissed && callDiagIndex == 0)
+            (string dialogue, bool showNewline) = callDiagList[callDiagIndex];
+            translateTextbox.SetActive(true);
+            if (showNewline)
             {
-                caller.isEligible = false;
-                ScoreMiss();
-                return;
-            };
-
-            if (noHitOnce)
-            {
-                caller.isEligible = false;
-                FailContact();
-                return;
+                ResetTranslateTextbox(true);
             }
-
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
-                translator.DoScaledAnimationAsync("translator_speak", 0.5f);
-                if (callDiagIndex == 0) return;
                 TrailingContact();
+                callDiagIndex++;
                 return;
             }
 
             translator.DoScaledAnimationAsync("translator_speak", 0.5f);
             SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
             SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_B");
-            if (hasMissed)
-            {
-                caller.isEligible = false;
-                return;
-            }
-            else
-            {
-                (string dialogue, bool showNewline) = callDiagList[callDiagIndex];
-                if (showNewline)
-                {
-                    ResetTranslateTextbox(true);
-                }
-                respDiagBuffer += dialogue;
-                translateTextbox.SetActive(true);
-                UpdateTranslateTextbox();
-                callDiagIndex++;
-            }
+            respDiagBuffer += dialogue;
+            UpdateTranslateTextbox();
+            callDiagIndex++;
         }
 
         public void AlienOnMiss(PlayerActionEvent caller) //OnMiss
         {
-            if (!noHitOnce)
+            if (!noHitOnce && !hasMissed)
             {
                 SoundByte.PlayOneShotGame("firstContact/alienNoHit");
                 noHitOnce = true;

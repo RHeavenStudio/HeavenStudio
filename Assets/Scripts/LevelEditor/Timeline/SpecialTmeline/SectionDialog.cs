@@ -11,7 +11,7 @@ using TMPro;
 
 public class SectionDialog : Dialog
 {
-    const float MIN_WEIGHT = 0, MAX_WEIGHT = 10;
+    const float MIN_WEIGHT = 0, MAX_WEIGHT = 10, WEIGHT_INTERVAL = 0.1f;
     SectionTimelineObj sectionObj;
     [SerializeField] TMP_InputField sectionName;
     [SerializeField] Toggle challengeEnable;
@@ -40,7 +40,7 @@ public class SectionDialog : Dialog
 
             markerWeight.maxValue = MAX_WEIGHT;
             markerWeight.minValue = MIN_WEIGHT;
-            markerWeight.wholeNumbers = true;
+            markerWeight.wholeNumbers = false;
 
             if (!initHooks)
             {
@@ -65,10 +65,11 @@ public class SectionDialog : Dialog
         sectionName.text = sectionObj.chartEntity["sectionName"];
         challengeEnable.isOn = sectionObj.chartEntity["startPerfect"];
         markerWeight.value = sectionObj.chartEntity["weight"];
+        markerWeightManual.text = sectionObj.chartEntity["weight"].ToString("0.0");
 
         markerWeight.maxValue = MAX_WEIGHT;
         markerWeight.minValue = MIN_WEIGHT;
-        markerWeight.wholeNumbers = true;
+        markerWeight.wholeNumbers = false;
 
         UpdateCatButtonState();
     }
@@ -103,16 +104,23 @@ public class SectionDialog : Dialog
     public void SetSectionWeight()
     {
         if (sectionObj == null) return;
-        sectionObj.chartEntity["weight"] = markerWeight.value;
-        markerWeightManual.text = ((float) sectionObj.chartEntity["weight"]).ToString("G");
+        sectionObj.chartEntity["weight"] = RoundNearest(markerWeight.value, WEIGHT_INTERVAL);
+        markerWeight.value = sectionObj.chartEntity["weight"];
+        markerWeightManual.text = ((float) sectionObj.chartEntity["weight"]).ToString("0.0");
     }
 
     public void SetSectionWeightManual()
     {
         if (sectionObj == null) return;
-        sectionObj.chartEntity["weight"] = Mathf.Round((float)Math.Clamp(Convert.ToSingle(markerWeightManual.text), MIN_WEIGHT, MAX_WEIGHT));
+        sectionObj.chartEntity["weight"] = RoundNearest((float)Math.Clamp(Convert.ToSingle(markerWeightManual.text), MIN_WEIGHT, MAX_WEIGHT), WEIGHT_INTERVAL);
         markerWeight.value = sectionObj.chartEntity["weight"];
-        markerWeightManual.text = ((float) sectionObj.chartEntity["weight"]).ToString("G");
+        markerWeightManual.text = ((float) sectionObj.chartEntity["weight"]).ToString("0.0");
+    }
+
+    float RoundNearest(float a, float interval)
+    {
+        int root = Mathf.RoundToInt(a / interval);
+        return root * interval;
     }
 
     void UpdateCatButtonState()
