@@ -35,6 +35,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             public float moveSpeed = 1.0f;
 
             private List<Transform> _objects = new();
+            private List<float> _objectOffsets = new();
             private float _xDistance;
 
             private float GetDistance()
@@ -46,25 +47,34 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             {
                 _xDistance = GetDistance();
                 _objects.Add(first);
+                _objectOffsets.Add(first.localPosition.x);
                 _objects.Add(second);
+                _objectOffsets.Add(second.localPosition.x);
 
                 for (int i = 0; i < BACKGROUND_OBJECT_AMOUNT; i++)
                 {
                     Transform spawnedObject = Instantiate(first, parent);
                     spawnedObject.localPosition = new Vector3(second.localPosition.x + (_xDistance * (i + 1)), first.localPosition.y, first.localPosition.z);
                     _objects.Add(spawnedObject);
+                    _objectOffsets.Add(spawnedObject.localPosition.x);
                 }
             }
 
             public void ScrollClones()
             {
-                foreach (var b in _objects)
+                for (int i = 0; i < _objects.Count; i++)
                 {
-                    b.localPosition += new Vector3(-Time.deltaTime * moveSpeed, 0);
+                    var b = _objects[i];
+                    var bOffset = _objectOffsets[i];
+                    float songPos = Conductor.instance.songPosition;
 
-                    if (b.localPosition.x <= _xDistance * -(BACKGROUND_OBJECT_AMOUNT + 2) / 2)
+                    b.localPosition = new Vector3(bOffset - (songPos * moveSpeed), b.localPosition.y);
+
+                    float fullDistance = (BACKGROUND_OBJECT_AMOUNT + 2) * _xDistance;
+
+                    if (b.localPosition.x <= -fullDistance / 2)
                     {
-                        b.localPosition = new Vector3(_xDistance * (BACKGROUND_OBJECT_AMOUNT + 2) / 2, b.localPosition.y, b.localPosition.z);
+                        _objectOffsets[i] = bOffset + fullDistance;
                     }
                 }
             }

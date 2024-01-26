@@ -18,8 +18,10 @@ namespace HeavenStudio.Games.Loaders
             {
                 new("start", "Start Jumping")
                 {
+                    preFunction = delegate { if (eventCaller.currentEntity["cue"]) TotemClimb.StartCueIn(eventCaller.currentEntity.beat); },
                     parameters = new List<Param>()
                     {
+                        new("cue", true, "Cue-In"),
                         new("hide", false, "Hide Fence")
                     }
                 },
@@ -385,6 +387,15 @@ namespace HeavenStudio.Games
         }
 
         public Transform EndJumperPoint => _totemManager.EndJumperPoint;
+
+        public static void StartCueIn(double beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new("totemClimb/beatchange", beat - 2),
+                new("totemClimb/beatchange", beat - 1),
+            });
+        }
 
         public static void TripleJumpSound(double beat, float length, bool enterSound, bool exitSound)
         {
