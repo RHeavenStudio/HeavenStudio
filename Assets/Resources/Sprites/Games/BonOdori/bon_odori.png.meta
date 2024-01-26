@@ -512,7 +512,7 @@ TextureImporter:
         width: 44
         height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -533,7 +533,7 @@ TextureImporter:
         width: 56
         height: 51
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -554,7 +554,7 @@ TextureImporter:
         width: 50
         height: 57
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -562,6 +562,27 @@ TextureImporter:
       bones: []
       spriteID: 69317f0c0a631a44fa6759d4d8188b29
       internalID: -1823065352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bon_odori_glasses
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 361
+        width: 31
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9580f92a948e0e046999f2a6db6dcd21
+      internalID: 1995107967
       vertices: []
       indices: 
       edges: []
@@ -589,6 +610,7 @@ TextureImporter:
       bon_odori_foot_1: -1359953972
       bon_odori_foot_2: 2045781370
       bon_odori_foot_3: -495488965
+      bon_odori_glasses: 1995107967
       bon_odori_hand: 1538450157
       bon_odori_hand_: 2071723266
       bon_odori_hand_1: 814594678
