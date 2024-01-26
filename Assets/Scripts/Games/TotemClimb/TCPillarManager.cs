@@ -50,13 +50,13 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
             _pillars[0].Add(_pillarSecond);
             _pillars[1].Add(_pillarUp);
 
-            if (_pillarFirst.localPosition.y >= _endDistance)
+            if (_pillarFirst.localPosition.y + _pillarDistanceY >= _endDistance)
             {
                 _pillarFirst.GetChild(0).gameObject.SetActive(true);
                 _pillarSecond.GetChild(0).gameObject.SetActive(true);
                 _pillarUp.gameObject.SetActive(false);
             }
-            else if (_pillarUp.localPosition.y >= _endDistance)
+            else if (_pillarUp.localPosition.y + _pillarDistanceY >= _endDistance)
             {
                 _pillarUp.GetChild(0).gameObject.SetActive(true);
             }
@@ -71,7 +71,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     spawnedPillar.localPosition = new Vector3(_pillarStartX + (_pillarDistanceX * j), spawnedPillar.localPosition.y + (_pillarDistanceY * i));
                     _pillars[i].Add(spawnedPillar);
 
-                    if (spawnedPillar.localPosition.y >= _endDistance)
+                    if (spawnedPillar.localPosition.y + _pillarDistanceY >= _endDistance)
                     {
                         spawnedPillar.GetChild(0).gameObject.SetActive(true);
                         _hasReachedEnd = true;
@@ -115,7 +115,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                     if (p == null) continue;
                     p.localPosition = new Vector3(p.localPosition.x, p.localPosition.y + (_pillarDistanceY * PILLAR_AMOUNT_Y));
 
-                    if (currentDistanceY >= _endDistance)
+                    if (currentDistanceY + _pillarDistanceY >= _endDistance)
                     {
                         p.GetChild(0).gameObject.SetActive(true);
                         _hasReachedEnd = true;

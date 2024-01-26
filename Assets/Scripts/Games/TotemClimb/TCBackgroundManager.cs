@@ -62,9 +62,9 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 {
                     b.localPosition += new Vector3(-Time.deltaTime * moveSpeed, 0);
 
-                    if (b.localPosition.x <= _xDistance * -BACKGROUND_OBJECT_AMOUNT / 2)
+                    if (b.localPosition.x <= _xDistance * -(BACKGROUND_OBJECT_AMOUNT + 2) / 2)
                     {
-                        b.localPosition = new Vector3(_xDistance * BACKGROUND_OBJECT_AMOUNT / 2, b.localPosition.y, b.localPosition.z);
+                        b.localPosition = new Vector3(_xDistance * (BACKGROUND_OBJECT_AMOUNT + 2) / 2, b.localPosition.y, b.localPosition.z);
                     }
                 }
             }

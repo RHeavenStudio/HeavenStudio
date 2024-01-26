@@ -151,6 +151,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
                 yield return null;
             }
+            transform.position = GetPathPositionFromBeat(_path, beat + _path.positions[0].duration, beat);
             _anim.Play("Idle", 0, 0);
             if (beat + 1 >= _onPlayBeat && _game.EndBeat <= beat + 1)
             {
@@ -264,6 +265,7 @@ namespace HeavenStudio.Games.Scripts_TotemClimb
                 normalizedBeat = Conductor.instance.GetPositionFromBeat(beat, _path.positions[0].duration);
                 yield return null;
             }
+            transform.position = GetPathPositionFromBeat(_path, beat + _path.positions[0].duration, beat);
             _anim.Play("Idle", 0, 0);
             _highParticle.Stop();
             _highMissParticle.Stop();
