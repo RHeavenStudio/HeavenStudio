@@ -198,42 +198,6 @@ namespace HeavenStudio.Games
             scheduledInputs.Remove(evt);
         }
 
-        //Get the scheduled input that should happen the **Soonest**
-        //Can return null if there's no scheduled inputs
-        // remark: need a check for specific button(s)
-        [Obsolete("Use GetClosestScheduledInput InputAction or InputAction category instead")]
-        public PlayerActionEvent GetClosestScheduledInput(InputType input = InputType.ANY)
-        {
-            PlayerActionEvent closest = null;
-
-            foreach (PlayerActionEvent toCompare in scheduledInputs)
-            {
-                // ignore inputs that are for sequencing in autoplay
-                if (toCompare.autoplayOnly) continue;
-
-                if (closest == null)
-                {
-                    if (input == InputType.ANY || (toCompare.inputType & input) != 0)
-                        closest = toCompare;
-                }
-                else
-                {
-                    double t1 = closest.startBeat + closest.timer;
-                    double t2 = toCompare.startBeat + toCompare.timer;
-
-                    // Debug.Log("t1=" + t1 + " -- t2=" + t2);
-
-                    if (t2 < t1)
-                    {
-                        if (input == InputType.ANY || (toCompare.inputType & input) != 0)
-                            closest = toCompare;
-                    }
-                }
-            }
-
-            return closest;
-        }
-
         public PlayerActionEvent GetClosestScheduledInput(int[] actionCats)
         {
             int catIdx = (int)PlayerInput.CurrentControlStyle;
@@ -267,22 +231,6 @@ namespace HeavenStudio.Games
             return closest;
         }
 
-        public PlayerActionEvent GetClosestScheduledInput(PlayerInput.InputAction action)
-        {
-            return GetClosestScheduledInput(action.inputLockCategory);
-        }
-
-        //Hasn't been tested yet. *Should* work.
-        //Can be used to detect if the user is expected to input something now or not
-        //Useful for strict call and responses games like Tambourine
-        [Obsolete("Use IsExpectingInputNow InputAction or InputAction category instead")]
-        public bool IsExpectingInputNow(InputType wantInput = InputType.ANY)
-        {
-            PlayerActionEvent input = GetClosestScheduledInput(wantInput);
-            if (input == null) return false;
-            return input.IsExpectingInputNow();
-        }
-
         public bool IsExpectingInputNow(int[] wantActionCategory)
         {
             PlayerActionEvent input = GetClosestScheduledInput(wantActionCategory);
@@ -299,43 +247,43 @@ namespace HeavenStudio.Games
         public static double NgEarlyTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f - ngEarlyTime;
-            return 1f - (ngEarlyTimeBase * pitch);
+                return 1 - ngEarlyTime;
+            return 1 - (ngEarlyTimeBase * pitch);
         }
 
         public static double JustEarlyTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f - justEarlyTime;
-            return 1f - (justEarlyTimeBase * pitch);
+                return 1 - justEarlyTime;
+            return 1 - (justEarlyTimeBase * pitch);
         }
 
         public static double JustLateTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f + justLateTime;
-            return 1f + (justLateTimeBase * pitch);
+                return 1 + justLateTime;
+            return 1 + (justLateTimeBase * pitch);
         }
 
         public static double NgLateTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f + ngLateTime;
-            return 1f + (ngLateTimeBase * pitch);
+                return 1 + ngLateTime;
+            return 1 + (ngLateTimeBase * pitch);
         }
 
         public static double AceEarlyTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f - aceEarlyTime;
-            return 1f - (aceEarlyTimeBase * pitch);
+                return 1 - aceEarlyTime;
+            return 1 - (aceEarlyTimeBase * pitch);
         }
 
         public static double AceLateTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f + aceLateTime;
-            return 1f + (aceLateTimeBase * pitch);
+                return 1 + aceLateTime;
+            return 1 + (aceLateTimeBase * pitch);
         }
 
         public virtual void OnGameSwitch(double beat)
