@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
 
         public static Minigame AddGame(EventCaller eventCaller)
         { 
-            return new Minigame("bonOdori", "The☆Bon Odori \n<color=#adadad>(Za☆Bon Odori)</color>", "ffffff", false, false, new List<GameAction>()
+            return new Minigame("bonOdori", "The☆Bon Odori \n<color=#adadad>(Za☆Bon Odori)</color>", "312B9F", false, false, new List<GameAction>()
             {
                 
                 new GameAction("pan", "Pan")
