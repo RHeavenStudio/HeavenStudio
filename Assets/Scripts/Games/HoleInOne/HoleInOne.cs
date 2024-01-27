@@ -66,12 +66,12 @@ namespace HeavenStudio.Games
         public void DoMandrill(double beat)
         {
             //Mandrill Multisound
-            // ScheduleInput(beat, 3f, InputAction_BasicPress, CatchSuccess, CatchSuccess1, CatchSuccess2);
+            ScheduleInput(beat, 3f, InputAction_BasicPress, MandrillSuccess, MandrillMiss, Whiff);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("holeInOne/mandrill1", beat),
                 new MultiSound.Sound("holeInOne/mandrill2", beat + 1f),
                 new MultiSound.Sound("holeInOne/mandrill3", beat + 2f),
-                new MultiSound.Sound("holeInOne/mandrill4", beat + 3f),
+                new MultiSound.Sound("holeInOne/hole1", beat + 3f),
             });
 
             // BeatAction.New(instance, new List<BeatAction.Action>()
@@ -86,7 +86,7 @@ namespace HeavenStudio.Games
         public void DoMonkey(double beat)
         {
             //Monkey Multisound
-            ScheduleInput(beat, 2f, InputAction_BasicPress, MonkeySuccess, MonkeyMiss, MonkeyWhiff);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, MonkeySuccess, MonkeyMiss, Whiff);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("holeInOne/monkey1", beat),
                 new MultiSound.Sound("holeInOne/monkey2", beat + 1f)
@@ -98,6 +98,18 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1.0f,     delegate { MonkeyAnim.Play("MonkeyThrow");}),
             });
 
+        }
+
+        public void MandrillSuccess(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("holeInOne/mandrill4");
+            MonkeyAnim.Play("MonkeySpin");
+        }
+
+        public void MandrillMiss(PlayerActionEvent caller)
+        {
+            SoundByte.PlayOneShotGame("holeInOne/whale");
+            MonkeyAnim.Play("MonkeySpin");            
         }
 
         public void MonkeySuccess(PlayerActionEvent caller, float state)
@@ -112,9 +124,8 @@ namespace HeavenStudio.Games
             MonkeyAnim.Play("MonkeySpin");            
         }
 
-        public void MonkeyWhiff(PlayerActionEvent caller)
+        public void Whiff(PlayerActionEvent caller)
         {
-            SoundByte.PlayOneShotGame("holeInOne/mandrill4");
             MonkeyAnim.Play("MonkeyBop");
         }
     }
