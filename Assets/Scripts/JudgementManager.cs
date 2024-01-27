@@ -13,7 +13,7 @@ using HeavenStudio.InputSystem;
 
 namespace HeavenStudio
 {
-    [RequireComponent(typeof(PlayableDirector), typeof(AudioSource))]
+    [RequireComponent(typeof(PlayableDirector), typeof(AudioSource), typeof(PlayableDirector))]
     public class JudgementManager : MonoBehaviour
     {
         enum Rank
@@ -58,7 +58,7 @@ namespace HeavenStudio
             public List<MedalInfo> medals;
 
             public double finalScore;
-            public bool star, perfect;
+            public bool star, perfect, noMiss;
             public DateTime time;
         }
 
@@ -85,6 +85,7 @@ namespace HeavenStudio
         [SerializeField] AudioClip messageLast;
         [SerializeField] AudioClip barLoop, barStop;
         [SerializeField] AudioClip rankNg, rankOk, rankHi;
+        [SerializeField] AudioClip noMissSound, starSound;
         [SerializeField] AudioClip musNgStart, musOkStart, musHiStart;
         [SerializeField] AudioClip musNg, musOk, musHi;
         [SerializeField] AudioClip jglNg, jglOk, jglHi;
@@ -103,6 +104,8 @@ namespace HeavenStudio
         [SerializeField] AspectRatioFitter epilogueFitter;
         [SerializeField] Sprite epilogueNg, epilogueOk, epilogueHi;
         [SerializeField] Sprite epilogueFrmNg, epilogueFrmOk, epilogueFrmHi;
+        [SerializeField] GameObject noMissComment;
+        [SerializeField] GameObject starComment;
 
         [SerializeField] GameObject bg;
         [SerializeField] GameObject rankLogo;
@@ -113,11 +116,12 @@ namespace HeavenStudio
         [SerializeField] Animator canvasAnim;
 
         AudioSource audioSource;
+        PlayableDirector director;
         List<int> usedCategories;
         float[] categoryInputs;
         double[] categoryScores;
         string msg0, msg1, msg2;
-        float barTime = 0, barStartTime = float.MaxValue;
+        float barTime = 0, barStartTime = float.MaxValue, didEpilogueTime = float.MaxValue;
         Rank rank;
         bool twoMessage = false, barStarted = false, didRank = false, didEpilogue = false, subRank = false;
 
@@ -126,6 +130,10 @@ namespace HeavenStudio
             bg.SetActive(false);
             rankLogo.SetActive(false);
             justOk.gameObject.SetActive(false);
+
+            noMissComment.SetActive(false);
+            starComment.SetActive(false);
+
             subRank = false;
 
             barText.text = "0";
@@ -521,6 +529,9 @@ namespace HeavenStudio
         private void Start()
         {
             audioSource = GetComponent<AudioSource>();
+            director = GetComponent<PlayableDirector>();
+            PrepareJudgement();
+            director.Play();
         }
 
         private IEnumerator WaitAndRank()
@@ -563,12 +574,13 @@ namespace HeavenStudio
                         audioSource.PlayOneShot(jglHi);
                     }
                     didEpilogue = true;
+                    didEpilogueTime = Time.realtimeSinceStartup + 1.5f;
                 }
-                else if (didEpilogue)
+                else if (didEpilogue && Time.realtimeSinceStartup > didEpilogueTime)
                 {
                     audioSource.Stop();
-                    RiqFileHandler.ClearCache();
                     GlobalGameManager.LoadScene("Title", 0.35f, 0.5f);
+                    RiqFileHandler.ClearCache();
                 }
                 else if (barStarted)
                 {
@@ -600,6 +612,18 @@ namespace HeavenStudio
                     {
                         barText.color = numColourHi;
                         barSlider.fillRect.GetComponent<Image>().color = barColourHi;
+                    }
+
+                    if (judgementInfo.star)
+                    {
+                        starComment.SetActive(true);
+                        audioSource.PlayOneShot(starSound);
+                    }
+
+                    if (judgementInfo.noMiss)
+                    {
+                        noMissComment.SetActive(true);
+                        audioSource.PlayOneShot(noMissSound);
                     }
 
                     StartCoroutine(WaitAndRank());

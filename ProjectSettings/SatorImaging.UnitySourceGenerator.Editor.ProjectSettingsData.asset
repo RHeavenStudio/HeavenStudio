@@ -17,7 +17,46 @@ MonoBehaviour:
   DenseViewWidthThreshold: 512
   _disableAutoReloadInBackground: 0
   ImportedScriptPaths:
-  - Assets/Scripts/Games/Cannery/Can.cs
-  - Assets/Scripts/Games/Cannery/Cannery.cs
+  - Assets/Scripts/Minigames.cs
+  - Assets/Editor/CreateAssetBundles.cs
+  - Assets/Editor/CreateMinigameScriptTemplate.cs
+  - Assets/Scripts/Games/Minigame.cs
+  - Assets/Scripts/Games/FanClub/FanClub.cs
+  - Assets/Scripts/GameManager.cs
+  - Assets/Editor/SpritesheetScaler.cs
+  - Assets/Scripts/USG.g/LoadMinigames.Minigames.MinigameLoaderGenerator.g.cs
+  - Assets/Scripts/Games/TheDazzles/TheDazzles.cs
+  - Assets/Scripts/Games/FirstContact/FirstContact.cs
+  - Assets/Scripts/SourceGenerators/ControllerLoaderGenerator.cs
+  - Assets/Scripts/InputSystem/PlayerInput.cs
+  - Assets/Scripts/JudgementManager.cs
+  - Assets/Scripts/LevelEditor/RemixPropertiesDialog/PropertyPrefabs/RatingScreenPropertyDialog.cs
+  - Assets/Scripts/GlobalGameManager.cs
+  - Assets/Scripts/Games/KarateMan/KarateMan.cs
+  - Assets/Scripts/Games/KarateMan/KarateManJoe.cs
+  - Assets/Scripts/Games/KarateMan/KarateManNoriController.cs
+  - Assets/Scripts/Util/BeatAction.cs
+  - Assets/Scripts/Games/TossBoys/TossBoys.cs
+  - Assets/Scripts/Games/DoubleDate/DoubleDate.cs
+  - Assets/Scripts/Games/AirRally/AirRally.cs
+  - Assets/Scripts/LevelEditor/Editor.cs
+  - Assets/Scripts/Common/MemRenderer.cs
+  - Assets/Scripts/Games/BoardMeeting/BoardMeeting.cs
+  - Assets/Scripts/PersistentDataManager.cs
+  - Assets/Scripts/UI/Overlays/OverlaysManager.cs
+  - Assets/Scripts/TitleManager.cs
+  - Assets/Scripts/LevelEditor/Timeline/SpecialTmeline/SectionDialog.cs
+  - Assets/Scripts/LevelEditor/Timeline/SpecialTmeline/TimelineObjs/SectionTimelineObj.cs
+  - Assets/Scripts/Games/DJSchool/Student.cs
+  - Assets/Scripts/UI/PauseMenu.cs
+  - Assets/Scripts/Util/Sound.cs
+  - Assets/Scripts/Conductor.cs
+  - Assets/Scripts/EventCaller.cs
+  - Assets/Scripts/Games/TrickClass/TrickClass.cs
+  - Assets/Scripts/GameInitializer.cs
+  - Assets/Scripts/LevelEditor/Timeline/Timeline.cs
+  - Assets/Scripts/Games/PlayerActionEvent.cs
+  - Assets/Scripts/Games/KarateMan/KarateManPot.cs
+  - Assets/Scripts/Games/DJSchool/DJSchool.cs
   PathsToSkipImportEvent: []
   PathsToIgnoreOverwriteSettingOnAttribute: []

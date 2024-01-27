@@ -236,7 +236,7 @@ namespace HeavenStudio.Common
             isQuitting = true;
             SoundByte.PlayOneShot("ui/PauseQuit");
             GameManager.instance.CircleCursor.LockCursor(false);
-            GlobalGameManager.LoadScene("Title", 0, 0.35f);
+            GlobalGameManager.LoadScene("Title", 0, 0.35f, callback: GameManager.instance.DestroyGame);
         }
 
         void OnSettings()

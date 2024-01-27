@@ -79,7 +79,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new()
                     {
-                        new("d", DoubleDate.DayTime.Noon, "Time", "Set the time of day.")
+                        new("d", DoubleDate.DayTime.Sunset, "Time", "Set the time of day.")
                     }
                 }
             },
@@ -192,7 +192,7 @@ namespace HeavenStudio.Games
         public enum DayTime
         {
             Day,
-            Noon
+            Sunset
         }
 
         private void DayTimeCheck(double beat)
@@ -206,7 +206,7 @@ namespace HeavenStudio.Games
 
         public void SetTime(int time)
         {
-            if (time == (int)DayTime.Noon)
+            if (time == (int)DayTime.Sunset)
             {
                 doubleDateCellAnim.SetColor("_Color", noonColor);
                 bgSquare.color = squareColor;
