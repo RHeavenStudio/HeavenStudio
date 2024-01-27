@@ -69,7 +69,7 @@ namespace HeavenStudio
         bool AudioLoadDone;
         bool ChartLoadError;
 
-        List<double> eventBeats, tempoBeats, volumeBeats, sectionBeats;
+        List<double> eventBeats, preSequenceBeats, tempoBeats, volumeBeats, sectionBeats;
         List<RiqEntity> allGameSwitches;
 
         public event Action<double> onBeatChanged;
@@ -336,6 +336,10 @@ namespace HeavenStudio
 
         public void ScoreInputAccuracy(double beat, double accuracy, bool late, double time, float weight = 1, bool doDisplay = true)
         {
+            // push the hit event to the timing display
+            if (doDisplay)
+                TimingAccuracyDisplay.instance.MakeAccuracyVfx(time, late);
+
             if (weight > 0 && MarkerWeight > 0)
             {
                 totalInputs += weight * MarkerWeight;
@@ -361,10 +365,6 @@ namespace HeavenStudio
                 if (SkillStarManager.instance.DoStarJust())
                     skillStarCollected = true;
             }
-
-            // push the hit event to the timing display
-            if (doDisplay)
-                TimingAccuracyDisplay.instance.MakeAccuracyVfx(time, late);
         }
 
         public void DoSectionCompletion(double beat, bool clear, string name, double score)
@@ -455,28 +455,22 @@ namespace HeavenStudio
         {
             if (currentPreSequence < Beatmap.Entities.Count && currentPreSequence >= 0)
             {
-                List<RiqEntity> entitiesAtSameBeat = ListPool<RiqEntity>.Get();
-                RiqEntity seekEntity = Beatmap.Entities[currentPreSequence];
-
-                foreach (RiqEntity entity in Beatmap.Entities)
+                if (start >= preSequenceBeats[currentPreSequence])
                 {
-                    if (entity.beat == seekEntity.beat)
+                    List<RiqEntity> entitiesInRange = ListPool<RiqEntity>.Get();
+                    foreach (RiqEntity entity in Beatmap.Entities)
                     {
-                        entitiesAtSameBeat.Add(entity);
+                        string[] entityDatamodel = entity.datamodel.Split('/');
+                        double seekTime = eventCaller.GetGameAction(entityDatamodel[0], entityDatamodel[1]).preFunctionLength;
+                        if (entity.beat - seekTime == preSequenceBeats[currentPreSequence])
+                        {
+                            entitiesInRange.Add(entity);
+                        }
                     }
-                }
-                SortEventsByPriority(entitiesAtSameBeat);
+                    SortEventsByPriority(entitiesInRange);
 
-                string[] seekEntityDatamodel = seekEntity.datamodel.Split('/');
-
-                float seekTime = eventCaller.GetGameAction(
-                    eventCaller.GetMinigame(seekEntityDatamodel[0]), seekEntityDatamodel[1]).preFunctionLength;
-
-                if (start + seekTime >= eventBeats[currentPreSequence])
-                {
-                    foreach (RiqEntity entity in entitiesAtSameBeat)
+                    foreach (RiqEntity entity in entitiesInRange)
                     {
-                        currentPreSequence++;
                         string gameName = entity.datamodel.Split('/')[0];
                         var inf = GetGameInfo(gameName);
                         if (inf != null && inf.usesAssetBundle && inf.AssetsLoaded && !inf.SequencesPreloaded)
@@ -485,9 +479,10 @@ namespace HeavenStudio
                             PreloadGameSequences(gameName);
                         }
                         eventCaller.CallPreEvent(entity);
+                        currentPreSequence++;
                     }
+                    ListPool<RiqEntity>.Release(entitiesInRange);
                 }
-                ListPool<RiqEntity>.Release(entitiesAtSameBeat);
             }
         }
 
@@ -578,13 +573,13 @@ namespace HeavenStudio
             {
                 if (clampedBeat >= eventBeats[currentEvent])
                 {
-                    List<RiqEntity> entitiesAtSameBeat = ListPool<RiqEntity>.Get();
+                    List<RiqEntity> entitiesInRange = ListPool<RiqEntity>.Get();
                     List<RiqEntity> fxEntities = ListPool<RiqEntity>.Get();
 
                     // allows for multiple events on the same beat to be executed on the same frame, so no more 1-frame delay
                     using (PooledObject<List<RiqEntity>> pool = ListPool<RiqEntity>.Get(out List<RiqEntity> currentBeatEntities))
                     {
-                        currentBeatEntities = Beatmap.Entities.FindAll(c => c.beat == Beatmap.Entities[currentEvent].beat);
+                        currentBeatEntities = Beatmap.Entities.FindAll(c => c.beat == eventBeats[currentEvent]);
                         foreach (RiqEntity entity in currentBeatEntities)
                         {
                             if (EventCaller.FXOnlyGames().Contains(eventCaller.GetMinigame(entity.datamodel.Split('/')[0])))
@@ -593,13 +588,13 @@ namespace HeavenStudio
                             }
                             else
                             {
-                                entitiesAtSameBeat.Add(entity);
+                                entitiesInRange.Add(entity);
                             }
                         }
                     }
 
                     SortEventsByPriority(fxEntities);
-                    SortEventsByPriority(entitiesAtSameBeat);
+                    SortEventsByPriority(entitiesInRange);
 
                     // FX entities should ALWAYS execute before gameplay entities
                     foreach (RiqEntity entity in fxEntities)
@@ -608,7 +603,7 @@ namespace HeavenStudio
                         currentEvent++;
                     }
 
-                    foreach (RiqEntity entity in entitiesAtSameBeat)
+                    foreach (RiqEntity entity in entitiesInRange)
                     {
                         // if game isn't loaded, preload game so whatever event that would be called will still run outside if needed
                         if (entity.datamodel.Split('/')[0] != currentGame)
@@ -624,7 +619,7 @@ namespace HeavenStudio
                         currentEvent++;
                     }
 
-                    ListPool<RiqEntity>.Release(entitiesAtSameBeat);
+                    ListPool<RiqEntity>.Release(entitiesInRange);
                     ListPool<RiqEntity>.Release(fxEntities);
                 }
             }
@@ -644,6 +639,16 @@ namespace HeavenStudio
         private void LateUpdate()
         {
             OverlaysManager.instance.TogleOverlaysVisibility(Editor.Editor.instance == null || Editor.Editor.instance.fullscreen || ((PersistentDataManager.gameSettings.overlaysInEditor) && (!Editor.Editor.instance.fullscreen)) || HeavenStudio.Editor.GameSettings.InPreview);
+
+            if (!Conductor.instance.isPlaying)
+                return;
+
+            if (Conductor.instance.songPositionInBeatsAsDouble >= Math.Ceiling(_playStartBeat) + _latePulseTally)
+            {
+                if (_currentMinigame != null) _currentMinigame.OnLateBeatPulse(Math.Ceiling(_playStartBeat) + _latePulseTally);
+                onBeatPulse?.Invoke(Math.Ceiling(_playStartBeat) + _latePulseTally);
+                _latePulseTally++;
+            }
         }
 
         public void ToggleInputs(bool inputs)
@@ -655,6 +660,7 @@ namespace HeavenStudio
 
         private double _playStartBeat = 0;
         private int _pulseTally = 0;
+        private int _latePulseTally = 0;
 
         public void Play(double beat, float delay = 0f)
         {
@@ -662,6 +668,7 @@ namespace HeavenStudio
             Debug.Log("Playing at " + beat);
             _playStartBeat = beat;
             _pulseTally = 0;
+            _latePulseTally = 0;
             canInput = true;
             if (!paused)
             {
@@ -720,6 +727,7 @@ namespace HeavenStudio
 
             if (!paused)
             {
+                Conductor.instance.PlaySetup(beat);
                 Minigame miniGame = null;
                 if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
                 {
@@ -881,6 +889,15 @@ namespace HeavenStudio
             sectionBeats = Beatmap.SectionMarkers.Select(c => c.beat).ToList();
 
             allGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
+
+            preSequenceBeats = new List<double>();
+            foreach (RiqEntity entity in Beatmap.Entities)
+            {
+                string[] seekEntityDatamodel = entity.datamodel.Split('/');
+                double seekTime = eventCaller.GetGameAction(seekEntityDatamodel[0], seekEntityDatamodel[1]).preFunctionLength;
+                preSequenceBeats.Add(entity.beat - seekTime);
+            }
+            preSequenceBeats.Sort();
         }
 
         void SortEventsByPriority(List<RiqEntity> entities)
@@ -892,14 +909,11 @@ namespace HeavenStudio
                 xDatamodel = x.datamodel.Split('/');
                 yDatamodel = y.datamodel.Split('/');
 
-                Minigames.Minigame xGame = eventCaller.GetMinigame(xDatamodel[0]);
-                Minigames.GameAction xAction = eventCaller.GetGameAction(xGame, xDatamodel[1]);
-                Minigames.Minigame yGame = eventCaller.GetMinigame(yDatamodel[0]);
-                Minigames.GameAction yAction = eventCaller.GetGameAction(yGame, yDatamodel[1]);
+                Minigames.GameAction xAction = eventCaller.GetGameAction(xDatamodel[0], xDatamodel[1]);
+                Minigames.GameAction yAction = eventCaller.GetGameAction(yDatamodel[0], yDatamodel[1]);
 
                 return yAction.priority.CompareTo(xAction.priority);
             });
-
         }
 
         public static double GetClosestInList(List<double> list, double compareTo)
@@ -1111,6 +1125,7 @@ namespace HeavenStudio
             if (currentGameO.TryGetComponent<Minigame>(out var minigame))
             {
                 _currentMinigame = minigame;
+                minigame.minigameName = game;
             }
             Vector3 originalScale = currentGameO.transform.localScale;
             currentGameO.transform.parent = eventCaller.GamesHolder.transform;
@@ -1166,7 +1181,7 @@ namespace HeavenStudio
                     {
                         //game is packed in an assetbundle, load from that instead
                         if (gameInfo.AssetsLoaded && gameInfo.LoadedPrefab != null) return gameInfo.LoadedPrefab;
-                        
+
                         try
                         {
                             return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
@@ -1184,7 +1199,7 @@ namespace HeavenStudio
 
         public Minigames.Minigame GetGameInfo(string name)
         {
-            return eventCaller.minigames.Find(c => c.name == name);
+            return eventCaller.GetMinigame(name);
         }
 
         Color colMain;

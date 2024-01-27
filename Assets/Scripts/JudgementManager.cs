@@ -99,8 +99,10 @@ namespace HeavenStudio
 
         [SerializeField] TMP_Text epilogueMessage;
         [SerializeField] Image epilogueImage;
+        [SerializeField] Image epilogueFrame;
         [SerializeField] AspectRatioFitter epilogueFitter;
         [SerializeField] Sprite epilogueNg, epilogueOk, epilogueHi;
+        [SerializeField] Sprite epilogueFrmNg, epilogueFrmOk, epilogueFrmHi;
 
         [SerializeField] GameObject bg;
         [SerializeField] GameObject rankLogo;
@@ -293,6 +295,13 @@ namespace HeavenStudio
             {
                 imageResource = playedBeatmap != null ? playedBeatmap["epilogue_hi_res"] : null;
             }
+
+            epilogueFrame.sprite = rank switch
+            {
+                Rank.Ok => epilogueFrmOk,
+                Rank.Hi => epilogueFrmHi,
+                _ => epilogueFrmNg
+            };
 
             if (imageResource != null)
             {

@@ -200,7 +200,7 @@ namespace HeavenStudio.Editor.Track
 
             if (create)
             {
-                RiqEntity volumeC = GameManager.instance.Beatmap.AddNewVolumeChange(Timeline.instance.MousePos2BeatSnap, 100f);
+                RiqEntity volumeC = GameManager.instance.Beatmap.AddNewVolumeChange(Timeline.instance.MousePos2BeatSnap, 80f);
                 volumeTimelineObj.chartEntity = volumeC;
                 CommandManager.Instance.AddCommand(new Commands.AddMarker(volumeC, volumeC.guid, HoveringTypes.VolumeChange));
             }

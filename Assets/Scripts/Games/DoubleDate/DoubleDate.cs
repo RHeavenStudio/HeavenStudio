@@ -17,8 +17,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Bop", "Should the two couples bop?"),
-                        new Param("autoBop", false, "Bop (Auto)", "Should the two couples auto bop?")
+                        new Param("bop", true, "Bop", "Toggle if the two couples should bop for the duration of this event."),
+                        new Param("autoBop", false, "Bop (Auto)", "Toggle if the two couples should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("soccer", "Soccer Ball")
@@ -28,7 +28,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new()
                     {
-                        new("b", false, "Weasels Jump")
+                        new("b", false, "Weasels Jump", "Toggle if the weasels should jump upon successfully hitting the cue.")
                     }
                 },
                 new GameAction("basket", "Basket Ball")
@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new()
                     {
-                        new("b", false, "Weasels Jump")
+                        new("b", false, "Weasels Jump", "Toggle if the weasels should jump upon successfully hitting the cue.")
                     }
                 },
                 new GameAction("football", "Football")
@@ -48,29 +48,29 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2.5f,
                     parameters = new()
                     {
-                        new("b", true, "Weasels Jump")
+                        new("b", true, "Weasels Jump", "Toggle if the weasels should jump upon successfully hitting the cue.")
                     }
                 },
                 new GameAction("blush", "Blush")
                 {
                     function = delegate { DoubleDate.instance.GirlBlush(); }
                 },
-                new GameAction("toggleGirls", "Girls Presence")
+                new GameAction("toggleGirls", "Set Girls' Presence")
                 {
                     function = delegate { DoubleDate.instance.ToggleGirls(eventCaller.currentEntity["b"]); },
                     defaultLength = 0.5f,
                     parameters = new()
                     {
-                        new("b", false, "Present?")
+                        new("b", false, "Present", "Toggle if the girl and the female weasel should appear.")
                     }
                 },
-                new GameAction("stare", "Boy Stare")
+                new GameAction("stare", "Boy Looks")
                 {
                     function = delegate { DoubleDate.instance.ToggleStare(eventCaller.currentEntity["b"]); },
                     defaultLength = 0.5f,
                     parameters = new()
                     {
-                        new("b", true, "Should stare?")
+                        new("b", true, "Look", "Toggle if the boy should look at the girl.")
                     }
                 },
                 new GameAction("time", "Time of Day")
@@ -79,7 +79,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new()
                     {
-                        new("d", DoubleDate.DayTime.Noon, "Time")
+                        new("d", DoubleDate.DayTime.Noon, "Time", "Set the time of day.")
                     }
                 }
             },

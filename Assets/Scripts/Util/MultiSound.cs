@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 
 namespace HeavenStudio.Util
 {
@@ -10,6 +12,7 @@ namespace HeavenStudio.Util
         private double startBeat;
         private bool game;
         private bool forcePlay;
+        private bool commited;
         public List<Sound> sounds = new List<Sound>();
         public List<Util.Sound> playingSounds = new List<Util.Sound>();
 
@@ -36,14 +39,33 @@ namespace HeavenStudio.Util
 
         public static MultiSound Play(Sound[] snds, bool game = true, bool forcePlay = false)
         {
+            if (Conductor.instance == null) return null;
+
             List<Sound> sounds = snds.ToList();
             GameObject go = new GameObject("MultiSound");
             MultiSound ms = go.AddComponent<MultiSound>();
+
             ms.sounds = sounds;
             ms.startBeat = sounds[0].beat;
             ms.game = game;
             ms.forcePlay = forcePlay;
+            ms.commited = false;
 
+            if (Conductor.instance.WaitingForDsp)
+            {
+                Debug.Log("Multisound waiting for DSP, deferring play");
+                ms.PlayDeferred().Forget();
+            }
+            else
+            {
+                ms.CommitPlay();
+            }
+
+            return ms;
+        }
+
+        void CommitPlay()
+        {
             for (int i = 0; i < sounds.Count; i++)
             {
                 Util.Sound s;
@@ -51,14 +73,21 @@ namespace HeavenStudio.Util
                     s = SoundByte.PlayOneShotGame(sounds[i].name, sounds[i].beat, sounds[i].pitch, sounds[i].volume, sounds[i].looping, forcePlay, sounds[i].offset);
                 else
                     s = SoundByte.PlayOneShot(sounds[i].name, sounds[i].beat, sounds[i].pitch, sounds[i].volume, sounds[i].looping, null, sounds[i].offset);
-                ms.playingSounds.Add(s);
+                playingSounds.Add(s);
             }
+            commited = true;
+        }
 
-            return ms;
+        async UniTaskVoid PlayDeferred()
+        {
+            await UniTask.WaitUntil(() => !Conductor.instance.WaitingForDsp, PlayerLoopTiming.LastUpdate);
+            Debug.Log("Multisound DSP ready, playing");
+            CommitPlay();
         }
 
         private void Update()
         {
+            if (!commited) return;
             foreach (Util.Sound sound in playingSounds)
             {
                 if (sound == null) continue;

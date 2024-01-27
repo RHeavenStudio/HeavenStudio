@@ -20,9 +20,9 @@ namespace HeavenStudio.Games.Loaders
                         OctopusMachine.instance.Bop(e.length, e["whichBop"], e["singleBop"], e["keepBop"]);
                     },
                     parameters = new List<Param>() {
-                        new Param("whichBop", OctopusMachine.Bops.Bop, "Which Bop", "Plays a specific bop type"),
-                        new Param("singleBop", true, "Single Bop", "Plays one bop"),
-                        new Param("keepBop", false, "Keep Bopping", "Keeps playing the specified bop type"),
+                        new Param("singleBop", true, "Bop", "Toggle if the octopodes should bop for the duration of this event. Since this event is not stretchable, they will only bop once."),
+                        new Param("keepBop", false, "Bop (Auto)", "Toggle if the octopodes should automatically bop until another Bop event is reached."),
+                        new Param("whichBop", OctopusMachine.Bops.Bop, "Which Bop", "Set the type of bop."),
                     },
                 },
                 new GameAction("startInterval", "Start Interval")
@@ -42,11 +42,11 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true,
                     parameters = new List<Param>() {
-                        new Param("shouldPrep", true, "Prepare?", "Plays a prepare animation before the cue.", new List<Param.CollapseParam>()
+                        new Param("shouldPrep", true, "Prepare", "Toggle if the octopodes should automatically prepare for this cue.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "prepBeats" })
                         }),
-                        new Param("prepBeats", new EntityTypes.Float(0, 4, 1), "Prepare Beats", "How many beats before the cue does the octopus prepare?"),
+                        new Param("prepBeats", new EntityTypes.Float(0, 4, 1), "Prepare Beats", "Set how many beats before the cue the octopodes should prepare."),
                     },
                     preFunctionLength = 4f,
                     preFunction = delegate {
@@ -80,14 +80,14 @@ namespace HeavenStudio.Games.Loaders
                         OctopusMachine.instance.AutoAction(e["forceBop"], e["autoBop"], e["autoText"], e["hitText"], e["missText"]); 
                     },
                     parameters = new List<Param>() {
-                        new Param("forceBop", true, "Force Bop", "Forces a bop, even if an animation is playing."),
-                        new Param("autoBop", true, "Hit/Miss Bop", "Plays a bop depending on if you hit or missed the cues."),
-                        new Param("autoText", true, "Display Text", "Displays text depending on if you hit or missed the cues.", new List<Param.CollapseParam>()
+                        new Param("forceBop", true, "Force Bop", "Toggle if a bop should be forced to play, even if an animation is already playing."),
+                        new Param("autoBop", true, "Hit/Miss Bop", "Toggle if the octopodes should bop depending on if you hit or missed the cues."),
+                        new Param("autoText", true, "Display Text", "Toggle if text should display depending on if you hit or missed the cues.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "hitText", "missText" })
                         }),
-                        new Param("hitText", "Good!", "Hit Text", "The text to display if you hit the cues."),
-                        new Param("missText", "Wrong! Try again!", "Miss Text", "The text to display if you missed the cues."),
+                        new Param("hitText", "Good!", "Hit Text", "Set the text to display if you hit the cues."),
+                        new Param("missText", "Wrong! Try again!", "Miss Text", "Set the text to display if you missed the cues."),
                     },
                 },
                 new GameAction("forceSqueeze", "Force Squeeze")
@@ -106,24 +106,24 @@ namespace HeavenStudio.Games.Loaders
                         OctopusMachine.instance.BubbleToggle(e["isInstant"], e["setActive"], e["particleStrength"], e["particleSpeed"]);
                     },
                     parameters = new List<Param>() {
-                        new Param("isInstant", true, "Instant", "Will the bubbles disappear appear?"),
-                        new Param("setActive", OctopusMachine.Actives.Activate, "Activate or Deactivate", "Will the bubbles disappear or appear?", new List<Param.CollapseParam>()
+                        new Param("isInstant", true, "Instant", "Toggle if the particles should start or stop instantly."),
+                        new Param("setActive", OctopusMachine.Actives.Activate, "State", "Set if the bubbles should appear or disappear.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (int)x == (int)OctopusMachine.Actives.Activate, new string[] { "particleStrength" })
                         }),
-                        new Param("particleStrength", new EntityTypes.Float(0, 25, 3), "Bubble Intensity", "The amount of bubbles"),
-                        new Param("particleSpeed", new EntityTypes.Float(0, 25, 5), "Bubble Speed", "The speed of the bubbles"),
+                        new Param("particleStrength", new EntityTypes.Float(0, 25, 3), "Intensity", "Set the intensity of the bubbles."),
+                        new Param("particleSpeed", new EntityTypes.Float(0, 25, 5), "Speed", "Set the speed of the bubbles."),
                     },
                 },
-                new GameAction("changeText", "Change Text")
+                new GameAction("changeText", "Text")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
                         OctopusMachine.instance.ChangeText(e["text"], e["youText"]);
                     },
                     parameters = new List<Param>() {
-                        new Param("text", "Do what the others do.", "Text", "Set the text on the screen"),
-                        new Param("youText", "You", "You Text", "Set the text that orginally says \"You\""),
+                        new Param("text", "Do what the others do.", "Text", "Set the text on the screen."),
+                        new Param("youText", "You", "Player Text", "Set the text that points to the player."),
                     },
                 },
                 new GameAction("changeColor", "Change Color")
@@ -133,11 +133,11 @@ namespace HeavenStudio.Games.Loaders
                         OctopusMachine.instance.BackgroundColor(e.beat, e.length, e["color1"], e["color2"], e["octoColor"], e["squeezedColor"], e["ease"]);
                     },
                     parameters = new List<Param>() {
-                        new Param("color1", new Color(1f, 0.87f, 0.24f), "Background Start Color", "Set the beginning background color"),
-                        new Param("color2", new Color(1f, 0.87f, 0.24f), "Background End Color", "Set the end background color"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease"),
-                        new Param("octoColor", new Color(0.97f, 0.235f, 0.54f), "Octopodes Color", "Set the octopodes' colors"),
-                        new Param("squeezedColor", new Color(1f, 0f, 0f), "Squeezed Color", "Set the octopodes' colors when they're squeezed"),
+                        new Param("color1", new Color(1f, 0.87f, 0.24f), "Start BG Color", "Set the color at the start of the event."),
+                        new Param("color2", new Color(1f, 0.87f, 0.24f), "End BG Color", "Set the color at the end of the event."),
+                        new Param("octoColor", new Color(0.97f, 0.235f, 0.54f), "Octopodes' Color", "Set the octopodes' colors."),
+                        new Param("squeezedColor", new Color(1f, 0f, 0f), "Squeezed Color", "Set the octopodes' colors when they're squeezed."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                     },
                     resizable = true,
                 },
@@ -148,24 +148,24 @@ namespace HeavenStudio.Games.Loaders
                         OctopusMachine.instance.OctopusModifiers(e.beat, e["oct1x"], e["oct2x"], e["oct3x"], e["oct1y"], e["oct2y"], e["oct3y"], e["oct1"], e["oct2"], e["oct3"]);
                     },
                     parameters = new List<Param>() {
-                        new Param("oct1", true, "Show Octopus 1", "Should the first octopus be enabled?", new List<Param.CollapseParam>()
+                        new Param("oct1", true, "Show Octopus 1", "Toggle if the first octopus should be enabled.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "oct1x", "oct1y" })
                         }),
-                        new Param("oct1x", new EntityTypes.Float(-10, 10, -4.64f), "X Octopus 1", "Change Octopus 1's X"),
-                        new Param("oct1y", new EntityTypes.Float(-10, 10, 2.5f), "Y Octopus 1", "Change Octopus 1's Y"),
-                        new Param("oct2", true, "Show Octopus 2", "Should the second octopus be enabled?", new List<Param.CollapseParam>()
+                        new Param("oct1x", new EntityTypes.Float(-10, 10, -4.64f), "X Octopus 1", "Set the position on the X axis of octopus 1."),
+                        new Param("oct1y", new EntityTypes.Float(-10, 10, 2.5f), "Y Octopus 1", "Set the position on the Y axis of octopus 1."),
+                        new Param("oct2", true, "Show Octopus 2", "Toggle if the second octopus should be enabled.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "oct2x", "oct2y" })
                         }),
-                        new Param("oct2x", new EntityTypes.Float(-10, 10, -0.637f), "X Octopus 2", "Change Octopus 2's X"),
-                        new Param("oct2y", new EntityTypes.Float(-10, 10, 0f), "Y Octopus 2", "Change Octopus 2's Y"),
-                        new Param("oct3", true, "Show Octopus 3", "Should the third octopus be enabled?", new List<Param.CollapseParam>()
+                        new Param("oct2x", new EntityTypes.Float(-10, 10, -0.637f), "X Octopus 2", "Set the position on the X axis of octopus 2."),
+                        new Param("oct2y", new EntityTypes.Float(-10, 10, 0f), "Y Octopus 2", "Set the position on the Y axis of octopus 2."),
+                        new Param("oct3", true, "Show Octopus 3", "Toggle if the third octopus should be enabled.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "oct3x", "oct3y" })
                         }),
-                        new Param("oct3x", new EntityTypes.Float(-10, 10, 3.363f), "X Octopus 3", "Change Octopus 3's X"),
-                        new Param("oct3y", new EntityTypes.Float(-10, 10, -2.5f), "Y Octopus 3", "Change Octopus 3's Y"),
+                        new Param("oct3x", new EntityTypes.Float(-10, 10, 3.363f), "X Octopus 3", "Set the position on the X axis of octopus 3."),
+                        new Param("oct3y", new EntityTypes.Float(-10, 10, -2.5f), "Y Octopus 3", "Set the position on the Y axis of octopus 3."),
                     },
                     defaultLength = 0.5f,
                 },

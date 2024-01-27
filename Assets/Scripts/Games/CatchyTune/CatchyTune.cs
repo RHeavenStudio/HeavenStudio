@@ -15,17 +15,28 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("catchyTune", "Catchy Tune", "f2f2f2", "ff376c", "f2f2f2", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", CatchyTune.WhoBops.Both, "Bop", "Set the character(s) to bop for the duration of this event."),
+                        new Param("bopAuto", CatchyTune.WhoBops.None, "Bop (Auto)", "Set the character(s) to automatically bop until another Bop event is reached."),
+                    },
+                },
+
                 new GameAction("orange", "Orange")
                 {
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("side", CatchyTune.Side.Left, "Side", "The side the orange falls down"),
-                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching", new List<Param.CollapseParam>()
+                        new Param("side", CatchyTune.Side.Left, "Side", "Choose the side the orange falls down."),
+                        new Param("smile", false, "Smile", "Toggle if Plalin and Alalin should smile after catching.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "endSmile" })
                         }),
-                        new Param("endSmile", new EntityTypes.Float(2, 100, 2), "End Smile Beat", "How many beats after the catch should the smile end?")
+                        new Param("endSmile", new EntityTypes.Float(2, 100, 2), "Smile Length", "Choose how long the smile should last after the catch.")
                     },
                     preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], false, e["endSmile"]); },
                 },
@@ -35,25 +46,14 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 8f,
                     parameters = new List<Param>()
                     {
-                        new Param("side", CatchyTune.Side.Left, "Side", "The side the pineapple falls down"),
-                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching", new List<Param.CollapseParam>()
+                        new Param("side", CatchyTune.Side.Left, "Side", "Choose the side the pineapple falls down."),
+                        new Param("smile", false, "Smile", "Toggle if Plalin and Alalin should smile after catching.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "endSmile" })
                         }),
-                        new Param("endSmile", new EntityTypes.Float(2, 100, 2), "End Smile Beat", "How many beats after the catch should the smile end?")
+                        new Param("endSmile", new EntityTypes.Float(2, 100, 2), "Smile Length", "Choose how long the smile should last after the catch.")
                     },
                     preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], true, e["endSmile"]); },
-                },
-
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", CatchyTune.WhoBops.Both, "Bop", "Should Plalin and Alalin bop?"),
-                        new Param("bopAuto", CatchyTune.WhoBops.None, "Bop", "Should Plalin and Alalin auto bop?"),
-                    },
                 }
             },
             new List<string>() { "ctr", "normal" },

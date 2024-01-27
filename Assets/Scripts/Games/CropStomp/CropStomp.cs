@@ -35,18 +35,18 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("mute", false, "Mute", "Should the mole laugh sound be muted?")
+                        new Param("mute", false, "Mute", "Toggle if the mole laugh sound should be muted.")
                     },
-                    preFunctionLength = 6
+                    preFunctionLength = 3
                 },
                 new GameAction("end", "End")
                 {
                     parameters = new List<Param>()
                     {
-                        new Param("mute", true, "Mute Humming?")
+                        new Param("mute", true, "Toggle if Stomp Farmer should stopp humming.")
                     }
                 },
-                new GameAction("plantCollect", "Veggie Collection Values")
+                new GameAction("plantCollect", "Set Veggie Collection Thresholds")
                 {
                     function = delegate { var e = eventCaller.currentEntity; 
                         CropStomp.instance.SetCollectThresholds(e["threshold"], e["limit"], e["force"], e["forceAmount"]);
@@ -54,13 +54,13 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("threshold", new EntityTypes.Integer(1, 80, 8), "Threshold", "For each time the threshold is met a new plant will appear in the veggie bag."),
-                        new Param("limit", new EntityTypes.Integer(1, 1000, 80), "Limit", "What is the limit for plants collected?"),
-                        new Param("force", false, "Force Amount of Collected Plants", "", new List<Param.CollapseParam>()
+                        new Param("threshold", new EntityTypes.Integer(1, 80, 8), "Threshold", "Set how many veggies it takes for a new plant to appear in the collection bag."),
+                        new Param("limit", new EntityTypes.Integer(1, 1000, 80), "Limit", "Set the limit for the amount of plants to be collected and count towards the threshold."),
+                        new Param("force", false, "Set Amount Of Collected Plants", "Toggle if this event should automatically set the collected plants to a certain number.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "forceAmount" })
                         }),
-                        new Param("forceAmount", new EntityTypes.Integer(0, 1000, 0), "Force Amount")
+                        new Param("forceAmount", new EntityTypes.Integer(0, 1000, 0), "Set Amount", "Set the amount of plants to be collected automatically.")
                     }
                 }
             },
@@ -159,7 +159,6 @@ namespace HeavenStudio.Games
 
                     if (stepsPassed > 1000)
                     {
-                        Debug.Log("Loop broke!");
                         return;
                     }
                 }

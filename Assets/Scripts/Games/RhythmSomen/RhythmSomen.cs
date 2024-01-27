@@ -12,6 +12,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("rhythmSomen", "Rhythm Sōmen", "7ab96e", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle2", true, "Bop", "Toggle if Boss should bop for the duration of this event."),
+                        new Param("toggle", false, "Bop (Auto)", "Toggle if the man should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("crane (far)", "Far Crane")
                 {
                     function = delegate { RhythmSomen.instance.DoFarCrane(eventCaller.currentEntity.beat); },
@@ -34,16 +44,6 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("slurp", "Slurp")
                 {
                     function = delegate { RhythmSomen.instance.Slurp(eventCaller.currentEntity.beat); }
-                },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle2", true, "Bop", "Should the somen man bop?"),
-                        new Param("toggle", false, "Bop (Auto)", "Should the somen man bop automatically?")
-                    }
                 }
             },
             new List<string>() { "pco", "normal" },

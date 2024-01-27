@@ -14,6 +14,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("tapTroupe", "Tap Troupe", "999999", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Toggle if the tall tappers should bop for the duration of this event."),
+                        new Param("bopAuto", false, "Bop (Auto)", "Toggle if the tall tappers should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("stepping", "Stepping")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreStepping(e.beat, e.length, e["startTap"]); },
@@ -21,7 +31,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("startTap", false, "Start Tap Voice Line", "Whether or not it should say -Tap!- on the first step.")
+                        new Param("startTap", false, "Tap Voice Line", "Toggle if the \"Tap!\" voice line should be played on the first tap.")
                     }
                 },
                 new GameAction("tapping", "Tapping")
@@ -31,60 +41,50 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("okay", true, "Okay Voice Line", "Whether or not the tappers should say -Okay!- after successfully tapping.", new List<Param.CollapseParam>()
+                        new Param("okay", true, "OK", "Toggle if the tall tappers should say \"OK!\" after successfully tapping.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "okayType" })
                         }),
-                        new Param("okayType", TapTroupe.OkayType.OkayA, "Okay Type", "Which version of the okay voice line should the tappers say?"),
-                        new Param("animType", TapTroupe.OkayAnimType.Normal, "Okay Animation", "Which animations should be played when the tapper say OK?", new List<Param.CollapseParam>()
+                        new Param("okayType", TapTroupe.OkayType.OkayA, "Type", "Set the version of the voice line the tall tappers should say."),
+                        new Param("animType", TapTroupe.OkayAnimType.Normal, "Animation", "Set the animation that should be played when the tall tappers say \"OK!\"", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (int)x == (int)TapTroupe.OkayAnimType.Popper, new string[]{ "popperBeats"})
                         }),
-                        new Param("popperBeats", new EntityTypes.Float(0f, 80f, 2f), "Popper Beats", "How many beats until the popper will pop?"),
+                        new Param("popperBeats", new EntityTypes.Float(0f, 80f, 2f), "Popper Beats", "Set how many beats it should take for the party popper to pop."),
                         new Param("randomVoiceLine", true, "Extra Random Voice Line", "Whether there should be randomly said woos or laughs after the tappers say OK!"),
-                        new Param("noReady", false, "Mute Ready")
+                        new Param("noReady", false, "Mute Ready", "Toggle if the \"Rea-dy!\" cue should be muted.")
                     }
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Bop", "Should the tappers bop?"),
-                        new Param("bopAuto", false, "Bop (Auto)", "Should the tappers auto bop?")
-                    }
-                },
-                new GameAction("spotlights", "Toggle Spotlights")
+                new GameAction("spotlights", "Spotlights")
                 {
                     function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Spotlights(e["toggle"], e["player"], e["middleLeft"], e["middleRight"], e["leftMost"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Darkness On", "Whether or not it should be dark."),
-                        new Param("player", true, "Player Spotlight", "Whether or not the player spotlight should be turned on or off."),
-                        new Param("middleRight", false, "Middleright Tapper Spotlight", "Whether or not the middleright tapper spotlight should be turned on or off."),
-                        new Param("middleLeft", false, "Middleleft Tapper Spotlight", "Whether or not the middleleft tapper spotlight should be turned on or off."),
-                        new Param("leftMost", false, "Leftmost Tapper Spotlight", "Whether or not the leftmost tapper spotlight should be turned on or off."),
+                        new Param("toggle", true, "Darkness", "Toggle if the scene should be dark and the spotlights should appear."),
+                        new Param("leftMost", false, "Leftmost Spotlight", "Toggle if the leftmost spotlight should be turned on or off."),
+                        new Param("middleLeft", false, "Middle-Left Spotlight", "Toggle if the middle-left spotlight should be turned on or off."),
+                        new Param("middleRight", false, "Middle-Light Spotlight", "Toggle if the middle-right spotlight should be turned on or off."),
+                        new Param("player", true, "Player Spotlight", "Toggle if the player's spotlight should be turned on or off."),
                     }
                 },
-                new GameAction("zoomOut", "Special Zoom Out")
+                new GameAction("zoomOut", "Zoom Out")
                 {
                     function = delegate { TapTroupe.instance.ToggleZoomOut(); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("ease", Util.EasingFunction.Ease.EaseOutQuad, "Camera Ease", "What ease should the camera use?"),
+                        new Param("ease", Util.EasingFunction.Ease.EaseOutQuad, "Ease", "Set the easing of the action."),
                     },
                 },
-                new GameAction("tutorialMissFace", "Toggle Tutorial Miss Face")
+                new GameAction("tutorialMissFace", "Tutorial Miss Face")
                 {
                     function = delegate { var e = eventCaller.currentEntity;  TapTroupe.instance.ToggleMissFace(e["toggle"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Use it?", "Use the faces they do when you miss in the tutorial of Tap Troupe?")
+                        new Param("toggle", true, "Tutorial Miss Face", "Toggle if the NPC tappers should use the miss face as seen in the original tutorial.")
                     }
                 }
             },

@@ -27,7 +27,6 @@ namespace HeavenStudio.Editor
         public void OnClickCountUp()
         {
             SecretCounter++;
-            Debug.Log("SecretCounter: " + SecretCounter);
             if (SecretCounter == 10 && Editor.instance != null)
             {
                 secretObject.SetActive(true);
@@ -40,7 +39,6 @@ namespace HeavenStudio.Editor
 
             SecretActive = true;
             SoundByte.PlayOneShot("applause");
-            Debug.Log("Activating Studio Dance...");
 
             if (Editor.instance == null)
             {

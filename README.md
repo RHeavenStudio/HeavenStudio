@@ -11,8 +11,6 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-[YouTube Channel](https://www.youtube.com/channel/UCAb3R-5qyXWOEj8B4vibhxQ)
-
 [itch.io Page](https://rheavenstudio.itch.io/heaven-studio)
 
 [Documentation](https://rheavenstudio.github.io/)
@@ -39,7 +37,6 @@ These builds include experimental new features that will not be included in Rele
 
 #### Important Notes:
 - On MacOS and Linux builds you may [experience bugs with audio-related tasks](https://github.com/RHeavenStudio/HeavenStudio/issues/72), but in most cases Heaven Studio works perfectly.
-- On MacOS you'll need to have Discord open in the background for now, there's a bug that causes the DiscordSDK library to crash when the rich presence is updated while Discord is not open in the background.
 
 
 ## Self-Building
