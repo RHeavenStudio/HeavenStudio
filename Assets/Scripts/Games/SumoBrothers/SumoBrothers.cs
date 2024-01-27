@@ -87,6 +87,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator inuSensei;
         [SerializeField] Animator sumoBrotherP;
         [SerializeField] Animator sumoBrotherG;
+         [SerializeField] Animator sumoBrotherGHead;
 
         [Header("Properties")]
         static List<queuedSumoInputs> queuedInputs = new List<queuedSumoInputs>();
@@ -157,10 +158,6 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
 
-            if (PlayerInput.Pressed() && !IsExpectingInputNow())
-            {
-
-            }
         }
         
         public override void OnBeatPulse(double beat)
@@ -173,7 +170,7 @@ namespace HeavenStudio.Games
                     }
                     else
                     {
-                        inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f);
+                    //    inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f);
                     }
 
                 }
@@ -184,11 +181,12 @@ namespace HeavenStudio.Games
                     {
                         sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f);
                         sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f);
+                        sumoBrotherGHead.DoScaledAnimationAsync("SumoGIdle", 0.5f);
                     }
                     else
                     {
-                        sumoBrotherP.DoScaledAnimationAsync("SumoIdle", 0.5f);
-                        sumoBrotherG.DoScaledAnimationAsync("SumoIdle", 0.5f);
+                    //    sumoBrotherP.DoScaledAnimationAsync("SumoIdle", 0.5f);
+                    //    sumoBrotherG.DoScaledAnimationAsync("SumoIdle", 0.5f);
                     }
                     
                 }
@@ -216,6 +214,7 @@ namespace HeavenStudio.Games
                         {
                             sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f);
                             sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f);
+                            sumoBrotherGHead.DoScaledAnimationAsync("SumoGIdle", 0.5f);
                         }
                     }));
                 }
@@ -231,7 +230,7 @@ namespace HeavenStudio.Games
                 return;
             }
 
-            CueRunning(beat + 4);
+            CueRunning(beat + 0);
 
             if (mute == false)
             {
@@ -282,7 +281,16 @@ namespace HeavenStudio.Games
                 return;
             }
 
-            CueRunning(beat + 4);
+            CueRunning(beat + 0);
+
+            BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                new BeatAction.Action(beat + 3, delegate { allowBopSumo = false; }),
+                new BeatAction.Action(beat + 3, delegate { sumoBrotherP.DoScaledAnimationAsync("SumoSlapPrepare", 1f); }),
+                new BeatAction.Action(beat + 3, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoSlapPrepare", 1f); }),
+                new BeatAction.Action(beat + 3, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapPrepare", 0.5f); }),
+                new BeatAction.Action(beat + 4, delegate { allowBopSumo = true; })
+                });
 
             if (mute == false)
             {
@@ -359,7 +367,7 @@ namespace HeavenStudio.Games
             if (cueCurrentlyActive)
             { return; }
 
-            CueRunning(beat + 4);
+            CueRunning(beat + 0);
             sumoState = SumoState.Pose;
 
             var cond = Conductor.instance;
