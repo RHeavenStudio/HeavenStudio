@@ -3,7 +3,7 @@ guid: 86b126de2a1302e48b1e31891245b494
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -24,6 +24,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -41,14 +42,14 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 81.92
+  spritePixelsToUnits: 200
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -62,6 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -87,9 +89,1239 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: pillow_obj02_0
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 3556
+        width: 830
+        height: 392
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 145553a2000000000800000000000000
+      internalID: 708138305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_1
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 3538
+        width: 829
+        height: 409
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31dbbf8dffffffff0800000000000000
+      internalID: -654590701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_2
+      rect:
+        serializedVersion: 2
+        x: 2002
+        y: 3746
+        width: 172
+        height: 247
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f465a4fffffffff0800000000000000
+      internalID: -190487308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_3
+      rect:
+        serializedVersion: 2
+        x: 2232
+        y: 3780
+        width: 168
+        height: 166
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 710b2febffffffff0800000000000000
+      internalID: -1091391465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_4
+      rect:
+        serializedVersion: 2
+        x: 2452
+        y: 3779
+        width: 197
+        height: 167
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2c36f4bffffffff0800000000000000
+      internalID: -1258931158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_5
+      rect:
+        serializedVersion: 2
+        x: 2688
+        y: 3762
+        width: 160
+        height: 194
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bcb06c6000000000800000000000000
+      internalID: 1818279088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_6
+      rect:
+        serializedVersion: 2
+        x: 2927
+        y: 3782
+        width: 124
+        height: 183
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7ee38f2000000000800000000000000
+      internalID: 797175420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_7
+      rect:
+        serializedVersion: 2
+        x: 3140
+        y: 3781
+        width: 125
+        height: 129
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e609c97affffffff0800000000000000
+      internalID: -1482911634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_8
+      rect:
+        serializedVersion: 2
+        x: 3552
+        y: 3652
+        width: 169
+        height: 334
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2604692000000000800000000000000
+      internalID: 694421038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_9
+      rect:
+        serializedVersion: 2
+        x: 3817
+        y: 3639
+        width: 137
+        height: 347
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ee90d68ffffffff0800000000000000
+      internalID: -2033148185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_10
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 3043
+        width: 830
+        height: 395
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b717fc9ffffffff0800000000000000
+      internalID: -1661528138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_11
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 3028
+        width: 829
+        height: 408
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07f82b9effffffff0800000000000000
+      internalID: -374173840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_12
+      rect:
+        serializedVersion: 2
+        x: 2039
+        y: 3229
+        width: 275
+        height: 464
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99114c4effffffff0800000000000000
+      internalID: -456912487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_13
+      rect:
+        serializedVersion: 2
+        x: 2460
+        y: 3248
+        width: 267
+        height: 437
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80fad71cffffffff0800000000000000
+      internalID: -1048727800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_14
+      rect:
+        serializedVersion: 2
+        x: 2881
+        y: 3237
+        width: 275
+        height: 459
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4656e233000000000800000000000000
+      internalID: 858678628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_15
+      rect:
+        serializedVersion: 2
+        x: 3548
+        y: 3170
+        width: 424
+        height: 433
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 408f5076000000000800000000000000
+      internalID: 1728444420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_16
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 2541
+        width: 830
+        height: 399
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6be51768ffffffff0800000000000000
+      internalID: -2039390538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_17
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 2531
+        width: 829
+        height: 410
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8444470effffffff0800000000000000
+      internalID: -529251256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_18
+      rect:
+        serializedVersion: 2
+        x: 2019
+        y: 2814
+        width: 275
+        height: 344
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e058f036000000000800000000000000
+      internalID: 1661961486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_19
+      rect:
+        serializedVersion: 2
+        x: 2361
+        y: 2817
+        width: 276
+        height: 316
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63e7c291000000000800000000000000
+      internalID: 422346294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_20
+      rect:
+        serializedVersion: 2
+        x: 2744
+        y: 2677
+        width: 276
+        height: 461
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afd1e5a1000000000800000000000000
+      internalID: 442375674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_21
+      rect:
+        serializedVersion: 2
+        x: 3525
+        y: 2653
+        width: 470
+        height: 407
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35cddc1fffffffff0800000000000000
+      internalID: -238166957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_22
+      rect:
+        serializedVersion: 2
+        x: 2008
+        y: 2385
+        width: 275
+        height: 343
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8d61360000000000800000000000000
+      internalID: 103902602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_23
+      rect:
+        serializedVersion: 2
+        x: 2355
+        y: 2409
+        width: 275
+        height: 306
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7aa1ba3cffffffff0800000000000000
+      internalID: -1012196697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_24
+      rect:
+        serializedVersion: 2
+        x: 2702
+        y: 2330
+        width: 368
+        height: 308
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23df3874000000000800000000000000
+      internalID: 1199832370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_25
+      rect:
+        serializedVersion: 2
+        x: 3495
+        y: 2188
+        width: 530
+        height: 357
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81407b2cffffffff0800000000000000
+      internalID: -1028193256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_26
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 1996
+        width: 830
+        height: 409
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f3baaaaffffffff0800000000000000
+      internalID: -1431653383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_27
+      rect:
+        serializedVersion: 2
+        x: 1048
+        y: 1989
+        width: 841
+        height: 408
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f6c4638ffffffff0800000000000000
+      internalID: -2090547469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_28
+      rect:
+        serializedVersion: 2
+        x: 2011
+        y: 1969
+        width: 276
+        height: 342
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d499407fffffffff0800000000000000
+      internalID: -150693555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_29
+      rect:
+        serializedVersion: 2
+        x: 2418
+        y: 2019
+        width: 172
+        height: 247
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb9fd6e8ffffffff0800000000000000
+      internalID: -1905395269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_30
+      rect:
+        serializedVersion: 2
+        x: 2693
+        y: 2126
+        width: 209
+        height: 152
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26937f49ffffffff0800000000000000
+      internalID: -1795737246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_31
+      rect:
+        serializedVersion: 2
+        x: 2980
+        y: 1786
+        width: 393
+        height: 459
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b533710bffffffff0800000000000000
+      internalID: -1340656805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_32
+      rect:
+        serializedVersion: 2
+        x: 1045
+        y: 1461
+        width: 824
+        height: 446
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3130f270000000000800000000000000
+      internalID: 120521491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_33
+      rect:
+        serializedVersion: 2
+        x: 3497
+        y: 1831
+        width: 529
+        height: 274
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10c0ce0cffffffff0800000000000000
+      internalID: -1058272255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_34
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 1484
+        width: 830
+        height: 410
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 032a1341000000000800000000000000
+      internalID: 338797104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_35
+      rect:
+        serializedVersion: 2
+        x: 2103
+        y: 1553
+        width: 105
+        height: 254
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f6e3767000000000800000000000000
+      internalID: 1987307248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_36
+      rect:
+        serializedVersion: 2
+        x: 2299
+        y: 1519
+        width: 247
+        height: 290
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 458a63f9ffffffff0800000000000000
+      internalID: -1623807916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_37
+      rect:
+        serializedVersion: 2
+        x: 2580
+        y: 1508
+        width: 279
+        height: 292
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0044d3f5000000000800000000000000
+      internalID: 1597850624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_38
+      rect:
+        serializedVersion: 2
+        x: 2904
+        y: 1417
+        width: 532
+        height: 282
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b750eb1000000000800000000000000
+      internalID: 467687346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_39
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 963
+        width: 829
+        height: 408
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69b2c960000000000800000000000000
+      internalID: 110898070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_40
+      rect:
+        serializedVersion: 2
+        x: 1084
+        y: 870
+        width: 282
+        height: 466
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7570a13000000000800000000000000
+      internalID: 832599421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_41
+      rect:
+        serializedVersion: 2
+        x: 1498
+        y: 940
+        width: 541
+        height: 289
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 106fcacbffffffff0800000000000000
+      internalID: -1129515519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_42
+      rect:
+        serializedVersion: 2
+        x: 2125
+        y: 1029
+        width: 308
+        height: 342
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 200efb2fffffffff0800000000000000
+      internalID: -222306302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_43
+      rect:
+        serializedVersion: 2
+        x: 2545
+        y: 935
+        width: 161
+        height: 466
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 516d962fffffffff0800000000000000
+      internalID: -227944939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_44
+      rect:
+        serializedVersion: 2
+        x: 2933
+        y: 1003
+        width: 475
+        height: 322
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14f92437000000000800000000000000
+      internalID: 1933745985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_45
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 69
+        width: 503
+        height: 642
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c68ee103000000000800000000000000
+      internalID: 807331948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_46
+      rect:
+        serializedVersion: 2
+        x: 607
+        y: 67
+        width: 503
+        height: 641
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 913c745effffffff0800000000000000
+      internalID: -448281831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_47
+      rect:
+        serializedVersion: 2
+        x: 1165
+        y: 65
+        width: 503
+        height: 641
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f5931d7000000000800000000000000
+      internalID: 2098435571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_48
+      rect:
+        serializedVersion: 2
+        x: 1717
+        y: 67
+        width: 503
+        height: 641
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8281e6b1000000000800000000000000
+      internalID: 460199976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_49
+      rect:
+        serializedVersion: 2
+        x: 2286
+        y: 461
+        width: 146
+        height: 143
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2765ed87000000000800000000000000
+      internalID: 2027837042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_50
+      rect:
+        serializedVersion: 2
+        x: 2507
+        y: 465
+        width: 160
+        height: 125
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9e91b86000000000800000000000000
+      internalID: 1756470942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_51
+      rect:
+        serializedVersion: 2
+        x: 2725
+        y: 458
+        width: 385
+        height: 284
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6c8848effffffff0800000000000000
+      internalID: -397898644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_52
+      rect:
+        serializedVersion: 2
+        x: 3191
+        y: 451
+        width: 384
+        height: 298
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 085ca191000000000800000000000000
+      internalID: 421184896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_53
+      rect:
+        serializedVersion: 2
+        x: 3643
+        y: 465
+        width: 408
+        height: 274
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5de96d36000000000800000000000000
+      internalID: 1675009749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_54
+      rect:
+        serializedVersion: 2
+        x: 2275
+        y: 82
+        width: 503
+        height: 278
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d9c69e4000000000800000000000000
+      internalID: 1318504917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_55
+      rect:
+        serializedVersion: 2
+        x: 2855
+        y: 105
+        width: 384
+        height: 289
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1eb15fdffffffff0800000000000000
+      internalID: -548291044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_56
+      rect:
+        serializedVersion: 2
+        x: 3281
+        y: 117
+        width: 360
+        height: 270
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b983db4000000000800000000000000
+      internalID: 1272154546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pillow_obj02_57
+      rect:
+        serializedVersion: 2
+        x: 3679
+        y: 128
+        width: 384
+        height: 242
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29f36387000000000800000000000000
+      internalID: 2016821138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -100,6 +1332,65 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      pillow_obj02_0: 708138305
+      pillow_obj02_1: -654590701
+      pillow_obj02_10: -1661528138
+      pillow_obj02_11: -374173840
+      pillow_obj02_12: -456912487
+      pillow_obj02_13: -1048727800
+      pillow_obj02_14: 858678628
+      pillow_obj02_15: 1728444420
+      pillow_obj02_16: -2039390538
+      pillow_obj02_17: -529251256
+      pillow_obj02_18: 1661961486
+      pillow_obj02_19: 422346294
+      pillow_obj02_2: -190487308
+      pillow_obj02_20: 442375674
+      pillow_obj02_21: -238166957
+      pillow_obj02_22: 103902602
+      pillow_obj02_23: -1012196697
+      pillow_obj02_24: 1199832370
+      pillow_obj02_25: -1028193256
+      pillow_obj02_26: -1431653383
+      pillow_obj02_27: -2090547469
+      pillow_obj02_28: -150693555
+      pillow_obj02_29: -1905395269
+      pillow_obj02_3: -1091391465
+      pillow_obj02_30: -1795737246
+      pillow_obj02_31: -1340656805
+      pillow_obj02_32: 120521491
+      pillow_obj02_33: -1058272255
+      pillow_obj02_34: 338797104
+      pillow_obj02_35: 1987307248
+      pillow_obj02_36: -1623807916
+      pillow_obj02_37: 1597850624
+      pillow_obj02_38: 467687346
+      pillow_obj02_39: 110898070
+      pillow_obj02_4: -1258931158
+      pillow_obj02_40: 832599421
+      pillow_obj02_41: -1129515519
+      pillow_obj02_42: -222306302
+      pillow_obj02_43: -227944939
+      pillow_obj02_44: 1933745985
+      pillow_obj02_45: 807331948
+      pillow_obj02_46: -448281831
+      pillow_obj02_47: 2098435571
+      pillow_obj02_48: 460199976
+      pillow_obj02_49: 2027837042
+      pillow_obj02_5: 1818279088
+      pillow_obj02_50: 1756470942
+      pillow_obj02_51: -397898644
+      pillow_obj02_52: 421184896
+      pillow_obj02_53: 1675009749
+      pillow_obj02_54: 1318504917
+      pillow_obj02_55: -548291044
+      pillow_obj02_56: 1272154546
+      pillow_obj02_57: 2016821138
+      pillow_obj02_6: 797175420
+      pillow_obj02_7: -1482911634
+      pillow_obj02_8: 694421038
+      pillow_obj02_9: -2033148185
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

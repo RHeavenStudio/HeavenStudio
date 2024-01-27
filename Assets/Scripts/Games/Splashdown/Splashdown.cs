@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("type", new EntityTypes.Integer(1, 3, 1), "Type")
+                        new Param("type", new EntityTypes.Integer(1, 3, 1), "Type", "Set the type of animation to play when surfacing.")
                     }
                 },
                 new GameAction("jump", "Jump")
@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("dolphin", true, "Dolphin")
+                        new Param("dolphin", true, "Dolphin", "Toggle if the dolphin should be used.")
                     }
                 },
                 new GameAction("together", "Together Jump")
@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("al", false, "Alley-Oop!")
+                        new Param("al", false, "Alley-Oop!", "Toggle if the \"Alley-Oop!\" sound effect and animation should be used.")
                     }
                 },
                 new GameAction("togetherR9", "Together Jump (Remix 9)")
@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("al", false, "Alley-Oop!")
+                        new Param("al", false, "Alley-Oop!", "Toggle if the \"Alley-Oop!\" sound effect and animation should be used.")
                     }
                 },
                 new GameAction("intro", "Intro")
@@ -63,16 +63,20 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     defaultLength = 8
                 },
-                new GameAction("amount", "Synchrette Amount")
+                new GameAction("amount", "Change Synchrette Number")
                 {
                     function = delegate { Splashdown.instance.SpawnSynchrettes(eventCaller.currentEntity["amount"], eventCaller.currentEntity.beat); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("amount", new EntityTypes.Integer(3, 5, 3), "Amount")
+                        new Param("amount", new EntityTypes.Integer(3, 5, 3), "Synchrettes", "Set how many synchrettes there will be. The player is always the rightmost synchrette.")
                     }
                 }
-            });
+            },
+            new List<string>() { "ntr", "normal" },
+            "ntrdiving", "en",
+            new List<string>() { "en" }
+            );
         }
     }
 }
@@ -269,12 +273,12 @@ namespace HeavenStudio.Games
                 }));
                 SoundByte.PlayOneShotGame("splashdown/yeah", diveBeat);
                 SoundByte.PlayOneShotGame("splashdown/jumpOthers", diveBeat);
-                SoundByte.PlayOneShotGame("splashdown/rollOthers", diveBeat + 1);
+                if (dolphin) SoundByte.PlayOneShotGame("splashdown/rollOthers", diveBeat + 1);
                 SoundByte.PlayOneShotGame("splashdown/splashOthers", diveBeat + 1.75);
             }
             BeatAction.New(instance, actions);
             SoundByte.PlayOneShotGame("splashdown/yeah", beat + (currentSynchrettes.Count * length));
-            ScheduleInput(beat, currentSynchrettes.Count * length, InputAction_FlickRelease, dolphin ? JustJump : JustJumpNoDolphin, Out, Out);
+            ScheduleInput(beat, currentSynchrettes.Count * length, InputAction_FlickRelease, dolphin ? JustJump : JustJumpNoRollSound, Out, Out);
         }
 
         public void TogetherJump(double beat, bool alleyoop)
@@ -409,25 +413,6 @@ namespace HeavenStudio.Games
             }
             SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
             player.Jump(diveBeat);
-            BeatAction.New(instance, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(diveBeat + 1.75, delegate { crowdAnim.DoScaledAnimationAsync("CrowdCheer", 0.5f); }),
-                new BeatAction.Action(diveBeat + 4, delegate { crowdAnim.Play("CrowdIdle", 0, 0); })
-            });
-        }
-
-        private void JustJumpNoDolphin(PlayerActionEvent caller, float state)
-        {
-            double diveBeat = caller.timer + caller.startBeat;
-            SoundByte.PlayOneShotGame("splashdown/jumpPlayer");
-            SoundByte.PlayOneShotGame("splashdown/splashPlayer", diveBeat + 1.75);
-            if (state >= 1f || state <= -1f)
-            {
-                player.Jump(diveBeat, true, true);
-                return;
-            }
-            SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
-            player.Jump(diveBeat, false, true);
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(diveBeat + 1.75, delegate { crowdAnim.DoScaledAnimationAsync("CrowdCheer", 0.5f); }),

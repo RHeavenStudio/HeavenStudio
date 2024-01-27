@@ -14,6 +14,17 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("tambourine", "Tambourine", "388cd0", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("whoBops", Tambourine.WhoBops.Both, "Bop", "Set the character(s) to bop for the duration of this event."),
+                        new Param("whoBopsAuto", Tambourine.WhoBops.None, "Bop (Auto)", "Set the character(s) to automatically bop until another Bop event is reached."),
+                    },
+                    resizable = true,
+                    priority = 4
+                },
                 new GameAction("beat intervals", "Start Interval")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; Tambourine.PreInterval(e.beat, e.length, e["auto"]); },
@@ -21,7 +32,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     }
                 },
                 new GameAction("shake", "Shake")
@@ -41,17 +52,6 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     preFunctionLength = 1f
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("whoBops", Tambourine.WhoBops.Both, "Who Bops", "Who will bop."),
-                        new Param("whoBopsAuto", Tambourine.WhoBops.None, "Who Bops (Auto)", "Who will auto bop."),
-                    },
-                    resizable = true,
-                    priority = 4
-                },
                 new GameAction("success", "Success")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.SuccessFace(e.beat); },
@@ -65,9 +65,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorStart", Color.white, "Start Color", "The starting color of the fade."),
-                        new Param("colorEnd", Tambourine.defaultBGColor, "End Color", "The ending color of the fade."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("colorStart", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("colorEnd", Tambourine.defaultBGColor, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
             },

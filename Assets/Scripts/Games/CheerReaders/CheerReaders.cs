@@ -20,13 +20,23 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("cheerReaders", "Cheer Readers", "ffffde", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e.beat, e.length, e["toggle"], e["toggle2"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Bop", "Toggle if the girls should bop for the duration of this event."),
+                        new Param("toggle2", false, "Bop (Auto)", "Toggle if the girls should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("oneTwoThree", "One! Two! Three!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line.")
                     }
                 },
                 new GameAction("itsUpToYou", "It's Up To You!")
@@ -35,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line.")
                     }
                 },
                 new GameAction("letsGoReadABunchaBooks", "Let's Go Read A Buncha Books!")
@@ -44,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line.")
                     }
                 },
                 new GameAction("rahRahSisBoomBaBoom", "Rah-Rah Sis Boom Bah-BOOM!")
@@ -53,8 +63,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                        new Param("consecutive", false, "Consecutive", "Is this cue using the alternate consecutive version?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line."),
+                        new Param("consecutive", false, "Consecutive Version", "Toggle if this cue should use the consecutive version of the cue. This mutes the first book flip so it doesn't overlap with a previous cue.")
                     }
                 },
                 new GameAction("okItsOn", "OK, It's On!")
@@ -63,10 +73,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                        new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
-                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the School Library Pep Squad display?"),
-                        new Param("happy", true, "Make Happy Face?", "Will the School Library Pep Squad smile happily 2 beats after flipping their books?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line."),
+                        new Param("toggle", true, "Whistle", "Toggle if the whistle sounds should play."),
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Image", "Choose the image to display inside the books."),
+                        new Param("happy", true, "Smile", "Toggle if the girls will smile two beats after the input.")
                     }
                 },
                 new GameAction("okItsOnStretch", "OK, It's On! (Stretchable)")
@@ -76,10 +86,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                        new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
-                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the School Library Pep Squad display?"),
-                        new Param("happy", true, "Do Happy Face?", "Will the School Library Pep Squad smile happily 2 beats after showing off their books?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line."),
+                        new Param("toggle", true, "Whistle", "Toggle if the whistle sounds should play."),
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Image", "Choose the image to display inside the books."),
+                        new Param("happy", true, "Smile", "Toggle if the girls should smile two beats after the input.")
                     }
                 },
                 new GameAction("yay", "Yay!")
@@ -88,17 +98,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                    }
-                },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e.beat, e.length, e["toggle"], e["toggle2"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle", true, "Should bop?", "Should the girls bop?"),
-                        new Param("toggle2", false, "Should auto bop?", "Should the girls bop automatically?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line."),
                     }
                 },
                 new GameAction("resetPose", "Reset Pose")

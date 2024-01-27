@@ -44,7 +44,11 @@ namespace HeavenStudio.Editor.Track
             Vector2 relativeMousePosition;
 
             var cam = Editor.instance.EditorCamera;
-            if (cam == null) Debug.LogError("Camera not set!");
+            if (cam == null)
+            {
+                Debug.LogError("Camera not set!");
+                return;
+            }
             RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, cam, out relativeMousePosition);
 
             if (scrollDeltaY > 0)

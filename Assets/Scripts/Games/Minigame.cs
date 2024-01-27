@@ -7,14 +7,28 @@ using HeavenStudio.Common;
 using HeavenStudio.InputSystem;
 using System;
 using System.Linq;
+using Jukebox;
 
 namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double ngEarlyTime = 0.085f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.085f;
-        public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
+        public static double ngEarlyTimeBase = 0.1, justEarlyTimeBase = 0.05, aceEarlyTimeBase = 0.01, aceLateTimeBase = 0.01, justLateTimeBase = 0.05, ngLateTimeBase = 0.1;
+        public static double rankHiThreshold = 0.8, rankOkThreshold = 0.6;
+
+        public static double ngEarlyTime => ngEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double justEarlyTime => justEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double aceEarlyTime => aceEarlyTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double aceLateTime => aceLateTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double justLateTime => justLateTimeBase * Conductor.instance?.SongPitch ?? 1;
+        public static double ngLateTime => ngLateTimeBase * Conductor.instance?.SongPitch ?? 1;
+
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
+
+        [NonSerialized] public string minigameName;
+
+        [NonSerialized] public GameManager gameManager;
+        [NonSerialized] public Conductor conductor;
 
         #region Premade Input Actions
         protected const int IAEmptyCat = -1;
@@ -117,6 +131,11 @@ namespace HeavenStudio.Games
             PlayerActionEvent.ActionEventHittableQuery HittableQuery = null
             )
         {
+            // List<RiqEntity> gameSwitches = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= startBeat + timer && c.datamodel.Split("/")[0] == "switchGame");
+            // if (gameSwitches != null && gameSwitches[^1].datamodel.Split("/")[1] != gameObject.name)
+            // {
+            //     return null;
+            // }
 
             GameObject evtObj = new("ActionEvent" + (startBeat + timer));
 
@@ -137,6 +156,8 @@ namespace HeavenStudio.Games
 
             evt.transform.parent = this.transform.parent;
 
+            evt.minigame = minigameName;
+
             evtObj.SetActive(true);
 
             scheduledInputs.Add(evt);
@@ -153,6 +174,7 @@ namespace HeavenStudio.Games
         {
             PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank);
             evt.autoplayOnly = true;
+            evt.minigame = minigameName;
             return evt;
         }
 
@@ -166,82 +188,7 @@ namespace HeavenStudio.Games
         {
             PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank, HittableQuery);
             evt.noAutoplay = true;
-            return evt;
-        }
-
-        /// <summary>
-        /// Schedule an Input for a later time in the minigame. Executes the methods put in parameters
-        /// </summary>
-        /// <param name="startBeat">When the scheduling started (in beats)</param>
-        /// <param name="timer">How many beats later should the input be expected</param>
-        /// <param name="inputType">The type of the input that's expected (Press, Release, A, B, Directions>)</param>
-        /// <param name="OnHit">Method to run if the Input has been Hit</param>
-        /// <param name="OnMiss">Method to run if the Input has been Missed</param>
-        /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
-        /// <returns></returns>
-        [Obsolete("Use Input Action ScheduleInput instead")]
-        public PlayerActionEvent ScheduleInput(
-            double startBeat,
-            double timer,
-            InputType inputType,
-            PlayerActionEvent.ActionEventCallbackState OnHit,
-            PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank,
-            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null
-            )
-        {
-
-            GameObject evtObj = new GameObject("ActionEvent" + (startBeat + timer));
-            evtObj.AddComponent<PlayerActionEvent>();
-
-            PlayerActionEvent evt = evtObj.GetComponent<PlayerActionEvent>();
-
-            evt.startBeat = startBeat;
-            evt.timer = timer;
-            evt.inputType = inputType;
-            evt.OnHit = OnHit;
-            evt.OnMiss = OnMiss;
-            evt.OnBlank = OnBlank;
-            evt.IsHittable = HittableQuery;
-
-            evt.OnDestroy = RemoveScheduledInput;
-
-            evt.canHit = true;
-            evt.enabled = true;
-
-            evt.transform.parent = this.transform.parent;
-
-            evtObj.SetActive(true);
-
-            scheduledInputs.Add(evt);
-
-            return evt;
-        }
-
-        [Obsolete("Use Input Action ScheduleInput instead")]
-        public PlayerActionEvent ScheduleAutoplayInput(double startBeat,
-            double timer,
-            InputType inputType,
-            PlayerActionEvent.ActionEventCallbackState OnHit,
-            PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank)
-        {
-            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputType, OnHit, OnMiss, OnBlank);
-            evt.autoplayOnly = true;
-            return evt;
-        }
-
-        [Obsolete("Use Input Action ScheduleInput instead")]
-        public PlayerActionEvent ScheduleUserInput(double startBeat,
-            double timer,
-            InputType inputType,
-            PlayerActionEvent.ActionEventCallbackState OnHit,
-            PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank,
-            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null)
-        {
-            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputType, OnHit, OnMiss, OnBlank, HittableQuery);
-            evt.noAutoplay = true;
+            evt.minigame = minigameName;
             return evt;
         }
 
@@ -249,42 +196,6 @@ namespace HeavenStudio.Games
         public void RemoveScheduledInput(PlayerActionEvent evt)
         {
             scheduledInputs.Remove(evt);
-        }
-
-        //Get the scheduled input that should happen the **Soonest**
-        //Can return null if there's no scheduled inputs
-        // remark: need a check for specific button(s)
-        [Obsolete("Use GetClosestScheduledInput InputAction or InputAction category instead")]
-        public PlayerActionEvent GetClosestScheduledInput(InputType input = InputType.ANY)
-        {
-            PlayerActionEvent closest = null;
-
-            foreach (PlayerActionEvent toCompare in scheduledInputs)
-            {
-                // ignore inputs that are for sequencing in autoplay
-                if (toCompare.autoplayOnly) continue;
-
-                if (closest == null)
-                {
-                    if (input == InputType.ANY || (toCompare.inputType & input) != 0)
-                        closest = toCompare;
-                }
-                else
-                {
-                    double t1 = closest.startBeat + closest.timer;
-                    double t2 = toCompare.startBeat + toCompare.timer;
-
-                    // Debug.Log("t1=" + t1 + " -- t2=" + t2);
-
-                    if (t2 < t1)
-                    {
-                        if (input == InputType.ANY || (toCompare.inputType & input) != 0)
-                            closest = toCompare;
-                    }
-                }
-            }
-
-            return closest;
         }
 
         public PlayerActionEvent GetClosestScheduledInput(int[] actionCats)
@@ -320,22 +231,6 @@ namespace HeavenStudio.Games
             return closest;
         }
 
-        public PlayerActionEvent GetClosestScheduledInput(PlayerInput.InputAction action)
-        {
-            return GetClosestScheduledInput(action.inputLockCategory);
-        }
-
-        //Hasn't been tested yet. *Should* work.
-        //Can be used to detect if the user is expected to input something now or not
-        //Useful for strict call and responses games like Tambourine
-        [Obsolete("Use IsExpectingInputNow InputAction or InputAction category instead")]
-        public bool IsExpectingInputNow(InputType wantInput = InputType.ANY)
-        {
-            PlayerActionEvent input = GetClosestScheduledInput(wantInput);
-            if (input == null) return false;
-            return input.IsExpectingInputNow();
-        }
-
         public bool IsExpectingInputNow(int[] wantActionCategory)
         {
             PlayerActionEvent input = GetClosestScheduledInput(wantActionCategory);
@@ -349,50 +244,50 @@ namespace HeavenStudio.Games
         }
 
         // now should fix the fast bpm problem
-        public static double NgEarlyTime()
+        public static double NgEarlyTime(float pitch = -1)
         {
-            return 1f - ngEarlyTime;
+            if (pitch < 0)
+                return 1 - ngEarlyTime;
+            return 1 - (ngEarlyTimeBase * pitch);
         }
 
-        public static double JustEarlyTime()
+        public static double JustEarlyTime(float pitch = -1)
         {
-            return 1f - justEarlyTime;
+            if (pitch < 0)
+                return 1 - justEarlyTime;
+            return 1 - (justEarlyTimeBase * pitch);
         }
 
-        public static double JustLateTime()
+        public static double JustLateTime(float pitch = -1)
         {
-            return 1f + justLateTime;
+            if (pitch < 0)
+                return 1 + justLateTime;
+            return 1 + (justLateTimeBase * pitch);
         }
 
-        public static double NgLateTime()
+        public static double NgLateTime(float pitch = -1)
         {
-            return 1f + ngLateTime;
+            if (pitch < 0)
+                return 1 + ngLateTime;
+            return 1 + (ngLateTimeBase * pitch);
         }
 
-        public static double AceEarlyTime()
+        public static double AceEarlyTime(float pitch = -1)
         {
-            return 1f - aceEarlyTime;
+            if (pitch < 0)
+                return 1 - aceEarlyTime;
+            return 1 - (aceEarlyTimeBase * pitch);
         }
 
-        public static double AceLateTime()
+        public static double AceLateTime(float pitch = -1)
         {
-            return 1f + aceLateTime;
+            if (pitch < 0)
+                return 1 + aceLateTime;
+            return 1 + (aceLateTimeBase * pitch);
         }
 
         public virtual void OnGameSwitch(double beat)
         {
-            //Below is a template that can be used for handling previous entities.
-            //section below is if you only want to look at entities that overlap the game switch
-            /*
-            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
-            foreach(RiqEntity entity in prevEntities)
-            {
-                if(entity.beat + entity.length >= beat)
-                {
-                    EventCaller.instance.CallEvent(entity, true);
-                }
-            }
-            */
         }
 
         public virtual void OnTimeChange()
@@ -419,6 +314,13 @@ namespace HeavenStudio.Games
 
         }
 
+        // added because OnBeatPulse had some animation issues going on
+        // if your bopping overlaps with other animations, use this instead
+        public virtual void OnLateBeatPulse(double beat)
+        {
+
+        }
+
         public static MultiSound PlaySoundSequence(string game, string name, double startBeat, params SoundSequence.SequenceParams[] args)
         {
             Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);
@@ -426,7 +328,7 @@ namespace HeavenStudio.Games
             {
                 if (pair.name == name)
                 {
-                    Debug.Log($"Playing sound sequence {pair.name} at beat {startBeat}");
+                    // Debug.Log($"Playing sound sequence {pair.name} at beat {startBeat}");
                     return pair.sequence.Play(startBeat);
                 }
             }
@@ -434,19 +336,14 @@ namespace HeavenStudio.Games
             return null;
         }
 
-        public void ScoreMiss(double weight = 1f)
+        public void ScoreMiss(float weight = 1f)
         {
-            GameManager.instance.ScoreInputAccuracy(0, true, NgLateTime(), weight, false);
-            if (weight > 0)
-            {
-                GoForAPerfect.instance.Miss();
-                SectionMedalsManager.instance.MakeIneligible();
-            }
+            double beat = Conductor.instance?.songPositionInBeatsAsDouble ?? -1;
+            GameManager.instance.ScoreInputAccuracy(beat, 0, true, NgLateTime(), weight, false);
         }
 
         public void ToggleSplitColoursDisplay(bool on)
         {
-            
         }
 
         #region Bop
@@ -495,7 +392,7 @@ namespace HeavenStudio.Games
             {
                 if (bopRegion.ContainsKey(e.beat))
                 {
-                    Debug.Log("Two bops on the same beat, ignoring this one");
+                    // Debug.Log("Two bops on the same beat, ignoring this one");
                     continue;
                 }
                 if (isBool)

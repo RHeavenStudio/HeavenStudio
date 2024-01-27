@@ -16,6 +16,9 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
         private Animator opponentAnim;
         private Conductor cond;
 
+        public bool PlayerDown { get { return playerDown; } }
+        bool playerDown = false;
+
         public void Init()
         {
             game = RhythmRally.instance;
@@ -31,20 +34,23 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
                 if (PlayerInput.GetIsAction(RhythmRally.InputAction_BasicPress))
                 {
                     playerAnim.Play("Ready1");
+                    playerDown = true;
                 }
                 if (PlayerInput.GetIsAction(RhythmRally.InputAction_BasicRelease))
                 {
                     playerAnim.Play("UnReady1");
+                    playerDown = false;
                 }
             }
             else
             {
-                if (!game.served || game.missed || !game.started) return;
+                if (!game.started) return;
             }
             if (PlayerInput.GetIsAction(RhythmRally.InputAction_FlickPress) && !game.IsExpectingInputNow(RhythmRally.InputAction_FlickPress))
             {
                 // Play "whoosh" sound here
                 playerAnim.DoScaledAnimationAsync("Swing", 0.5f);
+                playerDown = false;
             }
         }
 
@@ -65,7 +71,8 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
                 bounceBeat = game.serveBeat + game.targetBeat + 0.5f;
             }
 
-            playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
+            playerAnim.DoScaledAnimationAsync("Swing", 0.5f);
+            playerDown = false;
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Return", hitBeat), new MultiSound.Sound("rhythmRally/ReturnBounce", bounceBeat) });
             BounceFX(bounceBeat);
             game.ball.SetActive(true);
@@ -75,7 +82,8 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
         {
             MissBall();
             SoundByte.PlayOneShot("miss");
-            playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
+            playerAnim.DoScaledAnimationAsync("Swing", 0.5f);
+            playerDown = false;
 
             game.missCurve.KeyPoints[0].Position = game.ball.transform.position;
             game.missCurve.transform.localScale = new Vector3(-state, 1f, 1f);

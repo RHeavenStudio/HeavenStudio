@@ -26,8 +26,8 @@ namespace HeavenStudio.Util
         {
             if (behaviour == null)
             {
-                Debug.LogWarning("Starting a BeatAction with no assigned behaviour. The Conductor will be used instead.");
-                behaviour = Conductor.instance;
+                Debug.LogWarning("Starting a BeatAction with no assigned behaviour. The Game Manager will be used instead.");
+                behaviour = GameManager.instance;
             }
             CancellationTokenSource cancelToken = new CancellationTokenSource();
             RunAsync(behaviour, actions, cancelToken.Token).Forget();
@@ -49,16 +49,28 @@ namespace HeavenStudio.Util
 
         static async UniTask BeatActionAsync(MonoBehaviour behaviour, List<Action> actions, CancellationToken token)
         {
+            Conductor conductor = Conductor.instance;
             int idx = 0;
             while (idx < actions.Count)
             {
-                await UniTask.WaitUntil(() => Conductor.instance.songPositionInBeatsAsDouble >= actions[idx].beat || (!Conductor.instance.isPlaying) || behaviour == null, cancellationToken: token);
+                await UniTask.WaitUntil(() => (conductor.songPositionInBeatsAsDouble >= actions[idx].beat && !conductor.WaitingForDsp) || !(conductor.isPlaying || conductor.isPaused) || behaviour == null, cancellationToken: token);
 
-                if (behaviour == null || !Conductor.instance.isPlaying)
+                if (behaviour == null || !(conductor.isPlaying || conductor.isPaused))
                     return;
 
-                actions[idx].function.Invoke();
-                idx++;
+                while (conductor.songPositionInBeatsAsDouble >= actions[idx].beat)
+                {
+                    try
+                    {
+                        actions[idx].function.Invoke();
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogError($"Exception thrown while executing BeatAction: {e}");
+                    }
+                    idx++;
+                    if (idx >= actions.Count) return;
+                }
             }
         }
     }

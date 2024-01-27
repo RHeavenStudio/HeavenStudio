@@ -15,6 +15,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("boardMeeting", "Board Meeting", "d37912", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Bop(e.beat, e.length, e["bop"], e["auto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Toggle if the pigs & assistant should bop for the duration of this event."),
+                        new Param("auto", false, "Bop (Auto)", "Toggle if the pigs & assistant should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("prepare", "Prepare")
                 {
                     function = delegate { BoardMeeting.instance.Prepare(); }
@@ -30,8 +40,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {var e = eventCaller.currentEntity; BoardMeeting.instance.Spin(e["start"], e["end"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("start", new EntityTypes.Integer(1, 6, 1), "Starting Pig", "Which pig from the far left (1) or far right (4) should be the first to spin?"),
-                        new Param("end", new EntityTypes.Integer(1, 6, 4), "Ending Pig", "Which pig from the far left (1) or far right (4) should be the last to spin?")
+                        new Param("start", new EntityTypes.Integer(1, 6, 1), "Starting Pig", "Choose the leftmost pig in the range to start spinning."),
+                        new Param("end", new EntityTypes.Integer(1, 6, 4), "Ending Pig", "Choose the rightmost pig in the range to start spinning.")
                     },
                     priority = 2
                 },
@@ -46,29 +56,19 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.AssistantStop(e.beat); },
                     defaultLength = 3f
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Bop(e.beat, e.length, e["bop"], e["auto"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Bop", "Should the executives and assistant bop?"),
-                        new Param("auto", false, "Bop (Auto)", "Should the executives and assistant auto bop?")
-                    }
-                },
-                new GameAction("changeCount", "Change Executives")
+                new GameAction("changeCount", "Change Pig Number")
                 {
                     function = delegate { BoardMeeting.instance.ChangeExecutiveCount(eventCaller.currentEntity["amount"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("amount", new EntityTypes.Integer(3, 5, 4), "Amount", "How many executives will there be?")
+                        new Param("amount", new EntityTypes.Integer(3, 5, 4), "Pigs", "Set how many pigs there will be. The player is always the rightmost pig.")
                     }
                 }
             },
-            new List<string>() {"rvl", "normal"},
+            new List<string>() { "rvl", "normal" },
             "rvlrotation", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
@@ -108,7 +108,7 @@ namespace HeavenStudio.Games
 
         private void OnDestroy()
         {
-            foreach(var evt in scheduledInputs)
+            foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
             }
@@ -125,7 +125,7 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (PlayerInput.GetIsAction(InputAction_BasicPressing) && !IsExpectingInputNow(InputAction_BasicPress.inputLockCategory))
+                if (PlayerInput.GetIsAction(InputAction_BasicPressing) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
                     if (executives[executiveCount - 1].spinning)
                     {
@@ -133,10 +133,6 @@ namespace HeavenStudio.Games
                         SoundByte.PlayOneShotGame("boardMeeting/miss");
                         SoundByte.PlayOneShot("miss");
                         ScoreMiss();
-                        foreach (var evt in scheduledInputs)
-                        {
-                            evt.Disable();
-                        }
                     }
                 }
             }
@@ -150,7 +146,7 @@ namespace HeavenStudio.Games
 
         void SingleBop()
         {
-            if (assistantCanBop) 
+            if (assistantCanBop)
             {
                 if (missCounter > 0) assistantAnim.DoScaledAnimationAsync("MissBop", 0.5f);
                 else assistantAnim.DoScaledAnimationAsync("Bop", 0.5f);
@@ -196,8 +192,8 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat, delegate { assistantAnim.DoScaledAnimationAsync("One", 0.5f); }),
                 new BeatAction.Action(beat + 1, delegate { assistantAnim.DoScaledAnimationAsync("Three", 0.5f); }),
-                new BeatAction.Action(beat + 2, delegate 
-                { 
+                new BeatAction.Action(beat + 2, delegate
+                {
                     foreach (var executive in executives)
                     {
                         if (executive.player) continue;
@@ -214,7 +210,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 2.5f, delegate { assistantCanBop = true; })
             });
-            ScheduleInput(beat, 2f, InputAction_BasicPress, JustAssistant, MissAssistant, Empty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, JustAssistant, MissAssistant, Empty, CanJust);
         }
 
         public void Stop(double beat, float length)
@@ -225,23 +221,22 @@ namespace HeavenStudio.Games
             {
                 if (executives[i].player) break;
                 int index = i;
-                stops.Add(new BeatAction.Action(beat + length * i, delegate 
+                int ex = executiveCount;
+                if (executiveCount < 4) ex = 4;
+                if (index < ex - 3)
                 {
-                    int ex = executiveCount;
-                    if (executiveCount < 4) ex = 4;
-                    if (index < ex - 3)
-                    {
-                        SoundByte.PlayOneShotGame("boardMeeting/stopA");
-                    }
-                    else if (index == ex - 3) 
-                    {
-                        SoundByte.PlayOneShotGame("boardMeeting/stopB");
-                    }
-                    else if (index == ex - 2)
-                    {
-                        SoundByte.PlayOneShotGame("boardMeeting/stopC");
-                    }
-
+                    SoundByte.PlayOneShotGame("boardMeeting/stopA", beat + length * i);
+                }
+                else if (index == ex - 3)
+                {
+                    SoundByte.PlayOneShotGame("boardMeeting/stopB", beat + length * i);
+                }
+                else if (index == ex - 2)
+                {
+                    SoundByte.PlayOneShotGame("boardMeeting/stopC", beat + length * i);
+                }
+                stops.Add(new BeatAction.Action(beat + length * i, delegate
+                {
                     if (index == executiveCount - 2 && !executives[executiveCount - 1].spinning)
                     {
                         if (chairLoopSound != null)
@@ -250,12 +245,12 @@ namespace HeavenStudio.Games
                             chairLoopSound = null;
                         }
                     }
-                    executives[index].Stop(); 
+                    executives[index].Stop();
                 }));
             }
             stops.Add(new BeatAction.Action(beat + length * executiveCount + 0.5f, delegate { executivesCanBop = true; }));
             BeatAction.New(instance, stops);
-            ScheduleInput(beat, length * (executiveCount - 1), InputAction_BasicPress, Just, Miss, Empty);
+            ScheduleInput(beat, length * (executiveCount - 1), InputAction_BasicPress, Just, Miss, Empty, CanJust);
         }
 
         public void Prepare()
@@ -303,6 +298,7 @@ namespace HeavenStudio.Games
         {
             if (start > executiveCount || end > executiveCount) return;
             bool forceStart = false;
+            chairLoopSound?.KillLoop(0);
             if (chairLoopSound == null)
             {
                 chairLoopSound = SoundByte.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
@@ -384,6 +380,11 @@ namespace HeavenStudio.Games
             executives.RemoveRange(1, executiveCount - 1);
             executiveCount = count;
             InitExecutives();
+        }
+
+        bool CanJust()
+        {
+            return executives[executiveCount - 1].spinning;
         }
 
         void Just(PlayerActionEvent caller, float state)

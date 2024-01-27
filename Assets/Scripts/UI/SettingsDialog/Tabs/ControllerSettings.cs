@@ -60,7 +60,7 @@ namespace HeavenStudio.Editor
             if (!initController.GetCurrentStyleSupported())
             {
                 PlayerInput.CurrentControlStyle = initController.GetDefaultStyle();
-                stylesDropdown.value = (int)PlayerInput.CurrentControlStyle;
+                stylesDropdown.SetValueWithoutNotify((int)PlayerInput.CurrentControlStyle);
             }
 
             UpdateControlStyleMapping();
@@ -103,13 +103,13 @@ namespace HeavenStudio.Editor
                     var controllers = PlayerInput.GetInputControllers();
                     foreach (var newController in controllers)
                     {
-                        if (newController.GetLastButtonDown() > 0)
+                        if (newController.GetLastButtonDown(true) > 0)
                         {
-                            isAutoSearching = false;
                             autoSearchLabel.SetActive(false);
                             AssignController(newController, currentController);
 
-                            controllersDropdown.value = PlayerInput.GetInputControllerId(1);
+                            controllersDropdown.SetValueWithoutNotify(PlayerInput.GetInputControllerId(1));
+                            isAutoSearching = false;
                         }
                     }
                 }
@@ -209,7 +209,7 @@ namespace HeavenStudio.Editor
             if (!newController.GetCurrentStyleSupported())
             {
                 PlayerInput.CurrentControlStyle = newController.GetDefaultStyle();
-                stylesDropdown.value = (int)PlayerInput.CurrentControlStyle;
+                stylesDropdown.SetValueWithoutNotify((int)PlayerInput.CurrentControlStyle);
             }
 
             UpdateControlStyleMapping();
@@ -346,7 +346,7 @@ namespace HeavenStudio.Editor
 
             stylesDropdown.ClearOptions();
             stylesDropdown.AddOptions(enumNames);
-            stylesDropdown.value = (int)PlayerInput.CurrentControlStyle;
+            stylesDropdown.SetValueWithoutNotify((int)PlayerInput.CurrentControlStyle);
         }
 
         public void PopulateControllersDropdown()
@@ -361,7 +361,7 @@ namespace HeavenStudio.Editor
             }
             controllersDropdown.ClearOptions();
             controllersDropdown.AddOptions(dropDownData);
-            controllersDropdown.value = PlayerInput.GetInputControllerId(1);
+            controllersDropdown.SetValueWithoutNotify(PlayerInput.GetInputControllerId(1));
         }
 
         public void ChangeControlStyle()

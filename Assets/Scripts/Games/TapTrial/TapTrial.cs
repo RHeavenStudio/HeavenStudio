@@ -19,8 +19,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Bop", "Whether both will bop to the beat or not"),
-                        new Param("toggle2", false, "Bop (Auto)", "Whether both will bop automatically to the beat or not")
+                        new Param("toggle", true, "Bop", "Toggle if the characters should bop for the duration of this event."),
+                        new Param("toggle2", false, "Bop (Auto)", "Toggle if the characters should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("tap", "Tap")
@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { TapTrial.instance.TripleTap(eventCaller.currentEntity.beat); },
                     defaultLength = 4.0f
                 },
-                new GameAction("jump tap prep", "Prepare Stance")
+                new GameAction("jump tap prep", "Jump Prepare")
                 {
                     function = delegate { TapTrial.instance.JumpPrepare(); },
                 },
@@ -48,7 +48,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
-                        new Param("final", false, "Final")
+                        new Param("final", false, "Final", "Toggle if this jump should be the final one of the set.")
                     }
                 },
                 new GameAction("scroll event", "Scroll Background")
@@ -57,12 +57,12 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Scroll FX", "Will scroll", new List<Param.CollapseParam>()
+                        new Param("toggle", true, "Scroll", "Toggle if the background should scroll.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "flash", "m"})
                         }),
-                        new Param("flash", true, "Flash FX", "Will flash to white"),
-                        new Param("m", new EntityTypes.Float(0, 10, 1), "Speed Multiplier")
+                        new Param("flash", true, "White Fade", "Toggle if the background will have a white overlay."),
+                        new Param("m", new EntityTypes.Float(0, 10, 1), "Speed", "Set how fast the background should scroll.")
                     }
                 },
                 new GameAction("giraffe events", "Giraffe Animations")
@@ -71,8 +71,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", TapTrial.GiraffeAnimation.Enter, "Animation", "Which animation?"),
-                        new Param("instant", EasingFunction.Ease.Linear, "Ease", "Which ease will be used?")
+                        new Param("toggle", TapTrial.GiraffeAnimation.Enter, "Animation", "Set the animation for the giraffe to perform."),
+                        new Param("instant", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 // backwards-compatibility

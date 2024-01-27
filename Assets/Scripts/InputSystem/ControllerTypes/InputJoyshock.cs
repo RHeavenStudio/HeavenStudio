@@ -61,6 +61,7 @@ namespace HeavenStudio.InputSystem.Loaders
             {
                 joyshock.CleanUp();
             }
+            JslSetCallback(null);
             JslDisconnectAndDisposeAll();
         }
 
@@ -635,7 +636,7 @@ namespace HeavenStudio.InputSystem
             return false;
         }
 
-        public override int GetLastButtonDown()
+        public override int GetLastButtonDown(bool strict = false)
         {
             for (int i = 0; i < buttonStates.Length; i++)
             {
