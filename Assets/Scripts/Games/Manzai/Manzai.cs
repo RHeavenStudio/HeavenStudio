@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("manzai", "Manzai", "72003D", false, false, new List<GameAction>()
+            return new Minigame("manzai", "(WIP) Manzai", "72003D", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
@@ -43,13 +43,13 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
-                        new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
+                        /*new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => !(bool)x, new string[] { "pun" }),
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "unused" })
-                        }),
+                        }),*/
                         new Param("pun", Manzai.Puns.FutongaFuttonda, "Which Pun?", "Which pun will Kosuke say?"),
-                        new Param("unused", false, "Include Unused", "Will unused puns be picked?"),
+                        //new Param("unused", false, "Include Unused", "Will unused puns be picked?"),
                         new Param("pitch", true, "Pitch Voiceline", "Will the pun pitch with the tempo?"),
                     }
                 },
@@ -167,12 +167,12 @@ namespace HeavenStudio.Games
 
         public enum Puns
         {
-            AichiniAichinna,
+            /*AichiniAichinna,
             AmmeteAmena,
             ChainaniNichaina,
-            DenwariDenwa,                    //short animation
+            DenwariDenwa,*/                    //short animation
             FutongaFuttonda,
-            HiromegaHirameida,
+            /*HiromegaHirameida,
             IkagariKatta,
             IkugawaIkura,                    //short animation (boing unused)
             KaeruBurikaeru,
@@ -200,7 +200,7 @@ namespace HeavenStudio.Games
             ToiletNiIttoire,
             TonakaiyoOtonokoi,
             TorinikugaTorininkui,
-            UmetteUmena,
+            UmetteUmena,*/
             Muted,
         }
 
