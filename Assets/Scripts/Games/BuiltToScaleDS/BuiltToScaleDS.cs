@@ -22,16 +22,16 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("silent", false, "Mute Audio", "Whether the piano notes should be muted or not.", new List<Param.CollapseParam>()
+                        new Param("silent", false, "Mute Notes", "Toggle if the piano notes in this event should be muted.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => !(bool)x, new string[] { "note1", "note2", "note3", "note4", "note5", "note6"})
+                            new Param.CollapseParam((x, _) => !(bool)x, new string[] { "note1", "note2", "note3", "note4", "note5", "note6"})
                         }),
-                        new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note3", new EntityTypes.Integer(-24, 24, 4), "3rd note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note4", new EntityTypes.Integer(-24, 24, 5), "4th note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note5", new EntityTypes.Integer(-24, 24, 7), "5th note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note6", new EntityTypes.Integer(-24, 24, 12), "6th note", "The number of semitones up or down this note should be pitched (This plays together with the 5th note)"),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 4), "3rd note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, 5), "4th note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note5", new EntityTypes.Integer(-24, 24, 7), "5th note", "Set the number of semitones up or down this note should be pitched. This note plays together with the 6th note."),
+                        new Param("note6", new EntityTypes.Integer(-24, 24, 12), "6th note", "Set the number of semitones up or down this note should be pitched. This note plays together with the 5th note."),
                     }
                 },
                 new GameAction("play piano", "Play Note")
@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("type", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The number of semitones up or down this note should be pitched")
+                        new Param("type", new EntityTypes.Integer(-24, 24, 0), "Semitones", "Set the number of semitones up or down this note should be pitched.")
                     },
                 },
                 new GameAction("color", "Color Palette")
@@ -49,9 +49,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("object", Color.white, "Object Color"),
-                        new Param("shooter", Color.white, "Shooter Color"),
-                        new Param("bg", new Color(0, 1, 0, 1), "Environment Color")
+                        new Param("object", Color.white, "Widget Color", "Choose the color of the widgets & rods."),
+                        new Param("shooter", Color.white, "Paddle Color", "Choose the color of the launch paddle."),
+                        new Param("bg", new Color(0, 1, 0, 1), "Environment Color", "Choose the color of the environment.")
                     }
                 },
                 new GameAction("lights", "Lights")
@@ -61,8 +61,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Lights (Auto)", "Should the lights auto light?"),
-                        new Param("light", false, "Lights", "Should the lights light?")
+                        new Param("light", false, "Lights", "Toggle if the lights should activate for the duration of this event."),
+                        new Param("auto", true, "Lights (Auto)", "Toggle if the lights should automatically activate until the another Lights event is reached.")
                     }
                 }
             }, new List<string>() { "ntr", "normal" }, "ntrassembly", "en", new List<string>() { });
@@ -128,6 +128,10 @@ namespace HeavenStudio.Games
         {
             instance = this;
 
+            GameCamera.AdditionalPosition = camPos.position + (Quaternion.Euler(camPos.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.AdditionalRotEuler = camPos.eulerAngles;
+            GameCamera.AdditionalFoV = cameraFoV;
+
             environmentMaterials = environmentRenderer.materials;
             elevatorMaterials = elevatorRenderer.materials;
             beltMaterial = Instantiate(environmentMaterials[8]);
@@ -191,13 +195,6 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void Start()
-        {
-            GameCamera.additionalPosition = camPos.position + (Quaternion.Euler(camPos.eulerAngles) * Vector3.forward * 10f);
-            GameCamera.additionalRotEluer = camPos.eulerAngles;
-            GameCamera.additionalFoV = cameraFoV;
-        }
-
         public void UpdateMappingColors(Color objectColor, Color shooterColor, Color environmentColor)
         {
             currentObjectColor = objectColor;
@@ -258,6 +255,7 @@ namespace HeavenStudio.Games
         List<RiqEntity> spawnedBlockEvents = new List<RiqEntity>();
         void Update()
         {
+            shootingThisFrame = false;
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
                 return;
 
@@ -283,21 +281,13 @@ namespace HeavenStudio.Games
                 HandleLights();
             }
 
-            currentBeltOffset = (currentBeltOffset + Time.deltaTime * -beltSpeed) % 1f;
-            beltMaterial.mainTextureOffset = new Vector2(0f, currentBeltOffset);
-            environmentRenderer.materials = environmentMaterials;
-            elevatorRenderer.materials = elevatorMaterials;
-        }
-
-        void LateUpdate()
-        {
             var shooterState = shooterAnim.GetCurrentAnimatorStateInfo(0);
             bool canShoot = (!shooterState.IsName("Shoot") || shooterAnim.IsAnimationNotPlaying()) && !shootingThisFrame;
 
             if (canShoot && lastShotOut)
                 lastShotOut = false;
 
-            if (canShoot && !lastShotOut && PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (canShoot && !lastShotOut && PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress.inputLockCategory))
             {
                 lastShotOut = true;
                 shootingThisFrame = true;
@@ -306,15 +296,36 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("builtToScaleDS/Boing");
             }
 
-            if (!shootingThisFrame)
+            currentBeltOffset = (currentBeltOffset + Time.deltaTime * -beltSpeed) % 1f;
+            beltMaterial.mainTextureOffset = new Vector2(0f, currentBeltOffset);
+            environmentRenderer.materials = environmentMaterials;
+            elevatorRenderer.materials = elevatorMaterials;
+
+            if (PlayerInput.PlayerHasControl() && PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Touch)
             {
-                if (blocksHolder.childCount == 0 && shooterState.IsName("Windup") && shooterAnim.IsAnimationNotPlaying())
+                if (PlayerInput.GetIsAction(InputAction_BasicPress))
                 {
-                    shooterAnim.Play("WindDown", 0, 0);
+                    shooterAnim.Play("Windup", 0, 0);
+                }
+                if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !shootingThisFrame)
+                {
+                    shooterAnim.Play("WindDown", 0, 23 / 28f);
                 }
             }
+            else
+            {
+                if (!shootingThisFrame)
+                {
+                    if (blocksHolder.childCount == 0 && shooterState.IsName("Windup") && shooterAnim.IsAnimationNotPlaying())
+                    {
+                        shooterAnim.Play("WindDown", 0, 0);
+                    }
+                }
+            }
+        }
 
-            shootingThisFrame = false;
+        void LateUpdate()
+        {
         }
 
         public void Lights(double beat, float length, bool autoLights, bool shouldLights)

@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
         public void Init(double beat)
         {
-            game.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Just, Out, Out);
+            game.ScheduleInput(beat, 1f, Fireworks.InputAction_BasicPress, Just, Out, Out);
             startBeat = beat;
         }
 

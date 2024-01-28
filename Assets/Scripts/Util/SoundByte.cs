@@ -37,8 +37,6 @@ namespace HeavenStudio.Util
                 GameObject Jukebox = new GameObject("Jukebox");
                 Jukebox.AddComponent<AudioSource>();
                 Jukebox.tag = "Jukebox";
-
-
             }
             if (oneShotAudioSourceObject == null)
             {

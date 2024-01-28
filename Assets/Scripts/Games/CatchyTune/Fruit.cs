@@ -25,8 +25,6 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
         private string soundText;
 
-        private Minigame.Eligible e = new Minigame.Eligible();
-
         private CatchyTune game;
 
         private float beatLength = 4f;
@@ -34,8 +32,6 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         private void Awake()
         {
             game = CatchyTune.instance;
-
-            e.gameObject = this.gameObject;
 
             var cond = Conductor.instance;
             var tempo = cond.songBpm;
@@ -70,20 +66,19 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
                 soundText += "Orange";
             }
 
-            game.ScheduleInput(startBeat, beatLength, side ? InputType.STANDARD_DOWN : InputType.DIRECTION_DOWN,
+            game.ScheduleInput(startBeat, beatLength, side ? CatchyTune.InputAction_Right : CatchyTune.InputAction_Left,
                 CatchFruit, Miss, WayOff);
         }
 
-        // minenice: note - needs PlayerActionEvent implementation
         private void Update()
         {
             if (barelyStart > 0f)
             {
-                anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f);
+                anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f, clamp: true);
             }
-            else 
+            else
             {
-                anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 4f : 2f));
+                anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 4f : 2f), clamp: true);
             }
         }
 
@@ -142,7 +137,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             {
                 //near miss (barely)
                 barelyStart = Conductor.instance.songPositionInBeatsAsDouble;
-                
+
                 game.catchBarely(side);
 
                 // play near miss animation
@@ -154,7 +149,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
                 });
 
             }
-            else 
+            else
             {
                 SoundByte.PlayOneShotGame(soundText + "Catch");
                 game.catchSuccess(side, isPineapple, smile, startBeat + beatLength, endSmile);
@@ -172,6 +167,6 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             });
         }
 
-        private void WayOff(PlayerActionEvent caller) {} // whiffing is handled in the main loop
+        private void WayOff(PlayerActionEvent caller) { } // whiffing is handled in the main loop
     }
 }

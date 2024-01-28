@@ -1,13 +1,6 @@
 using HeavenStudio.Util;
-using JetBrains.Annotations;
-using Starpelly.Transformer;
-using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static HeavenStudio.EntityTypes;
 
 namespace HeavenStudio.Games.Scripts_LaunchParty
 {
@@ -32,13 +25,13 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void Update()
         {
             if (GameManager.instance.currentGame != "launchParty") Destroy(gameObject);
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN) && !noInput)
+            if (PlayerInput.GetIsAction(LaunchParty.InputAction_BasicPress) && !game.IsExpectingInputNow(LaunchParty.InputAction_BasicPress) && !noInput)
             {
                 SoundByte.PlayOneShotGame("launchParty/miss");
                 SoundByte.PlayOneShotGame("launchParty/rocket_endBad");
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
-                if (!anim.IsPlayingAnimationName("RocketBarelyLeft") && !anim.IsPlayingAnimationName("RocketBarelyRight")) anim.Play("RocketBarely" + leftOrRight, 0, 0);
-                game.ScoreMiss(0.5);
+                if (!anim.IsPlayingAnimationNames("RocketBarelyLeft", "RocketBarelyRight")) anim.Play("RocketBarely" + leftOrRight, 0, 0);
+                game.ScoreMiss(0.5f);
             }
         }
 
@@ -50,7 +43,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         public void InitFamilyRocket(double beat)
         {
-            game.ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, JustFamilyRocket, Miss, Nothing);
+            game.ScheduleInput(beat, 3f, LaunchParty.InputAction_BasicPress, JustFamilyRocket, Miss, Nothing);
 
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -74,7 +67,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         public void InitPartyCracker(double beat)
         {
-            game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustPartyCracker, Miss, Nothing);
+            game.ScheduleInput(beat, 2f, LaunchParty.InputAction_BasicPress, JustPartyCracker, Miss, Nothing);
 
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -102,7 +95,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         public void InitBell(double beat)
         {
-            game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustBell, Miss, Nothing);
+            game.ScheduleInput(beat, 2f, LaunchParty.InputAction_BasicPress, JustBell, Miss, Nothing);
 
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -134,7 +127,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         public void InitBowlingPin(double beat)
         {
-            game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustBowlingPin, Miss, Nothing);
+            game.ScheduleInput(beat, 2f, LaunchParty.InputAction_BasicPress, JustBowlingPin, Miss, Nothing);
 
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -167,7 +160,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustFamilyRocket(PlayerActionEvent caller, float state)
         {
             noInput = true;
-            if (anim.IsPlayingAnimationName("RocketBarelyLeft") || anim.IsPlayingAnimationName("RocketBarelyRight")) 
+            if (anim.IsPlayingAnimationNames("RocketBarelyLeft", "RocketBarelyRight"))
             {
                 number.SetActive(false);
                 anim.SetBool("CanRise", false);
@@ -213,7 +206,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustPartyCracker(PlayerActionEvent caller, float state)
         {
             noInput = true;
-            if (anim.IsPlayingAnimationName("RocketBarelyLeft") || anim.IsPlayingAnimationName("RocketBarelyRight"))
+            if (anim.IsPlayingAnimationNames("RocketBarelyLeft", "RocketBarelyRight"))
             {
                 number.SetActive(false);
                 anim.SetBool("CanRise", false);
@@ -257,7 +250,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustBell(PlayerActionEvent caller, float state)
         {
             noInput = true;
-            if (anim.IsPlayingAnimationName("RocketBarelyLeft") || anim.IsPlayingAnimationName("RocketBarelyRight"))
+            if (anim.IsPlayingAnimationNames("RocketBarelyLeft", "RocketBarelyRight"))
             {
                 number.SetActive(false);
                 anim.SetBool("CanRise", false);
@@ -301,7 +294,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustBowlingPin(PlayerActionEvent caller, float state)
         {
             noInput = true;
-            if (anim.IsPlayingAnimationName("RocketBarelyLeft") || anim.IsPlayingAnimationName("RocketBarelyRight"))
+            if (anim.IsPlayingAnimationNames("RocketBarelyLeft", "RocketBarelyRight"))
             {
                 number.SetActive(false);
                 anim.SetBool("CanRise", false);

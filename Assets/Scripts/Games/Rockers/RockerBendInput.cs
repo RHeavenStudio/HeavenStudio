@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
         {
             game = Rockers.instance;
             this.pitch = pitch;
-            game.ScheduleInput(beat, length, InputType.DIRECTION_DOWN, Just, Miss, Empty);
+            game.ScheduleInput(beat, length, Rockers.InputAction_TriggerDown, Just, Miss, Empty);
         }
 
         private void Just(PlayerActionEvent caller, float state)

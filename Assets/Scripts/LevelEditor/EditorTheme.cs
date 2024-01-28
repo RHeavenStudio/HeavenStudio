@@ -70,10 +70,6 @@ namespace HeavenStudio.Editor
             tempoLayer.GetComponent<Image>().color = theme.properties.TempoLayerCol.Hex2RGB();
             musicLayer.GetComponent<Image>().color = theme.properties.MusicLayerCol.Hex2RGB();
             sectionLayer.GetComponent<Image>().color = theme.properties.SectionLayerCol.Hex2RGB();
-            Tooltip.AddTooltip(specialLayers.gameObject, $"All Special Tracks");
-            Tooltip.AddTooltip(tempoLayer.gameObject, $"Tempo Track");
-            Tooltip.AddTooltip(musicLayer.gameObject, $"Music Volume Track");
-            Tooltip.AddTooltip(sectionLayer.gameObject, $"Remix Sections Track");
 
 
             layer.gameObject.SetActive(false);

@@ -12,6 +12,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("rhythmSomen", "Rhythm Sōmen", "7ab96e", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle2", true, "Bop", "Toggle if Boss should bop for the duration of this event."),
+                        new Param("toggle", false, "Bop (Auto)", "Toggle if the man should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("crane (far)", "Far Crane")
                 {
                     function = delegate { RhythmSomen.instance.DoFarCrane(eventCaller.currentEntity.beat); },
@@ -34,21 +44,11 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("slurp", "Slurp")
                 {
                     function = delegate { RhythmSomen.instance.Slurp(eventCaller.currentEntity.beat); }
-                },
-                new GameAction("bop", "Bop") 
-                {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle2", true, "Bop", "Should the somen man bop?"),
-                        new Param("toggle", false, "Bop (Auto)", "Should the somen man bop automatically?")
-                    }
                 }
             },
-            new List<string>() {"pco", "normal"},
+            new List<string>() { "pco", "normal" },
             "pcosomen", "en",
-            new List<string>() {}
+            new List<string>() { }
             );
         }
     }
@@ -70,11 +70,8 @@ namespace HeavenStudio.Games
         public Animator CloseCrane;
         public Animator FarCrane;
         public GameObject Player;
-        private bool shouldBop = true;
         private bool missed;
         private bool hasSlurped;
-
-        public GameEvent bop = new GameEvent();
 
         public static RhythmSomen instance;
 
@@ -82,24 +79,23 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("rhythmSomen", "bop", "toggle");
         }
 
-        // Update is called once per frame
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat)) SomenPlayer.DoScaledAnimationAsync("HeadBob", 0.5f);
+        }
+
         void Update()
         {
-            var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
-            {
-                SomenPlayer.Play("HeadBob", -1, 0);
-            }
-
-            if (PlayerInput.Pressed() && !IsExpectingInputNow())
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
                 SoundByte.PlayOneShotGame("rhythmSomen/somen_mistake");
-                FrontArm.Play("ArmPluck", -1, 0);
-                backArm.Play("BackArmNothing", 0, 0);
+                FrontArm.DoScaledAnimationAsync("ArmPluck", 0.5f);
+                backArm.DoScaledAnimationAsync("BackArmNothing", 0.5f);
                 hasSlurped = false;
-                EffectSweat.Play("BlobSweating", -1, 0);
+                EffectSweat.DoScaledAnimationAsync("BlobSweating", 0.5f);
                 ScoreMiss();
             }
         }
@@ -108,7 +104,7 @@ namespace HeavenStudio.Games
         {
             if (!missed)
             {
-                backArm.Play("BackArmLift", 0, 0);
+                backArm.DoScaledAnimationAsync("BackArmLift", 0.5f);
                 FrontArm.DoScaledAnimationAsync("ArmSlurp", 0.5f);
                 hasSlurped = true;
                 BeatAction.New(instance, new List<BeatAction.Action>()
@@ -117,8 +113,8 @@ namespace HeavenStudio.Games
                     {
                         if (hasSlurped)
                         {
-                            backArm.Play("BackArmNothing", 0, 0);
-                            FrontArm.Play("ArmNothing", 0, 0);
+                            backArm.DoScaledAnimationAsync("BackArmNothing", 0.5f);
+                            FrontArm.DoScaledAnimationAsync("ArmNothing", 0.5f);
                         }
                     })
                 });
@@ -127,7 +123,6 @@ namespace HeavenStudio.Games
 
         public void ToggleBop(double beat, float length, bool bopOrNah, bool autoBop)
         {
-            shouldBop = autoBop;
             if (bopOrNah)
             {
                 for (int i = 0; i < length; i++)
@@ -136,7 +131,7 @@ namespace HeavenStudio.Games
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
-                            SomenPlayer.Play("HeadBob", -1, 0);
+                            SomenPlayer.DoScaledAnimationAsync("HeadBob", 0.5f);
                         })
                     });
                 }
@@ -146,7 +141,7 @@ namespace HeavenStudio.Games
         public void DoFarCrane(double beat)
         {
             //Far Drop Multisound
-            ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            ScheduleInput(beat, 3f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("rhythmSomen/somen_lowerfar", beat),
             new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
@@ -155,9 +150,9 @@ namespace HeavenStudio.Games
 
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                new BeatAction.Action(beat,     delegate { FarCrane.Play("Drop", -1, 0);}),
-                new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.Play("Open", -1, 0);}),
-                new BeatAction.Action(beat + 1.5f,     delegate { FarCrane.Play("Lift", -1, 0);}),
+                new BeatAction.Action(beat,     delegate { FarCrane.DoScaledAnimationAsync("Drop", 0.5f);}),
+                new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.DoScaledAnimationAsync("Open", 0.5f);}),
+                new BeatAction.Action(beat + 1.5f,     delegate { FarCrane.DoScaledAnimationAsync("Lift", 0.5f);}),
                 });
 
         }
@@ -165,7 +160,7 @@ namespace HeavenStudio.Games
         public void DoCloseCrane(double beat)
         {
             //Close Drop Multisound
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("rhythmSomen/somen_lowerclose", beat),
             new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
@@ -174,9 +169,9 @@ namespace HeavenStudio.Games
 
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                new BeatAction.Action(beat,     delegate { CloseCrane.Play("DropClose", -1, 0);}),
-                new BeatAction.Action(beat + 1.0f,     delegate { CloseCrane.Play("OpenClose", -1, 0);}),
-                new BeatAction.Action(beat + 1.5f,     delegate { CloseCrane.Play("LiftClose", -1, 0);}),
+                new BeatAction.Action(beat,     delegate { CloseCrane.DoScaledAnimationAsync("DropClose", 0.5f);}),
+                new BeatAction.Action(beat + 1.0f,     delegate { CloseCrane.DoScaledAnimationAsync("OpenClose", 0.5f);}),
+                new BeatAction.Action(beat + 1.5f,     delegate { CloseCrane.DoScaledAnimationAsync("LiftClose", 0.5f);}),
                 });
 
         }
@@ -184,24 +179,24 @@ namespace HeavenStudio.Games
         public void DoBothCrane(double beat)
         {
             //Both Drop Multisound
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
-            ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
+            ScheduleInput(beat, 3f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             MultiSound.Play(new MultiSound.Sound[] {
-            new MultiSound.Sound("rhythmSomen/somen_lowerfar", beat),
-            new MultiSound.Sound("rhythmSomen/somen_doublealarm", beat),
-            new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
-            new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
+                new MultiSound.Sound("rhythmSomen/somen_lowerfar", beat),
+                new MultiSound.Sound("rhythmSomen/somen_doublealarm", beat),
+                new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
+                new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
             });
 
             BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                new BeatAction.Action(beat,     delegate { CloseCrane.Play("DropClose", -1, 0);}),
-                new BeatAction.Action(beat,     delegate { FarCrane.Play("Drop", -1, 0);}),
-                new BeatAction.Action(beat + 1.0f,     delegate { CloseCrane.Play("OpenClose", -1, 0);}),
-                new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.Play("Open", -1, 0);}),
-                new BeatAction.Action(beat + 1.5f,     delegate { CloseCrane.Play("LiftClose", -1, 0);}),
-                new BeatAction.Action(beat + 1.5f,     delegate { FarCrane.Play("Lift", -1, 0);}),
-                });
+            {
+                new BeatAction.Action(beat,     delegate { CloseCrane.DoScaledAnimationAsync("DropClose", 0.5f);}),
+                new BeatAction.Action(beat,     delegate { FarCrane.DoScaledAnimationAsync("Drop", 0.5f);}),
+                new BeatAction.Action(beat + 1.0f,     delegate { CloseCrane.DoScaledAnimationAsync("OpenClose", 0.5f);}),
+                new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.DoScaledAnimationAsync("Open", 0.5f);}),
+                new BeatAction.Action(beat + 1.5f,     delegate { CloseCrane.DoScaledAnimationAsync("LiftClose", 0.5f);}),
+                new BeatAction.Action(beat + 1.5f,     delegate { FarCrane.DoScaledAnimationAsync("Lift", 0.5f);}),
+            });
 
         }
 
@@ -211,36 +206,36 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("rhythmSomen/somen_bell");
 
             BeatAction.New(instance, new List<BeatAction.Action>()
-                    {
-                    new BeatAction.Action(beat,     delegate { EffectExclam.Play("ExclamAppear", -1, 0);}),
-                    });
+            {
+            new BeatAction.Action(beat,     delegate { EffectExclam.DoScaledAnimationAsync("ExclamAppear", 0.5f);}),
+            });
 
         }
 
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
-            backArm.Play("BackArmNothing", 0, 0);
+            backArm.DoScaledAnimationAsync("BackArmNothing", 0, 0);
             hasSlurped = false;
             splashEffect.Play();
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("rhythmSomen/somen_splash");
-                FrontArm.Play("ArmPluckNG", -1, 0);
-                EffectSweat.Play("BlobSweating", -1, 0);
+                FrontArm.DoScaledAnimationAsync("ArmPluckNG", 0.5f);
+                EffectSweat.DoScaledAnimationAsync("BlobSweating", 0.5f);
                 missed = true;
                 return;
             }
             SoundByte.PlayOneShotGame("rhythmSomen/somen_catch");
             SoundByte.PlayOneShotGame("rhythmSomen/somen_catch_old", volume: 0.25f);
-            FrontArm.Play("ArmPluckOK", -1, 0);
-            EffectHit.Play("HitAppear", -1, 0);
+            FrontArm.DoScaledAnimationAsync("ArmPluckOK", 0.5f);
+            EffectHit.DoScaledAnimationAsync("HitAppear", 0.5f);
             missed = false;
         }
 
         public void CatchMiss(PlayerActionEvent caller)
         {
             missed = true;
-            EffectShock.Play("ShockAppear", -1, 0);
+            EffectShock.DoScaledAnimationAsync("ShockAppear", 0.5f);
         }
 
         public void CatchEmpty(PlayerActionEvent caller)
