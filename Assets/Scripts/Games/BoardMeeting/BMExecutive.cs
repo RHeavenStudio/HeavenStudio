@@ -22,6 +22,14 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
             game = BoardMeeting.instance;
         }
 
+        private void OnDestroy()
+        {
+            if (rollLoop != null)
+            {
+                rollLoop.Stop();
+            }
+        }
+
         public void Prepare()
         {
             if (spinning) return;
@@ -68,8 +76,9 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
                 rollLoop.KillLoop(0);
                 rollLoop = null;
             }
+            game.StopChairLoopSoundIfLastToStop();
 
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1.5f, delegate { canBop = true; })
             });
@@ -77,7 +86,7 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
 
         public void Bop()
         {
-            if (!canBop || spinning || !anim.IsAnimationNotPlaying() || preparing) return;
+            if (!canBop || spinning || preparing) return;
             if (smileCounter > 0)
             {
                 anim.DoScaledAnimationAsync("SmileBop", 0.5f);

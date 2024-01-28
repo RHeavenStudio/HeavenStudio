@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
         public void Init(double beat)
         {
-            game.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Just, Out, Out);
+            game.ScheduleInput(beat, 1f, Fireworks.InputAction_BasicPress, Just, Out, Out);
             startBeat = beat;
         }
 
@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         {
             anim.DoScaledAnimationAsync("ExplodeBomb", 0.25f);
             exploded = true;
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 3f, delegate { Destroy(gameObject); })
             });

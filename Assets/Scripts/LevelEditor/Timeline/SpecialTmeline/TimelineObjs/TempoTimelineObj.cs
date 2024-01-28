@@ -15,8 +15,7 @@ namespace HeavenStudio.Editor.Track
         [Header("Components")]
         [SerializeField] private TMP_Text tempoTXT;
         [SerializeField] private GameObject tempoLine;
-
-        public RiqEntity tempoChange;
+        [SerializeField] private TempoDialog tempoDialog;
 
         new private void Update()
         {
@@ -24,6 +23,7 @@ namespace HeavenStudio.Editor.Track
             if (hovering)
             {
                 SpecialTimeline.hoveringTypes |= SpecialTimeline.HoveringTypes.TempoChange;
+
                 if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
                 {
                     float newTempo = Input.mouseScrollDelta.y;
@@ -31,26 +31,35 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftShift))
                         newTempo *= 5f;
                     if (Input.GetKey(KeyCode.LeftControl))
-                        newTempo /= 100f;
+                        newTempo *= 0.01f;
 
-                    tempoChange["tempo"] += newTempo;
+                    if (newTempo != 0)
+                    {
+                        SetTempo(chartEntity["tempo"] + newTempo);
+                        tempoDialog.RefreshDialog();
+                    }
 
-                    //make sure tempo is positive
-                    if (tempoChange["tempo"] < 1)
-                        tempoChange["tempo"] = 1;
-                    
-                    if (first && newTempo != 0)
-                        Timeline.instance.UpdateStartingBPMText();
                 }
             }
+            UpdateTempo();
+        }
 
+        public void SetTempo(float tempo)
+        {
+            chartEntity["tempo"] = Mathf.Clamp(tempo, 1, 10000);
+            if (first)
+            {
+                Timeline.instance.UpdateStartingBPMText();
+            }
+            Timeline.instance.FitToSong();
             UpdateTempo();
         }
 
         private void UpdateTempo()
         {
-            tempoTXT.text = $"{tempoChange["tempo"]} BPM";
-            Timeline.instance.FitToSong();
+            tempoTXT.text = chartEntity["tempo"].ToString("F") + $" BPM";
+            if (!moving)
+                SetX(chartEntity);
         }
 
         public override void Init()
@@ -66,24 +75,27 @@ namespace HeavenStudio.Editor.Track
 
         public override void OnRightClick()
         {
-            if (first) return;
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
             {
-                GameManager.instance.Beatmap.TempoChanges.Remove(tempoChange);
-                DeleteObj();
+                tempoDialog.SetTempoObj(this);
+                tempoDialog.SwitchTempoDialog();
             }
         }
 
-        public override bool OnMove(float beat)
+        public override bool OnMove(float beat, bool final = false)
         {
+            if (beat < 0) beat = 0;
             foreach (var tempoChange in GameManager.instance.Beatmap.TempoChanges)
             {
-                if (this.tempoChange == tempoChange)
+                if (this.chartEntity == tempoChange)
                     continue;
                 if (beat > tempoChange.beat - Timeline.instance.snapInterval && beat < tempoChange.beat + Timeline.instance.snapInterval)
                     return false;
             }
-            this.tempoChange.beat = beat;
+            if (final)
+                CommandManager.Instance.AddCommand(new Commands.MoveMarker(chartEntity.guid, beat, type));
+            else
+                SetX(beat);
             return true;
         }
 
@@ -98,7 +110,16 @@ namespace HeavenStudio.Editor.Track
                     tempoLine.SetActive(false);
             }
             else
-                gameObject.SetActive(false);   
+                gameObject.SetActive(false);
+        }
+
+        public void Remove()
+        {
+            if (first) return;
+            if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
+            {
+                DeleteObj();
+            }
         }
     }
 }

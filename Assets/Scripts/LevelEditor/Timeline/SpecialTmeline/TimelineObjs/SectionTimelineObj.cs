@@ -16,8 +16,6 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private GameObject chartLine;
         [SerializeField] private SectionDialog sectionDialog;
 
-        public RiqEntity chartSection;
-
         new private void Update()
         {
             base.Update();
@@ -31,7 +29,13 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateLabel()
         {
-            sectionLabel.text = chartSection["sectionName"];
+            //<sprite="categoryMarker" name="cat0">
+            if (string.IsNullOrEmpty(chartEntity["sectionName"]))
+                sectionLabel.text = $"<sprite=\"categoryMarker\" name=\"cat{chartEntity["category"]}\"> x{chartEntity["weight"]:0.0}";
+            else
+                sectionLabel.text = $"<sprite=\"categoryMarker\" name=\"cat{chartEntity["category"]}\"> x{chartEntity["weight"]:0.0} | {chartEntity["sectionName"]}";
+            if (!moving)
+                SetX(chartEntity);
         }
 
         public override void Init()
@@ -54,16 +58,20 @@ namespace HeavenStudio.Editor.Track
             }
         }
 
-        public override bool OnMove(float beat)
+        public override bool OnMove(float beat, bool final = false)
         {
+            if (beat < 0) beat = 0;
             foreach (RiqEntity sectionChange in GameManager.instance.Beatmap.SectionMarkers)
             {
-                if (this.chartSection == sectionChange)
+                if (this.chartEntity == sectionChange)
                     continue;
                 if (beat > sectionChange.beat - Timeline.instance.snapInterval && beat < sectionChange.beat + Timeline.instance.snapInterval)
                     return false;
             }
-            this.chartSection.beat = beat;
+            if (final)
+                CommandManager.Instance.AddCommand(new Commands.MoveMarker(chartEntity.guid, beat, type));
+            else
+                SetX(beat);
             return true;
         }
 
@@ -85,8 +93,16 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
-                gameObject.SetActive(false);   
+                gameObject.SetActive(false);
 
+            }
+        }
+
+        public void Remove()
+        {
+            if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.ChartSection)
+            {
+                DeleteObj();
             }
         }
     }

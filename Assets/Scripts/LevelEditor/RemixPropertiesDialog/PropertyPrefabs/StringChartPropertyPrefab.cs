@@ -24,15 +24,10 @@ namespace HeavenStudio.Editor
 
             inputFieldString.text = (string) parameterManager.chart[propertyName];
 
-            inputFieldString.onSelect.AddListener(
-                _ =>
-                    Editor.instance.editingInputField = true
-            );
             inputFieldString.onValueChanged.AddListener(
                 _ =>
                 {;
                     parameterManager.chart[propertyName] = inputFieldString.text;
-                    Editor.instance.editingInputField = false;
                 }
             );
         }

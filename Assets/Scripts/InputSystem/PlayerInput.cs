@@ -1,108 +1,130 @@
-using System.Collections;
+using System;
+using System.Linq;
+using System.Reflection;
+
 using System.Collections.Generic;
-using UnityEngine;
+
 using HeavenStudio.InputSystem;
 
-using static JSL;
+using SatorImaging.UnitySourceGenerator;
+
+namespace HeavenStudio.InputSystem
+{
+    public class LoadOrder : Attribute
+    {
+        public int Order { get; set; }
+        public LoadOrder(int order)
+        {
+            Order = order;
+        }
+    }
+}
 
 namespace HeavenStudio
 {
-    public class PlayerInput
+    [UnitySourceGenerator(typeof(ControllerLoaderGenerator), OverwriteIfFileExists = false)]
+    public partial class PlayerInput
     {
-        //Clockwise
-        public const int UP = 0;
-        public const int RIGHT = 1;
-        public const int DOWN = 2;
-        public const int LEFT = 3;
-        
-        ///////////////////////////////
-        ////TEMPORARY JSL FUNCTIONS////
-        ///////////////////////////////
-        
-        static int jslDevicesFound = 0;
-        static int jslDevicesConnected = 0;
-        static int[] jslDeviceHandles;
-        
-        static List<InputController> inputDevices;
-        
-        public static int InitInputControllers()
+        public class InputAction
+        {
+            public delegate bool ActionQuery(out double dt);
+
+            public string name;
+            public int[] inputLockCategory;
+            public ActionQuery padAction, touchAction, batonAction;
+
+            public InputAction(string name, int[] inputLockCategory, ActionQuery pad, ActionQuery touch, ActionQuery baton)
+            {
+                this.name = name;
+                this.inputLockCategory = inputLockCategory;
+                padAction = pad;
+                touchAction = touch;
+                batonAction = baton;
+            }
+        }
+
+        public static InputController.ControlStyles CurrentControlStyle = InputController.ControlStyles.Pad;
+
+        static List<InputController> inputDevices = new List<InputController>();
+
+        public delegate InputController[] InputControllerInitializer();
+
+        public delegate void InputControllerDispose();
+        public static event InputControllerDispose PlayerInputCleanUp;
+
+        public delegate InputController[] InputControllerRefresh();
+        public static List<InputControllerRefresh> PlayerInputRefresh;
+
+        // static List<InputControllerInitializer> loadRunners;
+        // static void BuildLoadRunnerList()
+        // {
+        //     PlayerInputRefresh = new();
+        //     loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
+        //     .GetTypes()
+        //     .Where(x => x.Namespace == "HeavenStudio.InputSystem.Loaders" && x.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static) != null)
+        //     .Select(t => (InputControllerInitializer)Delegate.CreateDelegate(
+        //         typeof(InputControllerInitializer),
+        //         null,
+        //         t.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static),
+        //         false
+        //         ))
+        //     .ToList();
+
+        //     loadRunners.Sort((x, y) => x.Method.GetCustomAttribute<LoadOrder>().Order.CompareTo(y.Method.GetCustomAttribute<LoadOrder>().Order));
+        // }
+
+        // public static int InitInputControllers()
+        // {
+        //     inputDevices = new List<InputController>();
+
+        //     BuildLoadRunnerList();
+        //     foreach (InputControllerInitializer runner in loadRunners)
+        //     {
+        //         InputController[] controllers = runner();
+        //         if (controllers != null)
+        //         {
+        //             inputDevices.AddRange(controllers);
+        //         }
+        //     }
+
+        //     return inputDevices.Count;
+        // }
+
+        public static int RefreshInputControllers()
         {
             inputDevices = new List<InputController>();
-            //Keyboard setup
-            InputKeyboard keyboard = new InputKeyboard();
-            keyboard.SetPlayer(1);
-            keyboard.InitializeController();
-            inputDevices.Add(keyboard);
-            //end Keyboard setup
-            
-            //JoyShock setup
-            Debug.Log("Flushing possible JoyShocks...");
-            DisconnectJoyshocks();
-            
-            jslDevicesFound = JslConnectDevices();
-            if (jslDevicesFound > 0)
+            if (PlayerInputRefresh != null)
             {
-                jslDeviceHandles = new int[jslDevicesFound];
-                jslDevicesConnected = JslGetConnectedDeviceHandles(jslDeviceHandles, jslDevicesFound);
-                if (jslDevicesConnected < jslDevicesFound)
+                foreach (InputControllerRefresh runner in PlayerInputRefresh)
                 {
-                    Debug.Log("Found " + jslDevicesFound + " JoyShocks, but only " + jslDevicesConnected + " are connected.");
-                }
-                else
-                {
-                    Debug.Log("Found " + jslDevicesFound + " JoyShocks.");
-                    Debug.Log("Connected " + jslDevicesConnected + " JoyShocks.");
-                }
-                
-                foreach (int i in jslDeviceHandles)
-                {
-                    Debug.Log("Setting up JoyShock: ( Handle " + i + ", type " + JslGetControllerType(i) + " )");
-                    InputJoyshock joyshock = new InputJoyshock(i);
-                    joyshock.InitializeController();
-                    joyshock.SetPlayer(inputDevices.Count + 1);
-                    inputDevices.Add(joyshock);
+                    InputController[] controllers = runner();
+                    if (controllers != null)
+                    {
+                        inputDevices.AddRange(controllers);
+                    }
                 }
             }
-            else
-            {
-                Debug.Log("No JoyShocks found.");
-            }
-            //end JoyShock setup
-            
-            //TODO: XInput setup (boo)
-            //end XInput setup
-            
             return inputDevices.Count;
         }
-        
+
         public static int GetNumControllersConnected()
         {
             return inputDevices.Count;
         }
-        
+
         public static List<InputController> GetInputControllers()
         {
             return inputDevices;
         }
-        
+
         public static InputController GetInputController(int player)
         {
-            // Needed so Keyboard works on MacOS and Linux
-            #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            inputDevices = new List<InputController>();
-            if(inputDevices.Count < 1)
-            {
-                InputKeyboard keyboard = new InputKeyboard();
-                keyboard.SetPlayer(1);
-                keyboard.InitializeController();
-                inputDevices.Add(keyboard);
-            }
-            #endif
             //select input controller that has player field set to player
             //this will return the first controller that has that player number in the case of controller pairs (eg. Joy-Cons)
             //so such controllers should have a reference to the other controller in the pair
             foreach (InputController i in inputDevices)
             {
+                if (i == null) continue;
                 if (i.GetPlayer() == player)
                 {
                     return i;
@@ -110,28 +132,16 @@ namespace HeavenStudio
             }
             return null;
         }
-        
+
         public static int GetInputControllerId(int player)
         {
             //select input controller id that has player field set to player
             //this will return the first controller that has that player number in the case of controller pairs (eg. Joy-Cons)
             //so such controllers should have a reference to the other controller in the pair
             //controller IDs are determined by connection order (the Keyboard is always first)
-            
-            
-            // Needed so Keyboard works on MacOS and Linux
-            #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            inputDevices = new List<InputController>();
-            if(inputDevices.Count < 1)
-            {
-                InputKeyboard keyboard = new InputKeyboard();
-                keyboard.SetPlayer(1);
-                keyboard.InitializeController();
-                inputDevices.Add(keyboard);
-            }
-            #endif
             for (int i = 0; i < inputDevices.Count; i++)
             {
+                if (inputDevices[i] == null) continue;
                 if (inputDevices[i].GetPlayer() == player)
                 {
                     return i;
@@ -139,144 +149,206 @@ namespace HeavenStudio
             }
             return -1;
         }
-        
+
         public static void UpdateInputControllers()
         {
-            // Needed so Keyboard works on MacOS and Linux
-            #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-            inputDevices = new List<InputController>();
-            if(inputDevices.Count < 1)
-            {
-                InputKeyboard keyboard = new InputKeyboard();
-                keyboard.SetPlayer(1);
-                keyboard.InitializeController();
-                inputDevices.Add(keyboard);
-            }
-            #endif
+            if (inputDevices == null) return;
             foreach (InputController i in inputDevices)
             {
+                if (i == null) continue;
                 i.UpdateState();
             }
         }
-        
-        public static void DisconnectJoyshocks()
+
+        public static void CleanUp()
         {
-            if (jslDeviceHandles != null && jslDevicesConnected > 0 && jslDeviceHandles.Length > 0)
-            {
-                foreach (InputController i in inputDevices)
-                {
-                    if (typeof(InputJoyshock) == i.GetType())
-                    {
-                        InputJoyshock joy = (InputJoyshock)i;
-                        joy.DisconnectJoyshock();
-                    }
-                }
-            }
-            JslDisconnectAndDisposeAll();
-            jslDevicesFound = 0;
-            jslDevicesConnected = 0;
+            PlayerInputCleanUp?.Invoke();
         }
-        
+
         // The autoplay isn't activated AND
         // The song is actually playing AND
         // The GameManager allows you to Input
-        public static bool playerHasControl()
+        public static bool PlayerHasControl()
         {
+            if (GameManager.instance == null || Conductor.instance == null) return true;
             return !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
-        
+
         /*--------------------*/
         /* MAIN INPUT METHODS */
         /*--------------------*/
-        
-        // BUTTONS
-        //TODO: refactor for controller and custom binds, currently uses temporary button checks
-        
-        public static bool Pressed(bool includeDPad = false)
+
+        public static bool GetIsAction(InputAction action, out double dt)
         {
-            bool keyDown = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadE) || (includeDPad && GetAnyDirectionDown());
-            return keyDown && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput ;
+            dt = 0;
+            switch (CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Pad:
+                    return action.padAction(out dt);
+                case InputController.ControlStyles.Touch:
+                    return action.touchAction(out dt);
+                case InputController.ControlStyles.Baton:
+                    return action.batonAction(out dt);
+            }
+            return false;
         }
-        
-        public static bool PressedUp(bool includeDPad = false)
+
+        public static bool GetIsAction(InputAction action)
         {
-            bool keyUp = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.PadE) || (includeDPad && GetAnyDirectionUp());
-            return keyUp && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            switch (CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Pad:
+                    return action.padAction(out _);
+                case InputController.ControlStyles.Touch:
+                    return action.touchAction(out _);
+                case InputController.ControlStyles.Baton:
+                    return action.batonAction(out _);
+            }
+            return false;
         }
-        
-        public static bool Pressing(bool includeDPad = false)
+
+        public static bool GetPadDown(InputController.ActionsPad ac, out double dt)
         {
-            bool pressing = GetInputController(1).GetButton((int) InputController.ButtonsPad.PadE) || (includeDPad && GetAnyDirection());
-            return pressing && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)ac, out dt);
+            return a && PlayerHasControl();
         }
-        
-        
-        public static bool AltPressed()
+
+        public static bool GetPadDown(InputController.ActionsPad ac)
         {
-            bool down = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadS);
-            return down && playerHasControl();
+            bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)ac, out _);
+            return a && PlayerHasControl();
         }
-        
-        public static bool AltPressedUp()
+
+        public static bool GetPadUp(InputController.ActionsPad ac, out double dt)
         {
-            bool up = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.PadS);
-            return up && playerHasControl();
+            bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)ac, out dt);
+            return a && PlayerHasControl();
         }
-        
-        public static bool AltPressing()
+
+        public static bool GetPadUp(InputController.ActionsPad ac)
         {
-            bool pressing = GetInputController(1).GetButton((int) InputController.ButtonsPad.PadS);
-            return pressing && playerHasControl();
+            bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)ac, out _);
+            return a && PlayerHasControl();
         }
-        
-        //Directions
-        
-        public static bool GetAnyDirectionDown()
+
+        public static bool GetPad(InputController.ActionsPad ac)
         {
-            InputController c = GetInputController(1);
-            return (c.GetHatDirectionDown((InputController.InputDirection) UP)
-            || c.GetHatDirectionDown((InputController.InputDirection) DOWN)
-            || c.GetHatDirectionDown((InputController.InputDirection) LEFT)
-            || c.GetHatDirectionDown((InputController.InputDirection) RIGHT)
-            ) && playerHasControl();
-            
+            bool a = GetInputController(1).GetAction(InputController.ControlStyles.Pad, (int)ac);
+            return a && PlayerHasControl();
         }
-        
-        public static bool GetAnyDirectionUp()
+
+        public static bool GetBatonDown(InputController.ActionsBaton ac, out double dt)
         {
-            InputController c = GetInputController(1);
-            return (c.GetHatDirectionUp((InputController.InputDirection) UP)
-            || c.GetHatDirectionUp((InputController.InputDirection) DOWN)
-            || c.GetHatDirectionUp((InputController.InputDirection) LEFT)
-            || c.GetHatDirectionUp((InputController.InputDirection) RIGHT)
-            ) && playerHasControl();
-            
+            bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Baton, (int)ac, out dt);
+            return a && PlayerHasControl();
         }
-        
-        public static bool GetAnyDirection()
+
+        public static bool GetBatonDown(InputController.ActionsBaton ac)
         {
-            InputController c = GetInputController(1);
-            return (c.GetHatDirection((InputController.InputDirection) UP)
-            || c.GetHatDirection((InputController.InputDirection) DOWN)
-            || c.GetHatDirection((InputController.InputDirection) LEFT)
-            || c.GetHatDirection((InputController.InputDirection) RIGHT)
-            ) && playerHasControl();
-            
+            bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Baton, (int)ac, out _);
+            return a && PlayerHasControl();
         }
-        
-        public static bool GetSpecificDirection(int direction)
+
+        public static bool GetBatonUp(InputController.ActionsBaton ac, out double dt)
         {
-            return GetInputController(1).GetHatDirection((InputController.InputDirection) direction) && playerHasControl();
+            bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Baton, (int)ac, out dt);
+            return a && PlayerHasControl();
         }
-        
-        public static bool GetSpecificDirectionDown(int direction)
+
+        public static bool GetBatonUp(InputController.ActionsBaton ac)
         {
-            return GetInputController(1).GetHatDirectionDown((InputController.InputDirection) direction) && playerHasControl();
+            bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Baton, (int)ac, out _);
+            return a && PlayerHasControl();
         }
-        
-        public static bool GetSpecificDirectionUp(int direction)
+
+        public static bool GetBaton(InputController.ActionsBaton ac)
         {
-            return GetInputController(1).GetHatDirectionUp((InputController.InputDirection) direction) && playerHasControl();
+            bool a = GetInputController(1).GetAction(InputController.ControlStyles.Baton, (int)ac);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSqueeze()
+        {
+            bool a = GetInputController(1).GetSqueeze();
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSqueezeDown()
+        {
+            bool a = GetInputController(1).GetSqueezeDown(out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSqueezeDown(out double dt)
+        {
+            bool a = GetInputController(1).GetSqueezeDown(out dt);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSqueezeUp()
+        {
+            bool a = GetInputController(1).GetSqueezeUp(out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSqueezeUp(out double dt)
+        {
+            bool a = GetInputController(1).GetSqueezeUp(out dt);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetTouchDown(InputController.ActionsTouch ac, out double dt)
+        {
+            bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Touch, (int)ac, out dt);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetTouchDown(InputController.ActionsTouch ac)
+        {
+            bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Touch, (int)ac, out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetTouchUp(InputController.ActionsTouch ac, out double dt)
+        {
+            bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Touch, (int)ac, out dt);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetTouchUp(InputController.ActionsTouch ac)
+        {
+            bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Touch, (int)ac, out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetTouch(InputController.ActionsTouch ac)
+        {
+            bool a = GetInputController(1).GetAction(InputController.ControlStyles.Touch, (int)ac);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSlide()
+        {
+            bool a = GetInputController(1).GetSlide(out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSlide(out double dt)
+        {
+            bool a = GetInputController(1).GetSlide(out dt);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetFlick()
+        {
+            bool a = GetInputController(1).GetFlick(out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetFlick(out double dt)
+        {
+            bool a = GetInputController(1).GetFlick(out dt);
+            return a && PlayerHasControl();
         }
     }
 }

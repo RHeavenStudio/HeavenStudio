@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         {
             peekBeat = beat - 1;
             peekRising = true;
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate { peekBeat = beat + length; peekRising = false; shouldDelete = true; })
             });

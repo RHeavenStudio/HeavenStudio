@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
         private bool hasClapped = false;
         public bool canClap = false;
 
-        private bool hasSpun = true;
+        private bool hasSpun = false;
         private bool checkSpin = false;
 
         private bool hasFish = false;
@@ -34,17 +34,21 @@ namespace HeavenStudio.Games.Scripts_Kitties
         {
             var cond = Conductor.instance;
 
-            if (PlayerInput.Pressed() && canClap && !Kitties.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(Kitties.InputAction_BasicPress) && canClap && !Kitties.instance.IsExpectingInputNow(Kitties.InputAction_BasicPress))
             {
-                SoundByte.PlayOneShot("miss");
-                if (spawnType != 3)
-                    anim.Play("ClapFail", 0, 0);
-                else
-                    anim.Play("FaceClapFail", 0, 0);
+                if (PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch && !Kitties.instance.IsExpectingInputNow(Kitties.InputAction_AltStart))
+                {
+                    SoundByte.PlayOneShot("miss");
+                    if (spawnType != 3)
+                        anim.Play("ClapFail", 0, 0);
+                    else
+                        anim.Play("FaceClapFail", 0, 0);
+                }
             }
 
-            if (PlayerInput.AltPressed() && canClap && !Kitties.instance.IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)
-                || PlayerInput.AltPressedUp() && canClap && !Kitties.instance.IsExpectingInputNow(InputType.STANDARD_ALT_UP) && hasSpun)
+            if ((PlayerInput.GetIsAction(Kitties.InputAction_AltStart) && canClap && !(Kitties.instance.IsExpectingInputNow(Kitties.InputAction_AltStart) || Kitties.instance.IsExpectingInputNow(Kitties.InputAction_BasicPress)))
+                || (PlayerInput.GetIsAction(Kitties.InputAction_AltFinish) && canClap && !Kitties.instance.IsExpectingInputNow(Kitties.InputAction_AltFinish) && hasSpun)
+                || ((PlayerInput.GetIsAction(Kitties.InputAction_TouchRelease) && !PlayerInput.GetIsAction(Kitties.InputAction_AltFinish)) && canClap && hasSpun))
             {
                 RollFail();
             }
@@ -53,25 +57,24 @@ namespace HeavenStudio.Games.Scripts_Kitties
         public void ScheduleClap(double beat, int type)
         {
             spawnType = type;
-            Kitties.instance.ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, ClapSuccessOne, ClapMissOne, ClapEmpty);
-            Kitties.instance.ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, ClapSuccessTwo, ClapMissTwo, ClapEmpty);
+            Kitties.instance.ScheduleInput(beat, 2.5f, Kitties.InputAction_BasicPress, ClapSuccessOne, ClapMissOne, ClapEmpty);
+            Kitties.instance.ScheduleInput(beat, 3f, Kitties.InputAction_BasicPress, ClapSuccessTwo, ClapMissTwo, ClapEmpty);
         }
 
         public void ScheduleRoll(double beat)
         {
-                Kitties.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, SpinSuccessOne, SpinMissOne, SpinEmpty);
+                Kitties.instance.ScheduleInput(beat, 2f, Kitties.InputAction_AltStart, SpinSuccessOne, SpinMissOne, SpinEmpty);
         }
 
         public void ScheduleRollFinish(double beat)
         {
-            Debug.Log(hasSpun);
             if (hasSpun)
-                Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_ALT_UP, SpinSuccessTwo, SpinMissTwo, SpinEmpty);
+                Kitties.instance.ScheduleInput(beat, 2.75f, Kitties.InputAction_AltFinish, SpinSuccessTwo, SpinMissTwo, SpinEmpty);
         }
 
         public void ScheduleFish(double beat)
         {
-            Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_DOWN, FishSuccess, FishMiss, FishEmpty);
+            Kitties.instance.ScheduleInput(beat, 2.75f, Kitties.InputAction_BasicPress, FishSuccess, FishMiss, FishEmpty);
         }
 
         public void ClapSuccessOne(PlayerActionEvent Caller, float state)
@@ -152,12 +155,14 @@ namespace HeavenStudio.Games.Scripts_Kitties
             hasSpun = true;
             SoundByte.PlayOneShotGame("kitties/roll5");
             anim.Play("Rolling", 0, 0);
+            ScheduleRollFinish(caller.startBeat);
         }
 
         public void SpinSuccessTwo(PlayerActionEvent caller, float beat)
         {
             SoundByte.PlayOneShotGame("kitties/roll6");
             anim.Play("RollEnd", 0, 0);
+            hasSpun = false;
         }
 
         public void SpinMissOne(PlayerActionEvent caller)
