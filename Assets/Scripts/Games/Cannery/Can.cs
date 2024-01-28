@@ -16,11 +16,10 @@ namespace HeavenStudio.Games.Scripts_Cannery
         [SerializeField] Animator anim;
         // [SerializeField] SpriteRenderer sr;
 
-        Cannery game;
+        public Cannery game;
 
         private void Awake()
         {
-            game = Cannery.instance;
             int random = Random.Range(-1, 1);
             Debug.Log(random);
             var pos = transform.position;

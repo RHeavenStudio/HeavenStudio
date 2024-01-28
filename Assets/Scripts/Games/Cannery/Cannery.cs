@@ -56,12 +56,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        Cannery.instance.AlarmColor(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out Cannery instance)) {
+                            instance.AlarmColor(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
+                        }
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("startColor", new Color(0.8627f, 0.3725f, 0.0313f), "Start Color", "Set the color at the start of the event."),
+                        new Param("startColor", new Color(0.8627f, 0.3725f, 0.0313f), "Start Color", "Set the color at the start of the event.", new() { new((_, _) => true, new string[] { "startColor" }) }),
                         new Param("endColor",   new Color(0.8627f, 0.3725f, 0.0313f), "End Color",   "Set the color at the end of the event."),
                         new Param("ease", Util.EasingFunction.Ease.Instant, "Ease", "Set the easing of the action."),
                     }
@@ -71,7 +73,7 @@ namespace HeavenStudio.Games.Loaders
             // new List<string>() { "mob", "normal" },
             // "mobcannery", "en",
             // new List<string>() { }
-            );
+            );A
         }
     }
 }
@@ -99,11 +101,11 @@ namespace HeavenStudio.Games
 
         private bool alarmBop = true;
 
-        public static Cannery instance;
+        // public static Cannery instance;
 
         private void Awake()
         {
-            instance = this;
+            // instance = this;
             canGO.SetActive(false);
         }
 
@@ -143,7 +145,7 @@ namespace HeavenStudio.Games
             OnGameSwitch(beat);
         }
 
-        public override void OnBeatPulse(double beat)
+        public override void OnLateBeatPulse(double beat)
         {
             if (alarmBop) {
                 alarmAnim.DoScaledAnimationAsync("Bop", 0.5f);
@@ -183,6 +185,7 @@ namespace HeavenStudio.Games
             BeatAction.New(this, new() { new(beat, delegate { dingAnim.DoScaledAnimationFromBeatAsync("Ding", 0.5f, beat); }) });
 
             Can newCan = Instantiate(canGO, transform).GetComponent<Can>();
+            newCan.game = this;
             newCan.startBeat = beat;
             newCan.gameObject.SetActive(true);
         }
