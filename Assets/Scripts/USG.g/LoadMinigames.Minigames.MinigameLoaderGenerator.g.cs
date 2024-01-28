@@ -530,6 +530,17 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader AgbTossBoysLoader failed!");
             }
 
+            Debug.Log("Running game loader TotemClimbLoader");
+            game = TotemClimbLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader TotemClimbLoader failed!");
+            }
+
             Debug.Log("Running game loader AgbTramLoader");
             game = AgbTramLoader.AddGame(eventCaller);
             if (game != null)
