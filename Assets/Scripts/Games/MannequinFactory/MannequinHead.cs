@@ -19,11 +19,11 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
 
         int turnStatus;
 
-        private MannequinFactory game;
+        public MannequinFactory game;
         
         private void Awake()
         {
-            game = MannequinFactory.instance;
+
         }
 
         private void Start() 
@@ -35,15 +35,21 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
                 new BeatAction.Action(startBeat + 1, delegate { headAnim.DoScaledAnimationAsync("Move1", 0.3f); }),
                 new BeatAction.Action(startBeat + 3, delegate { headAnim.DoScaledAnimationAsync("Move2", 0.3f); }),
                 new BeatAction.Action(startBeat + 4, delegate {
-                    if (turnStatus == 1) game.ScheduleInput(startBeat, 5, InputType.STANDARD_DOWN, StampJust, StampMiss, Nothing);
-                    else game.ScheduleUserInput(startBeat, 5, InputType.STANDARD_DOWN, StampUnJust, StampMiss, Nothing);
+                    if (turnStatus == 1) {
+                        game.ScheduleInput(startBeat, 5, MannequinFactory.InputAction_Second, StampJust, StampMiss, Nothing);
+                    } else {
+                        game.ScheduleUserInput(startBeat, 5, MannequinFactory.InputAction_Second, StampUnJust, StampMiss, Nothing);
+                    }
                 }),
             });
-            if (needClap) SoundByte.PlayOneShotGame("mannequinFactory/whoosh", beat: startBeat + 3);
-            SoundByte.PlayOneShotGame("mannequinFactory/whoosh", beat: startBeat + 5);
 
-            if (needClap) game.ScheduleInput(startBeat, 3, InputType.DIRECTION_LEFT_DOWN, ClapJust, ClapMiss, Nothing);
-            else      game.ScheduleUserInput(startBeat, 3, InputType.DIRECTION_LEFT_DOWN, ClapUnJust, ClapMiss, Nothing);
+            if (needClap) {
+                game.ScheduleInput(startBeat, 3, MannequinFactory.InputAction_First, ClapJust, ClapMiss, Nothing);
+                SoundByte.PlayOneShotGame("mannequinFactory/whoosh", beat: startBeat + 3);
+            } else {
+                game.ScheduleUserInput(startBeat, 3, MannequinFactory.InputAction_First, ClapUnJust, ClapMiss, Nothing);
+                SoundByte.PlayOneShotGame("mannequinFactory/whoosh", beat: startBeat + 5);
+            }   
         }
 
         void ClapJust(PlayerActionEvent caller, float state)
@@ -65,7 +71,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
         {
             turnStatus++;
             SoundByte.PlayOneShotGame("mannequinFactory/slap");
-            game.HandAnim.DoScaledAnimationAsync("SlapJust");
+            game.HandAnim.DoScaledAnimationAsync("SlapJust", 0.3f);
             headAnim.Play("Slapped", 0, 0);
         }
 
@@ -75,7 +81,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
         {
             if (state >= 1f || state <= -1f) SoundByte.PlayOneShot("nearMiss");
             headAnim.DoScaledAnimationAsync("Stamp", 0.3f);
-            game.StampAnim.DoScaledAnimationAsync("StampJust", 0.2f);
+            game.StampAnim.DoScaledAnimationAsync("StampJust", 0.3f);
             SoundByte.PlayOneShotGame("mannequinFactory/eyes");
             eyesSr.gameObject.SetActive(true);
         }
