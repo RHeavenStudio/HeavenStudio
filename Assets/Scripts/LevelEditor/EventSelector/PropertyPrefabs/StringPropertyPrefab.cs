@@ -9,6 +9,7 @@ using Starpelly;
 
 using HeavenStudio.Util;
 using HeavenStudio.Editor;
+using UnityEngine.UIElements;
 
 namespace HeavenStudio.Editor
 {
@@ -18,9 +19,13 @@ namespace HeavenStudio.Editor
         [Space(10)]
         public TMP_InputField inputFieldString;
 
+        private string _defaultValue;
+
         new public void SetProperties(string propertyName, object type, string caption)
         {
             InitProperties(propertyName, caption);
+
+            _defaultValue = (string)type;
 
             inputFieldString.text = (string) parameterManager.entity[propertyName];
 
@@ -30,16 +35,30 @@ namespace HeavenStudio.Editor
             );
             inputFieldString.onValueChanged.AddListener(
                 _ =>
-                {;
+                {
                     parameterManager.entity[propertyName] = inputFieldString.text;
+                    if (inputFieldString.text != _defaultValue)
+                    {
+                        this.caption.text = _captionText + "*";
+                    }
+                    else
+                    {
+                        this.caption.text = _captionText;
+                    }
                 }
             );
+
             inputFieldString.onEndEdit.AddListener(
                 _ =>
                 {;
                     Editor.instance.editingInputField = false;
                 }
             );
+        }
+
+        public void ResetValue()
+        {
+            inputFieldString.text = _defaultValue;
         }
 
         public override void SetCollapses(object type)

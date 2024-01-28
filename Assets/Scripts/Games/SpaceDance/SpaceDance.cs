@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Common;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -12,6 +13,19 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("spaceDance", "Space Dance", "0014d6", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.EpicBop(e.beat, e.length, e["auto"], e["bop"], e["grampsAuto"], e["gramps"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Dancers Bop", "Toggle if the dancers should bop for the duration of this event."),
+                        new Param("auto", false, "Dancers Bop (Auto)", "Toggle if the dancers should automatically bop until another Bop event is reached."),
+                        new Param("gramps", false, "Gramps Bop", "Toggle if Space Gramps should bop for the duration of this event."),
+                        new Param("grampsAuto", false, "Gramps Bop (Auto)", "Toggle if Space Gramps should automatically bop until another Bop event is reached.")
+                    },
+                    resizable = true,
+                    defaultLength = 4f
+                },
                 new GameAction("turn right", "Turn Right")
                 {
                     function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoTurnRight(e.beat, e["gramps"]); },
@@ -19,8 +33,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
-                        new Param("whoSpeaks", SpaceDance.WhoSpeaks.Dancers, "Who Speaks?", "Who will say the voice line for the cue?"),
-                        new Param("gramps", false, "Space Gramps Animations", "Will Space Gramps turn right?")
+                        new Param("whoSpeaks", SpaceDance.WhoSpeaks.Dancers, "Speaker", "Choose who will say the voice line."),
+                        new Param("gramps", false, "Space Gramps Animations", "Toggle if Space Gramps will turn right with the dancers.")
                     }
                 },
                 new GameAction("sit down", "Sit Down")
@@ -30,8 +44,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
-                        new Param("whoSpeaks", SpaceDance.WhoSpeaks.Dancers, "Who Speaks?", "Who will say the voice line for the cue?"),
-                        new Param("gramps", false, "Space Gramps Animations", "Will Space Gramps turn right?")
+                        new Param("whoSpeaks", SpaceDance.WhoSpeaks.Dancers, "Speaker", "Choose who will say the voice line."),
+                        new Param("gramps", false, "Space Gramps Animations", "Toggle if Space Gramps will sit down with the dancers.")
                     }
                 },
                 new GameAction("punch", "Punch")
@@ -41,8 +55,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
-                        new Param("whoSpeaks", SpaceDance.WhoSpeaks.Dancers, "Who Speaks?", "Who will say the voice line for the cue?"),
-                        new Param("gramps", false, "Space Gramps Animations", "Will Space Gramps turn right?")
+                        new Param("whoSpeaks", SpaceDance.WhoSpeaks.Dancers, "Speaker", "Choose who will say the voice line."),
+                        new Param("gramps", false, "Space Gramps Animations", "Toggle if Space Gramps will punch with the dancers.")
                     }
                 },
                 new GameAction("shootingStar", "Shooting Star")
@@ -52,7 +66,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the shooting of the stars use?")
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("changeBG", "Change Background Color")
@@ -62,23 +76,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("start", SpaceDance.defaultBGColor, "Start Color", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
-                        new Param("end", SpaceDance.defaultBGColor, "End Color", "The end color for the fade."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("start", SpaceDance.defaultBGColor, "Start Color", "Set the color at the start of the event."),
+                        new Param("end", SpaceDance.defaultBGColor, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
-                },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.EpicBop(e.beat, e.length, e["auto"], e["bop"], e["grampsAuto"], e["gramps"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Dancers Bop", "Should the dancers bop?"),
-                        new Param("auto", false, "Dancers Bop (Auto)", "Should the dancers auto bop?"),
-                        new Param("gramps", false, "Gramps Bop", "Should Space Gramps bop with the dancers?"),
-                        new Param("grampsAuto", false, "Gramps Bop (Auto)", "Should Space Gramps auto bop with the dancers?")
-                    },
-                    resizable = true,
-                    defaultLength = 4f
                 },
                 new GameAction("grampsAnims", "Space Gramps Animations")
                 {
@@ -86,8 +87,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Looping", "Should the animation loop?"),
-                        new Param("type", SpaceDance.GrampsAnimationType.Talk, "Which animation?", "Which animation should space gramps do?")
+                        new Param("toggle", true, "Loop", "Toggle if the animation should loop."),
+                        new Param("type", SpaceDance.GrampsAnimationType.Talk, "Animation", "Set the animation for Space Gramps to perform.")
                     }
                 },
                 new GameAction("scroll", "Scrolling Background")
@@ -95,8 +96,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateScrollSpeed(e["x"], e["y"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>() {
-                        new Param("x", new EntityTypes.Float(-10f, 10f, 0), "Horizontal", "How fast does the background move horizontally?"),
-                        new Param("y", new EntityTypes.Float(-10f, 10f, 0), "Vertical", "How fast does the background move vertically?"),
+                        new Param("x", new EntityTypes.Float(-10f, 10f, 0), "Horizontal Speed", "Set how fast the background will scroll horizontally."),
+                        new Param("y", new EntityTypes.Float(-10f, 10f, 0), "Vertical Speed", "Set how fast the background will scroll vertically."),
                     }
                 },
             },
@@ -143,7 +144,6 @@ namespace HeavenStudio.Games
         public Animator Gramps;
         public Animator Hit;
         public GameObject Player;
-        [NonSerialized] public bool shouldBop = true;
         bool canBop = true;
         bool grampsCanBop = true;
         public bool spaceGrampsShouldBop = false;
@@ -164,12 +164,80 @@ namespace HeavenStudio.Games
 
         public static SpaceDance instance;
 
+        const int IA_TurnPress = IAMAXCAT;
+        const int IA_DownPress = IAMAXCAT + 1;
+        const int IA_PunchPress = IAMAXCAT + 2;
+
+        protected static bool IA_PadTurnPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_BatonTurnPress(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.East, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Punch);
+        }
+        protected static bool IA_TouchTurnPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !(instance.IsExpectingInputNow(InputAction_Down) || instance.IsExpectingInputNow(InputAction_Punch));
+        }
+
+        protected static bool IA_PadDownPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt);
+        }
+        protected static bool IA_BatonDownPress(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.South, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Punch);
+        }
+        protected static bool IA_TouchDownPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Down);
+        }
+
+        protected static bool IA_BatonPunchPress(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && instance.IsExpectingInputNow(InputAction_Punch);
+        }
+        protected static bool IA_TouchPunchPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Punch);
+        }
+
+        public static PlayerInput.InputAction InputAction_Turn =
+            new("AgbSpaceDanceTurn", new int[] { IA_TurnPress, IA_TurnPress, IA_TurnPress },
+            IA_PadTurnPress, IA_TouchTurnPress, IA_BatonTurnPress);
+        public static PlayerInput.InputAction InputAction_Down =
+            new("AgbSpaceDanceDown", new int[] { IA_DownPress, IA_DownPress, IA_DownPress },
+            IA_PadDownPress, IA_TouchDownPress, IA_BatonDownPress);
+        public static PlayerInput.InputAction InputAction_Punch =
+            new("AgbSpaceDancePunch", new int[] { IA_PunchPress, IA_PunchPress, IA_PunchPress },
+            IA_PadBasicPress, IA_TouchPunchPress, IA_BatonPunchPress);
+
         // Start is called before the first frame update
         void Awake()
         {
             instance = this;
             colorStart = defaultBGColor;
             colorEnd = defaultBGColor;
+            SetupBopRegion("spaceDance", "bop", "auto");
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat))
+            {
+                Bop();
+            }
+            if (spaceGrampsShouldBop)
+            {
+                GrampsBop();
+            }
         }
 
         // Update is called once per frame
@@ -181,17 +249,6 @@ namespace HeavenStudio.Games
             {
                 scroll.NormalizedX -= xBaseSpeed * xScrollMultiplier * Time.deltaTime;
                 scroll.NormalizedY -= yBaseSpeed * yScrollMultiplier * Time.deltaTime;
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (shouldBop)
-                    {
-                        Bop();
-                    }
-                    if (spaceGrampsShouldBop)
-                    {
-                        GrampsBop();
-                    }
-                }
                 if (isShootingStar)
                 {
                     float normalizedBeat = cond.GetPositionFromBeat(shootingStarStartBeat, shootingStarLength);
@@ -209,23 +266,23 @@ namespace HeavenStudio.Games
                         }
                     }
                 }
-                if (!DancerP.IsPlayingAnimationName("PunchDo") && !DancerP.IsPlayingAnimationName("TurnRightDo") && !DancerP.IsPlayingAnimationName("SitDownDo"))
+                if (!DancerP.IsPlayingAnimationNames("PunchDo", "TurnRightDo", "SitDownDo"))
                 {
-                    if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                    if (PlayerInput.GetIsAction(InputAction_Punch) && !IsExpectingInputNow(InputAction_Punch))
                     {
                         SoundByte.PlayOneShotGame("spaceDance/inputBad");
                         DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
                         Gramps.Play("GrampsOhFuck", 0, 0);
                     }
-                    if (PlayerInput.GetSpecificDirectionDown(1) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
+                    if (PlayerInput.GetIsAction(InputAction_Down) && !IsExpectingInputNow(InputAction_Down))
                     {
-                        DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
+                        DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
                         SoundByte.PlayOneShotGame("spaceDance/inputBad");
                         Gramps.Play("GrampsOhFuck", 0, 0);
                     }
-                    if (PlayerInput.GetSpecificDirectionDown(2) && !IsExpectingInputNow(InputType.DIRECTION_DOWN_DOWN))
+                    if (PlayerInput.GetIsAction(InputAction_Turn) && !IsExpectingInputNow(InputAction_Turn))
                     {
-                        DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
+                        DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                         SoundByte.PlayOneShotGame("spaceDance/inputBad");
                         Gramps.Play("GrampsOhFuck", 0, 0);
                     }
@@ -410,7 +467,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             if (grampsTurns) grampsCanBop = false;
-            ScheduleInput(beat, 1f, InputType.DIRECTION_RIGHT_DOWN, JustRight, RightMiss, Empty);
+            ScheduleInput(beat, 1f, InputAction_Turn, JustRight, RightMiss, Empty);
 
             BeatAction.New(instance, new List<BeatAction.Action>() 
             {
@@ -479,7 +536,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             if (grampsSits) grampsCanBop = false;
-            ScheduleInput(beat, 1f, InputType.DIRECTION_DOWN_DOWN, JustSit, SitMiss, Empty);
+            ScheduleInput(beat, 1f, InputAction_Down, JustSit, SitMiss, Empty);
 
             BeatAction.New(instance, new List<BeatAction.Action>() 
             {
@@ -554,7 +611,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             if (grampsPunches) grampsCanBop = false;
-            ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, JustPunch, PunchMiss, Empty);
+            ScheduleInput(beat, 1.5f, InputAction_Punch, JustPunch, PunchMiss, Empty);
 
             BeatAction.New(instance, new List<BeatAction.Action>() 
                 {
@@ -599,7 +656,6 @@ namespace HeavenStudio.Games
 
         public void EpicBop(double beat, float length, bool autoDancers, bool dancers, bool autoGramps, bool gramps)
         {
-            shouldBop = autoDancers;
             spaceGrampsShouldBop = autoGramps;
             if (dancers || gramps)
             {

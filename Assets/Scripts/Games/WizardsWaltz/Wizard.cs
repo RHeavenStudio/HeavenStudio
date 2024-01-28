@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
 
         private void LateUpdate()
         {
-            if (PlayerInput.Pressed(true))
+            if (PlayerInput.GetIsAction(WizardsWaltz.InputAction_Press))
             {
                 animator.Play("Magic", 0, 0);
                 SoundByte.PlayOneShotGame("wizardsWaltz/wand");

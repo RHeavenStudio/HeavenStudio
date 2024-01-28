@@ -9,6 +9,7 @@ using Starpelly;
 
 using HeavenStudio.Util;
 using HeavenStudio.Editor;
+using HeavenStudio.Common;
 
 namespace HeavenStudio.Editor
 {
@@ -16,8 +17,10 @@ namespace HeavenStudio.Editor
     {
         [Header("Dropdown")]
         [Space(10)]
-        public TMP_Dropdown dropdown;
+        public LeftClickTMP_Dropdown dropdown;
         private Array enumVals;
+
+        private int _defaultValue;
 
         private bool openedDropdown = false;
 
@@ -28,6 +31,7 @@ namespace HeavenStudio.Editor
             var enumType = type.GetType();
             enumVals = Enum.GetValues(enumType);
             var enumNames = Enum.GetNames(enumType).ToList();
+            _defaultValue = (int)type;
 
             // Can we assume non-holey enum?
             // If we can we can simplify to dropdown.value = (int) parameterManager.entity[propertyName]
@@ -40,9 +44,24 @@ namespace HeavenStudio.Editor
             dropdown.AddOptions(enumNames);
             dropdown.value = selected;
 
-            dropdown.onValueChanged.AddListener(_ =>
-                parameterManager.entity[propertyName] = (int) enumVals.GetValue(dropdown.value)
+            dropdown.onValueChanged.AddListener(_ => 
+            {
+                parameterManager.entity[propertyName] = (int)enumVals.GetValue(dropdown.value);
+                if ((int)enumVals.GetValue(dropdown.value) != _defaultValue)
+                {
+                    this.caption.text = _captionText + "*";
+                }
+                else
+                {
+                    this.caption.text = _captionText;
+                }
+            }
             );
+        }
+
+        public void ResetValue()
+        {
+            dropdown.value = _defaultValue;
         }
 
         public override void SetCollapses(object type)

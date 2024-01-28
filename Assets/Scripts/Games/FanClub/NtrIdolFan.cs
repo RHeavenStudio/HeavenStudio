@@ -6,6 +6,7 @@ using Starpelly;
 using NaughtyBezierCurves;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Scripts_FanClub
 {
@@ -35,16 +36,16 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 switch (type)
                 {
                     case 0:
-                        FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, ClapJust, ClapThrough, Out);
+                        FanClub.instance.ScheduleInput(beat, 1f, FanClub.InputAction_BasicPress, ClapJust, ClapThrough, Out);
                         break;
                     case 1:
-                        FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_UP, JumpJust, JumpThrough, JumpOut);
+                        FanClub.instance.ScheduleInput(beat, 1f, FanClub.InputAction_FlickRelease, JumpJust, JumpThrough, JumpOut);
                         break;
                     case 2:
-                        FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, ChargeClapJust, ClapThrough, Out);
+                        FanClub.instance.ScheduleInput(beat, 1f, FanClub.InputAction_BasicPress, ChargeClapJust, ClapThrough, Out);
                         break;
                     default:
-                        FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, LongClapJust, ClapThrough, Out);
+                        FanClub.instance.ScheduleInput(beat, 1f, FanClub.InputAction_BasicPress, LongClapJust, ClapThrough, Out);
                         break;
                 }
             }
@@ -97,9 +98,9 @@ namespace HeavenStudio.Games.Scripts_FanClub
 
             if (player)
             {
-                if (PlayerInput.Pressed())
+                if (PlayerInput.GetIsAction(FanClub.InputAction_BasicPress))
                 {
-                    if (!FanClub.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
+                    if (!FanClub.instance.IsExpectingInputNow(FanClub.InputAction_BasicPress.inputLockCategory))
                     {
                         if (FanClub.instance.JudgementPaused)
                         {
@@ -112,7 +113,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                         }
                     }
                 }
-                if (PlayerInput.Pressing())
+                if (PlayerInput.GetIsAction(FanClub.InputAction_BasicPressing))
                 {
                     if (clappingStartTime != double.MinValue && cond.songPositionInBeatsAsDouble > clappingStartTime + 2f && !stopCharge)
                     {
@@ -121,9 +122,16 @@ namespace HeavenStudio.Games.Scripts_FanClub
                         stopCharge = true;
                     }
                 }
-                if (PlayerInput.PressedUp())
+                if (PlayerInput.GetIsAction(FanClub.InputAction_FlickRelease))
                 {
-                    if (clappingStartTime != double.MinValue && cond.songPositionInBeatsAsDouble > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow(InputType.STANDARD_UP))
+                    float nonTouchDelay = 2f;
+                    if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                    {
+                        nonTouchDelay = 0f;
+                        stopCharge = true;
+                    }
+                    if (clappingStartTime != double.MinValue && cond.songPositionInBeatsAsDouble > clappingStartTime + nonTouchDelay && stopCharge
+                        && !FanClub.instance.IsExpectingInputNow(FanClub.InputAction_FlickRelease.inputLockCategory))
                     {
                         if (FanClub.instance.JudgementPaused)
                         {
@@ -142,6 +150,14 @@ namespace HeavenStudio.Games.Scripts_FanClub
                         stopBeat = false;
                         clappingStartTime = double.MinValue;
                     }
+                }
+                if (PlayerInput.GetIsAction(FanClub.InputAction_TouchRelease))
+                {
+                    animator.speed = 1f;
+                    animator.Play("FanFree", -1, 0);
+                    stopBeat = false;
+                    stopCharge = false;
+                    clappingStartTime = double.MinValue;
                 }
             }
             
@@ -199,7 +215,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(cond.songPositionInBeatsAsDouble + 0.1f, delegate { 
-                        if (PlayerInput.Pressing() || autoplayRelease > 0f)
+                        if (PlayerInput.GetIsAction(FanClub.InputAction_BasicPressing) || autoplayRelease > 0f)
                         {
                             animator.Play("FanClapCharge", -1, 0);
                             stopCharge = true;

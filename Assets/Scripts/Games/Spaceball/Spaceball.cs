@@ -21,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2, 
                     parameters = new List<Param>()
                     {
-                        new Param("type", Spaceball.BallType.Baseball, "Type", "The type of ball/object to shoot") 
+                        new Param("type", Spaceball.BallType.Baseball, "Type", "Set the object to shoot.") 
                     } 
                 },
 				new GameAction("shootHigh", "Pitch High Ball")
@@ -32,23 +32,23 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3,
                     parameters = new List<Param>()
                     {
-                        new Param("type", Spaceball.BallType.Baseball, "Type", "The type of ball/object to shoot") 
+                        new Param("type", Spaceball.BallType.Baseball, "Type", "Set the object to shoot.") 
                     } 
                 },
-				new GameAction("costume", "Change Batter Costume")
+				new GameAction("costume", "Batter Costume")
                 {
                     function = delegate { Spaceball.instance.Costume(eventCaller.currentEntity["type"]); },
                     parameters = new List<Param>() 
                     {
-                        new Param("type", Spaceball.CostumeType.Standard, "Type", "The costume to change to") 
+                        new Param("type", Spaceball.CostumeType.Standard, "Type", "Set the costume for the batter to wear.") 
                     } 
                 },
-                new GameAction("alien", "Show Alien")
+                new GameAction("alien", "Space Umpire Animation")
                 {
                     function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat, eventCaller.currentEntity["hide"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("hide", false, "Hide", "Should the alien be hidden?")
+                        new Param("hide", false, "Hide", "Toggle if Space Umpire should be hidden from the scene.")
                     }
                 },
                 new GameAction("camera", "Zoom Camera")
@@ -57,8 +57,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true, 
                     parameters = new List<Param>() 
                     {
-                        new Param("valA", new EntityTypes.Integer(1, 320, 10), "Zoom", "The camera's zoom level (Lower value = Zoomed in)"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "The easing function to use while zooming") 
+                        new Param("valA", new EntityTypes.Integer(1, 320, 10), "Zoom", "Set the level to zoom to."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.") 
                     } 
                 },
                 new GameAction("prepare dispenser", "Dispenser Prepare")
@@ -121,10 +121,6 @@ namespace HeavenStudio.Games
         {
             for (int i = 1; i < BallsHolder.transform.childCount; i++)
                 Destroy(BallsHolder.transform.GetChild(i).gameObject);
-            GameCamera.instance.camera.orthographic = false;
-
-            if (EligibleHits.Count > 0)
-                EligibleHits.RemoveRange(0, EligibleHits.Count);
         }
 
         public override void OnTimeChange()
@@ -169,27 +165,27 @@ namespace HeavenStudio.Games
                 {
                     if (normalizedBeat > 1)
                     {
-                        GameCamera.additionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
+                        GameCamera.AdditionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
                     }
                     else
                     {
                         if (currentZoomCamLength < 0)
                         {
-                            GameCamera.additionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
                         }
                         else
                         {
                             Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
 
                             float newPosZ = func(lastCamDistance + 10, currentZoomCamDistance + 10, normalizedBeat);
-                            GameCamera.additionalPosition = new Vector3(0, 0, newPosZ);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, newPosZ);
                         }
                     }
                 }
                 else
                 {
                     // ?
-                    GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                    GameCamera.AdditionalPosition = new Vector3(0, 0, 0);
                 }
             }
         }

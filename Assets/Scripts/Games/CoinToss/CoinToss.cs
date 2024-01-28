@@ -14,28 +14,28 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("toss", "Toss Coin")
                 {
-                    function = delegate { CoinToss.instance.TossCoin(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"]); }, 
-                    defaultLength = 7, 
+                    function = delegate { CoinToss.instance.TossCoin(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"]); },
+                    defaultLength = 7,
                     parameters = new List<Param>()
                     {
-                        new Param("type", CoinToss.CoinVariation.Default, "Variation", "Special Coin Variations"),
-                        new Param("toggle", false, "Audience Reaction", "Enable Audience Reaction"),
+                        new Param("type", CoinToss.CoinVariation.Default, "Variation", "Choose the version of the cue to play."),
+                        new Param("toggle", false, "Audience Reaction", "Toggle if there should be cheering or booing after the cue."),
                     }
                 },
-                new GameAction("fade background color", "Background Color")
+                new GameAction("fade background color", "Background Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity;
                         CoinToss.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["colorStartF"], e["colorEndF"], e["ease"]); },
-                    resizable = true, 
+                    resizable = true,
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("colorStart", CoinToss.defaultBgColor, "BG Start Color", "The starting color in the fade"),
-                        new Param("colorEnd", CoinToss.defaultBgColor, "BG End Color", "The ending color in the fade"),
-                        new Param("colorStartF", CoinToss.defaultBgColor, "FG Start Color", "The starting color in the fade"),
-                        new Param("colorEndF", CoinToss.defaultBgColor, "FG End Color", "The ending color in the fade"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
-                    } 
+                        new Param("colorStart", CoinToss.defaultBgColor, "BG Start Color", "Set the color for the outer ring at the start of the event."),
+                        new Param("colorEnd", CoinToss.defaultBgColor, "BG End Color", "Set the color for the outer ring at the end of the event."),
+                        new Param("colorStartF", CoinToss.defaultBgColor, "FG Start Color", "Set the color for the inner oval at the start of the event."),
+                        new Param("colorEndF", CoinToss.defaultBgColor, "FG End Color", "Set the color for the inner oval at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing for the action.")
+                    }
                 },
 
                 //left in for backwards-compatibility, but cannot be placed
@@ -51,9 +51,9 @@ namespace HeavenStudio.Games.Loaders
                     hidden = true
                 },
             },
-            new List<string>() {"ntr", "aim"},
+            new List<string>() { "ntr", "aim" },
             "ntrcoin", "en",
-            new List<string>() {}
+            new List<string>() { }
             );
         }
     }
@@ -70,6 +70,10 @@ namespace HeavenStudio.Games
 
         //Though it would need a bit of code rewrite to make it work with multiple coins
 
+        public static PlayerInput.InputAction InputAction_TouchFlick =
+            new("NtrCoinTouchFlick", new int[] { IAEmptyCat, IAFlickCat, IAEmptyCat },
+            IA_Empty, IA_TouchFlick, IA_Empty);
+
         public static CoinToss instance { get; set; }
 
         private static Color _defaultBgColor;
@@ -82,7 +86,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        
+
         private static Color _defaultFgColor;
         public static Color defaultFgColor
         {
@@ -129,6 +133,13 @@ namespace HeavenStudio.Games
         private void Update()
         {
             BackgroundColorUpdate();
+
+            if (coin != null && (!coin.canHit) && PlayerInput.GetIsAction(InputAction_TouchFlick))
+            {
+                coin.CanHit(true);
+                isThrowing = true;
+                handAnimator.Play("Throw_empty", 0, 0);
+            }
         }
 
         public void TossCoin(double beat, int type, bool audienceReacting)
@@ -142,11 +153,11 @@ namespace HeavenStudio.Games
             isThrowing = true;
 
             switch (type)
-                {
-                    case (int) CoinToss.CoinVariation.Cowbell:
-                        //this was intentional. it was to avoid the throw and cowbells to go offbeat.
-                        SoundByte.PlayOneShotGame("coinToss/cowbell1");
-                        MultiSound.Play(new MultiSound.Sound[] {
+            {
+                case (int)CoinVariation.Cowbell:
+                    //this was intentional. it was to avoid the throw and cowbells to go offbeat.
+                    SoundByte.PlayOneShotGame("coinToss/cowbell1");
+                    MultiSound.Play(new MultiSound.Sound[] {
                         new MultiSound.Sound("coinToss/cowbell2", beat + 1f, offset: 0.01f),
                         new MultiSound.Sound("coinToss/cowbell1", beat + 2f, offset: 0.01f),
                         new MultiSound.Sound("coinToss/cowbell2", beat + 3f, offset: 0.01f),
@@ -154,14 +165,14 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound("coinToss/cowbell2", beat + 5f, offset: 0.01f),
                         new MultiSound.Sound("coinToss/cowbell1", beat + 6f, offset: 0.01f),
                         });
-                        break;
-                    default:
-                        break;
-                }
-            
+                    break;
+                default:
+                    break;
+            }
+
             this.audienceReacting = audienceReacting;
 
-            coin = ScheduleInput(beat, 6f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            coin = ScheduleInput(beat, 6f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             //coin.perfectOnly = true;
         }
 
@@ -176,23 +187,23 @@ namespace HeavenStudio.Games
             isThrowing = true;
             this.audienceReacting = false;
 
-            coin = ScheduleInput(beat, 6f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            coin = ScheduleInput(beat, 6f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             //coin.perfectOnly = true;
         }
 
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("coinToss/catch");
-            if(this.audienceReacting) SoundByte.PlayOneShot("applause");
+            if (this.audienceReacting) SoundByte.PlayOneShot("applause");
             handAnimator.Play("Catch_success", 0, 0);
 
-            isThrowing = false; 
+            isThrowing = false;
         }
 
         public void CatchMiss(PlayerActionEvent caller)
         {
             SoundByte.PlayOneShot("miss");
-            if(this.audienceReacting) SoundByte.PlayOneShot("audience/disappointed");
+            if (this.audienceReacting) SoundByte.PlayOneShot("audience/disappointed");
             handAnimator.Play("Pickup", 0, 0);
 
             isThrowing = false;

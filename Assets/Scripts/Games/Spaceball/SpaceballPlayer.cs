@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 
         private void Update()
         {
-            if (PlayerInput.Pressed())
+            if (PlayerInput.GetIsAction(Spaceball.InputAction_BasicPress, out _))
             {
                 Swing(null);
             }

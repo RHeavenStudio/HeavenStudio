@@ -30,16 +30,17 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                 spawnedEffect.Play();
                 DoAnimationScaledAsync(crouch ? "CrouchHit" : "Hit", 0.5f);
             }
-            else if (!anim.IsPlayingAnimationName(prefix + "Whiff") && !anim.IsPlayingAnimationName(prefix + "Miss"))
+            else if (!anim.IsPlayingAnimationNames(prefix + "Whiff", prefix + "Miss"))
             {
                 DoAnimationScaledAsync("Whiff", 0.5f);
                 SoundByte.PlayOneShotGame("tossBoys/whiff");
             }
+            preparing = false;
         }
 
         public void Bop()
         {
-            if (!anim.IsAnimationNotPlaying() || crouch || preparing) return;
+            if (crouch || preparing || (!anim.IsAnimationNotPlaying() && !anim.IsPlayingAnimationNames(prefix + "Idle"))) return;
             DoAnimationScaledAsync("Bop", 0.5f);
         }
 

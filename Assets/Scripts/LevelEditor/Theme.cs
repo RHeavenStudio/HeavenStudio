@@ -1,3 +1,4 @@
+using HeavenStudio.Editor.Track;
 using Newtonsoft.Json;
 using Starpelly;
 using System;
@@ -54,6 +55,11 @@ namespace HeavenStudio.Editor
             }
 
             LayersGradient.colorKeys = colorKeys.ToArray();
+        }
+
+        public Color LayerGradientIndex(int layer)
+        {
+            return EditorTheme.theme.LayersGradient.Evaluate(layer / (float)(Timeline.instance.LayerCount - 1));
         }
     }
 }

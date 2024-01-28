@@ -9,69 +9,70 @@ namespace HeavenStudio.Games.Loaders
     using static Minigames;
     public static class AgbTapLoader
     {
-        public static Minigame AddGame(EventCaller eventCaller) {
+        public static Minigame AddGame(EventCaller eventCaller)
+        {
             return new Minigame("tapTrial", "Tap Trial", "94ffb5", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Bop(e.beat, e.length, e["toggle"], e["toggle2"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Bop(e.beat, e.length, e["toggle"], e["toggle2"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Bop", "Whether both will bop to the beat or not"),
-                        new Param("toggle2", false, "Bop (Auto)", "Whether both will bop automatically to the beat or not")
+                        new Param("toggle", true, "Bop", "Toggle if the characters should bop for the duration of this event."),
+                        new Param("toggle2", false, "Bop (Auto)", "Toggle if the characters should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("tap", "Tap")
                 {
-                    function = delegate { TapTrial.instance.Tap(eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.Tap(eventCaller.currentEntity.beat); },
                     defaultLength = 2.0f
                 },
                 new GameAction("double tap", "Double Tap")
                 {
-                    function = delegate { TapTrial.instance.DoubleTap(eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.DoubleTap(eventCaller.currentEntity.beat); },
                     defaultLength = 2.0f
                 },
                 new GameAction("triple tap", "Triple Tap")
                 {
-                    function = delegate { TapTrial.instance.TripleTap(eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.TripleTap(eventCaller.currentEntity.beat); },
                     defaultLength = 4.0f
                 },
-                new GameAction("jump tap prep", "Prepare Stance")
+                new GameAction("jump tap prep", "Jump Prepare")
                 {
-                    function = delegate { TapTrial.instance.JumpPrepare(); }, 
+                    function = delegate { TapTrial.instance.JumpPrepare(); },
                 },
                 new GameAction("jump tap", "Jump Tap")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.JumpTap(e.beat, e["final"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.JumpTap(e.beat, e["final"]); },
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
-                        new Param("final", false, "Final")
+                        new Param("final", false, "Final", "Toggle if this jump should be the final one of the set.")
                     }
                 },
                 new GameAction("scroll event", "Scroll Background")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Scroll(e["toggle"], e["flash"], e["m"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Scroll(e["toggle"], e["flash"], e["m"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Scroll FX", "Will scroll", new List<Param.CollapseParam>()
+                        new Param("toggle", true, "Scroll", "Toggle if the background should scroll.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "flash", "m"})
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "flash", "m"})
                         }),
-                        new Param("flash", true, "Flash FX", "Will flash to white"),
-                        new Param("m", new EntityTypes.Float(0, 10, 1), "Speed Multiplier")
+                        new Param("flash", true, "White Fade", "Toggle if the background will have a white overlay."),
+                        new Param("m", new EntityTypes.Float(0, 10, 1), "Speed", "Set how fast the background should scroll.")
                     }
                 },
                 new GameAction("giraffe events", "Giraffe Animations")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.GiraffeAnims(e.beat, e.length, e["toggle"], e["instant"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.GiraffeAnims(e.beat, e.length, e["toggle"], e["instant"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", TapTrial.GiraffeAnimation.Enter, "Animation", "Which animation?"),
-                        new Param("instant", EasingFunction.Ease.Linear, "Ease", "Which ease will be used?")
+                        new Param("toggle", TapTrial.GiraffeAnimation.Enter, "Animation", "Set the animation for the giraffe to perform."),
+                        new Param("instant", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 // backwards-compatibility
@@ -82,9 +83,9 @@ namespace HeavenStudio.Games.Loaders
                     hidden = true
                 },
             },
-            new List<string>() {"agb", "normal"},
+            new List<string>() { "agb", "normal" },
             "agbtap", "en",
-            new List<string>() {}
+            new List<string>() { }
             );
         }
     }
@@ -109,9 +110,7 @@ namespace HeavenStudio.Games
         [SerializeField] private float monkeyJumpHeight = 3f;
         [SerializeField] private float maxFlashOpacity = 0.8f;
 
-        private GameEvent bop = new();
         private bool canBop = true;
-        private bool shouldBop = true;
 
         private double jumpStartBeat = double.MinValue;
 
@@ -120,6 +119,12 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("tapTrial", "bop", "toggle2");
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat)) SingleBop();
         }
 
         private void Update()
@@ -127,10 +132,6 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (shouldBop && cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    SingleBop();
-                }
                 GiraffeUpdate(cond);
                 JumpUpdate(cond);
                 ScrollUpdate(cond);
@@ -151,7 +152,7 @@ namespace HeavenStudio.Games
             currentNormalizedY = 0;
             flash.color = new Color(1, 1, 1, 0);
         }
-        
+
         private bool scrolling;
         private bool flashing;
         [SerializeField] private float maxScrollSpeed = 0.25f;
@@ -251,11 +252,10 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool bop, bool autoBop)
         {
-            shouldBop = autoBop;
             if (bop)
             {
                 List<BeatAction.Action> actions = new();
-                for (int i = 0; i  < length; i++)
+                for (int i = 0; i < length; i++)
                 {
                     actions.Add(new BeatAction.Action(beat + i, delegate { SingleBop(); }));
                 }
@@ -302,7 +302,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTrial/tapMonkey", beat + 1, 1.4f, 0.5f),
             });
 
-            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustTap, Miss, Empty);
+            ScheduleInput(beat, 1, InputAction_BasicPress, JustTap, Miss, Empty);
         }
 
         public void DoubleTap(double beat)
@@ -340,8 +340,8 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTrial/tapMonkey", beat + 1.5, 1.4f, 0.5f),
             });
 
-            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustDoubleTap, Miss, Empty);
-            ScheduleInput(beat, 1.5, InputType.STANDARD_DOWN, JustDoubleTap, Miss, Empty);
+            ScheduleInput(beat, 1, InputAction_BasicPress, JustDoubleTap, Miss, Empty);
+            ScheduleInput(beat, 1.5, InputAction_BasicPress, JustDoubleTap, Miss, Empty);
         }
 
         public void TripleTap(double beat)
@@ -384,9 +384,9 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTrial/tapMonkey", beat + 3, 1.4f, 0.5f),
             });
 
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustTripleTap, Miss, Empty);
-            ScheduleInput(beat, 2.5, InputType.STANDARD_DOWN, JustTripleTap, Miss, Empty);
-            ScheduleInput(beat, 3, InputType.STANDARD_DOWN, JustTripleTap, Miss, Empty);
+            ScheduleInput(beat, 2, InputAction_BasicPress, JustTripleTap, Miss, Empty);
+            ScheduleInput(beat, 2.5, InputAction_BasicPress, JustTripleTap, Miss, Empty);
+            ScheduleInput(beat, 3, InputAction_BasicPress, JustTripleTap, Miss, Empty);
         }
 
         public void JumpPrepare()
@@ -425,7 +425,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTrial/tapMonkey", beat + 1, 1.4f, 0.5f),
             });
 
-            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, final ? JustJumpTapFinal : JustJumpTap, final ? MissJumpFinal : MissJump, Empty);
+            ScheduleInput(beat, 1, InputAction_BasicPress, final ? JustJumpTapFinal : JustJumpTap, final ? MissJumpFinal : MissJump, Empty);
         }
 
         private void JustJumpTap(PlayerActionEvent caller, float state)
@@ -441,14 +441,14 @@ namespace HeavenStudio.Games
         private void MissJump(PlayerActionEvent caller)
         {
             player.JumpTapMiss(false);
-            if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
+            if (giraffe.IsAnimationNotPlaying() && currentAnim != GiraffeAnimation.Exit) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
             ResetScroll();
         }
 
         private void MissJumpFinal(PlayerActionEvent caller)
         {
             player.JumpTapMiss(true);
-            if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
+            if (giraffe.IsAnimationNotPlaying() && currentAnim != GiraffeAnimation.Exit) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
             ResetScroll();
         }
 

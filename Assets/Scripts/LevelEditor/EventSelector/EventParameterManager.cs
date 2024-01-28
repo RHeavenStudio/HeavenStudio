@@ -5,6 +5,7 @@ using UnityEngine;
 using HeavenStudio.Editor.Track;
 using Jukebox;
 using Jukebox.Legacy;
+using System.Linq;
 
 namespace HeavenStudio.Editor
 {
@@ -80,8 +81,9 @@ namespace HeavenStudio.Editor
 
         private void AddParams(RiqEntity entity)
         {
-            var minigame = EventCaller.instance.GetMinigame(entity.datamodel.Split(0));
-            int actionIndex = minigame.actions.IndexOf(minigame.actions.Find(c => c.actionName == entity.datamodel.Split(1)));
+            string[] split = entity.datamodel.Split('/');
+            var minigame = EventCaller.instance.GetMinigame(split[0]);
+            int actionIndex = minigame.actions.IndexOf(minigame.actions.Find(c => c.actionName == split[1]));
             Minigames.GameAction action = minigame.actions[actionIndex];
 
             if (action.parameters != null)
@@ -105,21 +107,14 @@ namespace HeavenStudio.Editor
                     ePrefabs.Add(propertyName, AddParam(propertyName, param, caption, tooltip));
                 }
 
-                Debug.Log(action.parameters);
-
                 foreach (var p in action.parameters)
                 {
-                    Debug.Log(p.collapseParams);
                     if (p.collapseParams == null || p.collapseParams.Count == 0) continue;
                     EventPropertyPrefab input = ePrefabs[p.propertyName].GetComponent<EventPropertyPrefab>();
                     foreach (var c in p.collapseParams)
                     {
-                        List<GameObject> collapseables = new();
-                        foreach (var s in c.collapseables)
-                        {
-                            collapseables.Add(ePrefabs[s]);
-                        }
-                        input.propertyCollapses.Add(new EventPropertyPrefab.PropertyCollapse(collapseables, c.CollapseOn));
+                        List<GameObject> collapseables = c.collapseables.Select(x => ePrefabs[x]).ToList();
+                        input.propertyCollapses.Add(new EventPropertyPrefab.PropertyCollapse(collapseables, c.CollapseOn, entity));
                     }
                     input.SetCollapses(p.parameter);
                 }

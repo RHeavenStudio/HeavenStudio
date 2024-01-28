@@ -22,21 +22,12 @@ namespace HeavenStudio.Games.Scripts_FirstContact
 
         private void Update()
         {
-            ////IF YOU WANT TO PLAY NOTES ANYTIME W/O CONSTRAINTS
-            //if (PlayerInput.Pressed(true) && !game.isSpeaking)
-            //{
-            //    successTranslation(true);
-            //}
         }
 
         public void SuccessTranslation(bool ace)
         {
             if (ace)
             {
-                //if(game.version == 1)
-                //{
-                //    Jukebox.PlayOneShotGame("firstContact/citrusRemix/1_r");
-                //}
                 SoundByte.PlayOneShotGame("firstContact/" + RandomizerLines());
             }
             else

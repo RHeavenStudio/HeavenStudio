@@ -22,7 +22,7 @@ namespace UnityBuilderAction
             string appName = PlayerSettings.productName;
             // Get filename.
             string path = EditorUtility.SaveFilePanel("Build out WINDOWS to...", "", appName, "exe");
-            Build( BuildTarget.StandaloneWindows, 0, path);
+            Build( BuildTarget.StandaloneWindows64, 0, path);
         }
 
         [MenuItem("File/Build Linux")]
@@ -225,7 +225,7 @@ namespace UnityBuilderAction
             {
                 Directory.CreateDirectory(assetBundleDirectory);
             }
-            BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.ForceRebuildAssetBundle, buildTarget);
+            BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.ForceRebuildAssetBundle | BuildAssetBundleOptions.ChunkBasedCompression, buildTarget);
 
             BuildSummary buildSummary = BuildPipeline.BuildPlayer(buildPlayerOptions).summary;
             ReportSummary(buildSummary);
