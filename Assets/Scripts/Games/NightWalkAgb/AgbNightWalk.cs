@@ -4,6 +4,7 @@ using UnityEngine;
 using HeavenStudio.Util;
 using Jukebox;
 using System;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -167,6 +168,52 @@ namespace HeavenStudio.Games
         [NonSerialized] public int requiredJumps;
         [NonSerialized] public int requiredJumpsP;
 
+        const int IAAltDownCat = IAMAXCAT;
+        const int IAAltUpCat = IAMAXCAT + 1;
+
+        protected static bool IA_PadAltDown(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltDown(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltDown(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_AltDown);
+        }
+
+        protected static bool IA_PadAltUp(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltUp(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+        protected static bool IA_TouchAltUp(out double dt)
+        {
+            return PlayerInput.GetFlick(out dt)
+                && instance.IsExpectingInputNow(InputAction_AltUp);
+        }
+
+        protected static bool IA_EmptyTouchUp(out double dt)
+        {
+            return PlayerInput.GetTouchUp(InputController.ActionsTouch.Tap, out dt) && !PlayerInput.GetFlick(out _);
+        }
+
+        public static PlayerInput.InputAction InputAction_AltDown =
+            new("KarateAltDown", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltDown, IA_TouchAltDown, IA_BatonAltDown);
+        public static PlayerInput.InputAction InputAction_AltUp =
+            new("KarateAltUp", new int[] { IAAltUpCat, IAAltUpCat, IAAltUpCat },
+            IA_PadAltUp, IA_TouchAltUp, IA_BatonAltUp);
+        public static PlayerInput.InputAction InputAction_TouchUp =
+            new("KarateAltUp", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_PadAltUp, IA_EmptyTouchUp, IA_BatonAltUp);
+
         new void OnDrawGizmos()
         {
             base.OnDrawGizmos();
@@ -251,7 +298,7 @@ namespace HeavenStudio.Games
                     starHandler.Evolve(starAmount);
                 }));
             }
-            BeatAction.New(instance.gameObject, actions);
+            BeatAction.New(this, actions);
         }
 
         public bool FishOnBeat(double beat)
@@ -596,7 +643,7 @@ namespace HeavenStudio.Games
             {
                 if (countInLength == 8)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(countInBeat, delegate { playYan.PopBalloon(0, beat > countInBeat); }),
                         new BeatAction.Action(countInBeat + 2, delegate { playYan.PopBalloon(1, beat > countInBeat + 2); }),
@@ -611,7 +658,7 @@ namespace HeavenStudio.Games
                 {
                     playYan.PopBalloon(0, true);
                     playYan.PopBalloon(1, true);
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(countInBeat, delegate { playYan.PopBalloon(2, beat > countInBeat); }),
                         new BeatAction.Action(countInBeat + 1, delegate { playYan.PopBalloon(3, beat > countInBeat + 1); }),

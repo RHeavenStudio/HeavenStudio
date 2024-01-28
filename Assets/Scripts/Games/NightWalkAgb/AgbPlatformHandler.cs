@@ -122,7 +122,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     currentPlatformToDdestroy.Disappear(fallBeat);
                 }));
             }
-            BeatAction.New(gameObject, actions);
+            BeatAction.New(this, actions);
         }
 
         public void RaiseHeight(double beat, int lastUnits, int currentUnits)

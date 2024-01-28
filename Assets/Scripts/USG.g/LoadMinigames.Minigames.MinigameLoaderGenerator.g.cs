@@ -310,6 +310,17 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader ntrMunchyMonkLoader failed!");
             }
 
+            Debug.Log("Running game loader AgbNightWalkLoader");
+            game = AgbNightWalkLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbNightWalkLoader failed!");
+            }
+
             Debug.Log("Running game loader NtrOctopusMachineLoader");
             game = NtrOctopusMachineLoader.AddGame(eventCaller);
             if (game != null)
@@ -528,6 +539,17 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader AgbTossBoysLoader failed!");
+            }
+
+            Debug.Log("Running game loader TotemClimbLoader");
+            game = TotemClimbLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader TotemClimbLoader failed!");
             }
 
             Debug.Log("Running game loader AgbTramLoader");

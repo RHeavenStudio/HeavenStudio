@@ -82,7 +82,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     case JumpingState.Walking:
                         transform.localPosition = Vector3.zero;
                         anim.DoScaledAnimation("Walk", walkBeat, 0.5f, 0.35f);
-                        if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+                        if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !game.IsExpectingInputNow(Minigame.InputAction_BasicPress))
                         {
                             Whiff(cond.songPositionInBeatsAsDouble);
                         }
@@ -183,7 +183,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             jumpBeat = beat;
             anim.Play("Jump", 0, 0);
             spriteTrans.localEulerAngles = Vector3.zero;
-            jumpPath.positions[0].duration = 1 - (float)Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(jumpBeat));
+            jumpPath.positions[0].duration = 1 - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(jumpBeat));
             Update();
         }
 
@@ -193,7 +193,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             jumpBeat = beat;
             anim.DoScaledAnimationAsync("HighJump", 0.5f);
             spriteTrans.localEulerAngles = Vector3.zero;
-            highJumpPath.positions[0].duration = 1.5f - (float)Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(jumpBeat));
+            highJumpPath.positions[0].duration = 1.5f - (float)Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(jumpBeat));
             highJumpPath.positions[0].height = barely ? 3.5f : 4.5f;
             Update();
         }

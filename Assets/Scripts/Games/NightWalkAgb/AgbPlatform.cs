@@ -96,10 +96,10 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 {
                     if (game.ShouldNotJumpOnBeat(endBeat) || isFish)
                     {
-                        inputEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_ALT_DOWN, JustRollHold, RollMissHold, Empty);
+                        inputEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat, AgbNightWalk.InputAction_AltDown, JustRollHold, RollMissHold, Empty);
                         if (nextPlatformIsSameHeight && !isFinalBlock && !isEndEvent)
                         {
-                            BeatAction.New(gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(this, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(endBeat, delegate
                                 {
@@ -129,7 +129,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         }
                         else
                         {
-                            BeatAction.New(gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(this, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(endBeat + 0.5, delegate
                                 {
@@ -148,10 +148,10 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     }
                     else
                     {
-                        inputEvent = game.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_ALT_DOWN, JustRollHold, RollMissHold, Empty);
+                        inputEvent = game.ScheduleInput(startBeat, endBeat - startBeat, AgbNightWalk.InputAction_AltDown, JustRollHold, RollMissHold, Empty);
                     }
                     canKick = true;
-                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(endBeat, delegate
                         {
@@ -168,7 +168,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     if (nextPlatformIsSameHeight && !isEndEvent)
                     {
                         canKickRelease = true;
-                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(this, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(endBeat + 0.5, delegate
                             {
@@ -211,10 +211,10 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 {
                     if (game.ShouldNotJumpOnBeat(endBeat) || isFish)
                     {
-                        inputEvent = AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, isEndEvent ? JustEnd : Just, Miss, Empty);
+                        inputEvent = AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, Minigame.InputAction_BasicPress, isEndEvent ? JustEnd : Just, Miss, Empty);
                         if (nextPlatformIsSameHeight && !isFinalBlock)
                         {
-                            BeatAction.New(gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(this, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(endBeat, delegate
                                 {
@@ -235,7 +235,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         }
                         else
                         {
-                            BeatAction.New(gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(this, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(endBeat, delegate
                                 {
@@ -254,12 +254,12 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     }
                     else if (!isFish)
                     {
-                        inputEvent = AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, isEndEvent ? JustEnd : Just, Miss, Empty);
+                        inputEvent = AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, Minigame.InputAction_BasicPress, isEndEvent ? JustEnd : Just, Miss, Empty);
                     }
                     if (nextPlatformIsSameHeight && !isEndEvent)
                     {
                         canKick = true;
-                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(this, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(endBeat, delegate
                             {
@@ -356,11 +356,11 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
             if (caller.noAutoplay)
             {
-                releaseEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+                releaseEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat + 0.5, AgbNightWalk.InputAction_AltUp, JustRollRelease, RollMissRelease, Empty);
             }
             else
             {
-                releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+                releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, AgbNightWalk.InputAction_AltUp, JustRollRelease, RollMissRelease, Empty);
             }
 
             if (state >= 1f || state <= -1f)
@@ -388,7 +388,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     handler.DevolveAll();
                     if (isFish)
                     {
-                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(this, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat + 1, delegate
                             {
@@ -414,7 +414,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         fish.DoScaledAnimationAsync("Shock", 0.5f);
                         handler.StopAll();
                         handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 6);
-                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(this, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(caller.timer + caller.startBeat + 4, delegate
                             {
@@ -427,8 +427,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     {
                         game.playYan.HighJump(beat, true, state >= 1f || state <= -1f);
                         handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat);
-                        double missTime = 1.5 - Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(beat));
-                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                        double missTime = 1.5 - Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat));
+                        BeatAction.New(this, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat + missTime, delegate
                             {
@@ -452,7 +452,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     fish.DoScaledAnimationAsync("Shock", 0.5f);
                     handler.StopAll();
                     handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 6);
-                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(caller.timer + caller.startBeat + 4, delegate
                         {
@@ -464,8 +464,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 else if (isFinalBlock)
                 {
                     handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat);
-                    double missTime2 = 1.5 - Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(beat));
-                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    double missTime2 = 1.5 - Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat));
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + missTime2, delegate
                         {
@@ -492,16 +492,16 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             if (caller.noAutoplay)
             {
-                releaseEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+                releaseEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat + 0.5, AgbNightWalk.InputAction_AltUp, JustRollRelease, RollMissRelease, Empty);
             }
             else
             {
-                releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+                releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, AgbNightWalk.InputAction_AltUp, JustRollRelease, RollMissRelease, Empty);
             }
             releaseEvent.canHit = false;
             game.playYan.Walk();
             SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 0.5, delegate { anim.DoScaledAnimationAsync("Note", 0.5f); })
             });
@@ -513,7 +513,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             {
                 game.playYan.Walk();
                 SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.timer + caller.startBeat + 0.5, delegate { rollPlatform.DoScaledAnimationAsync("Note", 0.5f); })
                 });
@@ -537,7 +537,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             game.playYan.Jump(beat, isFinalBlock);
             if (isFish)
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 0.5, delegate
                     {
@@ -557,8 +557,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             else if (isFinalBlock)
             {
                 handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat);
-                double missTime = 1 - Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(beat));
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                double missTime = 1 - Conductor.instance.SecsToBeats(Minigame.justEarlyTime, Conductor.instance.GetBpmAtBeat(beat));
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + missTime, delegate
                     {
@@ -616,7 +616,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 handler.DevolveAll();
                 if (isFish)
                 {
-                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + 0.5, delegate
                         {
@@ -645,7 +645,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             {
                 game.playYan.Walk();
                 SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.timer + caller.startBeat + 0.5, delegate { anim.DoScaledAnimationAsync("Note", 0.5f); })
                 });
