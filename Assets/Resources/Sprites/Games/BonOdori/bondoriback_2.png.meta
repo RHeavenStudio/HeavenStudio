@@ -67,7 +67,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -129,10 +129,10 @@ TextureImporter:
       name: bondoriback_2_tower
       rect:
         serializedVersion: 2
-        x: 2857
-        y: 717
-        width: 1212
-        height: 1929
+        x: 2935
+        y: 815
+        width: 1086
+        height: 1694
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,10 +150,10 @@ TextureImporter:
       name: bondoriback_2_ropes
       rect:
         serializedVersion: 2
-        x: 928
-        y: 968
-        width: 1349
-        height: 900
+        x: 1025
+        y: 981
+        width: 1248
+        height: 582
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,10 +213,10 @@ TextureImporter:
       name: bondoriback_2_lamp_1
       rect:
         serializedVersion: 2
-        x: 1275
+        x: 1285
         y: 22
-        width: 264
-        height: 506
+        width: 236
+        height: 483
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,10 +234,10 @@ TextureImporter:
       name: bondoriback_2_lamp2
       rect:
         serializedVersion: 2
-        x: 1087
-        y: 22
-        width: 177
-        height: 353
+        x: 1097
+        y: 23
+        width: 166
+        height: 300
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,10 +255,10 @@ TextureImporter:
       name: bondoriback_2_lamp3
       rect:
         serializedVersion: 2
-        x: 874
-        y: 33
-        width: 144
-        height: 161
+        x: 885
+        y: 81
+        width: 84
+        height: 86
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -281,7 +281,7 @@ TextureImporter:
         width: 2580
         height: 2136
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -304,6 +304,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      bondoriback_2_0: -436055940
       bondoriback_2_floor: 1195066111
       bondoriback_2_idkwhatthisisfor: -2093520303
       bondoriback_2_lamp2: 1655419468
