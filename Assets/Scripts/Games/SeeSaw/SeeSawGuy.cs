@@ -169,6 +169,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         break;
                 }
                 float newCamY = 0f;
+
                 if (!see && game.cameraMove)
                 {
                     switch (currentState)
