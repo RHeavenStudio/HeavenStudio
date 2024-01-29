@@ -84,8 +84,11 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("lightsEnabled", false, "Spotlights", "Whether the spotlights will be turned on"),
                     },
-                },
-            });
+                }},
+                new List<string>() { "rvl", "normal" },
+                "rvlmanzai", "jp",
+                new List<string>() { "jp" }
+            );
         }
     }
 }
