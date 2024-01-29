@@ -353,12 +353,12 @@ namespace HeavenStudio.Editor.Track
             if (!GameManager.instance.autoplay)
             {
                 AutoplayBTN.GetComponent<Animator>().Play("Idle", 0, 0);
-                GameManager.instance.autoplay = true;
+                GameManager.instance.ToggleAutoplay(true);
             }
             else
             {
                 AutoplayBTN.GetComponent<Animator>().Play("Disabled", 0, 0);
-                GameManager.instance.autoplay = false;
+                GameManager.instance.ToggleAutoplay(false);
             }
         }
 

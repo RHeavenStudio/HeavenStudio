@@ -33,7 +33,7 @@ namespace HeavenStudio.Common
                 48000,
                 true,
                 true,
-                PerfectChallengeType.On,
+                PerfectChallengeType.Off,
                 true,
                 false,
                 true,
@@ -48,7 +48,7 @@ namespace HeavenStudio.Common
             
             gameSettings.timingDisplayComponents = new List<OverlaysManager.TimingDisplayComponent>()
             {
-                OverlaysManager.TimingDisplayComponent.CreateDefaultDual()
+                OverlaysManager.TimingDisplayComponent.CreateDefaultSingle()
             };
             gameSettings.skillStarComponents = new List<OverlaysManager.SkillStarComponent>()
             {
@@ -186,6 +186,8 @@ namespace HeavenStudio.Common
             public List<OverlaysManager.TimingDisplayComponent> timingDisplayComponents;
             public List<OverlaysManager.SkillStarComponent> skillStarComponents;
             public List<OverlaysManager.SectionComponent> sectionComponents;
+            // public List<OverlaysManager.DurationComponent> durationComponents;
+            // public List<OverlaysManager.WordJudgementComponent> wordJudgementComponents;
         }
     }
 }

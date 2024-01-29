@@ -29,8 +29,9 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate
                     {
-                        var e = eventCaller.currentEntity;
-                        TrickClass.PreTossObject(e.beat, (int)e["obj"], e["nx"]);
+                        EventCaller ec = eventCaller;
+                        var e = ec.currentEntity;
+                        TrickClass.PreTossObject(ec.gameManager, e.beat, (int)e["obj"], e["nx"]);
                     },
                     defaultLength = 2,
                     parameters = new List<Param>()
@@ -46,7 +47,9 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate
                     {
-                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Plane);
+                        EventCaller ec = eventCaller;
+                        var e = ec.currentEntity;
+                        TrickClass.PreTossObject(ec.gameManager, e.beat, (int)TrickClass.TrickObjType.Plane);
                     },
                     defaultLength = 3,
                 },
@@ -62,7 +65,9 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate
                     {
-                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Chair);
+                        EventCaller ec = eventCaller;
+                        var e = ec.currentEntity;
+                        TrickClass.PreTossObject(ec.gameManager, e.beat, (int)TrickClass.TrickObjType.Chair);
                     },
                     defaultLength = 2,
                     hidden = true,
@@ -71,7 +76,9 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate
                     {
-                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Phone, eventCaller.currentEntity["nx"]);
+                        EventCaller ec = eventCaller;
+                        var e = ec.currentEntity;
+                        TrickClass.PreTossObject(ec.gameManager, e.beat, (int)TrickClass.TrickObjType.Phone, eventCaller.currentEntity["nx"]);
                     },
                     defaultLength = 2,
                     hidden = true,
@@ -84,7 +91,9 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate
                     {
-                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Shock);
+                        EventCaller ec = eventCaller;
+                        var e = ec.currentEntity;
+                        TrickClass.PreTossObject(ec.gameManager, e.beat, (int)TrickClass.TrickObjType.Shock);
                     },
                     defaultLength = 2,
                     hidden = true,
@@ -283,23 +292,23 @@ namespace HeavenStudio.Games
             instance.showBubble = !instance.showBubble;
         }
 
-        public static void PreTossObject(double beat, int type, bool variant = false)
+        public static void PreTossObject(GameManager gm, double beat, int type, bool variant = false)
         {
-            if (GameManager.instance.currentGame == "trickClass")
+            if (gm.currentGame == "trickClass" && gm.minigameObj.TryGetComponent(out TrickClass tc))
             {
-                BeatAction.New(instance, new List<BeatAction.Action>()
+                BeatAction.New(tc, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - 1, delegate
                 {
-                    if (instance.showBubble == true)
+                    if (tc.showBubble == true)
                     {
-                        instance.warnAnim.Play(variant ? instance.objWarnAnimVariant[type] : instance.objWarnAnim[type], 0, 0);
+                        tc.warnAnim.Play(variant ? tc.objWarnAnimVariant[type] : tc.objWarnAnim[type], 0, 0);
                     }
                 }),
                     new BeatAction.Action(beat, delegate
                     {
-                        instance.warnAnim.Play("NoPose", 0, 0);
-                        instance.TossObject(beat, type, variant);
+                        tc.warnAnim.Play("NoPose", 0, 0);
+                        tc.TossObject(beat, type, variant);
                     })
                 });
             }

@@ -18,8 +18,10 @@ namespace HeavenStudio
         public static int InitInputControllers()
         {
 
+            inputDevices = new List<InputController>();
             InputController[] controllers;
             PlayerInputRefresh = new();
+            PlayerInputCleanUp = null;
 
             controllers = InputJoyshockInitializer.Initialize();
             if (controllers != null)

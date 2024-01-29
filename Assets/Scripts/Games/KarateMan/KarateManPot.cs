@@ -190,6 +190,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.ComboPot1:
                     OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, KarateMan.InputAction_AltDown, ComboStartJustOrNg, ComboStartThrough, ComboStartOut, CanCombo);
                     OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, KarateMan.InputAction_Press, ComboStartWrongAction, ComboStartOut, ComboStartOut, CanHitWrong);
+                    OnHitWrongAction.weight = 0;
                     path = 1;
                     break;
                 case ItemType.ComboPot2:
@@ -216,6 +217,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.KickBarrel:
                     OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, KarateMan.InputAction_Press, KickChargeJustOrNg, ItemThrough, ItemOut, CanCombo);
                     OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, KarateMan.InputAction_AltDown, ItemWrongAction, ItemOut, ItemOut, CanComboWrong);
+                    OnHitWrongAction.weight = 0;
                     path = 1;
                     comboId = -1;
                     break;
@@ -243,12 +245,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.Bomb:
                     OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, KarateMan.InputAction_Press, ItemJustOrNg, ItemThrough, ItemOut, CanHit);
                     OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, KarateMan.InputAction_AltDown, ItemWrongAction, ItemOut, ItemOut, CanHitWrong);
+                    OnHitWrongAction.weight = 0;
                     path = 1;
                     comboId = -1;
                     break;
                 default:
                     OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, KarateMan.InputAction_Press, ItemJustOrNg, ItemThrough, ItemOut, CanHit);
                     OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, KarateMan.InputAction_AltDown, ItemWrongAction, ItemOut, ItemOut, CanHitWrong);
+                    OnHitWrongAction.weight = 0;
                     path = 1;
                     comboId = -1;
                     break;
@@ -832,6 +836,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 }),
             });
             KarateMan.instance.Nori.DoThrough();
+            KarateMan.instance.ScoreMiss();
         }
 
         public void ItemOut(PlayerActionEvent caller) { }
@@ -937,6 +942,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 ItemHitEffect(straight);
             }
+            KarateMan.instance.ScoreMiss();
             KarateMan.instance.Nori.DoThrough();
         }
 
