@@ -288,6 +288,17 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader PcoMeatLoader failed!");
             }
 
+            Debug.Log("Running game loader RvlMonkeyWatchLoader");
+            game = RvlMonkeyWatchLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader RvlMonkeyWatchLoader failed!");
+            }
+
             Debug.Log("Running game loader AgbUpbeatLoader");
             game = AgbUpbeatLoader.AddGame(eventCaller);
             if (game != null)

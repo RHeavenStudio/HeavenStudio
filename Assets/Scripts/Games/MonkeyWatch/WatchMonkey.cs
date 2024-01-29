@@ -63,8 +63,8 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         public void Prepare(double prepareBeat, double inputBeat)
         {
             anim.DoScaledAnimationAsync(isPink ? "PinkPrepare" + direction : "Prepare" + direction, 0);
-            inputEvent = game.ScheduleInput(prepareBeat, inputBeat - prepareBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
-            BeatAction.New(this, new List<BeatAction.Action>() 
+            inputEvent = game.ScheduleInput(prepareBeat, inputBeat - prepareBeat, MonkeyWatch.InputAction_BasicPress, Just, Miss, Empty);
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(prepareBeat - 0.25, delegate
                 {
@@ -86,7 +86,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             }
             game.monkeyClockArrow.Move();
             game.PlayerMonkeyClap(isPink, barely);
-            
+
             anim.DoScaledAnimationAsync(isPink ? "PinkClap" + direction : "Clap" + direction, 0.4f);
             BeatAction.New(this, new List<BeatAction.Action>()
             {
@@ -104,7 +104,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             game.monkeyClockArrow.Move();
         }
 
-        private void Empty(PlayerActionEvent caller) 
+        private void Empty(PlayerActionEvent caller)
         {
 
         }

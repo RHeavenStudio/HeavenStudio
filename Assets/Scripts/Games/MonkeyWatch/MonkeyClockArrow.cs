@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
         private void Update()
         {
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(MonkeyWatch.InputAction_BasicPress) && !game.IsExpectingInputNow(MonkeyWatch.InputAction_BasicPress))
             {
                 PlayerClap(false, false, true);
             }
@@ -89,13 +89,13 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
         public void PlayerClap(bool big, bool barely, bool whiff)
         {
-            if (playerMonkeyAnim.IsPlayingAnimationName("PlayerClapBarely") && whiff) return;
-            if (whiff) 
+            if (playerMonkeyAnim.IsPlayingAnimationNames("PlayerClapBarely") && whiff) return;
+            if (whiff)
             {
                 game.middleMonkey.DoScaledAnimationAsync("MiddleMonkeyMiss", 0.4f);
                 SoundByte.PlayOneShot("miss");
-            } 
-            if (barely || whiff)  
+            }
+            if (barely || whiff)
             {
                 playerMonkeyAnim.DoScaledAnimationAsync("PlayerClapBarely", 0.4f);
             }

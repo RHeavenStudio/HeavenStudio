@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("appear", "Monkeys Appear")
                 {
-                    function = delegate 
+                    function = delegate
                     {
                         var e = eventCaller.currentEntity;
                         MonkeyWatch.instance.MonkeysAppear(e.beat, e.length, e["value"], e.beat);
@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("clap", "Clapping")
                 {
-                    preFunction = delegate 
+                    preFunction = delegate
                     {
                         MonkeyWatch.PreStartClapping(eventCaller.currentEntity.beat);
                     },
@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("min", new EntityTypes.Integer(0, 59, 0), "Set Starting Second", "1 second is equivalent to 1 monkey.")
+                        new Param("min", new EntityTypes.Integer(0, 59, 0), "Set Starting Second", "A second is equivalent to one monkey.")
                     }
                 },
                 new GameAction("off", "Pink Monkeys")
@@ -99,7 +99,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("instant", false, "Instant"),
-                        new Param("timeMode", MonkeyWatch.TimeMode.RealTime, "Time Mode", "Will the clock set the time to the current time or a certain time?"),
+                        new Param("timeMode", MonkeyWatch.TimeMode.RealTime, "Time Mode", "Set the clock to system time or a certain time"),
                         new Param("hour", new EntityTypes.Integer(0, 12, 3), "Hour"),
                         new Param("minute", new EntityTypes.Integer(0, 59, 0), "Minute")
                     }
@@ -115,7 +115,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("instant", false, "Instant"),
-                        new Param("timeMode", MonkeyWatch.TimeMode.RealTime, "Time Mode", "Will the clock set the time to the current time or a certain time?"),
+                        new Param("timeMode", MonkeyWatch.TimeMode.RealTime, "Time Mode", "Set the clock to system time or a certain time"),
                         new Param("hour", new EntityTypes.Integer(0, 12, 3), "Hour"),
                         new Param("minute", new EntityTypes.Integer(0, 59, 0), "Minute")
                     }
@@ -174,13 +174,8 @@ namespace HeavenStudio.Games
         [SerializeField] private Util.EasingFunction.Ease zoomInEase;
         private float lastAngle = 0f;
         private int cameraIndex = 0;
-        private struct MonkeyCamera
-        {
-            public float degreeTo;
-            public float length;
-            public double beat;
-        }
-        private List<MonkeyCamera> cameraMovements = new();
+        private float cameraWantAngle, cameraAngleDelay;
+        private float delayRate = 0.5f, targetDelayRate;
 
         private void Awake()
         {
@@ -189,6 +184,10 @@ namespace HeavenStudio.Games
             funcIn = Util.EasingFunction.GetEasingFunction(zoomInEase);
             pinkMonkeys = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "off", "offStretch" });
             pinkMonkeysCustom = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offInterval" });
+        }
+
+        private void Start()
+        {
             CameraUpdate();
         }
 
@@ -197,10 +196,11 @@ namespace HeavenStudio.Games
         private void Update()
         {
             CameraUpdate();
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
-            {
-                middleMonkey.DoScaledAnimationAsync("MiddleMonkeyBop", 0.4f);
-            }
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            middleMonkey.DoScaledAnimationAsync("MiddleMonkeyBop", 0.4f);
         }
 
         public void PlayerMonkeyClap(bool big, bool barely)
@@ -291,7 +291,7 @@ namespace HeavenStudio.Games
             int index = 0;
             while (index < repeatAmount)
             {
-                
+
                 if (IsPinkMonkeyAtBeat(lastBeat, out float pinkLength))
                 {
                     for (int i = 0; i < pinkLength; i++)
@@ -336,7 +336,6 @@ namespace HeavenStudio.Games
                     index++;
                     lastBeat += 2;
                 }
-                Debug.Log(index);
             }
 
             actions.Sort((x, y) => x.beat.CompareTo(y.beat));
@@ -410,6 +409,7 @@ namespace HeavenStudio.Games
                     {
                         monkeyHandler.SpawnMonkey(beat, false, beat - 4 < persistBeat);
                         ClapRecursing(beat + 2);
+                        cameraWantAngle += degreePerMonkey;
                     }),
                     new BeatAction.Action(beat - 1, delegate
                     {
@@ -431,11 +431,12 @@ namespace HeavenStudio.Games
                 for (int i = 0; i < length; i++)
                 {
                     int index = i;
-                    actions.AddRange(new List<BeatAction.Action>() 
+                    actions.AddRange(new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i - 4, delegate
                         {
                             monkeyHandler.SpawnMonkey(beat + index, true, beat + index - 4 < persistBeat);
+                            cameraWantAngle += degreePerMonkey;
                         }),
                         new BeatAction.Action(beat + i - 1, delegate
                         {
@@ -468,6 +469,7 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(e.beat - 4, delegate
                         {
                             monkeyHandler.SpawnMonkey(e.beat, true, e.beat - 4 < persistBeat);
+                            cameraWantAngle += degreePerMonkey;
                         }),
                         new BeatAction.Action(e.beat - 1.5, delegate
                         {
@@ -520,6 +522,8 @@ namespace HeavenStudio.Games
                 clappingEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
                 startClappingBeat = clappingEvents[0].beat;
                 startAngle = clappingEvents[0]["min"] * degreePerMonkey;
+                cameraWantAngle = startAngle;
+                cameraAngleDelay = startAngle;
                 overrideStartBeat = false;
             }
             lastAngle = startAngle;
@@ -555,20 +559,8 @@ namespace HeavenStudio.Games
 
                     if (e.beat - lastClappingBeat > 0)
                     {
-                        cameraMovements.Add(new MonkeyCamera()
-                        {
-                            beat = lastClappingBeat,
-                            length = (float)(e.beat - lastClappingBeat),
-                            degreeTo = lastAngleToCheck + (float)((e.beat - lastClappingBeat) / 2) * degreePerMonkey + (angleToAdd / 2)
-                        });
                         lastAngleToCheck += (float)((e.beat - lastClappingBeat) / 2) * degreePerMonkey;
                     }
-                    cameraMovements.Add(new MonkeyCamera()
-                    {
-                        beat = e.beat,
-                        length = e.length,
-                        degreeTo = lastAngleToCheck + angleToAdd
-                    });
 
                     lastAngleToCheck += angleToAdd;
                     lastClappingBeat = e.beat + e.length;
@@ -576,33 +568,16 @@ namespace HeavenStudio.Games
                 startClappingBeat = lastClappingBeat;
                 startAngle = lastAngleToCheck;
             }
-
-            if (clappingEvents.Count > 0 || pinkClappingEvents.Count > 0)
-            {
-                cameraMovements.Add(new MonkeyCamera
-                {
-                    beat = startClappingBeat,
-                    degreeTo = startAngle + degreePerMonkey,
-                    length = 2
-                });
-            }
-
-
-            Debug.Log("Camera Movements Count: " + cameraMovements.Count);
-            foreach (var cameraMovement in cameraMovements)
-            {
-                Debug.Log("Beat: " + cameraMovement.beat + ", Length: " + cameraMovement.length + " , DegreeTo: " + cameraMovement.degreeTo);
-            }
         }
 
         private void UpdateCamera()
         {
-            lastAngle = cameraMovements[cameraIndex].degreeTo;
-            cameraIndex++;
-            if (cameraIndex + 1 < cameraMovements.Count && Conductor.instance.songPositionInBeats >= cameraMovements[cameraIndex].beat + cameraMovements[cameraIndex].length)
-            {
-                UpdateCamera();
-            }
+            // lastAngle = cameraMovements[cameraIndex].degreeTo;
+            // cameraIndex++;
+            // if (cameraIndex + 1 < cameraMovements.Count && conductor.songPositionInBeats >= cameraMovements[cameraIndex].beat + cameraMovements[cameraIndex].length)
+            // {
+            //     UpdateCamera();
+            // }
         }
 
         private double zoomOutStartBeat = -2;
@@ -612,31 +587,21 @@ namespace HeavenStudio.Games
 
         private void CameraUpdate()
         {
-            var cond = Conductor.instance;
-            if (cond.isPlaying && !cond.isPaused && cameraMovements.Count > 0)
+            if (conductor.isPlaying && !conductor.isPaused)
             {
-                if (cameraIndex + 1 < cameraMovements.Count && cond.songPositionInBeats >= cameraMovements[cameraIndex].beat + cameraMovements[cameraIndex].length)
+                float degreesBehind = cameraWantAngle - 2 * degreePerMonkey;
+                float degreesBehindFast = cameraWantAngle - 3f * degreePerMonkey;
+                targetDelayRate = Mathf.Max((cameraAngleDelay - degreesBehindFast) / (degreesBehindFast - cameraWantAngle), 0) + 0.5f;
+                delayRate = Mathf.Lerp(delayRate, targetDelayRate, Time.deltaTime * (1f / conductor.pitchedSecPerBeat) * 0.5f);
+                if (cameraAngleDelay < degreesBehind)
                 {
-                    UpdateCamera();
+                    cameraAngleDelay += degreePerMonkey * Time.deltaTime * (1f / conductor.pitchedSecPerBeat) * delayRate;
+                    cameraAngleDelay = Mathf.Min(cameraAngleDelay, cameraWantAngle);
                 }
-
-                float normalizedBeat = cond.GetPositionFromBeat(cameraMovements[cameraIndex].beat, cameraMovements[cameraIndex].length);
-
-                float newAngle;
-
-                if (normalizedBeat < 0)
-                {
-                    newAngle = lastAngle;
-                }
-                else
-                {
-                    newAngle = Mathf.LerpUnclamped(lastAngle, cameraMovements[cameraIndex].degreeTo, normalizedBeat);
-                }
-
-                cameraAnchor.localEulerAngles = new Vector3(0, 0, newAngle);
+                cameraAnchor.localEulerAngles = new Vector3(0, 0, cameraAngleDelay);
             }
 
-            float normalizedZoomBeat = cond.GetPositionFromBeat(zoomOutStartBeat, zoomIn ? zoomInBeatLength : zoomOutBeatLength);
+            float normalizedZoomBeat = conductor.GetPositionFromBeat(zoomOutStartBeat, zoomIn ? zoomInBeatLength : zoomOutBeatLength);
             float newX = 0f;
             float newY = 0f;
             float newZ = 0f;
