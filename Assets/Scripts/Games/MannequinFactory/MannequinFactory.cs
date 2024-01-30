@@ -15,39 +15,49 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("headOut", "Send Head Out")
                 {
+                    inactiveFunction = delegate {
+                        MannequinFactory.HeadOutSFX(eventCaller.currentEntity.beat, 0);
+                    },
                     function = delegate {
+                        MannequinFactory.HeadOutSFX(eventCaller.currentEntity.beat, 0);
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out MannequinFactory instance)) {
-                            var e = eventCaller.currentEntity;
-                            instance.HeadOut(e.beat, 1);
+                            instance.HeadOut(eventCaller.currentEntity.beat, 0);
                         }
-                    }, 
+                    },
                     defaultLength = 7,
                 },
                 new GameAction("misalignedHeadOut", "Send Misaligned Head Out")
                 {
+                    inactiveFunction = delegate {
+                        MannequinFactory.HeadOutSFX(eventCaller.currentEntity.beat, 1);
+                    },
                     function = delegate {
+                        MannequinFactory.HeadOutSFX(eventCaller.currentEntity.beat, 1);
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out MannequinFactory instance)) {
-                            var e = eventCaller.currentEntity;
-                            instance.HeadOut(e.beat, 2);
+                            instance.HeadOut(eventCaller.currentEntity.beat, 1);
                         }
-                    }, 
+                    },
                     defaultLength = 7,
                 },
                 new GameAction("randomHeadOut", "Send Random Head Out")
                 {
+                    // inactiveFunction = delegate {
+                    //     int random = Random.Range(0, 2);
+                    //     MannequinFactory.HeadOutSFX(eventCaller.currentEntity.beat, random);
+                    // },
                     function = delegate {
+                        int random = Random.Range(0, 2);
+                        MannequinFactory.HeadOutSFX(eventCaller.currentEntity.beat, random);
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out MannequinFactory instance)) {
-                            var e = eventCaller.currentEntity;
-                            instance.HeadOut(e.beat, 0);
+                            instance.HeadOut(eventCaller.currentEntity.beat, random);
                         }
-                    }, 
+                    },
                     defaultLength = 7,
                 },
                 new GameAction("changeText", "Change Text")
                 {
                     function = delegate {
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out MannequinFactory instance)) {
-                            var e = eventCaller.currentEntity;
                             instance.SignText.text = eventCaller.currentEntity["text"];
                         }
                     },
@@ -75,11 +85,10 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true
                 },
-            }
-            // ,
-            // new List<string>() {"agb", "normal"},
-            // "agbmannequin", "en",
-            // new List<string>() {}
+            },
+            new List<string>() {"agb", "normal"},
+            "agbmannequin", "en",
+            new List<string>() {}
             );
         }
     }
@@ -99,19 +108,16 @@ namespace HeavenStudio.Games
         public TMP_Text SignText;
         public GameObject MannequinHeadObject;
 
+        public double slapScheduledBeat = double.MinValue;
+
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart, colorEnd = new Color(0.97f, 0.94f, 0.51f, 1f); // default bg color
+        private Util.EasingFunction.Ease colorEase;
+
         protected static bool IA_PadLeft(out double dt)
         {
             return PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt);
-        }
-        protected static new bool IA_TouchFlick(out double dt)
-        {
-            return PlayerInput.GetTouchUp(InputController.ActionsTouch.Tap, out dt) && PlayerInput.GetFlick(out _)
-                    && !instance.IsExpectingInputNow(InputAction_Second);
-        }
-        protected static bool IA_TouchPress(out double dt)
-        {
-            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)// && !PlayerInput.GetFlick(out _)
-                    && !instance.IsExpectingInputNow(InputAction_First);
         }
 
         public static PlayerInput.InputAction InputAction_First =
@@ -120,39 +126,55 @@ namespace HeavenStudio.Games
 
         public static PlayerInput.InputAction InputAction_Second =
             new("AgbMannequinFactoryTouchSecond", new int[] { IAPressCat, IAPressCat, IAPressCat },
-            IA_PadBasicPress, IA_TouchPress, IA_Empty);
-
-        // awww man a static instance 😢
-        private static MannequinFactory instance;
-
-        private void Awake()
-        {
-            instance = this;
-        }
+            IA_PadBasicPress, IA_TouchBasicPress, IA_Empty);
 
         private void Update()
         {
-            bool touch = PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch;
-            if (PlayerInput.GetIsAction(InputAction_First) && (!IsExpectingInputNow(InputAction_First) || (touch && !IsExpectingInputNow(InputAction_First) && !IsExpectingInputNow(InputAction_Second))))
+            if (PlayerInput.GetIsAction(InputAction_First) && !IsExpectingInputNow(InputAction_First) 
+                && !HandAnim.IsPlayingAnimationNames("SlapEmpty", "SlapJust"))
             {
                 HandAnim.DoScaledAnimationAsync("SlapEmpty", 0.3f);
             }
 
-            if (PlayerInput.GetIsAction(InputAction_Second) && (!IsExpectingInputNow(InputAction_Second) || (touch && !IsExpectingInputNow(InputAction_First) && !IsExpectingInputNow(InputAction_Second))))
+            bool canSlap = PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch || slapScheduledBeat < conductor.songPositionInBeatsAsDouble;
+
+            if (PlayerInput.GetIsAction(InputAction_Second) && !IsExpectingInputNow(InputAction_Second) 
+                && !StampAnim.IsPlayingAnimationNames("StampEmpty", "StampJust") && canSlap)
             {
                 StampAnim.DoScaledAnimationAsync("StampEmpty", 0.3f);
             }
 
-            BackgroundColorUpdate();
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
+
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
+
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
         }
 
-        public override void OnGameSwitch(double beat)
+        public override void OnPlay(double beat) => StartGame(beat, true);
+        public override void OnGameSwitch(double beat) => StartGame(beat, false);
+
+        private void StartGame(double beat, bool isPlay)
         {
             var events = gameManager.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] == "mannequinFactory");
 
-            foreach (var item in events.FindAll(e => e.datamodel is "headOut" or "misalignedHeadOut" or "randomHeadOut"))
+            foreach (var e in events)
             {
-                
+                if (e.beat < beat && e.beat + 2.75 > beat && e.datamodel is "mannequinFactory/headOut" or "mannequinFactory/misalignedHeadOut" /* or "mannequinFactory/randomHeadOut" */) {
+                    int cueType = e.datamodel switch {
+                        "mannequinFactory/headOut"            => 0,
+                        "mannequinFactory/misalignedHeadOut"  => 1,
+                        "mannequinFactory/randomHeadOut" or _ => Random.Range(0, 2),
+                    };
+                    HeadOut(e.beat, cueType);
+                    if (isPlay) {
+                        HeadOutSFX(e.beat, cueType, beat);
+                    }
+                }
             }
 
             var bg = events.FindLast(e => e.datamodel == "mannequinFactory/bgColor" && e.beat < beat);
@@ -164,16 +186,16 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void HeadOutSFX(double beat, int cueType)
+        public static void HeadOutSFX(double beat, int cueType, double fromBeat = 0)
         {
-            if (cueType == 0) cueType = Random.Range(1, 3);
             var sfx = new List<MultiSound.Sound>() {
-                new MultiSound.Sound("mannequinFactory/drum", beat      ),
-                new MultiSound.Sound("mannequinFactory/drum", beat + 0.5),
-                new MultiSound.Sound("mannequinFactory/drum", beat + 1.5),
-                new MultiSound.Sound("mannequinFactory/drum", beat + 2  ),
+                new("mannequinFactory/drum", beat      ),
+                new("mannequinFactory/drum", beat + 0.5),
+                new("mannequinFactory/drum", beat + 1.5),
+                new("mannequinFactory/drum", beat + 2  ),
+                new("mannequinFactory/whoosh", beat + 5),
             };
-            if (cueType == 1) {
+            if (cueType == 0) {
                 for (int i = 0; i < 7; i++) {
                     sfx.Add(new($"mannequinFactory/drumroll{i + 1}", beat + 3 + (i * 0.1667)));
                 }
@@ -181,9 +203,14 @@ namespace HeavenStudio.Games
                 sfx.AddRange(new MultiSound.Sound[] {
                     new("mannequinFactory/drum", beat + 0.75),
                     new("mannequinFactory/drum", beat + 1   ),
+                    new("mannequinFactory/whoosh", beat + 3),
                 });
             }
-            MultiSound.Play(sfx.ToArray(), forcePlay: true);
+            sfx.Sort((x, y) => x.beat.CompareTo(y.beat));
+            sfx.RemoveAll(x => x.beat < fromBeat);
+            if (sfx.Count > 0) {
+                MultiSound.Play(sfx.ToArray(), forcePlay: true);
+            }
         }
 
         public void HeadOut(double beat, int cueType)
@@ -191,26 +218,7 @@ namespace HeavenStudio.Games
             MannequinHead head = Instantiate(MannequinHeadObject, transform).GetComponent<MannequinHead>();
             head.game = this;
             head.startBeat = beat;
-            head.needClap = cueType == 2;
-        }
-
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart, colorEnd = new Color(0.97f, 0.94f, 0.51f, 1f); // obviously put to the default colour of the game
-        private Util.EasingFunction.Ease colorEase; // putting Util in case this game is using Jukebox
-
-        //call this in update
-        private void BackgroundColorUpdate()
-        {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
-
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            bg.color = new Color(newR, newG, newB);
+            head.needSlap = cueType == 1;
         }
 
         public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)

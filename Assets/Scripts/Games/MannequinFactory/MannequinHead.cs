@@ -8,7 +8,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
     public class MannequinHead : MonoBehaviour
     {
         public double startBeat;
-        public bool needClap;
+        public bool needSlap;
         
         [Header("Animators")]
         [SerializeField] SpriteRenderer headSr;
@@ -20,64 +20,67 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
         int turnStatus;
 
         public MannequinFactory game;
-        
-        private void Awake()
-        {
-
-        }
 
         private void Start() 
         {
-            turnStatus = needClap ? 0 : 1;
+            game.slapScheduledBeat = startBeat + 4;
+
+            turnStatus = needSlap ? 0 : 1;
             headSr.sprite = heads[turnStatus];
 
             BeatAction.New(game, new List<BeatAction.Action> {
-                new BeatAction.Action(startBeat + 1, delegate { headAnim.DoScaledAnimationAsync("Move1", 0.3f); }),
-                new BeatAction.Action(startBeat + 3, delegate { headAnim.DoScaledAnimationAsync("Move2", 0.3f); }),
-                new BeatAction.Action(startBeat + 4, delegate {
+                new(startBeat + 1, delegate { headAnim.DoScaledAnimationAsync("Move1", 0.3f); }),
+                new(startBeat + 3, delegate { if (game.gameManager.autoplay) headAnim.DoScaledAnimationAsync("Move2", 0.3f); }),
+                new(startBeat + 4, delegate {
+                    PlayerActionEvent input;
                     if (turnStatus == 1) {
-                        game.ScheduleInput(startBeat, 5, MannequinFactory.InputAction_Second, StampJust, StampMiss, Nothing);
+                        input = game.ScheduleInput(startBeat, 5, MannequinFactory.InputAction_Second, StampJust, StampMiss, null);
                     } else {
-                        game.ScheduleUserInput(startBeat, 5, MannequinFactory.InputAction_Second, StampUnJust, StampMiss, Nothing);
+                        input = game.ScheduleUserInput(startBeat, 5, MannequinFactory.InputAction_Second, StampUnJust, StampMiss, null);
                     }
+                    input.IsHittable = () => !game.StampAnim.IsPlayingAnimationNames("StampEmpty", "StampJust");
                 }),
             });
 
-            if (needClap) {
-                game.ScheduleInput(startBeat, 3, MannequinFactory.InputAction_First, ClapJust, ClapMiss, Nothing);
-                SoundByte.PlayOneShotGame("mannequinFactory/whoosh", beat: startBeat + 3);
+            PlayerActionEvent input;
+            if (needSlap) {
+                input = game.ScheduleInput(startBeat, 3, MannequinFactory.InputAction_First, SlapJust, SlapMiss, null);
             } else {
-                game.ScheduleUserInput(startBeat, 3, MannequinFactory.InputAction_First, ClapUnJust, ClapMiss, Nothing);
-                SoundByte.PlayOneShotGame("mannequinFactory/whoosh", beat: startBeat + 5);
-            }   
+                input = game.ScheduleUserInput(startBeat, 3, MannequinFactory.InputAction_First, SlapUnJust, SlapMiss, null);
+            }
+            input.IsHittable = () => !game.HandAnim.IsPlayingAnimationNames("SlapEmpty", "SlapJust");
         }
 
-        void ClapJust(PlayerActionEvent caller, float state)
+        private void SlapJust(PlayerActionEvent caller, float state)
         {
-            ClapHit(state);
+            SlapHit(state);
             headSr.sprite = heads[turnStatus];
         }
 
-        void ClapUnJust(PlayerActionEvent caller, float state)
+        private void SlapUnJust(PlayerActionEvent caller, float state)
         { 
             eyesSr.transform.localScale = new Vector2(-1, 1);
             headSr.transform.localScale = new Vector2(-1, 1);
             headSr.sprite = heads[0];
             game.ScoreMiss();
-            ClapHit(state);
+            SlapHit(state);
         }
 
-        void ClapHit(float state)
+        private void SlapHit(float state)
         {
+            if (state >= 1f || state <= -1f) SoundByte.PlayOneShot("nearMiss");
             turnStatus++;
             SoundByte.PlayOneShotGame("mannequinFactory/slap");
             game.HandAnim.DoScaledAnimationAsync("SlapJust", 0.3f);
             headAnim.Play("Slapped", 0, 0);
         }
 
-        void ClapMiss(PlayerActionEvent caller) { }
+        private void SlapMiss(PlayerActionEvent caller)
+        { 
+            headAnim.DoScaledAnimationAsync("Move2", 0.3f);
+        }
 
-        void StampHit(float state)
+        private void StampHit(float state)
         {
             if (state >= 1f || state <= -1f) SoundByte.PlayOneShot("nearMiss");
             headAnim.DoScaledAnimationAsync("Stamp", 0.3f);
@@ -86,7 +89,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
             eyesSr.gameObject.SetActive(true);
         }
 
-        void StampJust(PlayerActionEvent caller, float state)
+        private void StampJust(PlayerActionEvent caller, float state)
         {
             StampHit(state);
 
@@ -100,7 +103,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
             });
         }
 
-        void StampUnJust(PlayerActionEvent caller, float state)
+        private void StampUnJust(PlayerActionEvent caller, float state)
         {
             StampHit(state);
             eyesSr.sprite = eyes[1];
@@ -113,7 +116,7 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
             });
         }
 
-        void StampMiss(PlayerActionEvent caller)
+        private void StampMiss(PlayerActionEvent caller)
         {
             headAnim.DoScaledAnimationAsync("Move3", 0.3f);
             BeatAction.New(game, new List<BeatAction.Action> {
@@ -123,8 +126,6 @@ namespace HeavenStudio.Games.Scripts_MannequinFactory
                 }),
             });
         }
-
-        void Nothing(PlayerActionEvent caller) { }
 
         // animation event
         public void DestroySelf()
