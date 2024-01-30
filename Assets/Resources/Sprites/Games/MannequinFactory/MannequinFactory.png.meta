@@ -1,0 +1,843 @@
+fileFormatVersion: 2
+guid: 0ab4d532fd079014db979fbe1efcad1a
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: MannequinFactory_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1573
+        width: 209
+        height: 136
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85e5437e25ebcac4694ced6d7c0485b0
+      internalID: 294226147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_1
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 1588
+        width: 109
+        height: 112
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8be376227dd3e644aa78de5dd57e1c4
+      internalID: 1518159833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_2
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 1590
+        width: 111
+        height: 107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78d9dcb254fe77a4b911a9302dc4d6be
+      internalID: -1133773269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_3
+      rect:
+        serializedVersion: 2
+        x: 499
+        y: 1616
+        width: 166
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67a5b8a9f9aaf5e4592f811927030b9a
+      internalID: -157365526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_4
+      rect:
+        serializedVersion: 2
+        x: 697
+        y: 1620
+        width: 178
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 924745a408e2fc54ab9d4cfe3b1dec70
+      internalID: 502285084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_5
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 1255
+        width: 311
+        height: 445
+      alignment: 9
+      pivot: {x: 0.4566, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ef34246c6c353d43b9eef22afbf3a6e
+      internalID: -999337180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_6
+      rect:
+        serializedVersion: 2
+        x: 1242
+        y: 1628
+        width: 81
+        height: 78
+      alignment: 9
+      pivot: {x: 0.49354836, y: 0.8467517}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36882e79db43612408ee5e7dbf8fa824
+      internalID: -2020492239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_7
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 1317
+        width: 47
+        height: 333
+      alignment: 9
+      pivot: {x: 0.48936167, y: 0.036036037}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9027cc82c61b9e49b4d52d75affae97
+      internalID: 753397452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_8
+      rect:
+        serializedVersion: 2
+        x: 1438
+        y: 1335
+        width: 379
+        height: 354
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0804e8dd882e8a646a77816cd6ea38cd
+      internalID: -1113193445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_9
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 781
+        width: 284
+        height: 445
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe19f23e1efed6145a19fdbd68ef74e1
+      internalID: 1715456245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_10
+      rect:
+        serializedVersion: 2
+        x: 537
+        y: 1181
+        width: 204
+        height: 111
+      alignment: 9
+      pivot: {x: 0.1127451, y: 0.8828829}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d099e345395946442a2696062dcdae25
+      internalID: 1429607490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_11
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 903
+        width: 50
+        height: 353
+      alignment: 9
+      pivot: {x: 0.48, y: 0.033994332}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a642d4d8b9d83949b8b49f19ea62b38
+      internalID: -624473243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_12
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 803
+        width: 316
+        height: 428
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 078b080597eac4d498a67bdce66f49b0
+      internalID: 1580011362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_13
+      rect:
+        serializedVersion: 2
+        x: 1253
+        y: 903
+        width: 57
+        height: 332
+      alignment: 9
+      pivot: {x: 0.40350878, y: 0.036144577}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eae42ba9c3e4bfe459c70785617dc4c3
+      internalID: -2019308387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_14
+      rect:
+        serializedVersion: 2
+        x: 1351
+        y: 903
+        width: 47
+        height: 381
+      alignment: 9
+      pivot: {x: 0.48936167, y: 0.031496063}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11cc4b17e6e106646a1c2a7816b890b7
+      internalID: 1311046428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_15
+      rect:
+        serializedVersion: 2
+        x: 1429
+        y: 920
+        width: 398
+        height: 380
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51c577374787a4b47aba269b6361cbf7
+      internalID: -1372447240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_16
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 903
+        width: 47
+        height: 188
+      alignment: 9
+      pivot: {x: 0.5106383, y: 0.06382979}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3570dc1197433a94ea6027778d584a05
+      internalID: 1893394208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_17
+      rect:
+        serializedVersion: 2
+        x: 445
+        y: 903
+        width: 75
+        height: 73
+      alignment: 9
+      pivot: {x: 0.50666666, y: 0.1780822}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06318839543a3434f89842d6f39255d0
+      internalID: 1569016233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_18
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 699
+        width: 117
+        height: 175
+      alignment: 9
+      pivot: {x: 0.1965812, y: 0.068571426}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c1e6020fb6870148ad2c3dc26d6013e
+      internalID: -1133628558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_21
+      rect:
+        serializedVersion: 2
+        x: 1427
+        y: 762
+        width: 407
+        height: 111
+      alignment: 9
+      pivot: {x: 0.5000006, y: 0.15769506}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba9a29e9d7011014abc36cc08f2cbf96
+      internalID: 217388712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_28
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 487
+        width: 290
+        height: 242
+      alignment: 9
+      pivot: {x: 0.50000006, y: 0.62664545}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cef82d7c47088194db6763c37d33143e
+      internalID: -1035037690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_30
+      rect:
+        serializedVersion: 2
+        x: 1432
+        y: 625
+        width: 19
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d606537eb0136754d8135d9849ebe32b
+      internalID: 1420030655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_31
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 582
+        width: 64
+        height: 135
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44b670ecb2fe60149a26b8bc08f105ff
+      internalID: 1937412146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_32
+      rect:
+        serializedVersion: 2
+        x: 1582
+        y: 619
+        width: 66
+        height: 108
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d8ac726f78e99d4ba3e044979471c8a
+      internalID: 1206813266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_33
+      rect:
+        serializedVersion: 2
+        x: 1676
+        y: 619
+        width: 66
+        height: 101
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c22306f00b2c7f4c910f3524665bf4f
+      internalID: -1103558660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_34
+      rect:
+        serializedVersion: 2
+        x: 1770
+        y: 619
+        width: 66
+        height: 113
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4f410142f1972449af410e6e68d3cfc
+      internalID: 1926133227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_38
+      rect:
+        serializedVersion: 2
+        x: 518
+        y: 489
+        width: 135
+        height: 72
+      alignment: 9
+      pivot: {x: 0.17037037, y: 0.18055555}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e89d0aed4dd241e44ae690477ae5ea90
+      internalID: -112278815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_47
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 43
+        width: 842
+        height: 247
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 197, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6da5600c283379d458ed79579a286368
+      internalID: -82775236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_29
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 376
+        width: 556
+        height: 318
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70f7cb9685c5f6a42a65595505a5965a
+      internalID: -1236697583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_19
+      rect:
+        serializedVersion: 2
+        x: 1205
+        y: 828
+        width: 175
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8cad5e027352614e84b73b1c712564c
+      internalID: 995483716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_20
+      rect:
+        serializedVersion: 2
+        x: 1219
+        y: 760
+        width: 160
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e13be80f602f4447b9a7cc85fc0e4b0
+      internalID: -1688395747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MannequinFactory_22
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 376
+        width: 447
+        height: 194
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9401ad8a572c5f4ca4bcc8282f667a3
+      internalID: -1591536741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      MannequinFactory_0: 294226147
+      MannequinFactory_1: 1518159833
+      MannequinFactory_10: 1429607490
+      MannequinFactory_11: -624473243
+      MannequinFactory_12: 1580011362
+      MannequinFactory_13: -2019308387
+      MannequinFactory_14: 1311046428
+      MannequinFactory_15: -1372447240
+      MannequinFactory_16: 1893394208
+      MannequinFactory_17: 1569016233
+      MannequinFactory_18: -1133628558
+      MannequinFactory_19: 995483716
+      MannequinFactory_2: -1133773269
+      MannequinFactory_20: -1688395747
+      MannequinFactory_21: 217388712
+      MannequinFactory_22: -1591536741
+      MannequinFactory_23: 415753095
+      MannequinFactory_24: 1550893200
+      MannequinFactory_25: 1691182440
+      MannequinFactory_26: -1354302101
+      MannequinFactory_27: -439845383
+      MannequinFactory_28: -1035037690
+      MannequinFactory_29: -1236697583
+      MannequinFactory_3: -157365526
+      MannequinFactory_30: 1420030655
+      MannequinFactory_31: 1937412146
+      MannequinFactory_32: 1206813266
+      MannequinFactory_33: -1103558660
+      MannequinFactory_34: 1926133227
+      MannequinFactory_35: -555130092
+      MannequinFactory_36: -919320531
+      MannequinFactory_37: -900768262
+      MannequinFactory_38: -112278815
+      MannequinFactory_39: -237208010
+      MannequinFactory_4: 502285084
+      MannequinFactory_40: -615705721
+      MannequinFactory_41: -2074411750
+      MannequinFactory_42: 2133660389
+      MannequinFactory_43: -2072512297
+      MannequinFactory_44: 1442508354
+      MannequinFactory_45: -1126404478
+      MannequinFactory_46: 971447800
+      MannequinFactory_47: -82775236
+      MannequinFactory_5: -999337180
+      MannequinFactory_6: -2020492239
+      MannequinFactory_7: 753397452
+      MannequinFactory_8: -1113193445
+      MannequinFactory_9: 1715456245
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: agbmannequin/common
+  assetBundleVariant: 

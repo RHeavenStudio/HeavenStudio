@@ -73,6 +73,10 @@ namespace HeavenStudio.Util
             if (!double.IsNaN(startBeat)) {
                 var cond = Conductor.instance;
                 var animClip = Array.Find(anim.runtimeAnimatorController.animationClips, x => x.name == animName);
+                if (animClip == null) {
+                    Debug.LogError("Animation clip " + animName + " not found!");
+                    return;
+                }
                 double animLength = cond.SecsToBeats(animClip.length, cond.GetBpmAtBeat(startBeat));
                 pos = cond.GetPositionFromBeat(startBeat, animLength) * timeScale;
             } else {
