@@ -33,16 +33,40 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], e["boing"]); },
+                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 0); },
 
                     function = delegate { 
                         var e = eventCaller.currentEntity;
-                        Manzai.instance.DoPun(e.beat, e["boing"], e["pun"]); },
+                        Manzai.instance.DoPun(e.beat, 0, e["pun"]); },
                     defaultLength = 4,
 
                     parameters = new List<Param>()
                     {
-                        new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
+                        //new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
+                        /*new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => !(bool)x, new string[] { "pun" }),
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "unused" })
+                        }),*/
+                        new Param("pun", Manzai.Puns.FutongaFuttonda, "Which Pun?", "Which pun will Kosuke say?"),
+                        //new Param("unused", false, "Include Unused", "Will unused puns be picked?"),
+                        new Param("pitch", true, "Pitch Voiceline", "Will the pun pitch with the tempo?"),
+                    }
+                },
+                new GameAction("boing", "Pun (Boing)")
+                {
+                    preFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 1); },
+
+                    function = delegate { 
+                        var e = eventCaller.currentEntity;
+                        Manzai.instance.DoPun(e.beat, 1, e["pun"]); },
+                    defaultLength = 4,
+
+                    parameters = new List<Param>()
+                    {
+                        //new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
                         /*new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => !(bool)x, new string[] { "pun" }),
@@ -151,6 +175,8 @@ namespace HeavenStudio.Games
 
         double lastWhiffBeat = double.MinValue;
         bool canDodge = true;
+
+        float randomBubbleBoth = 0.0f;
 
 
 
@@ -321,7 +347,8 @@ namespace HeavenStudio.Games
         public static void PunSFX(double beat, int whichPun, bool isPitched, int isBoing)
         {
             var punName= Enum.GetName(typeof(Puns), whichPun);
-            float pitch = isPitched ? Conductor.instance.songBpm/98 : 1;
+            float pitch = isPitched ? Conductor.instance.GetBpmAtBeat(beat)/98 : 1;
+            double offset = isPitched ? (0.05/(Conductor.instance.GetBpmAtBeat(beat)/98)) : 0.05;
             var sounds = new List<MultiSound.Sound>();
             int boing  = isBoing;
             int length = boingLengths.GetValueOrDefault(punName);
@@ -330,12 +357,13 @@ namespace HeavenStudio.Games
             Debug.Log(length);
 
             for (int i = 0; i < syllables; i++) {
-                sounds.Add(new MultiSound.Sound($"manzai/{punName}{i + 1}", beat + (i * 0.25), pitch, offset: i == 0 ? 0.05 : 0));
+                sounds.Add(new MultiSound.Sound($"manzai/{punName}{i + 1}", beat + (i * 0.25), pitch, offset: i == 0 ? offset : 0));
             }
 
             if (isBoing == 1)
             {
-                sounds.Add(new MultiSound.Sound("manzai/boing", syllables == 6 ? beat + 1.50 : beat + 1.25 , pitch));
+                sounds.Add(new MultiSound.Sound("manzai/boing", syllables == 6 ? beat + 1.50 : beat + 1.25 , pitch, volume: 0.8f));
+                sounds.Add(new MultiSound.Sound("manzai/comedy", syllables == 6 ? beat + 1.50 : beat + 1.25 , pitch, volume: 0.8f));
             }
 
             MultiSound.Play(sounds.ToArray(), forcePlay: true);
@@ -357,7 +385,7 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; }),
+                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; bubbleRandom(); }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                     new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat); }),
                 });
@@ -370,11 +398,16 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 1.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; }),
+                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; bubbleRandom(); }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                     new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat); }),
                 });
             }
+        }
+
+        public void  bubbleRandom()
+        {
+            randomBubbleBoth = UnityEngine.Random.Range(-100, 101) / 1000.0f;
         }
 
         public void HaiJustFull(float state, int side)
@@ -406,7 +439,11 @@ namespace HeavenStudio.Games
             // var euler = PivotL.eulerAngles;
             // euler.z = UnityEngine.Random.Range(0, 100);
             int side = 0;
+            float randomL = UnityEngine.Random.Range(-40, 41) / 1000.0f;
 
+            Quaternion rotL = new Quaternion();
+            rotL.Set(0, 0, randomBubbleBoth + randomL, 1);
+            PivotL.rotation = rotL;
             HaiBubbleL.DoScaledAnimationAsync("HaiL", 0.5f);
             HaiJustFull(state, side);
         }
@@ -414,7 +451,11 @@ namespace HeavenStudio.Games
         public void HaiJustR(PlayerActionEvent caller, float state)
         {
             int side = 1;
+            float randomR = UnityEngine.Random.Range(-40, 41) / 1000.0f;
 
+            Quaternion rotR = new Quaternion();
+            rotR.Set(0, 0, randomBubbleBoth + randomR, 1);
+            PivotR.rotation = rotR;
             HaiBubbleR.DoScaledAnimationAsync("HaiR", 0.5f);
             HaiJustFull(state, side);
         }
@@ -435,6 +476,13 @@ namespace HeavenStudio.Games
             {
                 RavenAnim.DoScaledAnimationAsync("Ready", 0.5f);
             }
+            else
+            {
+                if (GameManager.instance.autoplay)
+                {
+                    RavenAnim.DoScaledAnimationAsync("Ready", 0.5f);
+                }
+            }
         }
 
         public void DoPunBoing(double beat, int whichPun)
@@ -454,7 +502,7 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 1.25f, delegate { isPreparingForBoing = true; }),
+                    new BeatAction.Action(beat + 0.50f, delegate { isPreparingForBoing = true; }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.50 : beat + 1.25, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.75 : beat + 1.50, delegate { canDodge = true; }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
@@ -470,8 +518,8 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 0.50f, delegate { isPreparingForBoing = true; }),
                     new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 1.25f, delegate { isPreparingForBoing = true; }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.50 : beat + 1.25, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.75 : beat + 1.50, delegate { canDodge = true; }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
@@ -520,8 +568,20 @@ namespace HeavenStudio.Games
             RavenAnim.DoScaledAnimationAsync("Attack", 0.5f);
             VultureAnim.DoScaledAnimationAsync("Damage", 0.5f);
 
-            int bubbleAnimation = UnityEngine.Random.Range(0, 2);
-            DonaiyanenBubble.DoScaledAnimationAsync(bubbleAnimation == 1 ? "DonaiyanenL" : "DonaiyanenR", 0.5f);
+
+            float randomD = UnityEngine.Random.Range(-40, 41) / 200.0f;
+            float randomH = UnityEngine.Random.Range(-50, 51) / 30.0f;
+            float randomV = UnityEngine.Random.Range(40, 81) / 40.0f;
+
+            Quaternion rotD = new Quaternion();
+            rotD.Set(0, 0, randomD, 1);
+            PivotD.rotation = rotD;
+
+            Vector3 posD = new Vector3();
+            posD.Set(randomH - 1.5f, randomV, 0);
+            PivotD.position = posD;
+
+            DonaiyanenBubble.DoScaledAnimationAsync("Donaiyanen", 0.5f);
         }
 
         public void BoingMiss(PlayerActionEvent caller)
@@ -535,7 +595,8 @@ namespace HeavenStudio.Games
 
         public void CustomBoing(double beat)
         {
-            SoundByte.PlayOneShotGame("manzai/Boing", pitch: Conductor.instance.songBpm/98);
+            SoundByte.PlayOneShotGame("manzai/boing", pitch: Conductor.instance.songBpm/98, volume: 0.8f);
+            SoundByte.PlayOneShotGame("manzai/comedy", pitch: Conductor.instance.songBpm/98, volume: 0.8f);
             VultureAnim.DoScaledAnimationAsync("Boing", 0.5f);
         }
 
@@ -648,12 +709,6 @@ namespace HeavenStudio.Games
             {
                 vultureCanBopTemp = true;
             }
-        }
-
-        public void LateUpdate()
-        {
-            var rot = PivotL.eulerAngles;
-            rot.z = 50;
         }
 
         public override void OnGameSwitch(double beat)
