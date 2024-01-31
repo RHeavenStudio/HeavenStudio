@@ -659,7 +659,13 @@ namespace HeavenStudio.InputSystem
             }
             if (otherHalf != null)
             {
-                return otherHalf.GetLastActionDown();
+                for (int i = 0; i < otherHalf.actionStates.Length; i++)
+                {
+                    if (otherHalf.actionStates[i].pressed && otherHalf.actionStates[i].isDelta)
+                    {
+                        return i;
+                    }
+                }
             }
             return -1;
         }
@@ -677,9 +683,10 @@ namespace HeavenStudio.InputSystem
         public override bool GetActionDown(ControlStyles style, int button, out double dt)
         {
             if (button == -1) { dt = 0; return false; }
-            if (otherHalf != null && otherHalf.GetActionDown(style, button, out dt))
+            if (otherHalf != null)
             {
-                return true;
+                dt = otherHalf.actionStates[button].dt;
+                return otherHalf.actionStates[button].pressed && otherHalf.actionStates[button].isDelta;
             }
             dt = actionStates[button].dt;
             return actionStates[button].pressed && actionStates[button].isDelta;
@@ -688,9 +695,10 @@ namespace HeavenStudio.InputSystem
         public override bool GetActionUp(ControlStyles style, int button, out double dt)
         {
             if (button == -1) { dt = 0; return false; }
-            if (otherHalf != null && otherHalf.GetActionUp(style, button, out dt))
+            if (otherHalf != null)
             {
-                return true;
+                dt = otherHalf.actionStates[button].dt;
+                return !otherHalf.actionStates[button].pressed && otherHalf.actionStates[button].isDelta;
             }
             dt = actionStates[button].dt;
             return !actionStates[button].pressed && actionStates[button].isDelta;
