@@ -415,7 +415,7 @@ namespace HeavenStudio.Games
     }
 
         public void ShowText(string text1, string text2, string text3, string text4, string text5, int font)
-        {
+        {               Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
             if (font == 0)
             {
                 Text1.GetComponent<TextMeshPro>().font = RodinDB;
@@ -455,9 +455,10 @@ namespace HeavenStudio.Games
     
 
                 
-            if (text1 is not "" || text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line"){
+            if (text1 is not "" || text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line."){
                 text1 = ChangeColor(text1);
                 Text1.text = text1;
+ ;
                 Text6.text = text1;
   
                 }
@@ -508,23 +509,27 @@ namespace HeavenStudio.Games
             }
 
         }
+IEnumerator scroll(float startVal, float endVal, float seconds)
+    {
+        float currentVal = startVal;
+        for (float t= 0.0f; t<1.0f;t+= Time.deltaTime / seconds)
+        {
+            var coords = new Vector4(-10f, -10f, Mathf.Lerp(currentVal, endVal, t), -10f);
+            Text6.GetComponent<TextMeshPro>().SetMask(0,coords);
+            yield return null;
+        }
+    }
 public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length)
-{ RectTransform rectTransform = Text6.GetComponent<RectTransform>();
-
-if (rectTransform != null)
 {
-    // Set Left and Top using anchoredPosition
-    rectTransform.anchoredPosition = new Vector2(-10, -10);
+    StartCoroutine(scroll(-10f, -7f, 5f));
 
-    // Calculate the Right and Bottom based on Left and Top
-    float width = -10f - 9.5f;  // Right - Left
-    float height = 10 - (-10);      // Top - Bottom
 
-    // Set sizeDelta based on calculated values
-    rectTransform.sizeDelta = new Vector2(width, height);
-} 
-}
-        public void Bop(double beat, double length, bool bop, bool auto)
+
+ 
+    }
+
+
+    public void Bop(double beat, double length, bool bop, bool auto)
         {  
 
         }
