@@ -266,7 +266,7 @@ namespace HeavenStudio.Games
         private void ScheduleStep(double beat)
         {
             PlayerActionEvent input = ScheduleInput(beat, 0.5f, InputAction_BasicPress, Success, Miss, Nothing);
-            input.IsHittable = () => man.canStep && man.canStepFromAnim && man.FacingCorrectly();
+            // input.IsHittable = () => man.canStep && man.canStepFromAnim && man.FacingCorrectly();
         }
 
         private void RecursiveStepping(double beat)
