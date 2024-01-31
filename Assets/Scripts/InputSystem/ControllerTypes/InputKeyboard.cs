@@ -131,6 +131,16 @@ namespace HeavenStudio.InputSystem
             currentBindings = newBinds;
         }
 
+        public override ControlBindings UpdateBindings(ControlBindings lastBinds)
+        {
+            return lastBinds;
+        }
+
+        public override int GetBindingsVersion()
+        {
+            return 0;
+        }
+
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
             return false;

@@ -107,7 +107,7 @@ namespace HeavenStudio.InputSystem
             "Joy-Con (R)",
             "Pro Controller",
             "DualShock 4",
-            "DualSense"
+            "DualSense/Edge"  // jsl doesn't expose a new device ID for DSE
         };
 
         static readonly int[] dsPlayerColours = new[]
@@ -228,6 +228,7 @@ namespace HeavenStudio.InputSystem
             "X",
             "Home",
             "Capture",
+            "", // mic on playstation, unused here
             "SL",
             "SR",
             "Stick Up",
@@ -256,6 +257,7 @@ namespace HeavenStudio.InputSystem
             "Triangle",
             "PS",
             "Touchpad Click",
+            "Mic",
         };
 
         static readonly string[] ps5ButtonNames = new[]
@@ -279,6 +281,10 @@ namespace HeavenStudio.InputSystem
             "PS",
             "Create",
             "Mic",
+            "Left Grip",
+            "Right Grip",
+            "Left Function",
+            "Right Function",
         };
 
         static readonly float debounceTime = 1f / 90f;
@@ -599,6 +605,7 @@ namespace HeavenStudio.InputSystem
                     break;
             }
             binds.PointerSensitivity = 3;
+            binds.version = 1;
             return binds;
         }
 
@@ -617,20 +624,45 @@ namespace HeavenStudio.InputSystem
             currentBindings = newBinds;
         }
 
+        public override ControlBindings UpdateBindings(ControlBindings lastBinds)
+        {
+            if (lastBinds.version == 0)
+            {
+                switch (type)
+                {
+                    case TypeProController:
+                    case TypeDualShock4:
+                    case TypeDualSense:
+                        return lastBinds;
+                    case TypeJoyConLeft:
+                    case TypeJoyConRight:
+                        for (int i = 0; i < lastBinds.Pad.Length; i++)
+                        {
+                            if (lastBinds.Pad[i] is 18 or 19)
+                                lastBinds.Pad[i] = lastBinds.Pad[i] + 1;
+                        }
+                        return lastBinds;
+                }
+            }
+            return lastBinds;
+        }
+
+        public override int GetBindingsVersion()
+        {
+            return 1;
+        }
+
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
             if (otherHalf == null)
             {
-                switch (splitType)
+                if (splitType is SplitLeft or SplitRight)
                 {
-                    case SplitLeft:
-                    case SplitRight:
-                        switch (style)
-                        {
-                            case ControlStyles.Pad:
-                                return action is 0 or 1 or 2 or 3;
-                        }
-                        break;
+                    switch (style)
+                    {
+                        case ControlStyles.Pad:
+                            return action is 0 or 1 or 2 or 3;
+                    }
                 }
             }
             return false;
@@ -721,7 +753,7 @@ namespace HeavenStudio.InputSystem
                 case InputAxis.AxisRStickY:
                     return joyBtStateCurrent.stickRY;
                 case InputAxis.PointerX:   //isn't updated for now, so always returns 0f
-                                            //return joyTouchStateCurrent.t0X;
+                                           //return joyTouchStateCurrent.t0X;
                 case InputAxis.PointerY:
                 //return joyTouchStateCurrent.t0Y;
                 default:
