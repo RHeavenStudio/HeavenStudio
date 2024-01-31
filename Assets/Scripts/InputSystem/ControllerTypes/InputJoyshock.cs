@@ -312,9 +312,6 @@ namespace HeavenStudio.InputSystem
         // controller settings
         JSL_SETTINGS joySettings;
 
-        InputJoyshock otherHalf;
-        bool isPair;
-
         public struct JoyshockButtonState
         {
             public double dt;     // time passed since state
@@ -344,7 +341,7 @@ namespace HeavenStudio.InputSystem
             if (currentBindings.Pad == null) return -1;
             if (action < 0 || action >= BINDS_MAX) return -1;
             ControlBindings actionMap = currentBindings;
-            if (actionMap.Pad[action] > ButtonMaskSR) return -1;
+            if (actionMap.Pad[action] > ButtonMaskFnR) return -1;
 
             return actionMap.Pad[action];
         }
@@ -471,29 +468,8 @@ namespace HeavenStudio.InputSystem
             //left rotates counterclockwise, right rotates clockwise, all by 90 degrees
             float xAxis = 0f;
             float yAxis = 0f;
-            if (otherHalf == null)
-            {
-                switch (splitType)
-                {
-                    case SplitLeft:
-                        xAxis = -joyBtStateCurrent.stickLY;
-                        yAxis = joyBtStateCurrent.stickLX;
-                        break;
-                    case SplitRight: //use the right stick instead
-                        xAxis = joyBtStateCurrent.stickRY;
-                        yAxis = -joyBtStateCurrent.stickRX;
-                        break;
-                    case SplitFull:
-                        xAxis = joyBtStateCurrent.stickLX;
-                        yAxis = joyBtStateCurrent.stickLY;
-                        break;
-                }
-            }
-            else
-            {
-                xAxis = joyBtStateCurrent.stickLX;
-                yAxis = joyBtStateCurrent.stickLY;
-            }
+            xAxis = joyBtStateCurrent.stickLX;
+            yAxis = joyBtStateCurrent.stickLY;
 
             directionStateLast = directionStateCurrent;
             directionStateCurrent = 0;
@@ -520,8 +496,6 @@ namespace HeavenStudio.InputSystem
 
         public override string GetDeviceName()
         {
-            if (otherHalf != null)
-                return "Joy-Con Pair";
             return joyshockName;
         }
 
@@ -536,10 +510,7 @@ namespace HeavenStudio.InputSystem
                 case TypeDualSense:
                     return ps5ButtonNames;
                 default:
-                    if (otherHalf == null)
-                        return nsConButtonNames;
-                    else
-                        return nsProButtonNames;
+                    return nsConButtonNames;
             }
         }
 
@@ -583,16 +554,10 @@ namespace HeavenStudio.InputSystem
             switch (type)
             {
                 case TypeJoyConLeft:
-                    if (otherHalf == null)
-                        binds.Pad = defaultMappingsL;
-                    else
-                        binds.Pad = defaultMappings;
+                    binds.Pad = defaultMappingsL;
                     break;
                 case TypeJoyConRight:
-                    if (otherHalf == null)
-                        binds.Pad = defaultMappingsR;
-                    else
-                        binds.Pad = defaultMappings;
+                    binds.Pad = defaultMappingsR;
                     break;
                 case TypeProController:
                     binds.Pad = defaultMappings;
@@ -654,15 +619,12 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
-            if (otherHalf == null)
+            if (type is TypeJoyConLeft or TypeJoyConRight)
             {
-                if (splitType is SplitLeft or SplitRight)
+                switch (style)
                 {
-                    switch (style)
-                    {
-                        case ControlStyles.Pad:
-                            return action is 0 or 1 or 2 or 3;
-                    }
+                    case ControlStyles.Pad:
+                        return action is 0 or 1 or 2 or 3;
                 }
             }
             return false;
@@ -689,37 +651,18 @@ namespace HeavenStudio.InputSystem
                     return i;
                 }
             }
-            if (otherHalf != null)
-            {
-                for (int i = 0; i < otherHalf.actionStates.Length; i++)
-                {
-                    if (otherHalf.actionStates[i].pressed && otherHalf.actionStates[i].isDelta)
-                    {
-                        return i;
-                    }
-                }
-            }
             return -1;
         }
 
         public override bool GetAction(ControlStyles style, int button)
         {
             if (button == -1) { return false; }
-            if (otherHalf != null)
-            {
-                return actionStates[button].pressed || otherHalf.actionStates[button].pressed;
-            }
             return actionStates[button].pressed;
         }
 
         public override bool GetActionDown(ControlStyles style, int button, out double dt)
         {
             if (button == -1) { dt = 0; return false; }
-            if (otherHalf != null)
-            {
-                dt = otherHalf.actionStates[button].dt;
-                return otherHalf.actionStates[button].pressed && otherHalf.actionStates[button].isDelta;
-            }
             dt = actionStates[button].dt;
             return actionStates[button].pressed && actionStates[button].isDelta;
         }
@@ -727,11 +670,6 @@ namespace HeavenStudio.InputSystem
         public override bool GetActionUp(ControlStyles style, int button, out double dt)
         {
             if (button == -1) { dt = 0; return false; }
-            if (otherHalf != null)
-            {
-                dt = otherHalf.actionStates[button].dt;
-                return !otherHalf.actionStates[button].pressed && otherHalf.actionStates[button].isDelta;
-            }
             dt = actionStates[button].dt;
             return !actionStates[button].pressed && actionStates[button].isDelta;
         }
@@ -807,10 +745,6 @@ namespace HeavenStudio.InputSystem
                 default:
                     return false;
             }
-            if (otherHalf != null)
-            {
-                return GetAction(ControlStyles.Pad, bt) || BitwiseUtils.WantCurrent(otherHalf.directionStateCurrent, 1 << (int)direction) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int)direction);
-            }
             return GetAction(ControlStyles.Pad, bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int)direction);
         }
 
@@ -837,10 +771,6 @@ namespace HeavenStudio.InputSystem
             }
             bool btbool = GetActionDown(ControlStyles.Pad, bt, out dt);
             if (!btbool) dt = 0;
-            if (otherHalf != null)
-            {
-                return btbool || BitwiseUtils.WantCurrentAndNotLast(otherHalf.directionStateCurrent, otherHalf.directionStateLast, 1 << (int)direction) || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
-            }
             return btbool || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
         }
 
@@ -867,10 +797,6 @@ namespace HeavenStudio.InputSystem
             }
             bool btbool = GetActionUp(ControlStyles.Pad, bt, out dt);
             if (!btbool) dt = 0;
-            if (otherHalf != null)
-            {
-                return btbool || BitwiseUtils.WantNotCurrentAndLast(otherHalf.directionStateCurrent, otherHalf.directionStateLast, 1 << (int)direction) || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
-            }
             return btbool || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
         }
 
@@ -905,11 +831,6 @@ namespace HeavenStudio.InputSystem
 
         public Color GetBodyColor()
         {
-            if (otherHalf != null)
-            {
-                // gets the colour of the right controller if is split
-                return BitwiseUtils.IntToRgb(splitType == SplitRight ? joySettings.bodyColour : GetOtherHalf().joySettings.bodyColour);
-            }
             return BitwiseUtils.IntToRgb(joySettings.bodyColour);
         }
 
@@ -922,10 +843,6 @@ namespace HeavenStudio.InputSystem
 
         public Color GetLeftGripColor()
         {
-            if (otherHalf != null)
-            {
-                return BitwiseUtils.IntToRgb(splitType == SplitLeft ? joySettings.lGripColour : GetOtherHalf().joySettings.lGripColour);
-            }
             if (joySettings.lGripColour == 0xFFFFFF)
                 return GetBodyColor();
             return BitwiseUtils.IntToRgb(joySettings.lGripColour);
@@ -933,10 +850,6 @@ namespace HeavenStudio.InputSystem
 
         public Color GetRightGripColor()
         {
-            if (otherHalf != null)
-            {
-                return BitwiseUtils.IntToRgb(splitType == SplitRight ? joySettings.rGripColour : GetOtherHalf().joySettings.rGripColour);
-            }
             if (joySettings.rGripColour == 0xFFFFFF)
                 return GetBodyColor();
             return BitwiseUtils.IntToRgb(joySettings.rGripColour);
@@ -971,45 +884,9 @@ namespace HeavenStudio.InputSystem
 
         public void DisconnectJoyshock()
         {
-            if (otherHalf != null)
-            {
-                otherHalf = null;
-            }
             JslSetRumble(joyshockHandle, 0, 0);
             JslSetLightColour(joyshockHandle, 0);
             JslSetPlayerNumber(joyshockHandle, 0);
-        }
-
-        public void AssignOtherHalf(InputJoyshock otherHalf, bool force = false)
-        {
-            InputFeatures features = otherHalf.GetFeatures();
-            if (features.HasFlag(InputFeatures.Extra_SplitControllerLeft) || features.HasFlag(InputFeatures.Extra_SplitControllerRight))
-            {
-                //two-way link
-                this.otherHalf = otherHalf;
-                this.otherHalf.UnAssignOtherHalf(); //juste en cas
-                this.otherHalf.otherHalf = this;
-                this.otherHalf.SetPlayer(this.playerNum);
-            }
-            else if (force)
-            {
-                UnAssignOtherHalf();
-            }
-        }
-
-        public void UnAssignOtherHalf()
-        {
-            if (otherHalf != null)
-            {
-                this.otherHalf.otherHalf = null;
-                this.otherHalf.SetPlayer(-1);
-            }
-            otherHalf = null;
-        }
-
-        public InputJoyshock GetOtherHalf()
-        {
-            return otherHalf;
         }
 
         public override bool GetFlick(out double dt)
@@ -1035,12 +912,6 @@ namespace HeavenStudio.InputSystem
                     m.SetColor("_BtnColor", GetButtonColor());
                     m.SetColor("_LGripColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
                     m.SetColor("_RGripColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
-                    break;
-                case "Joy-Con Pair":
-                    m.SetColor("_BodyColor", splitType == SplitRight ? GetButtonColor() : GetOtherHalf().GetButtonColor());
-                    m.SetColor("_BtnColor", splitType == SplitLeft ? GetButtonColor() : GetOtherHalf().GetButtonColor());
-                    m.SetColor("_LGripColor", GetLeftGripColor());
-                    m.SetColor("_RGripColor", GetRightGripColor());
                     break;
                 case "DualShock 4":
                     m.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#E1E2E4", out colour) ? colour : Color.white);
