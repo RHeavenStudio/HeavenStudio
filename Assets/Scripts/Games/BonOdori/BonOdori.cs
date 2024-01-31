@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,7 +88,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("show text", "Show Text")
                 {
-                    function = delegate {BonOdori.instance.ShowText(eventCaller.currentEntity["line 1"], eventCaller.currentEntity["line 2"], eventCaller.currentEntity["line 3"], eventCaller.currentEntity["line 4"], eventCaller.currentEntity["line 5"], eventCaller.currentEntity["color"]);},
+                    function = delegate {BonOdori.instance.ShowText(eventCaller.currentEntity["line 1"], eventCaller.currentEntity["line 2"], eventCaller.currentEntity["line 3"], eventCaller.currentEntity["line 4"], eventCaller.currentEntity["line 5"],eventCaller.currentEntity["font"]);},
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {   new Param("whichLine", new EntityTypes.Integer(1,5,1), "Line", "Which line to modify.", new(){
@@ -97,12 +98,14 @@ namespace HeavenStudio.Games.Loaders
                         new((x, _) => (int)x == 4, new string[] { "line 4"}),
                         new((x, _) => (int)x == 5, new string[] { "line 5"}),
                     }),
-                        new Param("line 1", "", "Line 1", "Set the text for line 1."),
+                        new Param("line 1", "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line", "Line 1", "Set the text for line 1."),
                         new Param("line 2", "", "Line 2", "Set the text for line 2."),
-                        new Param("line 3", "", "Line 3", "Set the text for line 3."),
+                        new Param("line 3", "", "Line 3", "Set the text for line 3.y"),
                         new Param("line 4", "", "Line 4", "Set the text for line 4."),
                         new Param("line 5", "", "Line 5", "Set the text for line 5."),
-                        new Param("color", BonOdori.color.red, "Color", "Set the color for these lines of text.")
+                        new Param("font", BonOdori.font.RodinProDb, "font", "Set the font for the text")
+
+
                         
                     },
                     priority = 1
@@ -117,27 +120,34 @@ namespace HeavenStudio.Games.Loaders
                         new Param("line 2", false, "Line 2", "Delete the contents of line 2."),
                         new Param("line 3", false, "Line 3", "Delete the contents of line 3."),
                         new Param("line 4", false, "Line 4", "Delete the contents of line 4."),
-                        new Param("line 5", false, "Line 5", "Delete the contents of line 5.")
+                        new Param("line 5", false, "Line 5", "Delete the contents of line 5."),
                     },
 
                 },
+                    new GameAction("scroll text", "Scroll Text")
+                {
+                    function = delegate {BonOdori.instance.ScrollText(eventCaller.currentEntity["line 1"],eventCaller.currentEntity["line 2"],eventCaller.currentEntity["line 3"],eventCaller.currentEntity["line 4"],eventCaller.currentEntity["line 5"], eventCaller.currentEntity.length);},
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("line 1", false, "Line 1", "Scroll the contents of line 1."),
+                        new Param("line 2", false, "Line 2", "Scroll the contents of line 2."),
+                        new Param("line 3", false, "Line 3", "Scroll the contents of line 3."),
+                        new Param("line 4", false, "Line 4", "Scroll the contents of line 4."),
+                        new Param("line 5", false, "Line 5", "Scroll the contents of line 5."),
+                    },
+
+                }
  
                     
-                
+          
 
-
-
-            
-            
-            });
-
-        }  
-
-    }
+        });
         
+    }
+    };
 };
-
-
 namespace HeavenStudio.Games
 {
 
@@ -145,25 +155,45 @@ namespace HeavenStudio.Games
 
 
     public class BonOdori : Minigame
-    {   public string prefix;
-        public string suffix;
-        public bool autoBop;
+    {
+       string prefix;
+        string suffix;
         TextMeshProUGUI Text1_GUI;
         TextMeshProUGUI Text2_GUI;
         TextMeshProUGUI Text3_GUI;
         TextMeshProUGUI Text4_GUI;
         TextMeshProUGUI Text5_GUI;
+        TextMeshProUGUI Text6_GUI;
+        TextMeshProUGUI Text7_GUI;
+        TextMeshProUGUI Text8_GUI;
+        TextMeshProUGUI Text9_GUI;
+        TextMeshProUGUI Text10_GUI;
+
+
+        [SerializeField] TMPro.TMP_FontAsset WW;
+        [SerializeField] TMPro.TMP_FontAsset RodinDB;
         [SerializeField] TMP_Text Text1;
         [SerializeField] TMP_Text Text2;
         [SerializeField] TMP_Text Text3;
         [SerializeField] TMP_Text Text4;
         [SerializeField] TMP_Text Text5;
+        
+        [SerializeField] TMP_Text Text6;
+        [SerializeField] TMP_Text Text7;
+        [SerializeField] TMP_Text Text8;
+        [SerializeField] TMP_Text Text9;
+        [SerializeField] TMP_Text Text10;
         [SerializeField] Animator DarkPlane;
         [SerializeField] Animator Player;
         [SerializeField] Animator Judge;
         [SerializeField] Animator CPU;
         [SerializeField] Animator Face;
-        
+
+        public enum font
+        {
+            RodinProDb = 0,
+            WarioWareV2 = 1
+        }
         public enum color
         {
             red = 0,
@@ -221,18 +251,22 @@ namespace HeavenStudio.Games
 
         {
             instance = this;
-
-    
-
-
-        }
-        public void Start(){
             Text1_GUI = Text1.GetComponent<TextMeshProUGUI>();
             Text2_GUI = Text2.GetComponent<TextMeshProUGUI>();
             Text3_GUI = Text3.GetComponent<TextMeshProUGUI>();
             Text4_GUI = Text4.GetComponent<TextMeshProUGUI>();
             Text5_GUI = Text5.GetComponent<TextMeshProUGUI>();
+            Text6_GUI = Text6.GetComponent<TextMeshProUGUI>();
+            Text7_GUI = Text7.GetComponent<TextMeshProUGUI>();
+            Text8_GUI = Text8.GetComponent<TextMeshProUGUI>();
+            Text9_GUI = Text9.GetComponent<TextMeshProUGUI>();
+            Text10_GUI = Text10.GetComponent<TextMeshProUGUI>();
+
+    
+
+
         }
+
         public void Update()
         {
             if (PlayerInput.GetIsAction(BonOdori.InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)){
@@ -366,34 +400,86 @@ namespace HeavenStudio.Games
                         });
 
 
+
         }
-        public void ShowText(string text1, string text2, string text3, string text4, string text5, int color)
-        {if (color == 0){
-            prefix = "<color=#f42102>";
-            suffix = "</color>";
-        }
-        else if (color == 2){
-            prefix = "<color=#4ffe05>";
-            suffix = "</color>";
-        }
-        else if (color == 1){
-            prefix = "<color=#efec00>";
-            suffix = "</color>";
-        }
-            if (text1 != ""){
-                Text1.text = prefix + text1 + suffix;
+    string ChangeColor(string text)
+    {
+            if (text.Contains("r|") | text.Contains("y|") | text.Contains("g|")){
+            return text.Replace("r|", "<color=#ff0000>")
+                   .Replace("g|", "<color=#00ff00>")
+                   .Replace("y|", "<color=#ffff00>")
+                   + "</color>";
+            }
+            return text;
+
+    }
+
+        public void ShowText(string text1, string text2, string text3, string text4, string text5, int font)
+        {
+            if (font == 0)
+            {
+                Text1.GetComponent<TextMeshPro>().font = RodinDB;
+                Text2.GetComponent<TextMeshPro>().font = RodinDB;
+                Text3.GetComponent<TextMeshPro>().font = RodinDB;
+                Text4.GetComponent<TextMeshPro>().font = RodinDB;
+                Text5.GetComponent<TextMeshPro>().font = RodinDB;
+                Text6.GetComponent<TextMeshPro>().font = RodinDB;
+                Text7.GetComponent<TextMeshPro>().font = RodinDB;
+                Text8.GetComponent<TextMeshPro>().font = RodinDB;
+                Text9.GetComponent<TextMeshPro>().font = RodinDB;
+                Text10.GetComponent<TextMeshPro>().font = RodinDB;
+;
+            }
+            if (font == 1)
+            {
+                Text1.GetComponent<TextMeshPro>().font = WW;
+                Text2.GetComponent<TextMeshPro>().font = WW;
+                Text3.GetComponent<TextMeshPro>().font = WW;
+                Text4.GetComponent<TextMeshPro>().font = WW;
+                Text5.GetComponent<TextMeshPro>().font = WW;
+                Text6.GetComponent<TextMeshPro>().font = WW;
+                Text7.GetComponent<TextMeshPro>().font = WW;
+                Text8.GetComponent<TextMeshPro>().font = WW;
+                Text9.GetComponent<TextMeshPro>().font = WW;
+                Text10.GetComponent<TextMeshPro>().font = WW;
+            }
+
+
+
+        
+
+
+            
+            
+
+    
+
+                
+            if (text1 is not "" || text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line"){
+                text1 = ChangeColor(text1);
+                Text1.text = text1;
+                Text6.text = text1;
+  
                 }
-            if (text2 != ""){
-                Text2.text = prefix + text2 + suffix;
+            if (text2 is not ""){
+                text2 = ChangeColor(text2);
+                Text2.text = text2;
+   
                 }
             if (text3 != ""){
-                Text3.text = prefix + text3 + suffix;
+                text3 = ChangeColor(text3);
+                Text3.text = text3; 
+ 
                 }
             if (text4 != ""){
-                Text4.text = prefix + text4 + suffix;
+                text4 = ChangeColor(text4);
+                Text4.text = text4; 
+
                 }
             if (text5 != ""){
-                Text5.text = prefix + text5 + suffix;
+                text5 = ChangeColor(text5);
+                Text5.text = text5;
+
                 }
             
             if (Text1.text != "" | Text2.text != "" | Text3.text != "" | Text4.text != "" | Text5.text != ""){
@@ -422,9 +508,31 @@ namespace HeavenStudio.Games
             }
 
         }
+public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length)
+{ RectTransform rectTransform = Text6.GetComponent<RectTransform>();
+
+if (rectTransform != null)
+{
+    // Set Left and Top using anchoredPosition
+    rectTransform.anchoredPosition = new Vector2(-10, -10);
+
+    // Calculate the Right and Bottom based on Left and Top
+    float width = -10f - 9.5f;  // Right - Left
+    float height = 10 - (-10);      // Top - Bottom
+
+    // Set sizeDelta based on calculated values
+    rectTransform.sizeDelta = new Vector2(width, height);
+} 
+}
         public void Bop(double beat, double length, bool bop, bool auto)
         {  
 
         }
-    }}
+            
 
+
+        
+
+
+    }
+}
