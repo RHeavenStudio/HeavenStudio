@@ -18,9 +18,15 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("holeInOne", "Hole in One", "6ab99e", false, false, new List<GameAction>()
             {
-                new GameAction("testanims", "Test Animation") // Delete this one when the game is more competent
+                new GameAction("bop", "Bop")
                 {
-                    function = delegate { HoleInOne.instance.DoTestAnim(eventCaller.currentEntity.beat); },
+                    function = delegate { var e = eventCaller.currentEntity; HoleInOne.instance.ToggleBop(e.beat, e.length, e["bop"], e["autobop"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Toggle if the characters should bop for the duration of this event."),
+                        new Param("autobop", false, "Bop (Auto)", "Toggle if the characters should automatically bop until another Bop event is reached.")
+                    }
                 },
                 new GameAction("mandrill", "Mandrill (no visuals)")
                 {
@@ -54,13 +60,31 @@ namespace HeavenStudio.Games
         void Awake()
         {
             HoleInOne.instance = this;
+            SetupBopRegion("holeInOne", "bop", "toggle");
         }
 
-        // Delete this one when the game is more competent
-        public void DoTestAnim(double beat)
+        public override void OnBeatPulse(double beat)
         {
-            SoundByte.PlayOneShotGame("holeInOne/whale");
-            MonkeyAnim.Play("MonkeySpin");
+            if (BeatIsInBopRegion(beat)) MonkeyAnim.DoScaledAnimationAsync("MonkeyBop", 0.4f);
+
+        }
+
+        public void ToggleBop(double beat, float length, bool shouldBop, bool autoBop)
+        {
+            if (shouldBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            MonkeyAnim.DoScaledAnimationAsync("MonkeyBop", 0.4f);
+                            // TODO add bops for other characters
+                        })
+                    });
+                }
+            }
         }
 
         public void DoMandrill(double beat)
@@ -104,6 +128,7 @@ namespace HeavenStudio.Games
         {
             SoundByte.PlayOneShotGame("holeInOne/mandrill4");
             MonkeyAnim.Play("MonkeySpin");
+            
         }
 
         public void MandrillMiss(PlayerActionEvent caller)
@@ -114,7 +139,13 @@ namespace HeavenStudio.Games
 
         public void MonkeySuccess(PlayerActionEvent caller, float state)
         {
-            SoundByte.PlayOneShotGame("holeInOne/monkey3");
+            double beat = caller.timer;
+            int randomSuccess = UnityEngine.Random.Range(1,5);
+
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("holeInOne/monkey3", beat),
+                new MultiSound.Sound("holeInOne/hole" + randomSuccess, beat + 2f)
+            });
             MonkeyAnim.Play("MonkeySpin");
         }
 
