@@ -174,11 +174,17 @@ namespace HeavenStudio.Games
         bool hitDonaiyanen = false;
 
         double lastWhiffBeat = double.MinValue;
+
+        double lastTappedBeat = double.MinValue;
         bool canDodge = true;
 
         float randomBubbleBoth = 0.0f;
 
         Sound crowdSound;
+
+        bool isHolding = false;
+
+        bool isPlayingReadyAnimationForTapMode = false;
 
 
 
@@ -315,7 +321,7 @@ namespace HeavenStudio.Games
 
         public void BopAnimationRaven()
         {
-            if (ravenCanBop && ravenCanBopTemp)
+            if (ravenCanBop && ravenCanBopTemp && !isHolding)
                 RavenAnim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
@@ -683,6 +689,7 @@ namespace HeavenStudio.Games
                     if (isPreparingForBoing)
                     {
                         RavenAnim.DoScaledAnimationAsync("Ready", 0.5f);
+                        isPlayingReadyAnimationForTapMode = true;
                         ravenCanBop = false;
                     }
                     else
@@ -703,11 +710,13 @@ namespace HeavenStudio.Games
                     ravenCanBopTemp = false;
                 }
             }
+
             if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && PlayerInput.GetIsAction(InputAction_BasicRelease) && isPreparingForBoing)
             {
                 RavenAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 ravenCanBop = true;
             }
+
             if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt))
             {
                 SoundByte.PlayOneShotGame("manzai/miss2");
@@ -720,6 +729,7 @@ namespace HeavenStudio.Games
                     vultureCanBopTemp = false;
                 }
             }
+
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && IsExpectingInputNow(InputAction_Alt) && PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
             {
                 crowdSound = SoundByte.PlayOneShotGame("manzai/missWrongButton");
@@ -728,11 +738,35 @@ namespace HeavenStudio.Games
                 VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 missedWithWrongButton = true;
             }
+
             if ((lastWhiffBeat + 1) < conductor.songPositionInBeatsAsDouble)
             {
                 ravenCanBopTemp = true;
                 vultureCanBopTemp = true;
             }
+
+            if (((lastTappedBeat + 1) < conductor.songPositionInBeatsAsDouble && !isPlayingReadyAnimationForTapMode && isHolding))
+            {
+                RavenAnim.DoScaledAnimationAsync("Ready", 0.5f);
+                isPlayingReadyAnimationForTapMode = true;
+            }
+
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && PlayerInput.GetIsAction(InputAction_BasicPress))
+            {
+                isHolding = true;
+                lastTappedBeat = conductor.songPositionInBeatsAsDouble;
+            }
+
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && (PlayerInput.GetIsAction(InputAction_BasicRelease) || PlayerInput.GetIsAction(InputAction_Alt)))
+            {
+                if(isPlayingReadyAnimationForTapMode && PlayerInput.GetIsAction(InputAction_BasicRelease))
+                {
+                    RavenAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                }
+                isHolding = false;
+                isPlayingReadyAnimationForTapMode = false;
+            }
+
             if (canDodge == false)
             {
                 vultureCanBopTemp = true;
