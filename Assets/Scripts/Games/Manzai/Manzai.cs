@@ -35,9 +35,9 @@ namespace HeavenStudio.Games.Loaders
                         var e = eventCaller.currentEntity;
                         Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 0); },
 
-                    function = delegate { 
+                    /*function = delegate { 
                         var e = eventCaller.currentEntity;
-                        Manzai.instance.DoPun(e.beat, 0, e["pun"]); },
+                        Manzai.instance.DoPun(e.beat, 0, e["pun"]); },*/
                     defaultLength = 4,
 
                     parameters = new List<Param>()
@@ -59,9 +59,9 @@ namespace HeavenStudio.Games.Loaders
                         var e = eventCaller.currentEntity;
                         Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 1); },
 
-                    function = delegate { 
+                    /*function = delegate { 
                         var e = eventCaller.currentEntity;
-                        Manzai.instance.DoPun(e.beat, 1, e["pun"]); },
+                        Manzai.instance.DoPun(e.beat, 1, e["pun"]); },*/
                     defaultLength = 4,
 
                     parameters = new List<Param>()
@@ -349,12 +349,17 @@ namespace HeavenStudio.Games
         public static void PunSFX(double beat, int whichPun, bool isPitched, int isBoing)
         {
             var punName= Enum.GetName(typeof(Puns), whichPun);
-            float pitch = isPitched ? Conductor.instance.GetBpmAtBeat(beat)/98 : 1;
+            float pitch = isPitched ? (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch : 1;
             double offset = isPitched ? (0.05/(Conductor.instance.GetBpmAtBeat(beat)/98)) : 0.05;
             var sounds = new List<MultiSound.Sound>();
             int boing  = isBoing;
             int length = boingLengths.GetValueOrDefault(punName);
             int syllables = boing == 0 ? 9 : (length != 0 ? length : 4);
+
+            BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { Manzai.instance.DoPun(beat, isBoing, whichPun); }),
+                });
 
             for (int i = 0; i < syllables; i++) {
                 sounds.Add(new MultiSound.Sound($"manzai/{punName}{i + 1}", beat + (i * 0.25), pitch, offset: i == 0 ? offset : 0));
@@ -410,9 +415,11 @@ namespace HeavenStudio.Games
             randomBubbleBoth = UnityEngine.Random.Range(-100, 101) / 1000.0f;
         }
 
-        public void HaiJustFull(float state, int side)
+        public void HaiJustFull(float state, int side, PlayerActionEvent caller)
         {
-            SoundByte.PlayOneShotGame("manzai/hai", pitch: Conductor.instance.songBpm/98);
+            double beat = caller.startBeat + caller.timer;
+
+            SoundByte.PlayOneShotGame("manzai/hai", pitch: (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("manzai/miss1");
@@ -450,7 +457,7 @@ namespace HeavenStudio.Games
             rotL.Set(0, 0, randomBubbleBoth + randomL, 1);
             PivotL.rotation = rotL;
             HaiBubbleL.DoScaledAnimationAsync("HaiL", 0.5f);
-            HaiJustFull(state, side);
+            HaiJustFull(state, side, caller);
         }
 
         public void HaiJustR(PlayerActionEvent caller, float state)
@@ -462,7 +469,7 @@ namespace HeavenStudio.Games
             rotR.Set(0, 0, randomBubbleBoth + randomR, 1);
             PivotR.rotation = rotR;
             HaiBubbleR.DoScaledAnimationAsync("HaiR", 0.5f);
-            HaiJustFull(state, side);
+            HaiJustFull(state, side, caller);
         }
 
 
@@ -563,7 +570,9 @@ namespace HeavenStudio.Games
 
         public void BoingJust(PlayerActionEvent caller, float state)
         {
-            SoundByte.PlayOneShotGame("manzai/donaiyanen", pitch: Conductor.instance.songBpm/98);
+            double beat = caller.startBeat + caller.timer;
+
+            SoundByte.PlayOneShotGame("manzai/donaiyanen", pitch: (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("manzai/miss1");
@@ -614,8 +623,8 @@ namespace HeavenStudio.Games
 
         public void CustomBoing(double beat)
         {
-            SoundByte.PlayOneShotGame("manzai/boing", pitch: Conductor.instance.songBpm/98, volume: 0.8f);
-            SoundByte.PlayOneShotGame("manzai/comedy", pitch: Conductor.instance.songBpm/98, volume: 0.8f);
+            SoundByte.PlayOneShotGame("manzai/boing", pitch: (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch, volume: 0.8f);
+            SoundByte.PlayOneShotGame("manzai/comedy", pitch: (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch, volume: 0.8f);
             VultureAnim.DoScaledAnimationAsync("Boing", 0.5f);
         }
 
@@ -738,7 +747,7 @@ namespace HeavenStudio.Games
                 {
                     break;
                 }
-                if((entity.datamodel != "manzai/pun" &&  entity.datamodel != "manzai/boing") || entity.beat + entity.length <= beat) //check for pun that happen right before the switch
+                if((entity.datamodel != "manzai/pun" &&  entity.datamodel != "manzai/boing") || entity.beat + entity.length < beat) //check for pun that happen right before the switch
                 {
                     continue;
                 }
