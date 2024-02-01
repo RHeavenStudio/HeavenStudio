@@ -621,10 +621,9 @@ namespace HeavenStudio.InputSystem
         {
             if (type is TypeJoyConLeft or TypeJoyConRight)
             {
-                switch (style)
+                if (style is ControlStyles.Pad)
                 {
-                    case ControlStyles.Pad:
-                        return action is 0 or 1 or 2 or 3;
+                    return action is 0 or 1 or 2 or 3;
                 }
             }
             return false;
@@ -858,6 +857,11 @@ namespace HeavenStudio.InputSystem
         public Color GetLightbarColour()
         {
             return BitwiseUtils.IntToRgb(lightbarColour);
+        }
+
+        public int GetJoyshockType()
+        {
+            return type;
         }
 
         public void SetLightbarColour(Color color)

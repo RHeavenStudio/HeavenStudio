@@ -179,17 +179,6 @@ namespace HeavenStudio
                                 {
                                     obj.SetActive(!usingMouse);
                                 }
-
-                                if ((lastController as InputJoyshock) != null)
-                                {
-                                    (lastController as InputJoyshock)?.UnAssignOtherHalf();
-                                }
-
-                                if ((nextController as InputJoyshock) != null)
-                                {
-                                    nextController.OnSelected();
-                                    (nextController as InputJoyshock)?.UnAssignOtherHalf();
-                                }
                             }
                         }
                         else
