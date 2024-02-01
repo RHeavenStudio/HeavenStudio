@@ -44,6 +44,7 @@ public class HeavenRecorderController : MonoBehaviour
                 {
                     File.Delete("C:/Users/pikmi/Downloads/temp.mp4");
                 }
+                audioRenderer.Clear();
                 audioRenderer.Rendering = true;
                 print("recording started!");
                 recorder.enabled = true;
