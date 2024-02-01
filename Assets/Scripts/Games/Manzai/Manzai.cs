@@ -183,9 +183,10 @@ namespace HeavenStudio.Games
         Sound crowdSound;
 
         bool isHolding = false;
-
         bool isPlayingReadyAnimationForTapMode = false;
 
+        bool easterEgg1 = false;
+        bool easterEgg2 = false;
 
 
         public enum WhoBops
@@ -443,7 +444,14 @@ namespace HeavenStudio.Games
                     hitHaiR = true;
                 }
             }
-            RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
+            if (easterEgg1 && easterEgg2)
+            {
+                RavenAnim.DoScaledAnimationAsync(side == 0 ? "Move" : "MoveM", 0.5f);
+            }
+            else
+            {
+                RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
+            }
             VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
 
             if (crowdSound != null)
@@ -672,6 +680,21 @@ namespace HeavenStudio.Games
             StageAnim.DoScaledAnimationAsync(lightsEnabled ? "LightsOff" : "LightsOn", 0.5f);
         }
 
+        public void kasukeHaiAnimFull()
+        {
+            SoundByte.PlayOneShotGame("manzai/hai");
+            if (easterEgg1 && easterEgg2)
+            {
+                int danceSide = UnityEngine.Random.Range(0, 2);
+                RavenAnim.DoScaledAnimationAsync(danceSide == 0 ? "Move" : "MoveM", 0.5f);
+            }
+            else
+            {
+                RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
+            }
+            VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+        }
+
         private void Update()
         {
             if (isMoving) {
@@ -694,18 +717,16 @@ namespace HeavenStudio.Games
                     }
                     else
                     {
-                        SoundByte.PlayOneShotGame("manzai/hai");
-                        RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
-                        VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                        kasukeHaiAnimFull();
+                        Manzai.instance.ScoreMiss(0.5f);
                         lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
                         ravenCanBopTemp = false;
                     }
                 }
                 else
                 {
-                    SoundByte.PlayOneShotGame("manzai/hai");
-                    RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
-                    VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                    kasukeHaiAnimFull();
+                    Manzai.instance.ScoreMiss(0.5f);
                     lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
                     ravenCanBopTemp = false;
                 }
@@ -721,6 +742,7 @@ namespace HeavenStudio.Games
             {
                 SoundByte.PlayOneShotGame("manzai/miss2");
                 RavenAnim.DoScaledAnimationAsync("Spin", 0.5f);
+                Manzai.instance.ScoreMiss(0.5f);
                 lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
                 ravenCanBopTemp = false;
                 if (canDodge)
@@ -733,9 +755,7 @@ namespace HeavenStudio.Games
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && IsExpectingInputNow(InputAction_Alt) && PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
             {
                 crowdSound = SoundByte.PlayOneShotGame("manzai/missWrongButton");
-                SoundByte.PlayOneShotGame("manzai/hai");
-                RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
-                VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                kasukeHaiAnimFull();
                 missedWithWrongButton = true;
             }
 
@@ -765,6 +785,26 @@ namespace HeavenStudio.Games
                 }
                 isHolding = false;
                 isPlayingReadyAnimationForTapMode = false;
+            }
+
+            if (PlayerInput.GetPadDown(InputController.ActionsPad.ButtonL))
+            {
+                easterEgg1 = true;
+            }
+
+            if (PlayerInput.GetPadUp(InputController.ActionsPad.ButtonL))
+            {
+                easterEgg1 = false;
+            }
+
+            if (PlayerInput.GetPadDown(InputController.ActionsPad.ButtonR))
+            {
+                easterEgg2 = true;
+            }
+
+            if (PlayerInput.GetPadUp(InputController.ActionsPad.ButtonR))
+            {
+                easterEgg2 = false;
             }
 
             if (canDodge == false)
