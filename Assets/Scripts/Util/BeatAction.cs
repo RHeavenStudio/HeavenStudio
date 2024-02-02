@@ -58,8 +58,19 @@ namespace HeavenStudio.Util
                 if (behaviour == null || !(conductor.isPlaying || conductor.isPaused))
                     return;
 
-                actions[idx].function.Invoke();
-                idx++;
+                while (conductor.songPositionInBeatsAsDouble >= actions[idx].beat)
+                {
+                    try
+                    {
+                        actions[idx].function.Invoke();
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogError($"Exception thrown while executing BeatAction: {e}");
+                    }
+                    idx++;
+                    if (idx >= actions.Count) return;
+                }
             }
         }
     }

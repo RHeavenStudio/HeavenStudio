@@ -21,7 +21,7 @@ namespace HeavenStudio
 
         [Header("Lists")]
         [NonSerialized] public RiqBeatmap Beatmap = new();
-        private List<GameObject> preloadedGames = new();
+        private Dictionary<string, GameObject> cachedGamePrefabs = new();
         [NonSerialized] public ObjectPool<Sound> SoundObjects;
 
         [Header("Components")]
@@ -32,29 +32,30 @@ namespace HeavenStudio
         [NonSerialized] public Games.Global.Filter filter;
 
         [Header("Games")]
-        [NonSerialized] public string currentGame;
         Coroutine currentGameSwitchIE;
-
-        [Header("Properties")]
-        [NonSerialized] public string txt = null;
-        [NonSerialized] public string ext = null;
 
         [NonSerialized]
         public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
             currentPreEvent, currentPreSwitch, currentPreSequence;
-        [NonSerialized] public double endBeat;
-        [NonSerialized] public float startOffset;
-        [NonSerialized] public bool playMode;
-        [NonSerialized] public double startBeat;
-        [NonSerialized] public GameObject currentGameO;
-        private Minigame _currentMinigame;
-        [NonSerialized] public bool autoplay;
-        [NonSerialized] public bool canInput = true;
-        [NonSerialized] public RiqEntity lastSection, currentSection;
-        [NonSerialized] public double nextSectionBeat;
+
+        public string currentGame { get; private set; }
+        public GameObject minigameObj { get; private set; }
+        public Minigame minigame { get; private set; }
+        public RiqEntity lastSection { get; private set; }
+        public RiqEntity currentSection { get; private set; }
+
+        public double endBeat { get; private set; }
+        public double startBeat { get; private set; }
+
+        public double nextSectionBeat { get; private set; }
         public double SectionProgress { get; private set; }
         public float MarkerWeight { get; private set; }
+
         public int MarkerCategory { get; private set; }
+
+        public bool playMode { get; private set; }
+        public bool autoplay { get; private set; }
+        public bool canInput { get; private set; }
 
         public bool GameHasSplitColours
         {
@@ -68,6 +69,7 @@ namespace HeavenStudio
 
         bool AudioLoadDone;
         bool ChartLoadError;
+        bool exiting;
 
         List<double> eventBeats, preSequenceBeats, tempoBeats, volumeBeats, sectionBeats;
         List<RiqEntity> allGameSwitches;
@@ -104,7 +106,7 @@ namespace HeavenStudio
         }
 
         // input accuracy (%)
-        bool skillStarCollected = false;
+        bool skillStarCollected = false, noMiss = true;
 
         // cleared sections
         List<bool> clearedSections = new List<bool>();
@@ -120,8 +122,8 @@ namespace HeavenStudio
 
         private void Awake()
         {
-            // autoplay = true;
             instance = this;
+            exiting = false;
         }
 
         public void Init(bool preLoaded = false)
@@ -137,7 +139,9 @@ namespace HeavenStudio
 
             eventCaller = this.gameObject.AddComponent<EventCaller>();
             eventCaller.GamesHolder = GamesHolder.transform;
-            eventCaller.Init();
+            eventCaller.Init(this);
+
+            canInput = true;
 
             // note: serialize this shit in the inspector //
             GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
@@ -340,11 +344,13 @@ namespace HeavenStudio
                     weight = weight * MarkerWeight,
                     category = MarkerCategory
                 });
-            }
-
-            if (accuracy < Minigame.rankOkThreshold && weight > 0)
-            {
-                SkillStarManager.instance.KillStar();
+                if (accuracy < Minigame.rankOkThreshold)
+                {
+                    SkillStarManager.instance.KillStar();
+                    GoForAPerfect.instance.Miss();
+                    SectionMedalsManager.instance.MakeIneligible();
+                    noMiss = false;
+                }
             }
 
             if (SkillStarManager.instance.IsEligible && !skillStarCollected && accuracy >= 1f)
@@ -361,22 +367,6 @@ namespace HeavenStudio
                 beat = beat,
                 cleared = clear
             });
-        }
-
-        static bool StringStartsWith(string a, string b)
-        {
-            int aLen = a.Length;
-            int bLen = b.Length;
-
-            int ap = 0; int bp = 0;
-
-            while (ap < aLen && bp < bLen && a[ap] == b[bp])
-            {
-                ap++;
-                bp++;
-            }
-
-            return (bp == bLen);
         }
 
         public List<Minigames.Minigame> SeekAheadAndPreload(double start, float seekTime = 8f)
@@ -442,9 +432,10 @@ namespace HeavenStudio
         {
             if (currentPreSequence < Beatmap.Entities.Count && currentPreSequence >= 0)
             {
-                if (start >= preSequenceBeats[currentPreSequence])
+                List<RiqEntity> entitiesInRange = ListPool<RiqEntity>.Get();
+                while (currentPreSequence < preSequenceBeats.Count && start >= preSequenceBeats[currentPreSequence])
                 {
-                    List<RiqEntity> entitiesInRange = ListPool<RiqEntity>.Get();
+                    entitiesInRange.Clear();
                     foreach (RiqEntity entity in Beatmap.Entities)
                     {
                         string[] entityDatamodel = entity.datamodel.Split('/');
@@ -462,14 +453,14 @@ namespace HeavenStudio
                         var inf = GetGameInfo(gameName);
                         if (inf != null && inf.usesAssetBundle && inf.AssetsLoaded && !inf.SequencesPreloaded)
                         {
-                            Debug.Log($"Preloading game {gameName}");
+                            Debug.Log($"Preparing game {gameName}");
                             PreloadGameSequences(gameName);
                         }
                         eventCaller.CallPreEvent(entity);
                         currentPreSequence++;
                     }
-                    ListPool<RiqEntity>.Release(entitiesInRange);
                 }
+                ListPool<RiqEntity>.Release(entitiesInRange);
             }
         }
 
@@ -546,7 +537,7 @@ namespace HeavenStudio
 
             if (cond.songPositionInBeatsAsDouble >= Math.Ceiling(_playStartBeat) + _pulseTally)
             {
-                if (_currentMinigame != null) _currentMinigame.OnBeatPulse(Math.Ceiling(_playStartBeat) + _pulseTally);
+                if (minigame != null) minigame.OnBeatPulse(Math.Ceiling(_playStartBeat) + _pulseTally);
                 onBeatPulse?.Invoke(Math.Ceiling(_playStartBeat) + _pulseTally);
                 _pulseTally++;
             }
@@ -558,12 +549,13 @@ namespace HeavenStudio
 
             if (currentEvent < Beatmap.Entities.Count && currentEvent >= 0)
             {
-                if (clampedBeat >= eventBeats[currentEvent])
+                List<RiqEntity> entitiesInRange = ListPool<RiqEntity>.Get();
+                List<RiqEntity> fxEntities = ListPool<RiqEntity>.Get();
+                // allows for multiple events on the same beat to be executed on the same frame, so no more 1-frame delay
+                while (currentEvent < eventBeats.Count && clampedBeat >= eventBeats[currentEvent] && Conductor.instance.isPlaying)
                 {
-                    List<RiqEntity> entitiesInRange = ListPool<RiqEntity>.Get();
-                    List<RiqEntity> fxEntities = ListPool<RiqEntity>.Get();
-
-                    // allows for multiple events on the same beat to be executed on the same frame, so no more 1-frame delay
+                    fxEntities.Clear();
+                    entitiesInRange.Clear();
                     using (PooledObject<List<RiqEntity>> pool = ListPool<RiqEntity>.Get(out List<RiqEntity> currentBeatEntities))
                     {
                         currentBeatEntities = Beatmap.Entities.FindAll(c => c.beat == eventBeats[currentEvent]);
@@ -605,10 +597,9 @@ namespace HeavenStudio
                         // Thank you to @shshwdr for bring this to my attention
                         currentEvent++;
                     }
-
-                    ListPool<RiqEntity>.Release(entitiesInRange);
-                    ListPool<RiqEntity>.Release(fxEntities);
                 }
+                ListPool<RiqEntity>.Release(entitiesInRange);
+                ListPool<RiqEntity>.Release(fxEntities);
             }
 
             if (currentSection == null)
@@ -632,7 +623,7 @@ namespace HeavenStudio
 
             if (Conductor.instance.songPositionInBeatsAsDouble >= Math.Ceiling(_playStartBeat) + _latePulseTally)
             {
-                if (_currentMinigame != null) _currentMinigame.OnLateBeatPulse(Math.Ceiling(_playStartBeat) + _latePulseTally);
+                if (minigame != null) minigame.OnLateBeatPulse(Math.Ceiling(_playStartBeat) + _latePulseTally);
                 onBeatPulse?.Invoke(Math.Ceiling(_playStartBeat) + _latePulseTally);
                 _latePulseTally++;
             }
@@ -641,6 +632,16 @@ namespace HeavenStudio
         public void ToggleInputs(bool inputs)
         {
             canInput = inputs;
+        }
+
+        public void ToggleAutoplay(bool auto)
+        {
+            autoplay = auto;
+        }
+
+        public void TogglePlayMode(bool mode)
+        {
+            playMode = mode;
         }
 
         #region Play Events
@@ -665,6 +666,7 @@ namespace HeavenStudio
                 TimingAccuracyDisplay.instance.ResetArrow();
                 SkillStarManager.instance.Reset();
                 skillStarCollected = false;
+                noMiss = true;
 
                 GoForAPerfect.instance.perfect = true;
                 GoForAPerfect.instance.Disable();
@@ -713,7 +715,7 @@ namespace HeavenStudio
             {
                 Conductor.instance.PlaySetup(beat);
                 Minigame miniGame = null;
-                if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
+                if (minigameObj != null && minigameObj.TryGetComponent<Minigame>(out miniGame))
                 {
                     if (miniGame != null)
                     {
@@ -773,7 +775,7 @@ namespace HeavenStudio
             }
 
             Minigame miniGame;
-            if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
+            if (minigameObj != null && minigameObj.TryGetComponent<Minigame>(out miniGame))
             {
                 if (miniGame != null)
                 {
@@ -791,12 +793,14 @@ namespace HeavenStudio
             }
             else if (playMode)
             {
+                exiting = true;
                 judgementInfo.star = skillStarCollected;
                 judgementInfo.perfect = GoForAPerfect.instance.perfect;
+                judgementInfo.noMiss = noMiss;
                 judgementInfo.time = DateTime.Now;
 
                 JudgementManager.SetPlayInfo(judgementInfo, Beatmap);
-                GlobalGameManager.LoadScene("Judgement", 0.35f, 0f);
+                GlobalGameManager.LoadScene("Judgement", 0.35f, 0f, DestroyGame);
                 CircleCursor.LockCursor(false);
             }
             Application.backgroundLoadingPriority = ThreadPriority.Normal;
@@ -1075,7 +1079,7 @@ namespace HeavenStudio
             SetGame(game, false);
 
             Minigame miniGame;
-            if (currentGameO != null && currentGameO.TryGetComponent<Minigame>(out miniGame))
+            if (minigameObj != null && minigameObj.TryGetComponent<Minigame>(out miniGame))
             {
                 if (miniGame != null)
                 {
@@ -1102,22 +1106,30 @@ namespace HeavenStudio
         {
             ResetCamera(); // resetting camera before setting new minigame so minigames can set camera values in their awake call - Rasmus
 
-            Destroy(currentGameO);
+            GameObject prefab = GetGame(game);
+            if (prefab == null) return;
 
-            currentGameO = Instantiate(GetGame(game));
-            if (currentGameO.TryGetComponent<Minigame>(out var minigame))
+            Destroy(minigameObj);
+            minigameObj = Instantiate(prefab);
+            if (minigameObj.TryGetComponent<Minigame>(out var minigame))
             {
-                _currentMinigame = minigame;
+                this.minigame = minigame;
                 minigame.minigameName = game;
                 minigame.gameManager = this;
                 minigame.conductor = Conductor.instance;
             }
-            Vector3 originalScale = currentGameO.transform.localScale;
-            currentGameO.transform.parent = eventCaller.GamesHolder.transform;
-            currentGameO.transform.localScale = originalScale;
-            currentGameO.name = game;
+            Vector3 originalScale = minigameObj.transform.localScale;
+            minigameObj.transform.parent = eventCaller.GamesHolder.transform;
+            minigameObj.transform.localScale = originalScale;
+            minigameObj.name = game;
 
             SetCurrentGame(game, useMinigameColor);
+        }
+
+        public void DestroyGame()
+        {
+            cachedGamePrefabs.Clear();
+            SetGame("noGame");
         }
 
         private IEnumerator WaitAndSetGame(string game, bool useMinigameColor = true)
@@ -1157,29 +1169,40 @@ namespace HeavenStudio
                         .Select(x => GetGameInfo(x))
                         .Where(x => x != null)
                         .Where(x => !x.fxOnly)
-                        .Select(x => x.LoadableName);
-                    name = gameInfos.FirstOrDefault() ?? "noGame";
-                }
-                else
-                {
-                    if (gameInfo.usesAssetBundle)
+                        .Where(x => x.LoadableName is not "noGame" or "" or null);
+                    if (gameInfos.Count() > 0)
                     {
-                        //game is packed in an assetbundle, load from that instead
-                        if (gameInfo.AssetsLoaded && gameInfo.LoadedPrefab != null) return gameInfo.LoadedPrefab;
-
-                        try
-                        {
-                            return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogWarning($"Failed to load assetbundle for game {name}, using sync loading: {e.Message}");
-                            return Resources.Load<GameObject>($"Games/{name}");
-                        }
+                        gameInfo = gameInfos.FirstOrDefault();
+                        if (gameInfo == null) return Resources.Load<GameObject>($"Games/noGame");
+                    }
+                    else
+                    {
+                        return Resources.Load<GameObject>($"Games/noGame");
                     }
                 }
+                if (gameInfo.usesAssetBundle)
+                {
+                    //game is packed in an assetbundle, load from that instead
+                    if (gameInfo.AssetsLoaded && gameInfo.LoadedPrefab != null) return gameInfo.LoadedPrefab;
+                    // couldn't load cached prefab, try loading from assetbundle
+                    try
+                    {
+                        Debug.LogWarning($"Game prefab wasn't cached, loading from assetbundle for game {name}");
+                        return gameInfo.LoadGamePrefab();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogWarning($"Failed to load assetbundle for game {name}, using sync loading: {e.Message}");
+                        return Resources.Load<GameObject>($"Games/{name}");
+                    }
+                }
+                return Resources.Load<GameObject>($"Games/{name}");
             }
-            return Resources.Load<GameObject>($"Games/{name}");
+            else
+            {
+                Debug.LogWarning($"Game {name} not found, using noGame");
+                return Resources.Load<GameObject>($"Games/noGame");
+            }
         }
 
         public Minigames.Minigame GetGameInfo(string name)

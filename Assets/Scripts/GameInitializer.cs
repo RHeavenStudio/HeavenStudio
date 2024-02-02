@@ -68,7 +68,7 @@ namespace HeavenStudio
             GameObject Games = new GameObject();
             Games.name = "Games";
 
-            gameManager.playMode = playOnStart;
+            gameManager.TogglePlayMode(playOnStart);
 
             gameManager.GamesHolder = Games;
             gameManager.CircleCursor = Cursor.transform.GetChild(0).GetComponent<CircleCursor>();

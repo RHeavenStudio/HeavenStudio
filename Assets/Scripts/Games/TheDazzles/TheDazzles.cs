@@ -267,11 +267,15 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnPlay(double beat)
+        {
+            if (queuedPoses.Count > 0) queuedPoses.Clear();
+            if (queuedCrouches.Count > 0) queuedCrouches.Clear();
+        }
+
         void Update()
         {
-            var cond = Conductor.instance;
-
-            if (cond.isPlaying && !cond.isPaused)
+            if (conductor.isPlaying && !conductor.isPaused)
             {
                 if (queuedPoses.Count > 0)
                 {
@@ -319,33 +323,34 @@ namespace HeavenStudio.Games
                     }
                     shouldHold = false;
                 }
-                if (PlayerInput.GetIsAction(InputAction_TouchRelease) && !GameManager.instance.autoplay)
+                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
                 {
-                    player.UnPrepare();
-                    shouldHold = false;
-                }
-                if (PlayerInput.GetIsAction(InputAction_BasicRelease) && shouldHold && !GameManager.instance.autoplay)
-                {
-                    if (doingPoses)
-                    {
-                        player.Pose(false);
-                        SoundByte.PlayOneShotGame("theDazzles/miss");
-                        foreach (var girl in npcGirls)
-                        {
-                            girl.Ouch();
-                        }
-                    }
-                    else
+                    if (PlayerInput.GetIsAction(InputAction_TouchRelease) && !gameManager.autoplay)
                     {
                         player.UnPrepare();
+                        shouldHold = false;
                     }
-                    shouldHold = false;
                 }
-            }
-            else if (!cond.isPlaying && !cond.isPaused)
-            {
-                if (queuedPoses.Count > 0) queuedPoses.Clear();
-                if (queuedCrouches.Count > 0) queuedCrouches.Clear();
+                else
+                {
+                    if (PlayerInput.GetIsAction(InputAction_BasicRelease) && shouldHold && (!gameManager.autoplay) && !IsExpectingInputNow(InputAction_FlickRelease))
+                    {
+                        if (doingPoses)
+                        {
+                            player.Pose(false);
+                            SoundByte.PlayOneShotGame("theDazzles/miss");
+                            foreach (var girl in npcGirls)
+                            {
+                                girl.Ouch();
+                            }
+                        }
+                        else
+                        {
+                            player.UnPrepare();
+                        }
+                        shouldHold = false;
+                    }
+                }
             }
         }
 

@@ -166,11 +166,11 @@ namespace HeavenStudio.Games
         public override void OnBeatPulse(double beat)
         {
             if (!BeatIsInBopRegion(beat)) return;
-            if (student.isHolding)
+            if (student.isHolding && !student.swiping)
             {
                 student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
             }
-            else if (!student.swiping && student.anim.IsAnimationNotPlaying())
+            else if (student.anim.IsAnimationNotPlaying() && !student.swiping)
             {
                 student.anim.DoScaledAnimationAsync("IdleBop", 0.5f);
             }
@@ -217,16 +217,19 @@ namespace HeavenStudio.Games
             {
                 student.UnHold();
                 shouldBeHolding = false;
+                ScoreMiss();
             }
             else if(PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease) && student.isHolding) //Flick during hold
             {
                 student.OnFlickSwipe();
                 shouldBeHolding = false;
+                ScoreMiss();
             }
             else if (!GameManager.instance.autoplay && shouldBeHolding && !PlayerInput.GetIsAction(InputAction_BasicPressing) && !IsExpectingInputNow(InputAction_FlickRelease))
             {
                 student.UnHold();
                 shouldBeHolding = false;
+                ScoreMiss();
             }
         }
 
@@ -249,11 +252,11 @@ namespace HeavenStudio.Games
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
-                            if (student.isHolding)
+                            if (student.isHolding && !student.swiping)
                             {
                                 student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
                             }
-                            else if (!student.swiping && student.anim.IsAnimationNotPlaying())
+                            else if (student.anim.IsAnimationNotPlaying() && !student.swiping)
                             {
                                 student.anim.DoScaledAnimationAsync("IdleBop", 0.5f);
                             }
@@ -469,27 +472,13 @@ namespace HeavenStudio.Games
                 ScheduleInput(beat, timing, InputAction_FlickRelease, student.OnHitSwipe, student.OnMissSwipe, student.OnEmpty);
             }
             andStop = false;
-
-
-
-
         }
-
-        //void SetupCue(float beat, bool swipe)
-        //{
-        //    if (swipe)
-        //        student.swipeBeat = beat;
-        //    else
-        //        student.holdBeat = beat;
-            
-        //    student.eligible = true;
-        //    student.ResetState();
-        //}
 
         public static void SoundFX(bool toggle)
         {
             Student.soundFX = toggle;
         }
+
         public static void VoiceLines(double beat, int type)
         {
             string[] sounds;

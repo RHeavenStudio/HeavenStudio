@@ -54,6 +54,7 @@ namespace HeavenStudio
             {"icontype", 0},                                                                                                    // chart icon (presets, custom - future)
             {"iconres", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Select/", "Icon")},           // custom icon location (future)
             {"challengetype", 0},                                                                                               // perfect challenge type
+            {"accessiblewarning", false},                                                                                       // epilepsy warning
             {"playstyle", RecommendedControlStyle.Any},                                                                         // recommended control style
 
             // chart song info
@@ -478,9 +479,7 @@ namespace HeavenStudio
             {
                 if (AssetsLoaded || !usesAssetBundle) return;
                 await UniTask.WhenAll(LoadCommonAssetBundleAsync(), LoadLocalizedAssetBundleAsync());
-                await UniTask.WhenAll(LoadGamePrefabAsync());
-                await UniTask.WhenAll(LoadCommonAudioClips());
-                await UniTask.WhenAll(LoadLocalizedAudioClips());
+                await UniTask.WhenAll(LoadGamePrefabAsync(), LoadCommonAudioClips(), LoadLocalizedAudioClips());
             }
 
             public async UniTask LoadCommonAssetBundleAsync()
@@ -498,7 +497,7 @@ namespace HeavenStudio
                 if (!usesAssetBundle) return;
                 if (bundleCommon != null) return;
 
-                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common")).ToUniTask();
+                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common")).ToUniTask(timing: PlayerLoopTiming.PreLateUpdate);
 
                 bundleCommon = bundle;
                 commonLoaded = true;
@@ -520,7 +519,7 @@ namespace HeavenStudio
                 if (!usesAssetBundle) return;
                 if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) return;
 
-                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale)).ToUniTask();
+                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale)).ToUniTask(timing: PlayerLoopTiming.PreLateUpdate);
                 if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) return;
 
                 bundleLocalized = bundle;
@@ -534,7 +533,7 @@ namespace HeavenStudio
                 if (!commonLoaded) return;
                 if (bundleCommon == null) return;
 
-                UnityEngine.Object asset = await bundleCommon.LoadAssetAsync<GameObject>(name).ToUniTask();
+                UnityEngine.Object asset = await bundleCommon.LoadAssetAsync<GameObject>(name).ToUniTask(timing: PlayerLoopTiming.PreLateUpdate);
                 loadedPrefab = asset as GameObject;
 
                 // load sound sequences here for now
@@ -546,6 +545,14 @@ namespace HeavenStudio
                 }
             }
 
+            public GameObject LoadGamePrefab()
+            {
+                if (!usesAssetBundle) return null;
+
+                loadedPrefab = GetCommonAssetBundle().LoadAsset<GameObject>(name);
+                return loadedPrefab;
+            }
+
             public async UniTask LoadCommonAudioClips()
             {
                 if (!commonLoaded) return;
@@ -555,14 +562,6 @@ namespace HeavenStudio
 
                 var assets = bundleCommon.LoadAllAssetsAsync();
                 await assets;
-
-                // await UniTask.SwitchToThreadPool();
-                // foreach (var asset in assets.allAssets)
-                // {
-                //     AudioClip clip = asset as AudioClip;
-                //     commonAudioClips.Add(clip.name, clip);
-                // }
-                // await UniTask.SwitchToMainThread();
             }
 
             public async UniTask LoadLocalizedAudioClips()
@@ -574,14 +573,6 @@ namespace HeavenStudio
 
                 var assets = bundleLocalized.LoadAllAssetsAsync();
                 await assets;
-
-                // await UniTask.SwitchToThreadPool();
-                // foreach (var asset in assets.allAssets)
-                // {
-                //     AudioClip clip = asset as AudioClip;
-                //     localeAudioClips.Add(clip.name, clip);
-                // }
-                // await UniTask.SwitchToMainThread();
             }
 
             public async UniTask UnloadAllAssets()

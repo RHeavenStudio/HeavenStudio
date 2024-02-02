@@ -37,7 +37,7 @@ namespace HeavenStudio
         public static string PlayOpenFile = null;
 
         public static string buildTime = "00/00/0000 00:00:00";
-        public static string friendlyReleaseName = "Heaven Studio (1.0 Lush)";
+        public static string friendlyReleaseName = "Heaven Studio (1.0.1 Lush)";
 
         public static bool HasShutDown = false;
         public static bool discordDuringTesting = false;
@@ -240,7 +240,8 @@ namespace HeavenStudio
                 return null;
         }
 
-        public static void LoadScene(string scene, float fadeIn = 0.35f, float fadeOut = 0.35f)
+        public delegate void OnLoadSceneFadeInComplete();
+        public static void LoadScene(string scene, float fadeIn = 0.35f, float fadeOut = 0.35f, OnLoadSceneFadeInComplete callback = null)
         {
             if (scene == loadedScene)
                 return;
@@ -255,6 +256,7 @@ namespace HeavenStudio
             if (fadeIn <= 0)
             {
                 instance.fadeImage.color = new Color(0, 0, 0, 1);
+                callback?.Invoke();
                 AssetBundle.UnloadAllAssetBundles(true);
                 instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
             }
@@ -263,6 +265,7 @@ namespace HeavenStudio
                 instance.fadeImage.color = new Color(0, 0, 0, 0);
                 instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
                 {
+                    callback?.Invoke();
                     AssetBundle.UnloadAllAssetBundles(true);
                     instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
                 });
@@ -399,20 +402,35 @@ namespace HeavenStudio
                 height = (int)(width / 16f * 9f);
             }
 
-            GameRenderTexture.Release();
+            if (GameRenderTexture != null)
+            {
+                GameRenderTexture.Release();
 
-            GameRenderTexture.width = width;
-            GameRenderTexture.height = height;
+                GameRenderTexture.width = width;
+                GameRenderTexture.height = height;
 
-            GameRenderTexture.Create();
+                GameRenderTexture.Create();
+            }
+            else
+            {
+                GameRenderTexture = new RenderTexture(width, height, 24);
+                GameRenderTexture.Create();
+            }
 
+            if (OverlayRenderTexture != null)
+            {
+                OverlayRenderTexture.Release();
 
-            OverlayRenderTexture.Release();
+                OverlayRenderTexture.width = (int)(width * 1.5f);
+                OverlayRenderTexture.height = (int)(height * 1.5f);
 
-            OverlayRenderTexture.width = (int)(width * 1.5f);
-            OverlayRenderTexture.height = (int)(height * 1.5f);
-
-            OverlayRenderTexture.Create();
+                OverlayRenderTexture.Create();
+            }
+            else
+            {
+                OverlayRenderTexture = new RenderTexture((int)(width * 1.5f), (int)(height * 1.5f), 24);
+                OverlayRenderTexture.Create();
+            }
         }
 
         public static void ChangeMasterVolume(float value)

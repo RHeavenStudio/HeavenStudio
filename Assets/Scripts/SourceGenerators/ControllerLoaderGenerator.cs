@@ -80,8 +80,10 @@ namespace {context.TargetClass.Namespace}
         sb.IndentLevel(3);
 
         sb.Append($@"
+            inputDevices = new List<InputController>();
             InputController[] controllers;
             PlayerInputRefresh = new();
+            PlayerInputCleanUp = null;
 ");
 
         foreach (var loadRunner in loadRunners)
