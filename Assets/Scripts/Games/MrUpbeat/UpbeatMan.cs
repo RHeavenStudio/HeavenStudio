@@ -19,6 +19,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         public bool shouldGrow;
         public bool shouldBlip = true;
         public string blipString = "M";
+        public int blipLength = 4;
         public bool canStep = false; // just disabled when you normally couldn't step, which is anything less than 2 beats before you would start stepping and any time after the Ding!
         public bool canStepFromAnim = true; // disabled when stepping, then reenabled in the animation events. you can step JUST BARELY before the animation ends in fever
 
@@ -57,12 +58,13 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
 
         public void Blipping()
         {
+            int blipLengthReal = blipLength - 4;
             SoundByte.PlayOneShotGame("mrUpbeat/blip");
-            blipAnim.Play("Blip" + (blipSize + 1), 0, 0);
-            blipText.gameObject.SetActive(blipSize >= 4);
+            blipAnim.Play("Blip" + (blipSize + 1 - blipLengthReal), 0, 0);
+            blipText.gameObject.SetActive(blipSize - blipLengthReal >= 4);
             
             blipText.text = blipString != "" ? blipString : "";
-            if (shouldGrow && blipSize < 4) blipSize++;
+            if (shouldGrow && blipSize - blipLengthReal < 4) blipSize++;
         }
 
         public void Step(bool isInput = false)
