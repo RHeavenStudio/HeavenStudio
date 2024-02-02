@@ -17,45 +17,63 @@ MonoBehaviour:
   DenseViewWidthThreshold: 512
   _disableAutoReloadInBackground: 0
   ImportedScriptPaths:
-  - Assets/Scripts/Minigames.cs
-  - Assets/Editor/CreateAssetBundles.cs
-  - Assets/Editor/CreateMinigameScriptTemplate.cs
-  - Assets/Scripts/Games/Minigame.cs
-  - Assets/Scripts/Games/FanClub/FanClub.cs
-  - Assets/Scripts/GameManager.cs
-  - Assets/Editor/SpritesheetScaler.cs
-  - Assets/Scripts/Games/MeatGrinder/MeatGrinder.cs
-  - Assets/Scripts/Games/SneakySpirits/SneakySpirits.cs
-  - Assets/Scripts/LevelEditor/Timeline/SpecialTmeline/SpecialTimeline.cs
-  - Assets/Scripts/InputSystem/USG.g/InitInputControllers.PlayerInput.ControllerLoaderGenerator.g.cs
-  - Assets/Scripts/SourceGenerators/MinigameLoaderGenerator.cs
-  - Assets/Scripts/InputSystem/ControllerTypes/InputKeyboard.cs
-  - Assets/Scripts/Games/WorkingDough/PlayerEnterDoughBall.cs
-  - Assets/Scripts/Games/Lockstep/Lockstep.cs
-  - Assets/Scripts/InputSystem/ControllerTypes/InputJoyshock.cs
-  - Assets/Scripts/SourceGenerators/ControllerLoaderGenerator.cs
-  - Assets/Scripts/AppInfo.cs
-  - Assets/Scripts/GlobalGameManager.cs
-  - Assets/Scripts/Games/WorkingDough/WorkingDough.cs
-  - Assets/Scripts/InputSystem/InputController.cs
+  - Assets/Scripts/Games/KarateMan/KarateManNoriController.cs
+  - Assets/Scripts/DiscordController.cs
+  - Assets/Scripts/LevelEditor/RemixPropertiesDialog/PropertyPrefabs/RatingScreenPropertyDialog.cs
   - Assets/Scripts/Util/BeatAction.cs
-  - Assets/Scripts/Games/DogNinja/DogNinja.cs
+  - Assets/Scripts/GameInitializer.cs
+  - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowser.cs
+  - Assets/Scripts/Games/DoubleDate/DoubleDate.cs
+  - Assets/Scripts/Games/AirRally/AirRally.cs
+  - Assets/Scripts/Games/TossBoys/TossBoys.cs
+  - Assets/Scripts/UI/PauseMenu.cs
+  - Assets/Scripts/Util/Sound.cs
+  - Assets/Plugins/Discord/Plugins/DiscordGameSDK/LobbyManager.cs
+  - Assets/Scripts/Games/SeeSaw/SeeSawGuy.cs
   - Assets/Scripts/TitleManager.cs
-  - Assets/Scripts/Games/MrUpbeat/UpbeatMan.cs
-  - Assets/Scripts/Games/PajamaParty/CtrPillowPlayer.cs
+  - Assets/Scripts/Games/KarateMan/KarateManJoe.cs
+  - Assets/Scripts/InputSystem/USG.g/InitInputControllers.PlayerInput.ControllerLoaderGenerator.g.cs
+  - Assets/Plugins/Discord/Plugins/DiscordGameSDK/ImageManager.cs
+  - Assets/Plugins/Discord/Plugins/DiscordGameSDK/StorageManager.cs
+  - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowserEditor.cs
+  - Assets/Scripts/Games/KarateMan/KarateManPot.cs
+  - Assets/Scripts/Games/DJSchool/Student.cs
+  - Assets/Plugins/Discord/Plugins/DiscordGameSDK/StoreManager.cs
+  - Assets/Scripts/Games/TrickClass/TrickClass.cs
   - Assets/Scripts/Games/MrUpbeat/MrUpbeat.cs
-  - Assets/Scripts/Games/Ringside/Ringside.cs
+  - Assets/Scripts/Common/MemRenderer.cs
+  - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowserMac.cs
+  - Assets/Scripts/LevelEditor/Timeline/Timeline.cs
   - Assets/Scripts/PersistentDataManager.cs
-  - Assets/Scripts/Games/RhythmTweezers/LongHair.cs
-  - Assets/Scripts/Games/WizardsWaltz/WizardsWaltz.cs
-  - Assets/Scripts/InputSystem/PlayerInput.cs
+  - Assets/Scripts/Minigames.cs
+  - Assets/Scripts/LevelEditor/Editor.cs
+  - Assets/Scripts/Games/MunchyMonk/MunchyMonk.cs
+  - Assets/Scripts/Games/DJSchool/DJSchool.cs
+  - Assets/Plugins/Discord/Plugins/DiscordGameSDK/Core.cs
+  - Assets/Scripts/SourceGenerators/ControllerLoaderGenerator.cs
+  - Assets/Scripts/LevelEditor/Timeline/SpecialTmeline/TimelineObjs/SectionTimelineObj.cs
+  - Assets/Scripts/EventCaller.cs
+  - Assets/Scripts/Games/Minigame.cs
+  - Assets/Scripts/Games/TheDazzles/TheDazzles.cs
   - Assets/Scripts/USG.g/LoadMinigames.Minigames.MinigameLoaderGenerator.g.cs
-  - Assets/Scripts/Games/OctopusMachine/OctopusMachine.cs
-  - Assets/Scripts/Games/Tunnel/Tunnel.cs
-  - Assets/Scripts/Games/FlipperFlop/FlipperFlop.cs
+  - Assets/Scripts/InputSystem/InputType.cs
+  - Assets/Plugins/Discord/Plugins/DiscordGameSDK/ActivityManager.cs
+  - Assets/Scripts/Games/FirstContact/FirstContact.cs
+  - Assets/Scripts/Util/AnimationHelpers.cs
+  - Assets/Scripts/Games/BoardMeeting/BoardMeeting.cs
+  - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowserWindows.cs
+  - Assets/Scripts/UI/Overlays/OverlaysManager.cs
+  - Assets/Scripts/DiscordRPC.cs
+  - Assets/Scripts/Games/KarateMan/KarateMan.cs
+  - Assets/Scripts/LevelEditor/WaveformVisual.cs
+  - Assets/Scripts/GlobalGameManager.cs
+  - Assets/Plugins/Discord/Plugins/DiscordGameSDK/Constants.cs
+  - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowserLinux.cs
   - Assets/Scripts/Conductor.cs
-  - Assets/Scripts/Games/TramAndPauline/TramAndPauline.cs
+  - Assets/Scripts/LevelEditor/Timeline/SpecialTmeline/SectionDialog.cs
+  - Assets/Plugins/StandaloneFileBrowser/IStandaloneFileBrowser.cs
   - Assets/Scripts/JudgementManager.cs
-  - Assets/Scripts/Games/SumoBrothers/SumoBrothers.cs
+  - Assets/Scripts/GameManager.cs
+  - Assets/Scripts/Games/PlayerActionEvent.cs
   PathsToSkipImportEvent: []
   PathsToIgnoreOverwriteSettingOnAttribute: []

@@ -266,6 +266,28 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader NtrBackbeatLoader failed!");
             }
 
+            Debug.Log("Running game loader AgbMannequinFactoryLoader");
+            game = AgbMannequinFactoryLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbMannequinFactoryLoader failed!");
+            }
+
+            Debug.Log("Running game loader RvlManzaiLoader");
+            game = RvlManzaiLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader RvlManzaiLoader failed!");
+            }
+
             Debug.Log("Running game loader AgbMarcherLoader");
             game = AgbMarcherLoader.AddGame(eventCaller);
             if (game != null)
@@ -288,6 +310,17 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader PcoMeatLoader failed!");
             }
 
+            Debug.Log("Running game loader RvlMonkeyWatchLoader");
+            game = RvlMonkeyWatchLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader RvlMonkeyWatchLoader failed!");
+            }
+
             Debug.Log("Running game loader AgbUpbeatLoader");
             game = AgbUpbeatLoader.AddGame(eventCaller);
             if (game != null)
@@ -308,6 +341,17 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader ntrMunchyMonkLoader failed!");
+            }
+
+            Debug.Log("Running game loader AgbNightWalkLoader");
+            game = AgbNightWalkLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbNightWalkLoader failed!");
             }
 
             Debug.Log("Running game loader NtrOctopusMachineLoader");
@@ -539,6 +583,17 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader AgbTossBoysLoader failed!");
+            }
+
+            Debug.Log("Running game loader TotemClimbLoader");
+            game = TotemClimbLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader TotemClimbLoader failed!");
             }
 
             Debug.Log("Running game loader AgbTramLoader");
