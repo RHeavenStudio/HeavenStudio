@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private LBJBear _bear;
         private LumBEARjack.SmallType _type;
 
-        public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type)
+        public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;

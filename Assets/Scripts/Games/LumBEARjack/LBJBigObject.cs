@@ -11,12 +11,12 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private LumBEARjack.BigType _type;
         private PlayerActionEvent _cutActionEvent;
 
-        public void Init(LBJBear bear, double beat, double length, LumBEARjack.BigType type)
+        public void Init(LBJBear bear, double beat, double length, LumBEARjack.BigType type, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;
 
-            LumBEARjack.instance.ScheduleInput(beat, length / 4 * 2, Minigame.InputAction_BasicPress, JustHit, Miss, Blank);
+            if (startUpBeat <= beat + (length / 4 * 2)) LumBEARjack.instance.ScheduleInput(beat, length / 4 * 2, Minigame.InputAction_BasicPress, JustHit, Miss, Blank);
             _cutActionEvent = LumBEARjack.instance.ScheduleInput(beat, length / 4 * 3, Minigame.InputAction_BasicPress, JustCut, Miss, Blank);
         }
 
