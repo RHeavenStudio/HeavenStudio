@@ -875,6 +875,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SoundSequences: []
   scheduledInputs: []
+  _bear: {fileID: 7013601655191583099}
+  _smallObjectPrefab: {fileID: -5173722026323445984, guid: 3d44370bfd973e34ea21a4b1cfff8ca6, type: 3}
+  _bigObjectPrefab: {fileID: 3578111811869010179, guid: b18b10a5fd5fd2c4ea91f7c44b775dfa, type: 3}
+  _hugeObjectPrefab: {fileID: -3577666667379746924, guid: d971a00c5581d884b9658910cac762ad, type: 3}
 --- !u!1 &3527631078867808426
 GameObject:
   m_ObjectHideFlags: 0
@@ -1641,6 +1645,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5426823713711891276}
+  - component: {fileID: 7013601655191583099}
   m_Layer: 0
   m_Name: Beast
   m_TagString: Untagged
@@ -1669,6 +1674,19 @@ Transform:
   m_Father: {fileID: 2298792418077467027}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7013601655191583099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5655511689993903157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32640a26a175a5d4baa5ba61b5446e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 0}
 --- !u!1 &7392174160003629766
 GameObject:
   m_ObjectHideFlags: 0
