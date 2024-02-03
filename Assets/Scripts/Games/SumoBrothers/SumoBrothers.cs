@@ -73,6 +73,17 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true
                 },
 
+                new GameAction("look", "Look at Camera")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.LookAtCamera(e.beat, e.length, e["look"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("look", true, "Look at Camera", "Whether the Sumo Brothers will look at the camera while slapping."),
+                    },
+                    defaultLength = 1f,
+                    resizable = true
+                },
+
             });
         }
     }
@@ -87,7 +98,8 @@ namespace HeavenStudio.Games
         [SerializeField] Animator inuSensei;
         [SerializeField] Animator sumoBrotherP;
         [SerializeField] Animator sumoBrotherG;
-         [SerializeField] Animator sumoBrotherGHead;
+        [SerializeField] Animator sumoBrotherGHead;
+        [SerializeField] Animator sumoBrotherPHead;
 
         [Header("Properties")]
         static List<queuedSumoInputs> queuedInputs = new List<queuedSumoInputs>();
@@ -179,9 +191,10 @@ namespace HeavenStudio.Games
                 {
                     if(goBopSumo)
                     {
-                        sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f);
-                        sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f);
+                        sumoBrotherP.DoScaledAnimationAsync("SumoBop", 1f);
+                        sumoBrotherG.DoScaledAnimationAsync("SumoBop", 1f);
                         sumoBrotherGHead.DoScaledAnimationAsync("SumoGIdle", 0.5f);
+                        sumoBrotherPHead.DoScaledAnimationAsync("SumoGIdle", 0.5f);
                     }
                     else
                     {
@@ -212,8 +225,8 @@ namespace HeavenStudio.Games
                         }
                         if (sumo)
                         {
-                            sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f);
-                            sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f);
+                            sumoBrotherP.DoScaledAnimationAsync("SumoBop", 1f);
+                            sumoBrotherG.DoScaledAnimationAsync("SumoBop", 1f);
                             sumoBrotherGHead.DoScaledAnimationAsync("SumoGIdle", 0.5f);
                         }
                     }));
@@ -288,8 +301,8 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 3, delegate { allowBopSumo = false; }),
                 new BeatAction.Action(beat + 3, delegate { sumoBrotherP.DoScaledAnimationAsync("SumoSlapPrepare", 1f); }),
                 new BeatAction.Action(beat + 3, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoSlapPrepare", 1f); }),
-                new BeatAction.Action(beat + 3, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapPrepare", 0.5f); }),
-                new BeatAction.Action(beat + 4, delegate { allowBopSumo = true; })
+                new BeatAction.Action(beat + 3, delegate { sumoBrotherPHead.DoScaledAnimationAsync("SumoPSlapPrepare", 0.5f); }),
+                new BeatAction.Action(beat + 3, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapPrepare", 0.5f); })
                 });
 
             if (mute == false)
@@ -355,9 +368,23 @@ namespace HeavenStudio.Games
             new BeatAction.Action(beat, delegate { if (sumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoCrouch", 0.5f); }),
             new BeatAction.Action(beat + length - 0.001, delegate { allowBopInu = true; }),
             new BeatAction.Action(beat + length - 0.001, delegate { allowBopSumo = true; }),
-            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); })
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherP.DoScaledAnimationAsync("SumoBop", 1f); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoBop", 1f); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 1f); })
+            });
+
+        }
+
+        public void LookAtCamera(double beat, float length, bool lookatcam)
+        {
+            
+            BeatAction.New(instance, new List<BeatAction.Action>() {
+            new BeatAction.Action(beat, delegate { sumoBrotherPHead.DoScaledAnimationAsync("SumoPSlapLook", 0.5f); }),
+            new BeatAction.Action(beat, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapLook", 0.5f); }),
+            new BeatAction.Action(beat, delegate { print("look"); }),
+            new BeatAction.Action(beat + length, delegate { if (sumoState == SumoState.Slap) sumoBrotherPHead.DoScaledAnimationAsync("SumoPSlapPrepare", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { if (sumoState == SumoState.Slap) sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapPrepare", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { print("lookun"); })
             });
 
         }
@@ -382,7 +409,8 @@ namespace HeavenStudio.Games
 
             BeatAction.New(instance, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 3, delegate { allowBopInu = true; }),
-                new BeatAction.Action(beat + 3, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); })
+                new BeatAction.Action(beat + 3, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); }),
+                new BeatAction.Action(beat + 5, delegate { allowBopSumo = true; })
             });
 
         }
@@ -424,13 +452,16 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("nearmiss");
-                SoundByte.PlayOneShotGame("sumoBrothers/slap");
+
             }
             else
             {
 
             }
             SoundByte.PlayOneShotGame("sumoBrothers/slap");
+            sumoBrotherP.DoScaledAnimationAsync("SumoSlapFront", 1f);
+            sumoBrotherG.DoScaledAnimationAsync("SumoSlapFront", 1f);
+            
 
 
         }
