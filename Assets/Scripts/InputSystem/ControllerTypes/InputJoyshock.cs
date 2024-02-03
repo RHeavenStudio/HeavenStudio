@@ -11,14 +11,25 @@ namespace HeavenStudio.InputSystem.Loaders
 {
     public static class InputJoyshockInitializer
     {
+        static bool failedJsl = false;
         [LoadOrder(2)]
         public static InputController[] Initialize()
         {
+            failedJsl = false;
             InputJoyshock.joyshocks = new();
             PlayerInput.PlayerInputCleanUp += DisposeJoyshocks;
             PlayerInput.PlayerInputRefresh.Add(Refresh);
 
-            InputJoyshock.JslEventInit();
+            try
+            {
+                InputJoyshock.JslEventInit();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Failed to initialize JoyShockLibrary: " + e.Message);
+                failedJsl = true;
+                return null;
+            }
 
             InputController[] controllers;
             int jslDevicesFound = 0;
@@ -57,16 +68,18 @@ namespace HeavenStudio.InputSystem.Loaders
 
         public static void DisposeJoyshocks()
         {
+            if (failedJsl) return;
             foreach (InputJoyshock joyshock in InputJoyshock.joyshocks.Values)
             {
                 joyshock.CleanUp();
             }
-            JslSetCallback(null);
             JslDisconnectAndDisposeAll();
+            JslSetCallback(null);
         }
 
         public static InputController[] Refresh()
         {
+            if (failedJsl) return null;
             InputJoyshock.joyshocks.Clear();
             InputController[] controllers;
             int jslDevicesFound = 0;
@@ -299,6 +312,7 @@ namespace HeavenStudio.InputSystem
         int lightbarColour;
         string joyshockName;
         DateTime startTime;
+        bool joyConWantRotatedStick;
 
         //buttons, sticks, triggers
         JoyshockButtonState[] actionStates = new JoyshockButtonState[BINDS_MAX];
@@ -471,6 +485,25 @@ namespace HeavenStudio.InputSystem
             xAxis = joyBtStateCurrent.stickLX;
             yAxis = joyBtStateCurrent.stickLY;
 
+            if (joyConWantRotatedStick && splitType != SplitFull)
+            {
+                float tempX = xAxis;
+                float tempY = yAxis;
+                switch (splitType)
+                {
+                    case SplitLeft:
+                        xAxis = -tempY;
+                        yAxis = tempX;
+                        break;
+                    case SplitRight:
+                        xAxis = joyBtStateCurrent.stickRX;
+                        yAxis = joyBtStateCurrent.stickRY;
+                        xAxis = tempY;
+                        yAxis = -tempX;
+                        break;
+                }
+            }
+
             directionStateLast = directionStateCurrent;
             directionStateCurrent = 0;
             directionStateCurrent |= ((yAxis >= stickDeadzone) ? (1 << ((int)InputDirection.Up)) : 0);
@@ -484,6 +517,7 @@ namespace HeavenStudio.InputSystem
 
         public override void OnSelected()
         {
+            SetRotatedStickMode(true);
             Task.Run(() => SelectionVibrate());
         }
 
@@ -570,7 +604,7 @@ namespace HeavenStudio.InputSystem
                     break;
             }
             binds.PointerSensitivity = 3;
-            binds.version = 1;
+            binds.version = GetBindingsVersion();
             return binds;
         }
 
@@ -690,7 +724,7 @@ namespace HeavenStudio.InputSystem
                 case InputAxis.AxisRStickY:
                     return joyBtStateCurrent.stickRY;
                 case InputAxis.PointerX:   //isn't updated for now, so always returns 0f
-                                           //return joyTouchStateCurrent.t0X;
+                //return joyTouchStateCurrent.t0X;
                 case InputAxis.PointerY:
                 //return joyTouchStateCurrent.t0Y;
                 default:
@@ -862,6 +896,11 @@ namespace HeavenStudio.InputSystem
         public int GetJoyshockType()
         {
             return type;
+        }
+
+        public void SetRotatedStickMode(bool rotated)
+        {
+            joyConWantRotatedStick = rotated;
         }
 
         public void SetLightbarColour(Color color)

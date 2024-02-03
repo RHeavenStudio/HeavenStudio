@@ -113,9 +113,32 @@ namespace HeavenStudio.Editor
                         }
                     }
                 }
-                // else if (isPairSearching)
-                // {
-                // }
+                else if (currentController is InputJoyconPair)
+                {
+                    InputJoyconPair pair = (InputJoyconPair)currentController;
+                    if (!pair.HasControllers())
+                    {
+                        List<InputJoyshock> controllers = PlayerInput.GetInputControllers()
+                                            .Select(x => x as InputJoyshock)
+                                            .Where(x => x != null && x.GetJoyshockType() is TypeJoyConLeft or TypeJoyConRight)
+                                            .ToList();
+                        foreach (var possibleController in controllers)
+                        {
+                            if (possibleController.GetLastButtonDown(true) == ButtonMaskZL && possibleController.GetJoyshockType() is TypeJoyConLeft)
+                            {
+                                pair.SetLeftController(possibleController);
+                            }
+                            else if (possibleController.GetLastButtonDown(true) == ButtonMaskZR && possibleController.GetJoyshockType() is TypeJoyConRight)
+                            {
+                                pair.SetRightController(possibleController);
+                            }
+                        }
+                        if (pair.HasControllers())
+                        {
+                            pairSearchItem.SetActive(false);
+                        }
+                    }
+                }
             }
         }
 
@@ -179,6 +202,17 @@ namespace HeavenStudio.Editor
                 stylesDropdown.SetValueWithoutNotify((int)PlayerInput.CurrentControlStyle);
             }
 
+            newController.OnSelected();
+
+            if (newController is InputJoyconPair)
+            {
+                pairSearchItem.SetActive(true);
+            }
+            else
+            {
+                pairSearchItem.SetActive(false);
+            }
+
             UpdateControlStyleMapping();
             ShowControllerBinds(newController);
             ShowControllerIcon(newController);
@@ -197,7 +231,12 @@ namespace HeavenStudio.Editor
         public void StartBindSingle(int bt)
         {
             CancelBind();
-            if (PlayerInput.GetInputController(1).GetIsActionUnbindable(bt, PlayerInput.CurrentControlStyle))
+            InputController currentController = PlayerInput.GetInputController(1);
+            if (currentController.GetIsActionUnbindable(bt, PlayerInput.CurrentControlStyle))
+            {
+                return;
+            }
+            if (currentController is InputJoyconPair && !(currentController as InputJoyconPair).HasControllers())
             {
                 return;
             }
@@ -220,9 +259,14 @@ namespace HeavenStudio.Editor
         public void StartBindAll()
         {
             CancelBind();
+            InputController currentController = PlayerInput.GetInputController(1);
+            if (currentController is InputJoyconPair && !(currentController as InputJoyconPair).HasControllers())
+            {
+                return;
+            }
             bindAllMode = true;
             currentBindingBt = -1;
-            AdvanceAutoBind(PlayerInput.GetInputController(1));
+            AdvanceAutoBind(currentController);
         }
 
         public void CancelBind()

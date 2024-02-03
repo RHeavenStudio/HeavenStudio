@@ -56,199 +56,369 @@ namespace HeavenStudio.InputSystem
 {
     public class InputJoyconPair : InputController
     {
+        static readonly string[] nsConButtonNames = new[]
+        {
+            "Up",
+            "Down",
+            "Left",
+            "Right",
+            "Plus",
+            "Minus",
+            "Left Stick Click",
+            "Right Stick Click",
+            "L",
+            "R",
+            "ZL",
+            "ZR",
+            "B",
+            "A",
+            "Y",
+            "X",
+            "Home",
+            "Capture",
+            "", // mic on playstation, unused here
+            "SL",
+            "SR",
+            "Stick Up",
+            "Stick Down",
+            "Stick Left",
+            "Stick Right",
+        };
+
+        static int[] defaultMappings
+        {
+            get
+            {
+                return new[]
+                {
+                    ButtonMaskUp,
+                    ButtonMaskDown,
+                    ButtonMaskLeft,
+                    ButtonMaskRight,
+                    ButtonMaskS,
+                    ButtonMaskE,
+                    ButtonMaskW,
+                    ButtonMaskN,
+                    ButtonMaskL,
+                    ButtonMaskR,
+                    ButtonMaskPlus,
+                    -1
+                };
+            }
+        }
+
+        InputJoyshock leftController, rightController;
+        bool pairIsPossible = false;
+
+        public void SetLeftController(InputJoyshock leftController)
+        {
+            this.leftController = leftController;
+        }
+
+        public void SetRightController(InputJoyshock rightController)
+        {
+            this.rightController = rightController;
+        }
+
+        public bool HasControllers()
+        {
+            return leftController != null && rightController != null;
+        }
+
         public override bool GetAction(ControlStyles style, int action)
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return false;
+            }
+            return leftController.GetAction(style, action) || rightController.GetAction(style, action);
         }
 
         public override bool GetActionDown(ControlStyles style, int action, out double dt)
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                dt = 0;
+                return false;
+            }
+            return leftController.GetActionDown(style, action, out dt) || rightController.GetActionDown(style, action, out dt);
         }
 
         public override bool GetActionUp(ControlStyles style, int action, out double dt)
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                dt = 0;
+                return false;
+            }
+            return leftController.GetActionUp(style, action, out dt) || rightController.GetActionUp(style, action, out dt);
         }
 
         public override float GetAxis(InputAxis axis)
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return 0;
+            }
+            return leftController.GetAxis(axis) + rightController.GetAxis(axis);
         }
 
         public override int GetBindingsVersion()
         {
-            throw new NotImplementedException();
+            return 0;
         }
 
         public override string[] GetButtonNames()
         {
-            throw new NotImplementedException();
+            return nsConButtonNames;
         }
 
         public override ControlBindings GetCurrentBindings()
         {
-            throw new NotImplementedException();
+            return currentBindings;
         }
 
         public override bool GetCurrentStyleSupported()
         {
-            throw new NotImplementedException();
+            return PlayerInput.CurrentControlStyle is ControlStyles.Pad; // or ControlStyles.Baton
         }
 
         public override ControlBindings GetDefaultBindings()
         {
-            throw new NotImplementedException();
+            ControlBindings binds = new ControlBindings
+            {
+                Pad = defaultMappings,
+                version = GetBindingsVersion(),
+                PointerSensitivity = 3
+            };
+            return binds;
         }
 
         public override ControlStyles GetDefaultStyle()
         {
-            throw new NotImplementedException();
+            return ControlStyles.Pad;
         }
 
         public override string GetDeviceName()
         {
-            throw new NotImplementedException();
+            return "Joy-Con Pair";
         }
 
         public override InputFeatures GetFeatures()
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return 0;
+            }
+            InputFeatures features = leftController.GetFeatures() | rightController.GetFeatures();
+            return features;
         }
 
         public override bool GetFlick(out double dt)
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                dt = 0;
+                return false;
+            }
+            return leftController.GetFlick(out dt) || rightController.GetFlick(out dt);
         }
 
         public override bool GetHatDirection(InputDirection direction)
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return false;
+            }
+            return leftController.GetHatDirection(direction) || rightController.GetHatDirection(direction);
         }
 
         public override bool GetHatDirectionDown(InputDirection direction, out double dt)
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                dt = 0;
+                return false;
+            }
+            return leftController.GetHatDirectionDown(direction, out dt) || rightController.GetHatDirectionDown(direction, out dt);
         }
 
         public override bool GetHatDirectionUp(InputDirection direction, out double dt)
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                dt = 0;
+                return false;
+            }
+            return leftController.GetHatDirectionUp(direction, out dt) || rightController.GetHatDirectionUp(direction, out dt);
         }
 
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override bool GetIsConnected()
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return false;
+            }
+            return leftController.GetIsConnected() && rightController.GetIsConnected();
         }
 
         public override bool GetIsPoorConnection()
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return false;
+            }
+            return leftController.GetIsPoorConnection() || rightController.GetIsPoorConnection();
         }
 
         public override int GetLastActionDown()
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return -1;
+            }
+            return Math.Max(leftController.GetLastActionDown(), rightController.GetLastActionDown());
         }
 
         public override int GetLastButtonDown(bool strict = false)
         {
-            throw new NotImplementedException();
+            if (strict || leftController == null || rightController == null)
+            {
+                return -1;
+            }
+            return Math.Max(leftController.GetLastButtonDown(strict), rightController.GetLastButtonDown(strict));
         }
 
         public override int? GetPlayer()
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return null;
+            }
+            return playerNum;
         }
 
         public override Vector2 GetPointer()
         {
-            throw new NotImplementedException();
+            Camera cam = GameManager.instance.CursorCam;
+            Vector3 rawPointerPos = Input.mousePosition;
+            rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
+            return cam.ScreenToWorldPoint(rawPointerPos);
         }
 
         public override bool GetPointerLeftRight()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override bool GetSlide(out double dt)
         {
-            throw new NotImplementedException();
+            dt = 0;
+            return false;
         }
 
         public override bool GetSqueeze()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override bool GetSqueezeDown(out double dt)
         {
-            throw new NotImplementedException();
+            dt = 0;
+            return false;
         }
 
         public override bool GetSqueezeUp(out double dt)
         {
-            throw new NotImplementedException();
+            dt = 0;
+            return false;
         }
 
         public override Vector3 GetVector(InputVector vector)
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return Vector3.zero;
+            }
+            return leftController.GetVector(vector) + rightController.GetVector(vector);
         }
 
         public override void InitializeController()
         {
-            throw new NotImplementedException();
+            leftController = null;
+            rightController = null;
         }
 
         public override void OnSelected()
         {
-            throw new NotImplementedException();
+            if (leftController == null || rightController == null)
+            {
+                return;
+            }
+            leftController.OnSelected();
+            leftController.SetRotatedStickMode(false);
+            rightController.OnSelected();
+            rightController.SetRotatedStickMode(false);
+        }
+
+        async void SelectionVibrate(int handle)
+        {
+            JslSetRumbleFrequency(handle, 0.5f, 0.5f, 80f, 160f);
+            await Task.Delay(100);
+            JslSetRumbleFrequency(handle, 0f, 0f, 160f, 320f);
         }
 
         public override void RecentrePointer()
         {
-            throw new NotImplementedException();
         }
 
         public override void ResetBindings()
         {
-            throw new NotImplementedException();
+            currentBindings = GetDefaultBindings();
         }
 
         public override void SetCurrentBindings(ControlBindings newBinds)
         {
-            throw new NotImplementedException();
+            currentBindings = newBinds;
         }
 
         public override void SetMaterialProperties(Material m)
         {
-            throw new NotImplementedException();
+            Color colour;
+            m.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
+            m.SetColor("_BtnColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
+            m.SetColor("_LGripColor", leftController.GetBodyColor());
+            m.SetColor("_RGripColor", rightController.GetBodyColor());
         }
 
         public override void SetPlayer(int? playerNum)
         {
-            throw new NotImplementedException();
+            if (leftController != null)
+            {
+                leftController.SetPlayer(playerNum);
+            }
+            if (rightController != null)
+            {
+                rightController.SetPlayer(playerNum);
+            }
         }
 
         public override void TogglePointerLock(bool locked)
         {
-            throw new NotImplementedException();
         }
 
         public override ControlBindings UpdateBindings(ControlBindings lastBinds)
         {
-            throw new NotImplementedException();
+            return lastBinds;
         }
 
         public override void UpdateState()
         {
-            throw new NotImplementedException();
         }
     }
 }
