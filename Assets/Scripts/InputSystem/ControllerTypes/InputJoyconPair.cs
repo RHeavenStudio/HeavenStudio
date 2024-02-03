@@ -392,8 +392,22 @@ namespace HeavenStudio.InputSystem
             Color colour;
             m.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
             m.SetColor("_BtnColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
-            m.SetColor("_LGripColor", leftController.GetBodyColor());
-            m.SetColor("_RGripColor", rightController.GetBodyColor());
+            if (leftController == null)
+            {
+                m.SetColor("_LGripColor", Color.white);
+            }
+            else
+            {
+                m.SetColor("_LGripColor", leftController.GetBodyColor());
+            }
+            if (rightController == null)
+            {
+                m.SetColor("_RGripColor", Color.white);
+            }
+            else
+            {
+                m.SetColor("_RGripColor", rightController.GetBodyColor());
+            }
         }
 
         public override void SetPlayer(int? playerNum)

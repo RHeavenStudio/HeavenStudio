@@ -127,15 +127,19 @@ namespace HeavenStudio.Editor
                             if (possibleController.GetLastButtonDown(true) == ButtonMaskZL && possibleController.GetJoyshockType() is TypeJoyConLeft)
                             {
                                 pair.SetLeftController(possibleController);
+                                pair.SetMaterialProperties(controllerMat);
                             }
                             else if (possibleController.GetLastButtonDown(true) == ButtonMaskZR && possibleController.GetJoyshockType() is TypeJoyConRight)
                             {
                                 pair.SetRightController(possibleController);
+                                pair.SetMaterialProperties(controllerMat);
                             }
                         }
                         if (pair.HasControllers())
                         {
                             pairSearchItem.SetActive(false);
+                            pair.SetMaterialProperties(controllerMat);
+                            pair.OnSelected();
                         }
                     }
                 }
