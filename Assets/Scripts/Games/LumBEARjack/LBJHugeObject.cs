@@ -11,14 +11,14 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private LumBEARjack.HugeType _type;
         private PlayerActionEvent[] _soundsToDeleteIfMiss = new PlayerActionEvent[3];
 
-        public void Init(LBJBear bear, double beat, double length, LumBEARjack.HugeType type)
+        public void Init(LBJBear bear, double beat, double length, LumBEARjack.HugeType type, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;
 
-            LumBEARjack.instance.ScheduleInput(beat, length / 6 * 2, Minigame.InputAction_BasicPress, JustHit1, Miss, Blank);
-            _soundsToDeleteIfMiss[0] = LumBEARjack.instance.ScheduleInput(beat, length / 6 * 3, Minigame.InputAction_BasicPress, JustHit2, Miss, Blank);
-            _soundsToDeleteIfMiss[1] = LumBEARjack.instance.ScheduleInput(beat, length / 6 * 4, Minigame.InputAction_BasicPress, JustHit3, Miss, Blank);
+            if (startUpBeat <= beat + (length / 6 * 2)) LumBEARjack.instance.ScheduleInput(beat, length / 6 * 2, Minigame.InputAction_BasicPress, JustHit1, Miss, Blank);
+            if (startUpBeat <= beat + (length / 6 * 3)) _soundsToDeleteIfMiss[0] = LumBEARjack.instance.ScheduleInput(beat, length / 6 * 3, Minigame.InputAction_BasicPress, JustHit2, Miss, Blank);
+            if (startUpBeat <= beat + (length / 6 * 4)) _soundsToDeleteIfMiss[1] = LumBEARjack.instance.ScheduleInput(beat, length / 6 * 4, Minigame.InputAction_BasicPress, JustHit3, Miss, Blank);
             _soundsToDeleteIfMiss[2] = LumBEARjack.instance.ScheduleInput(beat, length / 6 * 5, Minigame.InputAction_BasicPress, JustCut, Miss, Blank);
         }
 
