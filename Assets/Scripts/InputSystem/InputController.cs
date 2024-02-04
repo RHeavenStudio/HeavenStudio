@@ -312,29 +312,6 @@ namespace HeavenStudio.InputSystem
         public abstract void TogglePointerLock(bool locked);
         public abstract void RecentrePointer();
 
-        /// <summary>
-        /// True if the current direction is active
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <returns></returns>
-        public abstract bool GetHatDirection(InputDirection direction);
-
-        /// <summary>
-        /// True if the current direction just became active this Update
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
-        /// <returns></returns>
-        public abstract bool GetHatDirectionDown(InputDirection direction, out double dt);
-
-        /// <summary>
-        /// True if the current direction just became inactive this Update
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
-        /// <returns></returns>
-        public abstract bool GetHatDirectionUp(InputDirection direction, out double dt);
-
         public abstract bool GetFlick(out double dt);
         public abstract bool GetSlide(out double dt);
         public abstract bool GetSqueezeDown(out double dt);

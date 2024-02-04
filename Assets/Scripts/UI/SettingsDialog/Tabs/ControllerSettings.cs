@@ -113,23 +113,24 @@ namespace HeavenStudio.Editor
                         }
                     }
                 }
-                else if (currentController is InputJoyconPair)
+                else if (currentController.GetType() == typeof(InputJoyconPair))
                 {
                     InputJoyconPair pair = (InputJoyconPair)currentController;
                     if (!pair.HasControllers())
                     {
+                        Debug.Log("Pair searching");
                         List<InputJoyshock> controllers = PlayerInput.GetInputControllers()
                                             .Select(x => x as InputJoyshock)
                                             .Where(x => x != null && x.GetJoyshockType() is TypeJoyConLeft or TypeJoyConRight)
                                             .ToList();
                         foreach (var possibleController in controllers)
                         {
-                            if (possibleController.GetLastButtonDown(true) == ButtonMaskZL && possibleController.GetJoyshockType() is TypeJoyConLeft)
+                            if (possibleController.GetLastButtonDown(true) == ButtonMaskZL && possibleController.GetJoyshockType() == TypeJoyConLeft)
                             {
                                 pair.SetLeftController(possibleController);
                                 pair.SetMaterialProperties(controllerMat);
                             }
-                            else if (possibleController.GetLastButtonDown(true) == ButtonMaskZR && possibleController.GetJoyshockType() is TypeJoyConRight)
+                            else if (possibleController.GetLastButtonDown(true) == ButtonMaskZR && possibleController.GetJoyshockType() == TypeJoyConRight)
                             {
                                 pair.SetRightController(possibleController);
                                 pair.SetMaterialProperties(controllerMat);
@@ -138,8 +139,9 @@ namespace HeavenStudio.Editor
                         if (pair.HasControllers())
                         {
                             pairSearchItem.SetActive(false);
-                            pair.SetMaterialProperties(controllerMat);
                             pair.OnSelected();
+                            pair.SetPlayer(1);
+                            pair.SetMaterialProperties(controllerMat);
                         }
                     }
                 }
@@ -210,6 +212,9 @@ namespace HeavenStudio.Editor
 
             if (newController is InputJoyconPair)
             {
+                InputJoyconPair pair = (InputJoyconPair)newController;
+                pair.SetLeftController(null);
+                pair.SetRightController(null);
                 pairSearchItem.SetActive(true);
             }
             else

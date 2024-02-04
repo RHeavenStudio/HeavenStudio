@@ -405,24 +405,6 @@ namespace HeavenStudio.InputSystem
             return realPos;
         }
 
-        //todo: directionals
-        public override bool GetHatDirection(InputDirection direction)
-        {
-            return false;
-        }
-
-        public override bool GetHatDirectionDown(InputDirection direction, out double dt)
-        {
-            dt = 0;
-            return false;
-        }
-
-        public override bool GetHatDirectionUp(InputDirection direction, out double dt)
-        {
-           dt = 0;
-            return false;
-        }
-
         public override void SetPlayer(int? playerNum)
         {
             if (playerNum == -1 || playerNum == null)

@@ -79,6 +79,8 @@ namespace HeavenStudio.InputSystem
             "", // mic on playstation, unused here
             "SL",
             "SR",
+            "", // fnl on playstation, unused here
+            "", // fnr on playstation, unused here
             "Stick Up",
             "Stick Down",
             "Stick Left",
@@ -108,7 +110,34 @@ namespace HeavenStudio.InputSystem
         }
 
         InputJoyshock leftController, rightController;
-        bool pairIsPossible = false;
+
+        int GetButtonForAction(int action)
+        {
+            if (currentBindings.Pad == null) return -1;
+            if (action < 0 || action >= BINDS_MAX) return -1;
+
+            ControlBindings actionMap = currentBindings;
+            if (actionMap.Pad[action] > ButtonMaskFnR) return -1;
+
+            return actionMap.Pad[action];
+        }
+
+        int GetActionForButton(int button, ControlStyles style)
+        {
+            if (style != ControlStyles.Pad) return -1;
+            if (currentBindings.Pad == null) return -1;
+            if (button < 0 || button >= ButtonMaskFnR) return -1;
+
+            ControlBindings actionMap = currentBindings;
+            for (int i = 0; i < BINDS_MAX; i++)
+            {
+                if (actionMap.Pad[i] == button)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
 
         public void SetLeftController(InputJoyshock leftController)
         {
@@ -131,27 +160,57 @@ namespace HeavenStudio.InputSystem
             {
                 return false;
             }
-            return leftController.GetAction(style, action) || rightController.GetAction(style, action);
+            int button = GetButtonForAction(action);
+            if (button == -1) { return false; }
+            return leftController.GetButtonState(button).pressed || rightController.GetButtonState(button).pressed;
         }
 
         public override bool GetActionDown(ControlStyles style, int action, out double dt)
         {
+            dt = 0;
             if (leftController == null || rightController == null)
             {
-                dt = 0;
                 return false;
             }
-            return leftController.GetActionDown(style, action, out dt) || rightController.GetActionDown(style, action, out dt);
+            int button = GetButtonForAction(action);
+            if (button == -1) { dt = 0; return false; }
+            InputJoyshock.JoyshockButtonState leftState = leftController.GetButtonState(button);
+            if (leftState.pressed && leftState.isDelta)
+            {
+                dt = leftState.dt;
+                return true;
+            }
+            InputJoyshock.JoyshockButtonState rightState = rightController.GetButtonState(button);
+            if (rightState.pressed && rightState.isDelta)
+            {
+                dt = rightState.dt;
+                return true;
+            }
+            return false;
         }
 
         public override bool GetActionUp(ControlStyles style, int action, out double dt)
         {
+            dt = 0;
             if (leftController == null || rightController == null)
             {
-                dt = 0;
                 return false;
             }
-            return leftController.GetActionUp(style, action, out dt) || rightController.GetActionUp(style, action, out dt);
+            int button = GetButtonForAction(action);
+            if (button == -1) { dt = 0; return false; }
+            InputJoyshock.JoyshockButtonState leftState = leftController.GetButtonState(button);
+            if (!leftState.pressed && leftState.isDelta)
+            {
+                dt = leftState.dt;
+                return true;
+            }
+            InputJoyshock.JoyshockButtonState rightState = rightController.GetButtonState(button);
+            if (!rightState.pressed && rightState.isDelta)
+            {
+                dt = rightState.dt;
+                return true;
+            }
+            return false;
         }
 
         public override float GetAxis(InputAxis axis)
@@ -165,7 +224,7 @@ namespace HeavenStudio.InputSystem
 
         public override int GetBindingsVersion()
         {
-            return 0;
+            return 1;
         }
 
         public override string[] GetButtonNames()
@@ -224,35 +283,6 @@ namespace HeavenStudio.InputSystem
             return leftController.GetFlick(out dt) || rightController.GetFlick(out dt);
         }
 
-        public override bool GetHatDirection(InputDirection direction)
-        {
-            if (leftController == null || rightController == null)
-            {
-                return false;
-            }
-            return leftController.GetHatDirection(direction) || rightController.GetHatDirection(direction);
-        }
-
-        public override bool GetHatDirectionDown(InputDirection direction, out double dt)
-        {
-            if (leftController == null || rightController == null)
-            {
-                dt = 0;
-                return false;
-            }
-            return leftController.GetHatDirectionDown(direction, out dt) || rightController.GetHatDirectionDown(direction, out dt);
-        }
-
-        public override bool GetHatDirectionUp(InputDirection direction, out double dt)
-        {
-            if (leftController == null || rightController == null)
-            {
-                dt = 0;
-                return false;
-            }
-            return leftController.GetHatDirectionUp(direction, out dt) || rightController.GetHatDirectionUp(direction, out dt);
-        }
-
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
             return false;
@@ -282,7 +312,22 @@ namespace HeavenStudio.InputSystem
             {
                 return -1;
             }
-            return Math.Max(leftController.GetLastActionDown(), rightController.GetLastActionDown());
+            int lastLeftButton = leftController.GetLastButtonDown();
+            int lastRightButton = rightController.GetLastButtonDown();
+            int leftAction = GetActionForButton(lastLeftButton, ControlStyles.Pad);
+            int rightAction = GetActionForButton(lastRightButton, ControlStyles.Pad);
+            if (leftAction == -1 && rightAction == -1)
+            {
+                return -1;
+            }
+            if (leftAction == -1)
+            {
+                return rightAction;
+            }
+            else
+            {
+                return leftAction;
+            }
         }
 
         public override int GetLastButtonDown(bool strict = false)
@@ -296,10 +341,6 @@ namespace HeavenStudio.InputSystem
 
         public override int? GetPlayer()
         {
-            if (leftController == null || rightController == null)
-            {
-                return null;
-            }
             return playerNum;
         }
 
@@ -352,6 +393,7 @@ namespace HeavenStudio.InputSystem
         {
             leftController = null;
             rightController = null;
+            LoadBindings();
         }
 
         public override void OnSelected()
@@ -364,13 +406,6 @@ namespace HeavenStudio.InputSystem
             leftController.SetRotatedStickMode(false);
             rightController.OnSelected();
             rightController.SetRotatedStickMode(false);
-        }
-
-        async void SelectionVibrate(int handle)
-        {
-            JslSetRumbleFrequency(handle, 0.5f, 0.5f, 80f, 160f);
-            await Task.Delay(100);
-            JslSetRumbleFrequency(handle, 0f, 0f, 160f, 320f);
         }
 
         public override void RecentrePointer()
@@ -412,13 +447,31 @@ namespace HeavenStudio.InputSystem
 
         public override void SetPlayer(int? playerNum)
         {
+            this.playerNum = playerNum;
+            int handle;
             if (leftController != null)
             {
-                leftController.SetPlayer(playerNum);
+                handle = leftController.GetHandle();
+                if (playerNum == -1 || playerNum == null)
+                {
+                    JslSetPlayerNumber(handle, 0);
+                }
+                else
+                {
+                    JslSetPlayerNumber(handle, (int)playerNum);
+                }
             }
             if (rightController != null)
             {
-                rightController.SetPlayer(playerNum);
+                handle = rightController.GetHandle();
+                if (playerNum == -1 || playerNum == null)
+                {
+                    JslSetPlayerNumber(handle, 0);
+                }
+                else
+                {
+                    JslSetPlayerNumber(handle, (int)playerNum);
+                }
             }
         }
 
@@ -428,6 +481,10 @@ namespace HeavenStudio.InputSystem
 
         public override ControlBindings UpdateBindings(ControlBindings lastBinds)
         {
+            if (lastBinds.version == 0)
+            {
+                return GetDefaultBindings();
+            }
             return lastBinds;
         }
 

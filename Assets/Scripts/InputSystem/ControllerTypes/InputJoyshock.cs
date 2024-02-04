@@ -20,9 +20,15 @@ namespace HeavenStudio.InputSystem.Loaders
             PlayerInput.PlayerInputCleanUp += DisposeJoyshocks;
             PlayerInput.PlayerInputRefresh.Add(Refresh);
 
+            List<InputController> controllers;
+            int jslDevicesFound = 0;
+            int jslDevicesConnected = 0;
+            int[] jslDeviceHandles;
+
             try
             {
-                InputJoyshock.JslEventInit();
+                JslDisconnectAndDisposeAll();
+                jslDevicesFound = JslConnectDevices();
             }
             catch (Exception e)
             {
@@ -30,13 +36,6 @@ namespace HeavenStudio.InputSystem.Loaders
                 failedJsl = true;
                 return null;
             }
-
-            InputController[] controllers;
-            int jslDevicesFound = 0;
-            int jslDevicesConnected = 0;
-            int[] jslDeviceHandles;
-
-            jslDevicesFound = JslConnectDevices();
             if (jslDevicesFound > 0)
             {
                 jslDeviceHandles = new int[jslDevicesFound];
@@ -51,16 +50,17 @@ namespace HeavenStudio.InputSystem.Loaders
                     Debug.Log("Connected " + jslDevicesConnected + " JoyShocks.");
                 }
 
-                controllers = new InputController[jslDevicesConnected];
+                controllers = new();
                 foreach (int i in jslDeviceHandles)
                 {
                     Debug.Log("Setting up JoyShock: ( Handle " + i + ", type " + JslGetControllerType(i) + " )");
                     InputJoyshock joyshock = new InputJoyshock(i);
                     joyshock.SetPlayer(null);
                     joyshock.InitializeController();
-                    controllers[i] = joyshock;
+                    controllers.Add(joyshock);
                 }
-                return controllers;
+                InputJoyshock.JslEventInit();
+                return controllers.ToArray();
             }
             Debug.Log("No JoyShocks found.");
             return null;
@@ -81,27 +81,29 @@ namespace HeavenStudio.InputSystem.Loaders
         {
             if (failedJsl) return null;
             InputJoyshock.joyshocks.Clear();
-            InputController[] controllers;
+            List<InputController> controllers;
             int jslDevicesFound = 0;
             int jslDevicesConnected = 0;
             int[] jslDeviceHandles;
 
+            JslDisconnectAndDisposeAll();
             jslDevicesFound = JslConnectDevices();
             if (jslDevicesFound > 0)
             {
                 jslDeviceHandles = new int[jslDevicesFound];
                 jslDevicesConnected = JslGetConnectedDeviceHandles(jslDeviceHandles, jslDevicesFound);
 
-                controllers = new InputController[jslDevicesConnected];
+                controllers = new();
                 foreach (int i in jslDeviceHandles)
                 {
                     Debug.Log("Setting up JoyShock: ( Handle " + i + ", type " + JslGetControllerType(i) + " )");
                     InputJoyshock joyshock = new InputJoyshock(i);
                     joyshock.SetPlayer(null);
                     joyshock.InitializeController();
-                    controllers[i] = joyshock;
+                    controllers.Add(joyshock);
                 }
-                return controllers;
+                InputJoyshock.JslEventInit();
+                return controllers.ToArray();
             }
             Debug.Log("No JoyShocks found.");
             return null;
@@ -161,10 +163,10 @@ namespace HeavenStudio.InputSystem
             {
                 return new[]
                 {
-                    20,
-                    21,
-                    22,
                     23,
+                    24,
+                    25,
+                    26,
                     ButtonMaskLeft,
                     ButtonMaskDown,
                     ButtonMaskUp,
@@ -183,10 +185,10 @@ namespace HeavenStudio.InputSystem
             {
                 return new[]
                 {
-                    20,
-                    21,
-                    22,
                     23,
+                    24,
+                    25,
+                    26,
                     ButtonMaskE,
                     ButtonMaskN,
                     ButtonMaskS,
@@ -244,6 +246,8 @@ namespace HeavenStudio.InputSystem
             "", // mic on playstation, unused here
             "SL",
             "SR",
+            "", // fnl on playstation, unused here
+            "", // fnr on playstation, unused here
             "Stick Up",
             "Stick Down",
             "Stick Left",
@@ -304,7 +308,7 @@ namespace HeavenStudio.InputSystem
 
         public static Dictionary<int, InputJoyshock> joyshocks;
 
-        float stickDeadzone = 0.5f;
+        const float STICK_DEAD = 0.6f;
 
         int joyshockHandle;
         int type;
@@ -312,11 +316,11 @@ namespace HeavenStudio.InputSystem
         int lightbarColour;
         string joyshockName;
         DateTime startTime;
-        bool joyConWantRotatedStick;
+        bool joyConWantRotatedStick = true;
 
         //buttons, sticks, triggers
         JoyshockButtonState[] actionStates = new JoyshockButtonState[BINDS_MAX];
-        JoyshockButtonState[] buttonStates = new JoyshockButtonState[ButtonMaskSR + 1];
+        JoyshockButtonState[] buttonStates = new JoyshockButtonState[ButtonMaskFnR + 1];
         JOY_SHOCK_STATE joyBtStateCurrent;
         //gyro and accelerometer
         IMU_STATE joyImuStateCurrent, joyImuStateLast;
@@ -350,7 +354,7 @@ namespace HeavenStudio.InputSystem
             joyshockHandle = handle;
         }
 
-        int GetButtonForSplitType(int action)
+        int GetButtonForAction(int action)
         {
             if (currentBindings.Pad == null) return -1;
             if (action < 0 || action >= BINDS_MAX) return -1;
@@ -396,7 +400,7 @@ namespace HeavenStudio.InputSystem
             lastInputStack = new();
 
             actionStates = new JoyshockButtonState[BINDS_MAX];
-            buttonStates = new JoyshockButtonState[ButtonMaskSR + 1];
+            buttonStates = new JoyshockButtonState[ButtonMaskFnR + 1];
             joyBtStateCurrent = new JOY_SHOCK_STATE();
 
             joyImuStateCurrent = new IMU_STATE();
@@ -440,6 +444,9 @@ namespace HeavenStudio.InputSystem
             for (int i = 0; i < buttonStates.Length; i++)
             {
                 buttonStates[i].isDelta = false;
+                buttonStates[i].debounce -= Time.deltaTime;
+                if (buttonStates[i].debounce < 0)
+                    buttonStates[i].debounce = 0;
             }
 
             foreach (TimestampedState state in lastInputStack)
@@ -448,7 +455,7 @@ namespace HeavenStudio.InputSystem
 
                 for (int i = 0; i < actionStates.Length; i++)
                 {
-                    int bt = GetButtonForSplitType(i);
+                    int bt = GetButtonForAction(i);
                     if (bt != -1)
                     {
                         bool pressed = BitwiseUtils.WantCurrent(state.input.buttons, 1 << bt);
@@ -470,9 +477,13 @@ namespace HeavenStudio.InputSystem
                     bool pressed = BitwiseUtils.WantCurrent(state.input.buttons, 1 << i);
                     if (pressed != buttonStates[i].pressed && !buttonStates[i].isDelta)
                     {
-                        buttonStates[i].pressed = pressed;
-                        buttonStates[i].isDelta = true;
-                        buttonStates[i].dt = reportTime - state.timestamp;
+                        if (buttonStates[i].debounce <= 0)
+                        {
+                            buttonStates[i].pressed = pressed;
+                            buttonStates[i].isDelta = true;
+                            buttonStates[i].dt = reportTime - state.timestamp;
+                        }
+                        buttonStates[i].debounce = debounceTime;
                     }
                 }
             }
@@ -482,35 +493,34 @@ namespace HeavenStudio.InputSystem
             //left rotates counterclockwise, right rotates clockwise, all by 90 degrees
             float xAxis = 0f;
             float yAxis = 0f;
-            xAxis = joyBtStateCurrent.stickLX;
-            yAxis = joyBtStateCurrent.stickLY;
 
-            if (joyConWantRotatedStick && splitType != SplitFull)
+            if (joyConWantRotatedStick && type is TypeJoyConLeft or TypeJoyConRight)
             {
-                float tempX = xAxis;
-                float tempY = yAxis;
-                switch (splitType)
+                switch (type)
                 {
-                    case SplitLeft:
-                        xAxis = -tempY;
-                        yAxis = tempX;
+                    case TypeJoyConLeft:
+                        xAxis = -joyBtStateCurrent.stickLY;
+                        yAxis = joyBtStateCurrent.stickLX;
                         break;
-                    case SplitRight:
-                        xAxis = joyBtStateCurrent.stickRX;
-                        yAxis = joyBtStateCurrent.stickRY;
-                        xAxis = tempY;
-                        yAxis = -tempX;
+                    case TypeJoyConRight:
+                        xAxis = joyBtStateCurrent.stickRY;
+                        yAxis = -joyBtStateCurrent.stickRX;
                         break;
                 }
+            }
+            else
+            {
+                xAxis = joyBtStateCurrent.stickLX;
+                yAxis = joyBtStateCurrent.stickLY;
             }
 
             directionStateLast = directionStateCurrent;
             directionStateCurrent = 0;
-            directionStateCurrent |= ((yAxis >= stickDeadzone) ? (1 << ((int)InputDirection.Up)) : 0);
-            directionStateCurrent |= ((yAxis <= -stickDeadzone) ? (1 << ((int)InputDirection.Down)) : 0);
-            directionStateCurrent |= ((xAxis >= stickDeadzone) ? (1 << ((int)InputDirection.Right)) : 0);
-            directionStateCurrent |= ((xAxis <= -stickDeadzone) ? (1 << ((int)InputDirection.Left)) : 0);
-            //Debug.Log("stick direction: " + directionStateCurrent + "| x axis: " + xAxis + " y axis: " + yAxis);
+            directionStateCurrent |= (yAxis >= STICK_DEAD) ? (1 << (int)ActionsPad.Up) : 0;
+            directionStateCurrent |= (yAxis <= -STICK_DEAD) ? (1 << (int)ActionsPad.Down) : 0;
+            directionStateCurrent |= (xAxis <= -STICK_DEAD) ? (1 << (int)ActionsPad.Left) : 0;
+            directionStateCurrent |= (xAxis >= STICK_DEAD) ? (1 << (int)ActionsPad.Right) : 0;
+            // Debug.Log($"{GetDeviceName()} stick direction: {directionStateCurrent}| x axis: {xAxis}, y axis: {yAxis}");
 
             lastInputStack.Clear();
         }
@@ -679,6 +689,13 @@ namespace HeavenStudio.InputSystem
         {
             for (int i = 0; i < actionStates.Length; i++)
             {
+                if (i is 0 or 1 or 2 or 3)
+                {
+                    if (BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << i))
+                    {
+                        return i;
+                    }
+                }
                 if (actionStates[i].pressed && actionStates[i].isDelta)
                 {
                     return i;
@@ -687,24 +704,59 @@ namespace HeavenStudio.InputSystem
             return -1;
         }
 
-        public override bool GetAction(ControlStyles style, int button)
+        public JoyshockButtonState GetButtonState(int button)
         {
-            if (button == -1) { return false; }
-            return actionStates[button].pressed;
+            return buttonStates[button];
         }
 
-        public override bool GetActionDown(ControlStyles style, int button, out double dt)
+        public JoyshockButtonState[] GetButtonStates()
         {
-            if (button == -1) { dt = 0; return false; }
-            dt = actionStates[button].dt;
-            return actionStates[button].pressed && actionStates[button].isDelta;
+            return buttonStates;
+        }
+
+        public override bool GetAction(ControlStyles style, int action)
+        {
+            if (action == -1) { return false; }
+            bool stick = false;
+            if (action is 0 or 1 or 2 or 3)
+            {
+                stick = BitwiseUtils.WantCurrent(directionStateCurrent, 1 << action);
+            }
+            return actionStates[action].pressed || stick;
+        }
+
+        public override bool GetActionDown(ControlStyles style, int action, out double dt)
+        {
+            if (action == -1) { dt = 0; return false; }
+            dt = actionStates[action].dt;
+            bool bt = actionStates[action].pressed && actionStates[action].isDelta;
+            if (bt)
+            {
+                return true;
+            }
+            else if (action is 0 or 1 or 2 or 3)
+            {
+                dt = 0;
+                return BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << action);
+            }
+            return false;
         }
 
         public override bool GetActionUp(ControlStyles style, int button, out double dt)
         {
             if (button == -1) { dt = 0; return false; }
             dt = actionStates[button].dt;
-            return !actionStates[button].pressed && actionStates[button].isDelta;
+            bool bt = !actionStates[button].pressed && actionStates[button].isDelta;
+            if (bt)
+            {
+                return true;
+            }
+            else if (button is 0 or 1 or 2 or 3)
+            {
+                dt = 0;
+                return BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << button);
+            }
+            return false;
         }
 
         public override float GetAxis(InputAxis axis)
@@ -756,81 +808,6 @@ namespace HeavenStudio.InputSystem
             Vector3 rawPointerPos = Input.mousePosition;
             rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
             return cam.ScreenToWorldPoint(rawPointerPos);
-        }
-
-        public override bool GetHatDirection(InputDirection direction)
-        {
-            int bt;
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    bt = 0;
-                    break;
-                case InputDirection.Down:
-                    bt = 1;
-                    break;
-                case InputDirection.Left:
-                    bt = 2;
-                    break;
-                case InputDirection.Right:
-                    bt = 3;
-                    break;
-                default:
-                    return false;
-            }
-            return GetAction(ControlStyles.Pad, bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int)direction);
-        }
-
-        public override bool GetHatDirectionDown(InputDirection direction, out double dt)
-        {
-            int bt;
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    bt = 0;
-                    break;
-                case InputDirection.Down:
-                    bt = 1;
-                    break;
-                case InputDirection.Left:
-                    bt = 2;
-                    break;
-                case InputDirection.Right:
-                    bt = 3;
-                    break;
-                default:
-                    dt = 0;
-                    return false;
-            }
-            bool btbool = GetActionDown(ControlStyles.Pad, bt, out dt);
-            if (!btbool) dt = 0;
-            return btbool || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
-        }
-
-        public override bool GetHatDirectionUp(InputDirection direction, out double dt)
-        {
-            int bt;
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    bt = 0;
-                    break;
-                case InputDirection.Down:
-                    bt = 1;
-                    break;
-                case InputDirection.Left:
-                    bt = 2;
-                    break;
-                case InputDirection.Right:
-                    bt = 3;
-                    break;
-                default:
-                    dt = 0;
-                    return false;
-            }
-            bool btbool = GetActionUp(ControlStyles.Pad, bt, out dt);
-            if (!btbool) dt = 0;
-            return btbool || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
         }
 
         public override void SetPlayer(int? playerNum)
