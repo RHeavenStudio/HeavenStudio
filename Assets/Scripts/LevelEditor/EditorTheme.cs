@@ -32,27 +32,44 @@ namespace HeavenStudio.Editor
             if (File.Exists(Application.persistentDataPath + "/editorTheme.json"))
             {
                 string json = File.ReadAllText(Application.persistentDataPath + "/editorTheme.json");
-                theme = JsonConvert.DeserializeObject<Theme>(json);
-
-                // Naive way of doing it? Possibly, but we should have a theme editor in the future.
-                if (defaultTheme.properties.LayerColors != null)
+                if (json == "")
                 {
-                    theme.properties.LayerColors = new string[]
+                    PersistentDataManager.SaveTheme(ThemeTXT.text);
+                    theme = defaultTheme;
+                    theme.SetLayersGradient();
+                    return;
+                }
+                try
+                {
+                    theme = JsonConvert.DeserializeObject<Theme>(json);
+
+                    // Naive way of doing it? Possibly, but we should have a theme editor in the future.
+                    if (defaultTheme.properties.LayerColors != null)
                     {
-                        theme.properties.Layer1Col,
-                        theme.properties.Layer2Col,
-                        theme.properties.Layer3Col,
-                        theme.properties.Layer4Col,
-                        theme.properties.Layer5Col
-                    };
-                    // Create a function for this in the future.
-                    var savedTheme = JsonConvert.SerializeObject(theme, Formatting.Indented, new JsonSerializerSettings()
-                    {
-                        TypeNameHandling = TypeNameHandling.None,
-                        NullValueHandling = NullValueHandling.Include,
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    });
-                    PersistentDataManager.SaveTheme(savedTheme);
+                        theme.properties.LayerColors = new string[]
+                        {
+                            theme.properties.Layer1Col,
+                            theme.properties.Layer2Col,
+                            theme.properties.Layer3Col,
+                            theme.properties.Layer4Col,
+                            theme.properties.Layer5Col
+                        };
+                        // Create a function for this in the future.
+                        var savedTheme = JsonConvert.SerializeObject(theme, Formatting.Indented, new JsonSerializerSettings()
+                        {
+                            TypeNameHandling = TypeNameHandling.None,
+                            NullValueHandling = NullValueHandling.Include,
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                        });
+                        PersistentDataManager.SaveTheme(savedTheme);
+                    }
+                }
+                catch
+                {
+                    PersistentDataManager.SaveTheme(ThemeTXT.text);
+                    theme = defaultTheme;
+                    theme.SetLayersGradient();
+                    return;
                 }
             }
             else
