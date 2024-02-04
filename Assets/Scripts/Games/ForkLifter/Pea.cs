@@ -83,9 +83,9 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             player.currentPerfectPeasOnFork++;
 
-            player.topbun = type == 1;
-            player.middleburger = type == 2;
-            player.bottombun = type == 3;
+            if (type == 1) player.topbun = true;
+            if (type == 2) player.middleburger = true;
+            if (type == 3) player.bottombun = true;
 
             Destroy(this.gameObject);
         }
