@@ -219,6 +219,7 @@ namespace HeavenStudio.Games
         [SerializeField] private LBJSmallObject _smallObjectPrefab;
         [SerializeField] private LBJBigObject _bigObjectPrefab;
         [SerializeField] private LBJHugeObject _hugeObjectPrefab;
+        [SerializeField] private Transform _cutObjectHolder;
 
         private List<double> _bearNoBopBeats = new();
 
@@ -250,7 +251,7 @@ namespace HeavenStudio.Games
             {
                 new(beat + (length / 3), delegate
                 {
-                    LBJSmallObject spawnedObject = Instantiate(_smallObjectPrefab, transform);
+                    LBJSmallObject spawnedObject = Instantiate(_smallObjectPrefab, _cutObjectHolder);
                     spawnedObject.Init(_bear, beat, length, type, startUpBeat);
                 })
             });
@@ -262,7 +263,7 @@ namespace HeavenStudio.Games
             {
                 new(beat + (length / 4), delegate
                 {
-                    LBJBigObject spawnedObject = Instantiate(_bigObjectPrefab, transform);
+                    LBJBigObject spawnedObject = Instantiate(_bigObjectPrefab, _cutObjectHolder);
                     spawnedObject.Init(_bear, beat, length, type, startUpBeat);
                 })
             });
@@ -274,7 +275,7 @@ namespace HeavenStudio.Games
             {
                 new(beat + (length / 6), delegate
                 {
-                    LBJHugeObject spawnedObject = Instantiate(_hugeObjectPrefab, transform);
+                    LBJHugeObject spawnedObject = Instantiate(_hugeObjectPrefab, _cutObjectHolder);
                     spawnedObject.Init(_bear, beat, length, type, startUpBeat);
                 })
             });

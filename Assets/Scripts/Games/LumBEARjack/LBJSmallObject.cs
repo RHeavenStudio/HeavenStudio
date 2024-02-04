@@ -2,20 +2,72 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_LumBEARjack
 {
     public class LBJSmallObject : MonoBehaviour
     {
+        [Header("Parameters")]
+        [SerializeField] private float _rotationStart = -22f;
+        [SerializeField] private float _rotationEnd = 22f;
+        [SerializeField] private EasingFunction.Ease _ease = EasingFunction.Ease.EaseInOutQuad;
+
+        [Header("Components")]
+        [SerializeField] private GameObject _log;
+        [SerializeField] private GameObject _can;
+        [SerializeField] private GameObject _bat;
+        [SerializeField] private GameObject _broom;
+
         private LBJBear _bear;
         private LumBEARjack.SmallType _type;
+
+        private double _rotationBeat;
+
+        private void Awake()
+        {
+            _log.SetActive(false);
+            _can.SetActive(false);
+            _bat.SetActive(false);
+            _broom.SetActive(false);
+        }
 
         public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;
 
+            switch (type)
+            {
+                case LumBEARjack.SmallType.log:
+                    _log.SetActive(true);
+                    break;
+                case LumBEARjack.SmallType.can:
+                    _can.SetActive(true);
+                    break;
+                case LumBEARjack.SmallType.bat:
+                    _bat.SetActive(true);
+                    break;
+                case LumBEARjack.SmallType.broom:
+                    _broom.SetActive(true);
+                    break;
+                default:
+                    break;
+            }
+
+            _rotationBeat = beat + (length / 3 * 2);
             LumBEARjack.instance.ScheduleInput(beat, length / 3 * 2, Minigame.InputAction_BasicPress, Just, Miss, Blank);
+            Update();
+        }
+
+        private void Update()
+        {
+            float normalized = Conductor.instance.GetPositionFromBeat(_rotationBeat - 1, 2);
+
+            var func = EasingFunction.GetEasingFunction(_ease);
+
+            float newRotation = func(_rotationStart, _rotationEnd, normalized);
+            transform.localEulerAngles = new Vector3(0, 0, newRotation);
         }
 
         private void Just(PlayerActionEvent caller, float state)
