@@ -69,6 +69,15 @@ namespace HeavenStudio.Games
 
         }
 
+        void Update()
+        {
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
+            {
+                SoundByte.PlayOneShotGame("holeInOne/hole1"); // temp miss sound. Should be: whiff sound
+                ScoreMiss();
+            }
+        }
+
         public void ToggleBop(double beat, float length, bool shouldBop, bool autoBop)
         {
             if (shouldBop)
@@ -90,7 +99,7 @@ namespace HeavenStudio.Games
         public void DoMandrill(double beat)
         {
             //Mandrill Multisound
-            ScheduleInput(beat, 3f, InputAction_BasicPress, MandrillSuccess, MandrillMiss, Whiff);
+            ScheduleInput(beat, 3f, InputAction_BasicPress, MandrillSuccess, MandrillMiss, Nothing);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("holeInOne/mandrill1", beat),
                 new MultiSound.Sound("holeInOne/mandrill2", beat + 1f),
@@ -110,7 +119,7 @@ namespace HeavenStudio.Games
         public void DoMonkey(double beat)
         {
             //Monkey Multisound
-            ScheduleInput(beat, 2f, InputAction_BasicPress, MonkeySuccess, MonkeyMiss, Whiff);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, MonkeySuccess, MonkeyMiss, Nothing);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("holeInOne/monkey1", beat),
                 new MultiSound.Sound("holeInOne/monkey2", beat + 1f)
@@ -126,8 +135,27 @@ namespace HeavenStudio.Games
 
         public void MandrillSuccess(PlayerActionEvent caller, float state)
         {
-            SoundByte.PlayOneShotGame("holeInOne/mandrill4");
-            MonkeyAnim.Play("MonkeySpin");
+            if (state >= 1f || state <= -1f)
+            {
+                double beat = caller.timer;
+
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound("holeInOne/mandrill1", beat),// temp should be miss
+                    new MultiSound.Sound("holeInOne/hole2", beat + 1f)// temp should be splash
+                });
+                MonkeyAnim.Play("MonkeySpin");
+            }
+            else
+            {
+                double beat = caller.timer;
+                int randomSuccess = UnityEngine.Random.Range(1,5);
+
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound("holeInOne/mandrill4", beat),
+                    new MultiSound.Sound("holeInOne/hole" + randomSuccess, beat + 2f)
+                });
+                MonkeyAnim.Play("MonkeySpin");
+            }
             
         }
 
@@ -139,14 +167,27 @@ namespace HeavenStudio.Games
 
         public void MonkeySuccess(PlayerActionEvent caller, float state)
         {
-            double beat = caller.timer;
-            int randomSuccess = UnityEngine.Random.Range(1,5);
+            if (state >= 1f || state <= -1f)
+            {
+                double beat = caller.timer;
 
-            MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound("holeInOne/monkey3", beat),
-                new MultiSound.Sound("holeInOne/hole" + randomSuccess, beat + 2f)
-            });
-            MonkeyAnim.Play("MonkeySpin");
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound("holeInOne/mandrill1", beat),// temp should be miss
+                    new MultiSound.Sound("holeInOne/hole2", beat + 1f)// temp should be splash
+                });
+                MonkeyAnim.Play("MonkeySpin");
+            }
+            else
+            {
+                double beat = caller.timer;
+                int randomSuccess = UnityEngine.Random.Range(1,5);
+
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound("holeInOne/monkey3", beat),
+                    new MultiSound.Sound("holeInOne/hole" + randomSuccess, beat + 2f)
+                });
+                MonkeyAnim.Play("MonkeySpin");
+            }
         }
 
         public void MonkeyMiss(PlayerActionEvent caller)
@@ -155,9 +196,8 @@ namespace HeavenStudio.Games
             MonkeyAnim.Play("MonkeySpin");            
         }
 
-        public void Whiff(PlayerActionEvent caller)
+        public void Nothing(PlayerActionEvent caller)
         {
-            MonkeyAnim.Play("MonkeyBop");
         }
     }
 }
