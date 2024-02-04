@@ -137,7 +137,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                double beat = caller.timer;
+                double beat = caller.startBeat + caller.timer;
 
                 MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("holeInOne/mandrill1", beat),// temp should be miss
@@ -147,7 +147,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                double beat = caller.timer;
+                double beat = caller.startBeat + caller.timer;
                 int randomSuccess = UnityEngine.Random.Range(1,5);
 
                 MultiSound.Play(new MultiSound.Sound[] {
@@ -169,7 +169,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                double beat = caller.timer;
+                double beat = caller.startBeat + caller.timer;
 
                 MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("holeInOne/mandrill1", beat),// temp should be miss
@@ -179,7 +179,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                double beat = caller.timer;
+                double beat = caller.startBeat + caller.timer;
                 int randomSuccess = UnityEngine.Random.Range(1,5);
 
                 MultiSound.Play(new MultiSound.Sound[] {

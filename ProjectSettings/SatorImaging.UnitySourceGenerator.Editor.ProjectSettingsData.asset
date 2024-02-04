@@ -17,7 +17,13 @@ MonoBehaviour:
   DenseViewWidthThreshold: 512
   _disableAutoReloadInBackground: 0
   ImportedScriptPaths:
-  - Assets/Scripts/Games/HoleInOne/HoleInOne.cs
+  - Assets/Scripts/Minigames.cs
+  - Assets/Editor/CreateAssetBundles.cs
+  - Assets/Editor/CreateMinigameScriptTemplate.cs
+  - Assets/Scripts/Games/Minigame.cs
+  - Assets/Scripts/Games/FanClub/FanClub.cs
+  - Assets/Scripts/GameManager.cs
+  - Assets/Editor/SpritesheetScaler.cs
   - Assets/Scripts/USG.g/LoadMinigames.Minigames.MinigameLoaderGenerator.g.cs
   - Assets/Scripts/Games/TheDazzles/TheDazzles.cs
   - Assets/Scripts/Games/FirstContact/FirstContact.cs
@@ -42,18 +48,16 @@ MonoBehaviour:
   - Assets/Scripts/LevelEditor/Timeline/SpecialTmeline/SectionDialog.cs
   - Assets/Scripts/LevelEditor/Timeline/SpecialTmeline/TimelineObjs/SectionTimelineObj.cs
   - Assets/Scripts/Games/DJSchool/Student.cs
-  - Assets/Scripts/UI/PauseMenu.cs
-  - Assets/Scripts/Util/Sound.cs
-  - Assets/Scripts/Conductor.cs
-  - Assets/Scripts/EventCaller.cs
-  - Assets/Scripts/Games/TrickClass/TrickClass.cs
-  - Assets/Scripts/GameInitializer.cs
-  - Assets/Scripts/LevelEditor/Timeline/Timeline.cs
-  - Assets/Scripts/Games/PlayerActionEvent.cs
-  - Assets/Scripts/Games/KarateMan/KarateManPot.cs
+  - Assets/Scripts/AppInfo.cs
   - Assets/Scripts/Games/DJSchool/DJSchool.cs
-  - Assets/Scripts/Games/Minigame.cs
-  - Assets/Scripts/GameManager.cs
-  - Assets/Scripts/Minigames.cs
+  - Assets/Scripts/GameInitializer.cs
+  - Assets/Scripts/EventCaller.cs
+  - Assets/Scripts/Games/KarateMan/KarateManPot.cs
+  - Assets/Scripts/Games/TrickClass/TrickClass.cs
+  - Assets/Scripts/Conductor.cs
+  - Assets/Scripts/Util/Sound.cs
+  - Assets/Scripts/LevelEditor/Timeline/Timeline.cs
+  - Assets/Scripts/Games/HoleInOne/HoleInOne.cs
+  - Assets/Scripts/Games/PlayerActionEvent.cs
   PathsToSkipImportEvent: []
   PathsToIgnoreOverwriteSettingOnAttribute: []
