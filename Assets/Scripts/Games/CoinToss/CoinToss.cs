@@ -123,10 +123,6 @@ namespace HeavenStudio.Games
 
             coin = null;
 
-            colorStart = defaultBgColor;
-            colorEnd = defaultBgColor;
-            colorStartF = defaultBgColor;
-            colorEndF = defaultBgColor;
             BackgroundColorUpdate();
         }
 
@@ -141,6 +137,9 @@ namespace HeavenStudio.Games
                 handAnimator.Play("Throw_empty", 0, 0);
             }
         }
+
+        public override void OnPlay(double beat) => PersistColor(beat);
+        public override void OnGameSwitch(double beat) => PersistColor(beat);
 
         public void TossCoin(double beat, int type, bool audienceReacting)
         {
@@ -176,21 +175,6 @@ namespace HeavenStudio.Games
             //coin.perfectOnly = true;
         }
 
-        public void TossCoin(double beat)
-        {
-            if (coin != null) return;
-
-            //Play sound and animations
-            SoundByte.PlayOneShotGame("coinToss/throw");
-            handAnimator.Play("Throw", 0, 0);
-            //Game state says the hand is throwing the coin
-            isThrowing = true;
-            this.audienceReacting = false;
-
-            coin = ScheduleInput(beat, 6f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
-            //coin.perfectOnly = true;
-        }
-
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("coinToss/catch");
@@ -217,43 +201,20 @@ namespace HeavenStudio.Games
             coin.CanHit(false);
         }
 
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart; //obviously put to the default color of the game
-        private Color colorEnd;
-        private Color colorStartF; //obviously put to the default color of the game
-        private Color colorEndF;
-        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+        private ColorEase bgColorEase = new(defaultBgColor);
+        private ColorEase bgFColorEase = new(defaultBgColor);
 
         //call this in update
         private void BackgroundColorUpdate()
         {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
-
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            bg.color = new Color(newR, newG, newB);
-
-            float newRF = func(colorStartF.r, colorEndF.r, normalizedBeat);
-            float newGF = func(colorStartF.g, colorEndF.g, normalizedBeat);
-            float newBF = func(colorStartF.b, colorEndF.b, normalizedBeat);
-
-            fg.color = new Color(newRF, newGF, newBF);
+            bg.color = GetNewColor(bgColorEase);
+            fg.color = GetNewColor(bgFColorEase);
         }
 
         public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color colorStartSetF, Color colorEndSetF, int ease)
         {
-            colorStartBeat = beat;
-            colorLength = length;
-            colorStart = colorStartSet;
-            colorEnd = colorEndSet;
-            colorStartF = colorStartSetF;
-            colorEndF = colorEndSetF;
-            colorEase = (Util.EasingFunction.Ease)ease;
+            bgColorEase = new ColorEase(beat, length, colorStartSet, colorEndSet, ease);
+            bgFColorEase = new ColorEase(beat, length, colorStartSetF, colorEndSetF, ease);
         }
 
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)
@@ -268,14 +229,5 @@ namespace HeavenStudio.Games
             }
         }
 
-        public override void OnPlay(double beat)
-        {
-            PersistColor(beat);
-        }
-
-        public override void OnGameSwitch(double beat)
-        {
-            PersistColor(beat);
-        }
     }
 }

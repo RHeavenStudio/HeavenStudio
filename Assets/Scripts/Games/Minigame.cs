@@ -428,6 +428,48 @@ namespace HeavenStudio.Games
 
         #endregion
 
+        #region Color
+        public struct ColorEase
+        {
+            public double startBeat;
+            public float length;
+            public Color startColor, endColor;
+            public Util.EasingFunction.Ease ease;
+            public readonly Util.EasingFunction.Function easeFunc;
+
+            public ColorEase(double startBeat, float length, Color startColor, Color endColor, int ease) {
+                this.startBeat = startBeat;
+                this.length = length;
+                (this.startColor, this.endColor) = (startColor, endColor);
+                this.ease = (Util.EasingFunction.Ease)ease;
+                this.easeFunc = Util.EasingFunction.GetEasingFunction(this.ease);
+            }
+            public ColorEase(Color? tempColor = null) {
+                startBeat = length = 0;
+                startColor = endColor = (tempColor ?? Color.white);
+                ease = Util.EasingFunction.Ease.Instant;
+                easeFunc = Util.EasingFunction.GetEasingFunction(ease);
+            }
+        }
+
+        public Color GetNewColor(ColorEase ce) => GetNewColor(ce.startBeat, ce.length, ce.startColor, ce.endColor, ce.easeFunc);
+        public Color GetNewColor(double beat, float length, Color start, Color end, Util.EasingFunction.Function func)
+        {
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(beat, length));
+
+            float newR = func(start.r, end.r, normalizedBeat);
+            float newG = func(start.g, end.g, normalizedBeat);
+            float newB = func(start.b, end.b, normalizedBeat);
+
+            return new Color(newR, newG, newB);
+        }
+
+        // public RiqEntity PersistColor(double beat)
+        // {
+        //
+        // }
+        #endregion
+
         private void OnDestroy()
         {
             foreach (var evt in scheduledInputs)
