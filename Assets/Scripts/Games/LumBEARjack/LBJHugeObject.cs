@@ -25,6 +25,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private PlayerActionEvent[] _soundsToDeleteIfMiss = new PlayerActionEvent[3];
 
         private double _rotationBeat;
+        private double _rotationLength;
 
         private void Awake()
         {
@@ -54,14 +55,28 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             }
 
             _rotationBeat = beat + (length / 6 * 2);
+            _rotationLength = length / 6;
+
             if (startUpBeat <= beat + (length / 6 * 2)) LumBEARjack.instance.ScheduleInput(beat, length / 6 * 2, Minigame.InputAction_BasicPress, JustHit1, Miss, Blank);
-            else _rotationBeat = beat + (length / 6 * 3);
+            else
+            {
+                _rotationBeat = beat + (length / 6 * 3);
+                SetObjectCutSprite(1);
+            }
 
             if (startUpBeat <= beat + (length / 6 * 3)) _soundsToDeleteIfMiss[0] = LumBEARjack.instance.ScheduleInput(beat, length / 6 * 3, Minigame.InputAction_BasicPress, JustHit2, Miss, Blank);
-            else _rotationBeat = beat + (length / 6 * 4);
+            else
+            {
+                _rotationBeat = beat + (length / 6 * 4);
+                SetObjectCutSprite(2);
+            }
 
             if (startUpBeat <= beat + (length / 6 * 4)) _soundsToDeleteIfMiss[1] = LumBEARjack.instance.ScheduleInput(beat, length / 6 * 4, Minigame.InputAction_BasicPress, JustHit3, Miss, Blank);
-            else _rotationBeat = beat + (length / 6 * 5);
+            else
+            {
+                _rotationBeat = beat + (length / 6 * 5);
+                SetObjectCutSprite(3);
+            }
 
             _soundsToDeleteIfMiss[2] = LumBEARjack.instance.ScheduleInput(beat, length / 6 * 5, Minigame.InputAction_BasicPress, JustCut, Miss, Blank);
             Update();
@@ -69,12 +84,30 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private void Update()
         {
-            float normalized = Conductor.instance.GetPositionFromBeat(_rotationBeat - 1, 2);
+            float normalized = Conductor.instance.GetPositionFromBeat(_rotationBeat - _rotationLength, _rotationLength * 2);
 
             var func = EasingFunction.GetEasingFunction(_ease);
 
             float newRotation = func(_rotationStart, _rotationEnd, normalized);
             transform.localEulerAngles = new Vector3(0, 0, newRotation);
+        }
+
+        private void SetObjectCutSprite(int step)
+        {
+            switch (_type)
+            {
+                case LumBEARjack.HugeType.log:
+                    _logSR.sprite = _logCutSprites[step - 1];
+                    break;
+                case LumBEARjack.HugeType.freezer:
+                    _freezerSR.sprite = _freezerCutSprites[step - 1];
+                    break;
+                case LumBEARjack.HugeType.peach:
+                    _peachSR.sprite = _peachCutSprites[step - 1];
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void JustHit1(PlayerActionEvent caller, float state)
@@ -115,20 +148,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _bear.CutMid();
             _rotationBeat = _soundsToDeleteIfMiss[step - 1].startBeat + _soundsToDeleteIfMiss[step - 1].timer;
 
-            switch (_type)
-            {
-                case LumBEARjack.HugeType.log:
-                    _logSR.sprite = _logCutSprites[step - 1];
-                    break;
-                case LumBEARjack.HugeType.freezer:
-                    _freezerSR.sprite = _freezerCutSprites[step - 1];
-                    break;
-                case LumBEARjack.HugeType.peach:
-                    _peachSR.sprite = _peachCutSprites[step - 1];
-                    break;
-                default:
-                    break;
-            }
+            SetObjectCutSprite(step);
         }
 
         private void JustCut(PlayerActionEvent caller, float state)

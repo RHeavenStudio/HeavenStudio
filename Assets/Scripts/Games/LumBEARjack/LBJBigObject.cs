@@ -21,6 +21,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private PlayerActionEvent _cutActionEvent;
 
         private double _rotationBeat;
+        private double _rotationLength;
 
         public void Init(LBJBear bear, double beat, double length, LumBEARjack.BigType type, double startUpBeat = -1)
         {
@@ -28,15 +29,20 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _type = type;
 
             _rotationBeat = beat + (length / 4 * 2);
+            _rotationLength = length / 4;
             if (startUpBeat <= beat + (length / 4 * 2)) LumBEARjack.instance.ScheduleInput(beat, length / 4 * 2, Minigame.InputAction_BasicPress, JustHit, Miss, Blank);
-            else _rotationBeat = beat + (length / 4 * 3);
+            else
+            {
+                _rotationBeat = beat + (length / 4 * 3);
+                _logSR.sprite = _logCutSprite;
+            }
             _cutActionEvent = LumBEARjack.instance.ScheduleInput(beat, length / 4 * 3, Minigame.InputAction_BasicPress, JustCut, Miss, Blank);
             Update();
         }
 
         private void Update()
         {
-            float normalized = Conductor.instance.GetPositionFromBeat(_rotationBeat - 1, 2);
+            float normalized = Conductor.instance.GetPositionFromBeat(_rotationBeat - _rotationLength, _rotationLength * 2);
 
             var func = EasingFunction.GetEasingFunction(_ease);
 

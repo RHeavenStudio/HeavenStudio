@@ -23,6 +23,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private LumBEARjack.SmallType _type;
 
         private double _rotationBeat;
+        private double _rotationLength;
 
         private void Awake()
         {
@@ -56,13 +57,14 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             }
 
             _rotationBeat = beat + (length / 3 * 2);
+            _rotationLength = length / 3;
             LumBEARjack.instance.ScheduleInput(beat, length / 3 * 2, Minigame.InputAction_BasicPress, Just, Miss, Blank);
             Update();
         }
 
         private void Update()
         {
-            float normalized = Conductor.instance.GetPositionFromBeat(_rotationBeat - 1, 2);
+            float normalized = Conductor.instance.GetPositionFromBeat(_rotationBeat - _rotationLength, _rotationLength * 2);
 
             var func = EasingFunction.GetEasingFunction(_ease);
 
