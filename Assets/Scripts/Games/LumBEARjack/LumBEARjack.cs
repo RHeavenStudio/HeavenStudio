@@ -96,9 +96,16 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new("sigh", "Rest")
                 {
-                    preFunction = delegate
+                    function = delegate
                     {
-                        SoundByte.PlayOneShotGame("lumbearjack/sigh" + (UnityEngine.Random.Range(1, 3) == 1 ? "A" : "B"), eventCaller.currentEntity.beat, 1, 1, false, true);
+                        var e = eventCaller.currentEntity;
+                        LumBEARjack.instance.RestBear(e["instant"], e["sound"]);
+                    },
+                    defaultLength = 4,
+                    parameters = new()
+                    {
+                        new("instant", false, "Instant"),
+                        new("sound", true, "Sound")
                     }
                 },
 
@@ -481,6 +488,15 @@ namespace HeavenStudio.Games
             }
 
             if (sounds.Count > 0) MultiSound.Play(sounds.ToArray(), true, true);
+        }
+
+        #endregion
+
+        #region Misc
+
+        public void RestBear(bool instant, bool sound)
+        {
+            _bear.Rest(instant, sound);
         }
 
         #endregion
