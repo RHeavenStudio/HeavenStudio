@@ -23,16 +23,6 @@ namespace HeavenStudio
             PlayerInputRefresh = new();
             PlayerInputCleanUp = null;
 
-            controllers = InputJoyshockInitializer.Initialize();
-            if (controllers != null)
-            {
-                inputDevices.AddRange(controllers);
-            }
-            else
-            {
-                Debug.Log("InputJoyshockInitializer.Initialize had no controllers to initialize.");
-            }
-
             controllers = InputKeyboardInitializer.Initialize();
             if (controllers != null)
             {
@@ -51,6 +41,26 @@ namespace HeavenStudio
             else
             {
                 Debug.Log("InputMouseInitializer.Initialize had no controllers to initialize.");
+            }
+
+            controllers = InputJoyshockInitializer.Initialize();
+            if (controllers != null)
+            {
+                inputDevices.AddRange(controllers);
+            }
+            else
+            {
+                Debug.Log("InputJoyshockInitializer.Initialize had no controllers to initialize.");
+            }
+
+            controllers = InputJoyconPairInitializer.Initialize();
+            if (controllers != null)
+            {
+                inputDevices.AddRange(controllers);
+            }
+            else
+            {
+                Debug.Log("InputJoyconPairInitializer.Initialize had no controllers to initialize.");
             }
 
             return inputDevices.Count;

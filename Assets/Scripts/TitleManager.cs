@@ -155,14 +155,9 @@ namespace HeavenStudio
                             var nextController = newController;
                             var lastController = PlayerInput.GetInputController(1);
 
-                            if ((newController is InputMouse) && !(lastController is InputMouse))
-                            {
-                                Debug.Log("Mouse used, selecting keyboard instead");
-                                nextController = controllers[0];
-                            }
                             Debug.Log("Assigning controller: " + newController.GetDeviceName());
 
-                            if (lastController != nextController && !firstBoot)
+                            if (lastController != nextController)// && !firstBoot)
                             {
                                 firstBoot = false;
                                 if (nextController == null)
@@ -172,6 +167,7 @@ namespace HeavenStudio
                                 }
                                 lastController.SetPlayer(null);
                                 nextController.SetPlayer(1);
+                                nextController.OnSelected();
                                 PlayerInput.CurrentControlStyle = nextController.GetDefaultStyle();
                                 usingMouse = PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch;
                                 selectedDisplayIcon.SetActive(!usingMouse);
@@ -179,18 +175,8 @@ namespace HeavenStudio
                                 {
                                     obj.SetActive(!usingMouse);
                                 }
-
-                                if ((lastController as InputJoyshock) != null)
-                                {
-                                    (lastController as InputJoyshock)?.UnAssignOtherHalf();
-                                }
-
-                                if ((nextController as InputJoyshock) != null)
-                                {
-                                    nextController.OnSelected();
-                                    (nextController as InputJoyshock)?.UnAssignOtherHalf();
-                                }
                             }
+                            break;
                         }
                         else
                         {
@@ -276,13 +262,13 @@ namespace HeavenStudio
                 }
                 else if (settingsPanel.IsOpen)
                 {
-                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
-                    {
-                        if (controller.GetLastActionDown() == (int)InputController.ActionsPad.South)
-                        {
-                            SettingsClose();
-                        }
-                    }
+                    // if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                    // {
+                    //     if (controller.GetLastActionDown() == (int)InputController.ActionsPad.South)
+                    //     {
+                    //         SettingsClose();
+                    //     }
+                    // }
                 }
                 else if (!firstPress)
                 {
@@ -570,7 +556,7 @@ namespace HeavenStudio
                     }
 
                     // waitingForButtonUp = true;
-                    playPanelRevealTime = Time.realtimeSinceStartup + 0.2f;
+                    playPanelRevealTime = Time.realtimeSinceStartup + 0.5f;
                     playPanel.SetActive(true);
                     playMenuRevealed = true;
                     SoundByte.PlayOneShot("ui/UISelect");
