@@ -41,7 +41,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         {
             if (state >= 1f || state <= -1f)
             {
-                // Barely
+                _bear.SwingWhiff(false, true);
+                Miss(caller);
                 return;
             }
 
@@ -56,13 +57,15 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 _ => throw new System.NotImplementedException(),
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + hitSound);
+            _bear.CutMid();
         }
 
         private void JustCut(PlayerActionEvent caller, float state)
         {
             if (state >= 1f || state <= -1f)
             {
-                // Barely
+                _bear.SwingWhiff(false, true);
+                Miss(caller);
                 return;
             }
 
@@ -76,6 +79,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 _ => throw new System.NotImplementedException(),
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
+            _bear.Cut(caller.startBeat + caller.timer, false, false);
             Destroy(gameObject);
         }
 

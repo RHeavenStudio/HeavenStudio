@@ -22,7 +22,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         {
             if (state >= 1f || state <= -1f)
             {
-                // Barely
+                _bear.SwingWhiff(false, true);
+                Miss(caller);
                 return;
             }
 
@@ -39,6 +40,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
 
             if (_type != LumBEARjack.SmallType.log) SoundByte.PlayOneShotGame("lumbearjack/huh", caller.startBeat + caller.timer + 1);
+            _bear.Cut(caller.startBeat + caller.timer, _type != LumBEARjack.SmallType.log, false); // Add proper logic for direction
 
             Destroy(gameObject);
         }

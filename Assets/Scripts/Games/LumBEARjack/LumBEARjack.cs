@@ -20,6 +20,20 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("lumbearjack", "LumBEARjack", "ffffff", false, false, new List<GameAction>()
             {
+                new("bop", "Bop")
+                {
+                    function = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        LumBEARjack.instance.Bop(e.beat, e.length, (LumBEARjack.WhoBops)e["bop"]);
+                    },
+                    resizable = true,
+                    parameters = new()
+                    {
+                        new("bop", LumBEARjack.WhoBops.Both, "Bop"),
+                        new("auto", LumBEARjack.WhoBops.None, "Bop (Auto)")
+                    }
+                },
                 new("small", "Small Object")
                 {
                     preFunction = delegate
@@ -80,7 +94,7 @@ namespace HeavenStudio.Games.Loaders
                         new("sound", true, "Cue Sound")
                     }
                 },
-                new("sigh", "Sigh")
+                new("sigh", "Rest")
                 {
                     preFunction = delegate
                     {
@@ -185,17 +199,28 @@ namespace HeavenStudio.Games
             peach
         }
 
+        public enum WhoBops
+        {
+            Both = 0,
+            Bear = 1,
+            Cats = 2,
+            None = 3
+        }
+
         [Header("Components")]
         [SerializeField] private LBJBear _bear;
         [SerializeField] private LBJSmallObject _smallObjectPrefab;
         [SerializeField] private LBJBigObject _bigObjectPrefab;
         [SerializeField] private LBJHugeObject _hugeObjectPrefab;
 
+        private List<double> _bearNoBopBeats = new();
+
         public static LumBEARjack instance;
 
         private void Awake()
         {
             instance = this;
+            SetupBopRegion("lumbearjack", "bop", "auto", false);
         }
 
         #region Update
@@ -255,11 +280,13 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             PersistObjects(beat);
+            HandleBops(beat);
         }
 
         public override void OnPlay(double beat)
         {
             PersistObjects(beat);
+            HandleBops(beat);
         }
 
         private void PersistObjects(double beat)
@@ -289,6 +316,96 @@ namespace HeavenStudio.Games
                         break;
                 }
             }
+        }
+
+        private void HandleBops(double beat)
+        {
+            List<RiqEntity> allCutEvents = EventCaller.GetAllInGameManagerList("lumbearjack", new string[] { "small", "big", "huge", "smallS", "bigS", "hugeS" });
+
+            for (int i = 0; i < allCutEvents.Count; i++)
+            {
+                var e = allCutEvents[i];
+
+                switch (e.datamodel.Split(1))
+                {
+                    case "small":
+                    case "smallS":
+                        _bearNoBopBeats.Add(e.beat + (e.length / 3 * 2));
+                        if ((SmallType)e["type"] != SmallType.log) _bearNoBopBeats.Add(e.beat + e.length);
+                        break;
+                    case "big":
+                    case "bigS":
+                        _bearNoBopBeats.Add(e.beat + (e.length / 4 * 2));
+                        _bearNoBopBeats.Add(e.beat + (e.length / 4 * 3));
+                        break;
+                    case "huge":
+                    case "hugeS":
+                        _bearNoBopBeats.Add(e.beat + (e.length / 6 * 2));
+                        _bearNoBopBeats.Add(e.beat + (e.length / 6 * 3));
+                        _bearNoBopBeats.Add(e.beat + (e.length / 6 * 4));
+                        _bearNoBopBeats.Add(e.beat + (e.length / 6 * 5));
+                        break;
+                }
+            }
+
+            List<RiqEntity> allEligibleBops = EventCaller.GetAllInGameManagerList("lumbearjack", new string[] { "bop" }).FindAll(x => x.beat < beat && x.beat + x.length > beat);
+
+            foreach (var e in allEligibleBops)
+            {
+                Bop(e.beat, e.length, (WhoBops)e["bop"], beat);
+            }
+        }
+
+        #endregion
+
+        #region Bop
+
+        public override void OnLateBeatPulse(double beat)
+        {
+            switch ((WhoBops)BeatIsInBopRegionInt(beat))
+            {
+                case WhoBops.Both:
+                    if (!_bearNoBopBeats.Contains(beat)) _bear.Bop();
+                    break;
+                case WhoBops.Bear:
+                    if (!_bearNoBopBeats.Contains(beat)) _bear.Bop();
+                    break;
+                case WhoBops.Cats:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void Bop(double beat, float length, WhoBops who, double startUpBeat = -1)
+        {
+            if (who == WhoBops.None) return;
+
+            List<BeatAction.Action> actions = new();
+
+            for (int i = 0; i < length; i++)
+            {
+                if (beat + i < startUpBeat) continue;
+
+                actions.Add(new(beat + i, delegate
+                {
+                    switch (who)
+                    {
+                        case WhoBops.Both:
+                            _bear.Bop();
+                            break;
+                        case WhoBops.Bear:
+                            _bear.Bop();
+                            break;
+                        case WhoBops.Cats:
+                            break;
+                        default:
+                            break;
+                    }
+                }));
+            }
+
+            if (actions.Count > 0) BeatAction.New(this, actions);
         }
 
         #endregion
