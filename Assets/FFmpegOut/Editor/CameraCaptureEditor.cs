@@ -15,6 +15,7 @@ namespace FFmpegOut
         SerializedProperty _height;
         SerializedProperty _preset;
         SerializedProperty _frameRate;
+        SerializedProperty _bitRate;
 
         GUIContent[] _presetLabels;
         int[] _presetOptions;
@@ -37,6 +38,7 @@ namespace FFmpegOut
             _height = serializedObject.FindProperty("_height");
             _preset = serializedObject.FindProperty("_preset");
             _frameRate = serializedObject.FindProperty("_frameRate");
+            _bitRate = serializedObject.FindProperty("_bitRate");
 
             var presets = FFmpegPreset.GetValues(typeof(FFmpegPreset));
             _presetLabels = presets.Cast<FFmpegPreset>().

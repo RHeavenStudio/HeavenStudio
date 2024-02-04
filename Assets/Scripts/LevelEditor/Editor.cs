@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using SFB;
+using FFmpegOut;
 
 using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
@@ -36,6 +37,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private TMP_Text GameEventSelectorTitle;
         [SerializeField] private TMP_Text BuildDateDisplay;
         [SerializeField] public StudioDanceManager StudioDanceManager;
+        [SerializeField] private HeavenRecorderController heavenRecorder;
 
         [Header("Toolbar")]
         [SerializeField] private Button NewBTN;
@@ -382,6 +384,23 @@ namespace HeavenStudio.Editor
                 }
             });
         }
+
+        public void SaveRemixMP4() //hiiii :3
+        {
+            var extensions = new[]
+            {
+                new ExtensionFilter("H264 Encoded Video File", "mp4")
+            };
+            StandaloneFileBrowser.SaveFilePanelAsync("Save Recording As", "", "remix_recording", extensions, (string path) =>
+            {
+                if (path != String.Empty)
+                {
+                    heavenRecorder.pathHeavenRecorder = path;
+                    heavenRecorder.GetUsablePath();
+                }
+            });
+        }
+
 
         private void SaveRemixFile(string path)
         {

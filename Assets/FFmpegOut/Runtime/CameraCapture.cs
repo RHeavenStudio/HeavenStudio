@@ -39,6 +39,8 @@ namespace FFmpegOut
             set { _frameRate = value; }
         }
 
+        public int bitRate;
+
         #endregion
 
         #region Private members
@@ -88,6 +90,7 @@ namespace FFmpegOut
         {
             _width = Mathf.Max(8, _width);
             _height = Mathf.Max(8, _height);
+            // bitRate = 100; //SET BITRATE NOT ON TOP IT DOESNT WORK LIKE THAT :SOB:
         }
 
         void OnDisable()
@@ -145,11 +148,12 @@ namespace FFmpegOut
                 }
 
                 // Start an FFmpeg session.
+                Debug.Log("i'm not" + bitRate);
                 _session = FFmpegSession.Create(
                     gameObject.name,
                     camera.targetTexture.width,
                     camera.targetTexture.height,
-                    _frameRate, preset
+                    _frameRate, bitRate, preset
                 );
 
                 _startTime = Time.time;

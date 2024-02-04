@@ -13,27 +13,29 @@ namespace FFmpegOut
 
         public static FFmpegSession Create(
             string name,
-            int width, int height, float frameRate,
+            int width, int height, float frameRate, int bitRate,
             FFmpegPreset preset
         )
         {
             name += System.DateTime.Now.ToString(" yyyy MMdd HHmmss");
             var path = name.Replace(" ", "_") + preset.GetSuffix();
-            return CreateWithOutputPath(path, width, height, frameRate, preset);
+            return CreateWithOutputPath(path, width, height, frameRate, bitRate, preset);
         }
 
         public static FFmpegSession CreateWithOutputPath(
             string outputPath,
-            int width, int height, float frameRate,
+            int width, int height, float frameRate, int bitRate,
             FFmpegPreset preset
         )
         {
+            Debug.Log("I'm" + bitRate);
             return new FFmpegSession(
                 "-y -f rawvideo -vcodec rawvideo -pixel_format rgba"
                 + " -colorspace bt709"
                 + " -video_size " + width + "x" + height
                 + " -framerate " + frameRate
                 + " -loglevel warning -i - " + preset.GetOptions()
+                + " -b:v " + (bitRate * 75) + "k"
                 + " \"" + "C:/Users/pikmi/Downloads/temp.mp4" + "\"" //hijacked this. basically i dont want some fancy output file name (which is what the old code did) so it's just temp now lol
             );
         }

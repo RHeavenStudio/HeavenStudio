@@ -1,8 +1,10 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using FFmpegOut;
 using System.IO;
+using HeavenStudio.Editor;
 
 namespace FFmpegOut
 {
@@ -10,6 +12,10 @@ public class HeavenRecorderController : MonoBehaviour
 {
     public CameraCapture recorder;
     public AudioRenderer audioRenderer;
+
+    public string pathHeavenRecorder;
+
+    [SerializeField]HeavenRecorderDialog dialog;
     
     bool exporting = true;
     // Start is called before the first frame update
@@ -63,7 +69,54 @@ public class HeavenRecorderController : MonoBehaviour
         _session = null;
         File.Delete("C:/Users/pikmi/Downloads/temp.wav");
         File.Delete("C:/Users/pikmi/Downloads/temp.mp4");
-        
+    }
+
+    public void GetUsablePath()
+    {
+        int numberOfSlashes = 0;
+        int tempNumberOfSlashes = 0;
+        int index = 0;
+        int charsAfterSlash = 0;
+        //hello guys i am a cs student and this is the most thinking i've had to do so far
+        //yo guys i cant even lie if astrl or minenice see this it would so horribly embarassing that i would crawl up into a hole and die just pretend that AI wrote this
+        //this implementation is such an eyesore there's prob a better way to implment it but my brain cannot think hard enough
+        foreach (char c in pathHeavenRecorder)
+        {
+            if(c=='\\')
+            {
+                numberOfSlashes++;
+            }
+        }
+        foreach (char c in pathHeavenRecorder)
+        {
+            if(c=='\\')
+            {
+                tempNumberOfSlashes++;
+            }
+            if(tempNumberOfSlashes == numberOfSlashes)
+            {
+                charsAfterSlash++;
+            }
+            else
+            {
+                index++;
+            }
+        }
+        pathHeavenRecorder = pathHeavenRecorder.Remove(index+1,charsAfterSlash-1);
+        pathHeavenRecorder = pathHeavenRecorder.Replace("\\", "\\\\");
+        WritePathToDialogue();
+    }
+
+    public void WritePathToDialogue()
+    {
+        dialog.pathDialog = pathHeavenRecorder;
+        dialog.SetPathText();
+    }
+
+    public void SetBitRate(int bitrate)
+    {
+        recorder.bitRate = bitrate;
+        // print(recorder.bitRate);
     }
 }
 }
