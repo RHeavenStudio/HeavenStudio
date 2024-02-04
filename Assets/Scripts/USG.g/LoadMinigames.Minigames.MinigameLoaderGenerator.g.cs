@@ -243,26 +243,6 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader NtrBackbeatLoader failed!");
             }
 
-            game = AgbMannequinFactoryLoader.AddGame(eventCaller);
-            if (game != null)
-            {
-                eventCaller.minigames.Add(game.name, game);
-            }
-            else
-            {
-                Debug.LogWarning("Game loader AgbMannequinFactoryLoader failed!");
-            }
-
-            game = RvlManzaiLoader.AddGame(eventCaller);
-            if (game != null)
-            {
-                eventCaller.minigames.Add(game.name, game);
-            }
-            else
-            {
-                Debug.LogWarning("Game loader RvlManzaiLoader failed!");
-            }
-
             game = AgbMarcherLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -283,16 +263,6 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader PcoMeatLoader failed!");
             }
 
-            game = RvlMonkeyWatchLoader.AddGame(eventCaller);
-            if (game != null)
-            {
-                eventCaller.minigames.Add(game.name, game);
-            }
-            else
-            {
-                Debug.LogWarning("Game loader RvlMonkeyWatchLoader failed!");
-            }
-
             game = AgbUpbeatLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -311,16 +281,6 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader ntrMunchyMonkLoader failed!");
-            }
-
-            game = AgbNightWalkLoader.AddGame(eventCaller);
-            if (game != null)
-            {
-                eventCaller.minigames.Add(game.name, game);
-            }
-            else
-            {
-                Debug.LogWarning("Game loader AgbNightWalkLoader failed!");
             }
 
             game = NtrOctopusMachineLoader.AddGame(eventCaller);
@@ -521,16 +481,6 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader AgbTossBoysLoader failed!");
-            }
-
-            game = TotemClimbLoader.AddGame(eventCaller);
-            if (game != null)
-            {
-                eventCaller.minigames.Add(game.name, game);
-            }
-            else
-            {
-                Debug.LogWarning("Game loader TotemClimbLoader failed!");
             }
 
             game = AgbTramLoader.AddGame(eventCaller);
