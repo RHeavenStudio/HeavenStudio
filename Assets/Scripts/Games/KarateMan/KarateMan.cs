@@ -567,15 +567,17 @@ namespace HeavenStudio.Games
         static double wordClearTime = double.MinValue;
 
         [Header("Backgrounds")]
-        // 0 = bg color, 1 = shadow color, 2 = filter color
-        private double[] colorStartBeats = new double[3] {
-            -1,
-            -1,
-            -1
-        };
-        private float[] colorLengths = new float[3];
-        private Color[] colorStarts, colorEnds = new Color[3];
-        private Util.EasingFunction.Ease[] colorEases = new Util.EasingFunction.Ease[3];
+        // // 0 = bg color, 1 = shadow color, 2 = filter color
+        // private double[] colorStartBeats = new double[3] {
+        //     -1,
+        //     -1,
+        //     -1
+        // };
+        // private float[] colorLengths = new float[3];
+        // private Color[] colorStarts, colorEnds = new Color[3];
+        // private Util.EasingFunction.Ease[] colorEases = new Util.EasingFunction.Ease[3];
+
+        private ColorEase[] colorEases = new ColorEase[3];
 
         public int currentBgEffect = (int)BackgroundFXType.None;
 
@@ -704,11 +706,10 @@ namespace HeavenStudio.Games
             bgEffectAnimator = BGEffect.GetComponent<Animator>();
             bgEffectSpriteRenderer = BGEffect.GetComponent<SpriteRenderer>();
 
-            colorEnds =
-            colorStarts = new Color[] {
-                BackgroundColors[0],
-                TintColor(BackgroundColors[0]),
-                new Color(),
+            colorEases = new ColorEase[] {
+                new(BackgroundColors[0]),
+                new(TintColor(BackgroundColors[0])),
+                new(new Color()),
             };
         }
 
@@ -768,11 +769,6 @@ namespace HeavenStudio.Games
                     bg["shadowType"], bg["shadowStart"], bg["shadowEnd"],
                     bg["textureType"], bg["autoColor"], bg["startTexture"], bg["endTexture"]
                 );
-            }
-            else
-            {
-                var c = new Color();
-                BackgroundColor(0, 0, 0, 0, c, c, (int)Util.EasingFunction.Ease.Instant, 0, c, c, 0, true, c, c);
             }
 
             if (obj != null)
@@ -1108,28 +1104,15 @@ namespace HeavenStudio.Games
         {
             currentBgEffect = fxType;
 
-            for (int i = 0; i < colorStarts.Length; i++)
-            {
-                colorStartBeats[i] = beat;
-                colorLengths[i] = length;
-                colorEases[i] = (Util.EasingFunction.Ease)colorEaseSet;
-            }
-
             bool preset = presetBG != (int)BackgroundType.Custom;
             bool tinted = shadowType == (int)ShadowType.Tinted;
 
             Color bgColorStart = preset ? BGPlane.color : colorStart;
-            colorStarts = new Color[] {
-                bgColorStart,
-                tinted ? TintColor(bgColorStart) : shadowStart,
-                autoColor ? TintColor(bgColorStart): filterStart,
-            };
-
             Color bgColorEnd = preset ? BackgroundColors[presetBG] : colorEnd;
-            colorEnds = new Color[] {
-                bgColorEnd,
-                tinted ? TintColor(bgColorEnd) : shadowEnd,
-                autoColor ? TintColor(bgColorEnd) : filterEnd,
+            colorEases = new ColorEase[] {
+                new(beat, length, bgColorStart, bgColorEnd, colorEaseSet),
+                new(beat, length, (tinted ? TintColor(bgColorStart) : shadowStart), (tinted ? TintColor(bgColorEnd) : shadowEnd), colorEaseSet),
+                new(beat, length, (autoColor ? TintColor(bgColorStart): filterStart), (autoColor ? TintColor(bgColorEnd) : filterEnd), colorEaseSet),
             };
 
             for (int i = 0; i < BGTextures.Length; i++)
@@ -1150,18 +1133,8 @@ namespace HeavenStudio.Games
 
             for (int i = 0; i < spriteRenderers.Length; i++)
             {
-                float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeats[i], colorLengths[i]));
-                if (double.IsNaN(normalizedBeat)) normalizedBeat = 0; // happens if the game is stopped onto the first beat
-                var func = Util.EasingFunction.GetEasingFunction(colorEases[i]);
-                float[] color = new float[3] {
-                    func(colorStarts[i].r, colorEnds[i].r, normalizedBeat),
-                    func(colorStarts[i].g, colorEnds[i].g, normalizedBeat),
-                    func(colorStarts[i].b, colorEnds[i].b, normalizedBeat),
-                };
-
-                foreach (var renderer in spriteRenderers[i])
-                {
-                    renderer.color = new Color(color[0], color[1], color[2]);
+                foreach (var renderer in spriteRenderers[i]) {
+                    renderer.color = GetNewColor(colorEases[i]);
                 }
             }
         }

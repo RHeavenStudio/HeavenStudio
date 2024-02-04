@@ -456,6 +456,7 @@ namespace HeavenStudio.Games
         public Color GetNewColor(double beat, float length, Color start, Color end, Util.EasingFunction.Function func)
         {
             float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(beat, length));
+            if (double.IsNaN(normalizedBeat)) normalizedBeat = 0; // happens if the game is stopped onto the first beat
 
             float newR = func(start.r, end.r, normalizedBeat);
             float newG = func(start.g, end.g, normalizedBeat);
