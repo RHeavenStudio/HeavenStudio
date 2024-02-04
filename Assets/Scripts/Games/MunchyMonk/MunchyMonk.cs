@@ -286,16 +286,6 @@ namespace HeavenStudio.Games
                 if (dumplings.Count != 0) InputFunctions(3);
             }
 
-            // blushes when done eating but not when staring
-            if (needBlush
-                && !MonkAnim.IsPlayingAnimationNames("Eat", "Stare", "Barely", "Miss")
-                && !isStaring
-                && !noBlush)
-            {
-                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
-                needBlush = false;
-            }
-
             // sets hair stuff active when it needs to be
             if (growLevel > 0) {
                 StacheHolder.SetActive(true);
@@ -343,6 +333,19 @@ namespace HeavenStudio.Games
             if (queuedThrees.Count > 0) {
                 foreach (var dumpling in queuedThrees) ThreeGoCue(dumpling.beat, dumpling.color1, dumpling.color2, dumpling.color3);
                 queuedThrees.Clear();
+            }
+        }
+
+        private void LateUpdate()
+        {
+            // blushes when done eating but not when staring
+            if (needBlush
+                && !MonkAnim.IsPlayingAnimationNames("Eat", "Stare", "Barely", "Miss")
+                && !isStaring
+                && !noBlush)
+            {
+                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
+                needBlush = false;
             }
         }
 
