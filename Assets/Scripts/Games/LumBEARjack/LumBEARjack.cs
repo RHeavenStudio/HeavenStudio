@@ -45,13 +45,14 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        LumBEARjack.instance.SpawnSmallObject(e.beat, e.length, (LumBEARjack.SmallType)e["type"]);
+                        LumBEARjack.instance.SpawnSmallObject(e.beat, e.length, (LumBEARjack.SmallType)e["type"], (LumBEARjack.HuhChoice)e["huh"]);
                     },
                     defaultLength = 3,
                     parameters = new()
                     {
                         new("type", LumBEARjack.SmallType.log, "Type"),
-                        new("sound", true, "Cue Sound")
+                        new("sound", true, "Cue Sound"),
+                        new("huh", LumBEARjack.HuhChoice.ObjectSpecific, "Huh")
                     }
                 },
                 new("big", "Big Object")
@@ -122,13 +123,14 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        LumBEARjack.instance.SpawnSmallObject(e.beat, e.length, (LumBEARjack.SmallType)e["type"]);
+                        LumBEARjack.instance.SpawnSmallObject(e.beat, e.length, (LumBEARjack.SmallType)e["type"], (LumBEARjack.HuhChoice)e["huh"]);
                     },
                     defaultLength = 3,
                     parameters = new()
                     {
                         new("type", LumBEARjack.SmallType.log, "Type"),
-                        new("sound", true, "Cue Sound")
+                        new("sound", true, "Cue Sound"),
+                        new("huh", LumBEARjack.HuhChoice.ObjectSpecific, "Huh")
                     },
                     resizable = true
                 },
@@ -214,6 +216,13 @@ namespace HeavenStudio.Games
             None = 3
         }
 
+        public enum HuhChoice
+        {
+            ObjectSpecific,
+            Off,
+            On
+        }
+
         [Header("Components")]
         [SerializeField] private LBJBear _bear;
         [SerializeField] private LBJSmallObject _smallObjectPrefab;
@@ -254,14 +263,14 @@ namespace HeavenStudio.Games
 
         #region Spawn Objects
 
-        public void SpawnSmallObject(double beat, double length, SmallType type, double startUpBeat = -1)
+        public void SpawnSmallObject(double beat, double length, SmallType type, HuhChoice huh, double startUpBeat = -1)
         {
             BeatAction.New(this, new()
             {
                 new(beat + (length / 3), delegate
                 {
                     LBJSmallObject spawnedObject = Instantiate(_smallObjectPrefab, _cutObjectHolder);
-                    spawnedObject.Init(_bear, beat, length, type, startUpBeat);
+                    spawnedObject.Init(_bear, beat, length, type, huh, startUpBeat);
                 })
             });
         }
@@ -321,7 +330,7 @@ namespace HeavenStudio.Games
                     case "small":
                     case "smallS":
                         SmallObjectSound(e.beat, e.length, (SmallType)e["type"], beat);
-                        SpawnSmallObject(e.beat, e.length, (SmallType)e["type"], beat);
+                        SpawnSmallObject(e.beat, e.length, (SmallType)e["type"], (HuhChoice)e["huh"], beat);
                         break;
                     case "big":
                     case "bigS":
@@ -350,7 +359,7 @@ namespace HeavenStudio.Games
                     case "small":
                     case "smallS":
                         _bearNoBopBeats.Add(e.beat + (e.length / 3 * 2));
-                        if ((SmallType)e["type"] != SmallType.log)
+                        if (((SmallType)e["type"] != SmallType.log || (HuhChoice)e["huh"] == HuhChoice.On) && (HuhChoice)e["huh"] != HuhChoice.Off)
                         {
                             _bearNoBopBeats.Add(e.beat + e.length);
                             _bearNoBopBeats.Add(e.beat + e.length + 1);
@@ -390,7 +399,18 @@ namespace HeavenStudio.Games
 
             foreach (var e in allEvents)
             {
-                if (e.beat + _catAnimationOffsetStart < beat || e.beat < nextGameSwitchBeat)
+                float effectiveLength = e.length / (e.datamodel.Split(1) switch
+                {
+                    "small" => 3,
+                    "smallS" => 3,
+                    "big" => 4,
+                    "bigS" => 4,
+                    "huge" => 6,
+                    "hugeS" => 6,
+                    _ => 3
+                });
+
+                if ((e.beat + _catAnimationOffsetStart < beat && e.beat + effectiveLength + _catAnimationOffsetEnd > beat) || (e.beat >= beat && e.beat < nextGameSwitchBeat))
                 {
                     switch (e.datamodel.Split(1))
                     {

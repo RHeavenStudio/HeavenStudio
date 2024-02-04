@@ -21,6 +21,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private LBJBear _bear;
         private LumBEARjack.SmallType _type;
+        private LumBEARjack.HuhChoice _huh;
 
         private double _rotationBeat;
         private double _rotationLength;
@@ -33,10 +34,11 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _broom.SetActive(false);
         }
 
-        public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type, double startUpBeat = -1)
+        public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type, LumBEARjack.HuhChoice huh, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;
+            _huh = huh;
 
             switch (type)
             {
@@ -93,8 +95,22 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
 
-            if (_type != LumBEARjack.SmallType.log) SoundByte.PlayOneShotGame("lumbearjack/huh", caller.startBeat + caller.timer + 1);
-            _bear.Cut(caller.startBeat + caller.timer, _type != LumBEARjack.SmallType.log, false); // Add proper logic for direction
+            // Add proper logic for direction
+
+            switch (_huh)
+            {
+                case LumBEARjack.HuhChoice.ObjectSpecific:
+                    if (_type != LumBEARjack.SmallType.log) SoundByte.PlayOneShotGame("lumbearjack/huh", caller.startBeat + caller.timer + 1);
+                    _bear.Cut(caller.startBeat + caller.timer, _type != LumBEARjack.SmallType.log, false);
+                    break;
+                case LumBEARjack.HuhChoice.On:
+                    SoundByte.PlayOneShotGame("lumbearjack/huh", caller.startBeat + caller.timer + 1);
+                    _bear.Cut(caller.startBeat + caller.timer, true, false);
+                    break;
+                default:
+                    _bear.Cut(caller.startBeat + caller.timer, false, false);
+                    break;
+            }
 
             Destroy(gameObject);
         }
