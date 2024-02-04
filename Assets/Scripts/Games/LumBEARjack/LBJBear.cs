@@ -13,29 +13,33 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private bool _rested = false;
         private bool _restSound = true;
 
-        public void SwingWhiff(bool sound = true, bool force = false)
+        public void SwingWhiff(bool sound = true)
         {
-            if ((_anim.IsPlayingAnimationNames("BeastWhiff", "BeastCut", "BeastCutMid", "BeastHalfCut", "BeastRest") || _rested) && !force) return;
+            if (_rested) return;
             if (sound) SoundByte.PlayOneShotGame("lumbearjack/swing", -1, SoundByte.GetPitchFromCents(Random.Range(-200, 201), false));
-            _anim.DoScaledAnimationAsync("BeastWhiff", 0.5f);
+            _anim.DoScaledAnimationAsync("BeastWhiff", 0.75f);
         }
 
         public void Cut(double beat, bool huh, bool huhL)
         {
-            _anim.DoScaledAnimationAsync(huh ? "BeastHalfCut" : "BeastCut", 0.5f);
+            _anim.DoScaledAnimationAsync(huh ? "BeastHalfCut" : "BeastCut", 0.75f);
             if (!huh) return;
             BeatAction.New(this, new()
             {
                 new(beat + 1, delegate
                 {
                     _anim.DoScaledAnimationAsync(huhL ? "BeastHuhL" : "BeastHuhR", 0.5f);
+                }),
+                new(beat + 2, delegate
+                {
+                    _anim.DoScaledAnimationAsync("BeastReady", 0.75f);
                 })
             });
         }
 
         public void CutMid()
         {
-            _anim.DoScaledAnimationAsync("BeastCutMid", 0.5f);
+            _anim.DoScaledAnimationAsync("BeastCutMid", 0.75f);
         }
 
         public void Bop()

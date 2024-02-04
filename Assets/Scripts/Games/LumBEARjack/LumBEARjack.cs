@@ -220,6 +220,14 @@ namespace HeavenStudio.Games
         [SerializeField] private LBJBigObject _bigObjectPrefab;
         [SerializeField] private LBJHugeObject _hugeObjectPrefab;
         [SerializeField] private Transform _cutObjectHolder;
+        [SerializeField] private Animator _catRight;
+        [SerializeField] private GameObject[] _catRightObjectsSmall = new GameObject[4];
+        [SerializeField] private GameObject[] _catRightObjectsBig = new GameObject[1];
+        [SerializeField] private GameObject[] _catRightObjectsHuge = new GameObject[3];
+
+        [Header("Parameters")]
+        [SerializeField] private double _catAnimationOffsetStart = -0.5;
+        [SerializeField] private double _catAnimationOffsetEnd = 0.5;
 
         private List<double> _bearNoBopBeats = new();
 
@@ -229,6 +237,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             SetupBopRegion("lumbearjack", "bop", "auto", false);
+            DisableAllCatRightObjects();
         }
 
         #region Update
@@ -289,12 +298,14 @@ namespace HeavenStudio.Games
         {
             PersistObjects(beat);
             HandleBops(beat);
+            HandleCatAnimation(beat);
         }
 
         public override void OnPlay(double beat)
         {
             PersistObjects(beat);
             HandleBops(beat);
+            HandleCatAnimation(beat);
         }
 
         private void PersistObjects(double beat)
@@ -339,7 +350,11 @@ namespace HeavenStudio.Games
                     case "small":
                     case "smallS":
                         _bearNoBopBeats.Add(e.beat + (e.length / 3 * 2));
-                        if ((SmallType)e["type"] != SmallType.log) _bearNoBopBeats.Add(e.beat + e.length);
+                        if ((SmallType)e["type"] != SmallType.log)
+                        {
+                            _bearNoBopBeats.Add(e.beat + e.length);
+                            _bearNoBopBeats.Add(e.beat + e.length + 1);
+                        }
                         break;
                     case "big":
                     case "bigS":
@@ -364,6 +379,38 @@ namespace HeavenStudio.Games
             }
         }
 
+        private void HandleCatAnimation(double beat)
+        {
+            var allEvents = EventCaller.GetAllInGameManagerList("lumbearjack", new string[] { "small", "big", "huge", "smallS", "bigS", "hugeS" });
+            var nextGameSwitch = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).Find(x => x.beat > beat && x.datamodel.Split(2) != "lumbearjack");
+
+            double nextGameSwitchBeat = double.MaxValue;
+            if (nextGameSwitch != null) nextGameSwitchBeat = nextGameSwitch.beat;
+
+
+            foreach (var e in allEvents)
+            {
+                if (e.beat + _catAnimationOffsetStart < beat || e.beat < nextGameSwitchBeat)
+                {
+                    switch (e.datamodel.Split(1))
+                    {
+                        case "small":
+                        case "smallS":
+                            CatPutObject(e.beat, e.length, (SmallType)e["type"]);
+                            break;
+                        case "big":
+                        case "bigS":
+                            CatPutObject(e.beat, e.length, (BigType)e["type"]);
+                            break;
+                        case "huge":
+                        case "hugeS":
+                            CatPutObject(e.beat, e.length, (HugeType)e["type"]);
+                            break;
+                    }
+                } 
+            }
+        }
+
         #endregion
 
         #region Bop
@@ -374,11 +421,15 @@ namespace HeavenStudio.Games
             {
                 case WhoBops.Both:
                     if (!_bearNoBopBeats.Contains(beat)) _bear.Bop();
+                    if (_catRight.IsPlayingAnimationNames("CatGrab")) break;
+                    _catRight.DoScaledAnimationAsync("CatBop", 0.5f);
                     break;
                 case WhoBops.Bear:
                     if (!_bearNoBopBeats.Contains(beat)) _bear.Bop();
                     break;
                 case WhoBops.Cats:
+                    if (_catRight.IsPlayingAnimationNames("CatGrab")) break;
+                    _catRight.DoScaledAnimationAsync("CatBop", 0.5f);
                     break;
                 default:
                     break;
@@ -401,11 +452,15 @@ namespace HeavenStudio.Games
                     {
                         case WhoBops.Both:
                             _bear.Bop();
+                            if (_catRight.IsPlayingAnimationNames("CatGrab")) break;
+                            _catRight.DoScaledAnimationAsync("CatBop", 0.5f);
                             break;
                         case WhoBops.Bear:
                             _bear.Bop();
                             break;
                         case WhoBops.Cats:
+                            if (_catRight.IsPlayingAnimationNames("CatGrab")) break;
+                            _catRight.DoScaledAnimationAsync("CatBop", 0.5f);
                             break;
                         default:
                             break;
@@ -489,6 +544,87 @@ namespace HeavenStudio.Games
             }
 
             if (sounds.Count > 0) MultiSound.Play(sounds.ToArray(), true, true);
+        }
+
+        #endregion
+
+        #region Cats
+
+        private Coroutine _catRightCoroutine;
+
+        public void CatPutObject(double beat, double length, SmallType type)
+        {
+            CatPutObjectExec(beat, length / 3, _catRightObjectsSmall[(int)type]);
+        }
+
+        public void CatPutObject(double beat, double length, BigType type)
+        {
+            CatPutObjectExec(beat, length / 4, _catRightObjectsBig[(int)type]);
+        }
+
+        public void CatPutObject(double beat, double length, HugeType type)
+        {
+            CatPutObjectExec(beat, length / 6, _catRightObjectsHuge[(int)type]);
+        }
+
+        private void CatPutObjectExec(double beat, double effectiveLength, GameObject objectUsed)
+        {
+            BeatAction.New(this, new()
+            {
+                new(beat + (_catAnimationOffsetStart * effectiveLength), delegate
+                {
+                    if (_catRightCoroutine != null) StopCoroutine(_catRightCoroutine);
+                    DisableAllCatRightObjects();
+                    _catRightCoroutine = StartCoroutine(CatPutObjectCo(beat, effectiveLength));
+                }),
+                new(beat, delegate
+                {
+                    objectUsed.SetActive(true);
+                }),
+                new(beat + effectiveLength, delegate
+                {
+                    DisableAllCatRightObjects();
+                })
+            });
+        }
+
+        private IEnumerator CatPutObjectCo(double beat, double effectiveLength)
+        {
+            double s = _catAnimationOffsetStart * effectiveLength;
+            double e = _catAnimationOffsetEnd * effectiveLength;
+
+            float normalizedBeat = conductor.GetPositionFromBeat(beat + s, effectiveLength + e - s, false);
+            _catRight.DoNormalizedAnimation("CatGrab", Mathf.Clamp01(normalizedBeat));
+
+            while (normalizedBeat <= 1)
+            {
+                normalizedBeat = conductor.GetPositionFromBeat(beat + s, effectiveLength + e - s, false);
+
+                _catRight.DoNormalizedAnimation("CatGrab", Mathf.Clamp01(normalizedBeat));
+
+                yield return null;
+            }
+        }
+
+        private void DisableAllCatRightObjects()
+        {
+            foreach (var g in _catRightObjectsSmall)
+            {
+                if (g == null) continue;
+                g.SetActive(false);
+            }
+
+            foreach (var g in _catRightObjectsBig)
+            {
+                if (g == null) continue;
+                g.SetActive(false);
+            }
+
+            foreach (var g in _catRightObjectsHuge)
+            {
+                if (g == null) continue;
+                g.SetActive(false);
+            }
         }
 
         #endregion

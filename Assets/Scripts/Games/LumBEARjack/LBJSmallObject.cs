@@ -76,7 +76,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         {
             if (state >= 1f || state <= -1f)
             {
-                _bear.SwingWhiff(false, true);
+                _bear.SwingWhiff(false);
                 Miss(caller);
                 return;
             }
