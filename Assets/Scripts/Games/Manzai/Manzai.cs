@@ -110,6 +110,20 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("lightsEnabled", false, "Spotlights", "Whether the spotlights will be turned on"),
                     },
+                },
+                new GameAction("crowd", "Crowd Animations")
+                {
+                    preFunction = delegate {
+                        var e = eventCaller.currentEntity; 
+                        Manzai.instance.CrowdAnimation(e.beat, e.length, e["animation"], e["loop"]); 
+                    },
+                    defaultLength = 1.0f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("animation", Manzai.CrowdAnimationList.Bop, "Animation", "What animation the crowd will play."),
+                        new Param("loop", new EntityTypes.Integer(1, 16, 4), "Loop Interval (x4)", "How many quarter-beats the animation will wait before looping"),
+                    },
                 }},
                 new List<string>() { "rvl", "normal" },
                 "rvlmanzai", "jp",
@@ -148,6 +162,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator DonaiyanenBubble;
         [SerializeField] Animator BothBirdsAnim;
         [SerializeField] Animator StageAnim;
+        [SerializeField] Animator CrowdAnim;
 
         [SerializeField] Transform PivotL;
         [SerializeField] Transform PivotR;
@@ -191,6 +206,9 @@ namespace HeavenStudio.Games
         bool easterEgg2 = false;
 
         bool boingHasCrowdSounds = true;
+        bool crowdCanCheerSound = true;
+        bool crowdCanCheerAnimation = true;
+        bool crowdIsCheering = false;
 
 
         public enum WhoBops
@@ -270,6 +288,16 @@ namespace HeavenStudio.Games
             Default,
             Practice,
             Silent,
+        }
+
+        public enum CrowdAnimationList
+        {
+            Idle,
+            Bop,
+            Cheer,
+            Uproar,
+            Angry,
+            Jump,
         }
 
         const int IAAltDownCat = IAMAXCAT;
@@ -362,6 +390,11 @@ namespace HeavenStudio.Games
                 DoPunBoing(beat, whichPun, isPitched, crowdSounds);
             }
             //Debug.Log(punOrBoing);
+
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 4.0, delegate { crowdAnimReset(); }),
+            });
         }
 
         public static void PunSFX(double beat, int whichPun, bool isPitched, int isBoing, int crowdSounds)
@@ -427,6 +460,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; bubbleRandom(); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { crowdCanCheerSound = (crowdSounds == 0); }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                     new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat, crowdSounds); }),
                 });
@@ -440,6 +474,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 1.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; bubbleRandom(); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { crowdCanCheerSound = (crowdSounds == 0); }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                     new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat, crowdSounds); }),
                 });
@@ -460,10 +495,22 @@ namespace HeavenStudio.Games
             {
                 SoundByte.PlayOneShotGame("manzai/miss1");
                 SoundByte.PlayOneShotGame("manzai/missClick");
+                if (crowdCanCheerSound && crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                    crowdIsCheering = false;
+                }
             }
             else
             {
                 SoundByte.PlayOneShotGame("manzai/HaiAccent");
+
+                if (crowdCanCheerSound && crowdCanCheerAnimation && !crowdIsCheering)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Cheer", 0.5f);
+                    crowdIsCheering = true;
+                }
+
                 if (side == 0)
                 {
                     float randomL = UnityEngine.Random.Range(-40, 41) / 1000.0f;
@@ -529,6 +576,12 @@ namespace HeavenStudio.Games
             }
             crowdSound = SoundByte.PlayOneShotGame("manzai/disappointed");
             
+            if (crowdCanCheerAnimation)
+            {
+                CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                crowdIsCheering = false;
+            }
+            
             //SoundByte.PlayOneShotGame("manzai/hai");
             //RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
             //VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
@@ -585,6 +638,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 2.00f, delegate { ravenCanBop = false; }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
                     new BeatAction.Action(beat + 2.25f, delegate { boingHasCrowdSounds = (crowdSounds == 0); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { crowdCanCheerSound = (crowdSounds == 0); }),
                     new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat, crowdSounds); }),
                     new BeatAction.Action(beat + 3.20f, delegate { isPreparingForBoing = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
@@ -603,6 +657,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 2.00f, delegate { ravenCanBop = false; }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
                     new BeatAction.Action(beat + 2.25f, delegate { boingHasCrowdSounds = (crowdSounds == 0); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { crowdCanCheerSound = (crowdSounds == 0); }),
                     new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat, crowdSounds); }),
                     new BeatAction.Action(beat + 3.20f, delegate { isPreparingForBoing = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
@@ -628,6 +683,7 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(beat + 3.00f, delegate { crowdSound = SoundByte.PlayOneShotGame("manzai/donaiyanenLaugh"); }),
                     });
                 }
+                crowdCanCheerSound = false;
             }
             hitHaiL = false;
             hitHaiR = false;
@@ -660,10 +716,22 @@ namespace HeavenStudio.Games
             {
                 SoundByte.PlayOneShotGame("manzai/miss1");
                 SoundByte.PlayOneShotGame("manzai/missClick");
+                if (crowdCanCheerSound && crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                    crowdIsCheering = false;
+                }
             }
             else
             {
                 SoundByte.PlayOneShotGame("manzai/donaiyanenAccent");
+
+                if (crowdCanCheerSound && crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Uproar", 0.5f);
+                    crowdIsCheering = true;
+                }
+
                 hitDonaiyanen = true;
             }
             RavenAnim.DoScaledAnimationAsync("Attack", 0.5f);
@@ -701,6 +769,12 @@ namespace HeavenStudio.Games
             {
                 crowdSound = SoundByte.PlayOneShotGame("manzai/disappointed");
                 missedWithWrongButton = false;
+            }
+
+            if (crowdCanCheerAnimation)
+            {
+                CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                crowdIsCheering = false;
             }
         }
 
@@ -749,6 +823,34 @@ namespace HeavenStudio.Games
             StageAnim.DoScaledAnimationAsync(lightsEnabled ? "LightsOff" : "LightsOn", 0.5f);
         }
 
+        public void CrowdAnimation(double beat, double length, int animation, int loop)
+        {
+            var crowdAnimation= Enum.GetName(typeof(CrowdAnimationList), animation);
+            double loopAsDouble = loop * 0.25;
+
+            var actions = new List<BeatAction.Action>();
+                if (animation != 1)
+                {
+                    actions.Add(new(beat - 0.25, delegate { crowdCanCheerAnimation = false; }));
+                }
+                for (int i = 0; i * loopAsDouble < length; i++)
+                { 
+                    actions.Add(new(beat + i * loopAsDouble, delegate { CrowdAnim.DoScaledAnimationAsync($"{crowdAnimation}", 0.5f); }));
+                }
+                actions.Add(new(beat + length, delegate { crowdCanCheerAnimation = true; }));
+                actions.Add(new(beat + length, delegate { CrowdAnim.DoScaledAnimationAsync("Idle"); }));
+            BeatAction.New(this, actions);
+        }
+
+        public void crowdAnimReset()
+        {
+            if (crowdIsCheering)
+            {
+                CrowdAnim.DoScaledAnimationAsync("Idle", 0.5f);
+                crowdIsCheering = false;
+            }
+        }
+
         public void kasukeHaiAnimFull()
         {
             SoundByte.PlayOneShotGame("manzai/hai");
@@ -790,6 +892,11 @@ namespace HeavenStudio.Games
                         Manzai.instance.ScoreMiss(0.5f);
                         lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
                         ravenCanBopTemp = false;
+                        if (crowdCanCheerAnimation)
+                        {
+                            CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                            crowdIsCheering = false;
+                        }
                     }
                 }
                 else
@@ -798,6 +905,11 @@ namespace HeavenStudio.Games
                     Manzai.instance.ScoreMiss(0.5f);
                     lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
                     ravenCanBopTemp = false;
+                    if (crowdCanCheerAnimation)
+                    {
+                        CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                        crowdIsCheering = false;
+                    }
                 }
             }
 
@@ -819,6 +931,11 @@ namespace HeavenStudio.Games
                     VultureAnim.DoScaledAnimationAsync("Dodge", 0.5f);
                     vultureCanBopTemp = false;
                 }
+                if (crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                    crowdIsCheering = false;
+                }
             }
 
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && IsExpectingInputNow(InputAction_Alt) && PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
@@ -833,6 +950,11 @@ namespace HeavenStudio.Games
                 }
                 kasukeHaiAnimFull();
                 missedWithWrongButton = true;
+                if (crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                    crowdIsCheering = false;
+                }
             }
 
             if ((lastWhiffBeat + 1) < conductor.songPositionInBeatsAsDouble)
