@@ -13,12 +13,39 @@ namespace HeavenStudio.Games.Loaders
             return new Minigame("sumoBrothers", "Sumo Brothers \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "EDED15", false, false, new List<GameAction>()
             {
                 
-                 new GameAction("stompSignal", "Stomp Signal")
+                new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.StompSignal(e.beat, e["mute"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Bop(e.beat, e.length, e["bopInu"], e["bopSumo"], e["bopInuAuto"], e["bopSumoAuto"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to stomping.")
+                        new Param("bopInu", true, "Bop Inu", "Whether Inu Sensei should bop or not."),
+                        new Param("bopSumo", true, "Bop Sumo", "Whether the Sumo Brothers should bop or not."),
+                        new Param("bopInuAuto", false, "Bop Inu (Auto)", "Whether Inu Sensei should bop automatically or not."),
+                        new Param("bopSumoAuto", false, "Bop Sumo (Auto)", "Whether the Sumo Brothers should bop automatically or not."),
+                    },
+                    defaultLength = 1f,
+                    resizable = true
+                },
+
+                new GameAction("crouch", "Crouch")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Crouch(e.beat, e.length, e["inuT"], e["sumoT"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("inuT", true, "Inu Sensei", "Whether Inu Sensei crouches or not."),
+                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers crouch or not.")
+                    },
+                    defaultLength = 1f,
+                    resizable = true
+                },
+
+                 new GameAction("stompSignal", "Stomp Signal")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.StompSignal(e.beat, e["mute"], e["look"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to stomping."),
+                        new Param("look", true, "Look Forward", "The Sumo Brothers will look at the camera if transitioning from slapping.")
                     },
                     defaultLength = 4f,
                     priority = 4
@@ -47,39 +74,13 @@ namespace HeavenStudio.Games.Loaders
                     priority = 2
                 },
 
-                 new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Bop(e.beat, e.length, e["bopInu"], e["bopSumo"], e["bopInuAuto"], e["bopSumoAuto"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("bopInu", true, "Bop Inu", "Whether Inu Sensei should bop or not."),
-                        new Param("bopSumo", true, "Bop Sumo", "Whether the Sumo Brothers should bop or not."),
-                        new Param("bopInuAuto", false, "Bop Inu (Auto)", "Whether Inu Sensei should bop automatically or not."),
-                        new Param("bopSumoAuto", false, "Bop Sumo (Auto)", "Whether the Sumo Brothers should bop automatically or not."),
-                    },
-                    defaultLength = 1f,
-                    resizable = true
-                },
-
-                 new GameAction("crouch", "Crouch")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Crouch(e.beat, e.length, e["inuT"], e["sumoT"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("inuT", true, "Inu Sensei", "Whether Inu Sensei crouches or not."),
-                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers crouch or not.")
-                    },
-                    defaultLength = 1f,
-                    resizable = true
-                },
-
-                new GameAction("look", "Look at Camera")
+                new GameAction("look", "Look Forward")
                 {
                     function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.LookAtCamera(e.beat, e.length, e["look"]); },
-                    parameters = new List<Param>()
+                    /*parameters = new List<Param>()
                     {
                         new Param("look", true, "Look at Camera", "Whether the Sumo Brothers will look at the camera while slapping."),
-                    },
+                    },*/
                     defaultLength = 1f,
                     resizable = true
                 },
@@ -102,14 +103,14 @@ namespace HeavenStudio.Games
         [SerializeField] Animator sumoBrotherPHead;
 
         [Header("Properties")]
-        static List<queuedSumoInputs> queuedInputs = new List<queuedSumoInputs>();
+        /*static List<queuedSumoInputs> queuedInputs = new List<queuedSumoInputs>();
         public struct queuedSumoInputs
         {
             public float beat;
             public int cue;
             public int poseType;
             public int poseBG;
-        }
+        }*/
 
         private bool goBopSumo;
         private bool goBopInu;
@@ -117,6 +118,7 @@ namespace HeavenStudio.Games
         private bool allowBopSumo;
         private bool allowBopInu;
 
+        private bool sumoStompDir = false;
         private double lastReportedBeat = 0f;
 
         private bool cueCurrentlyActive = false; 
@@ -145,6 +147,7 @@ namespace HeavenStudio.Games
             Pose
         }
         private SumoState sumoState = SumoState.Idle;
+        private SumoState sumoStatePrevious = SumoState.Idle;
 
         // Start is called before the first frame update
         void Awake()
@@ -159,10 +162,10 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            /*if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
-            }
+            }*/
         }
 
         // Update is called once per frame
@@ -191,8 +194,8 @@ namespace HeavenStudio.Games
                 {
                     if(goBopSumo)
                     {
-                        sumoBrotherP.DoScaledAnimationAsync("SumoBop", 1f);
-                        sumoBrotherG.DoScaledAnimationAsync("SumoBop", 1f);
+                        sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f);
+                        sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f);
                         sumoBrotherGHead.DoScaledAnimationAsync("SumoGIdle", 0.5f);
                         sumoBrotherPHead.DoScaledAnimationAsync("SumoGIdle", 0.5f);
                     }
@@ -204,7 +207,10 @@ namespace HeavenStudio.Games
                     
                 }
 
+                print("current sumo state:");
                 print(sumoState);
+                print("previous sumo state:");
+                print(sumoStatePrevious);
         }
 
         public void Bop(double beat, float length, bool inu, bool sumo, bool inuAuto, bool sumoAuto)
@@ -225,8 +231,8 @@ namespace HeavenStudio.Games
                         }
                         if (sumo)
                         {
-                            sumoBrotherP.DoScaledAnimationAsync("SumoBop", 1f);
-                            sumoBrotherG.DoScaledAnimationAsync("SumoBop", 1f);
+                            sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f);
+                            sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f);
                             sumoBrotherGHead.DoScaledAnimationAsync("SumoGIdle", 0.5f);
                         }
                     }));
@@ -236,7 +242,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void StompSignal(double beat, bool mute)
+        public void StompSignal(double beat, bool mute, bool lookatcam)
         {     
             if (sumoState == SumoState.Stomp || cueCurrentlyActive)
             {
@@ -244,6 +250,19 @@ namespace HeavenStudio.Games
             }
 
             CueRunning(beat + 0);
+
+            if (lookatcam) {
+                sumoBrotherPHead.DoScaledAnimationAsync("SumoPSlapLook", 0.5f);
+                sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapLook", 0.5f);
+
+            }
+
+            BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                new BeatAction.Action(beat + 3, delegate { allowBopSumo = false; }),
+                new BeatAction.Action(beat + 3, delegate { sumoBrotherPHead.DoScaledAnimationAsync("SumoPStomp", 0.5f); }),
+                new BeatAction.Action(beat + 3, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGStomp", 0.5f); })
+                });
 
             if (mute == false)
             {
@@ -261,8 +280,9 @@ namespace HeavenStudio.Games
             
             }
 
+            sumoStatePrevious = sumoState;
             sumoState = SumoState.Stomp;
-            StompRecursive(beat + 4, 2);
+            StompRecursive(beat + 3, 1);
         }
 
         private void StompRecursive(double beat, double remaining)
@@ -279,11 +299,33 @@ namespace HeavenStudio.Games
                 return;
             }
 
-            ScheduleInput(beat - 1, 1, InputAction_BasicPress, StompHit, StompMiss, Nothing);
+            if (sumoStompDir) {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { sumoBrotherP.DoScaledAnimationAsync("SumoStompPrepareL", 0.5f); }),
+                    new BeatAction.Action(beat, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoStompPrepareR", 0.5f); }),
+                    new BeatAction.Action(beat + 1, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoStompR", 0.5f); })                    
+                });
+            } else {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { sumoBrotherP.DoScaledAnimationAsync("SumoStompPrepareR", 0.5f); }),
+                    new BeatAction.Action(beat, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoStompPrepareL", 0.5f); }),
+                    new BeatAction.Action(beat + 1, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoStompL", 0.5f); })                    
+                });
+            }
+        
+
+            ScheduleInput(beat , 1, InputAction_BasicPress, StompHit, StompMiss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat, delegate { StompRecursive(beat + 2, remaining); })
                 });
+
+            if (sumoStompDir) { sumoStompDir = false;}
+            else
+            { sumoStompDir = true;}
+            print(sumoStompDir);
             
         }
 
@@ -299,8 +341,8 @@ namespace HeavenStudio.Games
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat + 3, delegate { allowBopSumo = false; }),
-                new BeatAction.Action(beat + 3, delegate { sumoBrotherP.DoScaledAnimationAsync("SumoSlapPrepare", 1f); }),
-                new BeatAction.Action(beat + 3, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoSlapPrepare", 1f); }),
+                new BeatAction.Action(beat + 3, delegate { sumoBrotherP.DoScaledAnimationAsync("SumoSlapPrepare",0.5f); }),
+                new BeatAction.Action(beat + 3, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoSlapPrepare", 0.5f); }),
                 new BeatAction.Action(beat + 3, delegate { sumoBrotherPHead.DoScaledAnimationAsync("SumoPSlapPrepare", 0.5f); }),
                 new BeatAction.Action(beat + 3, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapPrepare", 0.5f); })
                 });
@@ -324,6 +366,7 @@ namespace HeavenStudio.Games
                 }, forcePlay: true);
             }
 
+            sumoStatePrevious = sumoState;
             sumoState = SumoState.Slap;
             SlapRecursive(beat + 4, 4);
 
@@ -368,16 +411,16 @@ namespace HeavenStudio.Games
             new BeatAction.Action(beat, delegate { if (sumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoCrouch", 0.5f); }),
             new BeatAction.Action(beat + length - 0.001, delegate { allowBopInu = true; }),
             new BeatAction.Action(beat + length - 0.001, delegate { allowBopSumo = true; }),
-            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherP.DoScaledAnimationAsync("SumoBop", 1f); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoBop", 1f); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 1f); })
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); })
             });
 
         }
 
         public void LookAtCamera(double beat, float length, bool lookatcam)
         {
-            
+            if (sumoState == SumoState.Slap) {
             BeatAction.New(instance, new List<BeatAction.Action>() {
             new BeatAction.Action(beat, delegate { sumoBrotherPHead.DoScaledAnimationAsync("SumoPSlapLook", 0.5f); }),
             new BeatAction.Action(beat, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapLook", 0.5f); }),
@@ -386,6 +429,7 @@ namespace HeavenStudio.Games
             new BeatAction.Action(beat + length, delegate { if (sumoState == SumoState.Slap) sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapPrepare", 0.5f); }),
             new BeatAction.Action(beat + length, delegate { print("lookun"); })
             });
+            }
 
         }
 
@@ -395,6 +439,7 @@ namespace HeavenStudio.Games
             { return; }
 
             CueRunning(beat + 0);
+            sumoStatePrevious = sumoState;
             sumoState = SumoState.Pose;
 
             var cond = Conductor.instance;
@@ -429,7 +474,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                SoundByte.PlayOneShotGame("nearmiss");
+                SoundByte.PlayOneShotGame("sumoBrothers/tink");
             }
             else
             {
@@ -451,7 +496,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                SoundByte.PlayOneShotGame("nearmiss");
+                SoundByte.PlayOneShotGame("sumoBrothers/tink");
 
             }
             else
@@ -459,8 +504,8 @@ namespace HeavenStudio.Games
 
             }
             SoundByte.PlayOneShotGame("sumoBrothers/slap");
-            sumoBrotherP.DoScaledAnimationAsync("SumoSlapFront", 1f);
-            sumoBrotherG.DoScaledAnimationAsync("SumoSlapFront", 1f);
+            sumoBrotherP.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
+            sumoBrotherG.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
             
 
 
@@ -469,6 +514,8 @@ namespace HeavenStudio.Games
         void SlapMiss(PlayerActionEvent caller)
         {
             SoundByte.PlayOneShotGame("sumoBrothers/miss");
+            sumoBrotherG.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
+            sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f); // temp miss animation until i get real one done
 
 
         }
@@ -477,14 +524,22 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                SoundByte.PlayOneShotGame("nearmiss");
-                SoundByte.PlayOneShotGame("sumoBrothers/stomp");
+                SoundByte.PlayOneShotGame("sumoBrothers/tink");
+                sumoBrotherPHead.DoScaledAnimationAsync("SumoPStompBarely", 0.5f);
             }
             else
             {
-
+                sumoBrotherPHead.DoScaledAnimationAsync("SumoPStomp", 0.5f);
             }
             SoundByte.PlayOneShotGame("sumoBrothers/stomp");
+
+            if (sumoStompDir) 
+            {
+                sumoBrotherP.DoScaledAnimationAsync("SumoStompL", 0.5f);
+            } else {
+                sumoBrotherP.DoScaledAnimationAsync("SumoStompR", 0.5f);
+            }
+            
 
 
         }
