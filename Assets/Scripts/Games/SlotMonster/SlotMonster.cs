@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     priority = 1,
                 },
-                new GameAction("passTurn", "Pass Turn")
+                new GameAction("buttonColor", "Button Color")
                 {
                     function = delegate {
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out SlotMonster instance)) {
@@ -92,16 +92,16 @@ namespace HeavenStudio.Games
         public enum EyeTypes
         {
             Random,
-            Test1,
-            Test2,
-            Test3,
-            Test4,
-            Test5,
-            Test6,
-            Test7,
-            Test8,
-            Test9,
-            Test10,
+            Note,
+            Ring,
+            Cake,
+            Flower,
+            Beverage,
+            Mushroom,
+            Key,
+            Ribbon,
+            Hat,
+            Barista,
         }
 
         [Header("Animators")]
