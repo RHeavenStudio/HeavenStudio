@@ -167,6 +167,7 @@ namespace HeavenStudio.Games
         [SerializeField] Transform PivotL;
         [SerializeField] Transform PivotR;
         [SerializeField] Transform PivotD;
+        [SerializeField] Transform CrowdPos;
 
         bool ravenBop = true;
         bool vultureBop = true;
@@ -209,6 +210,15 @@ namespace HeavenStudio.Games
         bool crowdCanCheerSound = true;
         bool crowdCanCheerAnimation = true;
         bool crowdIsCheering = false;
+        double crowdLastMissAnimation = double.MinValue;
+
+        bool jumpUp = false;
+        bool jumpDown = false;
+        float jumpStart;
+        float jumpApex;
+        float jumpLength;
+        double startJumpTime = double.MinValue;
+        float jumpHeight = 1;
 
 
         public enum WhoBops
@@ -499,6 +509,7 @@ namespace HeavenStudio.Games
                 {
                     CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
                     crowdIsCheering = false;
+                    crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
                 }
             }
             else
@@ -580,6 +591,7 @@ namespace HeavenStudio.Games
             {
                 CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
                 crowdIsCheering = false;
+                crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
             }
             
             //SoundByte.PlayOneShotGame("manzai/hai");
@@ -720,6 +732,7 @@ namespace HeavenStudio.Games
                 {
                     CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
                     crowdIsCheering = false;
+                    crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
                 }
             }
             else
@@ -775,6 +788,7 @@ namespace HeavenStudio.Games
             {
                 CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
                 crowdIsCheering = false;
+                crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
             }
         }
 
@@ -825,7 +839,6 @@ namespace HeavenStudio.Games
 
         public void CrowdAnimation(double beat, double length, int animation, int loop)
         {
-            var crowdAnimation= Enum.GetName(typeof(CrowdAnimationList), animation);
             double loopAsDouble = loop * 0.25;
 
             var actions = new List<BeatAction.Action>();
@@ -833,13 +846,55 @@ namespace HeavenStudio.Games
                 {
                     actions.Add(new(beat - 0.25, delegate { crowdCanCheerAnimation = false; }));
                 }
-                for (int i = 0; i * loopAsDouble < length; i++)
-                { 
-                    actions.Add(new(beat + i * loopAsDouble, delegate { CrowdAnim.DoScaledAnimationAsync($"{crowdAnimation}", 0.5f); }));
+                if (animation != 1 && animation != 5)
+                {
+                    actions.Add(new(beat, delegate { doCrowdAnimation(animation, loopAsDouble, beat); }));
+                    actions.Add(new(beat + length, delegate { CrowdAnim.DoScaledAnimationAsync("Idle"); }));
+                }
+                else
+                {
+                    for (int i = 0; i * loopAsDouble < length; i++)
+                    { 
+                        actions.Add(new(beat + i * loopAsDouble, delegate { doCrowdAnimation(animation, loopAsDouble, beat); }));
+                    }
                 }
                 actions.Add(new(beat + length, delegate { crowdCanCheerAnimation = true; }));
-                actions.Add(new(beat + length, delegate { CrowdAnim.DoScaledAnimationAsync("Idle"); }));
             BeatAction.New(this, actions);
+        }
+
+        public void doCrowdAnimation(int animation, double loop, double beat)
+        {
+            var crowdAnimation= Enum.GetName(typeof(CrowdAnimationList), animation);
+
+            if (!crowdIsCheering && ((crowdLastMissAnimation + 2) < conductor.songPositionInBeatsAsDouble) && animation == 1)
+            {
+                CrowdAnim.DoScaledAnimationAsync($"{crowdAnimation}", 0.5f);
+            }
+            if (animation == 5)
+            {
+                jumpHeight = Math.Min((float)loop, 2f);
+                jumpLength = (float)loop;
+
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { startJumpTime = conductor.songPositionInBeatsAsDouble; }),
+                });
+            }
+            if (animation != 1 && animation != 5)
+            {
+                CrowdAnim.DoScaledAnimationAsync($"{crowdAnimation}", 0.5f);
+            }
+        }
+
+        public void crowdJumpAnimation()
+        {
+            float jumpPos = Conductor.instance.GetPositionFromBeat(startJumpTime, jumpLength);
+            if (jumpPos >= 0 && jumpPos <= 1f)
+            {
+                float yMul = jumpPos * 2f - 1f;
+                float yWeight = -(yMul * yMul) + 1f;
+                CrowdPos.transform.localPosition = new Vector3(0, jumpHeight * yWeight, -2);
+            }
         }
 
         public void crowdAnimReset()
@@ -896,6 +951,7 @@ namespace HeavenStudio.Games
                         {
                             CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
                             crowdIsCheering = false;
+                            crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
                         }
                     }
                 }
@@ -909,6 +965,7 @@ namespace HeavenStudio.Games
                     {
                         CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
                         crowdIsCheering = false;
+                        crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
                     }
                 }
             }
@@ -935,6 +992,7 @@ namespace HeavenStudio.Games
                 {
                     CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
                     crowdIsCheering = false;
+                    crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
                 }
             }
 
@@ -954,6 +1012,7 @@ namespace HeavenStudio.Games
                 {
                     CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
                     crowdIsCheering = false;
+                    crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
                 }
             }
 
@@ -1009,6 +1068,11 @@ namespace HeavenStudio.Games
             {
                 vultureCanBopTemp = true;
             }
+        }
+
+        public void LateUpdate()
+        {
+            crowdJumpAnimation();
         }
 
         public override void OnGameSwitch(double beat)
