@@ -86,6 +86,7 @@ namespace HeavenStudio.Util
                 {
                     cmnAb.LoadAllAssetsAsync<AudioClip>().completed += (op) =>
                     {
+                        //TODO: this can be more efficient if we bulk insert
                         foreach (var clip in (op as AssetBundleRequest).allAssets.Cast<AudioClip>())
                         {
                             OnResourceLoaded(clip, clip.name);
