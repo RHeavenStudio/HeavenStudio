@@ -159,6 +159,7 @@ namespace HeavenStudio
             GoForAPerfect.instance.Disable();
             /////
 
+            SoundByte.BasicCheck();
             SoundObjects = new ObjectPool<Sound>(CreatePooledSound, OnTakePooledSound, OnReturnPooledSound, OnDestroyPooledSound, true, SoundPoolSizeMin, SoundPoolSizeMax);
 
 
@@ -303,22 +304,10 @@ namespace HeavenStudio
             {
                 Stop(0);
             }
-            SetCurrentEventToClosest(0);
-
-            if (Beatmap.Entities.Count >= 1)
-            {
-                string game = Beatmap.Entities[0].datamodel.Split(0);
-                SetCurrentGame(game);
-                StartCoroutine(WaitAndSetGame(game));
-            }
-            else
-            {
-                SetGame("noGame");
-            }
+            SetCurrentEventToClosest(0, true);
 
             if (editor)
             {
-                Debug.Log(Beatmap.data.riqOrigin);
                 if (Beatmap.data.riqOrigin != "HeavenStudio")
                 {
                     string origin = Beatmap.data.riqOrigin?.DisplayName() ?? "Unknown Origin";
@@ -709,10 +698,7 @@ namespace HeavenStudio
                 {
                     yield return new WaitForSeconds(delay);
                 }
-            }
 
-            if (!paused)
-            {
                 Conductor.instance.PlaySetup(beat);
                 Minigame miniGame = null;
                 if (minigameObj != null && minigameObj.TryGetComponent<Minigame>(out miniGame))
@@ -813,6 +799,10 @@ namespace HeavenStudio
 
         private IEnumerator WaitReadyAndPlayCo(double beat, float delay = 1f, bool discord = true)
         {
+            SoundByte.UnloadAudioClips();
+            SoundByte.PreloadAudioClipAsync("skillStar");
+            SoundByte.PreloadAudioClipAsync("perfectMiss");
+
             WaitUntil yieldOverlays = new WaitUntil(() => OverlaysManager.OverlaysReady);
             WaitUntil yieldBeatmap = new WaitUntil(() => Beatmap != null && BeatmapEntities() > 0);
             WaitUntil yieldAudio = new WaitUntil(() => AudioLoadDone || (ChartLoadError && !GlobalGameManager.IsShowingDialog));
@@ -856,7 +846,7 @@ namespace HeavenStudio
         {
             Debug.Log("Killing all sounds");
             SoundObjects.Clear();
-            Util.SoundByte.KillOneShots();
+            SoundByte.KillOneShots();
         }
 
         #endregion
@@ -945,7 +935,7 @@ namespace HeavenStudio
             return 0;
         }
 
-        public void SetCurrentEventToClosest(double beat)
+        public void SetCurrentEventToClosest(double beat, bool canPreload = false)
         {
             SortEventsList();
             onBeatChanged?.Invoke(beat);
@@ -991,7 +981,15 @@ namespace HeavenStudio
 
                 if (!GetGameInfo(newGame).fxOnly)
                 {
-                    SetGame(newGame);
+                    if (canPreload)
+                    {
+                        StartCoroutine(WaitAndSetGame(newGame));
+                    }
+                    else
+                    {
+                        SetGame(newGame);
+                    }
+                    SetCurrentGame(newGame);
                 }
 
                 List<RiqEntity> allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "end" });
@@ -1129,6 +1127,7 @@ namespace HeavenStudio
         public void DestroyGame()
         {
             cachedGamePrefabs.Clear();
+            SoundByte.UnloadAudioClips();
             SetGame("noGame");
         }
 

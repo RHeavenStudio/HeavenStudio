@@ -382,8 +382,6 @@ namespace HeavenStudio
             private bool localeLoaded = false;
             private bool localePreloaded = false;
             private GameObject loadedPrefab = null;
-            private Dictionary<string, AudioClip> commonAudioClips;
-            private Dictionary<string, AudioClip> localeAudioClips;
 
             private SoundSequence.SequenceKeyValue[] soundSequences = null;
 
@@ -392,8 +390,6 @@ namespace HeavenStudio
                 get => soundSequences;
                 set => soundSequences = value;
             }
-            public Dictionary<string, AudioClip> CommonAudioClips => commonAudioClips;
-            public Dictionary<string, AudioClip> LocaleAudioClips => localeAudioClips;
 
             public Minigame(string name, string displayName, string color, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
             {
@@ -475,11 +471,15 @@ namespace HeavenStudio
                 return bundleCommon;
             }
 
-            public async UniTask LoadAssetsAsync()
+            bool alreadyLoading = false;
+            public async UniTaskVoid LoadAssetsAsync()
             {
-                if (AssetsLoaded || !usesAssetBundle) return;
+                if (alreadyLoading || AssetsLoaded || !usesAssetBundle) return;
+                alreadyLoading = true;
                 await UniTask.WhenAll(LoadCommonAssetBundleAsync(), LoadLocalizedAssetBundleAsync());
                 await UniTask.WhenAll(LoadGamePrefabAsync(), LoadCommonAudioClips(), LoadLocalizedAudioClips());
+                SoundByte.PreloadGameAudioClips(this);
+                alreadyLoading = false;
             }
 
             public async UniTask LoadCommonAssetBundleAsync()
@@ -558,8 +558,6 @@ namespace HeavenStudio
                 if (!commonLoaded) return;
                 if (bundleCommon == null) return;
 
-                commonAudioClips = new();
-
                 var assets = bundleCommon.LoadAllAssetsAsync();
                 await assets;
             }
@@ -569,8 +567,6 @@ namespace HeavenStudio
                 if (!localeLoaded) return;
                 if (bundleLocalized == null) return;
 
-                localeAudioClips = new();
-
                 var assets = bundleLocalized.LoadAllAssetsAsync();
                 await assets;
             }
@@ -578,8 +574,6 @@ namespace HeavenStudio
             public async UniTask UnloadAllAssets()
             {
                 if (!usesAssetBundle) return;
-                commonAudioClips.Clear();
-                localeAudioClips.Clear();
                 if (loadedPrefab != null)
                 {
                     loadedPrefab = null;
@@ -598,6 +592,7 @@ namespace HeavenStudio
                     localeLoaded = false;
                     localePreloaded = false;
                 }
+                SoundByte.UnloadAudioClips(name);
             }
         }
 
