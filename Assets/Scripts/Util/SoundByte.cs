@@ -218,30 +218,41 @@ namespace HeavenStudio.Util
         public static double GetClipLength(string name, float pitch = 1f, string game = null)
         {
             AudioClip clip = null;
-            if (audioClips.ContainsKey(name))
+            string soundName = name.Split('/')[^1];
+            if (game != null)
             {
-                clip = audioClips[name];
-            }
-            else if (game != null)
-            {
-                string soundName = name.Split('/')[2];
-                var inf = GameManager.instance.GetGameInfo(game);
-                //first try the game's common assetbundle
-                // Debug.Log("Jukebox loading sound " + soundName + " from common");
-                clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
-                //then the localized one
-                if (clip == null)
+                string cachedName = $"games/{game}/{soundName}";
+                if (audioClips.ContainsKey(cachedName))
                 {
-                    // Debug.Log("Jukebox loading sound " + soundName + " from locale");
-                    clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    clip = audioClips[cachedName];
+                }
+                else
+                {
+                    var inf = GameManager.instance.GetGameInfo(game);
+                    //first try the game's common assetbundle
+                    // Debug.Log("Jukebox loading sound " + soundName + " from common");
+                    clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    //then the localized one
+                    if (clip == null)
+                    {
+                        // Debug.Log("Jukebox loading sound " + soundName + " from locale");
+                        clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    }
                 }
             }
 
             //can't load from assetbundle, load from resources
             if (clip == null)
             {
-                // Debug.Log("Jukebox loading sound " + name + " from resources");
-                clip = Resources.Load<AudioClip>($"Sfx/{name}");
+                if (audioClips.ContainsKey(name))
+                {
+                    clip = audioClips[name];
+                }
+                else
+                {
+                    // Debug.Log("Jukebox loading sound " + name + " from resources");
+                    clip = Resources.Load<AudioClip>($"Sfx/{name}");
+                }
             }
 
             if (clip == null)
