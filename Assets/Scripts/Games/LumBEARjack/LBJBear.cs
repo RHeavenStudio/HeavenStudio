@@ -9,9 +9,22 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
     {
         [Header("Components")]
         [SerializeField] private Animator _anim;
+        [SerializeField] private Transform _cameraPoint;
+
+        [Header("Properties")]
+        [SerializeField] private double _zoomInLength = 0.25;
+        [SerializeField] private float _zoomInPower = 4f;
 
         private bool _rested = false;
         private bool _restSound = true;
+
+        private float _cameraPointZFrom;
+        private EasingFunction.Function _cameraFunc = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutBounce);
+
+        private void Awake()
+        {
+            _cameraPointZFrom = _cameraPoint.localPosition.z;
+        }
 
         public void SwingWhiff(bool sound = true)
         {
@@ -20,9 +33,10 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _anim.DoScaledAnimationAsync("BeastWhiff", 0.75f);
         }
 
-        public void Cut(double beat, bool huh, bool huhL)
+        public void Cut(double beat, bool huh, bool huhL, bool zoomIn = false)
         {
             _anim.DoScaledAnimationAsync(huh ? "BeastHalfCut" : "BeastCut", 0.75f);
+            if (zoomIn) ActivateZoomIn();
             if (!huh) return;
             BeatAction.New(this, new()
             {
@@ -57,6 +71,28 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         public void RestSound()
         {
             if (_restSound) SoundByte.PlayOneShotGame("lumbearjack/sigh" + (Random.Range(1, 3) == 1 ? "A" : "B"));
+        }
+
+        private Coroutine _currentZoomCo;
+
+        private void ActivateZoomIn()
+        {
+            if (_currentZoomCo != null) StopCoroutine(_currentZoomCo);
+            _currentZoomCo = StartCoroutine(ActivateZoomInCo());
+        }
+
+        private IEnumerator ActivateZoomInCo() 
+        {
+            double startBeat = Conductor.instance.songPositionInBeatsAsDouble;
+            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, _zoomInLength, false);
+
+            while (normalizedBeat <= 1f)
+            {
+                normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, _zoomInLength, false);
+                float newZ = _cameraFunc(_cameraPointZFrom + _zoomInPower, _cameraPointZFrom, Mathf.Clamp01(normalizedBeat));
+                _cameraPoint.localPosition = new Vector3(_cameraPoint.localPosition.x, _cameraPoint.localPosition.y, newZ);
+                yield return null;
+            }
         }
     }
 

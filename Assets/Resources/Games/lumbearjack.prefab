@@ -1876,6 +1876,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _anim: {fileID: 4680509007873141790}
+  _cameraPoint: {fileID: 2298792418077467027}
+  _zoomInLength: 0.4
+  _zoomInPower: -2
 --- !u!95 &4680509007873141790
 Animator:
   serializedVersion: 5
