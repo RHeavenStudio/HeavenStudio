@@ -40,6 +40,7 @@ namespace FFmpegOut
         }
 
         public int bitRate;
+        public string path;
 
         #endregion
 
@@ -150,7 +151,7 @@ namespace FFmpegOut
                 // Start an FFmpeg session.
                 Debug.Log("i'm not" + bitRate);
                 _session = FFmpegSession.Create(
-                    gameObject.name,
+                    path,
                     camera.targetTexture.width,
                     camera.targetTexture.height,
                     _frameRate, bitRate, preset

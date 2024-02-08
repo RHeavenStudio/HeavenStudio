@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.IO;
+using FFmpegOut;
 
 public class AudioRenderer : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class AudioRenderer : MonoBehaviour
     private const int HEADER_SIZE = 44;
     private const short BITS_PER_SAMPLE = 16;
     private const int SAMPLE_RATE = 44100;
+
+    //the video recorder
+    public bool recorderBegin;
 
     // the number of audio channels in the output file
     private int channels = 2;
@@ -58,6 +62,10 @@ public class AudioRenderer : MonoBehaviour
     /// Write a chunk of data to the output stream.
     public void Write(float[] audioData)
     {
+        if(!recorderBegin)
+        {
+            recorderBegin = true;
+        }
         // Convert numeric audio data to bytes
         for (int i = 0; i < audioData.Length; i++)
         {

@@ -396,6 +396,7 @@ namespace HeavenStudio.Editor
                 if (path != String.Empty)
                 {
                     heavenRecorder.pathHeavenRecorder = path;
+                    heavenRecorder.WritePathToDialogue();
                     heavenRecorder.GetUsablePath();
                 }
             });

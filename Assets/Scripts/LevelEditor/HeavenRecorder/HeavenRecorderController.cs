@@ -5,6 +5,8 @@ using UnityEngine;
 using FFmpegOut;
 using System.IO;
 using HeavenStudio.Editor;
+using HeavenStudio;
+using HeavenStudio.Editor.Track;
 
 namespace FFmpegOut
 {
@@ -14,10 +16,15 @@ public class HeavenRecorderController : MonoBehaviour
     public AudioRenderer audioRenderer;
 
     public string pathHeavenRecorder;
+    public string actualDirectory;
 
     [SerializeField]HeavenRecorderDialog dialog;
+    [SerializeField]Timeline timeline;
     
     bool exporting = true;
+    float endBeatRecorder;
+    float startBeatRecorder;
+    float prevStartBeat;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,35 +34,13 @@ public class HeavenRecorderController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.L))
+        if((Conductor.instance.songPositionInBeats > endBeatRecorder) || Input.GetKeyDown(KeyCode.Escape))
         {
-            if(recorder.enabled)
-            {
-                print("recording stopped!");
-                recorder.enabled = false;
-                audioRenderer.Rendering = false;
-                if(audioRenderer.Save("C:/Users/pikmi/Downloads/temp.wav").State == AudioRenderer.Status.SUCCESS && exporting == true)
-                {
-                    Merge();
-                    audioRenderer.Clear();
-                }
-            }
-            else
-            {
-                if(File.Exists("C:/Users/pikmi/Downloads/temp.wav"))
-                {
-                    File.Delete("C:/Users/pikmi/Downloads/temp.wav");
-                }
-                if(File.Exists("C:/Users/pikmi/Downloads/temp.mp4"))
-                {
-                    File.Delete("C:/Users/pikmi/Downloads/temp.mp4");
-                }
-                audioRenderer.Clear();
-                audioRenderer.Rendering = true;
-                print("recording started!");
-                recorder.enabled = true;
-                exporting = true;
-            }
+            StopRecording();
+        }
+        if(audioRenderer.recorderBegin && !recorder.enabled)
+        {
+            recorder.enabled = true;
         }
     }
 
@@ -63,16 +48,22 @@ public class HeavenRecorderController : MonoBehaviour
     {
         exporting = false;
         FFmpegSession _session;
-        _session = FFmpegSession.CreateWithArguments("-y -i C:/Users/pikmi/Downloads/temp.mp4 -i C:/Users/pikmi/Downloads/temp.wav -c:v copy -c:a aac C:/Users/pikmi/Downloads/output.mp4");
+        _session = FFmpegSession.CreateWithArguments("-y -i "+ pathHeavenRecorder + "temp.mp4 -i "+ pathHeavenRecorder + "temp.wav -c:v copy -c:a aac " + actualDirectory);
         _session.Close();
         _session.Dispose(); 
         _session = null;
-        File.Delete("C:/Users/pikmi/Downloads/temp.wav");
-        File.Delete("C:/Users/pikmi/Downloads/temp.mp4");
+        File.Delete(pathHeavenRecorder + "temp.wav");
+        File.Delete(pathHeavenRecorder + "temp.mp4");
     }
 
     public void GetUsablePath()
     {
+        actualDirectory = pathHeavenRecorder;
+        actualDirectory = actualDirectory.Replace("\\", "/");
+        if(actualDirectory.Contains(".mp4") == false)
+        {
+            actualDirectory += ".mp4";
+        }
         int numberOfSlashes = 0;
         int tempNumberOfSlashes = 0;
         int index = 0;
@@ -103,13 +94,14 @@ public class HeavenRecorderController : MonoBehaviour
             }
         }
         pathHeavenRecorder = pathHeavenRecorder.Remove(index+1,charsAfterSlash-1);
-        pathHeavenRecorder = pathHeavenRecorder.Replace("\\", "\\\\");
+        pathHeavenRecorder = pathHeavenRecorder.Replace("\\", "/");
         WritePathToDialogue();
+        recorder.path = pathHeavenRecorder + "temp.mp4";
     }
 
     public void WritePathToDialogue()
     {
-        dialog.pathDialog = pathHeavenRecorder;
+        dialog.pathDialog = actualDirectory;
         dialog.SetPathText();
     }
 
@@ -117,6 +109,57 @@ public class HeavenRecorderController : MonoBehaviour
     {
         recorder.bitRate = bitrate;
         // print(recorder.bitRate);
+    }
+
+    public void SetBeatData(float startBeat, float endBeat)
+    {
+        prevStartBeat = timeline.PlaybackBeat;
+        startBeatRecorder = startBeat; 
+        endBeatRecorder = endBeat;
+    }
+
+    public void BeginRecording()
+    {
+        dialog.RecordingIndicator(true);
+        if(!recorder.enabled)
+        {
+            if(File.Exists(pathHeavenRecorder + "temp.wav"))
+            {
+                File.Delete(pathHeavenRecorder + "temp.wav");
+            }
+            if(File.Exists(pathHeavenRecorder + "temp.mp4"))
+            {
+                File.Delete(pathHeavenRecorder + "temp.mp4");
+            }
+            audioRenderer.Clear();
+            audioRenderer.Rendering = true;
+            print("recording started!");
+            // recorder.enabled = true;
+            exporting = true;
+            timeline.PlaybackBeat = startBeatRecorder;
+            Conductor.instance.SetBeat(startBeatRecorder);
+            timeline.PlayCheck(false);
+        }
+    }
+
+    void StopRecording()
+    {
+        if(recorder.enabled && audioRenderer.Rendering)
+            {
+                print("recording stopped!");
+                audioRenderer.Rendering = false;
+                if(audioRenderer.Save(pathHeavenRecorder + "temp.wav").State == AudioRenderer.Status.SUCCESS && exporting == true)
+                {
+                    audioRenderer.recorderBegin = false;
+                    recorder.enabled = false;
+                    Merge();
+                    audioRenderer.Clear();
+                }
+                timeline.PlayCheck(false);
+                timeline.PlaybackBeat = endBeatRecorder;
+                Conductor.instance.SetBeat(prevStartBeat);
+                dialog.RecordingIndicator(false);
+            }
     }
 }
 }

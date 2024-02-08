@@ -17,9 +17,7 @@ namespace FFmpegOut
             FFmpegPreset preset
         )
         {
-            name += System.DateTime.Now.ToString(" yyyy MMdd HHmmss");
-            var path = name.Replace(" ", "_") + preset.GetSuffix();
-            return CreateWithOutputPath(path, width, height, frameRate, bitRate, preset);
+            return CreateWithOutputPath(name, width, height, frameRate, bitRate, preset);
         }
 
         public static FFmpegSession CreateWithOutputPath(
@@ -28,7 +26,6 @@ namespace FFmpegOut
             FFmpegPreset preset
         )
         {
-            Debug.Log("I'm" + bitRate);
             return new FFmpegSession(
                 "-y -f rawvideo -vcodec rawvideo -pixel_format rgba"
                 + " -colorspace bt709"
@@ -36,7 +33,7 @@ namespace FFmpegOut
                 + " -framerate " + frameRate
                 + " -loglevel warning -i - " + preset.GetOptions()
                 + " -b:v " + (bitRate * 75) + "k"
-                + " \"" + "C:/Users/pikmi/Downloads/temp.mp4" + "\"" //hijacked this. basically i dont want some fancy output file name (which is what the old code did) so it's just temp now lol
+                + " \"" + outputPath + "\"" //hijacked this. basically i dont want some fancy output file name (which is what the old code did) so it's just temp now lol
             );
         }
 
