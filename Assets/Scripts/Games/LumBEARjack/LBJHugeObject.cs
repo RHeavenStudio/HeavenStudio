@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using static HeavenStudio.Games.Scripts_AirRally.Cloud;
 
 namespace HeavenStudio.Games.Scripts_LumBEARjack
 {
@@ -22,6 +23,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private LBJBear _bear;
         private LumBEARjack.HugeType _type;
+        private bool _right = true;
+
         private PlayerActionEvent[] _soundsToDeleteIfMiss = new PlayerActionEvent[3];
 
         private double _rotationBeat;
@@ -34,10 +37,11 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _peachSR.gameObject.SetActive(false);
         }
 
-        public void Init(LBJBear bear, double beat, double length, LumBEARjack.HugeType type, double startUpBeat = -1)
+        public void Init(LBJBear bear, double beat, double length, LumBEARjack.HugeType type, bool right, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;
+            _right = right;
 
             switch (type)
             {
@@ -89,7 +93,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             var func = EasingFunction.GetEasingFunction(_ease);
 
             float newRotation = func(_rotationStart, _rotationEnd, normalized);
-            transform.localEulerAngles = new Vector3(0, 0, newRotation);
+            transform.localEulerAngles = new Vector3(0, 0, newRotation * (_right ? 1 : -1));
         }
 
         private void SetObjectCutSprite(int step)

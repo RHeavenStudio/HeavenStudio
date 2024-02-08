@@ -22,6 +22,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private LBJBear _bear;
         private LumBEARjack.SmallType _type;
         private LumBEARjack.HuhChoice _huh;
+        private bool _right = true;
 
         private double _rotationBeat;
         private double _rotationLength;
@@ -34,11 +35,12 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _broom.SetActive(false);
         }
 
-        public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type, LumBEARjack.HuhChoice huh, double startUpBeat = -1)
+        public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type, LumBEARjack.HuhChoice huh, bool right, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;
             _huh = huh;
+            _right = right;
 
             switch (type)
             {
@@ -71,7 +73,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             var func = EasingFunction.GetEasingFunction(_ease);
 
             float newRotation = func(_rotationStart, _rotationEnd, normalized);
-            transform.localEulerAngles = new Vector3(0, 0, newRotation);
+            transform.localEulerAngles = new Vector3(0, 0, newRotation * (_right ? 1 : -1));
         }
 
         private void Just(PlayerActionEvent caller, float state)
@@ -95,13 +97,11 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
 
-            // Add proper logic for direction
-
             switch (_huh)
             {
                 case LumBEARjack.HuhChoice.ObjectSpecific:
                     if (_type != LumBEARjack.SmallType.log) SoundByte.PlayOneShotGame("lumbearjack/huh", caller.startBeat + caller.timer + 1);
-                    _bear.Cut(caller.startBeat + caller.timer, _type != LumBEARjack.SmallType.log, false);
+                    _bear.Cut(caller.startBeat + caller.timer, _type != LumBEARjack.SmallType.log, !_right);
                     break;
                 case LumBEARjack.HuhChoice.On:
                     SoundByte.PlayOneShotGame("lumbearjack/huh", caller.startBeat + caller.timer + 1);

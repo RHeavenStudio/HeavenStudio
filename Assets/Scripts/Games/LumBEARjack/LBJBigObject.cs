@@ -18,15 +18,18 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private LBJBear _bear;
         private LumBEARjack.BigType _type;
+        private bool _right = true;
+
         private PlayerActionEvent _cutActionEvent;
 
         private double _rotationBeat;
         private double _rotationLength;
 
-        public void Init(LBJBear bear, double beat, double length, LumBEARjack.BigType type, double startUpBeat = -1)
+        public void Init(LBJBear bear, double beat, double length, LumBEARjack.BigType type, bool right, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;
+            _right = right;
 
             _rotationBeat = beat + (length / 4 * 2);
             _rotationLength = length / 4;
@@ -47,7 +50,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             var func = EasingFunction.GetEasingFunction(_ease);
 
             float newRotation = func(_rotationStart, _rotationEnd, normalized);
-            transform.localEulerAngles = new Vector3(0, 0, newRotation);
+            transform.localEulerAngles = new Vector3(0, 0, newRotation * (_right ? 1 : -1));
         }
 
         private void JustHit(PlayerActionEvent caller, float state)
