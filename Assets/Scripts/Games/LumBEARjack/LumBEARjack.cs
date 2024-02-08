@@ -103,7 +103,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new()
                     {
-                        new("main", LumBEARjack.MainCatChoice.Right, "Main Cats")
+                        new("main", LumBEARjack.MainCatChoice.Right, "Main Cats"),
+                        new("instant", false, "Instant")
                     }
                 },
                 new("sigh", "Rest")
@@ -259,11 +260,13 @@ namespace HeavenStudio.Games
         [SerializeField] private Transform _cutObjectHolder;
 
         [SerializeField] private Animator _catRight;
+        [SerializeField] private LBJCatMove _catRightMove;
         [SerializeField] private GameObject[] _catRightObjectsSmall = new GameObject[4];
         [SerializeField] private GameObject[] _catRightObjectsBig = new GameObject[1];
         [SerializeField] private GameObject[] _catRightObjectsHuge = new GameObject[3];
 
         [SerializeField] private Animator _catLeft;
+        [SerializeField] private LBJCatMove _catLeftMove;
         [SerializeField] private GameObject[] _catLeftObjectsSmall = new GameObject[4];
         [SerializeField] private GameObject[] _catLeftObjectsBig = new GameObject[1];
         [SerializeField] private GameObject[] _catLeftObjectsHuge = new GameObject[3];
@@ -271,9 +274,12 @@ namespace HeavenStudio.Games
         [Header("Parameters")]
         [SerializeField] private double _catAnimationOffsetStart = -0.5;
         [SerializeField] private double _catAnimationOffsetEnd = 0.5;
+        [SerializeField] private double _catMoveLength = 0.5;
 
         private List<double> _bearNoBopBeats = new();
         private Dictionary<double, CatPutChoice> _catPuts = new();
+        private Dictionary<double, MainCatChoice> _mainCatPresences = new();
+        private MainCatChoice _startMainCat = MainCatChoice.Right;
 
         public static LumBEARjack instance;
 
@@ -340,7 +346,7 @@ namespace HeavenStudio.Games
             switch (cat)
             {
                 case CatPutChoice.Alternate:
-                    bool right = true; // proper start to be implemented
+                    bool right = _startMainCat != MainCatChoice.Left;
                     bool first = true;
 
                     foreach (var e in _catPuts)
@@ -350,24 +356,22 @@ namespace HeavenStudio.Games
                         {
                             case CatPutChoice.Alternate:
                                 if (!first) right = !right;
+                                if (CatPresenceAtBeat(beat) != MainCatChoice.Both) right = CatPresenceAtBeat(beat) != MainCatChoice.Left;
                                 break;
                             case CatPutChoice.Right:
-                                right = true;
+                                right = CatPresenceAtBeat(beat) != MainCatChoice.Left;
                                 break;
                             case CatPutChoice.Left:
-                                right = false;
+                                right = CatPresenceAtBeat(beat) == MainCatChoice.Right;
                                 break;
                         }
                         first = false;
                     }
-
                     return right;
-
-                // Add checks for if cat is in
                 case CatPutChoice.Left:
-                    return false;
+                    return CatPresenceAtBeat(beat) == MainCatChoice.Right;
                 default:
-                    return true;
+                    return CatPresenceAtBeat(beat) != MainCatChoice.Left;
             }
         }
 
@@ -377,6 +381,7 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
+            HandleCatPresence(beat);
             PersistObjects(beat);
             HandleBops(beat);
             HandleCatAnimation(beat);
@@ -384,9 +389,95 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
+            HandleCatPresence(beat);
             PersistObjects(beat);
             HandleBops(beat);
             HandleCatAnimation(beat);
+        }
+
+        private void HandleCatPresence(double beat)
+        {
+            List<RiqEntity> allPresences = EventCaller.GetAllInGameManagerList("lumbearjack", new string[] { "cats" });
+
+            foreach (var e in allPresences)
+            {
+                if (_mainCatPresences.ContainsKey(e.beat)) continue;
+                _mainCatPresences.Add(e.beat, (MainCatChoice)e["main"]);
+            }
+
+            _startMainCat = CatPresenceBeforeBeat(beat);
+
+            switch (_startMainCat)
+            {
+                case MainCatChoice.Right:
+                    ActivateCatVisualPresence(beat, true, true, true);
+                    ActivateCatVisualPresence(beat, false, false, true);
+                    break;
+                case MainCatChoice.Left:
+                    ActivateCatVisualPresence(beat, false, true, true);
+                    ActivateCatVisualPresence(beat, true, false, true);
+                    break;
+                case MainCatChoice.Both:
+                    ActivateCatVisualPresence(beat, true, true, true);
+                    ActivateCatVisualPresence(beat, true, false, true);
+                    break;
+            }
+
+            var allPresencesAfterBeat = allPresences.FindAll(x => x.beat >= beat);
+            foreach (var e in allPresencesAfterBeat)
+            {
+                double eventBeat = e.beat;
+                bool instant = e["instant"];
+                MainCatChoice beforeCats = CatPresenceBeforeBeat(e.beat);
+                MainCatChoice atCats = (MainCatChoice)e["main"];
+                if (beforeCats == atCats) continue;
+
+                switch (atCats)
+                {
+                    case MainCatChoice.Right:
+                        BeatAction.New(this, new()
+                        {
+                            new(e.beat, delegate
+                            {
+                                if (beforeCats == MainCatChoice.Both)
+                                {
+                                    ActivateCatVisualPresence(eventBeat, true, true, true);
+                                    ActivateCatVisualPresence(eventBeat, false, false, instant);
+                                    return;
+                                }
+                                ActivateCatVisualPresence(eventBeat, true, true, instant);
+                                ActivateCatVisualPresence(eventBeat, false, false, instant);
+                            })
+                        });
+                        break;
+                    case MainCatChoice.Left:
+                        BeatAction.New(this, new()
+                        {
+                            new(e.beat, delegate
+                            {
+                                if (beforeCats == MainCatChoice.Both)
+                                {
+                                    ActivateCatVisualPresence(eventBeat, false, true, instant);
+                                    ActivateCatVisualPresence(eventBeat, true, false, true);
+                                    return;
+                                }
+                                ActivateCatVisualPresence(eventBeat, false, true, instant);
+                                ActivateCatVisualPresence(eventBeat, true, false, instant);
+                            })
+                        });
+                        break;
+                    case MainCatChoice.Both:
+                        BeatAction.New(this, new()
+                        {
+                            new(e.beat, delegate
+                            {
+                                ActivateCatVisualPresence(eventBeat, true, true, (beforeCats == MainCatChoice.Right) ? true : instant);
+                                ActivateCatVisualPresence(eventBeat, true, false, (beforeCats == MainCatChoice.Left) ? true : instant);
+                            })
+                        });
+                        break;
+                }
+            }
         }
 
         private void PersistObjects(double beat)
@@ -468,7 +559,7 @@ namespace HeavenStudio.Games
             double nextGameSwitchBeat = double.MaxValue;
             if (nextGameSwitch != null) nextGameSwitchBeat = nextGameSwitch.beat;
 
-            bool catRight = true; // again properise
+            bool catRight = _startMainCat != MainCatChoice.Left;
             bool first = true;
 
             foreach (var e in allEvents)
@@ -491,12 +582,13 @@ namespace HeavenStudio.Games
                     {
                         case CatPutChoice.Alternate:
                             if (!first) catRight = !catRight;
+                            if (CatPresenceAtBeat(e.beat) != MainCatChoice.Both) catRight = CatPresenceAtBeat(e.beat) != MainCatChoice.Left;
                             break;
                         case CatPutChoice.Left:
-                            catRight = false;
+                            catRight = CatPresenceAtBeat(e.beat) == MainCatChoice.Right;
                             break;
                         default:
-                            catRight = true;
+                            catRight = CatPresenceAtBeat(e.beat) != MainCatChoice.Left;
                             break;
                     }
 
@@ -772,6 +864,34 @@ namespace HeavenStudio.Games
                 if (g == null) continue;
                 g.SetActive(false);
             }
+        }
+
+        private void ActivateCatVisualPresence(double beat, bool inToScene, bool right, bool instant = false)
+        {
+            LBJCatMove move = right ? _catRightMove : _catLeftMove;
+            move.Move(beat, instant ? 0 : _catMoveLength, inToScene);
+        }
+
+        private MainCatChoice CatPresenceAtBeat(double beat)
+        {
+            MainCatChoice cat = MainCatChoice.Right;
+            foreach (var p in _mainCatPresences)
+            {
+                if (p.Key > beat) break;
+                cat = p.Value;
+            }
+            return cat;
+        }
+
+        private MainCatChoice CatPresenceBeforeBeat(double beat)
+        {
+            MainCatChoice cat = MainCatChoice.Right;
+            foreach (var p in _mainCatPresences)
+            {
+                if (p.Key >= beat) break;
+                cat = p.Value;
+            }
+            return cat;
         }
 
         #endregion
