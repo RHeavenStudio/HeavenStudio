@@ -178,15 +178,18 @@ namespace HeavenStudio
             Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
             Conductor.instance.firstBeatOffset = Beatmap.data.offset;
 
-            if (Beatmap.Entities.Count >= 1)
+            if (!preLoaded)
             {
-                string game = Beatmap.Entities[0].datamodel.Split(0);
-                SetCurrentGame(game);
-                StartCoroutine(WaitAndSetGame(game));
-            }
-            else
-            {
-                SetGame("noGame");
+                if (Beatmap.Entities.Count >= 1)
+                {
+                    string game = Beatmap.Entities[0].datamodel.Split(0);
+                    SetCurrentGame(game);
+                    StartCoroutine(WaitAndSetGame(game));
+                }
+                else
+                {
+                    SetGame("noGame");
+                }
             }
 
             if (playMode)
@@ -373,7 +376,7 @@ namespace HeavenStudio
                     inf = GetGameInfo(gameName);
                     if (inf != null && !(inf.inferred || inf.fxOnly))
                     {
-                        if (inf.usesAssetBundle && !inf.AssetsLoaded)
+                        if (inf.usesAssetBundle && !(inf.AssetsLoaded || inf.AlreadyLoading))
                         {
                             gamesToPreload.Add(inf);
                             Debug.Log($"ASYNC loading assetbundles for game {gameName}");
@@ -1134,13 +1137,20 @@ namespace HeavenStudio
         private IEnumerator WaitAndSetGame(string game, bool useMinigameColor = true)
         {
             var inf = GetGameInfo(game);
-            if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
+            if (inf != null && inf.usesAssetBundle)
             {
-                Debug.Log($"ASYNC loading assetbundles for game {game}");
-                inf.LoadAssetsAsync().Forget();
+                if (!(inf.AssetsLoaded || inf.AlreadyLoading))
+                {
+                    Debug.Log($"ASYNC loading assetbundles for game {game}");
+                    inf.LoadAssetsAsync().Forget();
+                }
                 yield return new WaitUntil(() => inf.AssetsLoaded);
+                SetGame(game, useMinigameColor);
             }
-            SetGame(game, useMinigameColor);
+            else
+            {
+                SetGame(game, useMinigameColor);
+            }
         }
 
         public void PreloadGameSequences(string game)
