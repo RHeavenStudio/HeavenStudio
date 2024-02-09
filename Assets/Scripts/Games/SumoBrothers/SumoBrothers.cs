@@ -119,6 +119,7 @@ namespace HeavenStudio.Games
         private bool allowBopInu;
 
         private bool sumoStompDir = false;
+        private bool sumoSlapDir = false;
         private double lastReportedBeat = 0f;
 
         private bool cueCurrentlyActive = false; 
@@ -251,7 +252,7 @@ namespace HeavenStudio.Games
 
             CueRunning(beat + 0);
 
-            if (lookatcam) {
+            if (lookatcam && sumoState == SumoState.Slap) {
                 sumoBrotherPHead.DoScaledAnimationAsync("SumoPSlapLook", 0.5f);
                 sumoBrotherGHead.DoScaledAnimationAsync("SumoGSlapLook", 0.5f);
 
@@ -392,6 +393,10 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate { SlapRecursive(beat + 1, remaining); })
                 });
             
+            if (sumoSlapDir) { sumoSlapDir = false;}
+            else
+            { sumoSlapDir = true;}
+            print(sumoSlapDir);
         }
 
         public void Crouch(double beat, float length, bool inu, bool sumo)
@@ -504,9 +509,15 @@ namespace HeavenStudio.Games
 
             }
             SoundByte.PlayOneShotGame("sumoBrothers/slap");
-            sumoBrotherP.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
-            sumoBrotherG.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
             
+            if (sumoSlapDir) 
+            {
+                sumoBrotherP.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
+                sumoBrotherG.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
+            } else {
+                sumoBrotherP.DoScaledAnimationAsync("SumoSlapBack", 0.5f);
+                sumoBrotherG.DoScaledAnimationAsync("SumoSlapBack", 0.5f);
+            }
 
 
         }
