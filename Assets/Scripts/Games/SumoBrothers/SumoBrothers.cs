@@ -119,7 +119,7 @@ namespace HeavenStudio.Games
         private bool allowBopInu;
 
         private bool sumoStompDir = false;
-        private bool sumoSlapDir = false;
+        private int sumoSlapDir = 0;
         private double lastReportedBeat = 0f;
 
         private bool cueCurrentlyActive = false; 
@@ -208,10 +208,7 @@ namespace HeavenStudio.Games
                     
                 }
 
-                print("current sumo state:");
-                print(sumoState);
-                print("previous sumo state:");
-                print(sumoStatePrevious);
+                print("current sumo state: " + sumoState + " and previous sumo state: " + sumoStatePrevious);
         }
 
         public void Bop(double beat, float length, bool inu, bool sumo, bool inuAuto, bool sumoAuto)
@@ -251,6 +248,7 @@ namespace HeavenStudio.Games
             }
 
             CueRunning(beat + 0);
+            sumoStompDir = true;
 
             if (lookatcam && sumoState == SumoState.Slap) {
                 sumoBrotherPHead.DoScaledAnimationAsync("SumoPSlapLook", 0.5f);
@@ -260,9 +258,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                new BeatAction.Action(beat + 3, delegate { allowBopSumo = false; }),
-                new BeatAction.Action(beat + 3, delegate { sumoBrotherPHead.DoScaledAnimationAsync("SumoPStomp", 0.5f); }),
-                new BeatAction.Action(beat + 3, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGStomp", 0.5f); })
+                new BeatAction.Action(beat + 3, delegate { allowBopSumo = false; })
                 });
 
             if (mute == false)
@@ -283,10 +279,17 @@ namespace HeavenStudio.Games
 
             sumoStatePrevious = sumoState;
             sumoState = SumoState.Stomp;
-            StompRecursive(beat + 3, 1);
+
+            var firstStomp = false;
+
+            if (sumoStatePrevious == SumoState.Slap) {
+                firstStomp = true;
+            }
+
+            StompRecursive(beat + 3, 1, firstStomp);
         }
 
-        private void StompRecursive(double beat, double remaining)
+        private void StompRecursive(double beat, double remaining, bool firstStomp)
         {
 
             if (sumoState != SumoState.Stomp) {
@@ -300,33 +303,43 @@ namespace HeavenStudio.Games
                 return;
             }
 
-            if (sumoStompDir) {
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            if (firstStomp) {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 1, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoStompL", 0.5f); }),
+                    new BeatAction.Action(beat + 1, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGStomp", 0.5f); })               
+                });
+            } else if (sumoStompDir) {
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { sumoBrotherP.DoScaledAnimationAsync("SumoStompPrepareL", 0.5f); }),
                     new BeatAction.Action(beat, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoStompPrepareR", 0.5f); }),
+                    new BeatAction.Action(beat, delegate { sumoBrotherPHead.DoScaledAnimationAsync("SumoPStomp", 0.5f); }),
+                    new BeatAction.Action(beat, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGStomp", 0.5f); }),
                     new BeatAction.Action(beat + 1, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoStompR", 0.5f); })                    
                 });
             } else {
-            BeatAction.New(instance, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { sumoBrotherP.DoScaledAnimationAsync("SumoStompPrepareR", 0.5f); }),
                     new BeatAction.Action(beat, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoStompPrepareL", 0.5f); }),
+                    new BeatAction.Action(beat, delegate { sumoBrotherPHead.DoScaledAnimationAsync("SumoPStomp", 0.5f); }),
+                    new BeatAction.Action(beat, delegate { sumoBrotherGHead.DoScaledAnimationAsync("SumoGStomp", 0.5f); }),
                     new BeatAction.Action(beat + 1, delegate { sumoBrotherG.DoScaledAnimationAsync("SumoStompL", 0.5f); })                    
                 });
             }
         
 
-            ScheduleInput(beat , 1, InputAction_BasicPress, StompHit, StompMiss, Nothing);
+        ScheduleInput(beat , 1, InputAction_BasicPress, StompHit, StompMiss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                new BeatAction.Action(beat, delegate { StompRecursive(beat + 2, remaining); })
+                new BeatAction.Action(beat, delegate { StompRecursive(beat + 2, remaining, false); })
                 });
 
             if (sumoStompDir) { sumoStompDir = false;}
             else
             { sumoStompDir = true;}
-            print(sumoStompDir);
+            print("sumo stomp dir: " + sumoStompDir);
             
         }
 
@@ -338,6 +351,8 @@ namespace HeavenStudio.Games
             }
 
             CueRunning(beat + 0);
+
+            sumoSlapDir = 0;
 
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
@@ -382,6 +397,10 @@ namespace HeavenStudio.Games
 
             }
 
+            if (remaining == 1) {
+                sumoSlapDir = 2;
+            }
+
             if (remaining <= 0) {
 
                 return;
@@ -393,10 +412,10 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate { SlapRecursive(beat + 1, remaining); })
                 });
             
-            if (sumoSlapDir) { sumoSlapDir = false;}
-            else
-            { sumoSlapDir = true;}
-            print(sumoSlapDir);
+            if (sumoSlapDir == 1) { sumoSlapDir = 0;}
+            else if (sumoSlapDir == 0) { sumoSlapDir = 1;}
+            
+            print("the sumo slap direction:" + sumoSlapDir);
         }
 
         public void Crouch(double beat, float length, bool inu, bool sumo)
@@ -510,8 +529,10 @@ namespace HeavenStudio.Games
             }
             SoundByte.PlayOneShotGame("sumoBrothers/slap");
             
-            if (sumoSlapDir) 
-            {
+            if (sumoSlapDir == 2) {
+                sumoBrotherP.DoScaledAnimationAsync("SumoSlapToStomp", 0.5f);
+                sumoBrotherG.DoScaledAnimationAsync("SumoSlapToStomp", 0.5f);
+            } else if (sumoSlapDir == 1) {
                 sumoBrotherP.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
                 sumoBrotherG.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
             } else {
@@ -525,7 +546,13 @@ namespace HeavenStudio.Games
         void SlapMiss(PlayerActionEvent caller)
         {
             SoundByte.PlayOneShotGame("sumoBrothers/miss");
-            sumoBrotherG.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
+            if (sumoSlapDir == 2) {
+                sumoBrotherG.DoScaledAnimationAsync("SumoSlapToStomp", 0.5f);
+            } else if (sumoSlapDir == 1) {
+                sumoBrotherG.DoScaledAnimationAsync("SumoSlapFront", 0.5f);
+            } else {
+                sumoBrotherG.DoScaledAnimationAsync("SumoSlapBack", 0.5f);
+            }
             sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f); // temp miss animation until i get real one done
 
 
