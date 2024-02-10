@@ -9,7 +9,7 @@ public class AudioRenderer : MonoBehaviour
     // constants for the wave file header
     private const int HEADER_SIZE = 44;
     private const short BITS_PER_SAMPLE = 16;
-    private const int SAMPLE_RATE = 44100;
+    public int SAMPLE_RATE = 48000;
 
     //the video recorder
     public bool recorderBegin;

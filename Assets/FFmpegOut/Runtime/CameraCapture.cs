@@ -41,6 +41,7 @@ namespace FFmpegOut
 
         public int bitRate;
         public string path;
+        public bool dropping;
 
         #endregion
 
@@ -81,6 +82,7 @@ namespace FFmpegOut
                 "time instability into output video. Decreasing the recording " +
                 "frame rate is recommended."
             );
+            dropping = true;
         }
 
         #endregion

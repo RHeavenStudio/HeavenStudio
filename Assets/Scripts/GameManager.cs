@@ -765,7 +765,7 @@ namespace HeavenStudio
 
         public void Stop(double beat, bool restart = false, float restartDelay = 0f)
         {
-            // I feel like I should standardize the names
+            // I feel like I should standardize the names //hm maybe
             if (Conductor.instance.isPlaying)
             {
                 SkillStarManager.instance.KillStar();

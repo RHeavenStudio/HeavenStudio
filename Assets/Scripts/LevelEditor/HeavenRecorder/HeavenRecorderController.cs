@@ -7,6 +7,7 @@ using System.IO;
 using HeavenStudio.Editor;
 using HeavenStudio;
 using HeavenStudio.Editor.Track;
+using HeavenStudio.Common;
 
 namespace FFmpegOut
 {
@@ -38,9 +39,23 @@ public class HeavenRecorderController : MonoBehaviour
         {
             StopRecording();
         }
+        if(recorder.dropping)
+        {
+            StopRecording();
+            dialog.LagOutError();
+            recorder.dropping = false;
+        }
         if(audioRenderer.recorderBegin && !recorder.enabled)
         {
             recorder.enabled = true;
+            timeline.PlaybackBeat = startBeatRecorder;
+            // Conductor.instance.SetBeat(startBeatRecorder);
+            timeline.PlayCheck(true);
+        }
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+                //to simulate lag
+            Application.targetFrameRate = 10;
         }
     }
 
@@ -48,7 +63,7 @@ public class HeavenRecorderController : MonoBehaviour
     {
         exporting = false;
         FFmpegSession _session;
-        _session = FFmpegSession.CreateWithArguments("-y -i "+ pathHeavenRecorder + "temp.mp4 -i "+ pathHeavenRecorder + "temp.wav -c:v copy -c:a aac " + actualDirectory);
+        _session = FFmpegSession.CreateWithArguments("-y -i "+ "\"" + pathHeavenRecorder + "\"" + "temp.mp4 -i " +  "\"" + pathHeavenRecorder + "\"" + "temp.wav -c:v copy -c:a aac " + "\"" + actualDirectory + "\"");
         _session.Close();
         _session.Dispose(); 
         _session = null;
@@ -120,6 +135,9 @@ public class HeavenRecorderController : MonoBehaviour
 
     public void BeginRecording()
     {
+        audioRenderer.SAMPLE_RATE = PersistentDataManager.gameSettings.sampleRate;
+        recorder.width = PersistentDataManager.gameSettings.resolutionWidth;
+        recorder.height = PersistentDataManager.gameSettings.resolutionHeight;
         dialog.RecordingIndicator(true);
         if(!recorder.enabled)
         {
@@ -136,13 +154,10 @@ public class HeavenRecorderController : MonoBehaviour
             print("recording started!");
             // recorder.enabled = true;
             exporting = true;
-            timeline.PlaybackBeat = startBeatRecorder;
-            Conductor.instance.SetBeat(startBeatRecorder);
-            timeline.PlayCheck(false);
         }
     }
 
-    void StopRecording()
+    public void StopRecording()
     {
         if(recorder.enabled && audioRenderer.Rendering)
             {
@@ -155,11 +170,16 @@ public class HeavenRecorderController : MonoBehaviour
                     Merge();
                     audioRenderer.Clear();
                 }
-                timeline.PlayCheck(false);
-                timeline.PlaybackBeat = endBeatRecorder;
-                Conductor.instance.SetBeat(prevStartBeat);
+                timeline.PlaybackBeat = prevStartBeat;
+                timeline.PlayCheck(true);
+                // Conductor.instance.SetBeat(prevStartBeat);
                 dialog.RecordingIndicator(false);
             }
+    }
+
+    public void SetCamFPS(float fps)
+    {
+        recorder.frameRate = fps;
     }
 }
 }

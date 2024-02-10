@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 using TMPro;
 using Starpelly;
+using FFmpegOut;
 using Jukebox;
 using Newtonsoft.Json;
 using System.Linq;
@@ -47,6 +48,8 @@ namespace HeavenStudio.Editor.Track
         private Vector2 relativeMousePos;
         public Vector2 RelativeMousePos => relativeMousePos;
         public float PlaybackBeat = 0.0f;
+
+        [SerializeField]HeavenRecorderController recorder;
 
         public static float SnapInterval() { return instance.snapInterval; }
 
@@ -702,7 +705,7 @@ namespace HeavenStudio.Editor.Track
         {
             // isPaused = true;
             // timelineSlider.value = 0;
-
+            recorder.StopRecording();
             if (TimelineSongPosLine != null)
                 Destroy(TimelineSongPosLine.gameObject);
 

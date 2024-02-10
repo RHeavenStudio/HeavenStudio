@@ -16,10 +16,12 @@ public class HeavenRecorderDialog : Dialog
     [SerializeField]TextMeshProUGUI directoryText;
     [SerializeField]TextMeshProUGUI qualityNum;
     [SerializeField]TextMeshProUGUI beatNumError;
+    [SerializeField]TextMeshProUGUI FPSError;
     [SerializeField]TextMeshProUGUI exportButtonText;
     [SerializeField]Slider qualitySlide;
     [SerializeField]TMP_InputField startBeat;
     [SerializeField]TMP_InputField endBeat;
+    [SerializeField]TMP_InputField FPS;
     [SerializeField]Button exportButton;
     [SerializeField]Color exportButtonColorReady;
 
@@ -37,7 +39,9 @@ public class HeavenRecorderDialog : Dialog
     void Start()
     {
         UpdateQualityNum();
+        SetFPS();
         beatNumError.SetText("");
+        FPSError.SetText("");
     }
 
     string BeatError()
@@ -101,6 +105,11 @@ public class HeavenRecorderDialog : Dialog
         heavenRecorder.SetBitRate((int)qualitySlide.value);
     }
 
+    public void SetFPS()
+    {
+        heavenRecorder.SetCamFPS(float.Parse(FPS.text));
+    }
+
     void PreFlightCheckSendOff()
     {
         //check two bools and send off all of the beat data to heavenrecordercontroller
@@ -119,6 +128,7 @@ public class HeavenRecorderDialog : Dialog
             ExportUI.SetActive(false);
             RecordingUI.SetActive(true);
             exitButton.SetActive(false);
+            FPSError.SetText("");
         }
         else
         {
@@ -126,6 +136,11 @@ public class HeavenRecorderDialog : Dialog
             RecordingUI.SetActive(false);
             exitButton.SetActive(true);
         }
+    }
+
+    public void LagOutError()
+    {
+        FPSError.SetText("LAG OUT ERROR: Set your FPS Lower!! (have mercy on your PC...)");
     }
 }
 }
