@@ -97,6 +97,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
 
+            LumBEARjack.instance.DoSmallObjectEffect(_type);
+
             switch (_huh)
             {
                 case LumBEARjack.HuhChoice.ObjectSpecific:

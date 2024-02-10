@@ -65,6 +65,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             SoundByte.PlayOneShotGame("lumbearjack/hitVoice" + (Random.Range(1, 3) == 1 ? "A" : "B"));
             SoundByte.PlayOneShotGame("lumbearjack/baseHit");
 
+            LumBEARjack.instance.DoBigObjectEffect(_type, true);
+
             string hitSound = _type switch
             {
                 LumBEARjack.BigType.log => "bigLogHit",
@@ -86,6 +88,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             }
 
             SoundByte.PlayOneShotGame("lumbearjack/bigLogCutVoice");
+
+            LumBEARjack.instance.DoBigObjectEffect(_type, false);
 
             string cutSound = _type switch
             {

@@ -271,6 +271,16 @@ namespace HeavenStudio.Games
         [SerializeField] private GameObject[] _catLeftObjectsBig = new GameObject[1];
         [SerializeField] private GameObject[] _catLeftObjectsHuge = new GameObject[3];
 
+        [SerializeField] private Transform _particleHitPoint;
+        [SerializeField] private Transform _particleCutPoint;
+
+        [Header("Particles")]
+        [SerializeField] private ParticleSystem _smallLogCutParticle;
+        [SerializeField] private ParticleSystem _bigLogHitParticle;
+        [SerializeField] private ParticleSystem _bigLogCutParticle;
+        [SerializeField] private ParticleSystem _hugeLogHitParticle;
+        [SerializeField] private ParticleSystem _hugeLogCutParticle;
+
         [Header("Parameters")]
         [SerializeField] private double _catAnimationOffsetStart = -0.5;
         [SerializeField] private double _catAnimationOffsetEnd = 0.5;
@@ -892,6 +902,53 @@ namespace HeavenStudio.Games
                 cat = p.Value;
             }
             return cat;
+        }
+
+        #endregion
+
+        #region Particles and Effects
+
+        public void DoSmallObjectEffect(SmallType type)
+        {
+            switch (type)
+            {
+                case SmallType.log:
+                    ParticleSystem spawnedParticle = Instantiate(_smallLogCutParticle, _particleCutPoint);
+                    spawnedParticle.PlayScaledAsyncAllChildren(0.75f);
+                    break;
+                case SmallType.can:
+                    break;
+                case SmallType.bat:
+                    break;
+                case SmallType.broom:
+                    break;
+            }
+        }
+
+        public void DoBigObjectEffect(BigType type, bool hit)
+        {
+            switch (type)
+            {
+                case BigType.log:
+                    ParticleSystem spawnedParticle = Instantiate(hit ? _bigLogHitParticle : _bigLogCutParticle, hit ? _particleHitPoint : _particleCutPoint);
+                    spawnedParticle.PlayScaledAsyncAllChildren(0.75f);
+                    break;
+            }
+        }
+
+        public void DoHugeObjectEffect(HugeType type, bool hit)
+        {
+            switch (type)
+            {
+                case HugeType.log:
+                    ParticleSystem spawnedParticle = Instantiate(hit ? _hugeLogHitParticle : _hugeLogCutParticle, hit ? _particleHitPoint : _particleCutPoint);
+                    spawnedParticle.PlayScaledAsyncAllChildren(0.75f);
+                    break;
+                case HugeType.freezer:
+                    break;
+                case HugeType.peach:
+                    break;
+            }
         }
 
         #endregion
