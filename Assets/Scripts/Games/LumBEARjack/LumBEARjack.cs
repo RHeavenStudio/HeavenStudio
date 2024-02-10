@@ -914,7 +914,7 @@ namespace HeavenStudio.Games
             {
                 case SmallType.log:
                     ParticleSystem spawnedParticle = Instantiate(_smallLogCutParticle, _particleCutPoint);
-                    spawnedParticle.PlayScaledAsyncAllChildren(0.75f);
+                    spawnedParticle.PlayScaledAsyncAllChildren(0.5f);
                     break;
                 case SmallType.can:
                     break;
@@ -931,7 +931,7 @@ namespace HeavenStudio.Games
             {
                 case BigType.log:
                     ParticleSystem spawnedParticle = Instantiate(hit ? _bigLogHitParticle : _bigLogCutParticle, hit ? _particleHitPoint : _particleCutPoint);
-                    spawnedParticle.PlayScaledAsyncAllChildren(0.75f);
+                    spawnedParticle.PlayScaledAsyncAllChildren(0.5f);
                     break;
             }
         }
@@ -942,7 +942,7 @@ namespace HeavenStudio.Games
             {
                 case HugeType.log:
                     ParticleSystem spawnedParticle = Instantiate(hit ? _hugeLogHitParticle : _hugeLogCutParticle, hit ? _particleHitPoint : _particleCutPoint);
-                    spawnedParticle.PlayScaledAsyncAllChildren(0.75f);
+                    spawnedParticle.PlayScaledAsyncAllChildren(0.5f);
                     break;
                 case HugeType.freezer:
                     break;
