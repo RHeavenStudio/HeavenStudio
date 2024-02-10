@@ -52,11 +52,11 @@ public class HeavenRecorderController : MonoBehaviour
             // Conductor.instance.SetBeat(startBeatRecorder);
             timeline.PlayCheck(true);
         }
-        if(Input.GetKeyDown(KeyCode.L))
-        {
-                //to simulate lag
-            Application.targetFrameRate = 10;
-        }
+        // if(Input.GetKeyDown(KeyCode.L))
+        // {
+        //         //to simulate lag
+        //     Application.targetFrameRate = 10;
+        // }
     }
 
     void Merge()
