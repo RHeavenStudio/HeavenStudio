@@ -179,7 +179,6 @@ namespace HeavenStudio
             {
                 AudioConfiguration config = AudioSettings.GetConfiguration();
                 dspSizeSeconds = config.dspBufferSize / (double)config.sampleRate;
-                Debug.Log($"dsp size: {dspSizeSeconds}");
                 dspMargin = 2 * dspSizeSeconds;
 
                 SetMinigameVolume(1f);
@@ -210,7 +209,6 @@ namespace HeavenStudio
                 }
                 musicSource.PlayScheduled(musicScheduledTime);
                 musicSource.pitch = timelinePitch;
-                Debug.Log($"playback scheduled for dsptime {dspStart}");
             }
 
             songPosBeat = beat;
@@ -234,7 +232,7 @@ namespace HeavenStudio
             if (deferTimeKeeping && dsp >= dspStart - dspSizeSeconds)
             {
                 deferTimeKeeping = false;
-                Debug.Log($"dsptime: {dsp}, deferred timekeeping for {DateTime.Now - startTime} seconds (delta dsp {dsp - dspStart})");
+                // Debug.Log($"dsptime: {dsp}, deferred timekeeping for {DateTime.Now - startTime} seconds (delta dsp {dsp - dspStart})");
                 startTime += TimeSpan.FromSeconds(dsp - dspStart);
                 absTimeAdjust = 0;
                 dspStart = dsp;

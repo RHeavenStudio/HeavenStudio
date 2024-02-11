@@ -272,6 +272,7 @@ namespace HeavenStudio.Games
             var relevantInputs = GetAllInputsBetweenBeat(beat, beat + interval);
             relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
 
+            List<MultiSound.Sound> sounds = new();
             for (int i = 0; i < relevantInputs.Count; i++)
             {
                 bool isHit = relevantInputs[i].datamodel == "tambourine/hit";
@@ -282,10 +283,12 @@ namespace HeavenStudio.Games
                     {
                         MonkeyInput(inputBeat, isHit);
                     }));
+                    sounds.Add(new MultiSound.Sound($"tambourine/monkey/{(isHit ? "hit" : "shake")}/m{(isHit ? "h" : "s")}{UnityEngine.Random.Range(1, 6)}", inputBeat));
                 }
             }
 
             BeatAction.New(this, actions);
+            MultiSound.Play(sounds.ToArray(), true, true);
 
             if (autoPassTurn)
             {
@@ -298,12 +301,10 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 monkeyAnimator.DoScaledAnimationAsync("MonkeySmack", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/monkey/hit/{UnityEngine.Random.Range(1, 6)}");
             }
             else
             {
                 monkeyAnimator.DoScaledAnimationAsync("MonkeyShake", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/monkey/shake/{UnityEngine.Random.Range(1, 6)}");
             }
         }
 
@@ -335,7 +336,7 @@ namespace HeavenStudio.Games
 
         private void PassTurn(double beat, double intervalBeat, float intervalLength, float length)
         {
-            SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}", beat);
+            SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/tp{UnityEngine.Random.Range(1, 6)}", beat);
             List<BeatAction.Action> actions = new()
             {
                 new BeatAction.Action(beat, delegate
@@ -417,7 +418,7 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 handsAnimator.DoScaledAnimationAsync("Smack", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/ph{UnityEngine.Random.Range(1, 6)}");
                 SoundByte.PlayOneShotGame("tambourine/miss");
                 sweatAnimator.DoScaledAnimationAsync("Sweating", 0.5f);
                 misses++;
@@ -435,7 +436,7 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 handsAnimator.DoScaledAnimationAsync("Shake", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/ps{UnityEngine.Random.Range(1, 6)}");
                 SoundByte.PlayOneShotGame("tambourine/miss");
                 sweatAnimator.DoScaledAnimationAsync("Sweating", 0.5f);
                 misses++;
@@ -454,12 +455,12 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 handsAnimator.DoScaledAnimationAsync("Smack", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/ph{UnityEngine.Random.Range(1, 6)}");
             }
             else
             {
                 handsAnimator.DoScaledAnimationAsync("Shake", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/ps{UnityEngine.Random.Range(1, 6)}");
             }
         }
 
