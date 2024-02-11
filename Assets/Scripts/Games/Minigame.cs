@@ -290,7 +290,7 @@ namespace HeavenStudio.Games
         {
         }
 
-        public virtual void OnTimeChange()
+        public virtual void OnTimelineChange(double beat)
         {
 
         }
@@ -429,7 +429,7 @@ namespace HeavenStudio.Games
         #endregion
 
         #region Color
-        public struct ColorEase
+        public class ColorEase
         {
             public double startBeat;
             public float length;

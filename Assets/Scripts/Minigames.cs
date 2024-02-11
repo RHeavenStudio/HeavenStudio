@@ -760,6 +760,35 @@ namespace HeavenStudio
                             GameManager.instance.ToggleInputs(eventCaller.currentEntity["toggle"]);
                         }
                     ),
+
+                    // These are still here for backwards-compatibility but are hidden in the editor
+                    new GameAction("flash", "", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("colorA", Color.white, "Start Color"),
+                            new Param("colorB", Color.white, "End Color"),
+                            new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
+                            new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        },
+                        hidden: true
+                    ),
+                    new GameAction("move camera", "", 1f, true, new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
+                        new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
+                        new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out"),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
+                    },
+                    hidden: true ),
+                    new GameAction("rotate camera", "", 1f, true, new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
+                        new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
+                        new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
+                    },
+                    hidden: true ),
                 }),
 
                 new Minigame("countIn", "Count-Ins", "", false, true, new List<GameAction>()

@@ -179,7 +179,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public override void OnTimeChange()
+        public override void OnTimelineChange(double beat)
         {
             UpdateCameraZoom();
         }

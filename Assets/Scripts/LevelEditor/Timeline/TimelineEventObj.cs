@@ -6,6 +6,7 @@ using Jukebox;
 using TMPro;
 using System.Linq;
 using System.Collections.Generic;
+using static HeavenStudio.Minigames;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -38,6 +39,7 @@ namespace HeavenStudio.Editor.Track
 
         [Header("Properties")]
         public RiqEntity entity;
+        public GameAction gameAction;
         public float length;
         private bool lastVisible;
         public bool selected;
@@ -97,6 +99,7 @@ namespace HeavenStudio.Editor.Track
 
             if (action != null)
             {
+                gameAction = action;
                 this.resizable = action.resizable;
                 if (action.resizable == false)
                 {
@@ -326,9 +329,15 @@ namespace HeavenStudio.Editor.Track
             if (Conductor.instance.NotStopped()) return;
 
             if (Input.GetMouseButton(1) || Input.GetMouseButton(2)) return;
-            if (!moving)
-                if (!altWhenClicked)
+            if (!moving) {
+                if (!altWhenClicked) {
                     altWhenClicked = Input.GetKey(KeyCode.LeftAlt);
+                }
+            } else {
+                if (gameAction.isVfx) {
+                    gameAction.function.Invoke();
+                }
+            }
 
             if (!altWhenClicked)
             {
