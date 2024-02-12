@@ -78,14 +78,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("flash", new Color(1f, 1f, 0.68f), "Button Flash Color", "Set the color of the flash of the buttons."),
                     },
                 },
-                new GameAction("test", "Test")
-                {
-                    function = delegate {
-                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out SlotMonster instance)) {
-                            instance.ScheduleInput(eventCaller.currentEntity.beat, 1, Games.Minigame.InputAction_BasicPress, null, null, null);
-                        }
-                    },
-                },
             }
             );
         }
