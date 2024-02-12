@@ -876,6 +876,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6713427547028951939}
   - component: {fileID: 3765927633667635310}
+  - component: {fileID: 8493640715844712253}
   m_Layer: 0
   m_Name: Button3
   m_TagString: Untagged
@@ -921,6 +922,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8493640715844712253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468298043875673060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824e4674e220b544991c5311c2d90ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressed: 0
+  color: {r: 0.86274517, g: 0, b: 0, a: 0}
+  anim: {fileID: 3765927633667635310}
+  srs:
+  - {fileID: 2877045166871582979}
+  - {fileID: 4449036682437390073}
 --- !u!1 &3502234333494748245
 GameObject:
   m_ObjectHideFlags: 0
@@ -1184,6 +1203,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6816887475717257767}
   - component: {fileID: 8656164449290761354}
+  - component: {fileID: 7161291887338607999}
   m_Layer: 0
   m_Name: Button2
   m_TagString: Untagged
@@ -1229,6 +1249,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7161291887338607999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4661475570310962003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824e4674e220b544991c5311c2d90ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressed: 0
+  color: {r: 0.8000001, g: 0.2784314, b: 0.95294124, a: 0}
+  anim: {fileID: 8656164449290761354}
+  srs:
+  - {fileID: 6069226680631927887}
+  - {fileID: 2214261874876006399}
 --- !u!1 &4687682230392877706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1323,6 +1361,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2864234776698747384}
   - component: {fileID: 8588887349593004598}
+  - component: {fileID: 5051449585850381948}
   m_Layer: 0
   m_Name: Button1
   m_TagString: Untagged
@@ -1368,6 +1407,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5051449585850381948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5076257341597419496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824e4674e220b544991c5311c2d90ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressed: 0
+  color: {r: 0.3803922, g: 0.9843138, b: 0.25490198, a: 0}
+  anim: {fileID: 8588887349593004598}
+  srs:
+  - {fileID: 4790761080377207371}
+  - {fileID: 6479832831682828701}
 --- !u!1 &5449113805416087283
 GameObject:
   m_ObjectHideFlags: 0
@@ -1502,29 +1559,15 @@ MonoBehaviour:
   SoundSequences: []
   scheduledInputs: []
   smAnim: {fileID: 8395666848120559718}
-  eyeSprites:
-  - {fileID: 1032231447, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
-  - {fileID: 90921217, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
-  - {fileID: -108380036, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
-  - {fileID: -1768230940, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
-  - {fileID: -867298969, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
-  - {fileID: 1609057261, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
-  - {fileID: -1628350790, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
-  - {fileID: 1306426365, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
-  - {fileID: 811989312, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
-  - {fileID: -1260976779, guid: 878a62db1eeb38d46a0db8e2b67b9730, type: 3}
   eyeAnims:
   - {fileID: 7955005190241873031}
   - {fileID: 2460964828755838947}
   - {fileID: 5491330272697201237}
-  eyeSRs:
-  - {fileID: 2787758216707421360}
-  - {fileID: 1775810850113365420}
-  - {fileID: 8454085075965419430}
-  buttonAnims:
-  - {fileID: 8588887349593004598}
-  - {fileID: 8656164449290761354}
-  - {fileID: 3765927633667635310}
+  buttons:
+  - {fileID: 5051449585850381948}
+  - {fileID: 7161291887338607999}
+  - {fileID: 8493640715844712253}
+  buttonFlashColor: {r: 1, g: 1, b: 0.68235296, a: 0}
 --- !u!1 &5849268409563499564
 GameObject:
   m_ObjectHideFlags: 0
@@ -2567,7 +2610,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9212153283773584803}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.179, y: 0.2550001, z: 0}
+  m_LocalPosition: {x: 0.17900002, y: 0.2550001, z: 0}
   m_LocalScale: {x: 0.8024, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
