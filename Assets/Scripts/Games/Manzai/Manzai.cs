@@ -169,6 +169,8 @@ namespace HeavenStudio.Games
         [SerializeField] Transform PivotD;
         [SerializeField] Transform CrowdPos;
 
+        [SerializeField] ParticleSystem Feathers;
+
         bool ravenBop = true;
         bool vultureBop = true;
 
@@ -744,6 +746,8 @@ namespace HeavenStudio.Games
                     CrowdAnim.DoScaledAnimationAsync("Uproar", 0.5f);
                     crowdIsCheering = true;
                 }
+
+                Feathers.Play();
 
                 hitDonaiyanen = true;
             }
