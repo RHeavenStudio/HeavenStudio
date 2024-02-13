@@ -433,16 +433,6 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader NtrSlotMonsterLoader failed!");
             }
 
-            game = NtrSlotMonsterLoader.AddGame(eventCaller);
-            if (game != null)
-            {
-                eventCaller.minigames.Add(game.name, game);
-            }
-            else
-            {
-                Debug.LogWarning("Game loader NtrSlotMonsterLoader failed!");
-            }
-
             game = AgbGhostLoader.AddGame(eventCaller);
             if (game != null)
             {

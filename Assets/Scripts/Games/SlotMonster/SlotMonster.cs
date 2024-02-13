@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
 
 using Jukebox;
-using System.Linq;
-using System.ComponentModel;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -156,32 +155,43 @@ namespace HeavenStudio.Games
         // make sure the current button is always between 0 and 2 (buttons 1-3)
         private int GetCurrentButton() => Array.FindIndex(buttons, button => !button.pressed);
 
-        private bool HitButton(bool isHit = false) // returns true if it's the last one
+        private bool HitButton(bool isHit = false, int timing = 0) // returns true if it's the last one
         {
             int thisButton = GetCurrentButton();
             if (thisButton == -1) return false;
-            bool lastButton = thisButton == maxButtons - 1;
-            string hitSfx = "slotMonster/stop_" + (lastButton && isHit ? "hit" : (thisButton + 1));
+            bool isLast = thisButton == maxButtons - 1;
+            string hitSfx = "slotMonster/stop_" + (isLast && isHit ? "hit" : (thisButton + 1));
             SoundByte.PlayOneShotGame(hitSfx, forcePlay: true);
-            for (int i = thisButton; i < (lastButton ? 3 : thisButton + 1); i++)
+            for (int i = thisButton; i < (isLast ? 3 : thisButton + 1); i++)
             {
                 buttons[thisButton].Press();
                 if (eyeAnims[thisButton].IsPlayingAnimationNames("Spin")) {
                     int eyeSprite = currentEyeSprite;
+                    string anim = "EyeItem";
                     if (!isHit) {
                         do {
-                            eyeSprite = UnityEngine.Random.Range(1, 10);
-                        } while (eyeSprite == currentEyeSprite);
+                            eyeSprite = UnityEngine.Random.Range(0, 9);
+                        } while (eyeSprite == (currentEyeSprite - 1));
+                        anim += eyeSprite + 1;
+                    } else {
+                        if (timing == 1) {
+                            eyeSprite = (eyeSprite + 1) % 9;
+                        }
+                        anim += eyeSprite + 1;
+                        if (timing != 0) {
+                            // string += lol
+                            anim += "Barely";
+                        }
                     }
-                    Debug.Log("EyeItem" + eyeSprite);
-                    eyeAnims[thisButton].Play("EyeItem" + eyeSprite, 0, 0);
+                    Debug.Log(anim);
+                    eyeAnims[thisButton].Play(anim, 0, 0);
                 }
             }
-            if (lastButton) {
+            if (isLast) {
                 if (rollingSound != null) rollingSound.Stop();
             }
             currentButton++;
-            return lastButton && isHit;
+            return isLast && isHit;
         }
 
         public void StartInterval(double beat, float length, bool autoPass, int eyeSprite, double gameSwitchBeat)
@@ -200,8 +210,11 @@ namespace HeavenStudio.Games
             for (int i = 0; i < maxButtons; i++) // limit to 3 actions
             {
                 buttons[i].anim.Play("PopUp", 0, 0);
+                buttons[i].pressed = false;
+                eyeAnims[i].Play("Idle", 0, 1);
                 int whichSlot = i;
                 RiqEntity slot = slotActions[whichSlot];
+                // buttons[i].timing = slot.beat;
                 if (slot.beat < gameSwitchBeat) continue;
                 string sfx = "";
                 if (slot["drum"] == (int)DrumTypes.Default) {
@@ -250,9 +263,8 @@ namespace HeavenStudio.Games
                     buttons[whichSlot].TryFlash();
                 }));
 
-                // Debug.Log("input scheduled at : " + (beat + length + slotBeat - startBeat));
                 PlayerActionEvent input = ScheduleInput(beat, slotBeat - startBeat + length, InputAction_BasicPress, ButtonHit, null, null);
-                // input.IsHittable = () => {
+                // input.IsHittable = () => { // ugh this breaks the input check
                 //     int currentButton = GetCurrentButton();
                 //     return currentButton == whichSlot && !buttonsPressed[whichSlot];
                 // };
@@ -262,18 +274,18 @@ namespace HeavenStudio.Games
 
         private void ButtonHit(PlayerActionEvent caller, float state)
         {
-            bool isWin = HitButton(true);
+            int timing = state switch {
+                >= 1f => -1,
+                <= -1f => 1,
+                _ => 0,
+            };
+            bool isWin = HitButton(true, timing);
             if (isWin) {
                 if (rollingSound != null) rollingSound.Stop();
                 smAnim.DoScaledAnimationAsync("Win", 0.5f);
             }
             if (state is >= 1f or <= -1f) SoundByte.PlayOneShot("nearMiss");
         }
-
-        // private void ButtonMiss(PlayerActionEvent caller)
-        // {
-        //
-        // }
 
         public void ButtonColor(Color[] colors, Color flashColor)
         {

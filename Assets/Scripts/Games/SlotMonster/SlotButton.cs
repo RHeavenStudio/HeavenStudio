@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+
 using UnityEngine;
 
 using HeavenStudio.Util;
@@ -10,14 +11,15 @@ namespace HeavenStudio.Games.Scripts_SlotMonster
     public class SlotButton : MonoBehaviour
     {
         public bool pressed;
+        // public double timing;
         public Color color; // used to ease between button colors and button flash colors! wow
 
         public Animator anim;
         public SpriteRenderer[] srs;
 
-        public bool flashing;
+        private bool flashing;
         const int FLASH_FRAMES = 4;
-        public int currentFrame;
+        private int currentFrame;
 
         private SlotMonster game;
 
