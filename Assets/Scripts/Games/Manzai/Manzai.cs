@@ -9,10 +9,22 @@ using TMPro;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
+    using Jukebox;
     public static class RvlManzaiLoader
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
+            RiqEntity BoingUpdater(string datamodel, RiqEntity e)
+            {
+                if (datamodel == "manzai/pun" && (e["boing"] == 1))
+                {
+                    e.datamodel = "manzai/boing";
+                    return e;
+                }
+                return null;
+            }
+            RiqBeatmap.OnUpdateEntity += BoingUpdater;
+
             return new Minigame("manzai", "Manzai", "72003D", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
@@ -239,11 +251,11 @@ namespace HeavenStudio.Games
 
         public enum Puns
         {
-            AichiniAichinna,
-            AmmeteAmena,
+            AichiniAichinna = 0,
+            AmmeteAmena = 1,
             /*ChainaniNichaina,
             DenwariDenwa,*/                    //short animation
-            FutongaFuttonda,
+            FutongaFuttonda = 4,
             /*HiromegaHirameida,
             IkagariKatta,
             IkugawaIkura,                    //short animation (boing unused)
@@ -252,18 +264,18 @@ namespace HeavenStudio.Games
             KouchagaKouchou,
             KusagaKusai,                     //short animation (boing unused)
             MegaminiwaMegane,*/
-            MikangaMikannai,
+            MikangaMikannai = 13,
             /*NekogaNekoronda,*/
-            OkanewaOkkane,
+            OkanewaOkkane = 15,
             /*OkurezeKitteOkure,
             OmochinoKimochi,
             OmoinoHokaOmoi,
             PuringaTappurin,*/
-            RakudawaRakugana,
+            RakudawaRakugana = 20,
             /*RoukadaKatarouka,
             SaiyoMinasai,
             SakanaKanaMasakana,*/
-            SarugaSaru,                      //short animation (boing unused)
+            SarugaSaru = 24,                      //short animation (boing unused)
             /*ShaiinniNanariNashain_Unused,    //fully unused
             SuikawaYasuika,
             TaigaTabetaina,
@@ -273,7 +285,7 @@ namespace HeavenStudio.Games
             TonakaiyoOtonokoi,
             TorinikugaTorininkui,
             UmetteUmena,*/
-            Muted,
+            Muted = 34,
         }
 
         static readonly Dictionary<string, int> boingLengths = new() {
@@ -411,7 +423,8 @@ namespace HeavenStudio.Games
 
         public static void PunSFX(double beat, int whichPun, bool isPitched, int isBoing, int crowdSounds, bool random)
         {
-            if (random) whichPun = UnityEngine.Random.Range(0, 7);
+            // you don't need to use this once all the puns are in but this makes everything automatic for now 👍 -AJ
+            if (random) whichPun = (int)Enum.GetValues(typeof(Puns)).GetValue(UnityEngine.Random.Range(0, 7)); // just replace 7 with the max
             var punName= Enum.GetName(typeof(Puns), whichPun);
             float pitch = isPitched ? (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch : 1;
             double offset = isPitched ? (0.05/(Conductor.instance.GetBpmAtBeat(beat)/98)) : 0.05;
