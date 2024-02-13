@@ -33,7 +33,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 0, e["crowd"]); },
+                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 0, e["crowd"], e["random"]); },
 
                     /*function = delegate { 
                         var e = eventCaller.currentEntity;
@@ -43,11 +43,11 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         //new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
-                        /*new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
+                        new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => !(bool)x, new string[] { "pun" }),
-                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "unused" })
-                        }),*/
+                            //new Param.CollapseParam((x, _) => (bool)x, new string[] { "unused" })
+                        }),
                         new Param("pun", Manzai.Puns.FutongaFuttonda, "Which Pun?", "Which pun will Kosuke say?"),
                         //new Param("unused", false, "Include Unused", "Will unused puns be picked?"),
                         new Param("pitch", true, "Pitch Voiceline", "Will the pun pitch with the tempo?"),
@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 1, e["crowd"]); },
+                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 1, e["crowd"], e["random"]); },
 
                     /*function = delegate { 
                         var e = eventCaller.currentEntity;
@@ -68,11 +68,11 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         //new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
-                        /*new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
+                        new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => !(bool)x, new string[] { "pun" }),
-                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "unused" })
-                        }),*/
+                            //new Param.CollapseParam((x, _) => (bool)x, new string[] { "unused" })
+                        }),
                         new Param("pun", Manzai.Puns.FutongaFuttonda, "Which Pun?", "Which pun will Kosuke say?"),
                         //new Param("unused", false, "Include Unused", "Will unused puns be picked?"),
                         new Param("pitch", true, "Pitch Voiceline", "Will the pun pitch with the tempo?"),
@@ -239,9 +239,9 @@ namespace HeavenStudio.Games
 
         public enum Puns
         {
-            /*AichiniAichinna,
+            AichiniAichinna,
             AmmeteAmena,
-            ChainaniNichaina,
+            /*ChainaniNichaina,
             DenwariDenwa,*/                    //short animation
             FutongaFuttonda,
             /*HiromegaHirameida,
@@ -251,20 +251,20 @@ namespace HeavenStudio.Games
             KarewaKare,
             KouchagaKouchou,
             KusagaKusai,                     //short animation (boing unused)
-            MegaminiwaMegane,
+            MegaminiwaMegane,*/
             MikangaMikannai,
-            NekogaNekoronda,
+            /*NekogaNekoronda,*/
             OkanewaOkkane,
-            OkurezeKitteOkure,
+            /*OkurezeKitteOkure,
             OmochinoKimochi,
             OmoinoHokaOmoi,
-            PuringaTappurin,
+            PuringaTappurin,*/
             RakudawaRakugana,
-            RoukadaKatarouka,
+            /*RoukadaKatarouka,
             SaiyoMinasai,
-            SakanaKanaMasakana,
+            SakanaKanaMasakana,*/
             SarugaSaru,                      //short animation (boing unused)
-            ShaiinniNanariNashain_Unused,    //fully unused
+            /*ShaiinniNanariNashain_Unused,    //fully unused
             SuikawaYasuika,
             TaigaTabetaina,
             TaininiKittai,
@@ -409,8 +409,9 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PunSFX(double beat, int whichPun, bool isPitched, int isBoing, int crowdSounds)
+        public static void PunSFX(double beat, int whichPun, bool isPitched, int isBoing, int crowdSounds, bool random)
         {
+            if (random) whichPun = UnityEngine.Random.Range(0, 7);
             var punName= Enum.GetName(typeof(Puns), whichPun);
             float pitch = isPitched ? (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch : 1;
             double offset = isPitched ? (0.05/(Conductor.instance.GetBpmAtBeat(beat)/98)) : 0.05;
@@ -460,8 +461,8 @@ namespace HeavenStudio.Games
                 double offset = isPitched ? (0.03/(Conductor.instance.GetBpmAtBeat(beat)/98)) : 0.03;
 
                 var sounds = new List<MultiSound.Sound>();
-                sounds.Add(new MultiSound.Sound("manzai/crowdHai1", beat + 2.50, pitch, offset: offset));
-                sounds.Add(new MultiSound.Sound("manzai/crowdHai2", beat + 3.00, pitch, offset: offset));
+                sounds.Add(new MultiSound.Sound("manzai/crowdHai1", beat + 2.50, pitch, offset: offset, volume: 0.7f));
+                sounds.Add(new MultiSound.Sound("manzai/crowdHai2", beat + 3.00, pitch, offset: offset, volume: 0.7f));
                 MultiSound.Play(sounds.ToArray(), forcePlay: true);
             }
 
@@ -561,25 +562,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void HaiJustL(PlayerActionEvent caller, float state)
-        {
-            HaiJustFull(state, 0, caller, false);
-        }
+        public void HaiJustL(PlayerActionEvent caller, float state) => HaiJustFull(state, 0, caller, false);
 
-        public void HaiJustR(PlayerActionEvent caller, float state)
-        {
-            HaiJustFull(state, 1, caller, false);
-        }
+        public void HaiJustR(PlayerActionEvent caller, float state) => HaiJustFull(state, 1, caller, false);
 
-        public void HaiJustLP(PlayerActionEvent caller, float state)
-        {
-            HaiJustFull(state, 0, caller, true);
-        }
+        public void HaiJustLP(PlayerActionEvent caller, float state) => HaiJustFull(state, 0, caller, true);
 
-        public void HaiJustRP(PlayerActionEvent caller, float state)
-        {
-            HaiJustFull(state, 1, caller, true);
-        }
+        public void HaiJustRP(PlayerActionEvent caller, float state) => HaiJustFull(state, 1, caller, true);
 
         public void HaiMiss(PlayerActionEvent caller)
         {
@@ -633,10 +622,10 @@ namespace HeavenStudio.Games
                 double offset = isPitched ? (0.03/(Conductor.instance.GetBpmAtBeat(beat)/98)) : 0.03;
 
                 var sounds = new List<MultiSound.Sound>();
-                sounds.Add(new MultiSound.Sound("manzai/crowdDon1", beat + 0.00 + 2.50, pitch, offset: offset));
-                sounds.Add(new MultiSound.Sound("manzai/crowdDon2", beat + 0.25 + 2.50, pitch));
-                sounds.Add(new MultiSound.Sound("manzai/crowdDon3", beat + 0.75 + 2.50, pitch));
-                sounds.Add(new MultiSound.Sound("manzai/crowdDon4", beat + 1.00 + 2.50, pitch));
+                sounds.Add(new MultiSound.Sound("manzai/crowdDon1", beat + 0.00 + 2.50, pitch, offset: offset, volume: 0.7f));
+                sounds.Add(new MultiSound.Sound("manzai/crowdDon2", beat + 0.25 + 2.50, pitch,                 volume: 0.7f));
+                sounds.Add(new MultiSound.Sound("manzai/crowdDon3", beat + 0.75 + 2.50, pitch,                 volume: 0.7f));
+                sounds.Add(new MultiSound.Sound("manzai/crowdDon4", beat + 1.00 + 2.50, pitch,                 volume: 0.7f));
                 MultiSound.Play(sounds.ToArray(), forcePlay: true);
             }
 
