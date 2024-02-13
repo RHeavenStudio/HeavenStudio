@@ -24,6 +24,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private LBJBear _bear;
         private LumBEARjack.HugeType _type;
         private bool _right = true;
+        private bool _zoom = true;
 
         private PlayerActionEvent[] _soundsToDeleteIfMiss = new PlayerActionEvent[3];
 
@@ -37,11 +38,12 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _peachSR.gameObject.SetActive(false);
         }
 
-        public void Init(LBJBear bear, double beat, double length, LumBEARjack.HugeType type, bool right, double startUpBeat = -1)
+        public void Init(LBJBear bear, double beat, double length, LumBEARjack.HugeType type, bool right, bool zoom, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;
             _right = right;
+            _zoom = zoom;
 
             switch (type)
             {
@@ -178,7 +180,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 _ => throw new System.NotImplementedException(),
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
-            _bear.Cut(caller.startBeat + caller.timer, false, false, true);
+            _bear.Cut(caller.startBeat + caller.timer, false, false, _zoom);
             Destroy(gameObject);
         }
 

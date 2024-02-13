@@ -1650,6 +1650,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6903108778393898136}
   - component: {fileID: 8767186862898821743}
+  - component: {fileID: 14258192005344558}
   m_Layer: 0
   m_Name: Cat
   m_TagString: Untagged
@@ -1686,6 +1687,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _otherPoint: {fileID: 0}
+  _startAtOther: 0
+--- !u!210 &14258192005344558
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7537329938738626932}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
 --- !u!1 &7816188901787332666
 GameObject:
   m_ObjectHideFlags: 0

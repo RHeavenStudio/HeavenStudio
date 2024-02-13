@@ -88,14 +88,15 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        LumBEARjack.instance.SpawnHugeObject(e.beat, e.length, (LumBEARjack.HugeType)e["type"], (LumBEARjack.CatPutChoice)e["cat"]);
+                        LumBEARjack.instance.SpawnHugeObject(e.beat, e.length, (LumBEARjack.HugeType)e["type"], (LumBEARjack.CatPutChoice)e["cat"], e["zoom"]);
                     },
                     defaultLength = 6,
                     parameters = new()
                     {
                         new("type", LumBEARjack.HugeType.log, "Type"),
                         new("sound", true, "Cue Sound"),
-                        new("cat", LumBEARjack.CatPutChoice.Alternate, "Side")
+                        new("cat", LumBEARjack.CatPutChoice.Alternate, "Side"),
+                        new("zoom", true, "Zoom-In")
                     }
                 },
                 new("cats", "Cats Presence")
@@ -104,6 +105,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new()
                     {
                         new("main", LumBEARjack.MainCatChoice.Right, "Main Cats"),
+                        new("bg", new EntityTypes.Integer(0, 12), "Background Cats"),
                         new("instant", false, "Instant")
                     }
                 },
@@ -180,14 +182,15 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        LumBEARjack.instance.SpawnHugeObject(e.beat, e.length, (LumBEARjack.HugeType)e["type"], (LumBEARjack.CatPutChoice)e["cat"]);
+                        LumBEARjack.instance.SpawnHugeObject(e.beat, e.length, (LumBEARjack.HugeType)e["type"], (LumBEARjack.CatPutChoice)e["cat"], e["zoom"]);
                     },
                     defaultLength = 6,
                     parameters = new()
                     {
                         new("type", LumBEARjack.HugeType.log, "Type"),
                         new("sound", true, "Cue Sound"),
-                        new("cat", LumBEARjack.CatPutChoice.Alternate, "Side")
+                        new("cat", LumBEARjack.CatPutChoice.Alternate, "Side"),
+                        new("zoom", true, "Zoom-In")
                     },
                     resizable = true
                 },
@@ -274,6 +277,8 @@ namespace HeavenStudio.Games
         [SerializeField] private Transform _particleHitPoint;
         [SerializeField] private Transform _particleCutPoint;
 
+        [SerializeField] private LBJBGCat[] _bgCats = new LBJBGCat[12];
+
         [Header("Particles")]
         [SerializeField] private ParticleSystem _smallLogCutParticle;
         [SerializeField] private ParticleSystem _bigLogHitParticle;
@@ -290,6 +295,8 @@ namespace HeavenStudio.Games
         private Dictionary<double, CatPutChoice> _catPuts = new();
         private Dictionary<double, MainCatChoice> _mainCatPresences = new();
         private MainCatChoice _startMainCat = MainCatChoice.Right;
+
+        private Dictionary<double, int> _bgCatPresences = new();
 
         public static LumBEARjack instance;
 
@@ -339,14 +346,14 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void SpawnHugeObject(double beat, double length, HugeType type, CatPutChoice cat, double startUpBeat = -1)
+        public void SpawnHugeObject(double beat, double length, HugeType type, CatPutChoice cat, bool zoom, double startUpBeat = -1)
         {
             BeatAction.New(this, new()
             {
                 new(beat + (length / 6), delegate
                 {
                     LBJHugeObject spawnedObject = Instantiate(_hugeObjectPrefab, _cutObjectHolder);
-                    spawnedObject.Init(_bear, beat, length, type, ObjectShouldBeRight(beat, cat), startUpBeat);
+                    spawnedObject.Init(_bear, beat, length, type, ObjectShouldBeRight(beat, cat), zoom, startUpBeat);
                 })
             });
         }
@@ -411,8 +418,8 @@ namespace HeavenStudio.Games
 
             foreach (var e in allPresences)
             {
-                if (_mainCatPresences.ContainsKey(e.beat)) continue;
-                _mainCatPresences.Add(e.beat, (MainCatChoice)e["main"]);
+                if (!_bgCatPresences.ContainsKey(e.beat)) _bgCatPresences.Add(e.beat, e["bg"]);
+                if (!_mainCatPresences.ContainsKey(e.beat)) _mainCatPresences.Add(e.beat, (MainCatChoice)e["main"]);
             }
 
             _startMainCat = CatPresenceBeforeBeat(beat);
@@ -433,11 +440,22 @@ namespace HeavenStudio.Games
                     break;
             }
 
+            SetBGCats(beat, BGCatPresenceBeforeBeat(beat), BGCatPresenceBeforeBeat(beat), true);
+
             var allPresencesAfterBeat = allPresences.FindAll(x => x.beat >= beat);
+            List<BeatAction.Action> actions = new();
             foreach (var e in allPresencesAfterBeat)
             {
                 double eventBeat = e.beat;
                 bool instant = e["instant"];
+
+                int beforeBG = BGCatPresenceBeforeBeat(e.beat);
+                int atBG = e["bg"];
+                actions.Add(new(e.beat, delegate
+                {
+                    SetBGCats(eventBeat, atBG, beforeBG, instant);
+                }));
+
                 MainCatChoice beforeCats = CatPresenceBeforeBeat(e.beat);
                 MainCatChoice atCats = (MainCatChoice)e["main"];
                 if (beforeCats == atCats) continue;
@@ -445,8 +463,7 @@ namespace HeavenStudio.Games
                 switch (atCats)
                 {
                     case MainCatChoice.Right:
-                        BeatAction.New(this, new()
-                        {
+                        actions.Add(
                             new(e.beat, delegate
                             {
                                 if (beforeCats == MainCatChoice.Both)
@@ -458,11 +475,10 @@ namespace HeavenStudio.Games
                                 ActivateCatVisualPresence(eventBeat, true, true, instant);
                                 ActivateCatVisualPresence(eventBeat, false, false, instant);
                             })
-                        });
+                        );
                         break;
                     case MainCatChoice.Left:
-                        BeatAction.New(this, new()
-                        {
+                        actions.Add(
                             new(e.beat, delegate
                             {
                                 if (beforeCats == MainCatChoice.Both)
@@ -474,20 +490,20 @@ namespace HeavenStudio.Games
                                 ActivateCatVisualPresence(eventBeat, false, true, instant);
                                 ActivateCatVisualPresence(eventBeat, true, false, instant);
                             })
-                        });
+                        );
                         break;
                     case MainCatChoice.Both:
-                        BeatAction.New(this, new()
-                        {
+                        actions.Add(
                             new(e.beat, delegate
                             {
                                 ActivateCatVisualPresence(eventBeat, true, true, (beforeCats == MainCatChoice.Right) ? true : instant);
                                 ActivateCatVisualPresence(eventBeat, true, false, (beforeCats == MainCatChoice.Left) ? true : instant);
                             })
-                        });
+                        );
                         break;
                 }
             }
+            if (actions.Count > 0) BeatAction.New(this, actions);
         }
 
         private void PersistObjects(double beat)
@@ -513,7 +529,7 @@ namespace HeavenStudio.Games
                     case "huge":
                     case "hugeS":
                         HugeObjectSound(e.beat, e.length, (HugeType)e["type"], beat);
-                        SpawnHugeObject(e.beat, e.length, (HugeType)e["type"], (CatPutChoice)e["cat"], beat);
+                        SpawnHugeObject(e.beat, e.length, (HugeType)e["type"], (CatPutChoice)e["cat"], e["zoom"], beat);
                         break;
                 }
             }
@@ -882,6 +898,29 @@ namespace HeavenStudio.Games
             move.Move(beat, instant ? 0 : _catMoveLength, inToScene);
         }
 
+        private void SetBGCats(double beat, int bgCats, int beforeBgCats, bool instant)
+        {
+            bgCats = Math.Clamp(bgCats, 0, 12);
+            bgCats -= 1;
+            beforeBgCats -= 1;
+            
+            for (int i = 0; i < _bgCats.Length; i++)
+            {
+                if (bgCats < beforeBgCats)
+                {
+                    _bgCats[i].Activate(beat, _catMoveLength, bgCats >= i, instant || !(i > bgCats && i <= beforeBgCats));
+                }
+                else if (bgCats > beforeBgCats)
+                {
+                    _bgCats[i].Activate(beat, _catMoveLength, bgCats >= i, instant || !(i > beforeBgCats && i <= bgCats));
+                }
+                else
+                {
+                    _bgCats[i].Activate(beat, _catMoveLength, bgCats >= i, true);
+                }
+            }
+        }
+
         private MainCatChoice CatPresenceAtBeat(double beat)
         {
             MainCatChoice cat = MainCatChoice.Right;
@@ -902,6 +941,28 @@ namespace HeavenStudio.Games
                 cat = p.Value;
             }
             return cat;
+        }
+
+        private int BGCatPresenceAtBeat(double beat)
+        {
+            int amount = 0;
+            foreach (var p in _bgCatPresences)
+            {
+                if (p.Key > beat) break;
+                amount = p.Value;
+            }
+            return amount;
+        }
+
+        private int BGCatPresenceBeforeBeat(double beat)
+        {
+            int amount = 0;
+            foreach (var p in _bgCatPresences)
+            {
+                if (p.Key >= beat) break;
+                amount = p.Value;
+            }
+            return amount;
         }
 
         #endregion
