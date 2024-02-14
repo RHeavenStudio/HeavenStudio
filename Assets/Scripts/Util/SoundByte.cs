@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HeavenStudio.Util
@@ -10,6 +13,8 @@ namespace HeavenStudio.Util
         static GameObject oneShotAudioSourceObject;
         static AudioSource oneShotAudioSource;
         static int soundIdx = 0;
+
+        static Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
 
         public enum AudioType
         {
@@ -32,26 +37,12 @@ namespace HeavenStudio.Util
         /// </summary>
         public static void BasicCheck()
         {
-            if (FindJukebox() == null)
-            {
-                GameObject Jukebox = new GameObject("Jukebox");
-                Jukebox.AddComponent<AudioSource>();
-                Jukebox.tag = "Jukebox";
-            }
             if (oneShotAudioSourceObject == null)
             {
                 oneShotAudioSourceObject = new GameObject("OneShot Audio Source");
                 oneShotAudioSource = oneShotAudioSourceObject.AddComponent<AudioSource>();
                 UnityEngine.Object.DontDestroyOnLoad(oneShotAudioSourceObject);
             }
-        }
-
-        public static GameObject FindJukebox()
-        {
-            if (GameObject.FindGameObjectWithTag("Jukebox") != null)
-                return GameObject.FindGameObjectWithTag("Jukebox");
-            else
-                return null;
         }
 
         /// <summary>
@@ -87,32 +78,181 @@ namespace HeavenStudio.Util
             }
         }
 
+        public static void PreloadGameAudioClips(Minigames.Minigame inf)
+        {
+            if (inf.usesAssetBundle)
+            {
+                var cmnAb = inf.GetCommonAssetBundle();
+                if (cmnAb != null)
+                {
+                    cmnAb.LoadAllAssetsAsync<AudioClip>().completed += (op) =>
+                    {
+                        foreach (var clip in (op as AssetBundleRequest).allAssets.Cast<AudioClip>())
+                        {
+                            OnResourceLoaded(clip, $"games/{inf.name}/{clip.name}");
+                        }
+                    };
+                }
+                var locAb = inf.GetLocalizedAssetBundle();
+                if (locAb != null)
+                {
+                    locAb.LoadAllAssetsAsync<AudioClip>().completed += (op) =>
+                    {
+                        foreach (var clip in (op as AssetBundleRequest).allAssets.Cast<AudioClip>())
+                        {
+                            OnResourceLoaded(clip, $"games/{inf.name}/{clip.name}");
+                        }
+                    };
+                }
+            }
+            else
+            {
+                string path = $"Sfx/games/{inf.name}";
+                var clips = Resources.LoadAll<AudioClip>(path);
+                foreach (var clip in clips)
+                {
+                    OnResourceLoaded(clip, $"games/{inf.name}/{clip.name}");
+                }
+            }
+        }
+
+        public static void PreloadGameAudioClips(string game)
+        {
+            var inf = GameManager.instance.GetGameInfo(game);
+            PreloadGameAudioClips(inf);
+        }
+
+        public static void PreloadAudioClipAsync(string name, string game)
+        {
+            var inf = GameManager.instance.GetGameInfo(game);
+            if (inf != null)
+            {
+                name = $"games/{name}";
+            }
+            if (audioClips.ContainsKey(name)) return;
+            if (inf.usesAssetBundle)
+            {
+                var cmnAb = inf.GetCommonAssetBundle();
+                if (cmnAb != null && cmnAb.Contains(name))
+                {
+                    var request = cmnAb.LoadAssetAsync<AudioClip>(name);
+                    request.completed += (op) =>
+                    {
+                        OnResourceLoaded((op as ResourceRequest).asset as AudioClip, $"{game}/{name}");
+                    };
+                }
+                else
+                {
+                    var locAb = inf.GetLocalizedAssetBundle();
+                    if (locAb != null && locAb.Contains(name))
+                    {
+                        var request = locAb.LoadAssetAsync<AudioClip>(name);
+                        request.completed += (op) =>
+                        {
+                            OnResourceLoaded((op as ResourceRequest).asset as AudioClip, $"{game}/{name}");
+                        };
+                    }
+                }
+            }
+            else
+            {
+                PreloadAudioClipAsync($"{game}/{name}");
+            }
+        }
+
+        public static void PreloadAudioClipAsync(string name)
+        {
+            if (audioClips.ContainsKey(name)) return;
+            string path = $"Sfx/{name}";
+            ResourceRequest request = Resources.LoadAsync<AudioClip>(path);
+            request.completed += (op) =>
+            {
+                OnResourceLoaded((op as ResourceRequest).asset as AudioClip, name);
+            };
+        }
+
+        static void OnResourceLoaded(AudioClip clip, string name)
+        {
+            if (audioClips.ContainsKey(name))
+            {
+                audioClips[name] = clip;
+            }
+            else
+            {
+                audioClips.Add(name, clip);
+            }
+        }
+
+        public static void UnloadAudioClips(params string[] names)
+        {
+            foreach (string s in names)
+            {
+                if (audioClips.ContainsKey(s)) audioClips.Remove(s);
+            }
+            Resources.UnloadUnusedAssets();
+        }
+
+        public static void UnloadAudioClips()
+        {
+            audioClips.Clear();
+            Resources.UnloadUnusedAssets();
+        }
+
+        public static void UnloadAudioClips(string game)
+        {
+            string[] split;
+            foreach (string s in audioClips.Where(x =>
+            {
+                split = x.Key.Split('/');
+                return split.Length > 2 && split[0] == "games" && split[1] == game;
+            }).Select(x => x.Key).ToList())
+            {
+                audioClips.Remove(s);
+            }
+            Resources.UnloadUnusedAssets();
+        }
+
         /// <summary>
         ///    Gets the length of an audio clip
         /// </summary>
         public static double GetClipLength(string name, float pitch = 1f, string game = null)
         {
             AudioClip clip = null;
+            string soundName = name.Split('/')[^1];
             if (game != null)
             {
-                string soundName = name.Split('/')[2];
-                var inf = GameManager.instance.GetGameInfo(game);
-                //first try the game's common assetbundle
-                // Debug.Log("Jukebox loading sound " + soundName + " from common");
-                clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
-                //then the localized one
-                if (clip == null)
+                string cachedName = $"games/{game}/{soundName}";
+                if (audioClips.ContainsKey(cachedName))
                 {
-                    // Debug.Log("Jukebox loading sound " + soundName + " from locale");
-                    clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    clip = audioClips[cachedName];
+                }
+                else
+                {
+                    var inf = GameManager.instance.GetGameInfo(game);
+                    //first try the game's common assetbundle
+                    // Debug.Log("Jukebox loading sound " + soundName + " from common");
+                    clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    //then the localized one
+                    if (clip == null)
+                    {
+                        // Debug.Log("Jukebox loading sound " + soundName + " from locale");
+                        clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    }
                 }
             }
 
             //can't load from assetbundle, load from resources
             if (clip == null)
             {
-                // Debug.Log("Jukebox loading sound " + name + " from resources");
-                clip = Resources.Load<AudioClip>($"Sfx/{name}");
+                if (audioClips.ContainsKey(name))
+                {
+                    clip = audioClips[name];
+                }
+                else
+                {
+                    // Debug.Log("Jukebox loading sound " + name + " from resources");
+                    clip = Resources.Load<AudioClip>($"Sfx/{name}");
+                }
             }
 
             if (clip == null)
@@ -147,26 +287,41 @@ namespace HeavenStudio.Util
         public static Sound PlayOneShot(string name, double beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, string game = null, double offset = 0f)
         {
             AudioClip clip = null;
+            string soundName = name.Split('/')[^1];
             if (game != null)
             {
-                string soundName = name.Split('/')[2];
-                var inf = GameManager.instance.GetGameInfo(game);
-                //first try the game's common assetbundle
-                // Debug.Log("Jukebox loading sound " + soundName + " from common");
-                clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
-                //then the localized one
-                if (clip == null)
+                string cachedName = $"games/{game}/{soundName}";
+                if (audioClips.ContainsKey(cachedName))
                 {
-                    // Debug.Log("Jukebox loading sound " + soundName + " from locale");
-                    clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    clip = audioClips[cachedName];
+                }
+                else
+                {
+                    var inf = GameManager.instance.GetGameInfo(game);
+                    //first try the game's common assetbundle
+                    // Debug.Log("Jukebox loading sound " + soundName + " from common");
+                    clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    //then the localized one
+                    if (clip == null)
+                    {
+                        // Debug.Log("Jukebox loading sound " + soundName + " from locale");
+                        clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    }
                 }
             }
 
             //can't load from assetbundle, load from resources
             if (clip == null)
             {
-                // Debug.Log("Jukebox loading sound " + name + " from resources");
-                clip = Resources.Load<AudioClip>($"Sfx/{name}");
+                if (audioClips.ContainsKey(name))
+                {
+                    clip = audioClips[name];
+                }
+                else
+                {
+                    // Debug.Log("Jukebox loading sound " + name + " from resources");
+                    clip = Resources.Load<AudioClip>($"Sfx/{name}");
+                }
             }
 
             if (looping || beat != -1 || pitch != 1f)
@@ -203,26 +358,43 @@ namespace HeavenStudio.Util
         public static Sound PlayOneShotScheduled(string name, double targetTime, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
         {
             Sound snd = GetAvailableScheduledSound();
-
             AudioClip clip = null;
+            string soundName = name.Split('/')[^1];
             if (game != null)
             {
-                string soundName = name.Split('/')[2];
-                var inf = GameManager.instance.GetGameInfo(game);
-                //first try the game's common assetbundle
-                // Debug.Log("Jukebox loading sound " + soundName + " from common");
-                clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
-                //then the localized one
-                if (clip == null)
+                string cachedName = $"games/{game}/{soundName}";
+                if (audioClips.ContainsKey(cachedName))
                 {
-                    // Debug.Log("Jukebox loading sound " + soundName + " from locale");
-                    clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    clip = audioClips[cachedName];
+                }
+                else
+                {
+                    var inf = GameManager.instance.GetGameInfo(game);
+                    //first try the game's common assetbundle
+                    // Debug.Log("Jukebox loading sound " + soundName + " from common");
+                    clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    //then the localized one
+                    if (clip == null)
+                    {
+                        // Debug.Log("Jukebox loading sound " + soundName + " from locale");
+                        clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                    }
                 }
             }
 
             //can't load from assetbundle, load from resources
             if (clip == null)
-                clip = Resources.Load<AudioClip>($"Sfx/{name}");
+            {
+                if (audioClips.ContainsKey(name))
+                {
+                    clip = audioClips[name];
+                }
+                else
+                {
+                    // Debug.Log("Jukebox loading sound " + name + " from resources");
+                    clip = Resources.Load<AudioClip>($"Sfx/{name}");
+                }
+            }
 
             // abort if no clip found
 

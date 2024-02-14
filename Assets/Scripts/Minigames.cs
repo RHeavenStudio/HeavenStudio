@@ -363,13 +363,14 @@ namespace HeavenStudio
 
             public List<string> tags;
             public string defaultLocale = "en";
-            public string wantAssetBundle = "";
+            public string wantAssetBundle = null;
             public List<string> supportedLocales;
             public bool inferred;
 
-            public bool usesAssetBundle => wantAssetBundle != "";
+            public bool usesAssetBundle => wantAssetBundle is not null or "";
             public bool hasLocales => supportedLocales.Count > 0;
-            public bool AssetsLoaded => ((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded;
+            public bool AssetsLoaded => ((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded && loadComplete;
+            public bool AlreadyLoading => alreadyLoading;
             public bool SequencesPreloaded => soundSequences != null;
             public string LoadableName => inferred ? "noGame" : name;
             public GameObject LoadedPrefab => loadedPrefab;
@@ -382,8 +383,8 @@ namespace HeavenStudio
             private bool localeLoaded = false;
             private bool localePreloaded = false;
             private GameObject loadedPrefab = null;
-            private Dictionary<string, AudioClip> commonAudioClips;
-            private Dictionary<string, AudioClip> localeAudioClips;
+
+            bool loadComplete = false;
 
             private SoundSequence.SequenceKeyValue[] soundSequences = null;
 
@@ -392,10 +393,8 @@ namespace HeavenStudio
                 get => soundSequences;
                 set => soundSequences = value;
             }
-            public Dictionary<string, AudioClip> CommonAudioClips => commonAudioClips;
-            public Dictionary<string, AudioClip> LocaleAudioClips => localeAudioClips;
 
-            public Minigame(string name, string displayName, string color, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
+            public Minigame(string name, string displayName, string color, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string wantAssetBundle = null, string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
             {
                 this.name = name;
                 this.displayName = displayName;
@@ -405,7 +404,7 @@ namespace HeavenStudio
                 this.fxOnly = fxOnly;
 
                 this.tags = tags ?? new List<string>();
-                this.wantAssetBundle = assetBundle;
+                this.wantAssetBundle = wantAssetBundle;
                 this.defaultLocale = defaultLocale;
                 this.supportedLocales = supportedLocales ?? new List<string>();
                 this.inferred = inferred;
@@ -414,7 +413,7 @@ namespace HeavenStudio
                 this.splitColorR = null;
             }
 
-            public Minigame(string name, string displayName, string color, string splitColorL, string splitColorR, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
+            public Minigame(string name, string displayName, string color, string splitColorL, string splitColorR, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string wantAssetBundle = null, string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
             {
                 this.name = name;
                 this.displayName = displayName;
@@ -424,7 +423,7 @@ namespace HeavenStudio
                 this.fxOnly = fxOnly;
 
                 this.tags = tags ?? new List<string>();
-                this.wantAssetBundle = assetBundle;
+                this.wantAssetBundle = wantAssetBundle;
                 this.defaultLocale = defaultLocale;
                 this.supportedLocales = supportedLocales ?? new List<string>();
                 this.inferred = inferred;
@@ -475,11 +474,17 @@ namespace HeavenStudio
                 return bundleCommon;
             }
 
-            public async UniTask LoadAssetsAsync()
+            bool alreadyLoading = false;
+            public async UniTaskVoid LoadAssetsAsync()
             {
-                if (AssetsLoaded || !usesAssetBundle) return;
+                if (alreadyLoading || AssetsLoaded || !usesAssetBundle) return;
+                loadComplete = false;
+                alreadyLoading = true;
                 await UniTask.WhenAll(LoadCommonAssetBundleAsync(), LoadLocalizedAssetBundleAsync());
                 await UniTask.WhenAll(LoadGamePrefabAsync(), LoadCommonAudioClips(), LoadLocalizedAudioClips());
+                SoundByte.PreloadGameAudioClips(this);
+                alreadyLoading = false;
+                loadComplete = true;
             }
 
             public async UniTask LoadCommonAssetBundleAsync()
@@ -533,16 +538,23 @@ namespace HeavenStudio
                 if (!commonLoaded) return;
                 if (bundleCommon == null) return;
 
-                UnityEngine.Object asset = await bundleCommon.LoadAssetAsync<GameObject>(name).ToUniTask(timing: PlayerLoopTiming.PreLateUpdate);
-                loadedPrefab = asset as GameObject;
+                AssetBundleRequest request = bundleCommon.LoadAssetAsync<GameObject>(name);
+                request.completed += (op) => OnPrefabLoaded(op as AssetBundleRequest);
+                await request;
+                loadedPrefab = request.asset as GameObject;
+            }
 
-                // load sound sequences here for now
-                // this is taxing and is still done synchronously
-                // move sequences to their own assets so that we don't have to look up a component
-                if (loadedPrefab.TryGetComponent<Games.Minigame>(out Games.Minigame minigame))
+            void OnPrefabLoaded(AssetBundleRequest request)
+            {
+                GameObject prefab = request.asset as GameObject;
+                // // load sound sequences here for now
+                // // this is taxing and is still done synchronously
+                // // move sequences to their own assets so that we don't have to look up a component
+                if (prefab.TryGetComponent<Games.Minigame>(out Games.Minigame minigame))
                 {
                     soundSequences = minigame.SoundSequences;
                 }
+                loadedPrefab = prefab;
             }
 
             public GameObject LoadGamePrefab()
@@ -558,8 +570,6 @@ namespace HeavenStudio
                 if (!commonLoaded) return;
                 if (bundleCommon == null) return;
 
-                commonAudioClips = new();
-
                 var assets = bundleCommon.LoadAllAssetsAsync();
                 await assets;
             }
@@ -569,8 +579,6 @@ namespace HeavenStudio
                 if (!localeLoaded) return;
                 if (bundleLocalized == null) return;
 
-                localeAudioClips = new();
-
                 var assets = bundleLocalized.LoadAllAssetsAsync();
                 await assets;
             }
@@ -578,8 +586,6 @@ namespace HeavenStudio
             public async UniTask UnloadAllAssets()
             {
                 if (!usesAssetBundle) return;
-                commonAudioClips.Clear();
-                localeAudioClips.Clear();
                 if (loadedPrefab != null)
                 {
                     loadedPrefab = null;
@@ -598,6 +604,8 @@ namespace HeavenStudio
                     localeLoaded = false;
                     localePreloaded = false;
                 }
+                SoundByte.UnloadAudioClips(name);
+                loadComplete = false;
             }
         }
 
@@ -746,35 +754,6 @@ namespace HeavenStudio
                             GameManager.instance.ToggleInputs(eventCaller.currentEntity["toggle"]);
                         }
                     ),
-
-                    // These are still here for backwards-compatibility but are hidden in the editor
-                    new GameAction("flash", "", 1f, true,
-                        new List<Param>()
-                        {
-                            new Param("colorA", Color.white, "Start Color"),
-                            new Param("colorB", Color.white, "End Color"),
-                            new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
-                            new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
-                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
-                        },
-                        hidden: true
-                    ),
-                    new GameAction("move camera", "", 1f, true, new List<Param>()
-                    {
-                        new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
-                        new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
-                        new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
-                    },
-                    hidden: true ),
-                    new GameAction("rotate camera", "", 1f, true, new List<Param>()
-                    {
-                        new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
-                        new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
-                        new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
-                    },
-                    hidden: true ),
                 }),
 
                 new Minigame("countIn", "Count-Ins", "", false, true, new List<GameAction>()
