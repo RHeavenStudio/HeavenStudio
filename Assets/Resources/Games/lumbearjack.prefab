@@ -145286,7 +145286,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 14258192005344558, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_SortingOrder
-      value: 900
+      value: 145
       objectReference: {fileID: 0}
     - target: {fileID: 704268889839616480, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_FlipX
@@ -145627,7 +145627,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 14258192005344558, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_SortingOrder
-      value: 900
+      value: 145
       objectReference: {fileID: 0}
     - target: {fileID: 975253968622856459, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_Color.b
@@ -145645,6 +145645,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 80a3377bf2a9b4f4289c3d4015492887, type: 2}
+    - target: {fileID: 3670770204538845814, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.319
+      objectReference: {fileID: 0}
+    - target: {fileID: 3670770204538845814, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.984
+      objectReference: {fileID: 0}
     - target: {fileID: 4639588617581127802, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_IsActive
       value: 0
