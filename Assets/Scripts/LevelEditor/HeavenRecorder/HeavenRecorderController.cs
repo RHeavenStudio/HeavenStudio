@@ -26,6 +26,7 @@ public class HeavenRecorderController : MonoBehaviour
     float endBeatRecorder;
     float startBeatRecorder;
     float prevStartBeat;
+    float prevVolume;
     // Start is called before the first frame update
     void Start()
     {
@@ -67,8 +68,8 @@ public class HeavenRecorderController : MonoBehaviour
         _session.Close();
         _session.Dispose(); 
         _session = null;
-        File.Delete(pathHeavenRecorder + "temp.wav");
-        File.Delete(pathHeavenRecorder + "temp.mp4");
+        // File.Delete(pathHeavenRecorder + "temp.wav");
+        // File.Delete(pathHeavenRecorder + "temp.mp4");
     }
 
     public void GetUsablePath()
@@ -138,7 +139,9 @@ public class HeavenRecorderController : MonoBehaviour
         audioRenderer.SAMPLE_RATE = PersistentDataManager.gameSettings.sampleRate;
         recorder.width = PersistentDataManager.gameSettings.resolutionWidth;
         recorder.height = PersistentDataManager.gameSettings.resolutionHeight;
+        prevVolume = PersistentDataManager.gameSettings.masterVolume;
         dialog.RecordingIndicator(true);
+        GlobalGameManager.ChangeMasterVolume(0.6f);
         if(!recorder.enabled)
         {
             if(File.Exists(pathHeavenRecorder + "temp.wav"))
@@ -174,6 +177,7 @@ public class HeavenRecorderController : MonoBehaviour
                 timeline.PlayCheck(true);
                 // Conductor.instance.SetBeat(prevStartBeat);
                 dialog.RecordingIndicator(false);
+                GlobalGameManager.ChangeMasterVolume(prevVolume);
             }
     }
 

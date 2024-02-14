@@ -118,7 +118,6 @@ public class AudioRenderer : MonoBehaviour
                 // for debugging only
                 Debug.Log("Finished saving to " + filename + ".");
             }
-
             result.State = Status.SUCCESS;
         }
         else
