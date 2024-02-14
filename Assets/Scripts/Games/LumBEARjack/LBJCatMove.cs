@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             }
             else
             {
-                _otherPosition = _thisPosition += new Vector3(_slideOffset, 0);
+                _otherPosition = _thisPosition + new Vector3(_slideOffset / 2, 0);
             }
             if (_startAtOther) transform.position = _otherPosition;
         }
