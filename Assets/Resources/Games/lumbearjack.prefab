@@ -286,8 +286,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.65
-      minScalar: 0.55
+      scalar: 0.8
+      minScalar: 0.7
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1577,7 +1577,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 1510181714, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: 1604799176, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -5285,8 +5285,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1.1
-      minScalar: 0.9
+      scalar: 0.8
+      minScalar: 0.7
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -6558,7 +6558,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 1839077146, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: 1908930708, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -10184,8 +10184,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1.1
-      minScalar: 0.9
+      scalar: 0.7
+      minScalar: 0.6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -11457,7 +11457,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -1184818775, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: -1489110472, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -15149,8 +15149,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.9
-      minScalar: 0.75
+      scalar: 0.8
+      minScalar: 0.65
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -16422,7 +16422,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 50591991, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: 1599155735, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -19735,7 +19735,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 0.1
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -20282,8 +20282,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1.1
-      minScalar: 0.9
+      scalar: 0.7
+      minScalar: 0.6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -21555,7 +21555,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -1184818775, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: -1489110472, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -25493,8 +25493,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.6
-      minScalar: 0.55
+      scalar: 0.8
+      minScalar: 0.7
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -26784,7 +26784,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -943671564, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: -656951434, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -30323,9 +30323,9 @@ Transform:
   m_Children:
   - {fileID: 7667565463099435952}
   - {fileID: 3867080228037786540}
-  - {fileID: 5426823713711891276}
   - {fileID: 8968276012044984537}
   - {fileID: 6081244242579349435}
+  - {fileID: 5426823713711891276}
   - {fileID: 1786682412932371778}
   - {fileID: 5046786283028669412}
   - {fileID: 615325631333663386}
@@ -32497,7 +32497,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 1839077146, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: 1908930708, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -36502,8 +36502,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.65
-      minScalar: 0.55
+      scalar: 0.8
+      minScalar: 0.8
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -37793,7 +37793,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 1510181714, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: 1604799176, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -41341,7 +41341,7 @@ Transform:
   - {fileID: 8003342604478868877}
   - {fileID: 4409991293451252365}
   m_Father: {fileID: 2298792418077467027}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7013601655191583099
 MonoBehaviour:
@@ -41780,8 +41780,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.6
-      minScalar: 0.55
+      scalar: 0.7
+      minScalar: 0.6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -43071,7 +43071,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -943671564, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: -656951434, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -47987,7 +47987,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -1184818775, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: -1489110472, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -51695,8 +51695,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.9
-      minScalar: 0.75
+      scalar: 0.8
+      minScalar: 0.65
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -52968,7 +52968,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -467152134, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: -629850815, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -56281,7 +56281,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 0.1
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -57097,8 +57097,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1.1
-      minScalar: 0.9
+      scalar: 0.7
+      minScalar: 0.6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -58370,7 +58370,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 1839077146, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+    - sprite: {fileID: 1908930708, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -61990,6 +61990,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2298792418077467027}
     m_Modifications:
+    - target: {fileID: 14258192005344558, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
+      propertyPath: m_SortingOrder
+      value: 900
+      objectReference: {fileID: 0}
     - target: {fileID: 704268889839616480, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_FlipX
       value: 1
@@ -62032,7 +62036,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6903108778393898136, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6903108778393898136, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_LocalScale.x
@@ -62327,6 +62331,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2298792418077467027}
     m_Modifications:
+    - target: {fileID: 14258192005344558, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
+      propertyPath: m_SortingOrder
+      value: 900
+      objectReference: {fileID: 0}
     - target: {fileID: 975253968622856459, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -62357,7 +62365,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6903108778393898136, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6903108778393898136, guid: e2e08f4bea037a14da41e5490ce6d393, type: 3}
       propertyPath: m_LocalPosition.x
