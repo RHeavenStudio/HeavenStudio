@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private LBJCatMove _moveScript;
 
         private double _danceBeat = double.MaxValue;
+        private double _stopDanceBeat = double.MaxValue;
 
         private void Awake()
         {
@@ -20,23 +22,34 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private void Update()
         {
+            if (Conductor.instance.songPositionInBeatsAsDouble >= _stopDanceBeat)
+            {
+                _anim.DoNormalizedAnimation("CatDance", 0);
+                return;
+            }
             if (_danceBeat > Conductor.instance.songPositionInBeatsAsDouble)
             {
-                _anim.Play("CatIdle");
+                _anim.DoNormalizedAnimation("CatIdle", 0);
                 return;
             }
             float normalized = Conductor.instance.GetPositionFromBeat(_danceBeat, 2, false) % 1;
             _anim.DoNormalizedAnimation("CatDance", normalized);
         }
 
-        public void Activate(double beat, double length, bool inToScene, bool instant)
+        public void Activate(double beat, double length, bool inToScene, bool moveInstant, bool dance, bool instant)
         {
-            _moveScript.Move(beat, instant ? 0 : length, inToScene);
+            _moveScript.Move(beat, moveInstant ? 0 : length, inToScene);
 
-            double overflowBeat = (beat + 0.5) % 2;
-            _danceBeat = beat - overflowBeat + (instant ? 0 : 2);
+            double overflowBeat = beat % 2;
+            double toBeat = 2.0 - overflowBeat;
+
+            _danceBeat = beat + (instant ? -overflowBeat : toBeat) - 0.5;
 
             if (!inToScene) _danceBeat = double.MaxValue;
+
+            _stopDanceBeat = beat + (instant ? -overflowBeat : toBeat) - 0.5;
+
+            if (dance) _stopDanceBeat = double.MaxValue;
         }
     }
 }

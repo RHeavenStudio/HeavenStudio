@@ -101,12 +101,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new("cats", "Cats Presence")
                 {
-                    defaultLength = 0.5f,
+                    resizable = true,
                     parameters = new()
                     {
                         new("main", LumBEARjack.MainCatChoice.Right, "Main Cats"),
                         new("bg", new EntityTypes.Integer(0, 12), "Background Cats"),
-                        new("instant", false, "Instant")
+                        new("instant", false, "Instant"),
+                        new("dance", true, "Dance")
                     }
                 },
                 new("sigh", "Rest")
@@ -281,15 +282,19 @@ namespace HeavenStudio.Games
 
         [Header("Particles")]
         [SerializeField] private ParticleSystem _smallLogCutParticle;
+        [SerializeField] private ParticleSystem _canCutParticle;
+        [SerializeField] private ParticleSystem _batCutParticle;
+        [SerializeField] private ParticleSystem _broomCutParticle;
         [SerializeField] private ParticleSystem _bigLogHitParticle;
         [SerializeField] private ParticleSystem _bigLogCutParticle;
         [SerializeField] private ParticleSystem _hugeLogHitParticle;
         [SerializeField] private ParticleSystem _hugeLogCutParticle;
+        [SerializeField] private ParticleSystem _peachHitParticle;
+        [SerializeField] private ParticleSystem _peachCutParticle;
 
         [Header("Parameters")]
         [SerializeField] private double _catAnimationOffsetStart = -0.5;
         [SerializeField] private double _catAnimationOffsetEnd = 0.5;
-        [SerializeField] private double _catMoveLength = 0.5;
 
         private List<double> _bearNoBopBeats = new();
         private Dictionary<double, CatPutChoice> _catPuts = new();
@@ -329,7 +334,7 @@ namespace HeavenStudio.Games
                 new(beat + (length / 3), delegate
                 {
                     LBJSmallObject spawnedObject = Instantiate(_smallObjectPrefab, _cutObjectHolder);
-                    spawnedObject.Init(_bear, beat, length, type, huh, ObjectShouldBeRight(beat, cat), startUpBeat);
+                    spawnedObject.Init(_bear, beat, length, type, huh, ShouldBeRight(beat, cat), startUpBeat);
                 })
             });
         }
@@ -341,7 +346,7 @@ namespace HeavenStudio.Games
                 new(beat + (length / 4), delegate
                 {
                     LBJBigObject spawnedObject = Instantiate(_bigObjectPrefab, _cutObjectHolder);
-                    spawnedObject.Init(_bear, beat, length, type, ObjectShouldBeRight(beat, cat), startUpBeat);
+                    spawnedObject.Init(_bear, beat, length, type, ShouldBeRight(beat, cat), startUpBeat);
                 })
             });
         }
@@ -353,12 +358,12 @@ namespace HeavenStudio.Games
                 new(beat + (length / 6), delegate
                 {
                     LBJHugeObject spawnedObject = Instantiate(_hugeObjectPrefab, _cutObjectHolder);
-                    spawnedObject.Init(_bear, beat, length, type, ObjectShouldBeRight(beat, cat), zoom, startUpBeat);
+                    spawnedObject.Init(_bear, beat, length, type, ShouldBeRight(beat, cat), zoom, startUpBeat);
                 })
             });
         }
 
-        private bool ObjectShouldBeRight(double beat, CatPutChoice cat)
+        private bool ShouldBeRight(double beat, CatPutChoice cat)
         {
             switch (cat)
             {
@@ -427,33 +432,35 @@ namespace HeavenStudio.Games
             switch (_startMainCat)
             {
                 case MainCatChoice.Right:
-                    ActivateCatVisualPresence(beat, true, true, true);
-                    ActivateCatVisualPresence(beat, false, false, true);
+                    ActivateCatVisualPresence(beat, 0, true, true, true);
+                    ActivateCatVisualPresence(beat, 0, false, false, true);
                     break;
                 case MainCatChoice.Left:
-                    ActivateCatVisualPresence(beat, false, true, true);
-                    ActivateCatVisualPresence(beat, true, false, true);
+                    ActivateCatVisualPresence(beat, 0, false, true, true);
+                    ActivateCatVisualPresence(beat, 0, true, false, true);
                     break;
                 case MainCatChoice.Both:
-                    ActivateCatVisualPresence(beat, true, true, true);
-                    ActivateCatVisualPresence(beat, true, false, true);
+                    ActivateCatVisualPresence(beat, 0, true, true, true);
+                    ActivateCatVisualPresence(beat, 0, true, false, true);
                     break;
             }
 
-            SetBGCats(beat, BGCatPresenceBeforeBeat(beat), BGCatPresenceBeforeBeat(beat), true);
+            SetBGCats(beat, 0, BGCatPresenceBeforeBeat(beat), BGCatPresenceBeforeBeat(beat), true, true);
 
             var allPresencesAfterBeat = allPresences.FindAll(x => x.beat >= beat);
             List<BeatAction.Action> actions = new();
             foreach (var e in allPresencesAfterBeat)
             {
                 double eventBeat = e.beat;
+                double eventLength = e.length;
                 bool instant = e["instant"];
+                bool dance = e["dance"];
 
                 int beforeBG = BGCatPresenceBeforeBeat(e.beat);
                 int atBG = e["bg"];
                 actions.Add(new(e.beat, delegate
                 {
-                    SetBGCats(eventBeat, atBG, beforeBG, instant);
+                    SetBGCats(eventBeat, eventLength, atBG, beforeBG, instant, dance);
                 }));
 
                 MainCatChoice beforeCats = CatPresenceBeforeBeat(e.beat);
@@ -468,12 +475,12 @@ namespace HeavenStudio.Games
                             {
                                 if (beforeCats == MainCatChoice.Both)
                                 {
-                                    ActivateCatVisualPresence(eventBeat, true, true, true);
-                                    ActivateCatVisualPresence(eventBeat, false, false, instant);
+                                    ActivateCatVisualPresence(eventBeat, eventLength, true, true, true);
+                                    ActivateCatVisualPresence(eventBeat, eventLength, false, false, instant);
                                     return;
                                 }
-                                ActivateCatVisualPresence(eventBeat, true, true, instant);
-                                ActivateCatVisualPresence(eventBeat, false, false, instant);
+                                ActivateCatVisualPresence(eventBeat, eventLength, true, true, instant);
+                                ActivateCatVisualPresence(eventBeat, eventLength, false, false, instant);
                             })
                         );
                         break;
@@ -483,12 +490,12 @@ namespace HeavenStudio.Games
                             {
                                 if (beforeCats == MainCatChoice.Both)
                                 {
-                                    ActivateCatVisualPresence(eventBeat, false, true, instant);
-                                    ActivateCatVisualPresence(eventBeat, true, false, true);
+                                    ActivateCatVisualPresence(eventBeat, eventLength, false, true, instant);
+                                    ActivateCatVisualPresence(eventBeat, eventLength, true, false, true);
                                     return;
                                 }
-                                ActivateCatVisualPresence(eventBeat, false, true, instant);
-                                ActivateCatVisualPresence(eventBeat, true, false, instant);
+                                ActivateCatVisualPresence(eventBeat, eventLength, false, true, instant);
+                                ActivateCatVisualPresence(eventBeat, eventLength, true, false, instant);
                             })
                         );
                         break;
@@ -496,8 +503,8 @@ namespace HeavenStudio.Games
                         actions.Add(
                             new(e.beat, delegate
                             {
-                                ActivateCatVisualPresence(eventBeat, true, true, (beforeCats == MainCatChoice.Right) ? true : instant);
-                                ActivateCatVisualPresence(eventBeat, true, false, (beforeCats == MainCatChoice.Left) ? true : instant);
+                                ActivateCatVisualPresence(eventBeat, eventLength, true, true, (beforeCats == MainCatChoice.Right) ? true : instant);
+                                ActivateCatVisualPresence(eventBeat, eventLength, true, false, (beforeCats == MainCatChoice.Left) ? true : instant);
                             })
                         );
                         break;
@@ -585,8 +592,24 @@ namespace HeavenStudio.Games
             double nextGameSwitchBeat = double.MaxValue;
             if (nextGameSwitch != null) nextGameSwitchBeat = nextGameSwitch.beat;
 
-            bool catRight = _startMainCat != MainCatChoice.Left;
-            bool first = true;
+            foreach (var e in allEvents)
+            {
+                float effectiveLength = e.length / (e.datamodel.Split(1) switch
+                {
+                    "small" => 3,
+                    "smallS" => 3,
+                    "big" => 4,
+                    "bigS" => 4,
+                    "huge" => 6,
+                    "hugeS" => 6,
+                    _ => 3
+                });
+                if ((e.beat + _catAnimationOffsetStart < beat && e.beat + effectiveLength + _catAnimationOffsetEnd > beat) || (e.beat >= beat && e.beat < nextGameSwitchBeat))
+                    if (!_catPuts.ContainsKey(e.beat)) _catPuts.Add(e.beat, (CatPutChoice)e["cat"]);
+            }
+
+            var sortedCatPuts = _catPuts.OrderBy(x => x.Key);
+            _catPuts = sortedCatPuts.ToDictionary(pair => pair.Key, pair => pair.Value);
 
             foreach (var e in allEvents)
             {
@@ -603,20 +626,7 @@ namespace HeavenStudio.Games
 
                 if ((e.beat + _catAnimationOffsetStart < beat && e.beat + effectiveLength + _catAnimationOffsetEnd > beat) || (e.beat >= beat && e.beat < nextGameSwitchBeat))
                 {
-                    if (!_catPuts.ContainsKey(e.beat)) _catPuts.Add(e.beat, (CatPutChoice)e["cat"]);
-                    switch ((CatPutChoice)e["cat"])
-                    {
-                        case CatPutChoice.Alternate:
-                            if (!first) catRight = !catRight;
-                            if (CatPresenceAtBeat(e.beat) != MainCatChoice.Both) catRight = CatPresenceAtBeat(e.beat) != MainCatChoice.Left;
-                            break;
-                        case CatPutChoice.Left:
-                            catRight = CatPresenceAtBeat(e.beat) == MainCatChoice.Right;
-                            break;
-                        default:
-                            catRight = CatPresenceAtBeat(e.beat) != MainCatChoice.Left;
-                            break;
-                    }
+                    bool catRight = ShouldBeRight(e.beat, (CatPutChoice)e["cat"]);
 
                     switch (e.datamodel.Split(1))
                     {
@@ -634,11 +644,7 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }
-
-                first = false;
             }
-            var sortedCatPuts = _catPuts.OrderBy(x => x.Key);
-            _catPuts = sortedCatPuts.ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
         #endregion
@@ -892,13 +898,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void ActivateCatVisualPresence(double beat, bool inToScene, bool right, bool instant = false)
+        private void ActivateCatVisualPresence(double beat, double length, bool inToScene, bool right, bool instant = false)
         {
             LBJCatMove move = right ? _catRightMove : _catLeftMove;
-            move.Move(beat, instant ? 0 : _catMoveLength, inToScene);
+            move.Move(beat, instant ? 0 : length, inToScene);
         }
 
-        private void SetBGCats(double beat, int bgCats, int beforeBgCats, bool instant)
+        private void SetBGCats(double beat, double length, int bgCats, int beforeBgCats, bool instant, bool dance)
         {
             bgCats = Math.Clamp(bgCats, 0, 12);
             bgCats -= 1;
@@ -908,15 +914,15 @@ namespace HeavenStudio.Games
             {
                 if (bgCats < beforeBgCats)
                 {
-                    _bgCats[i].Activate(beat, _catMoveLength, bgCats >= i, instant || !(i > bgCats && i <= beforeBgCats));
+                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > bgCats && i <= beforeBgCats), dance, instant);
                 }
                 else if (bgCats > beforeBgCats)
                 {
-                    _bgCats[i].Activate(beat, _catMoveLength, bgCats >= i, instant || !(i > beforeBgCats && i <= bgCats));
+                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > beforeBgCats && i <= bgCats), dance, instant);
                 }
                 else
                 {
-                    _bgCats[i].Activate(beat, _catMoveLength, bgCats >= i, true);
+                    _bgCats[i].Activate(beat, length, bgCats >= i, true, dance, instant);
                 }
             }
         }
@@ -978,10 +984,16 @@ namespace HeavenStudio.Games
                     spawnedParticle.PlayScaledAsyncAllChildren(0.5f);
                     break;
                 case SmallType.can:
+                    ParticleSystem spawnedParticle1 = Instantiate(_canCutParticle, _particleCutPoint);
+                    spawnedParticle1.PlayScaledAsyncAllChildren(1);
                     break;
                 case SmallType.bat:
+                    ParticleSystem spawnedParticle2 = Instantiate(_batCutParticle, _particleCutPoint);
+                    spawnedParticle2.PlayScaledAsyncAllChildren(0.5f);
                     break;
                 case SmallType.broom:
+                    ParticleSystem spawnedParticle3 = Instantiate(_broomCutParticle, _particleCutPoint);
+                    spawnedParticle3.PlayScaledAsyncAllChildren(0.5f);
                     break;
             }
         }
@@ -1008,6 +1020,8 @@ namespace HeavenStudio.Games
                 case HugeType.freezer:
                     break;
                 case HugeType.peach:
+                    ParticleSystem spawnedParticle2 = Instantiate(hit ? _peachHitParticle : _peachCutParticle, hit ? _particleHitPoint : _particleCutPoint);
+                    spawnedParticle2.PlayScaledAsyncAllChildren(1);
                     break;
             }
         }
