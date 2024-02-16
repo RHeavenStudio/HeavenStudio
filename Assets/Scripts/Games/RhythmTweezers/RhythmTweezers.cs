@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Starpelly;
+
 using DG.Tweening;
 using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
@@ -253,7 +253,7 @@ namespace HeavenStudio.Games
                         spawnedHairs.Add(hair);
                         hair.gameObject.SetActive(true);
                         hair.GetComponent<Animator>().Play("SmallAppear", 0, 1);
-                        float rot = -58f + 116 * Mathp.Normalize((float)crEvent.relativeBeat, 0, crHandlerInstance.intervalLength - 1);
+                        float rot = -58f + 116 * MathUtils.Normalize((float)crEvent.relativeBeat, 0, crHandlerInstance.intervalLength - 1);
                         hair.transform.eulerAngles = new Vector3(0, 0, rot);
                         hair.createBeat = crEvent.beat;
                     }
@@ -263,7 +263,7 @@ namespace HeavenStudio.Games
                         spawnedLongs.Add(hair);
                         hair.gameObject.SetActive(true);
                         hair.GetComponent<Animator>().Play("LongAppear", 0, 1);
-                        float rot = -58f + 116 * Mathp.Normalize((float)crEvent.relativeBeat, 0, crHandlerInstance.intervalLength - 1);
+                        float rot = -58f + 116 * MathUtils.Normalize((float)crEvent.relativeBeat, 0, crHandlerInstance.intervalLength - 1);
                         hair.transform.eulerAngles = new Vector3(0, 0, rot);
                         hair.createBeat = crEvent.beat;
                     }

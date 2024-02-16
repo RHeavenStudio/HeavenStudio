@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
-using Starpelly;
+
 
 namespace HeavenStudio.Games.Scripts_MonkeyWatch
 {
@@ -78,10 +78,10 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
         private void SetArrowsToTime(int hours, int minutes, int seconds)
         {
-            float normalizedHour = Mathp.Normalize(hours + (minutes / 60f) + (seconds / 3600f), 0f, 12f);
+            float normalizedHour = MathUtils.Normalize(hours + (minutes / 60f) + (seconds / 3600f), 0f, 12f);
             anchorHour.localEulerAngles = new Vector3(0, 0, -Mathf.LerpUnclamped(0, 360, normalizedHour));
 
-            float normalizedMinute = Mathp.Normalize(minutes + (seconds / 60f), 0, 60);
+            float normalizedMinute = MathUtils.Normalize(minutes + (seconds / 60f), 0, 60);
             anchorMinute.localEulerAngles = new Vector3(0, 0, -Mathf.LerpUnclamped(0, 360, normalizedMinute));
         }
     }

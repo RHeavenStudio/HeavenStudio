@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Starpelly;
+
 
 namespace HeavenStudio.Util
 {
@@ -287,7 +287,7 @@ namespace HeavenStudio.Util
             while (bendTimer < bendTime)
             {
                 bendTimer += Time.deltaTime;
-                float normalizedProgress = Mathp.Normalize(bendTimer, 0, bendTime);
+                float normalizedProgress = MathUtils.Normalize(bendTimer, 0, bendTime);
                 float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, normalizedProgress);
                 audioSource.pitch = Mathf.Min(currentPitch, bendedPitch);
                 yield return null;
@@ -302,7 +302,7 @@ namespace HeavenStudio.Util
             while (bendTimer < bendTime)
             {
                 bendTimer += Time.deltaTime;
-                float normalizedProgress = Mathp.Normalize(bendTimer, 0, bendTime);
+                float normalizedProgress = MathUtils.Normalize(bendTimer, 0, bendTime);
                 float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, 1 - normalizedProgress);
                 audioSource.pitch = Mathf.Max(currentPitch, pitch);
                 yield return null;

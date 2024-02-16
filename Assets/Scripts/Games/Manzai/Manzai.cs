@@ -9,11 +9,23 @@ using TMPro;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
+    using Jukebox;
     public static class RvlManzaiLoader
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("manzai", "(WIP) Manzai", "72003D", false, false, new List<GameAction>()
+            RiqEntity BoingUpdater(string datamodel, RiqEntity e)
+            {
+                if (datamodel == "manzai/pun" && (e["boing"] == 1))
+                {
+                    e.datamodel = "manzai/boing";
+                    return e;
+                }
+                return null;
+            }
+            RiqBeatmap.OnUpdateEntity += BoingUpdater;
+
+            return new Minigame("manzai", "Manzai", "72003D", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
@@ -33,24 +45,50 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], e["boing"]); },
+                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 0, e["crowd"], e["random"]); },
 
-                    function = delegate { 
+                    /*function = delegate { 
                         var e = eventCaller.currentEntity;
-                        Manzai.instance.DoPun(e.beat, e["boing"], e["pun"]); },
+                        Manzai.instance.DoPun(e.beat, 0, e["pun"]); },*/
                     defaultLength = 4,
 
                     parameters = new List<Param>()
                     {
-                        new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
-                        /*new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
+                        //new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
+                        new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => !(bool)x, new string[] { "pun" }),
-                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "unused" })
-                        }),*/
+                            //new Param.CollapseParam((x, _) => (bool)x, new string[] { "unused" })
+                        }),
                         new Param("pun", Manzai.Puns.FutongaFuttonda, "Which Pun?", "Which pun will Kosuke say?"),
                         //new Param("unused", false, "Include Unused", "Will unused puns be picked?"),
                         new Param("pitch", true, "Pitch Voiceline", "Will the pun pitch with the tempo?"),
+                        new Param("crowd", Manzai.Crowd.Default, "Crowd Sounds", "How the crowd will sound during the input."),
+                    }
+                },
+                new GameAction("boing", "Pun (Boing)")
+                {
+                    preFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        Manzai.PunSFX(e.beat, e["pun"], e["pitch"], 1, e["crowd"], e["random"]); },
+
+                    /*function = delegate { 
+                        var e = eventCaller.currentEntity;
+                        Manzai.instance.DoPun(e.beat, 1, e["pun"]); },*/
+                    defaultLength = 4,
+
+                    parameters = new List<Param>()
+                    {
+                        //new Param("boing", Manzai.BoingType.Normal, "Pun Type", "Will Kosuke mess up his pun?"),
+                        new Param("random", true, "Random Voiceline", "Use a random pun?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => !(bool)x, new string[] { "pun" }),
+                            //new Param.CollapseParam((x, _) => (bool)x, new string[] { "unused" })
+                        }),
+                        new Param("pun", Manzai.Puns.FutongaFuttonda, "Which Pun?", "Which pun will Kosuke say?"),
+                        //new Param("unused", false, "Include Unused", "Will unused puns be picked?"),
+                        new Param("pitch", true, "Pitch Voiceline", "Will the pun pitch with the tempo?"),
+                        new Param("crowd", Manzai.Crowd.Default, "Crowd Sounds", "How the crowd will sound during the input."),
                     }
                 },
                 /* new GameAction("customBoing", "Custom Boing")
@@ -83,6 +121,20 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("lightsEnabled", false, "Spotlights", "Whether the spotlights will be turned on"),
+                    },
+                },
+                new GameAction("crowd", "Crowd Animations")
+                {
+                    preFunction = delegate {
+                        var e = eventCaller.currentEntity; 
+                        Manzai.instance.CrowdAnimation(e.beat, e.length, e["animation"], e["loop"]); 
+                    },
+                    defaultLength = 1.0f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("animation", Manzai.CrowdAnimationList.Bop, "Animation", "What animation the crowd will play."),
+                        new Param("loop", new EntityTypes.Integer(1, 16, 4), "Loop Interval (x4)", "How many quarter-beats the animation will wait before looping"),
                     },
                 }},
                 new List<string>() { "rvl", "normal" },
@@ -122,10 +174,14 @@ namespace HeavenStudio.Games
         [SerializeField] Animator DonaiyanenBubble;
         [SerializeField] Animator BothBirdsAnim;
         [SerializeField] Animator StageAnim;
+        [SerializeField] Animator CrowdAnim;
 
         [SerializeField] Transform PivotL;
         [SerializeField] Transform PivotR;
         [SerializeField] Transform PivotD;
+        [SerializeField] Transform CrowdPos;
+
+        [SerializeField] ParticleSystem Feathers;
 
         bool ravenBop = true;
         bool vultureBop = true;
@@ -150,8 +206,33 @@ namespace HeavenStudio.Games
         bool hitDonaiyanen = false;
 
         double lastWhiffBeat = double.MinValue;
+
+        double lastTappedBeat = double.MinValue;
         bool canDodge = true;
 
+        float randomBubbleBoth = 0.0f;
+
+        Sound crowdSound;
+
+        bool isHolding = false;
+        bool isPlayingReadyAnimationForTapMode = false;
+
+        bool easterEgg1 = false;
+        bool easterEgg2 = false;
+
+        bool boingHasCrowdSounds = true;
+        bool crowdCanCheerSound = true;
+        bool crowdCanCheerAnimation = true;
+        bool crowdIsCheering = false;
+        double crowdLastMissAnimation = double.MinValue;
+
+        bool jumpUp = false;
+        bool jumpDown = false;
+        float jumpStart;
+        float jumpApex;
+        float jumpLength;
+        double startJumpTime = double.MinValue;
+        float jumpHeight = 1;
 
 
         public enum WhoBops
@@ -170,11 +251,11 @@ namespace HeavenStudio.Games
 
         public enum Puns
         {
-            /*AichiniAichinna,
-            AmmeteAmena,
-            ChainaniNichaina,
+            AichiniAichinna = 0,
+            AmmeteAmena = 1,
+            /*ChainaniNichaina,
             DenwariDenwa,*/                    //short animation
-            FutongaFuttonda,
+            FutongaFuttonda = 4,
             /*HiromegaHirameida,
             IkagariKatta,
             IkugawaIkura,                    //short animation (boing unused)
@@ -182,20 +263,20 @@ namespace HeavenStudio.Games
             KarewaKare,
             KouchagaKouchou,
             KusagaKusai,                     //short animation (boing unused)
-            MegaminiwaMegane,
-            MikangaMikannai,
-            NekogaNekoronda,
-            OkanewaOkkane,
-            OkurezeKitteOkure,
+            MegaminiwaMegane,*/
+            MikangaMikannai = 13,
+            /*NekogaNekoronda,*/
+            OkanewaOkkane = 15,
+            /*OkurezeKitteOkure,
             OmochinoKimochi,
             OmoinoHokaOmoi,
-            PuringaTappurin,
-            RakudawaRakugana,
-            RoukadaKatarouka,
+            PuringaTappurin,*/
+            RakudawaRakugana = 20,
+            /*RoukadaKatarouka,
             SaiyoMinasai,
-            SakanaKanaMasakana,
-            SarugaSaru,                      //short animation (boing unused)
-            ShaiinniNanariNashain_Unused,    //fully unused
+            SakanaKanaMasakana,*/
+            SarugaSaru = 24,                      //short animation (boing unused)
+            /*ShaiinniNanariNashain_Unused,    //fully unused
             SuikawaYasuika,
             TaigaTabetaina,
             TaininiKittai,
@@ -204,7 +285,7 @@ namespace HeavenStudio.Games
             TonakaiyoOtonokoi,
             TorinikugaTorininkui,
             UmetteUmena,*/
-            Muted,
+            Muted = 34,
         }
 
         static readonly Dictionary<string, int> boingLengths = new() {
@@ -224,6 +305,23 @@ namespace HeavenStudio.Games
         {
             Inside,
             Outside,
+        }
+
+        public enum Crowd
+        {
+            Default,
+            Practice,
+            Silent,
+        }
+
+        public enum CrowdAnimationList
+        {
+            Idle,
+            Bop,
+            Cheer,
+            Uproar,
+            Angry,
+            Jump,
         }
 
         const int IAAltDownCat = IAMAXCAT;
@@ -287,7 +385,7 @@ namespace HeavenStudio.Games
 
         public void BopAnimationRaven()
         {
-            if (ravenCanBop && ravenCanBopTemp)
+            if (ravenCanBop && ravenCanBopTemp && !isHolding)
                 RavenAnim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
@@ -297,7 +395,7 @@ namespace HeavenStudio.Games
                 VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
-        public void DoPun(double beat, int isBoing, int whichPun)
+        public void DoPun(double beat, int isBoing, int whichPun, bool isPitched, int crowdSounds)
         {
             int punOrBoing = isBoing;
 
@@ -308,48 +406,78 @@ namespace HeavenStudio.Games
 
             if (punOrBoing == (int)Manzai.BoingType.Normal)
             {
-                DoPunHai(beat, whichPun);
+                DoPunHai(beat, whichPun, isPitched, crowdSounds);
             }
 
             if (punOrBoing == (int)Manzai.BoingType.Boing)
             {
-                DoPunBoing(beat, whichPun);
+                DoPunBoing(beat, whichPun, isPitched, crowdSounds);
             }
             //Debug.Log(punOrBoing);
+
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 4.0, delegate { crowdAnimReset(); }),
+            });
         }
 
-        public static void PunSFX(double beat, int whichPun, bool isPitched, int isBoing)
+        public static void PunSFX(double beat, int whichPun, bool isPitched, int isBoing, int crowdSounds, bool random)
         {
+            // you don't need to use this once all the puns are in but this makes everything automatic for now 👍 -AJ
+            if (random) whichPun = (int)Enum.GetValues(typeof(Puns)).GetValue(UnityEngine.Random.Range(0, 7)); // just replace 7 with the max
             var punName= Enum.GetName(typeof(Puns), whichPun);
-            float pitch = isPitched ? Conductor.instance.songBpm/98 : 1;
+            float pitch = isPitched ? (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch : 1;
+            double offset = isPitched ? (0.05/(Conductor.instance.GetBpmAtBeat(beat)/98)) : 0.05;
             var sounds = new List<MultiSound.Sound>();
             int boing  = isBoing;
             int length = boingLengths.GetValueOrDefault(punName);
             int syllables = boing == 0 ? 9 : (length != 0 ? length : 4);
 
-            Debug.Log(length);
+            BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { Manzai.instance.DoPun(beat, isBoing, whichPun, isPitched, crowdSounds); }),
+                });
 
             for (int i = 0; i < syllables; i++) {
-                sounds.Add(new MultiSound.Sound($"manzai/{punName}{i + 1}", beat + (i * 0.25), pitch, offset: i == 0 ? 0.05 : 0));
+                sounds.Add(new MultiSound.Sound($"manzai/{punName}{i + 1}", beat + (i * 0.25), pitch, offset: i == 0 ? offset : 0));
             }
 
             if (isBoing == 1)
             {
-                sounds.Add(new MultiSound.Sound("manzai/boing", syllables == 6 ? beat + 1.50 : beat + 1.25 , pitch));
+                sounds.Add(new MultiSound.Sound("manzai/boing", syllables == 6 ? beat + 1.50 : beat + 1.25 , pitch, volume: 0.8f));
+                sounds.Add(new MultiSound.Sound("manzai/comedy", syllables == 6 ? beat + 1.50 : beat + 1.25 , pitch, volume: 0.8f));
             }
 
             MultiSound.Play(sounds.ToArray(), forcePlay: true);
         }
 
-        public void DoPunHai(double beat, int whichPun)
+        public void DoPunHai(double beat, int whichPun, bool isPitched, int crowdSounds)
         {
             vultureCanBop = false;
             canDodge = false;
             int bubbleAnimation = UnityEngine.Random.Range(0, 2);
             var punName= Enum.GetName(typeof(Puns), whichPun);
+            if (isPitched)
+            {
+                ScheduleInput(beat, 2.5f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustLP : HaiJustRP, crowdSounds == 0 ? HaiMiss : Nothing, Nothing);
+                ScheduleInput(beat, 3.0f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustRP : HaiJustLP, crowdSounds == 0 ? HaiMiss : Nothing, Nothing);
+            }
+            else
+            {
+                ScheduleInput(beat, 2.5f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustL  : HaiJustR,  crowdSounds == 0 ? HaiMiss : Nothing, Nothing);
+                ScheduleInput(beat, 3.0f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustR  : HaiJustL,  crowdSounds == 0 ? HaiMiss : Nothing, Nothing);
+            }
 
-            ScheduleInput(beat, 2.5f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustL : HaiJustR, HaiMiss, Nothing);
-            ScheduleInput(beat, 3.0f, InputAction_BasicPress, bubbleAnimation == 0 ? HaiJustR : HaiJustL, HaiMiss, Nothing);
+            if (crowdSounds == 1)
+            {
+                float pitch = isPitched ? (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch : 1;
+                double offset = isPitched ? (0.03/(Conductor.instance.GetBpmAtBeat(beat)/98)) : 0.03;
+
+                var sounds = new List<MultiSound.Sound>();
+                sounds.Add(new MultiSound.Sound("manzai/crowdHai1", beat + 2.50, pitch, offset: offset, volume: 0.7f));
+                sounds.Add(new MultiSound.Sound("manzai/crowdHai2", beat + 3.00, pitch, offset: offset, volume: 0.7f));
+                MultiSound.Play(sounds.ToArray(), forcePlay: true);
+            }
 
             if ((punName == "DenwariDenwa") || (punName == "IkugawaIkura") || (punName == "KusagaKusai") || (punName == "SarugaSaru"))
             {
@@ -357,9 +485,10 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; }),
+                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; bubbleRandom(); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { crowdCanCheerSound = (crowdSounds == 0); }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
-                    new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat); }),
+                    new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat, crowdSounds); }),
                 });
             }
             else
@@ -370,59 +499,104 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 1.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; }),
+                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; canDodge = true; bubbleRandom(); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { crowdCanCheerSound = (crowdSounds == 0); }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
-                    new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat); }),
+                    new BeatAction.Action(beat + 3.25f, delegate { audienceRespond(beat, crowdSounds); }),
                 });
             }
         }
 
-        public void HaiJustFull(float state, int side)
+        public void  bubbleRandom()
         {
-            SoundByte.PlayOneShotGame("manzai/hai", pitch: Conductor.instance.songBpm/98);
+            randomBubbleBoth = UnityEngine.Random.Range(-100, 101) / 1000.0f;
+        }
+
+        public void HaiJustFull(float state, int side, PlayerActionEvent caller, bool isPitched)
+        {
+            double beat = caller.startBeat + caller.timer;
+
+            SoundByte.PlayOneShotGame("manzai/hai", pitch: isPitched ? (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch : 1);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("manzai/miss1");
                 SoundByte.PlayOneShotGame("manzai/missClick");
+                if (crowdCanCheerSound && crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                    crowdIsCheering = false;
+                    crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
+                }
             }
             else
             {
                 SoundByte.PlayOneShotGame("manzai/HaiAccent");
+
+                if (crowdCanCheerSound && crowdCanCheerAnimation && !crowdIsCheering)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Cheer", 0.5f);
+                    crowdIsCheering = true;
+                }
+
                 if (side == 0)
                 {
+                    float randomL = UnityEngine.Random.Range(-40, 41) / 1000.0f;
+
+                    Quaternion rotL = new Quaternion();
+                    rotL.Set(0, 0, randomBubbleBoth + randomL, 1);
+                    PivotL.rotation = rotL;
+                    HaiBubbleL.DoScaledAnimationAsync("HaiL", 0.5f);
                     hitHaiL = true;
                 }
                 if (side == 1)
                 {
+                    float randomR = UnityEngine.Random.Range(-40, 41) / 1000.0f;
+
+                    Quaternion rotR = new Quaternion();
+                    rotR.Set(0, 0, randomBubbleBoth + randomR, 1);
+                    PivotR.rotation = rotR;
+                    HaiBubbleR.DoScaledAnimationAsync("HaiR", 0.5f);
                     hitHaiR = true;
                 }
             }
-            RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
+            if (easterEgg1 && easterEgg2)
+            {
+                RavenAnim.DoScaledAnimationAsync(side == 0 ? "Move" : "MoveM", 0.5f);
+            }
+            else
+            {
+                RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
+            }
             VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+
+            if (crowdSound != null)
+            {
+                crowdSound.Stop();
+            }
         }
 
-        public void HaiJustL(PlayerActionEvent caller, float state)
-        {
-            // var euler = PivotL.eulerAngles;
-            // euler.z = UnityEngine.Random.Range(0, 100);
-            int side = 0;
+        public void HaiJustL(PlayerActionEvent caller, float state) => HaiJustFull(state, 0, caller, false);
 
-            HaiBubbleL.DoScaledAnimationAsync("HaiL", 0.5f);
-            HaiJustFull(state, side);
-        }
+        public void HaiJustR(PlayerActionEvent caller, float state) => HaiJustFull(state, 1, caller, false);
 
-        public void HaiJustR(PlayerActionEvent caller, float state)
-        {
-            int side = 1;
+        public void HaiJustLP(PlayerActionEvent caller, float state) => HaiJustFull(state, 0, caller, true);
 
-            HaiBubbleR.DoScaledAnimationAsync("HaiR", 0.5f);
-            HaiJustFull(state, side);
-        }
-
+        public void HaiJustRP(PlayerActionEvent caller, float state) => HaiJustFull(state, 1, caller, true);
 
         public void HaiMiss(PlayerActionEvent caller)
         {
-            SoundByte.PlayOneShotGame("manzai/disappointed");
+            if (crowdSound != null)
+            {
+                crowdSound.Stop();
+            }
+            crowdSound = SoundByte.PlayOneShotGame("manzai/disappointed");
+            
+            if (crowdCanCheerAnimation)
+            {
+                CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                crowdIsCheering = false;
+                crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
+            }
             
             //SoundByte.PlayOneShotGame("manzai/hai");
             //RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
@@ -435,9 +609,16 @@ namespace HeavenStudio.Games
             {
                 RavenAnim.DoScaledAnimationAsync("Ready", 0.5f);
             }
+            else
+            {
+                if (GameManager.instance.autoplay)
+                {
+                    RavenAnim.DoScaledAnimationAsync("Ready", 0.5f);
+                }
+            }
         }
 
-        public void DoPunBoing(double beat, int whichPun)
+        public void DoPunBoing(double beat, int whichPun, bool isPitched, int crowdSounds)
         {
             vultureCanBop = false;
             canDodge = false;
@@ -446,7 +627,20 @@ namespace HeavenStudio.Games
             int length = boingLengths.GetValueOrDefault(punName);
             int syllables = length != 0 ? length : 4;
 
-            ScheduleInput(beat, 2.5f, InputAction_Alt, BoingJust, BoingMiss, Nothing);
+            ScheduleInput(beat, 2.5f, InputAction_Alt, isPitched ? BoingJustP : BoingJustNP , crowdSounds == 0 ? BoingMiss : Nothing, Nothing);
+
+            if (crowdSounds == 1)
+            {
+                float pitch = isPitched ? (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch : 1;
+                double offset = isPitched ? (0.03/(Conductor.instance.GetBpmAtBeat(beat)/98)) : 0.03;
+
+                var sounds = new List<MultiSound.Sound>();
+                sounds.Add(new MultiSound.Sound("manzai/crowdDon1", beat + 0.00 + 2.50, pitch, offset: offset, volume: 0.7f));
+                sounds.Add(new MultiSound.Sound("manzai/crowdDon2", beat + 0.25 + 2.50, pitch,                 volume: 0.7f));
+                sounds.Add(new MultiSound.Sound("manzai/crowdDon3", beat + 0.75 + 2.50, pitch,                 volume: 0.7f));
+                sounds.Add(new MultiSound.Sound("manzai/crowdDon4", beat + 1.00 + 2.50, pitch,                 volume: 0.7f));
+                MultiSound.Play(sounds.ToArray(), forcePlay: true);
+            }
 
             if ((punName == "DenwariDenwa") || (punName == "IkugawaIkura") || (punName == "KusagaKusai") || (punName == "SarugaSaru"))
             {
@@ -454,12 +648,14 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 1.25f, delegate { isPreparingForBoing = true; }),
+                    new BeatAction.Action(beat + 0.50f, delegate { isPreparingForBoing = true; }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.50 : beat + 1.25, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.75 : beat + 1.50, delegate { canDodge = true; }),
+                    new BeatAction.Action(beat + 2.00f, delegate { ravenCanBop = false; }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
-                    new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { boingHasCrowdSounds = (crowdSounds == 0); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { crowdCanCheerSound = (crowdSounds == 0); }),
+                    new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat, crowdSounds); }),
                     new BeatAction.Action(beat + 3.20f, delegate { isPreparingForBoing = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                 });
@@ -470,72 +666,142 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + 0.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
                     new BeatAction.Action(beat + 0.50f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
+                    new BeatAction.Action(beat + 0.50f, delegate { isPreparingForBoing = true; }),
                     new BeatAction.Action(beat + 1.00f, delegate { VultureAnim.DoScaledAnimationAsync("Talk", 0.5f); }),
-                    new BeatAction.Action(beat + 1.25f, delegate { isPreparingForBoing = true; }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.50 : beat + 1.25, delegate { VultureAnim.DoScaledAnimationAsync("Boing", 0.5f); }),
                     new BeatAction.Action(syllables == 6 ? beat + 1.75 : beat + 1.50, delegate { canDodge = true; }),
+                    new BeatAction.Action(beat + 2.00f, delegate { ravenCanBop = false; }),
                     new BeatAction.Action(beat + 2.00f, delegate { SlapReady(); }),
-                    new BeatAction.Action(beat + 2.25f, delegate { ravenCanBop = false; }),
-                    new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { boingHasCrowdSounds = (crowdSounds == 0); }),
+                    new BeatAction.Action(beat + 2.25f, delegate { crowdCanCheerSound = (crowdSounds == 0); }),
+                    new BeatAction.Action(beat + 3.00f, delegate { audienceRespond(beat, crowdSounds); }),
                     new BeatAction.Action(beat + 3.20f, delegate { isPreparingForBoing = false; }),
                     new BeatAction.Action(beat + 3.25f, delegate { vultureCanBop = true; ravenCanBop = true; }),
                 });
             }
         }
 
-        public void audienceRespond(double beat)
+        public void audienceRespond(double beat, int crowdSounds)
         {
-            if (hitHaiL && hitHaiR)
+            if (crowdSounds == 0)
             {
-                BeatAction.New(instance, new List<BeatAction.Action>()
+                if (hitHaiL && hitHaiR)
                 {
-                    new BeatAction.Action(beat + 3.50f, delegate { SoundByte.PlayOneShotGame("manzai/haiClap"); }),
-                });
-            }
-            if (hitDonaiyanen)
-            {
-                BeatAction.New(instance, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + 3.50f, delegate { crowdSound = SoundByte.PlayOneShotGame("manzai/haiClap"); }),
+                    });
+                }
+                if (hitDonaiyanen)
                 {
-                    new BeatAction.Action(beat + 3.00f, delegate { SoundByte.PlayOneShotGame("manzai/donaiyanenLaugh"); }),
-                });
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + 3.00f, delegate { crowdSound = SoundByte.PlayOneShotGame("manzai/donaiyanenLaugh"); }),
+                    });
+                }
+                crowdCanCheerSound = false;
             }
             hitHaiL = false;
             hitHaiR = false;
             hitDonaiyanen = false;
         }
 
-        public void BoingJust(PlayerActionEvent caller, float state)
+        public void BoingJustP(PlayerActionEvent caller, float state)
         {
-            SoundByte.PlayOneShotGame("manzai/donaiyanen", pitch: Conductor.instance.songBpm/98);
+            BoingJust(caller, state, true);
+        }
+
+        public void BoingJustNP(PlayerActionEvent caller, float state)
+        {
+            BoingJust(caller, state, false);
+        }
+
+        public void BoingJust(PlayerActionEvent caller, float state, bool isPitched)
+        {
+            double beat = caller.startBeat + caller.timer;
+            float pitch = isPitched ? (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch : 1;
+
+            var sounds = new List<MultiSound.Sound>();
+            sounds.Add(new MultiSound.Sound("manzai/donaiyanen1", beat + 0.00, pitch));
+            sounds.Add(new MultiSound.Sound("manzai/donaiyanen2", beat + 0.25, pitch));
+            sounds.Add(new MultiSound.Sound("manzai/donaiyanen3", beat + 0.75, pitch));
+            sounds.Add(new MultiSound.Sound("manzai/donaiyanen4", beat + 1.00, pitch));
+            MultiSound.Play(sounds.ToArray(), forcePlay: true);
+
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("manzai/miss1");
                 SoundByte.PlayOneShotGame("manzai/missClick");
+                if (crowdCanCheerSound && crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                    crowdIsCheering = false;
+                    crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
+                }
             }
             else
             {
                 SoundByte.PlayOneShotGame("manzai/donaiyanenAccent");
+
+                if (crowdCanCheerSound && crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Uproar", 0.5f);
+                    crowdIsCheering = true;
+                }
+
+                Feathers.Play();
+
                 hitDonaiyanen = true;
             }
             RavenAnim.DoScaledAnimationAsync("Attack", 0.5f);
             VultureAnim.DoScaledAnimationAsync("Damage", 0.5f);
 
-            int bubbleAnimation = UnityEngine.Random.Range(0, 2);
-            DonaiyanenBubble.DoScaledAnimationAsync(bubbleAnimation == 1 ? "DonaiyanenL" : "DonaiyanenR", 0.5f);
+
+            float randomD = UnityEngine.Random.Range(-40, 41) / 200.0f;
+            float randomH = UnityEngine.Random.Range(-50, 51) / 30.0f;
+            float randomV = UnityEngine.Random.Range(40, 81) / 40.0f;
+
+            Quaternion rotD = new Quaternion();
+            rotD.Set(0, 0, randomD, 1);
+            PivotD.rotation = rotD;
+
+            Vector3 posD = new Vector3();
+            posD.Set(randomH - 1.5f, randomV, 0);
+            PivotD.position = posD;
+
+            DonaiyanenBubble.DoScaledAnimationAsync("Donaiyanen", 0.5f);
+
+            if (crowdSound != null)
+            {
+                crowdSound.Stop();
+            }
         }
 
         public void BoingMiss(PlayerActionEvent caller)
         {
+            if (crowdSound != null)
+            {
+                crowdSound.Stop();
+            }
+
             if (!missedWithWrongButton)
             {
-                SoundByte.PlayOneShotGame("manzai/disappointed");
+                crowdSound = SoundByte.PlayOneShotGame("manzai/disappointed");
+                missedWithWrongButton = false;
             }
-            missedWithWrongButton = false;
+
+            if (crowdCanCheerAnimation)
+            {
+                CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                crowdIsCheering = false;
+                crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
+            }
         }
 
         public void CustomBoing(double beat)
         {
-            SoundByte.PlayOneShotGame("manzai/Boing", pitch: Conductor.instance.songBpm/98);
+            SoundByte.PlayOneShotGame("manzai/boing", pitch: (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch, volume: 0.8f);
+            SoundByte.PlayOneShotGame("manzai/comedy", pitch: (Conductor.instance.GetBpmAtBeat(beat)/98)*Conductor.instance.TimelinePitch, volume: 0.8f);
             VultureAnim.DoScaledAnimationAsync("Boing", 0.5f);
         }
 
@@ -577,6 +843,90 @@ namespace HeavenStudio.Games
             StageAnim.DoScaledAnimationAsync(lightsEnabled ? "LightsOff" : "LightsOn", 0.5f);
         }
 
+        public void CrowdAnimation(double beat, double length, int animation, int loop)
+        {
+            double loopAsDouble = loop * 0.25;
+
+            var actions = new List<BeatAction.Action>();
+                if (animation != 1)
+                {
+                    actions.Add(new(beat - 0.25, delegate { crowdCanCheerAnimation = false; }));
+                }
+                if (animation != 1 && animation != 5)
+                {
+                    actions.Add(new(beat, delegate { doCrowdAnimation(animation, loopAsDouble, beat); }));
+                    actions.Add(new(beat + length, delegate { CrowdAnim.DoScaledAnimationAsync("Idle"); }));
+                }
+                else
+                {
+                    for (int i = 0; i * loopAsDouble < length; i++)
+                    { 
+                        actions.Add(new(beat + i * loopAsDouble, delegate { doCrowdAnimation(animation, loopAsDouble, beat); }));
+                    }
+                }
+                actions.Add(new(beat + length, delegate { crowdCanCheerAnimation = true; }));
+            BeatAction.New(this, actions);
+        }
+
+        public void doCrowdAnimation(int animation, double loop, double beat)
+        {
+            var crowdAnimation= Enum.GetName(typeof(CrowdAnimationList), animation);
+
+            if (!crowdIsCheering && ((crowdLastMissAnimation + 2) < conductor.songPositionInBeatsAsDouble) && animation == 1)
+            {
+                CrowdAnim.DoScaledAnimationAsync($"{crowdAnimation}", 0.5f);
+            }
+            if (animation == 5)
+            {
+                jumpHeight = Math.Min((float)loop, 2f);
+                jumpLength = (float)loop;
+
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { startJumpTime = conductor.songPositionInBeatsAsDouble; }),
+                });
+            }
+            if (animation != 1 && animation != 5)
+            {
+                CrowdAnim.DoScaledAnimationAsync($"{crowdAnimation}", 0.5f);
+            }
+        }
+
+        public void crowdJumpAnimation()
+        {
+            float jumpPos = Conductor.instance.GetPositionFromBeat(startJumpTime, jumpLength);
+            if (jumpPos >= 0 && jumpPos <= 1f)
+            {
+                float yMul = jumpPos * 2f - 1f;
+                float yWeight = -(yMul * yMul) + 1f;
+                CrowdPos.transform.localPosition = new Vector3(0, jumpHeight * yWeight, -2);
+            }
+        }
+
+        public void crowdAnimReset()
+        {
+            if (crowdIsCheering)
+            {
+                CrowdAnim.DoScaledAnimationAsync("Idle", 0.5f);
+                crowdIsCheering = false;
+            }
+        }
+
+        public void kasukeHaiAnimFull()
+        {
+            SoundByte.PlayOneShotGame("manzai/hai");
+            if (easterEgg1 && easterEgg2)
+            {
+                int danceSide = UnityEngine.Random.Range(0, 2);
+                RavenAnim.DoScaledAnimationAsync(danceSide == 0 ? "Move" : "MoveM", 0.5f);
+            }
+            else
+            {
+                RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
+            }
+            VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+        }
+
         private void Update()
         {
             if (isMoving) {
@@ -594,35 +944,49 @@ namespace HeavenStudio.Games
                     if (isPreparingForBoing)
                     {
                         RavenAnim.DoScaledAnimationAsync("Ready", 0.5f);
+                        isPlayingReadyAnimationForTapMode = true;
                         ravenCanBop = false;
                     }
                     else
                     {
-                        SoundByte.PlayOneShotGame("manzai/hai");
-                        RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
-                        VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                        kasukeHaiAnimFull();
+                        Manzai.instance.ScoreMiss(0.5f);
                         lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
                         ravenCanBopTemp = false;
+                        if (crowdCanCheerAnimation)
+                        {
+                            CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                            crowdIsCheering = false;
+                            crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
+                        }
                     }
                 }
                 else
                 {
-                    SoundByte.PlayOneShotGame("manzai/hai");
-                    RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
-                    VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                    kasukeHaiAnimFull();
+                    Manzai.instance.ScoreMiss(0.5f);
                     lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
                     ravenCanBopTemp = false;
+                    if (crowdCanCheerAnimation)
+                    {
+                        CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                        crowdIsCheering = false;
+                        crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
+                    }
                 }
             }
+
             if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && PlayerInput.GetIsAction(InputAction_BasicRelease) && isPreparingForBoing)
             {
                 RavenAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 ravenCanBop = true;
             }
+
             if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt))
             {
                 SoundByte.PlayOneShotGame("manzai/miss2");
                 RavenAnim.DoScaledAnimationAsync("Spin", 0.5f);
+                Manzai.instance.ScoreMiss(0.5f);
                 lastWhiffBeat = conductor.songPositionInBeatsAsDouble;
                 ravenCanBopTemp = false;
                 if (canDodge)
@@ -630,20 +994,82 @@ namespace HeavenStudio.Games
                     VultureAnim.DoScaledAnimationAsync("Dodge", 0.5f);
                     vultureCanBopTemp = false;
                 }
+                if (crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                    crowdIsCheering = false;
+                    crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
+                }
             }
+
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && IsExpectingInputNow(InputAction_Alt) && PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
             {
-                SoundByte.PlayOneShotGame("manzai/missWrongButton");
-                SoundByte.PlayOneShotGame("manzai/hai");
-                RavenAnim.DoScaledAnimationAsync("Talk", 0.5f);
-                VultureAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                if (boingHasCrowdSounds)
+                {
+                    crowdSound = SoundByte.PlayOneShotGame("manzai/missWrongButton");
+                }
+                else
+                {
+                    crowdSound = SoundByte.PlayOneShotGame("manzai/missClick");
+                }
+                kasukeHaiAnimFull();
                 missedWithWrongButton = true;
+                if (crowdCanCheerAnimation)
+                {
+                    CrowdAnim.DoScaledAnimationAsync("Angry", 0.5f);
+                    crowdIsCheering = false;
+                    crowdLastMissAnimation = conductor.songPositionInBeatsAsDouble;
+                }
             }
+
             if ((lastWhiffBeat + 1) < conductor.songPositionInBeatsAsDouble)
             {
                 ravenCanBopTemp = true;
                 vultureCanBopTemp = true;
             }
+
+            if (((lastTappedBeat + 1) < conductor.songPositionInBeatsAsDouble && !isPlayingReadyAnimationForTapMode && isHolding))
+            {
+                RavenAnim.DoScaledAnimationAsync("Ready", 0.5f);
+                isPlayingReadyAnimationForTapMode = true;
+            }
+
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && PlayerInput.GetIsAction(InputAction_BasicPress))
+            {
+                isHolding = true;
+                lastTappedBeat = conductor.songPositionInBeatsAsDouble;
+            }
+
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && (PlayerInput.GetIsAction(InputAction_BasicRelease) || PlayerInput.GetIsAction(InputAction_Alt)))
+            {
+                if(isPlayingReadyAnimationForTapMode && PlayerInput.GetIsAction(InputAction_BasicRelease))
+                {
+                    RavenAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                }
+                isHolding = false;
+                isPlayingReadyAnimationForTapMode = false;
+            }
+
+            if (PlayerInput.GetPadDown(InputController.ActionsPad.ButtonL))
+            {
+                easterEgg1 = true;
+            }
+
+            if (PlayerInput.GetPadUp(InputController.ActionsPad.ButtonL))
+            {
+                easterEgg1 = false;
+            }
+
+            if (PlayerInput.GetPadDown(InputController.ActionsPad.ButtonR))
+            {
+                easterEgg2 = true;
+            }
+
+            if (PlayerInput.GetPadUp(InputController.ActionsPad.ButtonR))
+            {
+                easterEgg2 = false;
+            }
+
             if (canDodge == false)
             {
                 vultureCanBopTemp = true;
@@ -652,8 +1078,7 @@ namespace HeavenStudio.Games
 
         public void LateUpdate()
         {
-            var rot = PivotL.eulerAngles;
-            rot.z = 50;
+            crowdJumpAnimation();
         }
 
         public override void OnGameSwitch(double beat)
@@ -664,13 +1089,13 @@ namespace HeavenStudio.Games
                 {
                     break;
                 }
-                if(entity.datamodel != "manzai/pun" || entity.beat + entity.length <= beat) //check for dispenses that happen right before the switch
+                if((entity.datamodel != "manzai/pun" &&  entity.datamodel != "manzai/boing") || entity.beat + entity.length < beat) //check for pun that happen right before the switch
                 {
                     continue;
                 }
                 bool isOnGameSwitchBeat = entity.beat == beat;
-                DoPun(entity.beat, entity["boing"], entity["pun"]);
-                break;
+                if(entity.datamodel == "manzai/pun")   {DoPun(entity.beat, 0, entity["pun"], entity["pitch"], entity["crowd"]);}
+                if(entity.datamodel == "manzai/boing") {DoPun(entity.beat, 1, entity["pun"], entity["pitch"], entity["crowd"]);}
             }
         }
     }
