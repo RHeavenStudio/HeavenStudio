@@ -775,26 +775,43 @@ namespace HeavenStudio
                         },
                         preFunction : delegate {
                             var e = eventCaller.currentEntity;
-                            GameManager.instance.PlaySFXArbitrary(e.beat, e["game"], e["sfxName"], e["pitch"], e["offset"]);
+                            GameManager.PlaySFXArbitrary(e.beat, e["game"], e["sfxName"], e["pitch"], e["offset"]);
                         }
                     ),
                 }),
 
                 new Minigame("countIn", "Count-Ins", "", false, true, new List<GameAction>()
                 {
+                    new GameAction("count-in", "Count-In", 4f, true,
+                        new List<Param>()
+                        {
+                            new Param("alt", false, "Alt", "Set the type of sounds to use for the count-in."),
+                            new Param("go", false, "Go!", "Toggle to end the count-in with \"Go!\""),
+                        },
+                        preFunction : delegate {
+                            var e = eventCaller.currentEntity;
+                            SoundEffects.CountIn(e.beat, e.length, e["alt"], e["go"]);
+                        }
+                    ),
                     new GameAction("4 beat count-in", "4 Beat Count-In", 4f, true,
                         new List<Param>()
                         {
                             new Param("type", SoundEffects.CountInType.Normal, "Type", "Set the type of sounds to use for the count-in.")
                         },
-                        delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn(e.beat, e.length / 4f, e["type"]); }
+                        delegate {
+                            var e = eventCaller.currentEntity;
+                            SoundEffects.FourBeatCountIn(e.beat, e.length / 4f, e["type"]);
+                        }
                     ),
                     new GameAction("8 beat count-in", "8 Beat Count-In", 8f, true,
                         new List<Param>()
                         {
                             new Param("type", SoundEffects.CountInType.Normal, "Type", "Set the type of sounds to use for the count-in.")
                         },
-                        delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn(e.beat, e.length / 8f, e["type"]); }
+                        delegate {
+                            var e = eventCaller.currentEntity;
+                            SoundEffects.EightBeatCountIn(e.beat, e.length / 8f, e["type"]);
+                        }
                     ),
                     new GameAction("count", "Count", 1f, false,
                         new List<Param>()
@@ -802,13 +819,16 @@ namespace HeavenStudio
                             new Param("type", SoundEffects.CountNumbers.One, "Type", "Set the number to say."),
                             new Param("toggle", false, "Alt", "Toggle if the alternate version of this voice line should be used.")
                         },
-                        delegate { var e = eventCaller.currentEntity; SoundEffects.Count(e["type"], e["toggle"]); }
+                        delegate {
+                            var e = eventCaller.currentEntity;
+                            SoundEffects.Count(e["type"], e["toggle"]);
+                        }
                     ),
                     new GameAction("cowbell", "Cowbell",
                         function: delegate { SoundEffects.Cowbell(); }
                     ),
                     new GameAction("ready!", "Ready!", 2f, true,
-                        function: delegate { var e = eventCaller.currentEntity; SoundEffects.Ready(e.beat, e.length / 2f); }
+                        function: delegate { var e = eventCaller.currentEntity; SoundEffects.Ready(e.beat, (e.length / 2f)); }
                     ),
                     new GameAction("and", "And", 0.5f,
                         function: delegate { SoundEffects.And(); }
