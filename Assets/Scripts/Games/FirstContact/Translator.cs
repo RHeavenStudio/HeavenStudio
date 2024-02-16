@@ -4,7 +4,7 @@ using UnityEngine;
 
 using DG.Tweening;
 using HeavenStudio.Util;
-using Starpelly;
+
 
 namespace HeavenStudio.Games.Scripts_FirstContact
 {

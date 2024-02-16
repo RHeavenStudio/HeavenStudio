@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using Starpelly;
+
 using Jukebox;
 using TMPro;
 using System.Linq;
@@ -146,7 +146,7 @@ namespace HeavenStudio.Editor.Track
         public void UpdateMarker()
         {
             mouseOver = Timeline.instance.timelineState.selected && Timeline.instance.MouseInTimeline &&
-                Timeline.instance.MousePos2Beat.IsWithin((float)entity.beat, (float)entity.beat + entity.length) &&
+                HeavenStudio.Util.MathUtils.IsBetween(Timeline.instance.MousePos2Beat, (float)entity.beat, (float)entity.beat + entity.length) &&
                 Timeline.instance.MousePos2Layer == (int)entity["track"];
 
             eventLabel.overflowMode = (mouseHovering || moving || resizing || inResizeRegion) ? TextOverflowModes.Overflow : TextOverflowModes.Ellipsis;

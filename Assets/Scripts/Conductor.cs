@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Starpelly;
 using Jukebox;
 using HeavenStudio.Util;
 using System.Data.Common;
@@ -469,7 +468,7 @@ namespace HeavenStudio
             {
                 beat = Mathf.Max(beat, 0);
             }
-            float a = Mathp.Normalize(beat, (float)startBeat, (float)(startBeat + length));
+            float a = MathUtils.Normalize(beat, (float)startBeat, (float)(startBeat + length));
             return a;
         }
 
