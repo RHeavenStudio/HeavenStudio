@@ -635,11 +635,10 @@ namespace HeavenStudio
             /// <param name="function"><para>What the block does when read during playback</para>
             /// <para>Only does this if the game that it is associated with is loaded.</para></param>
             /// <param name="inactiveFunction">What the block does when read while the game it's associated with isn't loaded.</param>
-            /// <param name="prescheduleFunction">What the block does when the GameManager seeks to this cue for pre-scheduling.</param>
+            /// <param name="preFunction">What the block does when the GameManager seeks to this cue for pre-scheduling.</param>
             /// <param name="hidden">Prevents the block from being shown in the game list. Block will still function normally if it is in the timeline.</param>
-            /// <param name="preFunction">Runs two beats before this event is reached.</param>
             /// <param name="priority">Priority of this event. Higher priority events will be run first.</param>
-            public GameAction(string actionName, string displayName, float defaultLength = 1, bool resizable = false, List<Param> parameters = null, EventCallback function = null, EventCallback inactiveFunction = null, EventCallback prescheduleFunction = null, bool hidden = false, EventCallback preFunction = null, int priority = 0, float preFunctionLength = 2.0f)
+            public GameAction(string actionName, string displayName, float defaultLength = 1, bool resizable = false, List<Param> parameters = null, EventCallback function = null, EventCallback inactiveFunction = null, EventCallback preFunction = null, bool hidden = false, int priority = 0, float preFunctionLength = 2.0f)
             {
                 this.actionName = actionName;
                 if (displayName == String.Empty) this.displayName = actionName;
@@ -651,7 +650,7 @@ namespace HeavenStudio
 
                 this.function = function ?? delegate { };
                 this.inactiveFunction = inactiveFunction ?? delegate { };
-                this.preFunction = prescheduleFunction ?? delegate { };
+                this.preFunction = preFunction ?? delegate { };
                 this.priority = priority;
                 this.preFunctionLength = preFunctionLength;
             }
@@ -752,6 +751,31 @@ namespace HeavenStudio
                         delegate
                         {
                             GameManager.instance.ToggleInputs(eventCaller.currentEntity["toggle"]);
+                        }
+                    ),
+                    new GameAction("play animation", "Play Animation", 0.5f, false,
+                        new List<Param>()
+                        {
+                            new Param("animator", "", "Animator", "Specify which animator in the scene to play an animation on. (i.e \"Plalin\" or \"Game/Paddlers/Player\")"),
+                            new Param("animation", "", "Animation", "Specify the name of the animation to play."),
+                            new Param("scale", new EntityTypes.Float(0, 5, 0.5f), "Animation Scale", "The time scale of the animation. Higher values are faster."),
+                        },
+                        delegate {
+                            var e = eventCaller.currentEntity;
+                            GameManager.instance.PlayAnimationArbitrary(e["animator"], e["animation"], e["scale"]);
+                        }
+                    ),
+                    new GameAction("play sfx", "Play SFX", 0.5f, false,
+                        new List<Param>()
+                        {
+                            new Param("game", "", "Which Game", "Specify the game's sfx to play. An empty input will play global sfx."),
+                            new Param("sfxName", "", "SFX Name", "The name of the sfx to play."),
+                            new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The sfx's pitch."),
+                            new Param("offset", new EntityTypes.Float(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),
+                        },
+                        preFunction : delegate {
+                            var e = eventCaller.currentEntity;
+                            GameManager.instance.PlaySFXArbitrary(e.beat, e["game"], e["sfxName"], e["pitch"], e["offset"]);
                         }
                     ),
                 }),
