@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out SlotMonster instance)) {
                             var e = eventCaller.currentEntity;
-                            instance.StartInterval(e.beat, e.length, e["auto"], e["eyeType"], 0);
+                            instance.StartInterval(e, e["auto"], e["eyeType"], 0);
                         }
                     },
                     defaultLength = 3f,
@@ -77,6 +77,24 @@ namespace HeavenStudio.Games.Loaders
                         new Param("flash", new Color(1f, 1f, 0.68f), "Button Flash Color", "Set the color of the flash of the buttons."),
                     },
                 },
+                new GameAction("gameplayModifiers", "Gameplay Modifiers")
+                {
+                    function = delegate {
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out SlotMonster instance)) {
+                            var e = eventCaller.currentEntity;
+                            instance.GameplayModifiers(e["lottery"], e["stars"]);
+                        }
+                    },
+                    defaultLength = 0.5f,
+                    priority = 1,
+                    parameters = new List<Param>()
+                    {
+                        new Param("lottery", true, "Lottery", "Toggle if the win particles should play after a successful sequence.", new() {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "stars" }),
+                        }),
+                        new Param("stars", false, "Use Stars", "Use stars instead of coins? (From the Korean version of RH DS)"),
+                    },
+                },
             }
             );
         }
@@ -85,6 +103,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using System.Linq;
     using Scripts_SlotMonster;
     public class SlotMonster : Minigame
     {
@@ -114,10 +133,13 @@ namespace HeavenStudio.Games
         [SerializeField] Animator smAnim;
         [SerializeField] Animator[] eyeAnims;
 
+        [Header("Objects")]
         [SerializeField] SlotButton[] buttons;
-        public Color buttonFlashColor;
+        [SerializeField] ParticleSystem winParticles;
+        public Color buttonFlashColor = new(1f, 1f, 0.68f);
 
         private List<RiqEntity> gameEntities;
+        private bool doWin = true;
 
         private Sound rollingSound;
         private int currentEyeSprite = 1;
@@ -146,9 +168,9 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
-            gameEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == "slotMonster");
+            gameEntities = gameManager.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == "slotMonster");
             foreach (RiqEntity e in gameEntities.FindAll(e => e.datamodel == "slotMonster/startInterval" && e.beat < beat && e.beat + e.length > beat)) {
-                StartInterval(e.beat, e.length, e["auto"], e["eyeType"], beat);
+                StartInterval(e, e["auto"], e["eyeType"], beat);
             }
         }
 
@@ -160,26 +182,22 @@ namespace HeavenStudio.Games
             int thisButton = GetCurrentButton();
             if (thisButton == -1) return false;
             bool isLast = thisButton == maxButtons - 1;
-            string hitSfx = "slotMonster/stop_" + (isLast && isHit ? "hit" : (thisButton + 1));
-            SoundByte.PlayOneShotGame(hitSfx, forcePlay: true);
             for (int i = thisButton; i < (isLast ? 3 : thisButton + 1); i++)
             {
-                buttons[thisButton].Press();
+                buttons[thisButton].Press(isHit);
                 if (eyeAnims[thisButton].IsPlayingAnimationNames("Spin")) {
                     int eyeSprite = currentEyeSprite;
                     string anim = "EyeItem";
                     if (!isHit) {
-                        do {
-                            eyeSprite = UnityEngine.Random.Range(0, 9);
-                        } while (eyeSprite == (currentEyeSprite - 1));
-                        anim += eyeSprite + 1;
-                    } else {
-                        if (timing == 1) {
+                        eyeSprite = UnityEngine.Random.Range(1, 9);
+                        if (eyeSprite >= currentEyeSprite) eyeSprite++;
+                        anim += eyeSprite;
+                    } else { // only do all this if it's actually a hit
+                        if (timing == -1) { // if the timing is early
                             eyeSprite = (eyeSprite + 1) % 9;
                         }
                         anim += eyeSprite + 1;
-                        if (timing != 0) {
-                            // string += lol
+                        if (timing != 0) { // if it's a barely
                             anim += "Barely";
                         }
                     }
@@ -187,19 +205,27 @@ namespace HeavenStudio.Games
                     eyeAnims[thisButton].Play(anim, 0, 0);
                 }
             }
+            bool isMiss = buttons.Any(x => x.missed);
+            string hitSfx = "slotMonster/stop_" + (isLast && isHit && !isMiss ? "hit" : (thisButton + 1));
+            SoundByte.PlayOneShotGame(hitSfx, forcePlay: true);
             if (isLast) {
                 if (rollingSound != null) rollingSound.Stop();
+                if (isHit && doWin) {
+                    SoundByte.PlayOneShotGame("slotMonster/win");
+                    winParticles.Play();
+                }
             }
             currentButton++;
             return isLast && isHit;
         }
 
-        public void StartInterval(double beat, float length, bool autoPass, int eyeSprite, double gameSwitchBeat)
+        public void StartInterval(RiqEntity si, bool autoPass, int eyeSprite, double gameSwitchBeat)
         {
-            List<RiqEntity> slotActions = gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat >= beat && e.beat < beat + length);
+            List<RiqEntity> slotActions = gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat >= si.beat && e.beat < si.beat + si.length);
+            if (slotActions.Count <= 0) return;
 
             SoundByte.PlayOneShotGame("slotMonster/start_touch", forcePlay: true);
-            smAnim.DoScaledAnimationFromBeatAsync("Prepare", 0.5f, beat);
+            smAnim.DoScaledAnimationFromBeatAsync("Prepare", 0.5f, si.beat);
             foreach (var button in buttons) {
                 button.anim.Play("PopUp", 0, 1);
             }
@@ -232,14 +258,14 @@ namespace HeavenStudio.Games
             BeatAction.New(this, actions);
 
             if (autoPass) {
-                BeatAction.New(this, new() { new(beat + length, delegate {
+                BeatAction.New(this, new() { new(si.beat + si.length, delegate {
                     currentEyeSprite = eyeSprite == 0 ? UnityEngine.Random.Range(1, 10) : eyeSprite;
-                    PassTurn(beat + length, 1, beat, slotActions);
+                    PassTurn(si.beat + si.length, 1, si.beat, si, slotActions);
                 })});
             }
         }
 
-        public void PassTurn(double beat, float length, double startBeat = -1, List<RiqEntity> slotActions = null)
+        public void PassTurn(double beat, float length, double startBeat = -1, RiqEntity startInterval = null, List<RiqEntity> slotActions = null)
         {
             smAnim.DoScaledAnimationFromBeatAsync("Release", 0.5f, beat);
             for (int i = 0; i < eyeAnims.Length; i++) {
@@ -247,11 +273,12 @@ namespace HeavenStudio.Games
             }
             SoundByte.PlayOneShotGame("slotMonster/start_rolling", forcePlay: true);
             rollingSound = SoundByte.PlayOneShotGame("slotMonster/rolling", looping: true, forcePlay: true);
-            if (startBeat < 0 || slotActions == null) {
-                var startInterval = gameEntities.FindLast(e => e.datamodel == "slotMonster/startInterval" && e.beat + e.length < beat);
+
+            startInterval ??= gameEntities.FindLast(e => e.datamodel == "slotMonster/startInterval" && e.beat + e.length < beat);
+            if (startBeat < 0) {
                 startBeat = startInterval.beat;
-                slotActions ??= gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat >= startInterval.beat && e.beat < startInterval.beat + startInterval.length);
             }
+            slotActions ??= gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat >= startInterval.beat && e.beat < startInterval.beat + startInterval.length);
 
             List<BeatAction.Action> actions = new();
             for (int i = 0; i < Mathf.Min(slotActions.Count, 3); i++) // limit to 3 actions
@@ -263,12 +290,16 @@ namespace HeavenStudio.Games
                     buttons[whichSlot].TryFlash();
                 }));
 
-                PlayerActionEvent input = ScheduleInput(beat, slotBeat - startBeat + length, InputAction_BasicPress, ButtonHit, null, null);
-                // input.IsHittable = () => { // ugh this breaks the input check
-                //     int currentButton = GetCurrentButton();
-                //     return currentButton == whichSlot && !buttonsPressed[whichSlot];
-                // };
+                PlayerActionEvent input = ScheduleInput(beat, slotBeat - startBeat + length, InputAction_BasicPress, ButtonHit, null, null, () => {
+                    return GetCurrentButton() == whichSlot && !buttons[whichSlot].pressed;
+                });
             }
+            actions.Add(new(beat + length + startInterval.beat + startInterval.length, delegate {
+                if (rollingSound != null) rollingSound.Stop();
+                if (buttons.Any(x => x.missed)) { // if it's a miss
+                    smAnim.DoScaledAnimationAsync("Lose", 0.5f);
+                }
+            }));
             BeatAction.New(this, actions);
         }
 
@@ -293,6 +324,12 @@ namespace HeavenStudio.Games
                 buttons[i].color = colors[i];
             }
             buttonFlashColor = flashColor;
+        }
+
+        public void GameplayModifiers(bool lottery, bool stars)
+        {
+            // var sheetAnim = winParticles.textureSheetAnimation;
+            doWin = lottery;
         }
     }
 }

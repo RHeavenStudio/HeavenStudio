@@ -11,51 +11,66 @@ namespace HeavenStudio.Games.Scripts_SlotMonster
     public class SlotButton : MonoBehaviour
     {
         public bool pressed;
-        // public double timing;
         public Color color; // used to ease between button colors and button flash colors! wow
+        public PlayerActionEvent input;
+        public bool missed;
 
+        [Header("Components")]
         public Animator anim;
-        public SpriteRenderer[] srs;
+        [SerializeField] SpriteRenderer[] srs;
 
         private bool flashing;
-        const int FLASH_FRAMES = 4;
+        private const float FLASH_FRAMES = 4f;
         private int currentFrame;
 
         private SlotMonster game;
 
         public void Init(SlotMonster instance)
         {
-            color = srs[0].color;
             game = instance;
+            pressed = true;
+            color = srs[0].color;
         }
 
         private void LateUpdate()
         {
-            if (flashing) {
-                foreach (var sr in srs) {
-                    // sr.color = Color.Lerp(color, game.buttonFlashColor, currentFrame / FRAMES);
+            Color newColor = color;
+            if (pressed) {
+                newColor = Color.LerpUnclamped(color, Color.black, 0.5f);
+            } else if (flashing)  {
+                float normalized = currentFrame / FLASH_FRAMES;
 
-                    var normalized = currentFrame / FLASH_FRAMES;
+                Debug.Log("normalized : " + normalized);
+                float newR = EasingFunction.Linear(game.buttonFlashColor.r, color.r, normalized);
+                float newG = EasingFunction.Linear(game.buttonFlashColor.g, color.g, normalized);
+                float newB = EasingFunction.Linear(game.buttonFlashColor.b, color.b, normalized);
 
-                    float newR = EasingFunction.Linear(game.buttonFlashColor.r, color.r, normalized);
-                    float newG = EasingFunction.Linear(game.buttonFlashColor.g, color.g, normalized);
-                    float newB = EasingFunction.Linear(game.buttonFlashColor.b, color.b, normalized);
-
-                    sr.color = new Color(newR, newG, newB);
-                    Debug.Log("sr.color : " + sr.color);
-                    Debug.Log("currentFrame : " + currentFrame);
-                }
-            } else {
-                foreach (var sr in srs) {
-                    sr.color = color;
-                }
+                newColor = new Color(newR, newG, newB);
+                // Debug.Log("currentFrame / FLASH_FRAMES : " + currentFrame + "/" + FLASH_FRAMES);
+                // newColor = Color.LerpUnclamped(color, game.buttonFlashColor, normalized);
+                // Debug.Log("color : " + color);
+                // Debug.Log("newColor : " + newColor);
             }
+
+            foreach (var sr in srs) {
+                sr.color = newColor;
+            }
+            // Color newColor = Color.LerpUnclamped(color, tempColor, 0.45f);
+
+            // foreach (var sr in srs) {
+            //     sr.color = color;
+            // }
         }
 
-        public void Press()
+        public void Press(bool isHit)
         {
             anim.DoScaledAnimationAsync("Press", 0.5f);
             pressed = true;
+            if (!isHit) {
+                missed = true;
+                input.Disable();
+                input.CleanUp();
+            }
         }
 
         public void TryFlash()
