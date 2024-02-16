@@ -6,7 +6,7 @@ using UnityEngine;
 using HeavenStudio.Util;
 using HeavenStudio.Common;
 using HeavenStudio.InputSystem;
-using Starpelly;
+
 using System.Linq;
 
 using SFB;
@@ -472,7 +472,7 @@ namespace HeavenStudio
 
         public float GetPositionFromBeat(float startBeat, float length)
         {
-            float a = Mathp.Normalize((float)songPosBeat, startBeat, startBeat + length);
+            float a = MathUtils.Normalize((float)songPosBeat, startBeat, startBeat + length);
             return a;
         }
 

@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 
-using Starpelly;
 using Jukebox;
 using HeavenStudio.Util;
 using HeavenStudio.Games;
@@ -979,7 +978,7 @@ namespace HeavenStudio
                             }
                         }
                     }
-                    // newGame = gameSwitchs[gameSwitchs.IndexOf(gameSwitchs.Find(c => c.beat == Mathp.GetClosestInList(gameSwitchs.Select(c => c.beat).ToList(), beat)))].datamodel.Split(2);
+                    // newGame = gameSwitchs[gameSwitchs.IndexOf(gameSwitchs.Find(c => c.beat == MathUtils.GetClosestInList(gameSwitchs.Select(c => c.beat).ToList(), beat)))].datamodel.Split(2);
                 }
 
                 if (!GetGameInfo(newGame).fxOnly)
@@ -1225,8 +1224,8 @@ namespace HeavenStudio
             currentGame = game;
             if (GetGameInfo(currentGame) != null)
             {
-                colMain = Colors.Hex2RGB(GetGameInfo(currentGame).color);
-                CircleCursor.SetCursorColors(colMain, Colors.Hex2RGB(GetGameInfo(currentGame).splitColorL), Colors.Hex2RGB(GetGameInfo(currentGame).splitColorR));
+                colMain = StringUtils.Hex2RGB(GetGameInfo(currentGame).color);
+                CircleCursor.SetCursorColors(colMain, StringUtils.Hex2RGB(GetGameInfo(currentGame).splitColorL), StringUtils.Hex2RGB(GetGameInfo(currentGame).splitColorR));
                 if (useMinigameColor) HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(colMain, true);
                 else HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black, false);
             }
@@ -1241,7 +1240,7 @@ namespace HeavenStudio
         private void SetAmbientGlowToCurrentMinigameColor()
         {
             if (GetGameInfo(currentGame) != null)
-                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color), true);
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(StringUtils.Hex2RGB(GetGameInfo(currentGame).color), true);
         }
 
         private bool SongPosLessThanClipLength(float t)
