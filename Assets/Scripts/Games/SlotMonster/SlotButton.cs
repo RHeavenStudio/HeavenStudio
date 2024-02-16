@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using UnityEngine.Playables;
 
 namespace HeavenStudio.Games.Scripts_SlotMonster
 {
@@ -62,11 +63,17 @@ namespace HeavenStudio.Games.Scripts_SlotMonster
             // }
         }
 
-        public void Press(bool isHit)
+        public void Ready()
+        {
+            anim.Play("PopUp", 0, 0);
+            pressed = false;
+        }
+
+        public void Press(bool isMiss)
         {
             anim.DoScaledAnimationAsync("Press", 0.5f);
             pressed = true;
-            if (!isHit) {
+            if (isMiss) {
                 missed = true;
                 input.Disable();
                 input.CleanUp();

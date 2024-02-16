@@ -140,6 +140,7 @@ namespace HeavenStudio.Games
 
         private List<RiqEntity> gameEntities;
         private bool doWin = true;
+        private bool inputsActive = false;
 
         private Sound rollingSound;
         private int currentEyeSprite = 1;
@@ -155,8 +156,8 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)) {
-                _ = HitButton();
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && inputsActive) {
+                HitButton();
                 ScoreMiss();
             }
         }
@@ -177,14 +178,14 @@ namespace HeavenStudio.Games
         // make sure the current button is always between 0 and 2 (buttons 1-3)
         private int GetCurrentButton() => Array.FindIndex(buttons, button => !button.pressed);
 
-        private bool HitButton(bool isHit = false, int timing = 0) // returns true if it's the last one
+        private void HitButton(bool isHit = false, int timing = 0) // returns true if it's the last one
         {
             int thisButton = GetCurrentButton();
-            if (thisButton == -1) return false;
+            if (thisButton == -1) return;
             bool isLast = thisButton == maxButtons - 1;
             for (int i = thisButton; i < (isLast ? 3 : thisButton + 1); i++)
             {
-                buttons[thisButton].Press(isHit);
+                buttons[thisButton].Press(!isHit || timing != 0);
                 if (eyeAnims[thisButton].IsPlayingAnimationNames("Spin")) {
                     int eyeSprite = currentEyeSprite;
                     string anim = "EyeItem";
@@ -210,17 +211,23 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame(hitSfx, forcePlay: true);
             if (isLast) {
                 if (rollingSound != null) rollingSound.Stop();
-                if (isHit && doWin) {
-                    SoundByte.PlayOneShotGame("slotMonster/win");
-                    winParticles.Play();
+                inputsActive = false;
+                if (isHit && !isMiss) {
+                    smAnim.DoScaledAnimationAsync("Win", 0.5f);
+                    if (doWin) {
+                        SoundByte.PlayOneShotGame("slotMonster/win");
+                        winParticles.Play();
+                    }
+                } else {
+                    smAnim.DoScaledAnimationAsync("Lose", 0.5f);
                 }
             }
             currentButton++;
-            return isLast && isHit;
         }
 
         public void StartInterval(RiqEntity si, bool autoPass, int eyeSprite, double gameSwitchBeat)
         {
+            if (rollingSound != null) rollingSound.Stop();
             List<RiqEntity> slotActions = gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat >= si.beat && e.beat < si.beat + si.length);
             if (slotActions.Count <= 0) return;
 
@@ -235,12 +242,10 @@ namespace HeavenStudio.Games
             maxButtons = Mathf.Min(slotActions.Count, 3);
             for (int i = 0; i < maxButtons; i++) // limit to 3 actions
             {
-                buttons[i].anim.Play("PopUp", 0, 0);
-                buttons[i].pressed = false;
+                buttons[i].Ready();
                 eyeAnims[i].Play("Idle", 0, 1);
                 int whichSlot = i;
                 RiqEntity slot = slotActions[whichSlot];
-                // buttons[i].timing = slot.beat;
                 if (slot.beat < gameSwitchBeat) continue;
                 string sfx = "";
                 if (slot["drum"] == (int)DrumTypes.Default) {
@@ -259,7 +264,7 @@ namespace HeavenStudio.Games
 
             if (autoPass) {
                 BeatAction.New(this, new() { new(si.beat + si.length, delegate {
-                    currentEyeSprite = eyeSprite == 0 ? UnityEngine.Random.Range(1, 10) : eyeSprite;
+                    currentEyeSprite = eyeSprite == 0 ? UnityEngine.Random.Range(1, 10) : eyeSprite - 1;
                     PassTurn(si.beat + si.length, 1, si.beat, si, slotActions);
                 })});
             }
@@ -280,26 +285,24 @@ namespace HeavenStudio.Games
             }
             slotActions ??= gameEntities.FindAll(e => e.datamodel == "slotMonster/slot" && e.beat >= startInterval.beat && e.beat < startInterval.beat + startInterval.length);
 
-            List<BeatAction.Action> actions = new();
+            List<BeatAction.Action> actions = new() {
+                new(beat, delegate { inputsActive = true; })
+            };
             for (int i = 0; i < Mathf.Min(slotActions.Count, 3); i++) // limit to 3 actions
             {
                 int whichSlot = i;
                 double slotBeat = slotActions[i].beat;
+                
 
                 actions.Add(new(beat + length + slotBeat - startBeat, delegate {
                     buttons[whichSlot].TryFlash();
                 }));
 
-                PlayerActionEvent input = ScheduleInput(beat, slotBeat - startBeat + length, InputAction_BasicPress, ButtonHit, null, null, () => {
+                PlayerActionEvent input = ScheduleInput(beat, slotBeat - startBeat + length, InputAction_BasicPress, ButtonHit, i == slotActions.Count - 1 ? ButtonEndMiss : null, null/*, () => {
                     return GetCurrentButton() == whichSlot && !buttons[whichSlot].pressed;
-                });
+                }*/);
+                buttons[whichSlot].input = input;
             }
-            actions.Add(new(beat + length + startInterval.beat + startInterval.length, delegate {
-                if (rollingSound != null) rollingSound.Stop();
-                if (buttons.Any(x => x.missed)) { // if it's a miss
-                    smAnim.DoScaledAnimationAsync("Lose", 0.5f);
-                }
-            }));
             BeatAction.New(this, actions);
         }
 
@@ -310,12 +313,21 @@ namespace HeavenStudio.Games
                 <= -1f => 1,
                 _ => 0,
             };
-            bool isWin = HitButton(true, timing);
-            if (isWin) {
-                if (rollingSound != null) rollingSound.Stop();
-                smAnim.DoScaledAnimationAsync("Win", 0.5f);
-            }
+            HitButton(true, timing);
             if (state is >= 1f or <= -1f) SoundByte.PlayOneShot("nearMiss");
+        }
+
+        private void ButtonEndMiss(PlayerActionEvent caller)
+        {
+            Debug.Log("miss i guess");
+            if (rollingSound != null) rollingSound.Stop();
+            inputsActive = false;
+            smAnim.DoScaledAnimationAsync("Lose", 0.5f);
+            foreach (var anim in eyeAnims) {
+                if (anim.IsPlayingAnimationNames("Spin")) {
+                    anim.Play("Idle", 0, 1);
+                }
+            }
         }
 
         public void ButtonColor(Color[] colors, Color flashColor)
