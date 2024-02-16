@@ -1,3 +1,29 @@
+/* Hello my brothers, it is RaffyTaffy14 here in the code comments with another monologue.
+I still do not know much crap about Unity or C#.
+Despite that, I have managed to cobble together Sumo Brothers in a fairly functional state.
+A lot of the code may be very weird or just useless (especially the older stuff), but it works for now.
+I started making Sumo Brothers for Heaven Studio all the way back in January of 2023 (13 months ago!)
+Sumo Brothers at that time was VERY janky. Heck, I used blurry screenshots from videos as reference guides for everything.
+Progress on Sumo stopped a few weeks into the project, being as functional as how I left Lockstep for rasmus to pick up.
+In June, I finally learned how to cue inputs (I was doing something wrong for the longest time), so now Finishing Poses could be cued.
+Nothing happened until December, when I coded most of the functionality for the Slapping/Stomping/Posing
+switching, which is how it currently works now.
+
+From the end of January 2024 to the middle of February 2024, I spent dozens of hours meticulously animating
+every animation (there's *74* when you factor out duplicate animations for the Glasses Brother) for the game, from "SumoSlapPrepare" all
+the way to "SumoPoseGBopMiss2".
+No one thought that there would be anyone crazy enough to hecking animate Sumo Brothers.
+People said that it would be animator suicide to even attempt to animate Sumo Brothers.
+Yet, here I am, still alive and still too crazy.
+
+Sometime during the mass animation process, I managed to get back in contact with the upscaler for this game for a potential
+redo of the Inu Sensei sprites.
+Let's just say that the sprites got a MASSIVE glow up (thx UnbrokenMage)
+Animation for Sumo Brothers still isn't done, as I am yet to animate the 3rd and 4th poses which are (currently) absent.
+Despite the absense for those 20 animations (yes 2 poses takes up 20 animations), I have managed to do a whopping 54 animations
+during my ~2 week grind.
+
+I hope that whomever may be reading this shall enjoy the wonders of Sumo Brothers and have a great rest of your day. */
 using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
 using System;
@@ -11,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("sumoBrothers", "Sumo Brothers \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "EDED15", false, false, new List<GameAction>()
+            return new Minigame("sumoBrothers", "Sumo Brothers", "EDED15", false, false, new List<GameAction>()
             {
                 
                 new GameAction("bop", "Bop")
@@ -107,6 +133,8 @@ namespace HeavenStudio.Games
         [SerializeField] Animator sumoBrotherGHead;
         [SerializeField] Animator sumoBrotherPHead;
         [SerializeField] Animator impact;
+        [SerializeField] Animator dust;
+
 
         [Header("Properties")]
         /*static List<queuedSumoInputs> queuedInputs = new List<queuedSumoInputs>();
@@ -128,7 +156,7 @@ namespace HeavenStudio.Games
         private int sumoSlapDir;
         private int sumoPoseType;
         private string sumoPoseTypeCurrent = "1";
-        private int sumoPoseTypeNext = 1;
+        private int sumoPoseTypeNext;
 
         private bool lookingAtCamera = false;
 
@@ -200,7 +228,8 @@ namespace HeavenStudio.Games
             sumoStompDir = false;
             sumoSlapDir = 0;
 
-            sumoPoseType = UnityEngine.Random.Range(1, 2);
+            sumoPoseType = 0;
+            sumoPoseTypeNext = 0;
 
         }
 
@@ -284,7 +313,7 @@ namespace HeavenStudio.Games
                 }
 
                 print("current sumo state: " + sumoState + " and previous sumo state: " + sumoStatePrevious);
-                print("sumo pose type: " + sumoPoseTypeCurrent);
+                print("sumo pose type: " + sumoPoseType);
         }
 
         public void Bop(double beat, float length, bool inu, bool sumo, bool inuAuto, bool sumoAuto)
@@ -573,9 +602,11 @@ namespace HeavenStudio.Games
             sumoStatePrevious = sumoState;
             sumoState = SumoState.Pose;
 
-            if (randomPose) {
-                poseType = UnityEngine.Random.Range(1, 1);
+            if (sumoPoseTypeNext > 0 & randomPose) {
+                poseType = UnityEngine.Random.Range(1, 2);
                 if (poseType >= sumoPoseTypeNext) poseType++;
+            } else if (randomPose) {
+                poseType = UnityEngine.Random.Range(1, 3);
             }
 
             var cond = Conductor.instance;
@@ -615,21 +646,22 @@ namespace HeavenStudio.Games
             sumoPoseTypeCurrent = sumoPoseTypeNext.ToString();
             sumoPoseType = sumoPoseTypeNext;
 
+            sumoBrotherP.DoScaledAnimationAsync("SumoPoseP" + sumoPoseTypeCurrent, 0.5f);
+            sumoBrotherG.DoScaledAnimationAsync("SumoPoseG" + sumoPoseTypeCurrent, 0.5f);
+            sumoBrotherGHead.DoScaledAnimationAsync("SumoGPose" + sumoPoseTypeCurrent, 0.5f);
+
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("sumoBrothers/tink");
                 sumoBrotherPHead.DoScaledAnimationAsync("SumoPPoseBarely" + sumoPoseTypeCurrent, 0.5f);
+                // Dust is not meant to show up on a barely, need to somehow code that eventually
+                dust.DoScaledAnimationAsync("dustGone", 0.5f);
             }
             else
             {
                 sumoBrotherPHead.DoScaledAnimationAsync("SumoPPose" + sumoPoseTypeCurrent, 0.5f);
             }
             SoundByte.PlayOneShotGame("sumoBrothers/pose");
-
-            sumoBrotherP.DoScaledAnimationAsync("SumoPoseP" + sumoPoseTypeCurrent, 0.5f);
-            sumoBrotherG.DoScaledAnimationAsync("SumoPoseG" + sumoPoseTypeCurrent, 0.5f);
-            sumoBrotherGHead.DoScaledAnimationAsync("SumoGPose" + sumoPoseTypeCurrent, 0.5f);
-
 
         }
 

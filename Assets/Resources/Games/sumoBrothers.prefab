@@ -2020,6 +2020,7 @@ MonoBehaviour:
   sumoBrotherGHead: {fileID: 1817974397600853338}
   sumoBrotherPHead: {fileID: 3294882688726592496}
   impact: {fileID: 4014474221203422495}
+  dust: {fileID: 0}
 --- !u!1 &2594614983758801598
 GameObject:
   m_ObjectHideFlags: 0
@@ -2592,7 +2593,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4284038126118897443
 Transform:
   m_ObjectHideFlags: 0
@@ -7188,7 +7189,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 6.94, y: 4.13}
+  m_Size: {x: 4, y: 4.8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
