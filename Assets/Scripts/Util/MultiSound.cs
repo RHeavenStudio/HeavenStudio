@@ -36,12 +36,15 @@ namespace HeavenStudio.Util
             }
         }
 
-
         public static MultiSound Play(Sound[] snds, bool game = true, bool forcePlay = false)
         {
-            if (Conductor.instance == null) return null;
+            return Play(snds.ToList(), game, forcePlay);
+        }
 
-            List<Sound> sounds = snds.ToList();
+        public static MultiSound Play(List<Sound> sounds, bool game = true, bool forcePlay = false)
+        {
+            if (Conductor.instance == null || sounds.Count <= 0) return null;
+
             GameObject go = new GameObject("MultiSound");
             MultiSound ms = go.AddComponent<MultiSound>();
 
