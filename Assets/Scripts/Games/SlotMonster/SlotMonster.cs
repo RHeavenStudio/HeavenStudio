@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("slotMonster", "Slot Monster", "ffffff", false, false, new List<GameAction>()
+            return new Minigame("slotMonster", "Slot Monster", "d10914", false, false, new List<GameAction>()
             {
                 new GameAction("startInterval", "Start Interval")
                 {
@@ -132,6 +132,7 @@ namespace HeavenStudio.Games
         [Header("Animators")]
         [SerializeField] Animator smAnim;
         [SerializeField] Animator[] eyeAnims;
+        private int[] eyeSprites = new int[3];
 
         [Header("Objects")]
         [SerializeField] SlotButton[] buttons;
@@ -156,10 +157,15 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && inputsActive) {
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && inputsActive && !buttons[currentButton].pressed) {
                 HitButton();
                 ScoreMiss();
             }
+        }
+
+        private void LateUpdate()
+        {
+            currentButton = Array.FindIndex(buttons, button => !button.pressed);
         }
 
         public override void OnPlay(double beat)
@@ -175,23 +181,21 @@ namespace HeavenStudio.Games
             }
         }
 
-        // make sure the current button is always between 0 and 2 (buttons 1-3)
-        private int GetCurrentButton() => Array.FindIndex(buttons, button => !button.pressed);
-
-        private void HitButton(bool isHit = false, int timing = 0) // returns true if it's the last one
+        private void HitButton(bool isHit = false, int timing = 0)
         {
-            int thisButton = GetCurrentButton();
-            if (thisButton == -1) return;
-            bool isLast = thisButton == maxButtons - 1;
-            for (int i = thisButton; i < (isLast ? 3 : thisButton + 1); i++)
+            bool isLast = currentButton == maxButtons - 1;
+            buttons[currentButton].Press(!isHit || timing != 0);
+            for (int i = currentButton; i < (isLast ? 3 : currentButton + 1); i++)
             {
-                buttons[thisButton].Press(!isHit || timing != 0);
-                if (eyeAnims[thisButton].IsPlayingAnimationNames("Spin")) {
+                if (eyeAnims[i].IsPlayingAnimationNames("Spin")) {
                     int eyeSprite = currentEyeSprite;
                     string anim = "EyeItem";
                     if (!isHit) {
-                        eyeSprite = UnityEngine.Random.Range(1, 9);
-                        if (eyeSprite >= currentEyeSprite) eyeSprite++;
+                        do {
+                            eyeSprite = UnityEngine.Random.Range(1, 10);
+                        } while (eyeSprite == currentEyeSprite || eyeSprites.Contains(eyeSprite));
+
+                        eyeSprites[i] = eyeSprite;
                         anim += eyeSprite;
                     } else { // only do all this if it's actually a hit
                         if (timing == -1) { // if the timing is early
@@ -202,12 +206,11 @@ namespace HeavenStudio.Games
                             anim += "Barely";
                         }
                     }
-                    Debug.Log(anim);
-                    eyeAnims[thisButton].Play(anim, 0, 0);
+                    eyeAnims[i].Play(anim, 0, 0);
                 }
             }
             bool isMiss = buttons.Any(x => x.missed);
-            string hitSfx = "slotMonster/stop_" + (isLast && isHit && !isMiss ? "hit" : (thisButton + 1));
+            string hitSfx = "slotMonster/stop_" + (isLast && isHit && !isMiss ? "hit" : (currentButton + 1));
             SoundByte.PlayOneShotGame(hitSfx, forcePlay: true);
             if (isLast) {
                 if (rollingSound != null) rollingSound.Stop();
@@ -222,7 +225,6 @@ namespace HeavenStudio.Games
                     smAnim.DoScaledAnimationAsync("Lose", 0.5f);
                 }
             }
-            currentButton++;
         }
 
         public void StartInterval(RiqEntity si, bool autoPass, int eyeSprite, double gameSwitchBeat)
@@ -233,9 +235,6 @@ namespace HeavenStudio.Games
 
             SoundByte.PlayOneShotGame("slotMonster/start_touch", forcePlay: true);
             smAnim.DoScaledAnimationFromBeatAsync("Prepare", 0.5f, si.beat);
-            foreach (var button in buttons) {
-                button.anim.Play("PopUp", 0, 1);
-            }
 
             List<MultiSound.Sound> sounds = new();
             List<BeatAction.Action> actions = new();
@@ -253,7 +252,6 @@ namespace HeavenStudio.Games
                 } else {
                     sfx = Enum.GetName(typeof(DrumTypes), (int)slot["drum"]).ToLower();
                 }
-                // Debug.Log(sfx);
                 sounds.Add(new(sfx + "DrumNTR", slot.beat));
                 actions.Add(new(slot.beat, delegate {
                     buttons[whichSlot].TryFlash();
@@ -292,16 +290,14 @@ namespace HeavenStudio.Games
             {
                 int whichSlot = i;
                 double slotBeat = slotActions[i].beat;
-                
 
                 actions.Add(new(beat + length + slotBeat - startBeat, delegate {
                     buttons[whichSlot].TryFlash();
                 }));
 
-                PlayerActionEvent input = ScheduleInput(beat, slotBeat - startBeat + length, InputAction_BasicPress, ButtonHit, i == slotActions.Count - 1 ? ButtonEndMiss : null, null/*, () => {
-                    return GetCurrentButton() == whichSlot && !buttons[whichSlot].pressed;
-                }*/);
-                buttons[whichSlot].input = input;
+                buttons[whichSlot].input = ScheduleInput(beat, slotBeat - startBeat + length, InputAction_BasicPress, ButtonHit, i == slotActions.Count - 1 ? ButtonEndMiss : null, null, () => {
+                    return currentButton == whichSlot && !buttons[whichSlot].pressed;
+                });
             }
             BeatAction.New(this, actions);
         }
@@ -340,7 +336,8 @@ namespace HeavenStudio.Games
 
         public void GameplayModifiers(bool lottery, bool stars)
         {
-            // var sheetAnim = winParticles.textureSheetAnimation;
+            var sheetAnim = winParticles.textureSheetAnimation;
+            sheetAnim.frameOverTime = stars ? 1 : 0;
             doWin = lottery;
         }
     }

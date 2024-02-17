@@ -56,11 +56,6 @@ namespace HeavenStudio.Games.Scripts_SlotMonster
             foreach (var sr in srs) {
                 sr.color = newColor;
             }
-            // Color newColor = Color.LerpUnclamped(color, tempColor, 0.45f);
-
-            // foreach (var sr in srs) {
-            //     sr.color = color;
-            // }
         }
 
         public void Ready()
@@ -75,8 +70,10 @@ namespace HeavenStudio.Games.Scripts_SlotMonster
             pressed = true;
             if (isMiss) {
                 missed = true;
-                input.Disable();
-                input.CleanUp();
+                if (input != null) {
+                    input.Disable();
+                    input.CleanUp();
+                }
             }
         }
 
