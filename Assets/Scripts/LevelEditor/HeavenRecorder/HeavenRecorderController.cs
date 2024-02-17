@@ -64,7 +64,8 @@ public class HeavenRecorderController : MonoBehaviour
     {
         exporting = false;
         FFmpegSession _session;
-        _session = FFmpegSession.CreateWithArguments("-y -i "+ "\"" + pathHeavenRecorder + "\"" + "temp.mp4 -i " +  "\"" + pathHeavenRecorder + "\"" + "temp.wav -c:v copy -c:a aac " + "\"" + actualDirectory + "\"");
+        print("-y -i "+ "\"" + pathHeavenRecorder + "\"" + "temp.mp4 -i " +  "\"" + pathHeavenRecorder + "\"" + "temp.wav -filter:a "+ "\"" + "volume=3" + "\"" + "-c:v copy -c:a aac " + "\"" + actualDirectory + "\"");
+        _session = FFmpegSession.CreateWithArguments("-y -i "+ "\"" + pathHeavenRecorder + "\"" + "temp.mp4 -i " +  "\"" + pathHeavenRecorder + "\"" + "temp.wav -af silenceremove=1:0:0dB -filter:a "+ "\"" + "volume=3" + "\"" + " -c:v copy -c:a aac " + "\"" + actualDirectory + "\"");
         _session.Close();
         _session.Dispose(); 
         _session = null;
@@ -141,7 +142,7 @@ public class HeavenRecorderController : MonoBehaviour
         recorder.height = PersistentDataManager.gameSettings.resolutionHeight;
         prevVolume = PersistentDataManager.gameSettings.masterVolume;
         dialog.RecordingIndicator(true);
-        GlobalGameManager.ChangeMasterVolume(0.6f);
+        GlobalGameManager.ChangeMasterVolume(0.3f);
         if(!recorder.enabled)
         {
             if(File.Exists(pathHeavenRecorder + "temp.wav"))

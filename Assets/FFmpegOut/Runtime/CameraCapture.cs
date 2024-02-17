@@ -75,7 +75,7 @@ namespace FFmpegOut
 
         void WarnFrameDrop()
         {
-            if (++_frameDropCount != 10) return;
+            if (++_frameDropCount != 4) return;
 
             Debug.LogWarning(
                 "Significant frame droppping was detected. This may introduce " +
