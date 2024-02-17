@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Newtonsoft.Json;
-
 namespace HeavenStudio
 {
     public class EntityTypes
@@ -34,6 +32,18 @@ namespace HeavenStudio
                 this.min = min;
                 this.val = val;
                 this.max = max;
+            }
+        }
+
+        public struct Button
+        {
+            public string buttonLabel;
+            public Func<string> onClick;
+
+            public Button(string buttonLabel, Func<string> onClick)
+            {
+                this.buttonLabel = buttonLabel;
+                this.onClick = onClick;
             }
         }
 

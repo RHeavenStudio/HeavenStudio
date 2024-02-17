@@ -10,7 +10,7 @@ namespace HeavenStudio.Games
     {
         public enum CountNumbers { One, Two, Three, Four }
         public readonly static string[] countNames = { "one", "two", "one", "two", "three", "four" };
-        public readonly static float[]  timings    = {  0f,    2f,    4f,    5f,    6f,      7f    };
+        public readonly static float[] timings     = {  0f,    2f,    4f,    5f,    6f,      7f    };
         public static void Count(int type, bool alt)
         {
             SoundByte.PlayOneShot("count-ins/" + countNames[type] + (!alt ? "1" : "2"));

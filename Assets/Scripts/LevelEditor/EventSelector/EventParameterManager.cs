@@ -6,6 +6,9 @@ using HeavenStudio.Editor.Track;
 using Jukebox;
 using Jukebox.Legacy;
 using System.Linq;
+using System;
+using System.Windows.Forms.VisualStyles;
+using System.Windows.Forms;
 
 namespace HeavenStudio.Editor
 {
@@ -18,6 +21,7 @@ namespace HeavenStudio.Editor
         [Header("Property Prefabs")]
         [SerializeField] private GameObject IntegerP;
         [SerializeField] private GameObject FloatP;
+        [SerializeField] private GameObject ButtonP;
         [SerializeField] private GameObject BooleanP;
         [SerializeField] private GameObject DropdownP;
         [SerializeField] private GameObject ColorP;
@@ -129,50 +133,49 @@ namespace HeavenStudio.Editor
 
         private GameObject AddParam(string propertyName, object type, string caption, string tooltip = "")
         {
-            GameObject prefab = IntegerP;
             GameObject input;
 
             var objType = type.GetType();
 
             if (objType == typeof(EntityTypes.Integer))
             {
-                prefab = IntegerP;
-                input = InitPrefab(prefab, tooltip);
-                var property = input.GetComponent<NumberPropertyPrefab>();
+                input = InitPrefab(IntegerP, tooltip);
+                var property = input.GetComponent<BoolPropertyPrefab>();
                 property.SetProperties(propertyName, type, caption);
             }
             else if (objType == typeof(EntityTypes.Float))
             {
-                prefab = FloatP;
-                input = InitPrefab(prefab, tooltip);
+                input = InitPrefab(FloatP, tooltip);
                 var property = input.GetComponent<NumberPropertyPrefab>();
                 property.SetProperties(propertyName, type, caption);
             }
-            else if(type is bool)
+            else if (objType == typeof(EntityTypes.Button))
             {
-                prefab = BooleanP;
-                input = InitPrefab(prefab, tooltip);
+                input = InitPrefab(ButtonP, tooltip);
+                var property = input.GetComponent<ButtonPropertyPrefab>();
+                property.SetProperties(propertyName, type, caption);
+            }
+            else if (objType == typeof(bool))
+            {
+                input = InitPrefab(BooleanP, tooltip);
                 var property = input.GetComponent<BoolPropertyPrefab>();
                 property.SetProperties(propertyName, type, caption);
             }
-            else if (objType.IsEnum)
+            else if (objType.IsEnum || objType == typeof(string[]))
             {
-                prefab = DropdownP;
-                input = InitPrefab(prefab, tooltip);
-                var property = input.GetComponent<EnumPropertyPrefab>();
+                input = InitPrefab(DropdownP, tooltip);
+                var property = input.GetComponent<DropdownPropertyPrefab>();
                 property.SetProperties(propertyName, type, caption);
             }
             else if (objType == typeof(Color))
             {
-                prefab = ColorP;
-                input = InitPrefab(prefab, tooltip);
+                input = InitPrefab(ColorP, tooltip);
                 var property = input.GetComponent<ColorPropertyPrefab>();
                 property.SetProperties(propertyName, type, caption);
             }
-            else if(objType == typeof(string))
+            else if (objType == typeof(string))
             {
-                prefab = StringP;
-                input = InitPrefab(prefab, tooltip);
+                input = InitPrefab(StringP, tooltip);
                 var property = input.GetComponent<StringPropertyPrefab>();
                 property.SetProperties(propertyName, type, caption);
             }

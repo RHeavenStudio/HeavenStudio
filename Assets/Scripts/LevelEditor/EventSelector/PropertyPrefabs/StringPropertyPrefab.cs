@@ -50,7 +50,7 @@ namespace HeavenStudio.Editor
 
             inputFieldString.onEndEdit.AddListener(
                 _ =>
-                {;
+                {
                     Editor.instance.editingInputField = false;
                 }
             );
