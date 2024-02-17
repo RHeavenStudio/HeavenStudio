@@ -1,29 +1,29 @@
-/* Hello my brothers, it is RaffyTaffy14 here in the code comments with another monologue.
-I still do not know much crap about Unity or C#.
-Despite that, I have managed to cobble together Sumo Brothers in a fairly functional state.
-A lot of the code may be very weird or just useless (especially the older stuff), but it works for now.
-I started making Sumo Brothers for Heaven Studio all the way back in January of 2023 (13 months ago!)
-Sumo Brothers at that time was VERY janky. Heck, I used blurry screenshots from videos as reference guides for everything.
-Progress on Sumo stopped a few weeks into the project, being as functional as how I left Lockstep for rasmus to pick up.
-In June, I finally learned how to cue inputs (I was doing something wrong for the longest time), so now Finishing Poses could be cued.
-Nothing happened until December, when I coded most of the functionality for the Slapping/Stomping/Posing
-switching, which is how it currently works now.
+// Hello my brothers, it is RaffyTaffy14 here in the code comments with another monologue.
+// I still do not know much crap about Unity or C#.
+// Despite that, I have managed to cobble together Sumo Brothers in a fairly functional state.
+// A lot of the code may be very weird or just useless (especially the older stuff), but it works for now.
+// I started making Sumo Brothers for Heaven Studio all the way back in January of 2023 (13 months ago!)
+// Sumo Brothers at that time was VERY janky. Heck, I used blurry screenshots from videos as reference guides for everything.
+// Progress on Sumo stopped a few weeks into the project, being as functional as how I left Lockstep for rasmus to pick up.
+// In June, I finally learned how to cue inputs (I was doing something wrong for the longest time), so now Finishing Poses could be cued.
+// Nothing happened until December, when I coded most of the functionality for the Slapping/Stomping/Posing
+// switching, which is how it currently works now.
 
-From the end of January 2024 to the middle of February 2024, I spent dozens of hours meticulously animating
-every animation (there's *74* when you factor out duplicate animations for the Glasses Brother) for the game, from "SumoSlapPrepare" all
-the way to "SumoPoseGBopMiss2".
-No one thought that there would be anyone crazy enough to hecking animate Sumo Brothers.
-People said that it would be animator suicide to even attempt to animate Sumo Brothers.
-Yet, here I am, still alive and still too crazy.
+// From the end of January 2024 to the middle of February 2024, I spent dozens of hours meticulously animating
+// every animation (there's *74* when you factor out duplicate animations for the Glasses Brother) for the game, from "SumoSlapPrepare" all
+// the way to "SumoPoseGBopMiss2".
+// No one thought that there would be anyone crazy enough to hecking animate Sumo Brothers.
+// People said that it would be animator suicide to even attempt to animate Sumo Brothers.
+// Yet, here I am, still alive and still too crazy.
 
-Sometime during the mass animation process, I managed to get back in contact with the upscaler for this game for a potential
-redo of the Inu Sensei sprites.
-Let's just say that the sprites got a MASSIVE glow up (thx UnbrokenMage)
-Animation for Sumo Brothers still isn't done, as I am yet to animate the 3rd and 4th poses which are (currently) absent.
-Despite the absense for those 20 animations (yes 2 poses takes up 20 animations), I have managed to do a whopping 54 animations
-during my ~2 week grind.
+// Sometime during the mass animation process, I managed to get back in contact with the upscaler for this game for a potential
+// redo of the Inu Sensei sprites.
+// Let's just say that the sprites got a MASSIVE glow up (thx UnbrokenMage)
+// Animation for Sumo Brothers still isn't done, as I am yet to animate the 3rd and 4th poses which are (currently) absent.
+// Despite the absense for those 20 animations (yes 2 poses takes up 20 animations), I have managed to do a whopping 54 animations
+// during my ~2 week grind.
 
-I hope that whomever may be reading this shall enjoy the wonders of Sumo Brothers and have a great rest of your day. */
+// I hope that whomever may be reading this shall enjoy the wonders of Sumo Brothers and have a great rest of your day. 
 using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
 using System;
@@ -45,10 +45,10 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Bop(e.beat, e.length, e["bopInu"], e["bopSumo"], e["bopInuAuto"], e["bopSumoAuto"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("bopInu", true, "Bop Inu", "Whether Inu Sensei should bop or not."),
-                        new Param("bopSumo", true, "Bop Sumo", "Whether the Sumo Brothers should bop or not."),
-                        new Param("bopInuAuto", false, "Bop Inu (Auto)", "Whether Inu Sensei should bop automatically or not."),
-                        new Param("bopSumoAuto", false, "Bop Sumo (Auto)", "Whether the Sumo Brothers should bop automatically or not."),
+                        new Param("bopInu", true, "Bop Inu", "Whether Inu Sensei should bop."),
+                        new Param("bopSumo", true, "Bop Sumo", "Whether the Sumo Brothers should bop."),
+                        new Param("bopInuAuto", false, "Bop Inu (Auto)", "Whether Inu Sensei should bop automatically."),
+                        new Param("bopSumoAuto", false, "Bop Sumo (Auto)", "Whether the Sumo Brothers should bop automatically."),
                     },
                     defaultLength = 1f,
                     resizable = true
@@ -59,8 +59,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Crouch(e.beat, e.length, e["inuT"], e["sumoT"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("inuT", true, "Inu Sensei", "Whether Inu Sensei crouches or not."),
-                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers crouch or not.")
+                        new Param("inuT", true, "Inu Sensei", "Whether Inu Sensei should crouch."),
+                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers should crouch.")
                     },
                     defaultLength = 1f,
                     resizable = true
@@ -71,7 +71,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.StompSignal(e.beat, e["mute"], e["look"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to stomping."),
+                        new Param("mute", false, "Mute", "Disables Inu Sensei's sound cues and animations."),
                         new Param("look", true, "Look Forward", "The Sumo Brothers will look at the camera if transitioning from slapping.")
                     },
                     defaultLength = 4f,
@@ -83,7 +83,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.SlapSignal(e.beat, e["mute"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to slapping.")
+                        new Param("mute", false, "Mute", "Disables Inu Sensei's sound cues and animations.")
                     },
                     defaultLength = 4f,
                     priority = 3
@@ -246,7 +246,7 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
 
-            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_Alt))
             {
                 // Slap whiffs
                 if (sumoStatePrevious == SumoState.Slap || sumoStatePrevious == SumoState.Idle)
@@ -541,11 +541,16 @@ namespace HeavenStudio.Games
         private void SlapRecursive(double beat, double remaining)
         {
 
-            if (sumoState != SumoState.Slap) { remaining -= 1; }
+            if (sumoState != SumoState.Slap) {remaining -= 1; }
 
             if (remaining <= 0) { return; }
 
-            if (remaining == 1 && sumoState == SumoState.Stomp) { sumoSlapDir = 2; }
+            if (remaining == 1 && sumoState == SumoState.Stomp) {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                new BeatAction.Action(beat - 0.5, delegate { sumoSlapDir = 2; })
+                });
+                }
 
             ScheduleInput(beat - 1, 1, InputAction_BasicPress, SlapHit, SlapMiss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
@@ -560,20 +565,18 @@ namespace HeavenStudio.Games
 
         public void Crouch(double beat, float length, bool inu, bool sumo)
         {
-            if (sumoState == SumoState.Idle) {
+            if (sumoStatePrevious == SumoState.Idle) {
                 
                 if (inu) { allowBopInu = false; inuSensei.DoScaledAnimationAsync("InuCrouch", 0.5f); }
                 if (sumo) { sumoBrotherP.DoScaledAnimationAsync("SumoCrouch", 0.5f); sumoBrotherG.DoScaledAnimationAsync("SumoCrouch", 0.5f); 
                             allowBopSumo = false;}
-            }
-            
-            BeatAction.New(instance, new List<BeatAction.Action>() {
-            new BeatAction.Action(beat + length, delegate { if (sumoState == SumoState.Idle) allowBopInu = true; }),
-            new BeatAction.Action(beat + length, delegate { if (sumoState == SumoState.Idle) allowBopSumo = true; }),
-            new BeatAction.Action(beat + length, delegate { if (goBopSumo && sumoState == SumoState.Idle) BrosBop(); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopInu && sumoState == SumoState.Idle) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); })
+                            BeatAction.New(instance, new List<BeatAction.Action>() {
+            new BeatAction.Action(beat + length, delegate { if (sumoStatePrevious == SumoState.Idle) allowBopInu = true; }),
+            new BeatAction.Action(beat + length, delegate { if (sumoStatePrevious == SumoState.Idle) allowBopSumo = true; }),
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo && sumoStatePrevious == SumoState.Idle) BrosBop(); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopInu && sumoStatePrevious == SumoState.Idle) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); })
             });
-
+            }
         }
 
         public void LookAtCamera(double beat, float length)
@@ -590,7 +593,6 @@ namespace HeavenStudio.Games
             new BeatAction.Action(beat + length, delegate { print("lookun"); })
             });
             }
-
         }
 
         public void EndPose(double beat, bool randomPose, int poseType, int backgroundType, bool confetti)
