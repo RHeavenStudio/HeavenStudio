@@ -62,18 +62,19 @@ namespace HeavenStudio.Games.Scripts_SlotMonster
         {
             anim.Play("PopUp", 0, 0);
             pressed = false;
+            flashing = false;
+            missed = false;
         }
 
         public void Press(bool isMiss)
         {
             anim.DoScaledAnimationAsync("Press", 0.5f);
             pressed = true;
-            if (isMiss) {
-                missed = true;
-                if (input != null) {
-                    input.Disable();
-                    input.CleanUp();
-                }
+            flashing = false;
+            missed = isMiss;
+            if (isMiss && input != null) {
+                input.Disable();
+                input.CleanUp();
             }
         }
 

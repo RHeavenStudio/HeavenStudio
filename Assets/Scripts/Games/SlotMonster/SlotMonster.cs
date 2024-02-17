@@ -82,7 +82,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out SlotMonster instance)) {
                             var e = eventCaller.currentEntity;
-                            instance.GameplayModifiers(e["lottery"], e["stars"]);
+                            instance.GameplayModifiers(e["lottery"], e["lotteryAmount"], e["lotterySpeed"], e["stars"]);
                         }
                     },
                     defaultLength = 0.5f,
@@ -90,8 +90,10 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("lottery", true, "Lottery", "Toggle if the win particles should play after a successful sequence.", new() {
-                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "stars" }),
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "lotteryAmount", "lotterySpeed", "stars" }),
                         }),
+                        new Param("lotteryAmount", new EntityTypes.Float(0, 10, 1), "Lottery Amount", "Set the amount of win particles."),
+                        new Param("lotterySpeed", new EntityTypes.Float(0.5f, 3, 1), "Lottery Speed", "Set the speed of the win particles."),
                         new Param("stars", false, "Use Stars", "Use stars instead of coins? (From the Korean version of RH DS)"),
                     },
                 },
@@ -155,19 +157,6 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void Update()
-        {
-            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && inputsActive && !buttons[currentButton].pressed) {
-                HitButton();
-                ScoreMiss();
-            }
-        }
-
-        private void LateUpdate()
-        {
-            currentButton = Array.FindIndex(buttons, button => !button.pressed);
-        }
-
         public override void OnPlay(double beat)
         {
             OnGameSwitch(beat);
@@ -179,6 +168,19 @@ namespace HeavenStudio.Games
             foreach (RiqEntity e in gameEntities.FindAll(e => e.datamodel == "slotMonster/startInterval" && e.beat < beat && e.beat + e.length > beat)) {
                 StartInterval(e, e["auto"], e["eyeType"], beat);
             }
+        }
+
+        private void Update()
+        {
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && inputsActive && !buttons[currentButton].pressed) {
+                HitButton();
+                ScoreMiss();
+            }
+        }
+
+        private void LateUpdate()
+        {
+            currentButton = Array.FindIndex(buttons, button => !button.pressed);
         }
 
         private void HitButton(bool isHit = false, int timing = 0)
@@ -334,10 +336,20 @@ namespace HeavenStudio.Games
             buttonFlashColor = flashColor;
         }
 
-        public void GameplayModifiers(bool lottery, bool stars)
+        public void GameplayModifiers(bool lottery, float amount, float speed, bool stars)
         {
             var sheetAnim = winParticles.textureSheetAnimation;
             sheetAnim.frameOverTime = stars ? 1 : 0;
+
+            var rotOverTime = winParticles.rotationOverLifetime;
+            rotOverTime.z = new ParticleSystem.MinMaxCurve(stars ? -10 : 0, stars ? 10 : 0);
+
+            var emission = winParticles.emission;
+            emission.rateOverTime = amount * 13;
+
+            var main = winParticles.main;
+            main.simulationSpeed = speed;
+
             doWin = lottery;
         }
     }
