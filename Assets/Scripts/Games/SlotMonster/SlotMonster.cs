@@ -342,7 +342,7 @@ namespace HeavenStudio.Games
             sheetAnim.frameOverTime = stars ? 1 : 0;
 
             var rotOverTime = winParticles.rotationOverLifetime;
-            rotOverTime.z = new ParticleSystem.MinMaxCurve(stars ? -10 : 0, stars ? 10 : 0);
+            rotOverTime.z = new ParticleSystem.MinMaxCurve(stars ? -5 : 0, stars ? 5 : 0);
 
             var emission = winParticles.emission;
             emission.rateOverTime = amount * 13;
