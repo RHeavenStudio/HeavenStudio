@@ -6,19 +6,18 @@ using System;
 using System.Linq;
 using TMPro;
 
-
 using HeavenStudio.Util;
 using HeavenStudio.Editor;
 using HeavenStudio.Common;
 
 namespace HeavenStudio.Editor
 {
-    public class EnumPropertyPrefab : EventPropertyPrefab
+    public class DropdownPropertyPrefab : EventPropertyPrefab
     {
         [Header("Dropdown")]
         [Space(10)]
         public LeftClickTMP_Dropdown dropdown;
-        private Array enumVals;
+        private Array values;
 
         private int _defaultValue;
 
@@ -29,14 +28,14 @@ namespace HeavenStudio.Editor
             InitProperties(propertyName, caption);
 
             var enumType = type.GetType();
-            enumVals = Enum.GetValues(enumType);
+            values = Enum.GetValues(enumType);
             var enumNames = Enum.GetNames(enumType).ToList();
             _defaultValue = (int)type;
 
             // Can we assume non-holey enum?
             // If we can we can simplify to dropdown.value = (int) parameterManager.entity[propertyName]
             var currentlySelected = (int) parameterManager.entity[propertyName];
-            var selected = enumVals
+            var selected = values
                 .Cast<object>()
                 .ToList()
                 .FindIndex(val => (int) val == currentlySelected);
@@ -46,8 +45,8 @@ namespace HeavenStudio.Editor
 
             dropdown.onValueChanged.AddListener(_ => 
             {
-                parameterManager.entity[propertyName] = (int)enumVals.GetValue(dropdown.value);
-                if ((int)enumVals.GetValue(dropdown.value) != _defaultValue)
+                parameterManager.entity[propertyName] = GetValue();
+                if (GetValue() != _defaultValue)
                 {
                     this.caption.text = _captionText + "*";
                 }
@@ -59,6 +58,11 @@ namespace HeavenStudio.Editor
             );
         }
 
+        public int GetValue()
+        {
+            return (int)values.GetValue(dropdown.value);
+        }
+
         public void ResetValue()
         {
             dropdown.value = _defaultValue;
@@ -66,8 +70,8 @@ namespace HeavenStudio.Editor
 
         public override void SetCollapses(object type)
         {
-            dropdown.onValueChanged.AddListener(_ => UpdateCollapse((int)enumVals.GetValue(dropdown.value)));
-            UpdateCollapse((int)enumVals.GetValue(dropdown.value));
+            dropdown.onValueChanged.AddListener(_ => UpdateCollapse(GetValue()));
+            UpdateCollapse(GetValue());
         }
 
         private void Update()

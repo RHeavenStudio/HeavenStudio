@@ -40,6 +40,7 @@ namespace HeavenStudio
         public string currentGame { get; private set; }
         public GameObject minigameObj { get; private set; }
         public Minigame minigame { get; private set; }
+        public Animator[] mgAnimators { get; private set; }
         public RiqEntity lastSection { get; private set; }
         public RiqEntity currentSection { get; private set; }
 
@@ -1141,6 +1142,7 @@ namespace HeavenStudio
             minigameObj.transform.parent = eventCaller.GamesHolder.transform;
             minigameObj.transform.localScale = originalScale;
             minigameObj.name = game;
+            mgAnimators = minigameObj.transform.GetComponentsInChildren<Animator>();
 
             SetCurrentGame(game, useMinigameColor);
         }

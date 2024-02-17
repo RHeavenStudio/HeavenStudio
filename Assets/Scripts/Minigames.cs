@@ -753,31 +753,6 @@ namespace HeavenStudio
                             GameManager.instance.ToggleInputs(eventCaller.currentEntity["toggle"]);
                         }
                     ),
-                    new GameAction("play animation", "Play Animation", 0.5f, false,
-                        new List<Param>()
-                        {
-                            new Param("animator", "", "Animator", "Specify which animator in the scene to play an animation on. (i.e \"Plalin\" or \"Game/Paddlers/Player\")"),
-                            new Param("animation", "", "Animation", "Specify the name of the animation to play."),
-                            new Param("scale", new EntityTypes.Float(0, 5, 0.5f), "Animation Scale", "The time scale of the animation. Higher values are faster."),
-                        },
-                        delegate {
-                            var e = eventCaller.currentEntity;
-                            GameManager.instance.PlayAnimationArbitrary(e["animator"], e["animation"], e["scale"]);
-                        }
-                    ),
-                    new GameAction("play sfx", "Play SFX", 0.5f, false,
-                        new List<Param>()
-                        {
-                            new Param("game", "", "Which Game", "Specify the game's sfx to play. An empty input will play global sfx."),
-                            new Param("sfxName", "", "SFX Name", "The name of the sfx to play."),
-                            new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The sfx's pitch."),
-                            new Param("offset", new EntityTypes.Float(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),
-                        },
-                        preFunction : delegate {
-                            var e = eventCaller.currentEntity;
-                            GameManager.PlaySFXArbitrary(e.beat, e["game"], e["sfxName"], e["pitch"], e["offset"]);
-                        }
-                    ),
                 }),
 
                 new Minigame("countIn", "Count-Ins", "", false, true, new List<GameAction>()
@@ -1179,6 +1154,40 @@ namespace HeavenStudio
                         }
                     }
                 }),
+
+                new Minigame("advanced", "Advanced", "", false, true, new List<GameAction>()
+                {
+                    new GameAction("play animation", "Play Animation", 0.5f, false,
+                        new List<Param>()
+                        {
+                            new Param("getAnimators", new EntityTypes.Button("Get Animators", delegate {
+                                string gameName = GameManager.instance.currentGame;
+                                return gameName;
+                            }), "Button", "Specify which animator in the scene to play an animation on. (i.e \"Plalin\" or \"Game/Paddlers/Player\")"),
+                            new Param("animator", "", "Animator", "Specify which animator in the scene to play an animation on. (i.e \"Plalin\" or \"Game/Paddlers/Player\")"),
+                            new Param("animation", "", "Animation", "Specify the name of the animation to play."),
+                            new Param("scale", new EntityTypes.Float(0, 5, 0.5f), "Animation Scale", "The time scale of the animation. Higher values are faster."),
+                        },
+                        delegate {
+                            var e = eventCaller.currentEntity;
+                            GameManager.instance.PlayAnimationArbitrary(e["animator"], e["animation"], e["scale"]);
+                        }
+                    ),
+                    new GameAction("play sfx", "Play SFX", 0.5f, false,
+                        new List<Param>()
+                        {
+                            new Param("game", "", "Which Game", "Specify the game's sfx to play. An empty input will play global sfx."),
+                            new Param("sfxName", "", "SFX Name", "The name of the sfx to play."),
+                            new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The sfx's pitch."),
+                            new Param("offset", new EntityTypes.Float(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),
+                        },
+                        preFunction : delegate {
+                            var e = eventCaller.currentEntity;
+                            GameManager.PlaySFXArbitrary(e.beat, e["game"], e["sfxName"], e["pitch"], e["offset"]);
+                        }
+                    ),
+                }),
+
             };
 
             foreach (var game in defaultGames)
