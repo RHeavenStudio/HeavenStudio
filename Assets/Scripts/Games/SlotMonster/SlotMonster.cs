@@ -97,7 +97,10 @@ namespace HeavenStudio.Games.Loaders
                         new Param("stars", false, "Use Stars", "Use stars instead of coins? (From the Korean version of RH DS)"),
                     },
                 },
-            }
+            },
+            new List<string>() { "ntr", "normal" },
+            "ntrslotmonster", "en",
+            new List<string>() {}
             );
         }
     }
