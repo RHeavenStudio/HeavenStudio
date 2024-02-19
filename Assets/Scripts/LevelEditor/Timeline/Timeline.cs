@@ -890,16 +890,19 @@ namespace HeavenStudio.Editor.Track
                         {
                             object returnVal = ep[i].parameter;
 
-                            var propertyType = returnVal.GetType();
-                            if (propertyType == typeof(EntityTypes.Integer))
+                            if (returnVal is EntityTypes.Integer intVal)
                             {
-                                returnVal = ((EntityTypes.Integer)ep[i].parameter).val;
+                                returnVal = intVal.val;
                             }
-                            else if (propertyType == typeof(EntityTypes.Float))
+                            else if (returnVal is EntityTypes.Float floatVal)
                             {
-                                returnVal = ((EntityTypes.Float)ep[i].parameter).val;
+                                returnVal = floatVal.val;
                             }
-                            else if (propertyType.IsEnum)
+                            else if (returnVal is EntityTypes.Dropdown dropdownVal)
+                            {
+                                returnVal = dropdownVal.defaultValue;
+                            }
+                            else if (returnVal.GetType().IsEnum)
                             {
                                 returnVal = (int)ep[i].parameter;
                             }

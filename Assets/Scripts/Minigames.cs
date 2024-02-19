@@ -15,9 +15,8 @@ using Jukebox;
 using SatorImaging.UnitySourceGenerator;
 
 using System;
-using System.Linq;
-using System.Reflection;
 using System.IO;
+using System.Linq;
 
 namespace HeavenStudio
 {
@@ -673,7 +672,7 @@ namespace HeavenStudio
         {
             public string propertyName;
             public object parameter;
-            public string propertyCaption;
+            public string caption;
             public string tooltip;
             public List<CollapseParam> collapseParams;
 
@@ -682,12 +681,15 @@ namespace HeavenStudio
             /// </summary>
             /// <param name="propertyName">The name of the variable that's being changed.</param>
             /// <param name="parameter">The value of the parameter</param>
-            /// <param name="propertyCaption">The name shown in the editor. Can be anything you want.</param>
-            public Param(string propertyName, object parameter, string propertyCaption, string tooltip = "", List<CollapseParam> collapseParams = null)
+            /// <param name="caption">The name shown in the editor. Can be anything you want.</param>
+            public Param(string propertyName, object parameter, string caption, string tooltip = "", List<CollapseParam> collapseParams = null)
             {
                 this.propertyName = propertyName;
-                this.parameter = parameter;
-                this.propertyCaption = propertyCaption;
+                this.parameter = parameter switch {
+                    // Enum param => new EntityTypes.Dropdown(param),
+                    _ => parameter,
+                };
+                this.caption = caption;
                 this.tooltip = tooltip;
                 this.collapseParams = collapseParams;
             }
@@ -835,7 +837,7 @@ namespace HeavenStudio
 
                 new Minigame("vfx", "Visual Effects", "", false, true, new List<GameAction>()
                 {
-                    new GameAction("flash", "Flash", 1f, true,
+                    new GameAction("flash", "Flash/Fade", 1f, true,
                         new List<Param>()
                         {
                             new Param("colorA", Color.white, "Start Color", "Set the color at the start of the event."),
@@ -1160,12 +1162,18 @@ namespace HeavenStudio
                     new GameAction("play animation", "Play Animation", 0.5f, false,
                         new List<Param>()
                         {
-                            new Param("getAnimators", new EntityTypes.Button("Get Animators", delegate {
-                                string gameName = GameManager.instance.currentGame;
-                                return gameName;
-                            }), "Button", "Specify which animator in the scene to play an animation on. (i.e \"Plalin\" or \"Game/Paddlers/Player\")"),
-                            new Param("animator", "", "Animator", "Specify which animator in the scene to play an animation on. (i.e \"Plalin\" or \"Game/Paddlers/Player\")"),
-                            new Param("animation", "", "Animation", "Specify the name of the animation to play."),
+                            new Param("getAnimators", new EntityTypes.Button("No Game", e => {
+                                var gm = GameManager.instance;
+                                Minigame game = gm.GetGameInfo(gm.currentGame);
+                                if (game != null) {
+                                    gm.minigameAnimators = gm.minigameObj.transform.GetComponentsInChildren<Animator>();
+                                    e["animators"].values = gm.minigameAnimators.Select(x => x.name).ToList();
+                                    e["animations"] = gm.minigameAnimators[0].runtimeAnimatorController.animationClips.Select(x => x.name).ToList();
+                                }
+                                return game?.displayName ?? "No Game";
+                            }), "Button", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
+                            new Param("animators", new EntityTypes.Dropdown(0, "N/A"), "Animator", "Specify which animator in the scene to play an animation on. (i.e \"Plalin\" or \"Game/Paddlers/Player\")"),
+                            new Param("animations", new EntityTypes.Dropdown(0, "N/A"), "Animation", "Specify the name of the animation to play."),
                             new Param("scale", new EntityTypes.Float(0, 5, 0.5f), "Animation Scale", "The time scale of the animation. Higher values are faster."),
                         },
                         delegate {
@@ -1197,5 +1205,59 @@ namespace HeavenStudio
 
             LoadMinigames(eventCaller);
         }
+    }
+}
+
+public class EnumProcessor
+{
+    private readonly Enum enumValue;
+
+    public EnumProcessor(Enum value)
+    {
+        if (!value.GetType().IsEnum)
+        {
+            throw new ArgumentException("Value must be an enum type.");
+        }
+
+        this.enumValue = value;
+    }
+
+    public void ProcessEnumValue()
+    {
+        Type enumType = this.enumValue.GetType().DeclaringType;
+
+        if (enumType != null)
+        {
+            Console.WriteLine("EnumType: " + enumType.Name);
+        }
+
+        Console.WriteLine("EnumValue: " + this.enumValue);
+    }
+}
+
+public class EnumExamples
+{
+    public enum EnumExample
+    {
+        EnumValue1,
+        EnumValue2
+    }
+
+    public enum EnumAnotherExample
+    {
+        DifferentValue1,
+        DifferentValue2
+    }
+
+    public static void Main()
+    {
+        EnumProcessor processor1 = new EnumProcessor(EnumExample.EnumValue1);
+        EnumProcessor processor2 = new EnumProcessor(EnumAnotherExample.DifferentValue1);
+
+        // Call the method for EnumExample
+        processor1.ProcessEnumValue();
+
+        // Call the method for EnumAnotherExample
+        processor2.ProcessEnumValue();
     }
 }

@@ -6,8 +6,6 @@ using System;
 using System.Linq;
 using TMPro;
 
-using HeavenStudio.Util;
-using HeavenStudio.Editor;
 using HeavenStudio.Common;
 
 namespace HeavenStudio.Editor
@@ -17,50 +15,44 @@ namespace HeavenStudio.Editor
         [Header("Dropdown")]
         [Space(10)]
         public LeftClickTMP_Dropdown dropdown;
-        private Array values;
+        // private string[] values;
+        private List<string> names;
+        private List<(int, string)> values;
 
         private int _defaultValue;
 
         private bool openedDropdown = false;
 
-        new public void SetProperties(string propertyName, object type, string caption)
+        public override void SetProperties(string propertyName, object type, string caption)
         {
-            InitProperties(propertyName, caption);
+            base.SetProperties(propertyName, type, caption);
 
-            var enumType = type.GetType();
-            values = Enum.GetValues(enumType);
-            var enumNames = Enum.GetNames(enumType).ToList();
-            _defaultValue = (int)type;
+            // var enumType = type.GetType();
+            // values = Enum.GetValues(enumType).Cast<string>().ToArray();
+            // names = Enum.GetNames(enumType).ToList();
+            // _defaultValue = (int)type;
 
             // Can we assume non-holey enum?
             // If we can we can simplify to dropdown.value = (int) parameterManager.entity[propertyName]
-            var currentlySelected = (int) parameterManager.entity[propertyName];
-            var selected = values
-                .Cast<object>()
-                .ToList()
-                .FindIndex(val => (int) val == currentlySelected);
+            // var currentlySelected = (int) parameterManager.entity[propertyName];
+            // var selected = values
+            //     .Cast<object>()
+            //     .ToList()
+            //     .FindIndex(val => (int) val == currentlySelected);
 
-            dropdown.AddOptions(enumNames);
-            dropdown.value = selected;
+            if (type is not EntityTypes.Dropdown dropdownEntity) return;
 
-            dropdown.onValueChanged.AddListener(_ => 
-            {
-                parameterManager.entity[propertyName] = GetValue();
-                if (GetValue() != _defaultValue)
+            names = dropdownEntity.values;
+            dropdown.AddOptions(names);
+            dropdown.value = (int)parameterManager.entity[propertyName];
+
+            dropdown.onValueChanged.AddListener(newValue =>
                 {
-                    this.caption.text = _captionText + "*";
+                    parameterManager.entity[propertyName] = newValue;
+                    Debug.Log("newValue : " + newValue);
+                    this.caption.text = (newValue != _defaultValue) ? (_captionText + "*") : _captionText;
                 }
-                else
-                {
-                    this.caption.text = _captionText;
-                }
-            }
             );
-        }
-
-        public int GetValue()
-        {
-            return (int)values.GetValue(dropdown.value);
         }
 
         public void ResetValue()
@@ -70,8 +62,8 @@ namespace HeavenStudio.Editor
 
         public override void SetCollapses(object type)
         {
-            dropdown.onValueChanged.AddListener(_ => UpdateCollapse(GetValue()));
-            UpdateCollapse(GetValue());
+            dropdown.onValueChanged.AddListener(_ => UpdateCollapse(type));
+            UpdateCollapse(type);
         }
 
         private void Update()

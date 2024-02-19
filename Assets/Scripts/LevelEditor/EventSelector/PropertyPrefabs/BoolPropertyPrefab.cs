@@ -6,10 +6,6 @@ using System;
 using System.Linq;
 using TMPro;
 
-
-using HeavenStudio.Util;
-using HeavenStudio.Editor;
-
 namespace HeavenStudio.Editor
 {
     public class BoolPropertyPrefab : EventPropertyPrefab
@@ -20,9 +16,9 @@ namespace HeavenStudio.Editor
 
         private bool _defaultValue;
 
-        new public void SetProperties(string propertyName, object type, string caption)
+        public override void SetProperties(string propertyName, object type, string caption)
         {
-            InitProperties(propertyName, caption);
+            base.SetProperties(propertyName, type, caption);
 
             _defaultValue = (bool)type;
             toggle.isOn = Convert.ToBoolean(parameterManager.entity[propertyName]);

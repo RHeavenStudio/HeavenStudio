@@ -6,8 +6,6 @@ using System;
 using System.Linq;
 using TMPro;
 
-
-using HeavenStudio.Util;
 using Jukebox;
 
 namespace HeavenStudio.Editor
@@ -20,10 +18,7 @@ namespace HeavenStudio.Editor
         public string propertyName;
         public List<PropertyCollapse> propertyCollapses = new List<PropertyCollapse>();
 
-        public void SetProperties(string propertyName, object type, string caption) {}
-        public virtual void SetCollapses(object type) { }
-
-        public void InitProperties(string propertyName, string caption)
+        public virtual void SetProperties(string propertyName, object type, string caption)
         {
             this.parameterManager = EventParameterManager.instance;
             this.propertyName = propertyName;
@@ -32,6 +27,7 @@ namespace HeavenStudio.Editor
 
             this.caption.text = _captionText;
         }
+        public virtual void SetCollapses(object type) { }
 
         public void UpdateCollapse(object type)
         {
