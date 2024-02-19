@@ -67,7 +67,7 @@ namespace FFmpegOut
 
         int _frameCount;
         float _startTime;
-        int _frameDropCount;
+        public int _frameDropCount;
 
         float FrameTime {
             get { return _startTime + (_frameCount - 0.5f) / _frameRate; }
@@ -151,7 +151,6 @@ namespace FFmpegOut
                 }
 
                 // Start an FFmpeg session.
-                Debug.Log("i'm not" + bitRate);
                 _session = FFmpegSession.Create(
                     path,
                     camera.targetTexture.width,

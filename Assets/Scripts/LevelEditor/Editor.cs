@@ -168,7 +168,7 @@ namespace HeavenStudio.Editor
             #region Keyboard Shortcuts
             if (isShortcutsEnabled)
             {
-                if (Input.GetKeyDown(KeyCode.Tab))
+                if (Input.GetKeyDown(KeyCode.Tab) && heavenRecorder.enableInput)
                 {
                     Fullscreen();
                 }
@@ -201,7 +201,7 @@ namespace HeavenStudio.Editor
                     }
                 }
 
-                if (Input.GetKey(KeyCode.LeftControl))
+                if (Input.GetKey(KeyCode.LeftControl) && heavenRecorder.enableInput)
                 {
                     if (Input.GetKeyDown(KeyCode.N))
                     {

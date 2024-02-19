@@ -49,7 +49,7 @@ namespace HeavenStudio.Editor.Track
         public Vector2 RelativeMousePos => relativeMousePos;
         public float PlaybackBeat = 0.0f;
 
-        [SerializeField]HeavenRecorderController recorder;
+        [SerializeField]HeavenRecorderController heavenRecorder;
 
         public static float SnapInterval() { return instance.snapInterval; }
 
@@ -504,7 +504,7 @@ namespace HeavenStudio.Editor.Track
             if ((!userIsEditingInputField) && Editor.instance.isShortcutsEnabled)
             {
 
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) && heavenRecorder.enableInput)
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
@@ -516,46 +516,46 @@ namespace HeavenStudio.Editor.Track
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.P))
+                if (Input.GetKeyDown(KeyCode.P) && heavenRecorder.enableInput)
                 {
                     AutoPlayToggle();
                 }
 
-                if (Input.GetKeyDown(KeyCode.M))
+                if (Input.GetKeyDown(KeyCode.M) && heavenRecorder.enableInput)
                 {
                     MetronomeToggle();
                 }
 
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                if (Input.GetKeyDown(KeyCode.Alpha1) && heavenRecorder.enableInput)
                 {
                     timelineState.SetState(CurrentTimelineState.State.Selection);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                else if (Input.GetKeyDown(KeyCode.Alpha2) && heavenRecorder.enableInput)
                 {
                     timelineState.SetState(CurrentTimelineState.State.TempoChange);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                else if (Input.GetKeyDown(KeyCode.Alpha3) && heavenRecorder.enableInput)
                 {
                     timelineState.SetState(CurrentTimelineState.State.MusicVolume);
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                else if (Input.GetKeyDown(KeyCode.Alpha4) && heavenRecorder.enableInput)
                 {
                     timelineState.SetState(CurrentTimelineState.State.ChartSection);
                 }
 
-                if (Input.GetKeyDown(KeyCode.F))
+                if (Input.GetKeyDown(KeyCode.F) && heavenRecorder.enableInput)
                 {
                     PlaybackFocus(false);
                 }
 
                 float moveSpeed = 750;
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) moveSpeed *= 6;
+                if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && heavenRecorder.enableInput) moveSpeed *= 6;
 
-                if (Input.GetKey(KeyCode.LeftArrow) || (!Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.A)))
+                if ((Input.GetKey(KeyCode.LeftArrow) || (!Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.A))) && heavenRecorder.enableInput)
                 {
                     RealTimelineContent.transform.localPosition += new Vector3(moveSpeed * Time.deltaTime, 0);
                 }
-                else if (Input.GetKey(KeyCode.RightArrow) || (!Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.D)))
+                else if ((Input.GetKey(KeyCode.RightArrow) || (!Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.D))) && heavenRecorder.enableInput)
                 {
                     RealTimelineContent.transform.localPosition += new Vector3(-moveSpeed * Time.deltaTime, 0);
                 }
@@ -705,7 +705,7 @@ namespace HeavenStudio.Editor.Track
         {
             // isPaused = true;
             // timelineSlider.value = 0;
-            recorder.StopRecording();
+            heavenRecorder.StopRecording();
             if (TimelineSongPosLine != null)
                 Destroy(TimelineSongPosLine.gameObject);
 
