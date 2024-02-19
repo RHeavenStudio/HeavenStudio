@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
-using Starpelly;
+
 
 namespace HeavenStudio.Games.Scripts_MonkeyWatch
 {
@@ -52,12 +52,12 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
             if (realAngle <= 180)
             {
-                float normalizedAngle = Mathp.Normalize(realAngle, 0, 180);
+                float normalizedAngle = MathUtils.Normalize(realAngle, 0, 180);
                 x = Mathf.Lerp(0, shadowXRange, normalizedAngle);
             }
             else
             {
-                float normalizedAngle = Mathp.Normalize(realAngle, 180, 360);
+                float normalizedAngle = MathUtils.Normalize(realAngle, 180, 360);
                 x = Mathf.Lerp(shadowXRange, 0, normalizedAngle);
             }
 
@@ -66,12 +66,12 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
             if (realAngleY <= 90)
             {
-                float normalizedAngle = Mathp.Normalize(realAngleY, 0, 90);
+                float normalizedAngle = MathUtils.Normalize(realAngleY, 0, 90);
                 y = Mathf.Lerp(0, shadowYRange, normalizedAngle);
             }
             else
             {
-                float normalizedAngle = Mathp.Normalize(realAngleY, 90, 180);
+                float normalizedAngle = MathUtils.Normalize(realAngleY, 90, 180);
                 y = Mathf.Lerp(shadowYRange, 0, normalizedAngle);
             }
             shadowTrans.localPosition = new Vector3(x, y);

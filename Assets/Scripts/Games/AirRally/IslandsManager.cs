@@ -1,8 +1,10 @@
-using Starpelly;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_AirRally
 {
@@ -37,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
                 endZ = -fullLengthZ * loopMult;
                 foreach (var island in islands)
                 {
-                    island.normalizedOffset = 1 - Mathp.Normalize(island.startPos.z, minValueZ, maxValueZ);
+                    island.normalizedOffset = 1 - MathUtils.Normalize(island.startPos.z, minValueZ, maxValueZ);
                     island.normalizedOffset /= loopMult;
                 }
             }
