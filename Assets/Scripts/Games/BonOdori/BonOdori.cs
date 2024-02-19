@@ -88,8 +88,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("show text", "Show Text")
                 {
-                    function = delegate {BonOdori.instance.ShowText(eventCaller.currentEntity["line 1"], eventCaller.currentEntity["line 2"], eventCaller.currentEntity["line 3"], eventCaller.currentEntity["line 4"], eventCaller.currentEntity["line 5"],eventCaller.currentEntity["font"]);},
-                    defaultLength = 0.5f,
+                    function = delegate {BonOdori.instance.ShowText(eventCaller.currentEntity["line 1"], eventCaller.currentEntity["line 2"], eventCaller.currentEntity["line 3"], eventCaller.currentEntity["line 4"], eventCaller.currentEntity["line 5"]);},
+                    defaultLength = 1f,
                     parameters = new List<Param>()
                     {   new Param("whichLine", new EntityTypes.Integer(1,5,1), "Line", "Which line to modify.", new(){
                         new((x, _) => (int)x == 1, new string[] { "line 1"}),
@@ -98,12 +98,12 @@ namespace HeavenStudio.Games.Loaders
                         new((x, _) => (int)x == 4, new string[] { "line 4"}),
                         new((x, _) => (int)x == 5, new string[] { "line 5"}),
                     }),
-                        new Param("line 1", "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line", "Line 1", "Set the text for line 1."),
+                        new Param("line 1", "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line.", "Line 1", "Set the text for line 1."),
                         new Param("line 2", "", "Line 2", "Set the text for line 2."),
                         new Param("line 3", "", "Line 3", "Set the text for line 3.y"),
                         new Param("line 4", "", "Line 4", "Set the text for line 4."),
                         new Param("line 5", "", "Line 5", "Set the text for line 5."),
-                        new Param("font", BonOdori.font.RodinProDb, "font", "Set the font for the text")
+
 
 
                         
@@ -113,7 +113,7 @@ namespace HeavenStudio.Games.Loaders
                     new GameAction("delete text", "Delete Text")
                 {
                     function = delegate {BonOdori.instance.DeleteText(eventCaller.currentEntity["line 1"],eventCaller.currentEntity["line 2"],eventCaller.currentEntity["line 3"],eventCaller.currentEntity["line 4"],eventCaller.currentEntity["line 5"]);},
-                    defaultLength = 0.5f,
+                    defaultLength = 1f,
                     parameters = new List<Param>()
                     {
                         new Param("line 1", false, "Line 1", "Delete the contents of line 1."),
@@ -137,6 +137,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("line 4", false, "Line 4", "Scroll the contents of line 4."),
                         new Param("line 5", false, "Line 5", "Scroll the contents of line 5."),
                     },
+
+                },
+                    new GameAction("bow", "Bow")
+                {
+                    function = delegate {BonOdori.instance.Bow(eventCaller.currentEntity.beat);},
+                    defaultLength = 2f,
 
                 }
  
@@ -189,11 +195,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator CPU;
         [SerializeField] Animator Face;
 
-        public enum font
-        {
-            RodinProDb = 0,
-            WarioWareV2 = 1
-        }
+
         public enum color
         {
             red = 0,
@@ -414,36 +416,11 @@ namespace HeavenStudio.Games
 
     }
 
-        public void ShowText(string text1, string text2, string text3, string text4, string text5, int font)
-        {               Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-            if (font == 0)
-            {
-                Text1.GetComponent<TextMeshPro>().font = RodinDB;
-                Text2.GetComponent<TextMeshPro>().font = RodinDB;
-                Text3.GetComponent<TextMeshPro>().font = RodinDB;
-                Text4.GetComponent<TextMeshPro>().font = RodinDB;
-                Text5.GetComponent<TextMeshPro>().font = RodinDB;
-                Text6.GetComponent<TextMeshPro>().font = RodinDB;
-                Text7.GetComponent<TextMeshPro>().font = RodinDB;
-                Text8.GetComponent<TextMeshPro>().font = RodinDB;
-                Text9.GetComponent<TextMeshPro>().font = RodinDB;
-                Text10.GetComponent<TextMeshPro>().font = RodinDB;
-;
-            }
-            if (font == 1)
-            {
-                Text1.GetComponent<TextMeshPro>().font = WW;
-                Text2.GetComponent<TextMeshPro>().font = WW;
-                Text3.GetComponent<TextMeshPro>().font = WW;
-                Text4.GetComponent<TextMeshPro>().font = WW;
-                Text5.GetComponent<TextMeshPro>().font = WW;
-                Text6.GetComponent<TextMeshPro>().font = WW;
-                Text7.GetComponent<TextMeshPro>().font = WW;
-                Text8.GetComponent<TextMeshPro>().font = WW;
-                Text9.GetComponent<TextMeshPro>().font = WW;
-                Text10.GetComponent<TextMeshPro>().font = WW;
-            }
-
+        public void ShowText(string text1, string text2, string text3, string text4, string text5)
+        {         
+       
+                       
+                        
 
 
         
@@ -455,31 +432,46 @@ namespace HeavenStudio.Games
     
 
                 
-            if (text1 is not "" || text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line."){
+            if (text1 is not "" && text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line."){
+                Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 text1 = ChangeColor(text1);
+
                 Text1.text = text1;
+                
  ;
                 Text6.text = text1;
   
                 }
             if (text2 is not ""){
+                Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 text2 = ChangeColor(text2);
                 Text2.text = text2;
+                Text7.text = text2;
    
                 }
-            if (text3 != ""){
+            if (text3 is not ""){
+                  
+                Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                
                 text3 = ChangeColor(text3);
-                Text3.text = text3; 
+                
+                Text3.text = text3;
+                Text8.text = text3; 
  
                 }
-            if (text4 != ""){
+            if (text4 is not ""){
+                Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 text4 = ChangeColor(text4);
-                Text4.text = text4; 
+                Text4.text = text4;
+
+                Text9.text = text4; 
 
                 }
-            if (text5 != ""){
+            if (text5 is not ""){
+                Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 text5 = ChangeColor(text5);
                 Text5.text = text5;
+                Text10.text = text5;
 
                 }
             
@@ -509,30 +501,52 @@ namespace HeavenStudio.Games
             }
 
         }
-IEnumerator scroll(float startVal, float endVal, float seconds)
+ IEnumerator SmoothText(TMP_Text text, float length)
     {
-        float currentVal = startVal;
-        for (float t= 0.0f; t<1.0f;t+= Time.deltaTime / seconds)
+        float startTime = Time.time;
+        float endTime = startTime + length;
+
+        while (Time.time < endTime)
         {
-            var coords = new Vector4(-10f, -10f, Mathf.Lerp(currentVal, endVal, t), -10f);
-            Text6.GetComponent<TextMeshPro>().SetMask(0,coords);
+            float t = ((Time.time - startTime) *3);
+            float maskValue = Mathf.Lerp(-10f, -7.73f, t / length);
+
+            text.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, maskValue, 10));
+
             yield return null;
         }
+
+
+
     }
-public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length)
-{
-    StartCoroutine(scroll(-10f, -7f, 5f));
-
-
-
- 
+    public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length)
+    {
+        if (text1){
+            StartCoroutine(SmoothText(Text6, length));}
+        if (text2){
+            StartCoroutine(SmoothText(Text7, length));}
+        if (text3){
+            StartCoroutine(SmoothText(Text8, length));}
+        if (text4){
+            StartCoroutine(SmoothText(Text9, length));}
+        if (text5){
+            StartCoroutine(SmoothText(Text10, length));}
+            
     }
-
 
     public void Bop(double beat, double length, bool bop, bool auto)
         {  
 
         }
+    public void Bow(double beat)
+    {
+        Player.Play("Bow");
+        CPU.Play("Bow");
+                        BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 2, delegate { Player.Play("NeutralBopped"); })
+                });
+    }
             
 
 
