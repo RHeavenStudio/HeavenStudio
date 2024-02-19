@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Jukebox;
 using UnityEngine;
 
 namespace HeavenStudio
@@ -27,8 +29,33 @@ namespace HeavenStudio
             public float val;
             public float max;
 
-            public Float(float min, float max, float val = 0f)
+            public Float(float min, float max, float val = 0)
             {
+                this.min = min;
+                this.val = val;
+                this.max = max;
+            }
+        }
+
+        // this will eventually replace Float and Integer
+        public struct Number
+        {
+            public float snap;
+            public float min;
+            public float val;
+            public float max;
+
+            public Number(float snap, float min, float max, float val = 0)
+            {
+                this.snap = snap;
+                this.min = min;
+                this.val = val;
+                this.max = max;
+            }
+
+            public Number(float min, float max, float val = 0)
+            {
+                this.snap = 0.001f;
                 this.min = min;
                 this.val = val;
                 this.max = max;
@@ -37,13 +64,35 @@ namespace HeavenStudio
 
         public struct Button
         {
-            public string buttonLabel;
-            public Func<string> onClick;
+            public string defaultLabel;
+            public Func<RiqEntity, string> onClick;
 
-            public Button(string buttonLabel, Func<string> onClick)
+            public Button(string defaultLabel, Func<RiqEntity, string> onClick)
             {
-                this.buttonLabel = buttonLabel;
+                this.defaultLabel = defaultLabel;
                 this.onClick = onClick;
+            }
+        }
+
+        public struct Dropdown
+        {
+            public int defaultValue;
+            public List<string> values;
+
+            // params List<> when 😢
+            public Dropdown(int defaultValue, params string[] values)
+            {
+                this.defaultValue = defaultValue;
+                this.values = values.ToList();
+            }
+
+            public Dropdown(Enum value)
+            {
+                this.defaultValue = 0;
+                // Debug.Log(value);
+                // Debug.Log(value.GetType());
+                // Debug.Log(value.GetType().DeclaringType);
+                this.values = Enum.GetNames(value.GetType()).ToList();
             }
         }
 

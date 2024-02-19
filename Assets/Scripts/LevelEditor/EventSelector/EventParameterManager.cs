@@ -2,13 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using HeavenStudio.Editor.Track;
 using Jukebox;
-using Jukebox.Legacy;
 using System.Linq;
 using System;
-using System.Windows.Forms.VisualStyles;
-using System.Windows.Forms;
+using static HeavenStudio.EntityTypes;
 
 namespace HeavenStudio.Editor
 {
@@ -26,6 +23,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private GameObject DropdownP;
         [SerializeField] private GameObject ColorP;
         [SerializeField] private GameObject StringP;
+        private static Dictionary<Type, GameObject> PropertyPrefabs;
 
         public RiqEntity entity;
 
@@ -40,6 +38,18 @@ namespace HeavenStudio.Editor
         private void Awake()
         {
             instance = this;
+
+            if (PropertyPrefabs == null) {
+                PropertyPrefabs = new() {
+                    { typeof(Integer), IntegerP },
+                    { typeof(Float), FloatP },
+                    { typeof(Dropdown), DropdownP },
+                    { typeof(Button), ButtonP },
+                    { typeof(Color), ColorP },
+                    { typeof(bool), BooleanP },
+                    { typeof(string), StringP },
+                };
+            }
         }
 
         private void Start()
@@ -74,15 +84,6 @@ namespace HeavenStudio.Editor
             AddParams(entity);
         }
 
-        static string TrackToThemeColour(int track) => track switch
-        {
-            1 => EditorTheme.theme.properties.Layer2Col,
-            2 => EditorTheme.theme.properties.Layer3Col,
-            3 => EditorTheme.theme.properties.Layer4Col,
-            4 => EditorTheme.theme.properties.Layer5Col,
-            _ => EditorTheme.theme.properties.Layer1Col
-        };
-
         private void AddParams(RiqEntity entity)
         {
             string[] split = entity.datamodel.Split('/');
@@ -95,7 +96,7 @@ namespace HeavenStudio.Editor
                 eventSelector.SetActive(false);
                 this.entity = entity;
 
-                string col = TrackToThemeColour((int)entity["track"]);
+                string col = EditorTheme.theme.properties.LayerColors[(int)entity["track"]];
                 Editor.instance.SetGameEventTitle($"Properties for <color=#{col}>{action.displayName}</color> on Beat {entity.beat.ToString("F2")} on <color=#{col}>Track {(int)entity["track"] + 1}</color>");
 
                 DestroyParams();
@@ -104,11 +105,8 @@ namespace HeavenStudio.Editor
 
                 for (int i = 0; i < action.parameters.Count; i++)
                 {
-                    object param = action.parameters[i].parameter;
-                    string caption = action.parameters[i].propertyCaption;
-                    string propertyName = action.parameters[i].propertyName;
-                    string tooltip = action.parameters[i].tooltip;
-                    ePrefabs.Add(propertyName, AddParam(propertyName, param, caption, tooltip));
+                    var p = action.parameters[i];
+                    ePrefabs.Add(p.propertyName, AddParam(p.propertyName, p.parameter, p.caption, p.tooltip));
                 }
 
                 foreach (var p in action.parameters)
@@ -133,57 +131,15 @@ namespace HeavenStudio.Editor
 
         private GameObject AddParam(string propertyName, object type, string caption, string tooltip = "")
         {
-            GameObject input;
-
-            var objType = type.GetType();
-
-            if (objType == typeof(EntityTypes.Integer))
-            {
-                input = InitPrefab(IntegerP, tooltip);
-                var property = input.GetComponent<BoolPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if (objType == typeof(EntityTypes.Float))
-            {
-                input = InitPrefab(FloatP, tooltip);
-                var property = input.GetComponent<NumberPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if (objType == typeof(EntityTypes.Button))
-            {
-                input = InitPrefab(ButtonP, tooltip);
-                var property = input.GetComponent<ButtonPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if (objType == typeof(bool))
-            {
-                input = InitPrefab(BooleanP, tooltip);
-                var property = input.GetComponent<BoolPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if (objType.IsEnum || objType == typeof(string[]))
-            {
-                input = InitPrefab(DropdownP, tooltip);
-                var property = input.GetComponent<DropdownPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if (objType == typeof(Color))
-            {
-                input = InitPrefab(ColorP, tooltip);
-                var property = input.GetComponent<ColorPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if (objType == typeof(string))
-            {
-                input = InitPrefab(StringP, tooltip);
-                var property = input.GetComponent<StringPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else
-            {
+            if (!PropertyPrefabs.TryGetValue(type.GetType(), out GameObject propertyPrefab)) {
                 Debug.LogError("Can't make property interface of type: " + type.GetType());
                 return null;
             }
+
+            GameObject input = InitPrefab(propertyPrefab, tooltip);
+            EventPropertyPrefab property = input.GetComponent<EventPropertyPrefab>();
+            property.SetProperties(propertyName, type, caption);
+
             return input;
         }
 

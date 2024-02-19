@@ -21,9 +21,9 @@ namespace HeavenStudio.Editor
 
         private string _defaultValue;
 
-        new public void SetProperties(string propertyName, object type, string caption)
+        public override void SetProperties(string propertyName, object type, string caption)
         {
-            InitProperties(propertyName, caption);
+            base.SetProperties(propertyName, type, caption);
 
             _defaultValue = (string)type;
 
