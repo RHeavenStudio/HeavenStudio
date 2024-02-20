@@ -141,6 +141,7 @@ namespace HeavenStudio.InputSystem
         [System.Serializable]
         public struct ControlBindings
         {
+            public int version;
             public int[] Pad;
             public int[] Baton;
             public int[] Touch;
@@ -184,7 +185,19 @@ namespace HeavenStudio.InputSystem
                 string json = File.ReadAllText(path);
                 if (json is not null or "")
                 {
-                    currentBindings = JsonUtility.FromJson<ControlBindings>(json);
+                    try
+                    {
+                        currentBindings = JsonUtility.FromJson<ControlBindings>(json);
+                        if (currentBindings.version != GetBindingsVersion())
+                        {
+                            currentBindings = UpdateBindings(currentBindings);
+                            SaveBindings();
+                        }
+                    }
+                    catch (System.Exception)
+                    {
+                        ResetBindings();
+                    }
                 }
                 else
                 {
@@ -219,6 +232,19 @@ namespace HeavenStudio.InputSystem
         /// </summary>
         /// <param name="newBinds"></param>
         public abstract void SetCurrentBindings(ControlBindings newBinds);
+
+        /// <summary>
+        /// updates controller bindings to new versions
+        /// </summary>
+        /// <param name="lastBinds">bindings of a previous version</param>
+        /// <returns></returns>
+        public abstract ControlBindings UpdateBindings(ControlBindings lastBinds);
+
+        /// <summary>
+        /// gets the current bindings version for this controller
+        /// </summary>
+        /// <returns></returns>
+        public abstract int GetBindingsVersion();
 
         /// <summary>
         /// Whether a given action can have be rebount
@@ -285,29 +311,6 @@ namespace HeavenStudio.InputSystem
         public abstract bool GetPointerLeftRight();
         public abstract void TogglePointerLock(bool locked);
         public abstract void RecentrePointer();
-
-        /// <summary>
-        /// True if the current direction is active
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <returns></returns>
-        public abstract bool GetHatDirection(InputDirection direction);
-
-        /// <summary>
-        /// True if the current direction just became active this Update
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
-        /// <returns></returns>
-        public abstract bool GetHatDirectionDown(InputDirection direction, out double dt);
-
-        /// <summary>
-        /// True if the current direction just became inactive this Update
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
-        /// <returns></returns>
-        public abstract bool GetHatDirectionUp(InputDirection direction, out double dt);
 
         public abstract bool GetFlick(out double dt);
         public abstract bool GetSlide(out double dt);

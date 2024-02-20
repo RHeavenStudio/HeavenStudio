@@ -67,7 +67,22 @@ namespace HeavenStudio.Common
             if (File.Exists(Application.persistentDataPath + "/settings.json"))
             {
                 string json = File.ReadAllText(Application.persistentDataPath + "/settings.json");
-                gameSettings = JsonUtility.FromJson<GameSettings>(json);
+                if (json == "")
+                {
+                    GlobalGameManager.IsFirstBoot = true;
+                    CreateDefaultSettings();
+                    return;
+                }
+                try
+                {
+                    gameSettings = JsonConvert.DeserializeObject<GameSettings>(json);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Error while loading settings, creating default settings;\n{e.Message}");
+                    GlobalGameManager.IsFirstBoot = true;
+                    CreateDefaultSettings();
+                }
             }
             else
             {

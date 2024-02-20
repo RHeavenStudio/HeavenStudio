@@ -6,11 +6,12 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 using TMPro;
-using Starpelly;
 using FFmpegOut;
 using Jukebox;
 using Newtonsoft.Json;
 using System.Linq;
+
+using HeavenStudio.Util;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -42,7 +43,7 @@ namespace HeavenStudio.Editor.Track
         public float VerticalZoom { get; private set; } = 1.0f;
         public float MousePos2Beat { get; private set; }
         public float MousePos2Layer { get; private set; }
-        public float MousePos2BeatSnap => Mathp.Round2Nearest(MousePos2Beat + (SnapInterval() * 0.5f), SnapInterval());
+        public float MousePos2BeatSnap => HeavenStudio.Util.MathUtils.Round2Nearest(MousePos2Beat + (SnapInterval() * 0.5f), SnapInterval());
         public bool MouseInTimeline { get; private set; }
 
         private Vector2 relativeMousePos;
@@ -383,11 +384,6 @@ namespace HeavenStudio.Editor.Track
             }
         }
 
-        public static string RandomID()
-        {
-            return Starpelly.Random.Strings.RandomString(Starpelly.Enums.Strings.StringType.Alphanumeric, 128);
-        }
-
         #endregion
 
         private void Update()
@@ -438,7 +434,7 @@ namespace HeavenStudio.Editor.Track
                     var left = leftSide;
                     var viewportWidth = TimelineScroll.viewport.rect.width;
                     var localPointRec = Mathf.Lerp(left, left + (viewportWidth / Zoom),
-                        Mathp.Normalize(Input.mousePosition.x, viewportPos.x, viewportPos.x + viewportWidth));
+                        MathUtils.Normalize(Input.mousePosition.x, viewportPos.x, viewportPos.x + viewportWidth));
 
                     var xPixels = (localPointRec * incre);
                     xPixels *= (Zoom);
@@ -827,7 +823,7 @@ namespace HeavenStudio.Editor.Track
                 }
             }
             int height = 200;
-            Color col = Colors.Hex2RGB("727272");
+            Color col = "727272".Hex2RGB();
             col.a = 0.25f;
 
             Texture2D tex = new Texture2D(wave.Length, height, TextureFormat.RGBA32, false);
@@ -985,7 +981,7 @@ namespace HeavenStudio.Editor.Track
         public float SnapToLayer(float y)
         {
             float size = LayerHeight();
-            return Mathf.Clamp(Mathp.Round2Nearest(y, size), -size * (LayerCount - 1), 0f);
+            return Mathf.Clamp(MathUtils.Round2Nearest(y, size), -size * (LayerCount - 1), 0f);
         }
 
         public float LayerHeight()
@@ -1011,7 +1007,7 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
-                float spd = Mathp.Round2Nearest(speed, SpeedSnap);
+                float spd = MathUtils.Round2Nearest(speed, SpeedSnap);
                 PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
                 Conductor.instance.SetTimelinePitch(spd);
                 PlaybackSpeed.value = spd;

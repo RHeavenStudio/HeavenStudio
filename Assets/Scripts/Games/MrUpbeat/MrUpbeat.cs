@@ -77,7 +77,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MrUpbeat.instance.BlipEvents(e["letter"], e["shouldGrow"], e["resetBlip"], e["shouldBlip"]);
+                        MrUpbeat.instance.BlipEvents(e["letter"], e["shouldGrow"], e["resetBlip"], e["shouldBlip"], e["blipLength"]);
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -86,6 +86,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("shouldGrow", true, "Grow Antenna", "Toggle if Mr. Upbeat's antennashould grow on every blip"),
                         new Param("resetBlip", false, "Reset Antenna", "Toggle if Mr. Upbeat's antenna should reset"),
                         new Param("shouldBlip", true, "Should Blip", "Toggle if Mr. Upbeat's antenna should blip every offbeat."),
+                        new Param("blipLength", new EntityTypes.Integer(0, 4, 4), "Text Blip Requirement", "Set how many blips it will take for the text to appear on Mr. Upbeat’s antenna."),
                     }
                 },
                 new GameAction("fourBeatCountInOffbeat", "4 Beat Count-In")
@@ -356,12 +357,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void BlipEvents(string inputLetter, bool shouldGrow, bool resetBlip, bool shouldBlip)
+        public void BlipEvents(string inputLetter, bool shouldGrow, bool resetBlip, bool shouldBlip, int blipLength)
         {
             if (resetBlip) man.blipSize = 0;
             man.shouldGrow = shouldGrow;
             man.blipString = inputLetter;
             man.shouldBlip = shouldBlip;
+            man.blipLength = blipLength;
         }
 
         public static void Count(int number)
