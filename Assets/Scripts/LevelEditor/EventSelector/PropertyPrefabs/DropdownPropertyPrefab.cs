@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using System;
 using System.Linq;
+
+using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 using HeavenStudio.Common;
+using Jukebox;
 
 namespace HeavenStudio.Editor
 {
@@ -15,9 +17,7 @@ namespace HeavenStudio.Editor
         [Header("Dropdown")]
         [Space(10)]
         public LeftClickTMP_Dropdown dropdown;
-        // private string[] values;
-        private List<string> names;
-        private List<(int, string)> values;
+        private List<int> keys;
 
         private int _defaultValue;
 
@@ -34,21 +34,41 @@ namespace HeavenStudio.Editor
 
             // Can we assume non-holey enum?
             // If we can we can simplify to dropdown.value = (int) parameterManager.entity[propertyName]
-            // var currentlySelected = (int) parameterManager.entity[propertyName];
-            // var selected = values
-            //     .Cast<object>()
-            //     .ToList()
-            //     .FindIndex(val => (int) val == currentlySelected);
+            // var currentlySelected = (int)parameterManager.entity[propertyName];
+            RiqEntity entity = parameterManager.entity;
+            int selected = 0;
 
-            if (type is not EntityTypes.Dropdown dropdownEntity) return;
+            switch (type)
+            {
+                case EntityTypes.Dropdown dropdownEntity:
+                    entity[propertyName].values = dropdownEntity.values;
+                    selected = dropdownEntity.defaultValue;
+                    break;
+                case Enum enumEntity:
+                    var enumType = enumEntity.GetType();
+                    entity[propertyName] = Enum.GetNames(enumType).ToList();
+                    keys = Enum.GetValues(enumType).Cast<int>().ToList();
+                    for (int i = 0; i < keys.Count; i++) {
+                        print("key " + (i + 1) + " : " + keys[i]);
+                    }
+                    selected = keys.FindIndex(val => val == (int)entity[propertyName]);
+                    break;
+                default:
+                break;
+            }
+            dropdown.AddOptions(entity[propertyName].values);
+            dropdown.value = selected;
 
-            names = dropdownEntity.values;
-            dropdown.AddOptions(names);
-            dropdown.value = (int)parameterManager.entity[propertyName];
+            entity[propertyName].valueChanged = new Action<List<string>>(newValues =>
+            {
+                print(string.Join(", ", entity[propertyName].values));
+                dropdown.ClearOptions();
+                dropdown.AddOptions(newValues);
+            });
 
             dropdown.onValueChanged.AddListener(newValue =>
                 {
-                    parameterManager.entity[propertyName] = newValue;
+                    parameterManager.entity[propertyName].currentIndex = newValue;
                     Debug.Log("newValue : " + newValue);
                     this.caption.text = (newValue != _defaultValue) ? (_captionText + "*") : _captionText;
                 }

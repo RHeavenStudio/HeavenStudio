@@ -5,7 +5,6 @@ using Cysharp.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.Networking;
-using DG.Tweening;
 
 using HeavenStudio.Util;
 using HeavenStudio.Editor.Track;
@@ -685,10 +684,7 @@ namespace HeavenStudio
             public Param(string propertyName, object parameter, string caption, string tooltip = "", List<CollapseParam> collapseParams = null)
             {
                 this.propertyName = propertyName;
-                this.parameter = parameter switch {
-                    // Enum param => new EntityTypes.Dropdown(param),
-                    _ => parameter,
-                };
+                this.parameter = parameter;
                 this.caption = caption;
                 this.tooltip = tooltip;
                 this.collapseParams = collapseParams;
@@ -1167,7 +1163,18 @@ namespace HeavenStudio
                                 Minigame game = gm.GetGameInfo(gm.currentGame);
                                 if (game != null) {
                                     var animators = gm.minigameObj.transform.GetComponentsInChildren<Animator>();
-                                    e["animator"] = string.Join(", ", animators.Select(anim => {
+                                    // e["animator"] = string.Join(", ", animators.Select(anim => {
+                                    //     var obj = anim.gameObject;
+                                    //     // string path = "/" + obj.name;
+                                    //     List<string> path = new() { obj.name };
+                                    //     while (obj.transform.parent != null && obj.transform.parent.name != game.name)
+                                    //     {
+                                    //         obj = obj.transform.parent.gameObject;
+                                    //         path.Add(obj.name);
+                                    //     }
+                                    //     return string.Join('/', path);
+                                    // }));
+                                    e["animator"].ChangeValues(animators.Select(anim => {
                                         var obj = anim.gameObject;
                                         // string path = "/" + obj.name;
                                         List<string> path = new() { obj.name };
@@ -1177,33 +1184,33 @@ namespace HeavenStudio
                                             path.Add(obj.name);
                                         }
                                         return string.Join('/', path);
-                                    }));
+                                    }).ToList());
                                 }
                                 return game?.displayName ?? "No Game";
                             }), "Get Animators", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
-                            new Param("animator", "", "Animator", "Specify which animator in the scene to play an animation on."),
+                            new Param("animator", new EntityTypes.Dropdown(0, "N/A"), "Animator", "Specify which animator in the scene to play an animation on."),
                             new Param("getAnimations", new EntityTypes.Button("N/A", e => {
                                 var gm = GameManager.instance;
                                 Minigame game = gm.GetGameInfo(gm.currentGame);
-                                var animObj = gm.minigameObj.transform.Find((string)e["animator"]);
+                                var animObj = gm.minigameObj.transform.Find(((EntityTypes.Dropdown)e["animator"]).currentValue);
                                 Animator animator = null;
-                                if (animObj != null && animObj.TryGetComponent(out animator)) {
-                                    e["animations"] = string.Join(", ", animator.runtimeAnimatorController.animationClips.Select(x => x.name));
+                                if (animObj != null && animObj.TryGetComponent(out animator) && animator != null) {
+                                    e["animation"].ChangeValues(animator.runtimeAnimatorController.animationClips.Select(x => x.name).ToList());
                                 }
                                 return animator != null ? animator.name : "N/A";
                             }), "Get Animations", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
-                            new Param("animations", "", "Animation", "Specify the name of the animation to play."),
+                            new Param("animation", new EntityTypes.Dropdown(0, "N/A"), "Animation", "Specify the name of the animation to play."),
                             new Param("scale", new EntityTypes.Float(0, 5, 0.5f), "Animation Scale", "The time scale of the animation. Higher values are faster."),
                         },
                         delegate {
                             var e = eventCaller.currentEntity;
-                            GameManager.instance.PlayAnimationArbitrary(e["animator"], e["animation"], e["scale"]);
+                            GameManager.instance.PlayAnimationArbitrary(e["animator"].currentValue, e["animation"].currentValue, e["scale"]);
                         }
                     ),
                     new GameAction("play sfx", "Play SFX", 0.5f, false,
                         new List<Param>()
                         {
-                            new Param("game", "", "Which Game", "Specify the game's sfx to play. An empty input will play global sfx."),
+                            new Param("game", new EntityTypes.Dropdown(0, EventCaller.instance.minigames.Values.Select(x => x.displayName).ToArray()), "Which Game", "Specify the game's sfx to play. An empty input will play global sfx."),
                             new Param("sfxName", "", "SFX Name", "The name of the sfx to play."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The sfx's pitch."),
                             new Param("offset", new EntityTypes.Float(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),

@@ -898,10 +898,6 @@ namespace HeavenStudio.Editor.Track
                             {
                                 returnVal = floatVal.val;
                             }
-                            else if (returnVal is EntityTypes.Dropdown dropdownVal)
-                            {
-                                returnVal = dropdownVal.defaultValue;
-                            }
                             else if (returnVal.GetType().IsEnum)
                             {
                                 returnVal = (int)ep[i].parameter;
