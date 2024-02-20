@@ -79,8 +79,7 @@ namespace HeavenStudio
             public int defaultValue;
             public List<string> values;
 
-            // params List<> when 😢
-            public Dropdown(int defaultValue, params string[] values)
+            public Dropdown(int defaultValue, List<string> values)
             {
                 this.defaultValue = defaultValue;
                 this.values = values.ToList();
