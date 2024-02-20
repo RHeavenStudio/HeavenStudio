@@ -208,9 +208,8 @@ public class HeavenRecorderController : MonoBehaviour
 
     public void StopRecording()
     {
-        if(recorder.enabled && audioRenderer.Rendering)
+        if(audioRenderer.Rendering)
             {
-                print("recording stopped!");
                 audioRenderer.Rendering = false;
                 if(audioRenderer.Save(pathHeavenRecorder + "temp.wav").State == AudioRenderer.Status.SUCCESS && exporting == true)
                 {
@@ -227,6 +226,8 @@ public class HeavenRecorderController : MonoBehaviour
                 enableInput = true;
                 dialog.ChangeExportButton(false);
                 dialog.lagSpikeText.SetText("Lag Spikes: 0/5");
+                lastFrameDrop = 0;
+                recorder._frameDropCount = 0;
                 dialog.UpdateProgressBar(0);
                 editorPreviewWindow.enabled = true;
                 PersistentDataManager.gameSettings.overlaysInEditor = prevOverlay;
