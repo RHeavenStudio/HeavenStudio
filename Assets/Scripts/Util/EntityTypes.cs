@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Jukebox;
 using UnityEngine;
@@ -76,22 +77,23 @@ namespace HeavenStudio
 
         public struct Dropdown
         {
+            public void ChangeValues(List<string> values)
+            {
+                this.values = values;
+                valueChanged?.Invoke(values);
+            }
             public int defaultValue;
             public List<string> values;
+            public int currentIndex;
+            public readonly string currentValue => values[currentIndex];
+            public Action<List<string>> valueChanged;
 
-            public Dropdown(int defaultValue, List<string> values)
+            public Dropdown(int defaultValue, params string[] values)
             {
                 this.defaultValue = defaultValue;
                 this.values = values.ToList();
-            }
-
-            public Dropdown(Enum value)
-            {
-                this.defaultValue = 0;
-                // Debug.Log(value);
-                // Debug.Log(value.GetType());
-                // Debug.Log(value.GetType().DeclaringType);
-                this.values = Enum.GetNames(value.GetType()).ToList();
+                currentIndex = 0;
+                valueChanged = null;
             }
         }
 
