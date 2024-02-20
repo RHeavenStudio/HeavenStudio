@@ -40,7 +40,6 @@ namespace HeavenStudio
         public string currentGame { get; private set; }
         public GameObject minigameObj { get; private set; }
         public Minigame minigame { get; private set; }
-        public Animator[] minigameAnimators { get; set; }
         public RiqEntity lastSection { get; private set; }
         public RiqEntity currentSection { get; private set; }
 
@@ -631,9 +630,13 @@ namespace HeavenStudio
             }
         }
 
-        public void PlayAnimationArbitrary(int animator, int animation, float scale)
+        public void PlayAnimationArbitrary(string animator, string animation, float scale)
         {
-            
+            // if possible (efficient enough) id like to find the object recursively, but for now this works
+            Transform animTrans = minigameObj.transform.Find(animator);
+            if (animTrans != null && animTrans.TryGetComponent(out Animator anim)) {
+                anim.DoScaledAnimationAsync(animation, scale);
+            }
         }
 
         public void ToggleInputs(bool inputs)

@@ -1166,14 +1166,33 @@ namespace HeavenStudio
                                 var gm = GameManager.instance;
                                 Minigame game = gm.GetGameInfo(gm.currentGame);
                                 if (game != null) {
-                                    gm.minigameAnimators = gm.minigameObj.transform.GetComponentsInChildren<Animator>();
-                                    e["animators"].values = gm.minigameAnimators.Select(x => x.name).ToList();
-                                    e["animations"] = gm.minigameAnimators[0].runtimeAnimatorController.animationClips.Select(x => x.name).ToList();
+                                    var animators = gm.minigameObj.transform.GetComponentsInChildren<Animator>();
+                                    e["animator"] = string.Join(", ", animators.Select(anim => {
+                                        var obj = anim.gameObject;
+                                        // string path = "/" + obj.name;
+                                        List<string> path = new() { obj.name };
+                                        while (obj.transform.parent != null && obj.transform.parent.name != game.name)
+                                        {
+                                            obj = obj.transform.parent.gameObject;
+                                            path.Add(obj.name);
+                                        }
+                                        return string.Join('/', path);
+                                    }));
                                 }
                                 return game?.displayName ?? "No Game";
-                            }), "Button", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
-                            new Param("animators", new EntityTypes.Dropdown(0, "N/A"), "Animator", "Specify which animator in the scene to play an animation on. (i.e \"Plalin\" or \"Game/Paddlers/Player\")"),
-                            new Param("animations", new EntityTypes.Dropdown(0, "N/A"), "Animation", "Specify the name of the animation to play."),
+                            }), "Get Animators", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
+                            new Param("animator", "", "Animator", "Specify which animator in the scene to play an animation on."),
+                            new Param("getAnimations", new EntityTypes.Button("N/A", e => {
+                                var gm = GameManager.instance;
+                                Minigame game = gm.GetGameInfo(gm.currentGame);
+                                var animObj = gm.minigameObj.transform.Find((string)e["animator"]);
+                                Animator animator = null;
+                                if (animObj != null && animObj.TryGetComponent(out animator)) {
+                                    e["animations"] = string.Join(", ", animator.runtimeAnimatorController.animationClips.Select(x => x.name));
+                                }
+                                return animator != null ? animator.name : "N/A";
+                            }), "Get Animations", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
+                            new Param("animations", "", "Animation", "Specify the name of the animation to play."),
                             new Param("scale", new EntityTypes.Float(0, 5, 0.5f), "Animation Scale", "The time scale of the animation. Higher values are faster."),
                         },
                         delegate {
