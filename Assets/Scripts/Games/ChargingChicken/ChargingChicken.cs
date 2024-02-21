@@ -1,4 +1,5 @@
 using NaughtyBezierCurves;
+using HeavenStudio.Common;
 using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
 using System;
@@ -33,6 +34,27 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     preFunctionLength = 4,
                 },
+                new GameAction("changeBgColor", "Background Appearance")
+                {
+                    function = delegate { 
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.ChangeColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
+                        }
+                    },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorFrom", ChargingChicken.defaultBGColor, "Color A Start", "Set the top-most color of the background gradient at the start of the event."),
+                        new Param("colorTo", ChargingChicken.defaultBGColor, "Color A End", "Set the top-most color of the background gradient at the end of the event."),
+                        new Param("colorFrom2", ChargingChicken.defaultBGColorBottom, "Color B Start", "Set the bottom-most color of the background gradient at the start of the event."),
+                        new Param("colorTo2", ChargingChicken.defaultBGColorBottom, "Color B End", "Set the bottom-most color of the background gradient at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new() {
+                            new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "colorFrom", "colorFrom2"  }),
+                        }),
+                    }
+                },
                 },
                 new List<string>() { "ctr", "aim" },
                 "ctrChargingChicken", "en",
@@ -49,7 +71,22 @@ namespace HeavenStudio.Games
         //definitions
         #region Definitions
 
+        [SerializeField] SpriteRenderer gradient;
+        [SerializeField] SpriteRenderer bgLow;
+        [SerializeField] SpriteRenderer bgHigh;
+        [SerializeField] Transform sea;
+
         bool isInputting = false;
+
+        double bgColorStartBeat = -1;
+        float bgColorLength = 0;
+        Util.EasingFunction.Ease lastEase;
+        Color colorFrom;
+        Color colorTo;
+        Color colorFrom2;
+        Color colorTo2;
+
+        float seaPos = 0;
 
         public enum DrumLoopList
         {
@@ -58,6 +95,25 @@ namespace HeavenStudio.Games
             SwungSixteenth,
             SwungEighth,
             Triplet,
+        }
+
+        private static Color _defaultBGColor;
+        public static Color defaultBGColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#6ED6FF", out _defaultBGColor);
+                return _defaultBGColor;
+            }
+        }
+        private static Color _defaultBGColorBottom;
+        public static Color defaultBGColorBottom
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FFFFFF", out _defaultBGColorBottom);
+                return _defaultBGColorBottom;
+            }
         }
 
         //drum loops
@@ -248,6 +304,9 @@ namespace HeavenStudio.Games
 
         public void Update()
         {
+            //update background color
+            BackgroundColorUpdate(Conductor.instance);
+
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             //player whiffs (press)
             {
@@ -265,6 +324,24 @@ namespace HeavenStudio.Games
 
                 isInputting = false; //stops the drums
             }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistColor(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColor(beat);
+        }
+
+        private void Awake()
+        {
+            colorFrom = defaultBGColor;
+            colorTo = defaultBGColor;
+            colorFrom2 = defaultBGColorBottom;
+            colorTo2 = defaultBGColorBottom;
         }
 
         #endregion
@@ -381,6 +458,47 @@ namespace HeavenStudio.Games
         {
             if (isInputting) SoundByte.PlayOneShotGame(whichDrum, volume: drumVolume);
         }
+
+        #region ColorShit
+
+        public void ChangeColor(double beat, float length, Color color1, Color color2, Color color3, Color color4, int ease)
+        {
+            bgColorStartBeat = beat;
+            bgColorLength = length;
+            colorFrom = color1;
+            colorTo = color2;
+            colorFrom2 = color3;
+            colorTo2 = color4;
+            lastEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeBgColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                ChangeColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
+            }
+        }
+
+        private void BackgroundColorUpdate(Conductor cond)
+        {
+            float normalizedBeat = Mathf.Clamp01(cond.GetPositionFromBeat(bgColorStartBeat, bgColorLength));
+            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
+            float newColorR = func(colorFrom.r, colorTo.r, normalizedBeat);
+            float newColorG = func(colorFrom.g, colorTo.g, normalizedBeat);
+            float newColorB = func(colorFrom.b, colorTo.b, normalizedBeat);
+            bgHigh.color = new Color(newColorR, newColorG, newColorB);
+            gradient.color = new Color(newColorR, newColorG, newColorB);
+            newColorR = func(colorFrom2.r, colorTo2.r, normalizedBeat);
+            newColorG = func(colorFrom2.g, colorTo2.g, normalizedBeat);
+            newColorB = func(colorFrom2.b, colorTo2.b, normalizedBeat);
+            bgLow.color = new Color(newColorR, newColorG, newColorB);
+        }
+
+        #endregion
 
         #endregion
     }
