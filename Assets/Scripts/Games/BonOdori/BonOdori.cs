@@ -25,8 +25,8 @@ namespace HeavenStudio.Games.Loaders
                         resizable = true,
                         parameters = new List<Param>()
                         {
-                            new Param("toggle", true, "Bop", "Toggle if the Donpans should bop for the duration of this event."),
-                            new Param("auto", false, "Bop (Auto)", "Toggle if the Donpans+ should automatically bop until another Bop event is reached."),
+                            new Param("toggle", true, "Bop", "Toggle if the Donpans and Yagura-chan should bop for the duration of this event."),
+                            new Param("auto", false, "Bop (Auto)", "Toggle if the Donpans and Yagura-chan should automatically bop until another Bop event is reached."),
                         },
 
                     },
@@ -34,58 +34,48 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("pan", "Pan")
                 {
                     
-                    function = delegate { BonOdori.instance.Clap(eventCaller.currentEntity.beat, 1,  "pan", eventCaller.currentEntity["type"]); },
-                    defaultLength = 0.5f,
+                   function = delegate {
+  var e = eventCaller.currentEntity;
+  string variation = "variation" + (new string[] { "Pan", "Pa", "Pa_n" })[e["type"]];
+  BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"]);
+},
+                    defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", BonOdori.variationPan.regular, "Type", "Set the variation of the voice line."),
+                        new Param("mute", false, "Mute Sound", "Mute the voice line."),
+                        new Param("type",BonOdori.typePan.Pan, "Type", "Set the type of voice line.", new(){
+                        new((x, _) => (int)x == 0, new string[] { "variationPan"}),
+                        new((x, _) => (int)x == 1, new string[] { "variationPa"}),
+                        new((x, _) => (int)x == 2, new string[] { "variationPa_n"}),
+                     }),
+                        new Param("variationPan", BonOdori.variationPan.PanC, "Pan Type", "Set the variation of the voice line."),
+                        new Param("variationPa", BonOdori.variationPa.PaG, "Pa Type", "Set the variation of the voice line."),
+                        new Param("variationPa_n", BonOdori.variationPa_n.Pa_nA , "Pa-n Type", "Set the variation of the voice line."),
                     }
                 },
-                new GameAction("pa-n", "Pa-n")
+               
+                 new GameAction("don", "Don")
                 {
-                    function = delegate { BonOdori.instance.Clap(eventCaller.currentEntity.beat, 1.5, "pa-n",  eventCaller.currentEntity["type"]); },
+                    
+                   function = delegate {
+  var e = eventCaller.currentEntity;
+  string variation = "variation" + (new string[] { "Don", "Do", "Do_n" })[e["type"]];
+  BonOdori.instance.Sound(e.beat, e[variation], e["type"]);
+},
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", BonOdori.variationPa_n.regular, "Type", "Set the variation of the voice line."),
-                    },
+                        new Param("type",BonOdori.typeDon.Don, "Type", "Set the type of voiceline", new(){
+                        new((x, _) => (int)x == 0, new string[] { "variationDon"}),
+                        new((x, _) => (int)x == 1, new string[] { "variationDo"}),
+                        new((x, _) => (int)x == 2, new string[] { "variationDo_n"}),
+                     }),
+                        new Param("variationDon", BonOdori.variationDon.DonA, "Don Type", "Set the variation of the voice line."),
+                        new Param("variationDo", BonOdori.variationDo.DoC, "Do Type", "Set the variation of the voice line."),
+                        new Param("variationDo_n", BonOdori.variationDo_n.Do_nA, "Do-n Type", "Set the variation of the voice line."),
+                    }
                 },
-                    new GameAction("pa", "Pa")
-                {
-                    function = delegate { BonOdori.instance.Clap(eventCaller.currentEntity.beat, 0.5,  "pa", eventCaller.currentEntity["type"]); },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", BonOdori.variationPa.regular, "Type", "Set the variation of the voice line."),
-                    },
-                },
-                new GameAction("don", "Don")
-                {
-                    function = delegate { BonOdori.instance.Sound(eventCaller.currentEntity.beat, 1,  "don",  eventCaller.currentEntity["type"]); },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", BonOdori.variationDon.regular, "Type", "Set the variation of the voice line."),
-                    },
-                },
-                new GameAction("do-n", "Do-n")
-                {
-                    function = delegate { BonOdori.instance.Sound(eventCaller.currentEntity.beat, 1.5, "do-n",  eventCaller.currentEntity["type"]); },
-                    defaultLength = 1f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", BonOdori.variationDo_n.regular, "Type", "Set the variation of the voice line."),
-                    },
-                },
-                new GameAction("do", "Do")
-                {
-                    function = delegate { BonOdori.instance.Sound(eventCaller.currentEntity.beat, 0.5,  "do",  eventCaller.currentEntity["type"]); },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", BonOdori.variationDo.regular, "Type", "Set the variation of the voice line."),
-                    },
-                },
+                
                 new GameAction("show text", "Show Text")
                 {
                     function = delegate {BonOdori.instance.ShowText(eventCaller.currentEntity["line 1"], eventCaller.currentEntity["line 2"], eventCaller.currentEntity["line 3"], eventCaller.currentEntity["line 4"], eventCaller.currentEntity["line 5"]);},
@@ -126,7 +116,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                     new GameAction("scroll text", "Scroll Text")
                 {
-                    function = delegate {BonOdori.instance.ScrollText(eventCaller.currentEntity["line 1"],eventCaller.currentEntity["line 2"],eventCaller.currentEntity["line 3"],eventCaller.currentEntity["line 4"],eventCaller.currentEntity["line 5"], eventCaller.currentEntity.length);},
+                    function = delegate {BonOdori.instance.ScrollText(eventCaller.currentEntity["line 1"],eventCaller.currentEntity["line 2"],eventCaller.currentEntity["line 3"],eventCaller.currentEntity["line 4"],eventCaller.currentEntity["line 5"], eventCaller.currentEntity.length, eventCaller.currentEntity.beat);},
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -141,10 +131,27 @@ namespace HeavenStudio.Games.Loaders
                 },
                     new GameAction("bow", "Bow")
                 {
-                    function = delegate {BonOdori.instance.Bow(eventCaller.currentEntity.beat);},
+                    function = delegate {BonOdori.instance.Bow(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
                     defaultLength = 2f,
+                    resizable = true,
 
-                }
+                },
+                new GameAction("spin", "Spin")
+                {
+                    function = delegate {BonOdori.instance.Spin(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
+                    defaultLength = 1f,
+
+                },
+                    new GameAction("toggle bg", "Toggle Darker Background")
+                {
+                    function = delegate {BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]);},
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Darken Background", "Darkens the background"),
+                    }
+
+                },
  
                     
           
@@ -163,7 +170,14 @@ namespace HeavenStudio.Games
     public class BonOdori : Minigame
     {
        string prefix;
+       double beatUniversal;
         string suffix;
+        bool goBop;
+        string originalText1;
+        string originalText2;
+        string originalText3;
+        string originalText4;
+        string originalText5;
         TextMeshProUGUI Text1_GUI;
         TextMeshProUGUI Text2_GUI;
         TextMeshProUGUI Text3_GUI;
@@ -176,8 +190,6 @@ namespace HeavenStudio.Games
         TextMeshProUGUI Text10_GUI;
 
 
-        [SerializeField] TMPro.TMP_FontAsset WW;
-        [SerializeField] TMPro.TMP_FontAsset RodinDB;
         [SerializeField] TMP_Text Text1;
         [SerializeField] TMP_Text Text2;
         [SerializeField] TMP_Text Text3;
@@ -192,61 +204,57 @@ namespace HeavenStudio.Games
         [SerializeField] Animator DarkPlane;
         [SerializeField] Animator Player;
         [SerializeField] Animator Judge;
-        [SerializeField] Animator CPU;
+
+        [SerializeField] Animator CPU1;
+        [SerializeField] Animator CPU2;
+        [SerializeField] Animator CPU3;
         [SerializeField] Animator Face;
 
+        public enum typePan
+        {
+            Pan = 0,
+            Pa = 1,
+            Pa_n = 2
+        }
+        public enum typeDon
+        {
+            Don = 0,
+            Do = 1,
+            Do_n = 2
+        }
 
-        public enum color
-        {
-            red = 0,
-            yellow = 1,
-            green = 2
-        }
-        public enum Tags
-        {
-            Tag1 = 1,
-            Tag2 = 2,
-            Tag3 = 3,
-            Tag4 = 4,
-            Tag5 = 5,
-            Tag6 = 6,
-            Tag7 = 7,
-            Tag8 = 8,
-            Tag9 = 9,
-            Tag10 = 10
-        }
         public enum variationPan
         {
-            regular = 0,
-            variation1 = 1,
-            variation2 = 2
+            PanC = 0,
+            PanE = 1,
+            PanA = 2
         }
         public enum variationPa_n
         {
-            regular = 0,
-            variation1 = 1
+            Pa_nA = 0,
+            Pa_nC = 1
         }
         public enum variationPa
         {   
-            regular = 0
+            PaG = 0
 
         }
         public enum variationDon
         {
-            regular = 0,
-            variation1 = 1,
-            variation2 = 2, 
-            variation3 = 3
+            DonA = 0,
+            DonD = 1,
+            DonC = 2, 
+            DonG = 3
         }
         public enum variationDo_n
         {
-            regular = 0,
-            variation1 = 1
+            Do_nA = 0,
+            Do_nG = 1
         }
         public enum variationDo
         {
-            regular = 0,
-            variation1 = 1
+            DoC = 0,
+            DoG = 1
         }
         public static BonOdori instance { get; set; }
         public void Awake()
@@ -281,97 +289,106 @@ namespace HeavenStudio.Games
 
         }
 
-        public void Clap(double beat, double type, string typeSpeak, int variation)
-        {   
+        public void Clap(double beat, int variation, int typeSpeak, bool muted)
+        {  
+            if (muted)
+            {
+                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
+            } 
+            else
+            {
+
             
             
-                        switch (typeSpeak){
-                            case "pan":
-                            ScheduleInput(beat, 0.5f, InputAction_BasicPress, Success, Miss, Empty);
+            
+                switch (typeSpeak){
+                            case 0:
+                            ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
                             switch (variation){
-                                case (int) variationPan.regular:
+                                case 0:
                                 MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pan1", beat + 0.5, offset: 0.01f)});
+                                    new MultiSound.Sound("bonOdori/pan1", beat, offset: 0.01f)});
                             
                                 break;
-                                case (int) variationPan.variation1:
+                                case 1:
                                 MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pan2", beat + 0.5f, offset: 0.01f)});
+                                    new MultiSound.Sound("bonOdori/pan2", beat, offset: 0.01f)});
                                 break;
-                                case (int) variationPan.variation2:
+                                case 2:
                                 MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pan3", beat + 0.5f, offset: 0.01f)});
+                                    new MultiSound.Sound("bonOdori/pan3", beat, offset: 0.01f)});
                                 break;}
                                 break;
-                            case "pa-n":
-                            ScheduleInput(beat, 1f, InputAction_BasicPress, Success, Miss, Empty);
+                            case 2:
+                            ScheduleInput(beat,0f, InputAction_BasicPress, Success, Miss, Empty);
                             switch (variation){
-                                case (int) variationPa_n.regular:
+                                case 0:
                                 MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pa_n1", beat + 1f, offset: 0.01f)});
+                                    new MultiSound.Sound("bonOdori/pa_n1", beat, offset: 0.01f)});
                             
                                 break;
-                                case (int) variationPa_n.variation1:
+                                case 1:
                                 MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pa_n2", beat + 1f, offset: 0.01f)});
+                                    new MultiSound.Sound("bonOdori/pa_n2", beat, offset: 0.01f)});
                                 break;}
                                 break;
-                            case "pa":
-                            ScheduleInput(beat, 0.5f, InputAction_BasicPress, Success, Miss, Empty);
+                            case 1:
+                            ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
                             MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pa1", beat + 0.5f, offset: 0.01f)});
+                                    new MultiSound.Sound("bonOdori/pa1", beat, offset: 0.01f)});
                                 break;
+                beatUniversal = beat;
                             
  
-            }
-        }
-        public void Sound(double beat, double type, string typeSpeak, int variation)
+            
+        }}}
+            public void Sound(double beat, int variation, int typeSpeak )
         {  switch (typeSpeak){
-                            case "don":
+                            case 0:
                             switch (variation){
-                case (int)variationDon.regular:
+                case 0:
                         MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/don1", beat + 0.5, offset: 0.01f)});
+                        new MultiSound.Sound("bonOdori/don1", beat, offset: 0.01f)});
                 break;
-                case (int)variationDon.variation1:
+                case 1:
                         MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/don2", beat + 0.5, offset: 0.01f)});
+                        new MultiSound.Sound("bonOdori/don2", beat, offset: 0.01f)});
                 break;
-                case (int)variationDon.variation2:
+                case 2:
                         MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/don3", beat + 0.5, offset: 0.01f)});
+                        new MultiSound.Sound("bonOdori/don3", beat, offset: 0.01f)});
                 break;   
-                case (int)variationDon.variation3:
+                case 3:
                         MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/don4", beat + 0.5, offset: 0.01f)});
+                        new MultiSound.Sound("bonOdori/don4", beat, offset: 0.01f)});
                 break;                                  
                             }
                             
                             
                             break;
-                            case "do-n":
+                            case 2:
 
             switch (variation) {
-                case (int)variationDo_n.regular:
+                case 0:
                         MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/do_n1", beat + 1, offset: 0.01f)});
+                        new MultiSound.Sound("bonOdori/do_n1", beat, offset: 0.01f)});
                 break;
-                case (int)variationDo_n.variation1:
+                case 1:
                         MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/do_n2", beat + 1, offset: 0.01f)});
+                        new MultiSound.Sound("bonOdori/do_n2", beat, offset: 0.01f)});
                 break;
             }
             break;
                             
-                            case "do":
+                            case 1:
                             switch (variation){
-                                case (int) variationDo.regular:
+                                case 0:
                                 MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/do1", beat + 0.5, offset: 0.01f)});
+                        new MultiSound.Sound("bonOdori/do1", beat, offset: 0.01f)});
                 break;
-                            case (int) variationDo.variation1:
+                            case 1:
                                 MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/do2", beat + 0.5, offset: 0.01f)});
+                        new MultiSound.Sound("bonOdori/do2", beat, offset: 0.01f)});
                 break;
                             }
                             
@@ -392,6 +409,12 @@ namespace HeavenStudio.Games
                         MultiSound.Play(new MultiSound.Sound[] {
                         new MultiSound.Sound("miss", 0f, offset: 0.01f),
                         });
+                         BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beatUniversal + 1d, delegate { Face.Play("Sad");}),
+                    new BeatAction.Action(beatUniversal + 3d, delegate {Face.Play("Neutral");})
+                });
+                        
         }
         
         
@@ -404,112 +427,123 @@ namespace HeavenStudio.Games
 
 
         }
-    string ChangeColor(string text)
+    string ChangeColor(string text, bool isScroll)
     {
             if (text.Contains("r|") | text.Contains("y|") | text.Contains("g|")){
+            if (!isScroll){
+
+            
             return text.Replace("r|", "<color=#ff0000>")
                    .Replace("g|", "<color=#00ff00>")
                    .Replace("y|", "<color=#ffff00>")
                    + "</color>";
             }
+            else
+            {
+                            return text.Replace("r|", "<color=#ff00ff>")
+                   .Replace("g|", "<color=#00ffff>")
+                   .Replace("y|", "<color=#ffffff>")
+                   + "</color>";
+
+            }}
             return text;
 
     }
 
         public void ShowText(string text1, string text2, string text3, string text4, string text5)
-        {         
-       
-                       
-                        
-
-
-        
-
-
+        {
             
-            
-
-    
-
-                
             if (text1 is not "" && text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line."){
                 Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                text1 = ChangeColor(text1);
+                originalText1 = text1;
+                text1 = ChangeColor(text1, false);
 
                 Text1.text = text1;
                 
- ;
-                Text6.text = text1;
+ ;              
+                Text6.text = ChangeColor(originalText1, true);
   
                 }
             if (text2 is not ""){
                 Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                text2 = ChangeColor(text2);
+                originalText2 = text2;
+                text2 = ChangeColor(text2, false);
                 Text2.text = text2;
-                Text7.text = text2;
+                Text7.text = ChangeColor(originalText2, true);
    
                 }
             if (text3 is not ""){
-                  
+                originalText3 = text3;
                 Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 
-                text3 = ChangeColor(text3);
+                text3 = ChangeColor(text3, false);
                 
                 Text3.text = text3;
-                Text8.text = text3; 
+                Text8.text = ChangeColor(originalText3, true);
  
                 }
             if (text4 is not ""){
                 Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                text4 = ChangeColor(text4);
+                originalText4 = text4;
+                text4 = ChangeColor(text4, false);
                 Text4.text = text4;
 
                 Text9.text = text4; 
+                Text9.text = ChangeColor(originalText4, true);
 
                 }
             if (text5 is not ""){
                 Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                text5 = ChangeColor(text5);
+                originalText5 = text5;
+                text5 = ChangeColor(text5, false);
                 Text5.text = text5;
-                Text10.text = text5;
+                Text10.text = ChangeColor(originalText5, true);
 
                 }
             
-            if (Text1.text != "" | Text2.text != "" | Text3.text != "" | Text4.text != "" | Text5.text != ""){
-                DarkPlane.Play("Appear");
-            }
 
         }
         public void DeleteText(bool text1, bool text2, bool text3, bool text4, bool text5){
             if (text1 == true){
+                Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text1.text = "";
+                Text6.text = "";
             }
             if (text2 == true){
+                Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text2.text = "";
+                Text7.text = "";
             }
             if (text3 == true){
+                Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text3.text = "";
+                Text8.text = "";
             }
             if (text4 == true){
+                Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text4.text = "";
+                Text9.text = "";
             }
             if (text5 == true){
+                Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text5.text = "";
-            }
-            if (Text1.text == "" && Text2.text == "" && Text3.text == "" && Text4.text == "" && Text5.text == ""){
-                DarkPlane.Play("GoAway");
+                Text10.text = "";
             }
 
+
         }
- IEnumerator SmoothText(TMP_Text text, float length)
+ IEnumerator SmoothText(TMP_Text text, float length, double beat)
     {
+        Conductor conductor = new Conductor();
         float startTime = Time.time;
         float endTime = startTime + length;
+        float duration = ((length / conductor.GetBpmAtBeat(beat)) * 60);
 
         while (Time.time < endTime)
         {
-            float t = ((Time.time - startTime) *3);
-            float maskValue = Mathf.Lerp(-10f, -7.73f, t / length);
+            float t = ((Time.time - startTime) / duration);
+        
+            float maskValue = Mathf.Lerp(-10f, -7f, t);
 
             text.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, maskValue, 10));
 
@@ -519,37 +553,87 @@ namespace HeavenStudio.Games
 
 
     }
-    public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length)
+    public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length, double beat)
     {
         if (text1){
-            StartCoroutine(SmoothText(Text6, length));}
+            StartCoroutine(SmoothText(Text6, length, beat));}
         if (text2){
-            StartCoroutine(SmoothText(Text7, length));}
+            StartCoroutine(SmoothText(Text7, length, beat));}
         if (text3){
-            StartCoroutine(SmoothText(Text8, length));}
+            StartCoroutine(SmoothText(Text8, length, beat));}
         if (text4){
-            StartCoroutine(SmoothText(Text9, length));}
+            StartCoroutine(SmoothText(Text9, length, beat));}
         if (text5){
-            StartCoroutine(SmoothText(Text10, length));}
+            StartCoroutine(SmoothText(Text10, length, beat));}
             
     }
 
-    public void Bop(double beat, double length, bool bop, bool auto)
-        {  
+    public void Bop(double beat, float length, bool shouldBop, bool autoBop)
+        {
+            if (!shouldBop) { goBop = false; return; }
+            goBop = autoBop;
+            if (shouldBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            Player.Play("Bop");
+                            CPU1.Play("Bop");
+                            CPU2.Play("Bop");
+                            CPU3.Play("Bop");
+                            Judge.Play("Bop");
+
+                        })
+                    });
+                }
+            
 
         }
-    public void Bow(double beat)
+
+        }
+    public void Bow(double beat, float length)
     {
+        goBop = false;
         Player.Play("Bow");
-        CPU.Play("Bow");
+        CPU1.Play("Bow");
+        CPU2.Play("Bow");
+        CPU3.Play("Bow");
                         BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + 2, delegate { Player.Play("NeutralBopped"); })
+                    new BeatAction.Action(beat + length, delegate { Player.Play("NeutralBopped"); CPU1.Play("NeutralBopped");CPU2.Play("NeutralBopped"); CPU3.Play("NeutralBopped");})
                 });
     }
+    public void Spin(double beat, float length)
+    {
+
+    }
             
+        public override void OnBeatPulse(double beat)
+        {
+            if (goBop)
+            {
+                Player.Play("Bop");
+                CPU1.Play("Bop");
+                CPU2.Play("Bop");
+                CPU3.Play("Bop");
+                Judge.Play("Bop");
 
-
+            }
+        }
+public void DarkBG(double beat, bool toggle)
+{
+    if (toggle)
+    {
+        DarkPlane.Play("Appear");
+    }
+    else
+    {
+        DarkPlane.Play("GoAway");
+    }
+}
         
 
 
