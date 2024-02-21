@@ -9,12 +9,9 @@ namespace HeavenStudio.Games
     public class SoundEffects : MonoBehaviour
     {
         public enum CountNumbers { One, Two, Three, Four }
+        // public readonly static string[] countNames = { "one", "two", "one", "two", "three", "four" };
         public readonly static string[] countNames = { "one", "two", "one", "two", "three", "four" };
         public readonly static float[] timings     = {  0f,    2f,    4f,    5f,    6f,      7f    };
-        public static void Count(int type, bool alt)
-        {
-            SoundByte.PlayOneShot("count-ins/" + countNames[type] + (!alt ? "1" : "2"));
-        }
 
         public enum CountInType { Normal, Alt, Cowbell }
         public static string GetCountInSound(int type)
@@ -28,7 +25,7 @@ namespace HeavenStudio.Games
 
         public static void PreloadCounts()
         {
-            foreach (var load in new string[] { "one", "two", "three", "four", "cowbell", "ready1", "ready2" })
+            foreach (string load in new string[] { "one", "two", "three", "four", "cowbell", "ready1", "ready2" })
             {
                 SoundByte.PreloadAudioClipAsync(load);
             }
@@ -73,6 +70,11 @@ namespace HeavenStudio.Games
                 sfx.Add(new MultiSound.Sound("count-ins/" + sounds[i] + sound, beat + (timings[i] * length)));
             }
             MultiSound.Play(sfx, false);
+        }
+
+        public static void Count(int type, bool alt)
+        {
+            SoundByte.PlayOneShot("count-ins/" + (CountNumbers)type + (!alt ? "1" : "2"));
         }
 
         public static void Cowbell()

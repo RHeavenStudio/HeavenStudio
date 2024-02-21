@@ -6,6 +6,7 @@ using Jukebox;
 using System.Linq;
 using System;
 using static HeavenStudio.EntityTypes;
+using HeavenStudio.Common;
 
 namespace HeavenStudio.Editor
 {
@@ -145,7 +146,12 @@ namespace HeavenStudio.Editor
             input.transform.localScale = Vector3.one;
 
             if (tooltip != string.Empty) {
-                Tooltip.AddTooltip(input, tooltip);
+                Debug.Log(PersistentDataManager.gameSettings.showParamTooltips);
+                if (PersistentDataManager.gameSettings.showParamTooltips) {
+                    Tooltip.AddTooltip(input, tooltip);
+                } else {
+                    Tooltip.AddTooltip(input, "", tooltip);
+                }
             }
             
             EventPropertyPrefab property = input.GetComponent<EventPropertyPrefab>();

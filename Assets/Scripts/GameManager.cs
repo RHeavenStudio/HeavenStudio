@@ -622,6 +622,7 @@ namespace HeavenStudio
 
         public static void PlaySFXArbitrary(double beat, string game, string name, float pitch, float offset)
         {
+            if (string.IsNullOrEmpty(game) || string.IsNullOrEmpty(name)) return;
             if (string.IsNullOrEmpty(game)) {
                 SoundByte.PlayOneShot(name, beat, pitch, offset: offset);
             } else {

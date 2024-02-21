@@ -1128,7 +1128,7 @@ namespace HeavenStudio
                             new("xEnd", new EntityTypes.Float(1, 100, 1), "End Horizontal Tiles", "Set the amount of horizontal tiles at the end of the event."),
                             new("yStart", new EntityTypes.Float(1, 100, 1), "Start Vertical Tiles", "Set the amount of vertical tiles at the start of the event."),
                             new("yEnd", new EntityTypes.Float(1, 100, 1), "End Vertical Tiles", "Set the amount of vertical tiles at the end of the event."),
-                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "Set if only a specific axis should be modified."),
+                            new("axis", StaticCamera.ViewAxis.All, "Axis", "Set if only a specific axis should be modified."),
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xStart", "yStart" })
@@ -1144,7 +1144,7 @@ namespace HeavenStudio
                             new("xScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Horizontal Scroll", "Set the horizontal scroll at the end of the event."),
                             new("yScrollStart", new EntityTypes.Float(-100, 100, 0), "Start Vertical Scroll", "Set the vertical scroll at the start of the event."),
                             new("yScrollEnd", new EntityTypes.Float(-100, 100, 0), "End Vertical Scroll", "Set the vertical scroll at the end of the event."),
-                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "Set if only a specific axis should be modified."),
+                            new("axis", StaticCamera.ViewAxis.All, "Axis", "Set if only a specific axis should be modified."),
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xScrollStart", "yScrollStart" })
@@ -1164,7 +1164,7 @@ namespace HeavenStudio
                                 if (game != null) {
                                     var animators = gm.minigameObj.transform.GetComponentsInChildren<Animator>();
                                     // not in an update loop so it's fine :3
-                                    e["animator"].ChangeValues(animators.Select(anim => {
+                                    ((EntityTypes.DropdownObj)e["animator"]).SetValues(animators.Select(anim => {
                                         var obj = anim.gameObject;
                                         List<string> path = new() { obj.name };
                                         while (obj.transform.parent != null && obj.transform.parent.name != game.name)
@@ -1181,13 +1181,17 @@ namespace HeavenStudio
                             new Param("getAnimations", new EntityTypes.Button("", e => {
                                 var gm = GameManager.instance;
                                 Minigame game = gm.GetGameInfo(gm.currentGame);
-                                string animPath = e["animator"].CurrentValue;
+                                string animPath = ((EntityTypes.DropdownObj)e["animator"]).CurrentValue;
                                 Animator animator = null;
                                 if (animPath != null) {
                                     var animObj = gm.minigameObj.transform.Find(animPath);
                                     if (animObj != null && animObj.TryGetComponent(out animator) && animator != null) {
-                                        var animations = animator.runtimeAnimatorController.animationClips.Select(x => x.name).ToList();
-                                        e["animation"].ChangeValues(animations);
+                                        var animations = animator
+                                            .runtimeAnimatorController
+                                            .animationClips
+                                            .Select(x => x.name)
+                                            .ToList();
+                                        ((EntityTypes.DropdownObj)e["animation"]).SetValues(animations);
                                     }
                                 }
                                 return animator != null ? animator.name : "N/A";
@@ -1203,24 +1207,40 @@ namespace HeavenStudio
                     new GameAction("play sfx", "Play SFX", 0.5f, false,
                         new List<Param>()
                         {
-                            new Param("game", new EntityTypes.Dropdown(0), "Which Game", "Specify the game's sfx to play. An empty input will play global sfx.", new() {
+                            new Param("game", new EntityTypes.Dropdown(), "Which Game", "Specify the game's sfx to play. An empty input will play global sfx.", new() {
                                 new((x, e) => {
-                                    e["game"].ChangeValues(EventCaller.instance.minigames.Values.Select(x => x.displayName).ToList());
+                                    // Minigame game = eventCaller.minigames[((EntityTypes.DropdownObj)x).CurrentValue];
+                                    string gameName = ((EntityTypes.DropdownObj)e["game"]).CurrentValue;
+                                    Minigame game = eventCaller.minigames[gameName];
+                                    int startFrom = "assets/resources/sfx/".Length - 1;
+                                    foreach (var thing in game.GetCommonAssetBundle().GetAllAssetNames())
+                                    {
+                                        Debug.Log(thing);
+                                    }
+                                    List<string> clips = new() { "" };
+                                    foreach (var clip in game.GetCommonAssetBundle().GetAllAssetNames().Concat(game.GetLocalizedAssetBundle().GetAllAssetNames()))
+                                    {
+                                        string[] splitClip = clip[startFrom..].Split('/');
+                                        if (splitClip[0] == "games" && splitClip[1] == gameName) {
+                                            clips.Add(splitClip[2]);
+                                            Debug.Log(splitClip[2]);
+                                        }
+                                    }
+                                    EntityTypes.DropdownObj sfxDD = e["sfxName"];
+                                    sfxDD.SetValues(clips);
                                     return true;
                                 }),
                             }),
-                            new Param("sfxName", "", "SFX Name", "The name of the sfx to play."),
+                            new Param("sfxName", new EntityTypes.Dropdown(), "SFX Name", "The name of the sfx to play."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The sfx's pitch."),
                             new Param("offset", new EntityTypes.Float(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),
                         },
                         preFunction : delegate {
                             var e = eventCaller.currentEntity;
-                            var mgs = EventCaller.instance.minigames.Values;
-                            GameManager.PlaySFXArbitrary(e.beat, mgs.ElementAt((int)e["game"].currentIndex).name, e["sfxName"], e["pitch"], e["offset"]);
+                            GameManager.PlaySFXArbitrary(e.beat, e["game"].CurrentValue, e["sfxName"].CurrentValue, e["pitch"], e["offset"]);
                         }
                     ),
                 }),
-
             };
 
             foreach (var game in defaultGames)
@@ -1229,60 +1249,9 @@ namespace HeavenStudio
             }
 
             LoadMinigames(eventCaller);
+
+            eventCaller.minigames["advanced"].actions
+                .Find(a => a.actionName == "play sfx").parameters[0].parameter = new EntityTypes.Dropdown(0, eventCaller.minigames.Keys.Skip(defaultGames.Count).ToArray());
         }
-    }
-}
-
-public class EnumProcessor
-{
-    private readonly Enum enumValue;
-
-    public EnumProcessor(Enum value)
-    {
-        if (!value.GetType().IsEnum)
-        {
-            throw new ArgumentException("Value must be an enum type.");
-        }
-
-        this.enumValue = value;
-    }
-
-    public void ProcessEnumValue()
-    {
-        Type enumType = this.enumValue.GetType().DeclaringType;
-
-        if (enumType != null)
-        {
-            Console.WriteLine("EnumType: " + enumType.Name);
-        }
-
-        Console.WriteLine("EnumValue: " + this.enumValue);
-    }
-}
-
-public class EnumExamples
-{
-    public enum EnumExample
-    {
-        EnumValue1,
-        EnumValue2
-    }
-
-    public enum EnumAnotherExample
-    {
-        DifferentValue1,
-        DifferentValue2
-    }
-
-    public static void Main()
-    {
-        EnumProcessor processor1 = new EnumProcessor(EnumExample.EnumValue1);
-        EnumProcessor processor2 = new EnumProcessor(EnumAnotherExample.DifferentValue1);
-
-        // Call the method for EnumExample
-        processor1.ProcessEnumValue();
-
-        // Call the method for EnumAnotherExample
-        processor2.ProcessEnumValue();
     }
 }
