@@ -26,17 +26,17 @@ namespace HeavenStudio.Editor
         {
             base.SetProperties(propertyName, type, caption);
 
-            RiqEntity entity = parameterManager.entity;
             int selected = 0;
 
             switch (type)
             {
                 case EntityTypes.Dropdown dropdownEntity:
                     // entity[propertyName].ChangeValues(dropdownEntity.Values);
-                    selected = entity[propertyName].currentIndex;
-                    if (dropdownEntity.Values != null) dropdown.AddOptions(entity[propertyName].Values);
-                    dropdown.onValueChanged.AddListener(newVal => parameterManager.entity[propertyName].currentIndex = newVal);
-                    entity[propertyName].onValueChanged = new Action<List<string>>(newValues =>
+                    EntityTypes.DropdownObj dropdownObj = entity[propertyName];
+                    selected = dropdownObj.currentIndex;
+                    dropdown.AddOptions(dropdownObj.Values);
+                    dropdown.onValueChanged.AddListener(newVal => dropdownObj.currentIndex = newVal);
+                    dropdownObj.onValueChanged = new Action<List<string>>(newValues =>
                     {
                         if (dropdown == null) return;
                         dropdown.ClearOptions();
@@ -50,7 +50,7 @@ namespace HeavenStudio.Editor
                     selected = Array.FindIndex(keys, val => val == (int)entity[propertyName]);
 
                     dropdown.AddOptions(Enum.GetNames(enumType).ToList());
-                    dropdown.onValueChanged.AddListener(val => parameterManager.entity[propertyName] = keys[val]);
+                    dropdown.onValueChanged.AddListener(val => entity[propertyName] = keys[val]);
                     break;
                 default:
                 break;

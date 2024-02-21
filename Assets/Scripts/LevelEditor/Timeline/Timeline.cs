@@ -888,26 +888,18 @@ namespace HeavenStudio.Editor.Track
                     {
                         for (int i = 0; i < ep.Count; i++)
                         {
-                            object returnVal = ep[i].parameter;
+                            object returnVal = ep[i].parameter switch {
+                                EntityTypes.Integer intVal => intVal.val,
+                                EntityTypes.Float floatVal => floatVal.val,
+                                EntityTypes.Button buttonVal => buttonVal.label,
+                                EntityTypes.Dropdown ddVal => new EntityTypes.DropdownObj(ddVal.defaultValue, ddVal.values),
+                                _ => ep[i].parameter,
+                            };
 
-                            if (returnVal is EntityTypes.Integer intVal)
-                            {
-                                returnVal = intVal.val;
-                            }
-                            else if (returnVal is EntityTypes.Float floatVal)
-                            {
-                                returnVal = floatVal.val;
-                            }
-                            else if (returnVal is EntityTypes.Button buttonVal)
-                            {
-                                returnVal = buttonVal.label;
-                            }
-                            else if (returnVal.GetType().IsEnum)
-                            {
+                            if (returnVal.GetType().IsEnum) {
                                 returnVal = (int)ep[i].parameter;
                             }
 
-                            //tempEntity[ep[i].propertyName] = returnVal;
                             tempEntity.CreateProperty(ep[i].propertyName, returnVal);
                         }
                     }

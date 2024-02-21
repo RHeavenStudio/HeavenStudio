@@ -76,21 +76,33 @@ namespace HeavenStudio
 
         public struct Dropdown
         {
-            public void ChangeValues(List<string> values)
-            {
-                this.Values = values ?? new();
-                onValueChanged?.Invoke(values);
-            }
             public int defaultValue;
-            public List<string> Values { get; private set; }
-            public int currentIndex;
-            public readonly string CurrentValue => currentIndex < Values?.Count - 1 ? Values?[currentIndex] : null;
-            [JsonIgnore] public Action<List<string>> onValueChanged;
+            public List<string> values;
 
             public Dropdown(int defaultValue = 0, params string[] values)
             {
                 this.defaultValue = defaultValue;
-                this.Values = values.ToList();
+                this.values = values.ToList();
+            }
+        }
+
+        public class DropdownObj
+        {
+            public void SetValues(List<string> values)
+            {
+                this.Values = values ?? new();
+                onValueChanged?.Invoke(values);
+            }
+            public int value;
+            public List<string> Values { get; private set; }
+            public int currentIndex;
+            public string CurrentValue => currentIndex < Values?.Count - 1 ? Values?[currentIndex] : null;
+            [JsonIgnore] public Action<List<string>> onValueChanged;
+
+            public DropdownObj(int value = 0, List<string> values = null)
+            {
+                this.value = value;
+                this.Values = values ?? new();
 
                 currentIndex = 0;
                 onValueChanged = null;
