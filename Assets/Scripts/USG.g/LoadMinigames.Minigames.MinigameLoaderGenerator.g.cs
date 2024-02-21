@@ -373,6 +373,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader PcoSomenLoader failed!");
             }
 
+            game = AgbRhythmTestGBALoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbRhythmTestGBALoader failed!");
+            }
+
             game = AgbHairLoader.AddGame(eventCaller);
             if (game != null)
             {
