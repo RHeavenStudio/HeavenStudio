@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Jukebox;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace HeavenStudio
@@ -65,12 +64,12 @@ namespace HeavenStudio
 
         public struct Button
         {
-            public string defaultLabel;
+            public string label;
             public Func<RiqEntity, string> onClick;
 
             public Button(string defaultLabel, Func<RiqEntity, string> onClick)
             {
-                this.defaultLabel = defaultLabel;
+                this.label = defaultLabel;
                 this.onClick = onClick;
             }
         }
@@ -79,21 +78,22 @@ namespace HeavenStudio
         {
             public void ChangeValues(List<string> values)
             {
-                this.values = values;
-                valueChanged?.Invoke(values);
+                this.Values = values ?? new();
+                onValueChanged?.Invoke(values);
             }
             public int defaultValue;
-            public List<string> values;
+            public List<string> Values { get; private set; }
             public int currentIndex;
-            public readonly string currentValue => values[currentIndex];
-            public Action<List<string>> valueChanged;
+            public readonly string CurrentValue => currentIndex < Values?.Count - 1 ? Values?[currentIndex] : null;
+            [JsonIgnore] public Action<List<string>> onValueChanged;
 
-            public Dropdown(int defaultValue, params string[] values)
+            public Dropdown(int defaultValue = 0, params string[] values)
             {
                 this.defaultValue = defaultValue;
-                this.values = values.ToList();
+                this.Values = values.ToList();
+
                 currentIndex = 0;
-                valueChanged = null;
+                onValueChanged = null;
             }
         }
 

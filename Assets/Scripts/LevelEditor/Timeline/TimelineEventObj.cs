@@ -388,12 +388,10 @@ namespace HeavenStudio.Editor.Track
             }
             else if (Input.GetMouseButton(2))
             {
-                // var mgs = EventCaller.instance.minigames;
                 string[] datamodels = entity.datamodel.Split('/');
                 Debug.Log("Selected entity's datamodel : " + entity.datamodel);
 
                 bool isSwitchGame = datamodels[1] == "switchGame";
-                // int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
                 int block = isSwitchGame ? 0 : EventCaller.instance.minigames[datamodels[isSwitchGame ? 2 : 0]].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
 
                 if (!isSwitchGame)
