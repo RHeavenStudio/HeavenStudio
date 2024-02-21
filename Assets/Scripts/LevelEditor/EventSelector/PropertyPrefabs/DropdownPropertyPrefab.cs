@@ -17,7 +17,6 @@ namespace HeavenStudio.Editor
         [Header("Dropdown")]
         [Space(10)]
         public LeftClickTMP_Dropdown dropdown;
-        private List<int> keys;
 
         private int _defaultValue;
 
@@ -27,52 +26,41 @@ namespace HeavenStudio.Editor
         {
             base.SetProperties(propertyName, type, caption);
 
-            // var enumType = type.GetType();
-            // values = Enum.GetValues(enumType).Cast<string>().ToArray();
-            // names = Enum.GetNames(enumType).ToList();
-            // _defaultValue = (int)type;
-
-            // Can we assume non-holey enum?
-            // If we can we can simplify to dropdown.value = (int) parameterManager.entity[propertyName]
-            // var currentlySelected = (int)parameterManager.entity[propertyName];
             RiqEntity entity = parameterManager.entity;
             int selected = 0;
 
             switch (type)
             {
                 case EntityTypes.Dropdown dropdownEntity:
-                    entity[propertyName].values = dropdownEntity.values;
-                    selected = dropdownEntity.defaultValue;
+                    // entity[propertyName].ChangeValues(dropdownEntity.Values);
+                    selected = entity[propertyName].currentIndex;
+                    if (dropdownEntity.Values != null) dropdown.AddOptions(entity[propertyName].Values);
+                    dropdown.onValueChanged.AddListener(newVal => parameterManager.entity[propertyName].currentIndex = newVal);
+                    entity[propertyName].onValueChanged = new Action<List<string>>(newValues =>
+                    {
+                        if (dropdown == null) return;
+                        dropdown.ClearOptions();
+                        dropdown.AddOptions(newValues);
+                        dropdown.enabled = newValues.Count > 0;
+                    });
                     break;
                 case Enum enumEntity:
-                    var enumType = enumEntity.GetType();
-                    entity[propertyName] = Enum.GetNames(enumType).ToList();
-                    keys = Enum.GetValues(enumType).Cast<int>().ToList();
-                    for (int i = 0; i < keys.Count; i++) {
-                        print("key " + (i + 1) + " : " + keys[i]);
-                    }
-                    selected = keys.FindIndex(val => val == (int)entity[propertyName]);
+                    Type enumType = enumEntity.GetType();
+                    int[] keys = Enum.GetValues(enumType).Cast<int>().ToArray();
+                    selected = Array.FindIndex(keys, val => val == (int)entity[propertyName]);
+
+                    dropdown.AddOptions(Enum.GetNames(enumType).ToList());
+                    dropdown.onValueChanged.AddListener(val => parameterManager.entity[propertyName] = keys[val]);
                     break;
                 default:
                 break;
             }
-            dropdown.AddOptions(entity[propertyName].values);
             dropdown.value = selected;
+            dropdown.enabled = dropdown.options.Count > 0;
 
-            entity[propertyName].valueChanged = new Action<List<string>>(newValues =>
-            {
-                print(string.Join(", ", entity[propertyName].values));
-                dropdown.ClearOptions();
-                dropdown.AddOptions(newValues);
+            dropdown.onValueChanged.AddListener(newValue => {
+                this.caption.text = (newValue != _defaultValue) ? (_captionText + "*") : _captionText;
             });
-
-            dropdown.onValueChanged.AddListener(newValue =>
-                {
-                    parameterManager.entity[propertyName].currentIndex = newValue;
-                    Debug.Log("newValue : " + newValue);
-                    this.caption.text = (newValue != _defaultValue) ? (_captionText + "*") : _captionText;
-                }
-            );
         }
 
         public void ResetValue()

@@ -144,23 +144,10 @@ namespace HeavenStudio.Editor
                     break;
 
                 case EntityTypes.Float fl:
-                    slider.onValueChanged.AddListener(
-                        _ =>
-                        {
-                            var newValue = (float)Math.Round(slider.value, 4);
-                            UpdateCollapse(newValue);
-                        }
-                    );
+                    slider.onValueChanged.AddListener(newVal => UpdateCollapse((float)Math.Round(newVal, 4)));
+                    inputField.onEndEdit.AddListener(_ => UpdateCollapse(slider.value));
 
-                    var newValue = (float)Math.Round(slider.value, 4);
-                    UpdateCollapse(newValue);
-
-                    inputField.onEndEdit.AddListener(
-                        _ =>
-                        {
-                            UpdateCollapse(slider.value);
-                        }
-                    );
+                    UpdateCollapse((float)Math.Round(slider.value, 4));
                     break;
 
                 default:

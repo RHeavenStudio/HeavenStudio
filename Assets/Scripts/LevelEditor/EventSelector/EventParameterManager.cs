@@ -131,30 +131,42 @@ namespace HeavenStudio.Editor
 
         private GameObject AddParam(string propertyName, object type, string caption, string tooltip = "")
         {
-            if (!PropertyPrefabs.TryGetValue(type.GetType(), out GameObject propertyPrefab)) {
-                Debug.LogError("Can't make property interface of type: " + type.GetType());
+            Type typeType = type.GetType();
+            GameObject propertyPrefab = DropdownP; // enum check is hardcoded because enums are awesome (lying)
+            if (!typeType.IsEnum && !PropertyPrefabs.TryGetValue(typeType, out propertyPrefab)) {
+                Debug.LogError("Can't make property interface of type: " + typeType);
                 return null;
             }
+            print(propertyPrefab.name);
 
-            GameObject input = InitPrefab(propertyPrefab, tooltip);
+            GameObject input = Instantiate(propertyPrefab);
+            input.transform.SetParent(this.gameObject.transform);
+            input.SetActive(true);
+            input.transform.localScale = Vector3.one;
+
+            if (tooltip != string.Empty) {
+                Tooltip.AddTooltip(input, tooltip);
+            }
+            
             EventPropertyPrefab property = input.GetComponent<EventPropertyPrefab>();
             property.SetProperties(propertyName, type, caption);
 
             return input;
         }
 
-        private GameObject InitPrefab(GameObject prefab, string tooltip = "")
-        {
-            GameObject input = Instantiate(prefab);
-            input.transform.SetParent(this.gameObject.transform);
-            input.SetActive(true);
-            input.transform.localScale = Vector3.one;
+        // private GameObject InitPrefab(GameObject prefab, string tooltip = "")
+        // {
+        //     GameObject input = Instantiate(prefab);
+        //     input.transform.SetParent(this.gameObject.transform);
+        //     input.SetActive(true);
+        //     input.transform.localScale = Vector3.one;
 
-            if(tooltip != string.Empty)
-                Tooltip.AddTooltip(input, "", tooltip);
+        //     if (tooltip != string.Empty) {
+        //         Tooltip.AddTooltip(input, "", tooltip);
+        //     }
 
-            return input;
-        }
+        //     return input;
+        // }
 
         private void DestroyParams()
         {

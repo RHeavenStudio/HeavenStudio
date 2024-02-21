@@ -898,6 +898,10 @@ namespace HeavenStudio.Editor.Track
                             {
                                 returnVal = floatVal.val;
                             }
+                            else if (returnVal is EntityTypes.Button buttonVal)
+                            {
+                                returnVal = buttonVal.label;
+                            }
                             else if (returnVal.GetType().IsEnum)
                             {
                                 returnVal = (int)ep[i].parameter;

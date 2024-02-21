@@ -699,7 +699,7 @@ namespace HeavenStudio
                 /// </summary>
                 /// <param name="collapseOn">What values should make it collapse/uncollapse?</param>
                 /// <param name="collapseables">IDs of the parameters to collapse</param>
-                public CollapseParam(Func<object, RiqEntity, bool> collapseOn, string[] collapseables)
+                public CollapseParam(Func<object, RiqEntity, bool> collapseOn, params string[] collapseables)
                 {
                     CollapseOn = collapseOn;
                     this.collapseables = collapseables;
@@ -1163,20 +1163,9 @@ namespace HeavenStudio
                                 Minigame game = gm.GetGameInfo(gm.currentGame);
                                 if (game != null) {
                                     var animators = gm.minigameObj.transform.GetComponentsInChildren<Animator>();
-                                    // e["animator"] = string.Join(", ", animators.Select(anim => {
-                                    //     var obj = anim.gameObject;
-                                    //     // string path = "/" + obj.name;
-                                    //     List<string> path = new() { obj.name };
-                                    //     while (obj.transform.parent != null && obj.transform.parent.name != game.name)
-                                    //     {
-                                    //         obj = obj.transform.parent.gameObject;
-                                    //         path.Add(obj.name);
-                                    //     }
-                                    //     return string.Join('/', path);
-                                    // }));
+                                    // not in an update loop so it's fine :3
                                     e["animator"].ChangeValues(animators.Select(anim => {
                                         var obj = anim.gameObject;
-                                        // string path = "/" + obj.name;
                                         List<string> path = new() { obj.name };
                                         while (obj.transform.parent != null && obj.transform.parent.name != game.name)
                                         {
@@ -1188,36 +1177,46 @@ namespace HeavenStudio
                                 }
                                 return game?.displayName ?? "No Game";
                             }), "Get Animators", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
-                            new Param("animator", new EntityTypes.Dropdown(0, "N/A"), "Animator", "Specify which animator in the scene to play an animation on."),
-                            new Param("getAnimations", new EntityTypes.Button("N/A", e => {
+                            new Param("animator", new EntityTypes.Dropdown(), "Animator", "Specify which animator in the scene to play an animation on."),
+                            new Param("getAnimations", new EntityTypes.Button("", e => {
                                 var gm = GameManager.instance;
                                 Minigame game = gm.GetGameInfo(gm.currentGame);
-                                var animObj = gm.minigameObj.transform.Find(((EntityTypes.Dropdown)e["animator"]).currentValue);
+                                string animPath = e["animator"].CurrentValue;
                                 Animator animator = null;
-                                if (animObj != null && animObj.TryGetComponent(out animator) && animator != null) {
-                                    e["animation"].ChangeValues(animator.runtimeAnimatorController.animationClips.Select(x => x.name).ToList());
+                                if (animPath != null) {
+                                    var animObj = gm.minigameObj.transform.Find(animPath);
+                                    if (animObj != null && animObj.TryGetComponent(out animator) && animator != null) {
+                                        var animations = animator.runtimeAnimatorController.animationClips.Select(x => x.name).ToList();
+                                        e["animation"].ChangeValues(animations);
+                                    }
                                 }
                                 return animator != null ? animator.name : "N/A";
                             }), "Get Animations", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
-                            new Param("animation", new EntityTypes.Dropdown(0, "N/A"), "Animation", "Specify the name of the animation to play."),
+                            new Param("animation", new EntityTypes.Dropdown(), "Animation", "Specify the name of the animation to play."),
                             new Param("scale", new EntityTypes.Float(0, 5, 0.5f), "Animation Scale", "The time scale of the animation. Higher values are faster."),
                         },
                         delegate {
                             var e = eventCaller.currentEntity;
-                            GameManager.instance.PlayAnimationArbitrary(e["animator"].currentValue, e["animation"].currentValue, e["scale"]);
+                            GameManager.instance.PlayAnimationArbitrary(e["animator"].CurrentValue, e["animation"].CurrentValue, e["scale"]);
                         }
                     ),
                     new GameAction("play sfx", "Play SFX", 0.5f, false,
                         new List<Param>()
                         {
-                            new Param("game", new EntityTypes.Dropdown(0, EventCaller.instance.minigames.Values.Select(x => x.displayName).ToArray()), "Which Game", "Specify the game's sfx to play. An empty input will play global sfx."),
+                            new Param("game", new EntityTypes.Dropdown(0), "Which Game", "Specify the game's sfx to play. An empty input will play global sfx.", new() {
+                                new((x, e) => {
+                                    e["game"].ChangeValues(EventCaller.instance.minigames.Values.Select(x => x.displayName).ToList());
+                                    return true;
+                                }),
+                            }),
                             new Param("sfxName", "", "SFX Name", "The name of the sfx to play."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The sfx's pitch."),
                             new Param("offset", new EntityTypes.Float(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),
                         },
                         preFunction : delegate {
                             var e = eventCaller.currentEntity;
-                            GameManager.PlaySFXArbitrary(e.beat, e["game"], e["sfxName"], e["pitch"], e["offset"]);
+                            var mgs = EventCaller.instance.minigames.Values;
+                            GameManager.PlaySFXArbitrary(e.beat, mgs.ElementAt((int)e["game"].currentIndex).name, e["sfxName"], e["pitch"], e["offset"]);
                         }
                     ),
                 }),
