@@ -22,13 +22,14 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
-                            instance.ChargeUp(e.beat, e.length, e["drumbeat"]);
+                            instance.ChargeUp(e.beat, e.length, e["drumbeat"], e["bubble"]);
                         }
                         ChargingChicken.CountIn(e.beat);
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("drumbeat", ChargingChicken.DrumLoopList.Straight, "Drum Beat", "REPLACE THIS"),
+                        new Param("drumbeat", ChargingChicken.DrumLoopList.Straight, "Drum Beat", "Choose which drum beat to play while filling."),
+                        new Param("bubble", false, "Countdown Bubble", "Choose whether the counting bubble will spawn for this input."),
                     },
                     defaultLength = 8,
                     resizable = true,
@@ -42,7 +43,6 @@ namespace HeavenStudio.Games.Loaders
                             instance.ChangeColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
                         }
                     },
-                    defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -52,6 +52,26 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorTo2", ChargingChicken.defaultBGColorBottom, "Color B End", "Set the bottom-most color of the background gradient at the end of the event."),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new() {
                             new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "colorFrom", "colorFrom2"  }),
+                        }),
+                    }
+                },
+                new GameAction("changeFgLight", "Foreground Appearance")
+                {
+                    function = delegate { 
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.ChangeLight(e.beat, e.length, e["lightFrom"], e["lightTo"], e["headLightFrom"], e["headLightTo"], e["ease"]);
+                        }
+                    },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("lightFrom", new EntityTypes.Float(0, 1, 1), "Scene Brightness Start", "Set the brightness of the foreground at the start of the event."),
+                        new Param("lightTo", new EntityTypes.Float(0, 1, 1), "Scene Brightness End", "Set the brightness of the foreground at the end of the event."),
+                        new Param("headLightFrom", new EntityTypes.Float(0, 1, 0), "Headlight Brightness Start", "Set the brightness of the car's headlights at the start of the event."),
+                        new Param("headLightTo", new EntityTypes.Float(0, 1, 0), "Headlight Brightness End", "Set the brightness of the car's headlights at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new() {
+                            new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "lightFrom", "headLightFrom"  }),
                         }),
                     }
                 },
@@ -74,17 +94,31 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer gradient;
         [SerializeField] SpriteRenderer bgLow;
         [SerializeField] SpriteRenderer bgHigh;
+        [SerializeField] Animator ChickenAnim;
         [SerializeField] Transform sea;
+        [SerializeField] TMP_Text yardsText;
+        [SerializeField] TMP_Text bubbleText;
+        [SerializeField] GameObject countBubble;
+        [SerializeField] Material chickenColors;
+        [SerializeField] SpriteRenderer headlightColor;
 
         bool isInputting = false;
 
         double bgColorStartBeat = -1;
         float bgColorLength = 0;
+        double fgLightStartBeat = -1;
+        float fgLightLength = 0;
         Util.EasingFunction.Ease lastEase;
         Color colorFrom;
         Color colorTo;
         Color colorFrom2;
         Color colorTo2;
+        float lightFrom = 1;
+        float lightTo = 1;
+        float lightFrom2 = 0;
+        float lightTo2 = 0;
+
+        double bubbleEndCount = 0;
 
         float seaPos = 0;
 
@@ -305,7 +339,10 @@ namespace HeavenStudio.Games
         public void Update()
         {
             //update background color
-            BackgroundColorUpdate(Conductor.instance);
+            AllColorsUpdate(Conductor.instance);
+
+            //update counting bubble
+            bubbleText.text = ($"{Math.Ceiling(bubbleEndCount - Conductor.instance.songPositionInBeatsAsDouble)}");
 
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             //player whiffs (press)
@@ -319,7 +356,13 @@ namespace HeavenStudio.Games
                 if (isInputting)
                 //if the player was doing well
                 {
-                    SoundByte.PlayOneShotGame("chargingChicken/blastoff"); //TO DO: replace with proper takeoff function
+                    SoundByte.PlayOneShotGame("chargingChicken/blastoff"); ChickenAnim.DoScaledAnimationAsync("Ride", 0.5f); //TO DO: replace with proper takeoff function
+
+                    //erase text
+                    yardsText.text = "";
+
+                    //despawn the counting bubble
+                    countBubble.SetActive(false);
                 }
 
                 isInputting = false; //stops the drums
@@ -361,8 +404,12 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
         }
 
-        public void ChargeUp(double beat, double length, int whichDrum) //TO DO: make this inactive
+        public void ChargeUp(double beat, double actualLength, int whichDrum, bool bubble = false) //TO DO: make this inactive
         {
+            //convert length to an integer, which is at least 2
+            double length = Math.Ceiling(actualLength);
+            if (length < 2) length = 2;
+
             //TO DO: GET RID OF THIS THIS IS JUST FOR DEMO PURPOSES, IT PLAYS THE LITTLE "COLLAPSE" NOISE BUT IT NEEDS TO BE REPLACED WITH A PROPER DISTANCE CHECK
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
@@ -371,31 +418,55 @@ namespace HeavenStudio.Games
                 }),
             });
 
-            //animation
-            //STUFF GOES HERE
-
             //input
             ScheduleInput(beat - 1, 1, InputAction_BasicPress, whichDrum == 0 ? StartChargingJust : StartChargingJustMusic, StartChargingMiss, Nothing);
             ScheduleInput(beat, length, InputAction_BasicRelease, EndChargingJust, EndChargingMiss, Nothing);
 
+            //set up bubble
+            bubbleEndCount = beat + length;
+
+            //set up the big beataction
+            var actions = new List<BeatAction.Action>();
+
+            //"X yards to goal" text
+            double yardsTextLength = length;
+            actions.Add(new(beat - 2, delegate {
+                yardsText.text = $"<color=yellow>{yardsTextLength}</color> yards to the goal.";
+            }));
+
+            //chicken ducks into the car window
+            actions.Add(new(beat - 1, delegate {
+                ChickenAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+            }));
+
+            //spawns the countdown bubble
+            actions.Add(new(beat, delegate {
+                    countBubble.SetActive(bubble);
+            }));
+
+            //drum loop
             while ( length >= 0 )
 		    {
-                //create the beat action
-                var actions = PlayDrumLoop(beat, whichDrum, length);
-
-                //execute the list of actions from PlayDrumLoop
-                BeatAction.New(GameManager.instance, actions);
+                //add drums to the beataction
+                var drumActions = PlayDrumLoop(beat, whichDrum, length);
+                actions.AddRange(drumActions);
 
                 //start the next drum loop
                 beat += 4;
                 length -= 4;
             }
+
+            //activate the big beat action
+            BeatAction.New(GameManager.instance, actions);
         }
 
         public void StartChargingJust(PlayerActionEvent caller, float state)
         {
             //sound
             isInputting = true; //starts the drums
+
+            //animation
+            ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
         }
 
         public void StartChargingJustMusic(PlayerActionEvent caller, float state)
@@ -404,12 +475,21 @@ namespace HeavenStudio.Games
             isInputting = true; //starts the drums
             SoundByte.PlayOneShotGame("chargingChicken/kick");
             SoundByte.PlayOneShotGame("chargingChicken/hihat");
+
+            //animation
+            ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
         }
 
         public void StartChargingMiss(PlayerActionEvent caller)
         {
             //sound
             isInputting = false; //ends the drums (just in case)
+
+            //erase text TO DO: make this happen later (but for now it's fine here)
+            yardsText.text = "";
+
+            //despawn the counting bubble TO DO: make this happen later (but for now it's fine here)
+            countBubble.SetActive(false);
         }
 
         public void EndChargingJust(PlayerActionEvent caller, float state)
@@ -417,12 +497,27 @@ namespace HeavenStudio.Games
             //sound
             isInputting = false; //ends the drums
             SoundByte.PlayOneShotGame("chargingChicken/blastoff");
+
+            //TO DO: remove this and make it better
+            ChickenAnim.DoScaledAnimationAsync("Ride", 0.5f);
+
+            //erase text
+            yardsText.text = "";
+
+            //despawn the counting bubble
+            countBubble.SetActive(false);
         }
 
         public void EndChargingMiss(PlayerActionEvent caller)
         {
             //sound
             isInputting = false; //ends the drums
+
+            //erase text
+            yardsText.text = "";
+
+            //despawn the counting bubble
+            countBubble.SetActive(false);
         }
 
         public void Nothing(PlayerActionEvent caller) { }
@@ -472,6 +567,17 @@ namespace HeavenStudio.Games
             lastEase = (Util.EasingFunction.Ease)ease;
         }
 
+        public void ChangeLight(double beat, float length, float light1, float light2, float light3, float light4, int ease)
+        {
+            fgLightStartBeat = beat;
+            fgLightLength = length;
+            lightFrom = light1;
+            lightTo = light2;
+            lightFrom2 = light3;
+            lightTo2 = light4;
+            lastEase = (Util.EasingFunction.Ease)ease;
+        }
+
         private void PersistColor(double beat)
         {
             var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeBgColor" }).FindAll(x => x.beat < beat);
@@ -481,21 +587,40 @@ namespace HeavenStudio.Games
                 var lastEvent = allEventsBeforeBeat[^1];
                 ChangeColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
             }
+
+            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeFgLight" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                ChangeLight(lastEvent.beat, lastEvent.length, lastEvent["lightFrom"], lastEvent["lightTo"], lastEvent["headLightFrom"], lastEvent["headLightTo"], lastEvent["ease"]);
+            }
         }
 
-        private void BackgroundColorUpdate(Conductor cond)
+        private void AllColorsUpdate(Conductor cond)
         {
-            float normalizedBeat = Mathf.Clamp01(cond.GetPositionFromBeat(bgColorStartBeat, bgColorLength));
             Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
-            float newColorR = func(colorFrom.r, colorTo.r, normalizedBeat);
-            float newColorG = func(colorFrom.g, colorTo.g, normalizedBeat);
-            float newColorB = func(colorFrom.b, colorTo.b, normalizedBeat);
+
+            //bg color
+            float normalizedBeatBG = Mathf.Clamp01(cond.GetPositionFromBeat(bgColorStartBeat, bgColorLength));
+            float newColorR = func(colorFrom.r, colorTo.r, normalizedBeatBG);
+            float newColorG = func(colorFrom.g, colorTo.g, normalizedBeatBG);
+            float newColorB = func(colorFrom.b, colorTo.b, normalizedBeatBG);
             bgHigh.color = new Color(newColorR, newColorG, newColorB);
             gradient.color = new Color(newColorR, newColorG, newColorB);
-            newColorR = func(colorFrom2.r, colorTo2.r, normalizedBeat);
-            newColorG = func(colorFrom2.g, colorTo2.g, normalizedBeat);
-            newColorB = func(colorFrom2.b, colorTo2.b, normalizedBeat);
+
+            newColorR = func(colorFrom2.r, colorTo2.r, normalizedBeatBG);
+            newColorG = func(colorFrom2.g, colorTo2.g, normalizedBeatBG);
+            newColorB = func(colorFrom2.b, colorTo2.b, normalizedBeatBG);
             bgLow.color = new Color(newColorR, newColorG, newColorB);
+
+            //fg light
+            float normalizedBeatFG = Mathf.Clamp01(cond.GetPositionFromBeat(fgLightStartBeat, fgLightLength));
+            float newLight = func(lightFrom, lightTo, normalizedBeatFG);
+            chickenColors.color = new Color(newLight, newLight, newLight);
+
+            newLight = func(lightFrom2, lightTo2, normalizedBeatFG);
+            headlightColor.color = new Color(1, 1, 1, newLight);
         }
 
         #endregion

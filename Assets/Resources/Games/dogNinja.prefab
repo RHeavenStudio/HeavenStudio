@@ -97,17 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ac06902fd6630045a550c76211fcc63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 119991411479083905}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
   startBeat: 0
   type: 0
   fromLeft: 0
@@ -544,17 +533,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3ef60f47c093b45a623a707f33c877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 0}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
   startBeat: 0
   objPos: {x: 0, y: 0, z: 0}
   lefty: 0
@@ -1695,9 +1673,7 @@ MonoBehaviour:
         looping: 0
         offset: 0
         parameters: []
-  EligibleHits: []
   scheduledInputs: []
-  firstEnable: 0
   DogAnim: {fileID: 1770250701376598399}
   BirdAnim: {fileID: 4964290445827434540}
   ObjectBase: {fileID: 119991411479083905}
@@ -1888,7 +1864,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6570085815560366024
 Transform:
   m_ObjectHideFlags: 0
@@ -4165,17 +4141,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3ef60f47c093b45a623a707f33c877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 0}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
   startBeat: 0
   objPos: {x: 0, y: 0, z: 0}
   lefty: 1
@@ -4730,15 +4695,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 0
   m_isCullingEnabled: 0
