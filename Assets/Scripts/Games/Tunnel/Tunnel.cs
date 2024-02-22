@@ -98,8 +98,9 @@ namespace HeavenStudio.Games
             Field,
             City,
             Night,
-            Moai,
-            Crop
+            MoaiDooWop,
+            CropStomp,
+            QuizShow
         }
 
         float fadeDuration = 2f;
