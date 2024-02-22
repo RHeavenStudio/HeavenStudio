@@ -99,7 +99,7 @@ namespace HeavenStudio.Games.Loaders
                         {
                             new Param.CollapseParam((x, _) => !(bool)x, new string[] { "type" })
                         }),
-                        new Param("type", new EntityTypes.Integer(1, 2, 1), "Pose", "The pose that the Sumo Brothers will make."),
+                        new Param("type", new EntityTypes.Integer(1, 3, 1), "Pose", "The pose that the Sumo Brothers will make."),
                         new Param("bg", SumoBrothers.BGType.None, "Background", "The background that appears on a successful input."),
                         new Param("confetti", false, "Confetti (WIP)", "Confetti particles will fly everywhere on a successful input.")
                     },
@@ -118,7 +118,11 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true
                 },
 
-            });
+            }
+            //new List<string>() { "ctr", "keep" },
+            //"ctrsumou", "jp",
+            //new List<string>() { }
+            );
         }
     }
 }
@@ -411,7 +415,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 3, delegate { allowBopSumo = false; })
                 });
 
-            if (inu)
+            if (inu && conductor.songPosBeat < beat + 2)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
@@ -546,7 +550,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 3, delegate { if (sumoStatePrevious == SumoState.Pose) sumoBrotherGHead.DoScaledAnimationAsync("SumoGStomp",0.5f); })
                 });
 
-            if (inu)
+            if (inu  && conductor.songPosBeat < beat + 3)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
@@ -650,10 +654,10 @@ namespace HeavenStudio.Games
             sumoState = SumoState.Pose;
 
             if (sumoPoseTypeNext > 0 & randomPose) {
-                poseType = UnityEngine.Random.Range(1, 2);
+                poseType = UnityEngine.Random.Range(1, 3);
                 if (poseType >= sumoPoseTypeNext) poseType++;
             } else if (randomPose) {
-                poseType = UnityEngine.Random.Range(1, 3);
+                poseType = UnityEngine.Random.Range(1, 4);
             }
 
             var cond = Conductor.instance;
