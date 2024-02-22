@@ -172,7 +172,9 @@ namespace HeavenStudio.Games
        string prefix;
        double beatUniversal;
         string suffix;
-        bool goBop;
+        bool goBopDonpans;
+        bool goBopJudge;
+        bool bopDonpans;
         string originalText1;
         string originalText2;
         string originalText3;
@@ -281,7 +283,7 @@ namespace HeavenStudio.Games
         {
             if (PlayerInput.GetIsAction(BonOdori.InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)){
                 ScoreMiss();
-                SoundByte.PlayOneShot("miss");
+                SoundByte.PlayOneShotGame("bonOdori/clap");
   
             
             
@@ -303,64 +305,52 @@ namespace HeavenStudio.Games
             
                 switch (typeSpeak){
                             case 0:
-                            ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
+                           
                             switch (variation){
                                 case 0:
-                                MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pan1", beat, offset: 0.01f)});
-                            
+                                SoundByte.PlayOneShotGame("bonOdori/pan1");
                                 break;
                                 case 1:
-                                MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pan2", beat, offset: 0.01f)});
-                                break;
+                                SoundByte.PlayOneShotGame("bonOdori/pan2");                               break;
                                 case 2:
-                                MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pan3", beat, offset: 0.01f)});
+                                SoundByte.PlayOneShotGame("bonOdori/pan3");
                                 break;}
                                 break;
                             case 2:
-                            ScheduleInput(beat,0f, InputAction_BasicPress, Success, Miss, Empty);
+
                             switch (variation){
                                 case 0:
-                                MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pa_n1", beat, offset: 0.01f)});
-                            
+                              SoundByte.PlayOneShotGame("bonOdori/pa_n1");
                                 break;
                                 case 1:
-                                MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pa_n2", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/pa_n2");
                                 break;}
                                 break;
                             case 1:
-                            ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
-                            MultiSound.Play(new MultiSound.Sound[]{
-                                    new MultiSound.Sound("bonOdori/pa1", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/pa1");
                                 break;
-                beatUniversal = beat;
+
                             
  
             
-        }}}
+        }
+                        beatUniversal = beat;
+                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);}}
             public void Sound(double beat, int variation, int typeSpeak )
         {  switch (typeSpeak){
                             case 0:
                             switch (variation){
                 case 0:
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/don1", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/don1");
                 break;
                 case 1:
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/don2", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/don2");
                 break;
                 case 2:
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/don3", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/don3");
                 break;   
                 case 3:
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/don4", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/don4");
                 break;                                  
                             }
                             
@@ -370,12 +360,10 @@ namespace HeavenStudio.Games
 
             switch (variation) {
                 case 0:
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/do_n1", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/do_n1");
                 break;
                 case 1:
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/do_n2", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/do_n2");
                 break;
             }
             break;
@@ -383,12 +371,10 @@ namespace HeavenStudio.Games
                             case 1:
                             switch (variation){
                                 case 0:
-                                MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/do1", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/do1");
                 break;
                             case 1:
-                                MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/do2", beat, offset: 0.01f)});
+                              SoundByte.PlayOneShotGame("bonOdori/do2");
                 break;
                             }
                             
@@ -570,8 +556,10 @@ namespace HeavenStudio.Games
 
     public void Bop(double beat, float length, bool shouldBop, bool autoBop)
         {
-            if (!shouldBop) { goBop = false; return; }
-            goBop = autoBop;
+            if (!shouldBop) { goBopDonpans = false; goBopJudge = false; return; }
+            goBopDonpans = autoBop;
+            goBopJudge = autoBop;
+            if (autoBop) { return;}
             if (shouldBop)
             {
                 for (int i = 0; i < length; i++)
@@ -586,6 +574,15 @@ namespace HeavenStudio.Games
                             CPU3.Play("Bop");
                             Judge.Play("Bop");
 
+                        }),
+                        new BeatAction.Action(beat + length, delegate
+                        {
+                            Player.Play("NeutralBopped");
+                            CPU1.Play("NeutralBopped");
+                            CPU2.Play("NeutralBopped");
+                            CPU3.Play("NeutralBopped");
+
+
                         })
                     });
                 }
@@ -596,14 +593,22 @@ namespace HeavenStudio.Games
         }
     public void Bow(double beat, float length)
     {
-        goBop = false;
+        if (goBopDonpans == true)
+        {
+            bopDonpans = true;
+        }
+        else
+        {
+            bopDonpans = false;
+        }
+        goBopDonpans = false;
         Player.Play("Bow");
         CPU1.Play("Bow");
         CPU2.Play("Bow");
         CPU3.Play("Bow");
                         BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + length, delegate { Player.Play("NeutralBopped"); CPU1.Play("NeutralBopped");CPU2.Play("NeutralBopped"); CPU3.Play("NeutralBopped");})
+                    new BeatAction.Action(beat + length, delegate { Player.Play("NeutralBopped"); CPU1.Play("NeutralBopped");CPU2.Play("NeutralBopped"); CPU3.Play("NeutralBopped"); if (bopDonpans) {goBopDonpans = true;}})
                 });
     }
     public void Spin(double beat, float length)
@@ -613,14 +618,17 @@ namespace HeavenStudio.Games
             
         public override void OnBeatPulse(double beat)
         {
-            if (goBop)
+            if (goBopDonpans)
             {
                 Player.Play("Bop");
                 CPU1.Play("Bop");
                 CPU2.Play("Bop");
                 CPU3.Play("Bop");
-                Judge.Play("Bop");
 
+            }
+            if (goBopJudge)
+            {
+                Judge.Play("Bop");
             }
         }
 public void DarkBG(double beat, bool toggle)
