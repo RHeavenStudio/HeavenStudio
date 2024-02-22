@@ -180,6 +180,11 @@ namespace HeavenStudio.Games
         string originalText3;
         string originalText4;
         string originalText5;
+        Coroutine Scroll1;
+        Coroutine Scroll2;
+        Coroutine Scroll3;
+        Coroutine Scroll4;
+        Coroutine Scroll5;
         TextMeshProUGUI Text1_GUI;
         TextMeshProUGUI Text2_GUI;
         TextMeshProUGUI Text3_GUI;
@@ -440,17 +445,27 @@ namespace HeavenStudio.Games
         {
             
             if (text1 is not "" && text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line."){
+                if (Scroll1 is not null)
+                {
+                    StopCoroutine(Scroll1);
+                    Scroll1 = null;
+                }
                 Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 originalText1 = text1;
                 text1 = ChangeColor(text1, false);
 
                 Text1.text = text1;
                 
- ;              
+ 
                 Text6.text = ChangeColor(originalText1, true);
   
                 }
             if (text2 is not ""){
+                if (Scroll2 is not null)
+                {
+                    StopCoroutine(Scroll2);
+                    Scroll2 = null;
+                }
                 Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 originalText2 = text2;
                 text2 = ChangeColor(text2, false);
@@ -459,6 +474,11 @@ namespace HeavenStudio.Games
    
                 }
             if (text3 is not ""){
+                if (Scroll3 is not null)
+                {
+                    StopCoroutine(Scroll3);
+                    Scroll3 = null;
+                }
                 originalText3 = text3;
                 Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 
@@ -469,6 +489,11 @@ namespace HeavenStudio.Games
  
                 }
             if (text4 is not ""){
+                if (Scroll4 is not null)
+                {
+                    StopCoroutine(Scroll4);
+                    Scroll4 = null;
+                }
                 Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 originalText4 = text4;
                 text4 = ChangeColor(text4, false);
@@ -479,6 +504,11 @@ namespace HeavenStudio.Games
 
                 }
             if (text5 is not ""){
+                if (Scroll5 is not null)
+                {
+                    StopCoroutine(Scroll5);
+                    Scroll5 = null;
+                }
                 Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 originalText5 = text5;
                 text5 = ChangeColor(text5, false);
@@ -491,26 +521,51 @@ namespace HeavenStudio.Games
         }
         public void DeleteText(bool text1, bool text2, bool text3, bool text4, bool text5){
             if (text1 == true){
+                if (Scroll1 is not null)
+                {
+                    StopCoroutine(Scroll1);
+                    Scroll1 = null;
+                }
                 Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text1.text = "";
                 Text6.text = "";
             }
             if (text2 == true){
+                if (Scroll2 is not null)
+                {
+                    StopCoroutine(Scroll2);
+                    Scroll2 = null;
+                }
                 Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text2.text = "";
                 Text7.text = "";
             }
             if (text3 == true){
+                if (Scroll3 is not null)
+                {
+                    StopCoroutine(Scroll3);
+                    Scroll3 = null;
+                }
                 Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text3.text = "";
                 Text8.text = "";
             }
             if (text4 == true){
+                if (Scroll4 is not null)
+                {
+                    StopCoroutine(Scroll4);
+                    Scroll4 = null;
+                }
                 Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text4.text = "";
                 Text9.text = "";
             }
             if (text5 == true){
+                if (Scroll5 is not null)
+                {
+                    StopCoroutine(Scroll5);
+                    Scroll5 = null;
+                }
                 Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
                 Text5.text = "";
                 Text10.text = "";
@@ -534,6 +589,7 @@ namespace HeavenStudio.Games
             text.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, maskValue, 10));
 
             yield return null;
+            
         }
 
 
@@ -542,15 +598,15 @@ namespace HeavenStudio.Games
     public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length, double beat)
     {
         if (text1){
-            StartCoroutine(SmoothText(Text6, length, beat));}
+            Scroll1 = StartCoroutine(SmoothText(Text6, length, beat));}
         if (text2){
-            StartCoroutine(SmoothText(Text7, length, beat));}
+            Scroll2 = StartCoroutine(SmoothText(Text7, length, beat));}
         if (text3){
-            StartCoroutine(SmoothText(Text8, length, beat));}
+            Scroll3 = StartCoroutine(SmoothText(Text8, length, beat));}
         if (text4){
-            StartCoroutine(SmoothText(Text9, length, beat));}
+            Scroll4 = StartCoroutine(SmoothText(Text9, length, beat));}
         if (text5){
-            StartCoroutine(SmoothText(Text10, length, beat));}
+            Scroll5 = StartCoroutine(SmoothText(Text10, length, beat));}
             
     }
 
