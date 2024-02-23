@@ -581,11 +581,14 @@ MonoBehaviour:
   bgHigh: {fileID: 6392346911876790710}
   ChickenAnim: {fileID: 122590160896605966}
   sea: {fileID: 5079513360686983010}
+  islandBaseTransform: {fileID: 0}
   yardsText: {fileID: 8575941321201979456}
   bubbleText: {fileID: 5637715493577622280}
   countBubble: {fileID: 8579964775969778696}
+  IslandBase: {fileID: 452761269397350257, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
   chickenColors: {fileID: 2100000, guid: acc543038ca31514fa57524efa7642f9, type: 2}
   headlightColor: {fileID: 1126427993834615640}
+  isInputting: 0
 --- !u!1 &3828967778714515104
 GameObject:
   m_ObjectHideFlags: 0
@@ -1701,11 +1704,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2904719894427165250, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.35
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2904719894427165250, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.05
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2904719894427165250, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1742,6 +1745,10 @@ PrefabInstance:
     - target: {fileID: 5614227873648938110, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
       propertyPath: m_Name
       value: Island
+      objectReference: {fileID: 0}
+    - target: {fileID: 5614227873648938110, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8004014250941503462, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
       propertyPath: m_IsActive

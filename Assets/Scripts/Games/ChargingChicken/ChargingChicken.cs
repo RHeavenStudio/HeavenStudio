@@ -86,6 +86,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Scripts_ChargingChicken;
     public class ChargingChicken : Minigame
     {
         //definitions
@@ -99,6 +100,7 @@ namespace HeavenStudio.Games
         [SerializeField] TMP_Text yardsText;
         [SerializeField] TMP_Text bubbleText;
         [SerializeField] GameObject countBubble;
+        [SerializeField] Island IslandBase;
         [SerializeField] Material chickenColors;
         [SerializeField] SpriteRenderer headlightColor;
 
@@ -121,6 +123,12 @@ namespace HeavenStudio.Games
         double bubbleEndCount = 0;
 
         float seaPos = 0;
+
+        Island nextIsland;
+        Island currentIsland;
+
+        double platformDistanceConstant = 5.35;
+        int platformsPerBeat = 4;
 
         public enum DrumLoopList
         {
@@ -356,7 +364,7 @@ namespace HeavenStudio.Games
                 if (isInputting)
                 //if the player was doing well
                 {
-                    SoundByte.PlayOneShotGame("chargingChicken/blastoff"); ChickenAnim.DoScaledAnimationAsync("Ride", 0.5f); //TO DO: replace with proper takeoff function
+                    SoundByte.PlayOneShotGame("chargingChicken/blastoff"); ChickenAnim.DoScaledAnimationAsync("Ride", 0.5f); currentIsland.BlastoffAnimation(); //TO DO: replace with proper takeoff function
 
                     //erase text
                     yardsText.text = "";
@@ -385,6 +393,8 @@ namespace HeavenStudio.Games
             colorTo = defaultBGColor;
             colorFrom2 = defaultBGColorBottom;
             colorTo2 = defaultBGColorBottom;
+
+            nextIsland = Instantiate(IslandBase, transform).GetComponent<Island>();
         }
 
         #endregion
@@ -410,11 +420,23 @@ namespace HeavenStudio.Games
             double length = Math.Ceiling(actualLength);
             if (length < 2) length = 2;
 
+            //hose animation
+            nextIsland.ChargerArmCountIn(beat);
+            var hoseActions = new List<BeatAction.Action>();
+            for (int i = 1; i < length; i++ )
+            hoseActions.Add(new(beat + i, delegate {
+                PumpBeat();
+            }));
+            BeatAction.New(GameManager.instance, hoseActions);
+
             //TO DO: GET RID OF THIS THIS IS JUST FOR DEMO PURPOSES, IT PLAYS THE LITTLE "COLLAPSE" NOISE BUT IT NEEDS TO BE REPLACED WITH A PROPER DISTANCE CHECK
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + (length * 2) - 1, delegate { 
                     SoundByte.PlayOneShotGame("chargingChicken/complete");
+                    nextIsland.isMoving = false;
+                    currentIsland.isMoving = false;
+                    nextIsland.BigLandmass.SetActive(false);
                 }),
             });
 
@@ -434,9 +456,10 @@ namespace HeavenStudio.Games
                 yardsText.text = $"<color=yellow>{yardsTextLength}</color> yards to the goal.";
             }));
 
-            //chicken ducks into the car window
+            //chicken ducks into the car window and the next island is spawned
             actions.Add(new(beat - 1, delegate {
                 ChickenAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+                SpawnJourney(beat - 4, yardsTextLength - 1);
             }));
 
             //spawns the countdown bubble
@@ -476,8 +499,11 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("chargingChicken/kick");
             SoundByte.PlayOneShotGame("chargingChicken/hihat");
 
-            //animation
+            //chicken animation
             ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
+
+            //hose animation
+            currentIsland.ChargingAnimation();
         }
 
         public void StartChargingMiss(PlayerActionEvent caller)
@@ -506,6 +532,12 @@ namespace HeavenStudio.Games
 
             //despawn the counting bubble
             countBubble.SetActive(false);
+
+            //hose animation
+            currentIsland.BlastoffAnimation();
+
+            //logic and movement
+            BlastOff(state);
         }
 
         public void EndChargingMiss(PlayerActionEvent caller)
@@ -552,6 +584,37 @@ namespace HeavenStudio.Games
         public void PlayDrum(string whichDrum, float drumVolume)
         {
             if (isInputting) SoundByte.PlayOneShotGame(whichDrum, volume: drumVolume);
+        }
+
+        public void PumpBeat()
+        {
+            if (isInputting) currentIsland.ChargingAnimation();
+        }
+
+        public void SpawnJourney(double beat, double length)
+        {
+            Destroy(currentIsland);
+            currentIsland = nextIsland;
+            nextIsland = Instantiate(IslandBase, transform).GetComponent<Island>();
+
+            nextIsland.transform.localPosition = new Vector3((float)(length * platformDistanceConstant * platformsPerBeat), 0, 0);
+            nextIsland.BigLandmass.SetActive(true);
+
+            nextIsland.journeyStart = length * platformDistanceConstant * platformsPerBeat;
+            nextIsland.journeyEnd = 0;
+            nextIsland.journeyBlastOffTime = beat;
+            nextIsland.journeyLength = length;
+
+            currentIsland.journeyStart = 0;
+            currentIsland.journeyEnd = -length * platformDistanceConstant * platformsPerBeat;
+            currentIsland.journeyBlastOffTime = beat;
+            currentIsland.journeyLength = length;
+        }
+
+        public void BlastOff(float state)
+        {
+            nextIsland.isMoving = true;
+            currentIsland.isMoving = true;
         }
 
         #region ColorShit
