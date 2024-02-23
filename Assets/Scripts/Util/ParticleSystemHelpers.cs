@@ -6,15 +6,14 @@ namespace HeavenStudio.Util
     {
         public static void PlayScaledAsync(this ParticleSystem particleSystem, float timeScale)
         {
-            ParticleSystem.MainModule main = particleSystem.main;
-            main.simulationSpeed = (1 / Conductor.instance.pitchedSecPerBeat) * timeScale;
+            SetAsyncScaling(particleSystem, timeScale);
             particleSystem.Play();
         }
 
         public static void SetAsyncScaling(this ParticleSystem particleSystem, float timeScale)
         {
             ParticleSystem.MainModule main = particleSystem.main;
-            main.simulationSpeed = (1 / Conductor.instance.pitchedSecPerBeat) * timeScale;
+            main.simulationSpeed = main.simulationSpeed / Conductor.instance.pitchedSecPerBeat * timeScale;
         }
 
         public static void PlayScaledAsyncAllChildren(this ParticleSystem particleSystem, float timeScale)

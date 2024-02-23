@@ -153,7 +153,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 _ => throw new System.NotImplementedException(),
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + hitSound);
-            _bear.CutMid();
+            _bear.CutMid(_type == LumBEARjack.HugeType.freezer);
             _rotationBeat = _soundsToDeleteIfMiss[step - 1].startBeat + _soundsToDeleteIfMiss[step - 1].timer;
 
             SetObjectCutSprite(step);

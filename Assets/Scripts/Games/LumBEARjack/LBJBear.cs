@@ -51,9 +51,9 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             });
         }
 
-        public void CutMid()
+        public void CutMid(bool noImpact = false)
         {
-            _anim.DoScaledAnimationAsync("BeastCutMid", 0.75f);
+            _anim.DoScaledAnimationAsync("BeastCutMid" + (noImpact ? "NoImpact" : ""), 0.75f);
         }
 
         public void Bop()

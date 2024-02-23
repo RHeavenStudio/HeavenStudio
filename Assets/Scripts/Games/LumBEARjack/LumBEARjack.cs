@@ -289,6 +289,7 @@ namespace HeavenStudio.Games
         [SerializeField] private ParticleSystem _bigLogCutParticle;
         [SerializeField] private ParticleSystem _hugeLogHitParticle;
         [SerializeField] private ParticleSystem _hugeLogCutParticle;
+        [SerializeField] private ParticleSystem _freezerChipParticle;
         [SerializeField] private ParticleSystem _freezerBreakParticle;
         [SerializeField] private ParticleSystem _peachHitParticle;
         [SerializeField] private ParticleSystem _peachCutParticle;
@@ -986,7 +987,7 @@ namespace HeavenStudio.Games
                     break;
                 case SmallType.can:
                     ParticleSystem spawnedParticle1 = Instantiate(_canCutParticle, _particleCutPoint);
-                    spawnedParticle1.PlayScaledAsyncAllChildren(1);
+                    spawnedParticle1.PlayScaledAsyncAllChildren(0.5f);
                     break;
                 case SmallType.bat:
                     ParticleSystem spawnedParticle2 = Instantiate(_batCutParticle, _particleCutPoint);
@@ -1019,13 +1020,12 @@ namespace HeavenStudio.Games
                     spawnedParticle.PlayScaledAsyncAllChildren(0.5f);
                     break;
                 case HugeType.freezer:
-                    if (hit) break;
-                    ParticleSystem spawnedParticle1 = Instantiate(_freezerBreakParticle, _particleCutPoint);
+                    ParticleSystem spawnedParticle1 = Instantiate(hit ? _freezerChipParticle : _freezerBreakParticle, hit ? _particleHitPoint : _particleCutPoint);
                     spawnedParticle1.PlayScaledAsyncAllChildren(0.5f);
                     break;
                 case HugeType.peach:
                     ParticleSystem spawnedParticle2 = Instantiate(hit ? _peachHitParticle : _peachCutParticle, hit ? _particleHitPoint : _particleCutPoint);
-                    spawnedParticle2.PlayScaledAsyncAllChildren(1);
+                    spawnedParticle2.PlayScaledAsyncAllChildren(0.5f);
                     break;
             }
         }
