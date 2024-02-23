@@ -115,13 +115,13 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        LumBEARjack.instance.RestBear(e["instant"], e["sound"]);
+                        LumBEARjack.instance.RestBear(e["instant"], (LumBEARjack.RestSoundChoice)e["sound"]);
                     },
-                    defaultLength = 4,
+                    defaultLength = 3,
                     parameters = new()
                     {
                         new("instant", false, "Instant"),
-                        new("sound", true, "Sound")
+                        new("sound", LumBEARjack.RestSoundChoice.Random, "Sound")
                     }
                 },
 
@@ -207,6 +207,14 @@ namespace HeavenStudio.Games
 
     public class LumBEARjack : Minigame
     {
+        public enum RestSoundChoice
+        {
+            Random,
+            restA,
+            restB,
+            NoSound
+        }
+
         public enum SmallType
         {
             log,
@@ -916,11 +924,11 @@ namespace HeavenStudio.Games
             {
                 if (bgCats < beforeBgCats)
                 {
-                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > bgCats && i <= beforeBgCats), dance, instant);
+                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > bgCats && i <= beforeBgCats), dance, instant || i <= bgCats);
                 }
                 else if (bgCats > beforeBgCats)
                 {
-                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > beforeBgCats && i <= bgCats), dance, instant);
+                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > beforeBgCats && i <= bgCats), dance, instant || i <= beforeBgCats);
                 }
                 else
                 {
@@ -1034,7 +1042,7 @@ namespace HeavenStudio.Games
 
         #region Misc
 
-        public void RestBear(bool instant, bool sound)
+        public void RestBear(bool instant, RestSoundChoice sound)
         {
             _bear.Rest(instant, sound);
         }

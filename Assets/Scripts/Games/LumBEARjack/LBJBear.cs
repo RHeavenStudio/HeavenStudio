@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         [SerializeField] private float _zoomInPower = 4f;
 
         private bool _rested = false;
-        private bool _restSound = true;
+        private LumBEARjack.RestSoundChoice _restSound;
 
         private float _cameraPointZFrom;
         private EasingFunction.Function _cameraFunc = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutBounce);
@@ -62,15 +62,29 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _anim.DoScaledAnimationAsync("BeastBop", 0.5f);
         }
 
-        public void Rest(bool instant, bool sound)
+        public void Rest(bool instant, LumBEARjack.RestSoundChoice sound)
         {
             _anim.DoScaledAnimationAsync("BeastRest", 0.5f, instant ? 1 : 0);
             _rested = true;
+            _restSound = sound;
         }
 
         public void RestSound()
         {
-            if (_restSound) SoundByte.PlayOneShotGame("lumbearjack/sigh" + (Random.Range(1, 3) == 1 ? "A" : "B"));
+            switch (_restSound)
+            {
+                case LumBEARjack.RestSoundChoice.Random:
+                    SoundByte.PlayOneShotGame("lumbearjack/sigh" + (Random.Range(1, 3) == 1 ? "A" : "B"));
+                    break;
+                case LumBEARjack.RestSoundChoice.restA:
+                    SoundByte.PlayOneShotGame("lumbearjack/sighA");
+                    break;
+                case LumBEARjack.RestSoundChoice.restB:
+                    SoundByte.PlayOneShotGame("lumbearjack/sighB");
+                    break;
+                default:
+                    break;
+            }
         }
 
         private Coroutine _currentZoomCo;
