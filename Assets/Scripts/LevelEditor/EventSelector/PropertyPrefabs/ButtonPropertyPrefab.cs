@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 namespace HeavenStudio.Editor
 {
@@ -8,7 +9,9 @@ namespace HeavenStudio.Editor
     {
         [Header("Boolean")]
         [Space(10)]
-        // public Button buttonObj;
+        public float minButtonSize;
+        public RectTransform buttonTextRect;
+        public RectTransform buttonRect;
         public TMP_Text buttonText;
         public EntityTypes.Button button;
 
@@ -31,15 +34,30 @@ namespace HeavenStudio.Editor
             if (text != null) {
                 buttonText.text = entity[propertyName] = text;
             }
+            UpdateCollapse(entity[propertyName]);
         }
 
-        // OnClick() already handles this. 
-        // if somebody wants to uncomment this for their thing feel free but it's unused for now -AJ
-        // private void LateUpdate()
-        // {
-        //     if (entity[propertyName] != buttonText.text) {
-        //         buttonText.text = entity[propertyName];
-        //     }
-        // }
+        private void LateUpdate()
+        {
+            // OnClick() already handles this. 
+            // if somebody wants to uncomment this for their thing feel free but it's unused for now -AJ
+            // if (entity[propertyName] != buttonText.text) {
+            //     buttonText.text = entity[propertyName];
+            // }
+
+            Debug.Log(buttonTextRect.sizeDelta.x > minButtonSize ? "buttonTextRect.sizeDelta.x : " + buttonTextRect.sizeDelta.x : "minButtonSize : " + minButtonSize);
+
+            buttonRect.sizeDelta = new(Mathf.Max(buttonTextRect.sizeDelta.x, minButtonSize), buttonRect.sizeDelta.y);
+        }
+
+        public void ResetValue()
+        {
+            buttonText.text = entity[propertyName] = button.defaultLabel;
+        }
+
+        public override void SetCollapses(object type)
+        {
+            UpdateCollapse(entity[propertyName]);
+        }
     }
 }

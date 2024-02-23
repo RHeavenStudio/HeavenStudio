@@ -14,7 +14,7 @@ namespace HeavenStudio.Util
         static AudioSource oneShotAudioSource;
         static int soundIdx = 0;
 
-        static Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
+        public static Dictionary<string, AudioClip> audioClips { get; private set; } = new Dictionary<string, AudioClip>();
 
         public enum AudioType
         {

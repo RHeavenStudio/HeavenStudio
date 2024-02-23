@@ -140,13 +140,11 @@ namespace HeavenStudio.Editor
             }
             print(propertyPrefab.name);
 
-            GameObject input = Instantiate(propertyPrefab);
-            input.transform.SetParent(this.gameObject.transform);
+            GameObject input = Instantiate(propertyPrefab, transform);
             input.SetActive(true);
             input.transform.localScale = Vector3.one;
 
             if (tooltip != string.Empty) {
-                Debug.Log(PersistentDataManager.gameSettings.showParamTooltips);
                 if (PersistentDataManager.gameSettings.showParamTooltips) {
                     Tooltip.AddTooltip(input, tooltip);
                 } else {
@@ -159,20 +157,6 @@ namespace HeavenStudio.Editor
 
             return input;
         }
-
-        // private GameObject InitPrefab(GameObject prefab, string tooltip = "")
-        // {
-        //     GameObject input = Instantiate(prefab);
-        //     input.transform.SetParent(this.gameObject.transform);
-        //     input.SetActive(true);
-        //     input.transform.localScale = Vector3.one;
-
-        //     if (tooltip != string.Empty) {
-        //         Tooltip.AddTooltip(input, "", tooltip);
-        //     }
-
-        //     return input;
-        // }
 
         private void DestroyParams()
         {

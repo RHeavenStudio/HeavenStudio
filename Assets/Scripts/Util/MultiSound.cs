@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using Cysharp.Threading.Tasks.Triggers;
 
 namespace HeavenStudio.Util
 {
