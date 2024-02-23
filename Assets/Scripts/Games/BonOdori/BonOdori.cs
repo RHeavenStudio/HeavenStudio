@@ -137,12 +137,12 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
 
                 },
-                new GameAction("spin", "Spin")
-                {
-                    function = delegate {BonOdori.instance.Spin(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
-                    defaultLength = 1f,
+                // new GameAction("spin", "Spin")
+                // {
+                //     function = delegate {BonOdori.instance.Spin(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
+                //     defaultLength = 1f,
 
-                },
+                // },
                     new GameAction("toggle bg", "Toggle Darker Background")
                 {
                     function = delegate {BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]);},
@@ -794,10 +794,10 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + length, delegate { Player.Play("NeutralBopped"); CPU1.Play("NeutralBopped");CPU2.Play("NeutralBopped"); CPU3.Play("NeutralBopped"); if (bopDonpans) {goBopDonpans = true;}})
                 });
     }
-    public void Spin(double beat, float length)
-    {
+    // public void Spin(double beat, float length)
+    // {
 
-    }
+    // }
             
         public override void OnBeatPulse(double beat)
         {
