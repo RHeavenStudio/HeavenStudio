@@ -131,7 +131,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1730902299297412491}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.804, y: 0.61300004, z: 0}
+  m_LocalPosition: {x: 1.804, y: 0.61300004, z: -4.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -215,7 +215,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1990977082314958150}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.804, y: 0.613, z: 0}
+  m_LocalPosition: {x: -1.804, y: 0.613, z: -4.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -300,7 +300,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2069064452885481355}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.695, y: 0.3288985, z: -4.085526}
+  m_LocalPosition: {x: -0.7, y: 0.3288985, z: -4.085526}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -369,7 +369,7 @@ Animator:
   m_GameObject: {fileID: 2069064452885481355}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7e18ea2ac28e60f48a2ef1455f4f7e2e, type: 2}
+  m_Controller: {fileID: 9100000, guid: b4ae35ac3016b504b869d219b982a151, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -405,7 +405,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2097296857581379271}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.0651015, z: 4.0855255}
+  m_LocalPosition: {x: 0, y: 1.0651015, z: 4.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -842,7 +842,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5985063182856050203}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.695, y: 0.32889855, z: -4.0855255}
+  m_LocalPosition: {x: 0.7, y: 0.32889855, z: -4.0855255}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -955,5 +955,5 @@ MonoBehaviour:
   scheduledInputs: []
   buttonAnimator: {fileID: 3702318791696650226}
   flashAnimator: {fileID: 7814860204980886555}
-  numberbgAnimator: {fileID: 0}
-  numberAnimator: {fileID: 0}
+  numberBGAnimator: {fileID: 3131245519608349835}
+  numberAnimator: {fileID: 4403813855415779181}

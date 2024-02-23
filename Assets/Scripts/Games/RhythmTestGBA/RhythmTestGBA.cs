@@ -39,9 +39,14 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("countin", "Start Beeping")
                 {
-                    function = delegate { RhythmTestGBA.instance.KeepTheBeep(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
+                    function = delegate { RhythmTestGBA.instance.KeepTheBeep(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["toggle"], eventCaller.currentEntity["auto"]); },
                     defaultLength = 1f,
                     resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Toggle", "Toggle the automatic beeping on or off."),
+                        new Param("auto", false, "Auto", "Toggle if the machine should beep automatically."),
+                    },
                 },
 
                 new GameAction("button", "Start Keep-the-Beat")
@@ -54,34 +59,36 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("stopktb", "Stop Keep-the-Beat")
                 {
-                    function = delegate { RhythmTestGBA.instance.StopKeepbeat(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
-                    defaultLength = 4f,
-                    resizable = false,
-                },
-
-                new GameAction("countthree", "Count Down From Three")
-                {
-                    function = delegate {RhythmTestGBA.instance.CountDownThree(
-eventCaller.currentEntity.beat, eventCaller.currentEntity["mute3"], eventCaller.currentEntity["mute2"], eventCaller.currentEntity["mute1"]);},
+                    preFunction = delegate { RhythmTestGBA.instance.PreStopKeepbeat(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["mutecue"]); },
                     defaultLength = 4f,
                     resizable = false,
                     parameters = new List<Param>()
                     {
-                        new Param("mute3", false, "3 Muted", "Hides and mutes the 3 in the countdown."),
-                        new Param("mute2", false, "2 Muted", "Hides and mutes the 2 in the countdown."),
-                        new Param("mute1", false, "1 Muted", "Hides and mutes the 1 in the countdown."),
+                        new Param("mutecue", false, "Mute Cue", "Mute the sound cue signifying the end of the keep-the-beat section."),
                     }
                 },
 
                 new GameAction("countdown", "Countdown")
                 {
-                    function = delegate {RhythmTestGBA.instance.CountDown(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["countdownNumber"]);},
+                    preFunction = delegate {RhythmTestGBA.instance.PreCountDown(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["val1"]);},
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("countdownNumber", new EntityTypes.Integer(1, 9, 3), "Beats", "Set how many beats there will be before the player has to input.")                        
+                        new Param("val1", new EntityTypes.Integer(1, 9, 3), "Beats", "Set how many beats there will be before the player has to input.")                        
                     }
+                },
+
+                new GameAction("hidecount", "Toggle Countdown")
+                {
+                    function = delegate {RhythmTestGBA.instance.HideCountdown(eventCaller.currentEntity["togglecount"]);},
+                    defaultLength = 0.5f,
+                    resizable = false,
+                    parameters = new List<Param>()
+                    {
+                        new Param("togglecount", true, "Toggle Countdown?", "Toggles whether the countdown appears or not."),
+                    }
+
                 },
 
             },
@@ -101,18 +108,27 @@ namespace HeavenStudio.Games
     {
         public static RhythmTestGBA instance;
         static List<double> queuedButton = new();
+        
+        bool goBeep;
+        bool stopBeep;
+        bool keepPressing;
+        bool shouldmute;
+        bool disableCount;
+
+        private double numberSelect;
+        private float countLength;
 
         [Header("Animators")]
         [SerializeField] Animator buttonAnimator;
         [SerializeField] Animator flashAnimator;
-        [SerializeField] Animator numberbgAnimator;
+        [SerializeField] Animator numberBGAnimator;
         [SerializeField] Animator numberAnimator;
 
         [Header("Properties")]
         private static double startBlippingBeat = double.MaxValue;
 
         [Header("Variables")]
-        bool keepPressing;
+        
         int pressPlayerCount;
         public static double wantButton = double.MinValue;
 
@@ -130,6 +146,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            
         }
 
         void OnDestroy()
@@ -171,12 +188,9 @@ namespace HeavenStudio.Games
                         BeatAction.New(instance, new List<BeatAction.Action>() {
                             new BeatAction.Action(ktb, delegate {
                                 ScheduleInput(ktb, 1f, InputAction_BasicPress, ButtonSuccess, ButtonFailure, ButtonEmpty);
-                                flashAnimator.Play("KTBPulse", 0, 0);
-                                SoundByte.PlayOneShotGame("rhythmTestGBA/blip");
 
                             }),
                             new BeatAction.Action(ktb + 1, delegate {
-                               flashAnimator.Play("KTBPulse", 0, 0);
                                if (keepPressing) queuedButton.Add(ktb + 1);
                             }),
                         });
@@ -193,22 +207,30 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void KeepTheBeep(double beat, float length)
+        public void KeepTheBeep(double beat, float length, bool shouldBeep, bool autoBeep)
         {
-            for (int i = 0; i < length; i++)
+            stopBeep = false;
+            if (!shouldBeep) { goBeep = false; return;}
+            goBeep = autoBeep;
+            if (shouldBeep)
             {
-                BeatAction.New(instance, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + i, delegate
-                    {
-                        flashAnimator.Play("KTBPulse", 0, 0);
-                        SoundByte.PlayOneShotGame("rhythmTestGBA/blip");
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + i, delegate
+                        {
+                            flashAnimator.Play("KTBPulse", 0, 0);
+                            SoundByte.PlayOneShotGame("rhythmTestGBA/blip");
                 
-                    })
-                });
+                        })
+                    });
                 
+                }
             }
         }
+
+
 
 
 
@@ -220,24 +242,52 @@ namespace HeavenStudio.Games
 
         }
 
-                
-
-
-        public void StopKeepbeat(double beat, float length)
+        public void PreStopKeepbeat(double beat, float length, bool muted)
         {
-
-            keepPressing = false;
-            SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");            
+            shouldmute = muted;
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat+1, delegate { StopKeepbeatInput(beat);}),
-                new BeatAction.Action(beat+1, delegate { SoundByte.PlayOneShotGame("rhythmTestGBA/blip2", beat: beat);}),
-                new BeatAction.Action(beat+2, delegate { StopKeepbeatInput(beat);}),
-                new BeatAction.Action(beat+2, delegate { SoundByte.PlayOneShotGame("rhythmTestGBA/blip2", beat: beat);}),
-                new BeatAction.Action(beat+3, delegate { StopKeepbeatInput(beat);}),
+                new BeatAction.Action(beat-1, delegate {killBeeps(beat);}),
+                new BeatAction.Action(beat, delegate {StopKeepbeat(beat, shouldmute);})
+            });
+            
+
+        }        
+
+
+        public void StopKeepbeat(double beat,  bool shouldmute)
+        {
+
+            
+            keepPressing = false;
+            ScheduleInput(beat, 1f, InputAction_BasicPress, ButtonSuccess, ButtonFailure, ButtonEmpty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, ButtonSuccess, ButtonFailure, ButtonEmpty);
+            ScheduleInput(beat, 3f, InputAction_BasicPress, ButtonSuccess, ButtonFailure, ButtonEmpty);
+
+
+          
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                
+                new BeatAction.Action(beat, delegate {flashAnimator.Play("KTBPulse");}),  
+                
+                new BeatAction.Action(beat+1, delegate {flashAnimator.Play("KTBPulse");}),                      
+  
+                new BeatAction.Action(beat+2, delegate {flashAnimator.Play("KTBPulse");}),  
+
                 new BeatAction.Action(beat+3, delegate { SoundByte.PlayOneShotGame("rhythmTestGBA/end_ding", beat: beat, forcePlay: true);})
 
             });
+            if (!shouldmute)
+            {
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat+1, delegate { SoundByte.PlayOneShotGame("rhythmTestGBA/blip2", beat: beat);}),
+                    new BeatAction.Action(beat+2, delegate { SoundByte.PlayOneShotGame("rhythmTestGBA/blip2", beat: beat);})
+                });  
+
+            }
         }
 
 
@@ -245,6 +295,21 @@ namespace HeavenStudio.Games
         {
             ScheduleInput(beat, 0f, InputAction_BasicPress, ButtonSuccess, ButtonFailure, ButtonEmpty);
             flashAnimator.Play("KTBPulse");
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (goBeep)
+            {
+                flashAnimator.Play("KTBPulse");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip");
+            }
+            
+        }
+
+        public void killBeeps(double beat)
+        {
+            goBeep = false;
         }
         
 
@@ -256,113 +321,312 @@ namespace HeavenStudio.Games
             
         }
 
-        public void CountDownThree(double beat, bool mute3, bool mute2, bool mute1)
-        {
-            ScheduleInput(beat, 3f, InputAction_BasicPress, ButtonSuccess, ButtonFailure, ButtonEmpty);
-            if (mute3)
-            {
-                FlashNone(beat);
-            }
-            else
-            {
-                FlashThree(beat);
-            }
-            if (mute2)
-            {
-                BeatAction.New(instance, new List<BeatAction.Action>(){
-                    new BeatAction.Action(beat+1, delegate {FlashNone(beat);})});
-            }
-            else
-            {
-                BeatAction.New(instance, new List<BeatAction.Action>(){
-                    new BeatAction.Action(beat+1, delegate {FlashTwo(beat);})});
-            }
-            if (mute1)
-            {
-                BeatAction.New(instance, new List<BeatAction.Action>(){
-                    new BeatAction.Action(beat+2, delegate {FlashNone(beat);})});
-            }
-            else
-            {
-                BeatAction.New(instance, new List<BeatAction.Action>(){
-                    new BeatAction.Action(beat+2, delegate {FlashOne(beat);})});
-            }
-                BeatAction.New(instance, new List<BeatAction.Action>(){
-                    new BeatAction.Action(beat+3, delegate {FlashZero(beat);})});
 
+        public void PreCountDown(double startBeat, float length, int countdownNumber)
+        {
+            if (keepPressing) return;
+            ScheduleInput(startBeat, length * countdownNumber, InputAction_BasicPress, ButtonSuccess, ButtonFailure, ButtonEmpty);
+            countLength = length;
+            switch (countdownNumber)
+            {
+                case 1:
+                    CountOne(startBeat, length);
+                    break;
+                case 2:
+                    CountTwo(startBeat, length);
+                    break;
+                case 3:
+                    CountThree(startBeat, length);
+                    break;
+                case 4:
+                    CountFour(startBeat, length);
+                    break;
+                case 5:
+                    CountFive(startBeat, length);
+                    break;
+                case 6:
+                    CountSix(startBeat, length);
+                    break;
+                case 7:
+                    CountSeven(startBeat, length);
+                    break;
+                case 8:
+                    CountEight(startBeat, length);
+                    break;
+                case 9:
+                    CountNine(startBeat, length);
+                    break;
+            }
         }
 
-        public void CountDown(double beat, float length, int countdownNumber)
+// Countdown playing functions
+
+        public void CountNine(double startBeat, float length)
         {
+            
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
 
-
-
-            ScheduleInput(beat, length * (countdownNumber), InputAction_BasicPress, ButtonSuccess, ButtonFailure, ButtonEmpty);
-
-
+                new BeatAction.Action(startBeat, delegate {FlashNine(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length, delegate {FlashEight(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*2, delegate {FlashSeven(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*3, delegate {FlashSix(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*4, delegate {FlashFive(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*5, delegate {FlashFour(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*6, delegate {FlashThree(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*7, delegate {FlashTwo(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*8, delegate {FlashOne(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*9, delegate {FlashZero(startBeat);})
+            });
         }
 
+
+        public void CountEight(double startBeat, float length)
+        {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat, delegate {FlashEight(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length, delegate {FlashSeven(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*2, delegate {FlashSix(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*3, delegate {FlashFive(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*4, delegate {FlashFour(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*5, delegate {FlashThree(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*6, delegate {FlashTwo(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*7, delegate {FlashOne(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*8, delegate {FlashZero(startBeat);})
+            });
+
+        }        
+        public void CountSeven(double startBeat, float length)
+        {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat, delegate {FlashSeven(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length, delegate {FlashSix(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*2, delegate {FlashFive(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*3, delegate {FlashFour(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*4, delegate {FlashThree(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*5, delegate {FlashTwo(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*6, delegate {FlashOne(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*7, delegate {FlashZero(startBeat);})
+            });
+        }
+        public void CountSix(double startBeat, float length)
+        {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat, delegate {FlashSix(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length, delegate {FlashFive(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*2, delegate {FlashFour(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*3, delegate {FlashThree(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*4, delegate {FlashTwo(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*5, delegate {FlashOne(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*6, delegate {FlashZero(startBeat);})
+            });
+        }
+        public void CountFive(double startBeat, float length)
+        {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat, delegate {FlashFive(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length, delegate {FlashFour(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*2, delegate {FlashThree(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*3, delegate {FlashTwo(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*4, delegate {FlashOne(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*5, delegate {FlashZero(startBeat);})
+            });
+        }
+        public void CountFour(double startBeat, float length)
+        {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat, delegate {FlashFour(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length, delegate {FlashThree(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*2, delegate {FlashTwo(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*3, delegate {FlashOne(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*4, delegate {FlashZero(startBeat);})
+            });
+        }
+        public void CountThree(double startBeat, float length)
+        {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat, delegate {FlashThree(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length, delegate {FlashTwo(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*2, delegate {FlashOne(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*3, delegate {FlashZero(startBeat);})
+            });
+        }
+        public void CountTwo(double startBeat, float length)
+        {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat, delegate {FlashTwo(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length, delegate {FlashOne(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length*2, delegate {FlashZero(startBeat);})
+            });
+        }
+        public void CountOne(double startBeat, float length)
+        {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat, delegate {FlashOne(startBeat, disableCount);}),
+                new BeatAction.Action(startBeat + length, delegate {FlashZero(startBeat);})
+            });
+        }
 // Number Call Functions
-        public void FlashSeven(double beat)
+
+        public void HideCountdown(bool toggleCount)
         {
-
-            numberbgAnimator.Play("FlashBG");
-            numberAnimator.Play("Seven");
-            SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
-
+            if (toggleCount)
+            {
+                disableCount = false;
+            }
+            else
+            {
+                disableCount = true;
+            }
         }
-        public void FlashSix(double beat)
+
+        public void FlashNine(double beat, bool disableCount)
         {
-
-            numberbgAnimator.Play("FlashBG");
-            numberAnimator.Play("Six");
-            SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
-
+            if (disableCount != true)
+            {
+                numberBGAnimator.Play("FlashBG", -1, 0);
+                numberAnimator.Play("Nine");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+            }
+            else
+            {
+                numberBGAnimator.Play("Idle");
+                numberAnimator.Play("Idle");                
+            }
         }
-        public void FlashFive(double beat)
+
+        public void FlashEight(double beat, bool disableCount)
         {
-
-            numberbgAnimator.Play("FlashBG");
-            numberAnimator.Play("Five");
-            SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
-
+            if (!disableCount)
+            {
+                numberBGAnimator.Play("FlashBG", -1, 0);
+                numberAnimator.Play("Eight");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+            }
+            else
+            {
+                numberBGAnimator.Play("Idle");
+                numberAnimator.Play("Idle");                
+            }
         }
-        public void FlashFour(double beat)
+
+        public void FlashSeven(double beat, bool disableCount)
         {
-
-            numberbgAnimator.Play("FlashBG");
-            numberAnimator.Play("Four");
-            SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
-
+            if (!disableCount)
+            {
+                numberBGAnimator.Play("FlashBG", -1, 0);
+                numberAnimator.Play("Seven");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+            }
+            else
+            {
+                numberBGAnimator.Play("Idle");
+                numberAnimator.Play("Idle");                
+            }
         }
-        public void FlashThree(double beat)
+
+        public void FlashSix(double beat, bool disableCount)
         {
-
-            numberbgAnimator.Play("FlashBG");
-            numberAnimator.Play("Three");
-            SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
-
+            if (!disableCount)
+            {
+                numberBGAnimator.Play("FlashBG", -1, 0);
+                numberAnimator.Play("Six");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+            }
+            else
+            {
+                numberBGAnimator.Play("Idle");
+                numberAnimator.Play("Idle");                
+            }
         }
-        public void FlashTwo(double beat)
+
+        public void FlashFive(double beat, bool disableCount)
         {
-
-            numberbgAnimator.Play("FlashBG");
-            numberAnimator.Play("Two");
-            SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
-
+            if (!disableCount)
+            {
+                numberBGAnimator.Play("FlashBG", -1, 0);
+                numberAnimator.Play("Five");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+            }
+            else
+            {
+                numberBGAnimator.Play("Idle");
+                numberAnimator.Play("Idle");                
+            }
         }
-        public void FlashOne(double beat)
+
+        public void FlashFour(double beat, bool disableCount)
         {
+            if (!disableCount)
+            {
+                numberBGAnimator.Play("FlashBG", -1, 0);
+                numberAnimator.Play("Four");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+            }
+            else
+            {
+                numberBGAnimator.Play("Idle");
+                numberAnimator.Play("Idle");                
+            }
+        }        
 
-            numberbgAnimator.Play("FlashBG");
-            numberAnimator.Play("One");
-            SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
-
+        public void FlashThree(double beat, bool disableCount)
+        {
+            if (!disableCount)
+            {
+                numberBGAnimator.Play("FlashBG", -1, 0);
+                numberAnimator.Play("Three");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+            }
+            else
+            {
+                numberBGAnimator.Play("Idle");
+                numberAnimator.Play("Idle");                
+            }
         }
+
+        public void FlashTwo(double beat, bool disableCount)
+        {
+            if (!disableCount)
+            {
+                numberBGAnimator.Play("FlashBG", -1, 0);
+                numberAnimator.Play("Two");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+            }
+            else
+            {
+                numberBGAnimator.Play("Idle");
+                numberAnimator.Play("Idle");                
+            }
+        }
+
+        public void FlashOne(double beat, bool disableCount)
+        {
+            if (!disableCount)
+            {
+                numberBGAnimator.Play("FlashBG", -1, 0);
+                numberAnimator.Play("One");
+                SoundByte.PlayOneShotGame("rhythmTestGBA/blip2");
+            }
+            else
+            {
+                numberBGAnimator.Play("Idle");
+                numberAnimator.Play("Idle");                
+            }
+        }
+
         public void FlashZero(double beat)
         {
 
-            numberbgAnimator.Play("FlashHit");
+            numberBGAnimator.Play("FlashHit");
             numberAnimator.Play("Zero");
             SoundByte.PlayOneShotGame("rhythmTestGBA/blip3");
 
@@ -371,11 +635,8 @@ namespace HeavenStudio.Games
 
 
 
-        public void FlashNone(double beat)
+        public void HideCountdown(double beat, bool showcount)
         {
-
-            numberbgAnimator.Play("Idle");
-            numberAnimator.Play("Idle");
 
         }
 
