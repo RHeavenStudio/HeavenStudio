@@ -415,7 +415,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 3, delegate { allowBopSumo = false; })
                 });
 
-            if (inu && conductor.songPosBeat < beat + 2)
+            if (inu && conductor.songPosBeat <= beat + 2)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
@@ -550,7 +550,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 3, delegate { if (sumoStatePrevious == SumoState.Pose) sumoBrotherGHead.DoScaledAnimationAsync("SumoGStomp",0.5f); })
                 });
 
-            if (inu  && conductor.songPosBeat < beat + 3)
+            if (inu  && conductor.songPosBeat <= beat + 3)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
