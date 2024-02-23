@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                    function = delegate {
   var e = eventCaller.currentEntity;
   string variation = "variation" + (new string[] { "Pan", "Pa", "Pa_n" })[e["type"]];
-  BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"]);
+  BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"],e["clapType"]);
 },
                     defaultLength = 1f,
                     parameters = new List<Param>()
@@ -51,6 +51,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("variationPan", BonOdori.variationPan.PanC, "Pan Type", "Set the variation of the voice line."),
                         new Param("variationPa", BonOdori.variationPa.PaG, "Pa Type", "Set the variation of the voice line."),
                         new Param("variationPa_n", BonOdori.variationPa_n.Pa_nA , "Pa-n Type", "Set the variation of the voice line."),
+                        new Param("clapType", BonOdori.typeClap.SideClap, "Clap Type", "Set the type of clap.")
                     }
                 },
                
@@ -175,6 +176,8 @@ namespace HeavenStudio.Games
         bool goBopDonpans;
         bool goBopJudge;
         bool bopDonpans;
+        int clapTypeGlobal = 0;
+        string clapTypeString = "ClapSide";
         string originalText1;
         string originalText2;
         string originalText3;
@@ -185,6 +188,7 @@ namespace HeavenStudio.Games
         Coroutine Scroll3;
         Coroutine Scroll4;
         Coroutine Scroll5;
+        bool darkBgIsOn = false;
         TextMeshProUGUI Text1_GUI;
         TextMeshProUGUI Text2_GUI;
         TextMeshProUGUI Text3_GUI;
@@ -195,6 +199,7 @@ namespace HeavenStudio.Games
         TextMeshProUGUI Text8_GUI;
         TextMeshProUGUI Text9_GUI;
         TextMeshProUGUI Text10_GUI;
+
 
 
         [SerializeField] TMP_Text Text1;
@@ -216,7 +221,11 @@ namespace HeavenStudio.Games
         [SerializeField] Animator CPU2;
         [SerializeField] Animator CPU3;
         [SerializeField] Animator Face;
-
+        public enum typeClap
+        {
+            SideClap = 0,
+            FrontClap = 1
+        }
         public enum typePan
         {
             Pan = 0,
@@ -267,6 +276,10 @@ namespace HeavenStudio.Games
         public void Awake()
 
         {
+
+
+            
+            clapTypeGlobal = 0;
             instance = this;
             Text1_GUI = Text1.GetComponent<TextMeshProUGUI>();
             Text2_GUI = Text2.GetComponent<TextMeshProUGUI>();
@@ -286,18 +299,85 @@ namespace HeavenStudio.Games
 
         public void Update()
         {
+            Conductor con = new Conductor();
+            if (!con.NotStopped())
+            {
+                Text1.text = "";
+                Text2.text = "";
+                Text3.text = "";
+                Text4.text = "";
+                Text6.text = "";
+                Text7.text = "";
+                Text8.text = "";
+                Text9.text = "";
+                Text10.text = "";
+
+
+
+                StopCoroutine(Scroll1);
+                StopCoroutine(Scroll2);
+                StopCoroutine(Scroll3);
+                StopCoroutine(Scroll4);
+                StopCoroutine(Scroll5);
+                Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                DarkPlane.Play("StayOff");
+
+
+            }
+            
+
+            
             if (PlayerInput.GetIsAction(BonOdori.InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)){
                 ScoreMiss();
                 SoundByte.PlayOneShotGame("bonOdori/clap");
+                if (clapTypeGlobal == 0)
+                { 
+                    clapTypeString = "ClapSide";
+                }
+                else
+                {
+                    clapTypeString = "ClapFront";
+                }
+                    
+                    Player.Play(clapTypeString);
+                    CPU1.Play(clapTypeString);
+                    CPU2.Play(clapTypeString);
+                    CPU3.Play(clapTypeString);
+                    if (!goBopDonpans)
+                    {
+
+                    
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");})
+                });
+                }
+                
+                
   
             
             
         }
 
         }
+        
 
-        public void Clap(double beat, int variation, int typeSpeak, bool muted)
+
+        public void Clap(double beat, int variation, int typeSpeak, bool muted, int clapType)
+
         {  
+            if (clapType == 1)
+            {
+                clapTypeGlobal = 1;
+            }
+            else
+            {
+                clapTypeGlobal = 0;
+            }
             if (muted)
             {
                 ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
@@ -340,7 +420,8 @@ namespace HeavenStudio.Games
             
         }
                         beatUniversal = beat;
-                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);}}
+                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);}
+            }
             public void Sound(double beat, int variation, int typeSpeak )
         {  switch (typeSpeak){
                             case 0:
@@ -390,6 +471,28 @@ namespace HeavenStudio.Games
 
         public void Success(PlayerActionEvent caller, float state)
         {
+            if (clapTypeGlobal == 0)
+                { 
+                        clapTypeString = "ClapSide";
+                }
+                else
+                {
+                        clapTypeString = "ClapFront";
+                }
+                    
+                    Player.Play(clapTypeString);
+                    CPU1.Play(clapTypeString);
+                    CPU2.Play(clapTypeString);
+                    CPU3.Play(clapTypeString);
+                    if (!goBopDonpans)
+                    {
+
+                    
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
+                });
+                }
             MultiSound.Play(new MultiSound.Sound[] {
                         new MultiSound.Sound("bonOdori/clap", 0f, offset: 0.01f),
                         });
@@ -411,6 +514,29 @@ namespace HeavenStudio.Games
         
         public void Empty(PlayerActionEvent caller)
         {
+            if (clapTypeGlobal == 0)
+                { 
+                    clapTypeString = "ClapSide";
+                }
+                else
+                {
+                    clapTypeString = "ClapFront";
+                }
+                    
+                    Player.Play(clapTypeString);
+                    CPU1.Play(clapTypeString);
+                    CPU2.Play(clapTypeString);
+                    CPU3.Play(clapTypeString);
+                    if (!goBopDonpans)
+                    {
+
+                    
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
+                });
+                }
+                 
                         MultiSound.Play(new MultiSound.Sound[] {
                         new MultiSound.Sound("bonOdori/nearMiss", 0f, offset: 0.01f),
                         });
@@ -656,6 +782,7 @@ namespace HeavenStudio.Games
         else
         {
             bopDonpans = false;
+            
         }
         goBopDonpans = false;
         Player.Play("Bow");
@@ -692,10 +819,12 @@ public void DarkBG(double beat, bool toggle)
     if (toggle)
     {
         DarkPlane.Play("Appear");
+        darkBgIsOn = true;
     }
     else
     {
         DarkPlane.Play("GoAway");
+        darkBgIsOn = false;
     }
 }
         
