@@ -620,9 +620,9 @@ namespace HeavenStudio
             }
         }
 
-        public static void PlaySFXArbitrary(double beat, string game, string name, float pitch, float offset)
+        public static void PlaySFXArbitrary(double beat, string game, string name, float pitch, int offset)
         {
-            if (string.IsNullOrEmpty(game) || string.IsNullOrEmpty(name)) return;
+            if (string.IsNullOrEmpty(name)) return;
             if (string.IsNullOrEmpty(game)) {
                 SoundByte.PlayOneShot(name, beat, pitch, offset: offset);
             } else {
@@ -633,7 +633,6 @@ namespace HeavenStudio
 
         public void PlayAnimationArbitrary(string animator, string animation, float scale)
         {
-            // if possible (efficient enough) id like to find the object recursively, but for now this works
             Transform animTrans = minigameObj.transform.Find(animator);
             if (animTrans != null && animTrans.TryGetComponent(out Animator anim)) {
                 anim.DoScaledAnimationAsync(animation, scale);

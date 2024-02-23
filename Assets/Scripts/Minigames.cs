@@ -1176,14 +1176,17 @@ namespace HeavenStudio
                                     }).ToList());
                                 }
                                 return game?.displayName ?? "No Game";
-                            }), "Get Animators", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
+                            }), "Get Animators", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)", new() {
+                                new((x, _) => { Debug.Log(x.GetType()); return (string)x != "No Game"; }, "animator", "getAnimations")
+                            }),
                             new Param("animator", new EntityTypes.Dropdown(), "Animator", "Specify which animator in the scene to play an animation on."),
                             new Param("getAnimations", new EntityTypes.Button("", e => {
                                 var gm = GameManager.instance;
                                 Minigame game = gm.GetGameInfo(gm.currentGame);
                                 string animPath = ((EntityTypes.DropdownObj)e["animator"]).CurrentValue;
+                                Debug.Log(animPath);
                                 Animator animator = null;
-                                if (animPath != null) {
+                                if (!string.IsNullOrEmpty(animPath)) {
                                     var animObj = gm.minigameObj.transform.Find(animPath);
                                     if (animObj != null && animObj.TryGetComponent(out animator) && animator != null) {
                                         var animations = animator
@@ -1194,8 +1197,10 @@ namespace HeavenStudio
                                         ((EntityTypes.DropdownObj)e["animation"]).SetValues(animations);
                                     }
                                 }
-                                return animator != null ? animator.name : "N/A";
-                            }), "Get Animations", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
+                                return animator != null ? animator.name : "";
+                            }), "Get Animations", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)", new() {
+                                new((x, _) => (string)x != "", "animation", "scale")
+                            }),
                             new Param("animation", new EntityTypes.Dropdown(), "Animation", "Specify the name of the animation to play."),
                             new Param("scale", new EntityTypes.Float(0, 5, 0.5f), "Animation Scale", "The time scale of the animation. Higher values are faster."),
                         },
@@ -1207,33 +1212,22 @@ namespace HeavenStudio
                     new GameAction("play sfx", "Play SFX", 0.5f, false,
                         new List<Param>()
                         {
-                            new Param("game", new EntityTypes.Dropdown(), "Which Game", "Specify the game's sfx to play. An empty input will play global sfx.", new() {
-                                new((x, e) => {
-                                    // Minigame game = eventCaller.minigames[((EntityTypes.DropdownObj)x).CurrentValue];
-                                    string gameName = ((EntityTypes.DropdownObj)e["game"]).CurrentValue;
-                                    Minigame game = eventCaller.minigames[gameName];
-                                    int startFrom = "assets/resources/sfx/".Length - 1;
-                                    foreach (var thing in game.GetCommonAssetBundle().GetAllAssetNames())
-                                    {
-                                        Debug.Log(thing);
-                                    }
-                                    List<string> clips = new() { "" };
-                                    foreach (var clip in game.GetCommonAssetBundle().GetAllAssetNames().Concat(game.GetLocalizedAssetBundle().GetAllAssetNames()))
-                                    {
-                                        string[] splitClip = clip[startFrom..].Split('/');
-                                        if (splitClip[0] == "games" && splitClip[1] == gameName) {
-                                            clips.Add(splitClip[2]);
-                                            Debug.Log(splitClip[2]);
-                                        }
-                                    }
-                                    EntityTypes.DropdownObj sfxDD = e["sfxName"];
-                                    sfxDD.SetValues(clips);
-                                    return true;
-                                }),
-                            }),
+                            new Param("game", new EntityTypes.Dropdown(), "Which Game", "Specify the game's sfx to play. An empty input will play global sfx."),
+                            new Param("getAnimations", new EntityTypes.Button("", e => {
+                                string gameName = ((EntityTypes.DropdownObj)e["game"]).CurrentValue;
+                                Minigame game = eventCaller.minigames[gameName];
+                                IEnumerable<AudioClip> audioClips = game.GetCommonAssetBundle().LoadAllAssets<AudioClip>();
+                                var localAssBun = game.GetLocalizedAssetBundle();
+                                if (localAssBun != null) {
+                                    audioClips = audioClips.Concat(localAssBun.LoadAllAssets<AudioClip>());
+                                }
+                                EntityTypes.DropdownObj sfxDD = e["sfxName"];
+                                sfxDD.SetValues(audioClips.Select(x => x.name).ToList());
+                                return !string.IsNullOrEmpty(gameName) ? eventCaller.minigames[gameName]?.displayName : "N/A";
+                            }), "Get Animations", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
                             new Param("sfxName", new EntityTypes.Dropdown(), "SFX Name", "The name of the sfx to play."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The sfx's pitch."),
-                            new Param("offset", new EntityTypes.Float(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),
+                            new Param("offset", new EntityTypes.Integer(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),
                         },
                         preFunction : delegate {
                             var e = eventCaller.currentEntity;
@@ -1250,8 +1244,9 @@ namespace HeavenStudio
 
             LoadMinigames(eventCaller);
 
+            // im so sorry
             eventCaller.minigames["advanced"].actions
-                .Find(a => a.actionName == "play sfx").parameters[0].parameter = new EntityTypes.Dropdown(0, eventCaller.minigames.Keys.Skip(defaultGames.Count).ToArray());
+                .Find(a => a.actionName == "play sfx").parameters[0].parameter = new EntityTypes.Dropdown(0, eventCaller.minigames.Keys.Skip(defaultGames.Count).Concat(new string[] { "" }).ToArray());
         }
     }
 }

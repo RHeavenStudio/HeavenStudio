@@ -17,6 +17,7 @@ namespace HeavenStudio.Editor
         [Header("Dropdown")]
         [Space(10)]
         public LeftClickTMP_Dropdown dropdown;
+        public Scrollbar scrollbar;
 
         private int _defaultValue;
 
@@ -32,20 +33,23 @@ namespace HeavenStudio.Editor
             {
                 case EntityTypes.Dropdown dropdownEntity:
                     // entity[propertyName].ChangeValues(dropdownEntity.Values);
+                    _defaultValue = dropdownEntity.defaultValue;
                     EntityTypes.DropdownObj dropdownObj = entity[propertyName];
-                    selected = dropdownObj.currentIndex;
+                    selected = dropdownObj.value;
                     dropdown.AddOptions(dropdownObj.Values);
-                    dropdown.onValueChanged.AddListener(newVal => dropdownObj.currentIndex = newVal);
+                    dropdown.onValueChanged.AddListener(newVal => dropdownObj.value = newVal);
                     dropdownObj.onValueChanged = new Action<List<string>>(newValues =>
                     {
                         if (dropdown == null) return;
                         dropdown.ClearOptions();
                         dropdown.AddOptions(newValues);
                         dropdown.enabled = newValues.Count > 0;
+                        dropdownObj.value = _defaultValue;
                     });
                     break;
                 case Enum enumEntity:
                     Type enumType = enumEntity.GetType();
+                    _defaultValue = (int)type;
                     int[] keys = Enum.GetValues(enumType).Cast<int>().ToArray();
                     selected = Array.FindIndex(keys, val => val == (int)entity[propertyName]);
 
@@ -76,9 +80,6 @@ namespace HeavenStudio.Editor
 
         private void Update()
         {
-            var scrollbar = GetComponentInChildren<ScrollRect>()?.verticalScrollbar;
-
-            // This is bad but we'll fix it later.
             if (scrollbar != null)
             {
                 if (openedDropdown == false)

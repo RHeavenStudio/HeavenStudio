@@ -64,12 +64,12 @@ namespace HeavenStudio
 
         public struct Button
         {
-            public string label;
+            public string defaultLabel;
             public Func<RiqEntity, string> onClick;
 
             public Button(string defaultLabel, Func<RiqEntity, string> onClick)
             {
-                this.label = defaultLabel;
+                this.defaultLabel = defaultLabel;
                 this.onClick = onClick;
             }
         }
@@ -90,21 +90,19 @@ namespace HeavenStudio
         {
             public void SetValues(List<string> values)
             {
-                this.Values = values ?? new();
+                Values = values ?? new();
                 onValueChanged?.Invoke(values);
             }
             public int value;
             public List<string> Values { get; private set; }
-            public int currentIndex;
-            public string CurrentValue => currentIndex < Values?.Count - 1 ? Values?[currentIndex] : null;
+            [JsonIgnore] public string CurrentValue => value < Values?.Count - 1 ? Values?[value] : null;
             [JsonIgnore] public Action<List<string>> onValueChanged;
 
-            public DropdownObj(int value = 0, List<string> values = null)
+            public DropdownObj(int defaultValue = 0, List<string> values = null)
             {
-                this.value = value;
-                this.Values = values ?? new();
+                value = defaultValue;
+                Values = values ?? new();
 
-                currentIndex = 0;
                 onValueChanged = null;
             }
         }
