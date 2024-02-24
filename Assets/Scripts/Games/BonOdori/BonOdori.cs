@@ -355,16 +355,13 @@ namespace HeavenStudio.Games
                 }
                     
                     Player.Play(clapTypeString);
-                    CPU1.Play(clapTypeString);
-                    CPU2.Play(clapTypeString);
-                    CPU3.Play(clapTypeString);
                     if (!goBopDonpans)
                     {
 
                     
                     BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");})
+                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped"); goBopDonpans = true;})
                 });
                 }
                 
@@ -506,16 +503,15 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
                 });
                 }
-            MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/clap", 0f, offset: 0.01f),
-                        });
+SoundByte.PlayOneShotGame("bonOdori/clap")
         }
         
         public void Miss(PlayerActionEvent caller)
         {
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("miss", 0f, offset: 0.01f),
-                        });
+                    CPU1.Play(clapTypeString);
+                    CPU2.Play(clapTypeString);
+                    CPU3.Play(clapTypeString);
+                        SoundByte.PlayOneShot("miss");
                          BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beatUniversal + 1d, delegate { Face.Play("Sad");}),
@@ -550,10 +546,7 @@ namespace HeavenStudio.Games
                 });
                 }
                  
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/nearMiss", 0f, offset: 0.01f),
-                        });
-
+                        SoundByte.PlayOneShot("nearMiss");
 
 
         }
