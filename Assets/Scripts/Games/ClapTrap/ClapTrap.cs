@@ -188,14 +188,14 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (PlayerInput.Pressed() && canClap == true && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && canClap == true && !IsExpectingInputNow(InputAction_BasicPress))
             {
-                Jukebox.PlayOneShotGame($"clapTrap/clap");
+                SoundByte.PlayOneShotGame($"clapTrap/clap");
 
                 dollArms.DoScaledAnimationAsync("ArmsWhiff", 0.5f);
                 clapEffect.DoScaledAnimationAsync("ClapEffect", 0.5f);
 
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap = false; }),
                     new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.2, delegate { canClap = true; })
@@ -215,7 +215,7 @@ namespace HeavenStudio.Games
         }
 
 
-        public void Clap(float beat, float length, int type, bool spotlightBool)
+        public void Clap(double beat, float length, int type, bool spotlightBool)
         {
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound("clapTrap/donk",  beat),
@@ -244,7 +244,7 @@ namespace HeavenStudio.Games
             swordClone.spotlightToggle = spotlightBool;
         }
         
-        public void DollAnimations(float beat, int animate)
+        public void DollAnimations(double beat, int animate)
         {
             if (animate == 0)
             {
@@ -253,12 +253,12 @@ namespace HeavenStudio.Games
             else if (animate == 1)
             {
                 dollHead.DoScaledAnimationAsync("HeadBreatheIn", 0.5f);
-                Jukebox.PlayOneShotGame($"clapTrap/deepInhale");
+                SoundByte.PlayOneShotGame($"clapTrap/deepInhale");
             }
             else if (animate == 2)
             {
                 dollHead.DoScaledAnimationAsync("HeadBreatheOut", 0.5f);
-                Jukebox.PlayOneShotGame($"clapTrap/deepExhale{UnityEngine.Random.Range(1, 2)}");
+                SoundByte.PlayOneShotGame($"clapTrap/deepExhale{UnityEngine.Random.Range(1, 2)}");
             }
             else if (animate == 3)
             {

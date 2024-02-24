@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
 
         void Start()
         {
-            game.ScheduleInput((float)cueStart, cueLength, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Out);
+            game.ScheduleInput((float)cueStart, cueLength, ClapTrap.InputAction_BasicPress, Hit, Miss, Out);
             gameObject.SetActive(false);
         }
 
@@ -49,17 +49,17 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
         {
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame($"clapTrap/barely{UnityEngine.Random.Range(1, 2)}");
+                SoundByte.PlayOneShotGame($"clapTrap/barely{UnityEngine.Random.Range(1, 2)}");
                 dollHead.DoScaledAnimationAsync("HeadBarely", 0.5f);
             }
             else if (state >= -0.01f && state <= 0.01f)
             {
-                Jukebox.PlayOneShotGame($"clapTrap/aceClap{UnityEngine.Random.Range(1, 4)}");
+                SoundByte.PlayOneShotGame($"clapTrap/aceClap{UnityEngine.Random.Range(1, 4)}");
                 dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
             }
             else
             {
-                Jukebox.PlayOneShotGame($"clapTrap/goodClap{UnityEngine.Random.Range(1, 4)}");
+                SoundByte.PlayOneShotGame($"clapTrap/goodClap{UnityEngine.Random.Range(1, 4)}");
                 dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
             }
 
@@ -76,7 +76,7 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
 
         private void Miss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame($"clapTrap/miss");
+            SoundByte.PlayOneShotGame($"clapTrap/miss");
             dollHead.DoScaledAnimationAsync("HeadMiss", 0.5f);
             dollArms.DoScaledAnimationAsync("ArmsMiss", 0.5f);
 

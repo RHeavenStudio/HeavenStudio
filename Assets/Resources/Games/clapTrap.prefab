@@ -938,9 +938,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoundSequences: []
-  EligibleHits: []
   scheduledInputs: []
-  firstEnable: 0
   Background: {fileID: 8803862954908386457}
   bg: {fileID: 8803862954908386457}
   stageLeft: {fileID: 2624870750878462004}
@@ -2511,7 +2509,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7244187080185357008
 Transform:
   m_ObjectHideFlags: 0
