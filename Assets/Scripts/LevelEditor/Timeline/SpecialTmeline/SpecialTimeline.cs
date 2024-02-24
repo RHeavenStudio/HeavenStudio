@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
+using HeavenStudio.Util;
+
 using TMPro;
-using Starpelly;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -19,7 +22,7 @@ namespace HeavenStudio.Editor.Track
         [Header("Components")]
         private RectTransform rectTransform;
 
-        public List<SpecialTimelineObj> specialTimelineObjs = new List<SpecialTimelineObj>();
+        public Dictionary<Guid, SpecialTimelineObj> specialTimelineObjs = new();
 
         [System.Flags]
         public enum HoveringTypes
@@ -45,14 +48,23 @@ namespace HeavenStudio.Editor.Track
         public void Setup()
         {
             ClearSpecialTimeline();
+            GameManager.instance.SortEventsList();
 
-            foreach (var tempoChange in GameManager.instance.Beatmap.tempoChanges)
-                AddTempoChange(false, tempoChange);
+            bool first = true;
+            foreach (var tempoChange in GameManager.instance.Beatmap.TempoChanges)
+            {
+                AddTempoChange(false, tempoChange, first);
+                first = false;
+            }
 
-            foreach (var volumeChange in GameManager.instance.Beatmap.volumeChanges)
-                AddVolumeChange(false, volumeChange);
+            first = true;
+            foreach (var volumeChange in GameManager.instance.Beatmap.VolumeChanges)
+            {
+                AddVolumeChange(false, volumeChange, first);
+                first = false;
+            }
 
-            foreach (var sectionChange in GameManager.instance.Beatmap.beatmapSections)
+            foreach (var sectionChange in GameManager.instance.Beatmap.SectionMarkers)
                 AddChartSection(false, sectionChange);
 
             Timeline.instance.timelineState.SetState(Timeline.CurrentTimelineState.State.Selection);
@@ -99,7 +111,7 @@ namespace HeavenStudio.Editor.Track
 
         public void FixObjectsVisibility()
         {
-            foreach (SpecialTimelineObj obj in specialTimelineObjs)
+            foreach (SpecialTimelineObj obj in specialTimelineObjs.Values)
             {
                 obj.SetVisibility(Timeline.instance.timelineState.currentState);
             }
@@ -107,15 +119,24 @@ namespace HeavenStudio.Editor.Track
 
         public void ClearSpecialTimeline()
         {
-            foreach (SpecialTimelineObj obj in specialTimelineObjs)
+            foreach (SpecialTimelineObj obj in specialTimelineObjs.Values)
             {
                 Destroy(obj.gameObject);
             }
             specialTimelineObjs.Clear();
         }
 
-        public void AddTempoChange(bool create, DynamicBeatmap.TempoChange tempoChange_ = null)
-        {      
+        public void AddTempoChange(bool create, RiqEntity tempoChange_ = null, bool first = false)
+        {
+            if (create)
+            {
+                foreach (var e in GameManager.instance.Beatmap.TempoChanges)
+                {
+                    if (Timeline.instance.MousePos2BeatSnap > e.beat - Timeline.instance.snapInterval && Timeline.instance.MousePos2BeatSnap < e.beat + Timeline.instance.snapInterval)
+                        return;
+                }
+            }
+
             GameObject tempoChange = Instantiate(RefTempoChange.gameObject, this.transform);
 
             tempoChange.transform.GetChild(0).GetComponent<Image>().color = EditorTheme.theme.properties.TempoLayerCol.Hex2RGB();
@@ -125,45 +146,48 @@ namespace HeavenStudio.Editor.Track
             tempoChange.SetActive(true);
 
             TempoTimelineObj tempoTimelineObj = tempoChange.GetComponent<TempoTimelineObj>();
+            tempoTimelineObj.type = HoveringTypes.TempoChange;
 
-            if (create == true)
+            if (create)
             {
-                tempoChange.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, tempoChange.transform.position.y);
-                tempoChange.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(tempoChange.transform.localPosition.x, Timeline.SnapInterval()), tempoChange.transform.localPosition.y);
-
-                DynamicBeatmap.TempoChange tempoC = new DynamicBeatmap.TempoChange();
-                tempoC.beat = tempoChange.transform.localPosition.x;
+                float lastTempo = Conductor.instance.GetBpmAtBeat(tempoChange.transform.localPosition.x);
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {
-                    tempoC.tempo = GameManager.instance.Beatmap.bpm * 2f;
+                    lastTempo *= 2f;
                 }
                 else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
                 {
-                    tempoC.tempo = GameManager.instance.Beatmap.bpm / 2f;
+                    lastTempo /= 2f;
                 }
-                else
-                {
-                    tempoC.tempo = GameManager.instance.Beatmap.bpm;
-                }
-
-                tempoTimelineObj.tempoChange = tempoC;
-                GameManager.instance.Beatmap.tempoChanges.Add(tempoC);
+                RiqEntity tempoC = GameManager.instance.Beatmap.AddNewTempoChange(Timeline.instance.MousePos2BeatSnap, lastTempo);
+                tempoTimelineObj.chartEntity = tempoC;
+                CommandManager.Instance.AddCommand(new Commands.AddMarker(tempoC, tempoC.guid, HoveringTypes.TempoChange));
             }
             else
             {
-                tempoChange.transform.localPosition = new Vector3(tempoChange_.beat, tempoChange.transform.localPosition.y);
-
-                tempoTimelineObj.tempoChange = tempoChange_;
+                tempoTimelineObj.chartEntity = tempoChange_;
+                tempoTimelineObj.first = first;
             }
             tempoTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
-            specialTimelineObjs.Add(tempoTimelineObj);
+            specialTimelineObjs.Add(tempoTimelineObj.chartEntity.guid, tempoTimelineObj);
 
             Timeline.instance.FitToSong();
+            if (create)
+                tempoTimelineObj.OnRightClick();
         }
 
-        public void AddVolumeChange(bool create, DynamicBeatmap.VolumeChange volumeChange_ = null)
-        {      
+        public void AddVolumeChange(bool create, RiqEntity volumeChange_ = null, bool first = false)
+        {
+            if (create)
+            {
+                foreach (var e in GameManager.instance.Beatmap.VolumeChanges)
+                {
+                    if (Timeline.instance.MousePos2BeatSnap > e.beat - Timeline.instance.snapInterval && Timeline.instance.MousePos2BeatSnap < e.beat + Timeline.instance.snapInterval)
+                        return;
+                }
+            }
+
             GameObject volumeChange = Instantiate(RefVolumeChange.gameObject, this.transform);
 
             volumeChange.transform.GetChild(0).GetComponent<Image>().color = EditorTheme.theme.properties.MusicLayerCol.Hex2RGB();
@@ -173,32 +197,37 @@ namespace HeavenStudio.Editor.Track
             volumeChange.SetActive(true);
 
             VolumeTimelineObj volumeTimelineObj = volumeChange.GetComponent<VolumeTimelineObj>();
+            volumeTimelineObj.type = HoveringTypes.VolumeChange;
 
-            if (create == true)
+            if (create)
             {
-                volumeChange.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, volumeChange.transform.position.y);
-                volumeChange.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(volumeChange.transform.localPosition.x, Timeline.SnapInterval()), volumeChange.transform.localPosition.y);
-
-                DynamicBeatmap.VolumeChange volumeC = new DynamicBeatmap.VolumeChange();
-                volumeC.beat = volumeChange.transform.localPosition.x;
-                volumeC.volume = GameManager.instance.Beatmap.musicVolume;
-
-                volumeTimelineObj.volumeChange = volumeC;
-                GameManager.instance.Beatmap.volumeChanges.Add(volumeC);
+                RiqEntity volumeC = GameManager.instance.Beatmap.AddNewVolumeChange(Timeline.instance.MousePos2BeatSnap, 80f);
+                volumeTimelineObj.chartEntity = volumeC;
+                CommandManager.Instance.AddCommand(new Commands.AddMarker(volumeC, volumeC.guid, HoveringTypes.VolumeChange));
             }
             else
             {
-                volumeChange.transform.localPosition = new Vector3(volumeChange_.beat, volumeChange.transform.localPosition.y);
-
-                volumeTimelineObj.volumeChange = volumeChange_;
+                volumeTimelineObj.chartEntity = volumeChange_;
+                volumeTimelineObj.first = first;
             }
             volumeTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
-            specialTimelineObjs.Add(volumeTimelineObj);
+            specialTimelineObjs.Add(volumeTimelineObj.chartEntity.guid, volumeTimelineObj);
+            if (create)
+                volumeTimelineObj.OnRightClick();
         }
 
-        public void AddChartSection(bool create, DynamicBeatmap.ChartSection chartSection_ = null)
-        {      
+        public void AddChartSection(bool create, RiqEntity chartSection_ = null)
+        {
+            if (create)
+            {
+                foreach (var e in GameManager.instance.Beatmap.SectionMarkers)
+                {
+                    if (Timeline.instance.MousePos2BeatSnap > e.beat - Timeline.instance.snapInterval && Timeline.instance.MousePos2BeatSnap < e.beat + Timeline.instance.snapInterval)
+                        return;
+                }
+            }
+
             GameObject chartSection = Instantiate(RefSectionChange.gameObject, this.transform);
 
             chartSection.transform.GetChild(0).GetComponent<Image>().color = EditorTheme.theme.properties.SectionLayerCol.Hex2RGB();
@@ -209,37 +238,29 @@ namespace HeavenStudio.Editor.Track
             chartSection.SetActive(true);
 
             SectionTimelineObj sectionTimelineObj = chartSection.GetComponent<SectionTimelineObj>();
+            sectionTimelineObj.type = HoveringTypes.SectionChange;
 
-            if (create == true)
+            if (create)
             {
-                chartSection.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, chartSection.transform.position.y);
-                chartSection.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(chartSection.transform.localPosition.x, Timeline.SnapInterval()), chartSection.transform.localPosition.y);
+                RiqEntity sectionC = GameManager.instance.Beatmap.AddNewSectionMarker(Timeline.instance.MousePos2BeatSnap, "New Section");
 
-                DynamicBeatmap.ChartSection sectionC = new DynamicBeatmap.ChartSection();
-                sectionC.beat = chartSection.transform.localPosition.x;
-                sectionC.sectionName = "New Section";
-                sectionC.startPerfect = false;
-                sectionC.isCheckpoint = false;
+                sectionC.CreateProperty("startPerfect", false);
+                sectionC.CreateProperty("weight", 1f);
+                sectionC.CreateProperty("category", 0);
 
-                sectionTimelineObj.chartSection = sectionC;
-                GameManager.instance.Beatmap.beatmapSections.Add(sectionC);
+                sectionTimelineObj.chartEntity = sectionC;
+                CommandManager.Instance.AddCommand(new Commands.AddMarker(sectionC, sectionC.guid, HoveringTypes.SectionChange));
             }
             else
             {
-                chartSection.transform.localPosition = new Vector3(chartSection_.beat, chartSection.transform.localPosition.y);
-
-                sectionTimelineObj.chartSection = chartSection_;
+                sectionTimelineObj.chartEntity = chartSection_;
             }
             sectionTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
-            specialTimelineObjs.Add(sectionTimelineObj);
+            specialTimelineObjs.Add(sectionTimelineObj.chartEntity.guid, sectionTimelineObj);
             //auto-open the dialog
-            sectionTimelineObj.OnRightClick();
-        }
-
-        public bool InteractingWithEvents()
-        {
-            return specialTimelineObjs.FindAll(c => c.hovering == true).Count > 0 || specialTimelineObjs.FindAll(c => c.moving == true).Count > 0;
+            if (create)
+                sectionTimelineObj.OnRightClick();
         }
     }
 }

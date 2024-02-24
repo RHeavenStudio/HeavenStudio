@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using TMPro;
 
 using HeavenStudio.Editor;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Common
 {
@@ -19,35 +21,28 @@ namespace HeavenStudio.Common
         {
             GameManager.instance.onSectionChange += OnSectionChange;
             GameManager.instance.onBeatChanged += OnBeatChanged;
-            gameObject.SetActive(GameManager.instance.currentSection != null);
+            gameObject.SetActive(GameManager.instance.lastSection != null);
         }
 
         // Update is called once per frame
         void Update()
         {
-            SectionProgress.value = GameManager.instance.sectionProgress;
+            SectionProgress.value = (float) GameManager.instance.SectionProgress;
         }
 
-        public void OnBeatChanged(float beat)
+        public void OnBeatChanged(double beat)
         {
-            gameObject.SetActive(GameManager.instance.currentSection != null);
-            SectionProgress.value = GameManager.instance.sectionProgress;
+            gameObject.SetActive(GameManager.instance.lastSection != null);
+            SectionProgress.value = (float) GameManager.instance.SectionProgress;
         }
 
-        public void OnSectionChange(DynamicBeatmap.ChartSection section)
+        public void OnSectionChange(RiqEntity newSection, RiqEntity lastSection)
         {
-            if (section != null)
+            if (newSection != null)
             {
                 gameObject.SetActive(true);
-                SectionText.text = section.sectionName;
-                SectionProgress.value = GameManager.instance.sectionProgress;
-
-                if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.Off) return;
-                if (!OverlaysManager.OverlaysEnabled) return;
-                if (section.startPerfect && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
-                {
-                    GoForAPerfect.instance.Enable(section.beat);
-                }
+                SectionText.text = newSection["sectionName"];
+                SectionProgress.value = (float) GameManager.instance.SectionProgress;
             }
         }
     }

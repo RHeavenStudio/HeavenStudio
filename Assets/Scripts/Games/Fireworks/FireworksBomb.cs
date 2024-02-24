@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         public bool applause;
         private bool exploded;
         private Fireworks game;
-        private float startBeat;
+        private double startBeat;
         private Animator anim;
 
         void Awake()
@@ -21,9 +21,9 @@ namespace HeavenStudio.Games.Scripts_Fireworks
             anim = GetComponent<Animator>();
         }
 
-        public void Init(float beat)
+        public void Init(double beat)
         {
-            game.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Just, Out, Out);
+            game.ScheduleInput(beat, 1f, Fireworks.InputAction_BasicPress, Just, Out, Out);
             startBeat = beat;
         }
 
@@ -40,13 +40,13 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         {
             anim.DoScaledAnimationAsync("ExplodeBomb", 0.25f);
             exploded = true;
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 3f, delegate { Destroy(gameObject); })
             });
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("fireworks/miss");
+                SoundByte.PlayOneShotGame("fireworks/miss");
 
                 return;
             }
@@ -55,9 +55,9 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
         void Success(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("fireworks/taikoExplode");
+            SoundByte.PlayOneShotGame("fireworks/taikoExplode");
             game.FadeFlashColor(Color.white, new Color(1, 1, 1, 0), 0.5f);
-            if (applause) Jukebox.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
+            if (applause) SoundByte.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
         }
 
         void Out(PlayerActionEvent caller) { }

@@ -49,7 +49,7 @@ namespace HeavenStudio
             return default(PathPos);
         }
 
-        public static PathPos GetPathPosByTime(Path path, float currentTime, out float posTime, out PathPos nextPos, out PathPos prevPos, out bool pastCurve)
+        public static PathPos GetPathPosByTime(Path path, double currentTime, out double posTime, out PathPos nextPos, out PathPos prevPos, out bool pastCurve)
         {
             pastCurve = false;
             PathPos currentPos = path.positions[0];
@@ -81,7 +81,7 @@ namespace HeavenStudio
             return default(PathPos);
         }
 
-        public static PathPos GetPathPosByTime(Path path, float currentTime)
+        public static PathPos GetPathPosByTime(Path path, double currentTime)
         {
             return GetPathPosByTime(path, currentTime, out _, out _, out _, out _);
         }
@@ -117,7 +117,7 @@ namespace HeavenStudio
             return 0f;
         }
 
-        protected virtual Vector3 GetPathPositionFromBeat(Path path, float currentTime, out float heightOffset, float startTime = 0f)
+        protected virtual Vector3 GetPathPositionFromBeat(Path path, double currentTime, out double heightOffset, double startTime = 0f)
         {
             heightOffset = 0f;
             Vector3 anchorPos = Vector3.zero;
@@ -127,7 +127,7 @@ namespace HeavenStudio
                 return transform.position;
             
             PathPos nextPos = path.positions[0];
-            float currentPosTime = 0f;
+            double currentPosTime = 0;
             PathPos currentPos = GetPathPosByTime(path, currentTime - startTime, out currentPosTime, out nextPos, out  _,  out _);
             currentPathPos = currentPos;
             if (currentPos.pos == null || nextPos.pos == null)
@@ -142,16 +142,16 @@ namespace HeavenStudio
             if (nextPos.target != null)
                 endPos = nextPos.target.position;
             
-            float time = (currentTime - startTime - currentPosTime) / currentPos.duration;
-            Vector3 pos = Vector3.LerpUnclamped(startPos, endPos, time);
-            float yMul = time * 2f - 1f;
-            float yWeight = -(yMul * yMul) + 1f;
+            double time = (currentTime - startTime - currentPosTime) / currentPos.duration;
+            Vector3 pos = Vector3.LerpUnclamped(startPos, endPos, (float) time);
+            double yMul = time * 2f - 1f;
+            double yWeight = -(yMul * yMul) + 1f;
             heightOffset = yWeight * currentPos.height;
-            pos.y += heightOffset;
+            pos.y += (float) heightOffset;
             return pos + offset + anchorPos;
         }
 
-        protected virtual Vector3 GetPathPositionFromBeat(Path path, float currentTime, float startTime = 0f)
+        protected virtual Vector3 GetPathPositionFromBeat(Path path, double currentTime, double startTime = 0f)
         {
             return GetPathPositionFromBeat(path, currentTime, out _, startTime);
         }

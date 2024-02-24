@@ -16,12 +16,13 @@ namespace HeavenStudio.Games.Scripts_SneakySpirits
             game = SneakySpirits.instance;
         }
 
-        public void Init(float spawnBeat, float length)
+        public void Init(double spawnBeat, float length)
         {
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            if (length == 0) length = 1;
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(spawnBeat + 0.001f, delegate { anim.DoScaledAnimationAsync("Move", 1f); }),
-                new BeatAction.Action(spawnBeat + length - 0.5f, delegate { anim.DoScaledAnimationAsync("MoveDown", 1f); }),
+                new BeatAction.Action(spawnBeat, delegate { anim.DoScaledAnimationAsync("Move", (1 / length) * Conductor.instance.SongPitch); }),
+                new BeatAction.Action(spawnBeat + (length * 0.5f), delegate { anim.DoScaledAnimationAsync("MoveDown", (1 / length) * Conductor.instance.SongPitch); }),
                 new BeatAction.Action(spawnBeat + length, delegate { Destroy(gameObject); }),
             });
         }

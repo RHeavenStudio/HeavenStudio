@@ -10,12 +10,12 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 {
     public class SpawnHalves : MonoBehaviour
     {
-        public float startBeat;
+        public double startBeat;
         public Vector3 objPos;
         private Vector3 posModifier;
         public bool lefty;
         float bpmModifier;
-        float songPos;
+        double songPos;
         
         [SerializeField] float rotSpeed;
 
@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             game = DogNinja.instance;
             bpmModifier = Conductor.instance.songBpm / 100;
-            songPos = Conductor.instance.songPositionInBeats;
+            songPos = Conductor.instance.songPositionInBeatsAsDouble;
         }
 
         private void Start() 

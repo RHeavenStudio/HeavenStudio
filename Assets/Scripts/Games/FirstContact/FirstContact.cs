@@ -1,9 +1,13 @@
+using System;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using TMPro;
+using Jukebox;
+using UnityEngine.Assertions.Must;
+using UnityEngine.UIElements;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -16,30 +20,32 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.SetIntervalStart(e.beat, e.length, e["dialogue"]);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; FirstContact.PreInterval(e.beat, e.length, e["dialogue"], e["auto"]);   },
                     parameters = new List<Param>()
                     {
-                        new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "The line to use when messing up the translation")
+                        new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "Set the line to use when messing up the translation."),
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     },
-                    defaultLength = 4f,
+                    defaultLength = 3f,
                     resizable = true,
                     priority = 2,
                 },
                 new GameAction("alien speak", "Bob Speak")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.AlienSpeak(e.beat, e["dialogue"], e["spaceNum"]);  },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("spaceNum", new EntityTypes.Integer(0, 12, 0), "Amount of spaces", "Spaces to add before the untranslated icon"),
-                        new Param("dialogue", "", "Dialogue", "What should this sound translate to?")
+                        new Param("spaceNum", new EntityTypes.Integer(0, 12, 0), "Amount Of Spaces", "Choose the amount of spaces to add before the icon."),
+                        new Param("dotdotdot", false, "Ellipses", "Toggle if the symbol should have \"...\" before it."),
+                        new Param("newline", false, "New line", "Toggle if this text starts a new line."),
+                        new Param("dialogue", "", "Translation", "Set the text that this syllable will translate to. Spaces will not be automatically added.")
                     },
                     priority = 1
                 },
                 new GameAction("alien turnover", "Pass Turn")
                 {
-                    function = delegate { FirstContact.instance.AlienTurnOver(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  },
-                    resizable = true
+                    function = delegate { FirstContact.instance.PassTurnStandalone(eventCaller.currentEntity.beat);  },
+                    resizable = true,
                 },
                 new GameAction("alien success", "Success")
                 {
@@ -51,29 +57,33 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>
                     {
-                        new Param("toggle", false, "Stay", "If it's the end of the remix/song")
+                        new Param("toggle", false, "Stay", "Toggle if the camera should stay on mission control even after the event has ended. This is usually used for the end of a level.")
                     }
                 },
-                new GameAction("look at", "Look At")
+                new GameAction("look at", "Look")
                 {
                     function = delegate { FirstContact.instance.LookAtDirection(eventCaller.currentEntity["type"], eventCaller.currentEntity["type2"]);  },
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", FirstContact.alienLookAt.lookAtAlien, "Bob look at what", "[Bob] will look at what"),
-                        new Param("type2", FirstContact.translatorLookAt.lookAtBob, "Alien look at what", "[Alien] will look at what"),
+                        new Param("type", FirstContact.alienLookAt.lookAtAlien, "Farmer Bob", "Set where Farmer Bob will look."),
+                        new Param("type2", FirstContact.translatorLookAt.lookAtBob, "Alien", "Set where the alien will look."),
                     }
                 },
-                new GameAction("live bar beat", "Live Bar Beat")
+                new GameAction("live bar beat", "\"Live\" Bar")
                 {
                     function = delegate { FirstContact.instance.LiveBarBeat(eventCaller.currentEntity["toggle"]);  },
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "On Beat", "If the live bar animation will be on beat or not")
+                        new Param("toggle", true, "On Beat", "Toggle if the \"Live\" bar in the top-left will animate on onbeats or offbeats.")
                     }
                 }
-            });
+            },
+            new List<string>() { "ctr", "repeat" },
+            "ctrinterpreter", "en",
+            new List<string>() { }
+            );
         }
     }
 }
@@ -87,23 +97,21 @@ namespace HeavenStudio.Games
         const string MID_MSG_MISS = "<color=\"red\"> ..? </color>";
         const string MSG_ALIEN = "<sprite name=\"AlienIcn\">";
         const string MSG_MAN = "<sprite name=\"ManIcn\">";
+        const string MSG_MAN_DDD = "...<sprite name=\"ManIcn\">";
         // I should add a DonkTroll sprite 🫰🫰🫰🫰🫰
 
         public static FirstContact instance { get; private set; }
 
-        [Header("Properties")]
-        public int alienSpeakCount;
-        public int translatorSpeakCount;
-        public bool hasMissed;
-        private float lastReportedBeat = 0;
+        //[Header("Properties")]
+        private bool hasMissed;
+        private double lastReportedBeat = 0;
 
         [Header("Components")]
-        [SerializeField] GameObject alien;
-        [SerializeField] GameObject translator;
+        [SerializeField] Animator alien;
+        [SerializeField] Animator translator;
         //[SerializeField] GameObject alienSpeech;
-        [SerializeField] GameObject dummyHolder;
         [SerializeField] GameObject missionControl;
-        [SerializeField] GameObject liveBar;
+        [SerializeField] Animator liveBar;
 
         [SerializeField] GameObject alienTextbox;
         [SerializeField] TMP_Text alienText;
@@ -114,9 +122,6 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         int currentVoicelineIndex = -1;
-        public bool intervalStarted;
-        float intervalStartBeat;
-        public float beatInterval = 4f;
         public bool noHitOnce, isSpeaking;
         //public int version;
         public float lookAtLength = 1f;
@@ -126,16 +131,16 @@ namespace HeavenStudio.Games
         string onOutDialogue = "YOU SUCK AT CHARTING";
         string callDiagBuffer = "";
         string respDiagBuffer = "";
-        List<string> callDiagList = new List<string>();
+        List<(string, bool)> callDiagList = new();
         int callDiagIndex = 0;
-
-
-        static List<QueuedSecondContactInput> queuedInputs = new List<QueuedSecondContactInput>();
-        struct QueuedSecondContactInput
+        private struct QueuedInterval
         {
-            public float beatAwayFromStart;
-            public string dialogue;
+            public double beat;
+            public float interval;
+            public bool autoPassTurn;
+            public string outDialogue;
         }
+        private static List<QueuedInterval> queuedIntervals = new List<QueuedInterval>();
 
         //public enum VersionOfContact
         //{
@@ -156,11 +161,24 @@ namespace HeavenStudio.Games
             idle
         }
 
+        protected static bool IA_PadAny(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Press =
+            new("CtrInterpreterPress", new int[] { IAPressCat, IAFlickCat, IAPressCat },
+            IA_PadAny, IA_TouchBasicPress, IA_BatonBasicPress);
+
         void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            foreach (var evt in scheduledInputs)
             {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
+                evt.Disable();
             }
         }
 
@@ -181,66 +199,141 @@ namespace HeavenStudio.Games
             translateFailTextbox.SetActive(false);
         }
 
-        public void SetIntervalStart(float beat, float interval, string outDialogue)
+        private List<RiqEntity> GetAllSpeaksInBetweenBeat(double beat, double endBeat)
         {
-            translator.GetComponent<Animator>().Play("translator_lookAtAlien", 0, 0);
-            if (!intervalStarted)
+            List<RiqEntity> speakEvents = EventCaller.GetAllInGameManagerList("firstContact", new string[] { "alien speak" });
+            List<RiqEntity> tempEvents = new();
+
+            foreach (var entity in speakEvents)
             {
-                //alienSpeakCount = 0;
-                //translatorSpeakCount = 0;
-                intervalStarted = true;
+                if (entity.beat >= beat && entity.beat < endBeat)
+                {
+                    tempEvents.Add(entity);
+                }
             }
+            return tempEvents;
+        }
 
-            intervalStartBeat = beat;
-            beatInterval = interval;
+        private RiqEntity GetLastIntervalBeforeBeat(double beat)
+        {
+            List<RiqEntity> intervalEvents = EventCaller.GetAllInGameManagerList("firstContact", new string[] { "beat intervals" });
+            if (intervalEvents.Count == 0) return null;
+            var tempEvents = intervalEvents.FindAll(x => x.beat <= beat);
+            tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+            return tempEvents[^1];
+        }
 
-            onOutDialogue = outDialogue;
-            callDiagBuffer = "";
-            respDiagBuffer = "";
-            callDiagList.Clear();
-            callDiagIndex = 0;
+        public static void PreInterval(double beat, float interval, string outDialogue, bool autoPassTurn)
+        {
+            if (GameManager.instance.currentGame == "firstContact")
+            {
+                instance.SetIntervalStart(beat, interval, outDialogue, beat, autoPassTurn);
+            }
+            else
+            {
+                queuedIntervals.Add(new QueuedInterval
+                {
+                    beat = beat,
+                    interval = interval,
+                    outDialogue = outDialogue,
+                    autoPassTurn = autoPassTurn
+                });
+            }
+        }
 
-            alienText.text = "";
-            translateText.text = "";
-            translateFailText.text = "";
+        private void SetIntervalStart(double beat, float interval, string outDialogue, double gameSwitchBeat, bool autoPassTurn)
+        {
+            List<RiqEntity> relevantSpeakEvents = GetAllSpeaksInBetweenBeat(beat, beat + interval);
+            relevantSpeakEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+            List<BeatAction.Action> queuedSpeaks = new()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    translator.Play("translator_lookAtAlien", 0, 0);
 
-            alienTextbox.SetActive(false);
-            translateTextbox.SetActive(false);
-            translateFailTextbox.SetActive(false);
+                    onOutDialogue = outDialogue;
+                    callDiagBuffer = "";
+                    respDiagBuffer = "";
+                    callDiagList.Clear();
+                    callDiagIndex = 0;
+
+                    alienText.text = "";
+                    translateText.text = "";
+                    translateFailText.text = "";
+
+                    alienTextbox.SetActive(false);
+                    translateTextbox.SetActive(false);
+                    translateFailTextbox.SetActive(false);
+                    if (autoPassTurn)
+                    {
+                        AlienTurnOver(beat + interval, beat, beat + interval, 1);
+                    }
+                })
+            };
+            for (int i = 0; i < relevantSpeakEvents.Count; i++)
+            {
+                RiqEntity speakEventToCheck = relevantSpeakEvents[i];
+                if (speakEventToCheck.beat >= gameSwitchBeat)
+                {
+                    queuedSpeaks.Add(new BeatAction.Action(speakEventToCheck.beat, delegate
+                    {
+                        AlienSpeak(speakEventToCheck.beat, speakEventToCheck["spaceNum"], speakEventToCheck["dotdotdot"]);
+                    }));
+                }
+                else
+                {
+                    AlienSpeakInactive(speakEventToCheck["spaceNum"]);
+                }
+            }
+            BeatAction.New(this, queuedSpeaks);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
+            {
+                if (queuedIntervals.Count > 0)
+                {
+                    foreach (var interval in queuedIntervals)
+                    {
+                        SetIntervalStart(interval.beat, interval.interval, interval.outDialogue, beat, interval.autoPassTurn);
+                    }
+                    queuedIntervals.Clear();
+                }
+            }
         }
 
         private void Update()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
-            }
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused && intervalStarted)
-            {
-                intervalStarted = false;
-            }
             if (Conductor.instance.ReportBeat(ref lastReportedBeat, offset: liveBarBeatOffset))
             {
-                liveBar.GetComponent<Animator>().Play("liveBar", 0, 0);
+                liveBar.Play("liveBar", 0, 0);
             }
-            else if (Conductor.instance.songPositionInBeats < lastReportedBeat)
+            else if (Conductor.instance.songPositionInBeatsAsDouble < lastReportedBeat)
             {
-                lastReportedBeat = Mathf.Round(Conductor.instance.songPositionInBeats);
+                lastReportedBeat = Math.Round(Conductor.instance.songPositionInBeatsAsDouble);
             }
 
-            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Press) && !IsExpectingInputNow(InputAction_Press))
             {
-                translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_eh", 0.5f);
                 if (isSpeaking)
                 {
-                    if (callDiagIndex == 0)
+                    if (noHitOnce || callDiagIndex == 0)
+                    {
                         FailContact();
+                    }
                     else
+                    {
+                        SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
                         TrailingContact();
+                        ScoreMiss();
+                    }
                 }
                 else if (!noHitOnce && !missionControl.activeInHierarchy)
                 {
-                    Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_MISS2_A", -1, Jukebox.GetPitchFromSemiTones(UnityEngine.Random.Range(-2, 1), false));
+                    translator.DoScaledAnimationAsync("translator_eh", 0.5f);
+                    SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_MISS2_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-2, 1), false));
+                    ScoreMiss();
                 }
             }
         }
@@ -259,47 +352,50 @@ namespace HeavenStudio.Games
 
         public void LookAtDirection(int alienLookAt, int translatorLookAt)
         {
-            Debug.Log(alienLookAt);
-            Debug.Log(translatorLookAt);
             switch (alienLookAt)
             {
                 case 0:
-                    alien.GetComponent<Animator>().Play("alien_lookAt", 0, 0);
+                    alien.Play("alien_lookAt", 0, 0);
                     break;
                 case 1:
-                    alien.GetComponent<Animator>().Play("alien_idle", 0, 0);
+                    alien.Play("alien_idle", 0, 0);
                     break;
             }
 
             switch (translatorLookAt)
             {
                 case 0:
-                    translator.GetComponent<Animator>().Play("translator_lookAtAlien", 0, 0);
+                    translator.Play("translator_lookAtAlien", 0, 0);
                     break;
                 case 1:
-                    translator.GetComponent<Animator>().Play("translator_idle", 0, 0);
+                    translator.Play("translator_idle", 0, 0);
                     break;
             }
 
         }
 
-        public void AlienSpeak(float beat, string dialogue, int spaceNum)
+        private void AlienSpeak(double beat, int spaceNum, bool hasDDD)
         {
-            queuedInputs.Add(new QueuedSecondContactInput()
-            {
-                beatAwayFromStart = beat - intervalStartBeat,
-                dialogue = dialogue
-            });
             int voiceline = UnityEngine.Random.Range(1, 11);
             if (voiceline == currentVoicelineIndex) voiceline++;
             if (voiceline > 10) voiceline = 1;
             currentVoicelineIndex = voiceline;
-            Jukebox.PlayOneShotGame("firstContact/Bob" + voiceline, beat, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-100, 0), false));
-            Jukebox.PlayOneShotGame("firstContact/BobB");
-            alien.GetComponent<Animator>().DoScaledAnimationAsync("alien_talk", 0.5f);
-            if (UnityEngine.Random.Range(0, 5) == 0) translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_lookAtAlien_nod", 0.5f);
-            callDiagList.Add(dialogue);
+            SoundByte.PlayOneShotGame("firstContact/Bob" + voiceline, beat, SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-100, 0), false));
+            SoundByte.PlayOneShotGame("firstContact/BobB");
+            alien.DoScaledAnimationAsync("alien_talk", 0.5f);
+            if (UnityEngine.Random.Range(0, 5) == 0) translator.DoScaledAnimationAsync("translator_lookAtAlien_nod", 0.5f);
 
+            alienTextbox.SetActive(true);
+            for (int i = 0; i < spaceNum * 2; i++)
+            {
+                callDiagBuffer += " ";
+            }
+            callDiagBuffer += hasDDD ? MSG_MAN_DDD : MSG_MAN;
+            UpdateAlienTextbox();
+        }
+
+        private void AlienSpeakInactive(int spaceNum)
+        {
             alienTextbox.SetActive(true);
             for (int i = 0; i < spaceNum * 2; i++)
             {
@@ -309,34 +405,45 @@ namespace HeavenStudio.Games
             UpdateAlienTextbox();
         }
 
-        public void AlienTurnOver(float beat, float length)
+        public void PassTurnStandalone(double beat)
         {
-            if (queuedInputs.Count == 0) return;
-            Jukebox.PlayOneShotGame("firstContact/turnover");
-            alienTextbox.SetActive(false);
-            alien.GetComponent<Animator>().Play("alien_point", 0, 0);
-
-            isSpeaking = true;
-            intervalStarted = false;
-            BeatAction.New(alien, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 0.5f, delegate { alien.GetComponent<Animator>().Play("alien_idle", 0, 0); })
-            });
-            if (!isSpeaking)
-            {
-                translator.GetComponent<Animator>().Play("translator_idle", 0, 0);
-            }
-            foreach (var input in queuedInputs)
-            {
-                ScheduleInput(beat, length + input.beatAwayFromStart, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, AlienTapping, AlienOnMiss, AlienEmpty);
-            }
-            queuedInputs.Clear();
+            RiqEntity lastInterval = GetLastIntervalBeforeBeat(beat);
+            float length = EventCaller.GetAllInGameManagerList("firstContact", new string[] { "alien turnover" }).Find(x => x.beat == beat).length;
+            if (lastInterval == null) return;
+            AlienTurnOver(beat, lastInterval.beat, lastInterval.beat + lastInterval.length, length);
         }
 
-        public void AlienSuccess(float beat)
+        private void AlienTurnOver(double beat, double intervalBeat, double endBeat, float length)
+        {
+            var inputs = GetAllSpeaksInBetweenBeat(intervalBeat, endBeat);
+            inputs.Sort((x, y) => x.beat.CompareTo(y.beat));
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                var input = inputs[i];
+                double relativeBeat = input.beat - intervalBeat;
+                ScheduleInput(beat, length + relativeBeat, InputAction_Press, AlienTapping, AlienOnMiss, AlienEmpty, CanAlienTapping);
+                callDiagList.Add((input["dialogue"], input["newline"]));
+            }
+            BeatAction.New(this, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    isSpeaking = true;
+                    hasMissed = false;
+                    SoundByte.PlayOneShotGame("firstContact/turnover");
+                    alienTextbox.SetActive(false);
+                    alien.Play("alien_point", 0, 0);
+                }),
+                new BeatAction.Action(beat + (length / 2), delegate
+                {
+                    alien.Play("alien_idle", 0, 0);
+                })
+            });
+        }
+
+        public void AlienSuccess(double beat)
         {
             string animString = "";
-            float secondSoundOffset = 0f;
             List<MultiSound.Sound> sound = new List<MultiSound.Sound>();
             if (!(hasMissed || noHitOnce))
             {
@@ -345,8 +452,8 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("firstContact/successCrowd", beat),
                     new MultiSound.Sound("firstContact/nod", beat),
                     new MultiSound.Sound("firstContact/nod", beat + 0.5f),
-                    new MultiSound.Sound("firstContact/successExtra" + UnityEngine.Random.Range(1, 3), beat + 0.5f, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-50, 50), false)),
-                    new MultiSound.Sound("firstContact/whistle", beat + UnityEngine.Random.Range(0.5f, 1.5f), Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-50, 100), false), UnityEngine.Random.Range(0.4f, 1f)),
+                    new MultiSound.Sound("firstContact/successExtra" + UnityEngine.Random.Range(1, 3), beat + 0.5f, SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-50, 50), false)),
+                    new MultiSound.Sound("firstContact/whistle", beat + UnityEngine.Random.Range(0.5f, 1.5f), SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-50, 100), false), UnityEngine.Random.Range(0.4f, 1f)),
                 };
                 animString = "alien_success";
             }
@@ -364,14 +471,13 @@ namespace HeavenStudio.Games
 
             MultiSound.Play(sound.ToArray());
 
-            BeatAction.New(alien, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { alien.GetComponent<Animator>().Play(animString, 0, 0); }),
-                new BeatAction.Action(beat + .5f, delegate { alien.GetComponent<Animator>().Play(animString, 0, 0); }),
+                new BeatAction.Action(beat, delegate { alien.Play(animString, 0, 0); }),
+                new BeatAction.Action(beat + .5f, delegate { alien.Play(animString, 0, 0); }),
                 new BeatAction.Action(beat + 1, delegate { alienTextbox.SetActive(false); translateTextbox.SetActive(false); translateFailTextbox.SetActive(false); })
             });
 
-            intervalStarted = false;
             isSpeaking = false;
             hasMissed = false;
             noHitOnce = false;
@@ -382,27 +488,46 @@ namespace HeavenStudio.Games
             alienText.text = callDiagBuffer;
         }
 
+        string GetMessageFromCallDialogue(int callDiagIndex = 0)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = callDiagIndex; i < callDiagList.Count; i++)
+            {
+                (string s, bool showNewline) = callDiagList[i];
+                if (showNewline && callDiagIndex != i)
+                {
+                    break;
+                }
+                sb.Append(s);
+            }
+            return sb.ToString();
+        }
+
         void UpdateTranslateTextbox()
         {
             if (callDiagIndex == 0 && !hasMissed && !noHitOnce)
             {
-                // shift the textbox to centre the message
-                StringBuilder sb = new StringBuilder();
-                foreach (string s in callDiagList)
-                {
-                    sb.Append(s);
-                }
-                string fullMsg = sb.ToString();
-
-                // many hardcoded values there'll be a better way to do this
-                Vector2 size = translateText.GetPreferredValues(fullMsg, 10.95f, 2);
-                translateText.rectTransform.anchoredPosition = new Vector2(Mathf.Max((10.95f/2f) + (-size.x / 2 - 0.25f), -0.25f), Mathf.Max((2.11f / 2f) + (-size.y / 2) + 0.2f, 0.2f));
+                ResetTranslateTextbox();
             }
             translateText.text = respDiagBuffer;
             translateFailText.text = respDiagBuffer;
         }
 
-        public void MissionControlDisplay(float beat, bool stay, float length)
+        void ResetTranslateTextbox(bool destroyText = false)
+        {
+            // shift the textbox to centre the message
+            string message = GetMessageFromCallDialogue(callDiagIndex);
+            // many hardcoded values there'll be a better way to do this
+            Vector2 size = translateText.GetPreferredValues(message, 10.95f, 2);
+            translateText.rectTransform.anchoredPosition = new Vector2(Mathf.Max((10.95f / 2f) + (-size.x / 2 - 0.25f), -0.25f), Mathf.Max((2.11f / 2f) + (-size.y / 2) + 0.2f, 0.2f));
+            if (destroyText)
+            {
+                respDiagBuffer = "";
+                translateText.text = "";
+            }
+        }
+
+        public void MissionControlDisplay(double beat, bool stay, float length)
         {
             missionControl.SetActive(true);
 
@@ -422,12 +547,12 @@ namespace HeavenStudio.Games
             }
 
             missionControl.GetComponentInParent<Animator>().Play(textToPut, 0, 0);
-            alien.GetComponentInParent<Animator>().Play("alien_idle", 0, 0);
-            translator.GetComponent<Animator>().Play("translator_idle", 0, 0);
+            alien.Play("alien_idle", 0, 0);
+            translator.Play("translator_idle", 0, 0);
 
             if (!stay)
             {
-                BeatAction.New(missionControl, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length, delegate { missionControl.SetActive(false); }),
                     });
@@ -436,16 +561,13 @@ namespace HeavenStudio.Games
             {
                 missionControl.SetActive(true);
             }
-
-            alienSpeakCount = 0;
-            translatorSpeakCount = 0;
             isSpeaking = false;
         }
 
         void FailContact()
         {
-            Jukebox.PlayOneShotGame("firstContact/failContact");
-            translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_speak", 0.5f);
+            SoundByte.PlayOneShotGame("firstContact/failContact");
+            translator.DoScaledAnimationAsync("translator_speak", 0.5f);
             if (!hasMissed && callDiagIndex == 0)
             {
                 translateFailTextbox.SetActive(true);
@@ -458,8 +580,8 @@ namespace HeavenStudio.Games
 
         void TrailingContact()
         {
-            Jukebox.PlayOneShotGame("firstContact/slightlyFail");
-            translator.GetComponent<Animator>().Play("translator_eh", 0, 0);
+            SoundByte.PlayOneShotGame("firstContact/slightlyFail");
+            translator.Play("translator_eh", 0, 0);
             if (!hasMissed)
             {
                 respDiagBuffer += MID_MSG_MISS;
@@ -468,53 +590,40 @@ namespace HeavenStudio.Games
             hasMissed = true;
         }
 
+        public bool CanAlienTapping()
+        {
+            return !(hasMissed || noHitOnce);
+        }
+
         public void AlienTapping(PlayerActionEvent caller, float state) //OnHit
         {
-            if (hasMissed && callDiagIndex == 0)
+            (string dialogue, bool showNewline) = callDiagList[callDiagIndex];
+            translateTextbox.SetActive(true);
+            if (showNewline)
             {
-                caller.isEligible = false;
-                ScoreMiss();
-                return;
-            };
-
-            if (noHitOnce)
-            {
-                caller.isEligible = false;
-                FailContact();
-                return;
+                ResetTranslateTextbox(true);
             }
-
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, Jukebox.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
-                translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_speak", 0.5f);
-                if (callDiagIndex == 0) return;
+                SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
                 TrailingContact();
+                callDiagIndex++;
                 return;
             }
 
-            translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_speak", 0.5f);
-            Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, Jukebox.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
-            Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_B");
-            if (hasMissed)
-            {
-                caller.isEligible = false;
-                return;
-            }
-            else
-            {
-                respDiagBuffer += callDiagList[callDiagIndex];
-                translateTextbox.SetActive(true);
-                UpdateTranslateTextbox();
-                callDiagIndex++;
-            }
+            translator.DoScaledAnimationAsync("translator_speak", 0.5f);
+            SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
+            SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_B");
+            respDiagBuffer += dialogue;
+            UpdateTranslateTextbox();
+            callDiagIndex++;
         }
 
         public void AlienOnMiss(PlayerActionEvent caller) //OnMiss
         {
-            if (!noHitOnce)
+            if (!noHitOnce && !hasMissed)
             {
-                Jukebox.PlayOneShotGame("firstContact/alienNoHit");
+                SoundByte.PlayOneShotGame("firstContact/alienNoHit");
                 noHitOnce = true;
             }
 
@@ -525,7 +634,7 @@ namespace HeavenStudio.Games
                 hasMissed = true;
             }
 
-            alien.GetComponent<Animator>().Play("alien_noHit", 0, 0);
+            alien.Play("alien_noHit", 0, 0);
         }
 
         public void AlienEmpty(PlayerActionEvent caller) { } //OnEmpty

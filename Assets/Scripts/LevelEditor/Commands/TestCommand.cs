@@ -4,7 +4,7 @@ using UnityEngine;
 
 using HeavenStudio.Editor.Commands;
 
-public class TestCommand : IAction
+public class TestCommand : ICommand
 {
     private GameObject prefab;
     private Vector3 pos;

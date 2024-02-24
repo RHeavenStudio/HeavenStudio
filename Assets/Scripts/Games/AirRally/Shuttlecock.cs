@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using NaughtyBezierCurves;
 using HeavenStudio.Util;
-
+using System;
 
 namespace HeavenStudio.Games.Scripts_AirRally
 {
@@ -13,20 +12,26 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [SerializeField] Transform OtherTarget;
         [SerializeField] float TargetHeight;
         [SerializeField] float TargetHeightLong;
+        [SerializeField] float TargetHeightToss = 2.5f;
         [SerializeField] ParticleSystem hitEffect;
 
-        public float startBeat;
-        public float flyBeats;
+        private Rigidbody2D rb;
 
-        public bool flyType;
+        [NonSerialized] public double startBeat;
+        [NonSerialized] public double flyBeats;
+
+        [NonSerialized] public bool flyType;
         bool miss = false;
-        public float flyPos;
-        public bool isReturning;
+        [NonSerialized] public float flyPos;
+        [NonSerialized] public bool isReturning;
+        [NonSerialized] public bool isTossed = false;
+        [NonSerialized] public AirRally.DistanceSound currentDist = AirRally.DistanceSound.close;
         AirRally game;
 
         private void Awake()
         {
             game = AirRally.instance;
+            rb = GetComponent<Rigidbody2D>();
         }
 
         void Start()
@@ -34,15 +39,29 @@ namespace HeavenStudio.Games.Scripts_AirRally
             transform.position = OtherTarget.position;
         }
 
+        private Vector3 startPos;
+        private Vector3 endPos;
+
+        public void SetStartAndEndPos()
+        {
+            startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
+            endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
+            if (isTossed)
+            {
+                startPos = OtherTarget.position;
+                endPos = OtherTarget.position;
+            }
+        }
+
         // Update is called once per frame
         void Update()
         {
             var cond = Conductor.instance;
 
-            Vector3 startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
-            Vector3 endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
+            bool isFartherOrMore = currentDist != AirRally.DistanceSound.close && currentDist != AirRally.DistanceSound.far;
+
             Vector3 lastPos = transform.position;
-            if (!GetComponent<Rigidbody2D>().simulated)
+            if (!rb.simulated)
             {
                 flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
 
@@ -50,31 +69,47 @@ namespace HeavenStudio.Games.Scripts_AirRally
 
                 float yMul = flyPos * 2f - 1f;
                 float yWeight = -(yMul*yMul) + 1f;
-                transform.position += Vector3.up * yWeight * (flyType ? TargetHeightLong : TargetHeight);
+                if (isTossed) transform.position += Vector3.up * yWeight * TargetHeightToss;
+                else transform.position += Vector3.up * yWeight * (flyType ? TargetHeightLong : TargetHeight);
             }
 
             // calculates next position
             {
                 float rotation;
-                if (flyPos > 0.5)
+                if (isTossed)
                 {
-                    Vector3 midPos = Vector3.LerpUnclamped(startPos, endPos, 0.5f);
-                    midPos += Vector3.up * (flyType ? TargetHeightLong : TargetHeight);
-                    Vector3 direction = (transform.position - midPos).normalized;
-                    rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    rotation = Mathf.Lerp(90, -90, flyPos);
                 }
                 else
                 {
-                    Vector3 direction = (transform.position - lastPos).normalized;
-                    rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    if (flyPos > 0.5)
+                    {
+                        Vector3 midPos = Vector3.LerpUnclamped(startPos, endPos, 0.5f);
+                        midPos += Vector3.up * (flyType ? TargetHeightLong : TargetHeight);
+                        Vector3 direction = (transform.position - midPos).normalized;
+                        rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    }
+                    else
+                    {
+                        Vector3 direction = (transform.position - lastPos).normalized;
+                        rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    }
                 }
 
-                this.transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
+
+                if (isFartherOrMore)
+                {
+                    transform.eulerAngles = new Vector3(0, 0, isReturning ? -90f : 90f);
+                }
+                else
+                {
+                    transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
+                }
             }
 
             if (miss && flyPos > 4f)
             {
-                if (cond.GetPositionFromBeat(startBeat, flyBeats + 1f) >= 1f)
+                if (cond.GetPositionFromBeat(startBeat, flyBeats + 1) >= 1.0)
                 {
                     GameObject.Destroy(gameObject);
                     return;
@@ -106,7 +141,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
         public void DoNearMiss()
         {
             miss = true;
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
             transform.position = PlayerTarget.position;
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             rb.simulated = true;

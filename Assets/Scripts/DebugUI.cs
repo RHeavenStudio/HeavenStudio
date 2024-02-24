@@ -65,12 +65,12 @@ namespace HeavenStudio
 
             int minus = 0;
 
-            if (GameManager.instance.Beatmap.entities.Count > 0)
+            if (GameManager.instance.Beatmap.Entities.Count > 0)
             {
                 if (GameManager.instance.currentEvent - 1 >= 0) minus = 1;
 
-                SetText(currEvent, $"CurrentEvent: {GameManager.instance.Beatmap.entities[GameManager.instance.currentEvent - minus].datamodel}");
-                SetText(eventLength, $"Event Length: {GameManager.instance.Beatmap.entities[GameManager.instance.currentEvent - minus].length}");
+                SetText(currEvent, $"CurrentEvent: {GameManager.instance.Beatmap.Entities[GameManager.instance.currentEvent - minus].datamodel}");
+                SetText(eventLength, $"Event Length: {GameManager.instance.Beatmap.Entities[GameManager.instance.currentEvent - minus].length}");
             }
         }
 

@@ -1,25 +1,20 @@
 using System;
 using System.IO;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
-
-using Newtonsoft.Json;
 using TMPro;
-using Starpelly;
 using SFB;
 
 using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
-using HeavenStudio.Util;
 using HeavenStudio.StudioDance;
 
-using System.IO.Compression;
-using System.Text;
+using Jukebox;
+using UnityEditor;
+using System.Linq;
 
 namespace HeavenStudio.Editor
 {
@@ -33,7 +28,7 @@ namespace HeavenStudio.Editor
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;
         [SerializeField] private RawImage Screen;
-        [SerializeField] private RectTransform GridGameSelector;
+        [SerializeField] private RectTransform GridGameSelectorRect;
         public RectTransform eventSelectorBG;
 
         [Header("Components")]
@@ -48,11 +43,22 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button SaveBTN;
         [SerializeField] private Button UndoBTN;
         [SerializeField] private Button RedoBTN;
+        [SerializeField] private Button CopyBTN;
+        [SerializeField] private Button PasteBTN;
         [SerializeField] private Button MusicSelectBTN;
         [SerializeField] private Button FullScreenBTN;
         [SerializeField] private Button TempoFinderBTN;
         [SerializeField] private Button SnapDiagBTN;
         [SerializeField] private Button ChartParamBTN;
+        [SerializeField] private Button SortAlphabetBTN;
+        [SerializeField] private Button SortFavoritesBTN;
+        [SerializeField] private Button SortChronologicBTN;
+        [SerializeField] private TMP_InputField SearchBar;
+
+        [Header("Confirm Quit")]
+        [SerializeField] private GameObject _confirmQuitMain;
+        [SerializeField] private Button _quitYes;
+        [SerializeField] private Button _quitNo;
 
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
@@ -78,7 +84,7 @@ namespace HeavenStudio.Editor
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
 
-        private byte[] MusicBytes;
+        private Vector2 lastScreenSize = Vector2.zero;
 
         public static Editor instance { get; private set; }
 
@@ -98,25 +104,16 @@ namespace HeavenStudio.Editor
             GameManager.instance.Init();
             Timeline.Init();
 
-            foreach (var minigame in EventCaller.instance.minigames)
+            foreach (var minigame in EventCaller.instance.minigames.Values)
                 AddIcon(minigame);
 
-            Tooltip.AddTooltip(NewBTN.gameObject, "New <color=#adadad>[Ctrl+N]</color>");
-            Tooltip.AddTooltip(OpenBTN.gameObject, "Open <color=#adadad>[Ctrl+O]</color>");
-            Tooltip.AddTooltip(SaveBTN.gameObject, "Save Project <color=#adadad>[Ctrl+S]</color>\nSave Project As <color=#adadad>[Ctrl+Alt+S]</color>");
-            Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
-            Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
-            Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
-            Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
-            Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
-            Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
-            Tooltip.AddTooltip(ChartParamBTN.gameObject, "Remix Properties");
-
-            Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
             UpdateEditorStatus(true);
-
+#if HEAVENSTUDIO_PROD
+            BuildDateDisplay.text = GlobalGameManager.friendlyReleaseName;
+#else
             BuildDateDisplay.text = GlobalGameManager.buildTime;
-            isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
+#endif
+            isCursorEnabled = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
             GameManager.instance.CursorCam.enabled = isCursorEnabled;
         }
@@ -124,16 +121,48 @@ namespace HeavenStudio.Editor
         public void AddIcon(Minigames.Minigame minigame)
         {
             if (minigame.hidden) return;
-            GameObject GameIcon_ = Instantiate(GridGameSelector.GetChild(0).gameObject, GridGameSelector);
+            GameObject GameIcon_ = Instantiate(GridGameSelectorRect.GetChild(0).gameObject, GridGameSelectorRect);
             GameIcon_.GetComponent<Image>().sprite = GameIcon(minigame.name);
             GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(minigame.name);
             GameIcon_.GetComponent<GridGameSelectorGame>().UnClickIcon();
             GameIcon_.gameObject.SetActive(true);
-            GameIcon_.name = minigame.displayName;
+            GameIcon_.name = minigame.name;
+
+            var ggs = GridGameSelectorRect.GetComponent<GridGameSelector>();
+            (minigame.fxOnly ? ggs.fxActive : ggs.mgsActive).Add(GameIcon_.GetComponent<RectTransform>());
+        }
+
+        public void ShowQuitPopUp(bool show)
+        {
+            if (fullscreen) Fullscreen();
+            _confirmQuitMain.SetActive(show);
+            SetAuthoritiveMenu(show);
+        }
+
+        public bool ShouldQuit = false;
+
+        public void QuitGame()
+        {
+            ShouldQuit = true;
+            Application.Quit();
+        }
+
+        public void Update()
+        {
+            if (!PersistentDataManager.gameSettings.scaleWScreenSize)
+                MainCanvas.scaleFactor = 1.0f + (0.25f * PersistentDataManager.gameSettings.editorScale);
+
+            MainCanvas.GetComponent<CanvasScaler>().uiScaleMode = (PersistentDataManager.gameSettings.scaleWScreenSize) ? CanvasScaler.ScaleMode.ScaleWithScreenSize : CanvasScaler.ScaleMode.ConstantPixelSize;
         }
 
         public void LateUpdate()
         {
+            if (lastScreenSize != new Vector2(UnityEngine.Screen.width, UnityEngine.Screen.height))
+            {
+                // Timeline.OnScreenResize();
+            }
+            lastScreenSize = new Vector2(UnityEngine.Screen.width, UnityEngine.Screen.height);
+
             #region Keyboard Shortcuts
             if (isShortcutsEnabled)
             {
@@ -142,33 +171,31 @@ namespace HeavenStudio.Editor
                     Fullscreen();
                 }
 
-                if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
+                if ((Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace)) && !fullscreen)
                 {
-                    List<TimelineEventObj> ev = new List<TimelineEventObj>();
-                    for (int i = 0; i < Selections.instance.eventsSelected.Count; i++) ev.Add(Selections.instance.eventsSelected[i]);
-                    CommandManager.instance.Execute(new Commands.Deletion(ev));
+                    CommandManager.Instance.AddCommand(new Commands.Delete(Selections.instance.eventsSelected.Select(c => c.entity.guid).ToList()));
                 }
 
-                if (Input.GetKey(KeyCode.LeftControl))
+                if (Input.GetKey(KeyCode.LeftControl) && !fullscreen)
                 {
                     if (Input.GetKeyDown(KeyCode.Z))
                     {
                         if (Input.GetKey(KeyCode.LeftShift))
-                            CommandManager.instance.Redo();
+                            CommandManager.Instance.RedoCommand();
                         else
-                            CommandManager.instance.Undo();
+                            CommandManager.Instance.UndoCommand();
                     }
                     else if (Input.GetKeyDown(KeyCode.Y))
                     {
-                        CommandManager.instance.Redo();
+                        CommandManager.Instance.RedoCommand();
                     }
-
-                    if (Input.GetKey(KeyCode.LeftShift))
+                    else if (Input.GetKeyDown(KeyCode.C))
                     {
-                        if (Input.GetKeyDown(KeyCode.D))
-                        {
-                            ToggleDebugCam();
-                        }
+                        Timeline.instance.CopySelected();
+                    }
+                    else if (Input.GetKeyDown(KeyCode.V))
+                    {
+                        Timeline.instance.Paste();
                     }
                 }
 
@@ -176,6 +203,7 @@ namespace HeavenStudio.Editor
                 {
                     if (Input.GetKeyDown(KeyCode.N))
                     {
+                        if (fullscreen) Fullscreen();
                         NewBTN.onClick.Invoke();
                     }
                     else if (Input.GetKeyDown(KeyCode.O))
@@ -193,43 +221,37 @@ namespace HeavenStudio.Editor
                     {
                         SaveRemix(false);
                     }
+
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (Input.GetKeyDown(KeyCode.D))
+                        {
+                            ToggleDebugCam();
+                        }
+                    }
                 }
             }
             #endregion
 
-            if (CommandManager.instance.canUndo())
+            // Undo+Redo
+            if (CommandManager.Instance.CanUndo())
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
-
-            if (CommandManager.instance.canRedo())
+            if (CommandManager.Instance.CanRedo())
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
-            if (Timeline.instance.timelineState.selected && Editor.instance.canSelect)
-            {
-                if (Input.GetMouseButtonUp(0))
-                {
-                    List<TimelineEventObj> selectedEvents = Timeline.instance.eventObjs.FindAll(c => c.selected == true && c.eligibleToMove == true);
-
-                    if (selectedEvents.Count > 0)
-                    {
-                        List<TimelineEventObj> result = new List<TimelineEventObj>();
-
-                        for (int i = 0; i < selectedEvents.Count; i++)
-                        {
-                            //TODO: this is in LateUpdate, so this will never run! change this to something that works properly
-                            if (!(selectedEvents[i].isCreating || selectedEvents[i].wasDuplicated))
-                            {
-                                result.Add(selectedEvents[i]);
-                            }
-                            selectedEvents[i].OnUp();
-                        }
-                        CommandManager.instance.Execute(new Commands.Move(result));
-                    }
-                }
-            }
+            // Copy+Paste
+            if (Selections.instance.eventsSelected.Count > 0)
+                CopyBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            else
+                CopyBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+            if (Timeline.instance.CopiedEntities.Count > 0)
+                PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            else
+                PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
         }
 
         public static Sprite GameIcon(string name)
@@ -248,119 +270,98 @@ namespace HeavenStudio.Editor
         {
             var extensions = new[]
             {
-                new ExtensionFilter("Music Files", "mp3", "ogg", "wav")
+                new ExtensionFilter("Music Files", "mp3", "ogg", "wav", "aiff", "aif", "aifc")
             };
 
-            #if UNITY_STANDALONE_WINDOWS
+#if UNITY_STANDALONE_WINDOWS
             StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) => 
             {
                 if (paths.Length > 0)
                 {
-                    Conductor.instance.musicSource.clip = await LoadClip(Path.Combine(paths)); 
-                    changedMusic = true;
-                    
-                    Timeline.FitToSong();
+                    try
+                    {
+                        if (paths.Length == 0) return;
+                        RiqFileHandler.WriteSong(paths[0]);
+                        StartCoroutine(LoadMusic());
+                        return;
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.Log($"Error selecting music file: {e.Message}");
+                        Debug.LogException(e);
+                        GlobalGameManager.ShowErrorMessage("Error", e.Message);
+                        return;
+                    }
                 }
+                await Task.Yield();
             } 
             );
-            #else
+#else
             StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) =>
             {
                 if (paths.Length > 0)
                 {
-                    Conductor.instance.musicSource.clip = await LoadClip("file://" + Path.Combine(paths));
-                    changedMusic = true;
-
-                    Timeline.FitToSong();
-                    Timeline.CreateWaveform();
-                }
-            }
-            );
-            #endif
-        }
-
-        private async Task<AudioClip> LoadClip(string path)
-        {
-            AudioClip clip = null;
-
-            AudioType audioType = AudioType.OGGVORBIS;
-
-            // this is a bad solution but i'm lazy
-            if (path.Substring(path.Length - 3) == "ogg")
-                audioType = AudioType.OGGVORBIS;
-            else if (path.Substring(path.Length - 3) == "mp3")
-                audioType = AudioType.MPEG;
-            else if (path.Substring(path.Length - 3) == "wav")
-                audioType = AudioType.WAV;
-
-            using (UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(path, audioType))
-            {
-                uwr.SendWebRequest();
-
-                try
-                {
-                    while (!uwr.isDone) await Task.Delay(5);
-
-                    if (uwr.result == UnityWebRequest.Result.ProtocolError) Debug.Log($"{uwr.error}");
-                    else
+                    try
                     {
-                        clip = DownloadHandlerAudioClip.GetContent(uwr);
+                        if (paths.Length == 0) return;
+                        RiqFileHandler.WriteSong(paths[0]);
+                        StartCoroutine(LoadMusic());
+                        return;
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.Log($"Error selecting music file: {e.Message}");
+                        Debug.LogException(e);
+                        GlobalGameManager.ShowErrorMessage("Error", e.Message);
+                        return;
                     }
                 }
-                catch (Exception err)
-                {
-                    Debug.Log($"{err.Message}, {err.StackTrace}");
-                }
+                await Task.Yield();
             }
-
-            try
-            {
-                if (clip != null)
-                    MusicBytes = OggVorbis.VorbisPlugin.GetOggVorbis(clip, 1);
-                else
-                {
-                    MusicBytes = null;
-                    Debug.LogWarning("Failed to load music file! The stream is currently empty.");
-                }
-            }
-            catch (System.ArgumentNullException)
-            {
-                clip = null;
-                MusicBytes = null;
-                Debug.LogWarning("Failed to load music file! The stream is currently empty.");
-            }
-            catch (System.ArgumentOutOfRangeException)
-            {
-                clip = null;
-                MusicBytes = null;
-                Debug.LogWarning("Failed to load music file! The stream is malformed.");
-            }
-            catch (System.ArgumentException)
-            {
-                clip = null;
-                MusicBytes = null;
-                Debug.LogWarning("Failed to load music file! Only 1 or 2 channels are supported!.");
-            }
-
-            return clip;
+            );
+#endif
         }
 
+        IEnumerator LoadMusic()
+        {
+            yield return GameManager.instance.LoadMusic();
+            Timeline.FitToSong();
+            // Timeline.CreateWaveform();
+        }
 
         public void SaveRemix(bool saveAs = true)
         {
-            if (saveAs == true)
+            Debug.Log(GameManager.instance.Beatmap["propertiesmodified"]);
+            if (!(bool)GameManager.instance.Beatmap["propertiesmodified"])
             {
-                SaveRemixFilePanel();
+                foreach (var dialog in Dialogs)
+                {
+                    if (dialog.GetType() == typeof(RemixPropertiesDialog))
+                    {
+                        if (fullscreen) Fullscreen();
+                        GlobalGameManager.ShowErrorMessage("Set Remix Properties", "Set remix properties before saving.");
+                        (dialog as RemixPropertiesDialog).SwitchPropertiesDialog();
+                        (dialog as RemixPropertiesDialog).SetSaveOnClose(true, saveAs);
+                        return;
+                    }
+                }
             }
             else
             {
-                if (currentRemixPath == string.Empty)
+                if (saveAs)
                 {
                     SaveRemixFilePanel();
                 }
                 else
                 {
-                    SaveRemixFile(currentRemixPath);
+                    if (currentRemixPath is "" or null)
+                    {
+                        SaveRemixFilePanel();
+                    }
+                    else
+                    {
+                        SaveRemixFile(currentRemixPath);
+                    }
                 }
             }
         }
@@ -371,36 +372,30 @@ namespace HeavenStudio.Editor
             {
                 new ExtensionFilter("Heaven Studio Remix File", "riq")
             };
-            
+
             StandaloneFileBrowser.SaveFilePanelAsync("Save Remix As", "", "remix_level", extensions, (string path) =>
             {
                 if (path != String.Empty)
                 {
                     SaveRemixFile(path);
+                    currentRemixPath = path;
                 }
             });
         }
 
         private void SaveRemixFile(string path)
         {
-            using (FileStream zipFile = File.Open(path, FileMode.Create))
+            try
             {
-                using (var archive = new ZipArchive(zipFile, ZipArchiveMode.Update))
-                {
-                    var levelFile = archive.CreateEntry("remix.json", System.IO.Compression.CompressionLevel.NoCompression);
-                    using (var zipStream = levelFile.Open())
-                        zipStream.Write(Encoding.UTF8.GetBytes(GetJson()), 0, Encoding.UTF8.GetBytes(GetJson()).Length);
-
-                    if (MusicBytes != null)
-                    {
-                        var musicFile = archive.CreateEntry("song.ogg", System.IO.Compression.CompressionLevel.NoCompression);
-                        using (var zipStream = musicFile.Open())
-                            zipStream.Write(MusicBytes, 0, MusicBytes.Length);
-                    }
-                }
-
-                currentRemixPath = path;
-                UpdateEditorStatus(false);
+                RiqFileHandler.WriteRiq(GameManager.instance.Beatmap);
+                RiqFileHandler.PackRiq(path, true);
+                Debug.Log("Packed RIQ successfully!");
+                return;
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log($"Error packing RIQ: {e.Message}");
+                return;
             }
         }
 
@@ -410,79 +405,58 @@ namespace HeavenStudio.Editor
                 Timeline.instance?.Stop(0);
             else
                 GameManager.instance.Stop(0);
-            MusicBytes = null;
-            LoadRemix("");
+            LoadRemix(true);
         }
 
-        public void LoadRemix(string json = "", string type = "riq")
+        public void LoadRemix(bool create = false)
         {
-            GameManager.instance.LoadRemix(json, type);
+            if (fullscreen) Fullscreen();
+            if (create)
+            {
+                GameManager.instance.NewRemix();
+                currentRemixPath = string.Empty;
+            }
+            else
+            {
+                GameManager.instance.LoadRemix(true);
+            }
             Timeline.instance.LoadRemix();
-            // Timeline.instance.SpecialInfo.UpdateStartingBPMText();
-            // Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
-            // Timeline.instance.SpecialInfo.UpdateOffsetText();
             Timeline.FitToSong();
-
-            currentRemixPath = string.Empty;
         }
 
         public void OpenRemix()
         {
+            if (fullscreen) Fullscreen();
             var extensions = new[]
             {
-                new ExtensionFilter("All Supported Files ", new string[] { "riq", "tengoku", "rhmania" }),
                 new ExtensionFilter("Heaven Studio Remix File ", new string[] { "riq" }),
-                new ExtensionFilter("Legacy Heaven Studio Remix ", new string[] { "tengoku", "rhmania" })
             };
 
             StandaloneFileBrowser.OpenFilePanelAsync("Open Remix", "", extensions, false, (string[] paths) =>
             {
                 var path = Path.Combine(paths);
-
                 if (path == string.Empty) return;
-                loadedMusic = false;
-                string extension = path.GetExtension();
 
-                using var zipFile = File.Open(path, FileMode.Open);
-                using var archive = new ZipArchive(zipFile, ZipArchiveMode.Read);
-
-                foreach (var entry in archive.Entries)
-                    switch (entry.Name)
-                    {
-                        case "remix.json":
-                        {
-                            using var stream = entry.Open();
-                            using var reader = new StreamReader(stream);
-                            LoadRemix(reader.ReadToEnd(), extension);
-
-                            break;
-                        }
-                        case "song.ogg":
-                        {
-                            using var stream = entry.Open();
-                            using var memoryStream = new MemoryStream();
-                            stream.CopyTo(memoryStream);
-                            MusicBytes = memoryStream.ToArray();
-                            Conductor.instance.musicSource.clip = OggVorbis.VorbisPlugin.ToAudioClip(MusicBytes, "music");
-                            loadedMusic = true;
-                            Timeline.FitToSong();
-
-                            break;
-                        }
-                    }
-
-                if (!loadedMusic)
+                try
                 {
-                    Conductor.instance.musicSource.clip = null;
-                    MusicBytes = null;
+                    string tmpDir = RiqFileHandler.ExtractRiq(path);
+                    Debug.Log("Imported RIQ successfully!");
+                    LoadRemix();
                 }
+                catch (System.Exception e)
+                {
+                    Debug.Log($"Error importing RIQ: {e.Message}");
+                    Debug.LogException(e);
+                    GlobalGameManager.ShowErrorMessage("Error Loading RIQ", e.Message + "\n\n" + e.StackTrace);
+                    return;
+                }
+
+                StartCoroutine(LoadMusic());
 
                 currentRemixPath = path;
                 remixName = Path.GetFileName(path);
                 UpdateEditorStatus(false);
-                CommandManager.instance.Clear();
-                Timeline.FitToSong();
-                Timeline.CreateWaveform();
+                CommandManager.Instance.Clear();
             });
         }
 
@@ -496,9 +470,12 @@ namespace HeavenStudio.Editor
                 MainCanvas.enabled = false;
                 EditorCamera.enabled = false;
                 GameManager.instance.StaticCamera.targetTexture = null;
-                GameManager.instance.CursorCam.enabled = false;
-                fullscreen = true;
+                GameManager.instance.CursorCam.enabled = (PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch)
+                    && isCursorEnabled;
+                GameManager.instance.CursorCam.targetTexture = null;
 
+                GameManager.instance.CursorCam.rect = new Rect(0, 0, 1, 1);
+                fullscreen = true;
             }
             else
             {
@@ -506,6 +483,7 @@ namespace HeavenStudio.Editor
                 EditorCamera.enabled = true;
                 GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
                 GameManager.instance.CursorCam.enabled = true && isCursorEnabled;
+                GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
                 fullscreen = false;
 
                 GameCamera.instance.camera.rect = new Rect(0, 0, 1, 1);
@@ -513,19 +491,13 @@ namespace HeavenStudio.Editor
                 GameManager.instance.OverlayCamera.rect = new Rect(0, 0, 1, 1);
                 EditorCamera.rect = new Rect(0, 0, 1, 1);
             }
+            GameManager.instance.CircleCursor.LockCursor(fullscreen);
             Timeline.AutoBtnUpdate();
         }
 
         private void UpdateEditorStatus(bool updateTime)
         {
             GlobalGameManager.UpdateDiscordStatus($"{remixName}", true, updateTime);
-        }
-
-        public string GetJson()
-        {
-            string json = string.Empty;
-            json = JsonConvert.SerializeObject(GameManager.instance.Beatmap);
-            return json;
         }
 
         public void SetGameEventTitle(string txt)
@@ -535,16 +507,26 @@ namespace HeavenStudio.Editor
 
         public static bool MouseInRectTransform(RectTransform rectTransform)
         {
-            return (rectTransform.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera));
+            return rectTransform.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera);
+        }
+
+        public void ReturnToTitle()
+        {
+            GlobalGameManager.LoadScene("Title", callback: GameManager.instance.DestroyGame);
+        }
+
+        public void SetAuthoritiveMenu(bool state)
+        {
+            inAuthorativeMenu = state;
         }
 
         public void ToggleDebugCam()
         {
-            var game = GameManager.instance.currentGameO;
+            var game = GameManager.instance.minigameObj;
 
             if (game != null)
             {
-                foreach(FreeCam c in game.GetComponentsInChildren<FreeCam>(true))
+                foreach (FreeCam c in game.GetComponentsInChildren<FreeCam>(true))
                 {
                     c.enabled = !c.enabled;
                 }

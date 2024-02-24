@@ -5,7 +5,7 @@ using HeavenStudio.Editor.Track;
 
 using TMPro;
 
-namespace HeavenStudio.Editor 
+namespace HeavenStudio.Editor
 {
     public class Dialog : MonoBehaviour
     {
@@ -21,7 +21,7 @@ namespace HeavenStudio.Editor
 
         public static void ResetAllDialogs()
         {
-            foreach(var dialog in FindObjectsOfType<Dialog>())
+            foreach (var dialog in FindObjectsOfType<Dialog>())
             {
                 dialog.ForceState(false);
             }

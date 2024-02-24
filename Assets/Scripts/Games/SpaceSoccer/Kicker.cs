@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Scripts_SpaceSoccer
 {
@@ -16,12 +17,12 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         private bool kickPrepare = false;
         public bool kickLeft;
         bool kickLeftWhiff;
-        public float dispenserBeat; //unused
+        public double dispenserBeat; //unused
         public int kickTimes = 0;
         public bool player;
         private string animName = "Enter";
         private float animLength;
-        private float animStartBeat;
+        private double animStartBeat;
         private EasingFunction.Ease ease;
         bool stopBall;
 
@@ -39,7 +40,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             anim = GetComponent<Animator>();
         }
 
-        public void SetAnimParams(float beat, float length, string anim, int easeToPut)
+        public void SetAnimParams(double beat, float length, string anim, int easeToPut)
         {
             animStartBeat = beat;
             animLength = length;
@@ -50,19 +51,19 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             enterExitAnim.DoNormalizedAnimation(animName, newAnimPos);
         }
 
-        public void DispenseBall(float beat)
+        public void DispenseBall(double beat)
         {
             if (player)
             {
-                nextHit = game.ScheduleInput(beat, ball.GetAnimLength(Ball.State.Dispensing), InputType.STANDARD_DOWN, KickJust, Miss, Out);
+                nextHit = game.ScheduleInput(beat, ball.GetAnimLength(Ball.State.Dispensing), SpaceSoccer.InputAction_BasicPress, KickJust, Miss, Out);
             }
             else
             {
-                float beatToKick = beat + ball.GetAnimLength(Ball.State.Dispensing);
-                if (beatToKick < Conductor.instance.songPositionInBeats) beatToKick = ball.nextAnimBeat;
+                double beatToKick = beat + ball.GetAnimLength(Ball.State.Dispensing);
+                if (beatToKick < Conductor.instance.songPositionInBeatsAsDouble) beatToKick = ball.nextAnimBeat;
                 if (ball.state == Ball.State.HighKicked)
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beatToKick - 0.5f, delegate { Kick(true, true); }),
                         new BeatAction.Action(beatToKick, delegate { Toe(true); }),
@@ -71,7 +72,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 }
                 else
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beatToKick, delegate { KickCheck(true, false, beatToKick); }),
                     });
@@ -85,7 +86,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
             if (player)
             {
-                Jukebox.PlayOneShotGame("spaceSoccer/kick");
+                SoundByte.PlayOneShotGame("spaceSoccer/kick");
             }
 
             if (hit)
@@ -183,17 +184,17 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 kickLeftWhiff = !kickLeftWhiff;
             }
 
-            if (player) Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1");
+            if (player) SoundByte.PlayOneShotGame("spaceSoccer/highkicktoe1");
             if (hit && ball)
             {
                 ball.HighKick();
 
-                if (player) Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1_hit");
+                if (player) SoundByte.PlayOneShotGame("spaceSoccer/highkicktoe1_hit");
             }
 
         }
 
-        public void Toe(bool hit)
+        public void Toe(bool hit, bool flick = false)
         {
             if (stopBall) return;
             if (kickLeft)
@@ -207,18 +208,21 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
             if (player)
             {
-                Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3");
+                SoundByte.PlayOneShotGame("spaceSoccer/highkicktoe3");
                 if (hit && ball)
                 {
-                    Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3_hit");
+                    SoundByte.PlayOneShotGame("spaceSoccer/highkicktoe3_hit");
                 }
             }
 
             if (hit && ball)
                 ball.Toe();
 
-            kickTimes++;
-            kickPrepare = false;
+            if (!flick)
+            {
+                kickTimes++;
+                kickPrepare = false;
+            }
         }
 
         private void Update()
@@ -239,19 +243,17 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 kickLeft = true;
             }
 
-            var highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
+            var highKicks = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
             for (int i = 0; i < highKicks.Count; i++)
             {
-                if ((highKicks[i].beat - 0.15f) <= Conductor.instance.songPositionInBeats && highKicks[i].beat + 1f > Conductor.instance.songPositionInBeats)
+                if ((highKicks[i].beat - 0.15f) <= Conductor.instance.songPositionInBeatsAsDouble && highKicks[i].beat + 1f > Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     canHighKick = true;
                     canKick = false;
 
                     if (ball)
                     {
-                        ball.highKickSwing = highKicks[i].swing;
-                        if (ball.highKickSwing == 0f)
-                            ball.highKickSwing = 0.5f;
+                        ball.highKickSwing = 0.5f;
                     }
                     break;
                 }
@@ -265,7 +267,8 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             if (player)
             {
                 if (stopBall) return;
-                if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(SpaceSoccer.InputAction_BasicPress)
+                    && !game.IsExpectingInputNow(SpaceSoccer.InputAction_BasicPress))
                 {
                     if (ball == null)
                         KickCheck(false, true);
@@ -273,22 +276,32 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         Kick(false, ball.canKick);
 
                 }
-                if (PlayerInput.PressedUp() && ball != null)
+                if (PlayerInput.GetIsAction(SpaceSoccer.InputAction_FlickRelease))
                 {
-                    if (ball.waitKickRelease)
+                    if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
                     {
-                        ball.waitKickRelease = false;
+                        if (ball == null || !(game.IsExpectingInputNow(SpaceSoccer.InputAction_FlickRelease) || ball.canKick))
+                        {
+                            Toe(false);
+                        }
                     }
-                    else if (ball.canKick && !game.IsExpectingInputNow(InputType.STANDARD_UP))
+                    if (ball != null)
                     {
-                        ball.canKick = false;
-                        Kick(false);
+                        if (ball.waitKickRelease)
+                        {
+                            ball.waitKickRelease = false;
+                        }
+                        else if (ball.canKick && !game.IsExpectingInputNow(SpaceSoccer.InputAction_FlickRelease))
+                        {
+                            ball.canKick = false;
+                            Kick(false);
+                        }
                     }
                 }
             }
         }
 
-        private void KickCheck(bool hit,  bool overrideState = false, float beat = 0f)
+        private void KickCheck(bool hit,  bool overrideState = false, double beat = 0f)
         {
             if (stopBall) return;
             if (canHighKick)
@@ -296,7 +309,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 HighKick(hit);
                 if (!player)
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Kicked), delegate { Kick(true, true); }),
                         new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Toe), delegate { Toe(true); }),
@@ -309,7 +322,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 Kick(hit);
                 if (!player)
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Kicked), delegate { KickCheck(true, false, beat + ball.GetAnimLength(Ball.State.Kicked)); }),
                     });
@@ -320,7 +333,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 Kick(hit);
                 if (!player)
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Kicked), delegate { KickCheck(true, false, beat + ball.GetAnimLength(Ball.State.Kicked)); }),
                     });
@@ -336,15 +349,15 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             if (ball != null && stop) Destroy(ball.gameObject);
         }
 
-        void MissBall(float targetBeat)
+        void MissBall(double targetBeat)
         {
             if (stopBall) return;
 
             var cond = Conductor.instance;
             ball = null;
             // queue the miss sound
-            MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("spaceSoccer/missNeutral", targetBeat + (float)cond.SecsToBeats(Minigame.EndTime()-1, 
-                cond.GetBpmAtBeat(targetBeat)), Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-75, 75), false)) });
+            MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("spaceSoccer/missNeutral", targetBeat + (float)cond.SecsToBeats(Minigame.NgLateTime()-1, 
+                cond.GetBpmAtBeat(targetBeat)), SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-75, 75), false)) });
         }
 
         private void KickJust(PlayerActionEvent caller, float state)
@@ -359,16 +372,17 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             if (canHighKick)
             {
                 // queue high kick inputs
-                nextHit = game.ScheduleInput(caller.startBeat + caller.timer, ball.GetAnimLength(Ball.State.Toe), InputType.STANDARD_UP, ToeJust, Miss, Out);
-                nextAutoKick = game.ScheduleAutoplayInput(caller.startBeat + caller.timer, ball.GetAnimLength(Ball.State.Kicked), InputType.STANDARD_DOWN, ToePrepareJust, Out, Out);
+                nextHit = game.ScheduleInput(caller.startBeat + caller.timer, ball.GetAnimLength(Ball.State.Toe), SpaceSoccer.InputAction_FlickRelease, ToeJust, Miss, Out);
+                nextAutoKick = game.ScheduleAutoplayInput(caller.startBeat + caller.timer, ball.GetAnimLength(Ball.State.Kicked), SpaceSoccer.InputAction_BasicPress, ToePrepareJust, Out, Out);
                 ball.canKick = true;
                 ball.waitKickRelease = true;
             }
             else
             {
                 // queue normal kick input
-                nextHit = game.ScheduleInput(caller.startBeat + caller.timer, ball.GetAnimLength(Ball.State.Kicked), InputType.STANDARD_DOWN, KickJust, Miss, Out);
+                nextHit = game.ScheduleInput(caller.startBeat + caller.timer, ball.GetAnimLength(Ball.State.Kicked), SpaceSoccer.InputAction_BasicPress, KickJust, Miss, Out);
             }
+            game.hitBeats.Add(caller.startBeat + caller.timer);
         }
 
         private void Miss(PlayerActionEvent caller) 
@@ -390,8 +404,9 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 return;
             }
             Toe(true);
-            nextHit = game.ScheduleInput(caller.startBeat, 3f, InputType.STANDARD_DOWN, KickJust, Miss, Out);
+            nextHit = game.ScheduleInput(caller.startBeat, 3f, SpaceSoccer.InputAction_BasicPress, KickJust, Miss, Out);
             ball.canKick = false;
+            game.hitBeats.Add(caller.startBeat + caller.timer);
         }
 
         private void ToePrepareJust(PlayerActionEvent caller, float state)

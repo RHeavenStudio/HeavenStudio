@@ -1,11 +1,58 @@
 {
   "dependencies": {
-    "com.ecasillas.missingrefsfinder": {
-      "version": "https://github.com/edcasillas/unity-missing-references-finder.git",
+    "com.coffee.softmask-for-ugui": {
+      "version": "https://github.com/mob-sakai/SoftMaskForUGUI.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "183e49b96580cfcd348ec0437d6fa8f7c4e9b280"
+      "hash": "0a9cf7a1809a289ca7bedecee594cdf256e26935"
+    },
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "cfe509a55602ba5be6df7fa0468b10298b8a053d"
+    },
+    "com.nobi.roundedcorners": {
+      "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "88623988179d35ce2da93b7740d6e7be59fcc971"
+    },
+    "com.rheavenstudio.jukebox": {
+      "version": "https://github.com/RHeavenStudio/Jukebox.git?path=/Assets/Scripts/Jukebox",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
+        "jillejr.newtonsoft.json-for-unity.converters": "1.5.1"
+      },
+      "hash": "81516bd0bf64681a829ac2d807fd2180077dd3f8"
+    },
+    "com.sator-imaging.alt-source-generator": {
+      "version": "https://github.com/sator-imaging/Unity-AltSourceGenerator.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
+      },
+      "hash": "4fcd4088cda76e117e76780cea7d85c484a69d94"
+    },
+    "com.sr4dev.unity-spriteassist": {
+      "version": "https://github.com/sr4dev/Unity-SpriteAssist.git?path=Assets/SpriteAssist",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "2ee960d718cc2ac2c4a2ae847a83df23a7b56b66"
+    },
+    "com.tayx.graphy": {
+      "version": "https://github.com/Tayx94/graphy.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "7b634c383ae631e7f4efaf08235c2d829a7d3ecc"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -44,7 +91,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.17",
+      "version": "2.0.22",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -52,16 +99,9 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.ide.vscode": {
-      "version": "1.2.5",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.0.2",
-      "depth": 0,
+      "version": "3.2.1",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -72,6 +112,15 @@
       "source": "registry",
       "dependencies": {
         "com.unity.modules.physics": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.recorder": {
+      "version": "3.0.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.timeline": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -87,7 +136,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.2.0-pre.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -96,7 +145,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.6.4",
+      "version": "1.6.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -116,9 +165,16 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
-    "jillejr.newtonsoft.json-for-unity.converters": {
-      "version": "1.3.0",
+    "com.zigurous.shaders.blending": {
+      "version": "https://github.com/zigurous/unity-blend-shaders.git",
       "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "4b351991a8c464adc961232425ff99f607396b9d"
+    },
+    "jillejr.newtonsoft.json-for-unity.converters": {
+      "version": "1.5.1",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity"

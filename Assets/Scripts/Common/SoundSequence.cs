@@ -26,7 +26,7 @@ namespace HeavenStudio.Util
             this.clips = new List<SequenceClip>(clips);
         }
 
-        public MultiSound Play(float startBeat, params SequenceParams[] args)
+        public MultiSound Play(double startBeat, params SequenceParams[] args)
         {
             List<MultiSound.Sound> sounds = new List<MultiSound.Sound>();
             Dictionary<string, string> paramMaps = new Dictionary<string, string>();
@@ -34,11 +34,11 @@ namespace HeavenStudio.Util
             foreach (SequenceClip clipdat in clips)
             {
                 string clip = clipdat.clip;
-                float beat = clipdat.beat;
+                double beat = clipdat.beat;
                 float pitch = clipdat.pitch;
                 float volume = clipdat.volume;
                 bool looping = clipdat.looping;
-                float offset = clipdat.offset;
+                double offset = clipdat.offset;
                 if (args != null && clipdat.parameters != null && clipdat.parameters.Length > 0)
                 {
                     paramMaps.Clear();

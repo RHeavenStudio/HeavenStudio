@@ -30,16 +30,17 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                 spawnedEffect.Play();
                 DoAnimationScaledAsync(crouch ? "CrouchHit" : "Hit", 0.5f);
             }
-            else if (!anim.IsPlayingAnimationName(prefix + "Whiff") && !anim.IsPlayingAnimationName(prefix + "Miss"))
+            else if (!anim.IsPlayingAnimationNames(prefix + "Whiff", prefix + "Miss"))
             {
                 DoAnimationScaledAsync("Whiff", 0.5f);
-                Jukebox.PlayOneShotGame("tossBoys/whiff");
+                SoundByte.PlayOneShotGame("tossBoys/whiff");
             }
+            preparing = false;
         }
 
         public void Bop()
         {
-            if (!anim.IsAnimationNotPlaying() || crouch || preparing) return;
+            if (crouch || preparing || (!anim.IsAnimationNotPlaying() && !anim.IsPlayingAnimationNames(prefix + "Idle"))) return;
             DoAnimationScaledAsync("Bop", 0.5f);
         }
 
@@ -72,9 +73,9 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             DoAnimationScaledAsync("Barely", 0.5f);
         }
 
-        public void ShowArrow(float startBeat, float length)
+        public void ShowArrow(double startBeat, float length)
         {
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>(){
+            BeatAction.New(game, new List<BeatAction.Action>(){
                 new BeatAction.Action(startBeat, delegate { arrow.SetActive(true); }),
                 new BeatAction.Action(startBeat + length, delegate { arrow.SetActive(false); }),
             });

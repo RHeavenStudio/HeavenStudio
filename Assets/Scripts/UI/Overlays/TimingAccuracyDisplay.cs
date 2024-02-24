@@ -87,12 +87,12 @@ namespace HeavenStudio.Common
             // SetArrowPos(time);
 
             // no Clamp() because double
-            time = System.Math.Max(Minigame.EarlyTime(), System.Math.Min(Minigame.EndTime(), time));
+            time = System.Math.Max(Minigame.NgEarlyTime(), System.Math.Min(Minigame.NgLateTime(), time));
 
-            if (time >= Minigame.AceStartTime() && time <= Minigame.AceEndTime())
+            if (time >= Minigame.AceEarlyTime() && time <= Minigame.AceLateTime())
             {
                 type = Rating.Just;
-                frac = (float)((time - Minigame.AceStartTime()) / (Minigame.AceEndTime() - Minigame.AceStartTime()));
+                frac = (float)((time - Minigame.AceEarlyTime()) / (Minigame.AceLateTime() - Minigame.AceEarlyTime()));
                 y = barJustTransform.localScale.y * frac - (barJustTransform.localScale.y * 0.5f);
             }
             else
@@ -100,32 +100,32 @@ namespace HeavenStudio.Common
                 if (time > 1.0)
                 {
                     // goes "down"
-                    if (time <= Minigame.LateTime())
+                    if (time <= Minigame.JustLateTime())
                     {
                         type = Rating.OK;
-                        frac = (float)((time - Minigame.AceEndTime()) / (Minigame.LateTime() - Minigame.AceEndTime()));
+                        frac = (float)((time - Minigame.AceLateTime()) / (Minigame.JustLateTime() - Minigame.AceLateTime()));
                         y = ((barOKTransform.localScale.y - barJustTransform.localScale.y) * frac) + barJustTransform.localScale.y;
                     }
                     else
                     {
                         type = Rating.NG;
-                        frac = (float)((time - Minigame.LateTime()) / (Minigame.EndTime() - Minigame.LateTime()));
+                        frac = (float)((time - Minigame.JustLateTime()) / (Minigame.NgLateTime() - Minigame.JustLateTime()));
                         y = ((barNGTransform.localScale.y - barOKTransform.localScale.y) * frac) + barOKTransform.localScale.y;
                     }
                 }
                 else
                 {
                     // goes "up"
-                    if (time >= Minigame.PerfectTime())
+                    if (time >= Minigame.JustEarlyTime())
                     {
                         type = Rating.OK;
-                        frac = (float)((time - Minigame.PerfectTime()) / (Minigame.AceStartTime() - Minigame.PerfectTime()));
+                        frac = (float)((time - Minigame.JustEarlyTime()) / (Minigame.AceEarlyTime() - Minigame.JustEarlyTime()));
                         y = ((barOKTransform.localScale.y - barJustTransform.localScale.y) * -frac) - barJustTransform.localScale.y;
                     }
                     else
                     {
                         type = Rating.NG;
-                        frac = (float)((time - Minigame.EarlyTime()) / (Minigame.PerfectTime() - Minigame.EarlyTime()));
+                        frac = (float)((time - Minigame.NgEarlyTime()) / (Minigame.JustEarlyTime() - Minigame.NgEarlyTime()));
                         y = ((barNGTransform.localScale.y - barOKTransform.localScale.y) * -frac) - barOKTransform.localScale.y;
                     }
                 }

@@ -13,12 +13,12 @@ public class ScaleByVelocity : MonoBehaviour
 
 	private Vector2 startScale;
 
-	private void Start ()
+	private void Start()
 	{
 		startScale = transform.localScale;
 	}
 
-	private void Update ()
+	private void Update()
 	{
 		var velocity = rigidbody.velocity.magnitude;
 
@@ -28,15 +28,15 @@ public class ScaleByVelocity : MonoBehaviour
 		var amount = velocity * strength + bias;
 		var inverseAmount = 1.0f;
 		if (velocity > 0.4f)
-		inverseAmount = (1f / amount) * startScale.magnitude;
+			inverseAmount = (1f / amount) * startScale.magnitude;
 
 		switch (axis)
 		{
 			case Axis.X:
-				transform.localScale = new Vector3 (amount - 0.414214f, inverseAmount, 1f);
+				transform.localScale = new Vector3(amount - 0.414214f, inverseAmount, 1f);
 				return;
 			case Axis.Y:
-				transform.localScale = new Vector3 (Mathf.Clamp(inverseAmount, 0.6f, 1f), amount, 1f);
+				transform.localScale = new Vector3(Mathf.Clamp(inverseAmount, 0.6f, 1f), amount, 1f);
 				return;
 		}
 	}

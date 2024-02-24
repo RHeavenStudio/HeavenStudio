@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using UnityEngine.UIElements;
 
 namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class LongHair : MonoBehaviour
     {
-        public float createBeat;
+        public double createBeat;
         public GameObject hairSprite;
         public GameObject stubbleSprite;
         private RhythmTweezers game;
@@ -21,45 +22,38 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         private Sound pullSound;
 
-        PlayerActionEvent pluckEvent;
-        PlayerActionEvent endEvent;
-        InputType endInput;
+        private double inputBeat;
 
-        private void Awake()
+        PlayerActionEvent endEvent;
+
+        public void StartInput(double beat, double length, Tweezers tweezer)
         {
             game = RhythmTweezers.instance;
             anim = GetComponent<Animator>();
-            tweezers = game.Tweezers;
-        }
-
-        private void Start() {
-            game.ScheduleInput(createBeat, game.tweezerBeatOffset + game.beatInterval, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, StartJust, StartMiss, Out);
+            tweezers = tweezer;
+            inputBeat = beat + length;
+            game.ScheduleInput(beat, length, RhythmTweezers.InputAction_Press, StartJust, StartMiss, Out);
         }
 
         private void Update()
         {
             if (pluckState == 1)
             {
-                bool input = PlayerInput.PressedUp();
-                if (endInput == InputType.DIRECTION_UP) input = PlayerInput.GetAnyDirectionUp();
-                if (input && !game.IsExpectingInputNow(endInput))
-                {
-                    endEvent.isEligible = false;
-                    EndEarly();
-                    return;
-                }
-
                 Vector3 tst = tweezers.tweezerSpriteTrans.position;
                 var hairDirection = new Vector3(tst.x + 0.173f, tst.y) - holder.transform.position;
                 holder.transform.rotation = Quaternion.FromToRotation(Vector3.down, hairDirection);
 
-                float normalizedBeat = Conductor.instance.GetPositionFromBeat(createBeat + game.tweezerBeatOffset + game.beatInterval, 0.5f);
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(inputBeat, 0.5f);
                 anim.Play("LoopPull", 0, normalizedBeat);
                 tweezers.anim.Play("Tweezers_LongPluck", 0, normalizedBeat);
-
+                if (!game.IsExpectingInputNow(RhythmTweezers.InputAction_Release) && PlayerInput.GetIsAction(RhythmTweezers.InputAction_Release) && normalizedBeat < 1f)
+                {
+                    EndEarly();
+                    endEvent.Disable();
+                }
                 // Auto-release if holding at release time.
                 if (normalizedBeat >= 1f)
-                    endEvent.Hit(0f, 1f);
+                    endEvent.Hit(0, 1);
             }
 
             loop.transform.localScale = Vector2.one / holder.transform.localScale;
@@ -67,6 +61,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         public void EndAce()
         {
+            if (pluckState != 1) return;
             tweezers.LongPluck(true, this);
             tweezers.hitOnFrame++;
 
@@ -78,14 +73,15 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         public void EndEarly()
         {
-            var normalized = Conductor.instance.GetPositionFromBeat(createBeat + game.tweezerBeatOffset + game.beatInterval, 0.5f);
+            var normalized = Conductor.instance.GetPositionFromBeat(inputBeat, 0.5f);
             anim.Play("LoopPullReverse", 0, normalized);
-            tweezers.anim.Play("Idle", 0, 0);
+            tweezers.anim.Play("Tweezers_Idle", 0, 0);
 
             if (pullSound != null)
                 pullSound.Stop();
 
             pluckState = -1;
+            game.ScoreMiss();
         }
 
         private void StartJust(PlayerActionEvent caller, float state)
@@ -95,17 +91,9 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 pluckState = -1;
                 return; 
             }
-            if (PlayerInput.GetAnyDirectionDown())
-            {
-                endInput = InputType.DIRECTION_UP;
-            }
-            else
-            {
-                endInput = InputType.STANDARD_UP;
-            }
-            pullSound = Jukebox.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
+            pullSound = SoundByte.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
             pluckState = 1;
-            endEvent = game.ScheduleInput(createBeat, game.tweezerBeatOffset + game.beatInterval + 0.5f, endInput, EndJust, Out, Out);
+            endEvent = game.ScheduleInput(inputBeat, 0.5f, RhythmTweezers.InputAction_Release, EndJust, Out, Out);
         }
 
         private void StartMiss(PlayerActionEvent caller) 
@@ -122,14 +110,6 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 return; 
             }
             EndAce();
-        }
-
-        void OnDestroy()
-        {
-            if (pluckEvent != null)
-                pluckEvent.Disable();
-            if (endEvent != null)
-                endEvent.Disable();
         }
     }
 }

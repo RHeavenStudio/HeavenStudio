@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace HeavenStudio.Util
 {
@@ -6,18 +7,21 @@ namespace HeavenStudio.Util
     {
         public static bool IsAnimationNotPlaying(this Animator anim)
         {
-            float compare = anim.GetCurrentAnimatorStateInfo(0).speed;
-            return anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= compare && !anim.IsInTransition(0);
+            if (anim == null) return true;
+            var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+            return (stateInfo.normalizedTime >= stateInfo.speed || stateInfo.loop) && !anim.IsInTransition(0);
         }
         /// <summary>
         /// Returns true if animName is currently playing on animator
         /// </summary>
         /// <param name="anim">Animator to check</param>
-        /// <param name="animName">name of animation to look out for</param>
-        public static bool IsPlayingAnimationName(this Animator anim, string animName) 
+        /// <param name="animNames">name(s) of animation to look out for</param>
+        public static bool IsPlayingAnimationNames(this Animator anim, params string[] animNames)
         {
-            float compare = anim.GetCurrentAnimatorStateInfo(0).speed;
-            return anim.GetCurrentAnimatorStateInfo(0).IsName(animName) && anim.GetCurrentAnimatorStateInfo(0).normalizedTime < compare;
+            if (anim == null) return false;
+            var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+            var isPlaying = Array.Exists(animNames, animName => stateInfo.IsName(animName));
+            return (stateInfo.normalizedTime < stateInfo.speed || stateInfo.loop) && isPlaying;
         }
 
         /// <summary>
@@ -30,9 +34,11 @@ namespace HeavenStudio.Util
         /// <param name="length">duration of animation (progress 1.0)</param>
         /// <param name="timeScale">multiplier for animation progress (smaller values make animation slower)</param>
         /// <param name="animLayer">animator layer to play animation on</param>
-        public static void DoScaledAnimation(this Animator anim, string animName, float startTime, float length = 1f, float timeScale = 1f, int animLayer = -1)
+        public static void DoScaledAnimation(this Animator anim, string animName, double startTime, double length = 1, float timeScale = 1f, int animLayer = -1, bool clamp = false)
         {
+            if (anim == null) return;
             float pos = Conductor.instance.GetPositionFromBeat(startTime, length) * timeScale;
+            if (clamp) pos = Mathf.Clamp01(pos);
             anim.Play(animName, animLayer, pos);
             anim.speed = 1f; //not 0 so these can still play their script events
         }
@@ -46,13 +52,42 @@ namespace HeavenStudio.Util
         /// <param name="animLayer">animator layer to play animation on</param>
         public static void DoNormalizedAnimation(this Animator anim, string animName, float pos = 0f, int animLayer = -1)
         {
+            if (anim == null) return;
             anim.Play(animName, animLayer, pos);
             anim.speed = 1f;
         }
 
         /// <summary>
+        /// Plays animation on animator, scaling speed to song BPM 
+        /// call this function once, when playing an animation
+        /// </summary>
+        /// <param name="anim">Animator to play animation on</param>
+        /// <param name="animName">name of animation to play</param>
+        /// <param name="timeScale">multiplier for animation speed</param>
+        /// <param name="startBeat">beat that this animation would start on</param>
+        /// <param name="animLayer">animator layer to play animation on</param>
+        public static void DoScaledAnimationFromBeatAsync(this Animator anim, string animName, float timeScale = 1f, double startBeat = 0, int animLayer = -1)
+        {
+            if (anim == null) return;
+            float pos = 0;
+            if (!double.IsNaN(startBeat)) {
+                var cond = Conductor.instance;
+                var animClip = Array.Find(anim.runtimeAnimatorController.animationClips, x => x.name == animName);
+                if (animClip == null) {
+                    Debug.LogError("Animation clip " + animName + " not found!");
+                    return;
+                }
+                double animLength = cond.SecsToBeats(animClip.length, cond.GetBpmAtBeat(startBeat));
+                pos = cond.GetPositionFromBeat(startBeat, animLength) * timeScale;
+            } else {
+                Debug.LogWarning("DoScaledAnimationFromBeatAsync()'s startBeat was NaN; using DoScaledAnimationAsync() instead.");
+            }
+            anim.DoScaledAnimationAsync(animName, timeScale, pos, animLayer);
+        }
+
+        /// <summary>
         /// Plays animation on animator, scaling speed to song BPM
-        /// call this funtion once, when playing an animation
+        /// call this function once, when playing an animation
         /// </summary>
         /// <param name="anim">Animator to play animation on</param>
         /// <param name="animName">name of animation to play</param>
@@ -61,7 +96,14 @@ namespace HeavenStudio.Util
         /// <param name="animLayer">animator layer to play animation on</param>
         public static void DoScaledAnimationAsync(this Animator anim, string animName, float timeScale = 1f, float startPos = 0f, int animLayer = -1)
         {
+            if (anim == null) return;
             anim.Play(animName, animLayer, startPos);
+            anim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * timeScale;
+        }
+
+        public static void SetScaledAnimationSpeed(this Animator anim, float timeScale = 0.5f)
+        {
+            if (anim == null) return;
             anim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * timeScale;
         }
 
@@ -75,6 +117,7 @@ namespace HeavenStudio.Util
         /// <param name="animLayer">animator layer to play animation on</param>
         public static void DoUnscaledAnimation(this Animator anim, string animName, float startPos = 0f, int animLayer = -1)
         {
+            if (anim == null) return;
             anim.Play(animName, animLayer, startPos);
             anim.speed = 1f;
         }

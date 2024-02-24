@@ -9,6 +9,8 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Audio;
 
+using Jukebox;
+
 namespace HeavenStudio
 {
     public class GameInitializer : MonoBehaviour
@@ -34,9 +36,6 @@ namespace HeavenStudio
         public bool playOnStart = false;
         public bool fromCmd = false;
 
-        string json = "";
-        string ext = "";
-
         private void Start()
         {
             string input = "";
@@ -52,24 +51,24 @@ namespace HeavenStudio
                     }
                 }
             }
-            else if (OpeningManager.OnOpenFile is not null or "")
+            else if (GlobalGameManager.PlayOpenFile is not null or "")
             {
-                if (editorGO == null && OpeningManager.OnOpenFile.IndexOfAny(Path.GetInvalidPathChars()) == -1)
+                if (editorGO == null && GlobalGameManager.PlayOpenFile.IndexOfAny(Path.GetInvalidPathChars()) == -1)
                 {
-                    if (File.Exists(OpeningManager.OnOpenFile))
+                    if (File.Exists(GlobalGameManager.PlayOpenFile) && Path.GetExtension(GlobalGameManager.PlayOpenFile) == ".riq")
                     {
-                        input = OpeningManager.OnOpenFile;
+                        input = GlobalGameManager.PlayOpenFile;
                         fromCmd = true;
                         playOnStart = true;
                     }
                 }
-                OpeningManager.OnOpenFile = null;
+                GlobalGameManager.PlayOpenFile = null;
             }
 
             GameObject Games = new GameObject();
             Games.name = "Games";
 
-            gameManager.playOnStart = playOnStart;
+            gameManager.TogglePlayMode(playOnStart);
 
             gameManager.GamesHolder = Games;
             gameManager.CircleCursor = Cursor.transform.GetChild(0).GetComponent<CircleCursor>();
@@ -89,6 +88,7 @@ namespace HeavenStudio
             AudioSource source = Conductor.AddComponent<AudioSource>();
             Conductor.AddComponent<Conductor>();
             Conductor.GetComponent<Conductor>().musicSource = source;
+            source.priority = 255;
             source.outputAudioMixerGroup = Settings.GetMusicMixer();
             // Conductor.AddComponent<AudioDspTimeKeeper>();
 
@@ -98,11 +98,8 @@ namespace HeavenStudio
 
             if (editorGO == null)
             {
-                OpenCmdRemix(input);
-                Debug.Log(json);
-                gameManager.txt = json;
-                gameManager.ext = ext;
-                gameManager.Init();
+                bool success = OpenCmdRemix(input);
+                gameManager.Init(success);
             }
             else
             {
@@ -110,44 +107,18 @@ namespace HeavenStudio
             }
         }
 
-        public void OpenCmdRemix(string path)
+        public bool OpenCmdRemix(string path)
         {
-            if (path == string.Empty) return;
-            if (!File.Exists(path)) return;
-            byte[] MusicBytes;
-            bool loadedMusic = false;
-            string extension = path.GetExtension();
-
-            using var zipFile = File.Open(path, FileMode.Open);
-            using var archive = new ZipArchive(zipFile, ZipArchiveMode.Read);
-
-            foreach (var entry in archive.Entries)
-                switch (entry.Name)
-                {
-                    case "remix.json":
-                    {
-                        using var stream = entry.Open();
-                        using var reader = new StreamReader(stream);
-                        json = reader.ReadToEnd();
-                        ext = extension;
-                        break;
-                    }
-                    case "song.ogg":
-                    {
-                        using var stream = entry.Open();
-                        using var memoryStream = new MemoryStream();
-                        stream.CopyTo(memoryStream);
-                        MusicBytes = memoryStream.ToArray();
-                        Conductor.instance.musicSource.clip = OggVorbis.VorbisPlugin.ToAudioClip(MusicBytes, "music");
-                        loadedMusic = true;
-                        break;
-                    }
-                }
-
-            if (!loadedMusic)
+            try
             {
-                Conductor.instance.musicSource.clip = null;
-                MusicBytes = null;
+                string tmpDir = RiqFileHandler.ExtractRiq(path);
+                Debug.Log("Imported RIQ successfully!");
+                return true;
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log($"Error importing RIQ: {e.Message}");
+                return false;
             }
         }
     }

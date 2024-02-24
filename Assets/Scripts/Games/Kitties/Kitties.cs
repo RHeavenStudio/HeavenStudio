@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,10 +21,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", Kitties.SpawnType.Straight, "Spawn", "The way in which the kitties will spawn"),
-                        new Param("toggle", false, "Mice", "Replaces kitties as mice"),
-                        new Param("toggle1", false, "Invert Direction", "Inverts the direction they clap in"),
-                        new Param("toggle2", false, "Keep Cats Spawned", "Sets whether or not cats stay spawned after their cue"),
+                        new Param("type", Kitties.SpawnType.Straight, "Direction", "Choose the direction that the kitties will spawn in."),
+                        new Param("toggle", false, "Mice", "Toggle if the non-player kitties should be replaced with mice."),
+                        new Param("toggle1", false, "Invert Direction", "Toggle if the spawn direction should be inverted."),
+                        new Param("toggle2", false, "Keep Cats Spawned", "Toggle if the kitties should stay spawned after their cue. This is required for some other events."),
                     }
                 },
 
@@ -35,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
 
                         parameters = new List<Param>()
                         {
-                            new Param("toggle", false, "Keep Cats spawned", "Sets whether or not cats stay spawned after their cue"),
+                            new Param("toggle", false, "Keep Cats Spawned", "Toggle if the kitties should stay spawned after their cue. This is required for some other events."),
                         }
                     },
 
@@ -53,24 +54,34 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", Kitties.SpawnType.Straight, "Spawn", "The way in which the kitties will spawn"),
-                        new Param("toggle", false, "Mice", "Replaces kitties as mice"),
-                        new Param("toggle1", false, "Invert Direction", "Inverts the direction they clap in"),
-                        new Param("toggle2", false, "Keep Cats Spawned", "Sets whether or not cats stay spawned after their cue"),
+                        new Param("type", Kitties.SpawnType.Straight, "Direction", "Choose the direction that the kitties will spawn in."),
+                        new Param("toggle", false, "Mice", "Toggle if the non-player kitties should be replaced with mice."),
+                        new Param("toggle1", false, "Invert Direction", "Toggle if the spawn direction should be inverted."),
+                        new Param("toggle2", false, "Keep Cats Spawned", "Toggle if the kitties should stay spawned after their cue. This is required for some other events."),
                     }
                 },
 
-                new GameAction("bgcolor", "Background Color")
+                new GameAction("bgcolor", "Background Appearance")
                 {
-                    function = delegate {Kitties.instance.BackgroundColor(eventCaller.currentEntity["color"]); },
-                    defaultLength = .5f,
-
+                    function = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        Kitties.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["ease"]);
+                    },
+                    defaultLength = 4,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("color", Kitties.defaultBGColor, "Change BG Color", "Changes background color"),
+                        new Param("colorStart", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("colorEnd", Color.white, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 }
-            });
+            },
+            new List<string>() { "ctr", "normal" },
+            "ctrteppan", "en",
+            new List<string>() { }
+            );
         }
     }
 }
@@ -90,18 +101,6 @@ namespace HeavenStudio.Games
         public Vector3[] positions;
         public float[] rotationAngles;
 
-        private static Color _defaultBGColor;
-        public static Color defaultBGColor
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#FFFFFF", out _defaultBGColor);
-                return _defaultBGColor;
-            }
-        }
-
-        public Color currentBGColor;
-
         public enum SpawnType
         {
             Straight,
@@ -112,6 +111,42 @@ namespace HeavenStudio.Games
 
         public static Kitties instance;
 
+        const int IAAltDownCat = IAMAXCAT;
+        const int IAAltUpCat = IAMAXCAT + 1;
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_AltStart);
+        }
+
+        protected static bool IA_PadAltRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltRelease(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_AltStart =
+            new("CtrTeppanAltStart", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_AltFinish =
+            new("CtrTeppanAltFinish", new int[] { IAAltUpCat, IAFlickCat, IAAltUpCat },
+            IA_PadAltRelease, IA_TouchFlick, IA_BatonAltRelease);
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("CtrTeppanTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
+
         void Awake()
         {
             instance = this;
@@ -120,10 +155,10 @@ namespace HeavenStudio.Games
         // Update is called once per frame
         void Update()
         {
-
+            BackgroundColorUpdate();
         }
 
-        public void Clap(bool isMice, bool isInverse, bool keepSpawned, float beat, int type)
+        public void Clap(bool isMice, bool isInverse, bool keepSpawned, double beat, int type)
         {
             player.ScheduleClap(beat, type);
             MultiSound.Play(new MultiSound.Sound[] {
@@ -132,23 +167,23 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("kitties/nya3", beat + 1.5f)
             });
 
-            if(type == 3)
+            if (type == 3)
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse, true, false);}),
                     new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("FaceClap", 0, 0);}),
                     new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("FaceClap", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[1], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("FaceClap", 0, 0);}),
                 new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("FaceClap", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[2], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
@@ -157,21 +192,21 @@ namespace HeavenStudio.Games
 
             else if (!isMice)
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse, true, false);}),
                     new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("Clap1", 0, 0);}),
                     new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("Clap2", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[1], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("Clap1", 0, 0);}),
                 new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("Clap2", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[2], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
@@ -180,21 +215,21 @@ namespace HeavenStudio.Games
             }
             else
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse, true, false);}),
                     new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("MiceClap1", 0, 0);}),
                     new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("MiceClap2", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[1], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("MiceClap1", 0, 0);}),
                 new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("MiceClap2", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[2], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
@@ -204,14 +239,14 @@ namespace HeavenStudio.Games
 
             if (!keepSpawned)
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat + 3.5f, delegate { RemoveCats(false);})
                 });
             }
         }
 
-        public void Roll(bool keepSpawned, float beat)
+        public void Roll(bool keepSpawned, double beat)
         {
             if (!player.canClap)
                 return;
@@ -223,7 +258,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("kitties/roll4", beat + 1.5f)
 
             });
-            BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { kitties[0].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + .5f, delegate { kitties[0].Play("RollStart", 0, 0); }),
@@ -231,9 +266,9 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 1.5f, delegate { kitties[0].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + 2f, delegate { kitties[0].Play("Rolling", 0, 0); }),
                     new BeatAction.Action(beat + 2.75f, delegate { kitties[0].Play("RollEnd", 0, 0); })
-                    });
+                });
 
-            BeatAction.New(Cats[1], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { kitties[1].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + .5f, delegate { kitties[1].Play("RollStart", 0, 0); }),
@@ -243,29 +278,28 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 2.75f, delegate { kitties[1].Play("RollEnd", 0, 0); })
                     });
 
-            BeatAction.New(Cats[2], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { kitties[2].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + .5f, delegate { kitties[2].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + 1f, delegate { kitties[2].Play("RollStart", 0, 0); }),
-                    new BeatAction.Action(beat + 1.5f, delegate { kitties[2].Play("RollStart", 0, 0); }),
-                    new BeatAction.Action(beat + 2f, delegate { player.ScheduleRollFinish(beat); })
-                    });
+                    new BeatAction.Action(beat + 1.5f, delegate { kitties[2].Play("RollStart", 0, 0); })
+                });
 
             if (!keepSpawned)
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat + 3.5f, delegate { RemoveCats(false);})
                 });
             }
         }
 
-        public void CatchFish(float beat)
+        public void CatchFish(double beat)
         {
             //if (!player.canClap)
             //    return;
-            
+
             player.ScheduleFish(beat);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("kitties/fish1", beat + 2f),
@@ -274,20 +308,20 @@ namespace HeavenStudio.Games
 
             });
 
-            BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { if (isInverted)
                     Fish.transform.localScale = new Vector3(-1f, 1f, 1f);
                     else
                         Fish.transform.localScale = new Vector3(1f, 1f, 1f); }),
-                new BeatAction.Action(beat, delegate { Fish.SetActive(true); }),             
+                new BeatAction.Action(beat, delegate { Fish.SetActive(true); }),
                 new BeatAction.Action(beat, delegate { Fish.GetComponent<Animator>().DoScaledAnimationAsync("FishDangle", 0.5f); }),
                 new BeatAction.Action(beat + 2f, delegate { kitties[0].Play("FishNotice", 0, 0);  }),
                 new BeatAction.Action(beat + 2.25f, delegate { kitties[1].Play("FishNotice2", 0, 0);  }),
                 new BeatAction.Action(beat + 2.5f, delegate { kitties[2].Play("FishNotice3", 0, 0);  })
                 });
 
-                BeatAction.New(Fish, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat + 4f, delegate { Fish.SetActive(false);})
                 });
@@ -402,7 +436,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                if(pos == 3)
+                if (pos == 3)
                     kitties[catNum].Play("FaceIdle", 0, 0);
                 else if (!isMice)
                     kitties[catNum].Play("Idle", 0, 0);
@@ -431,12 +465,12 @@ namespace HeavenStudio.Games
             }
             else
                 Fish.SetActive(false);
-                player.canClap = false;
+            player.canClap = false;
         }
 
-        public void InstantSpawn(bool isMice, bool isInverse, float beat, int pos)
+        public void InstantSpawn(bool isMice, bool isInverse, double beat, int pos)
         {
-            BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat, delegate { Spawn(pos, 0, isMice, isInverse, true, true); }),
                 new BeatAction.Action(beat, delegate { Spawn(pos, 1, isMice, isInverse, true, true); }),
@@ -445,10 +479,55 @@ namespace HeavenStudio.Games
             player.canClap = true;
         }
 
-        public void BackgroundColor(Color color)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = Color.white; //obviously put to the default color of the game
+        private Color colorEnd = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            background.color = color;
-            currentBGColor = background.color;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
+
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
+
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            background.color = new Color(newR, newG, newB);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("kitties", new string[] { "bgcolor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorStart"], lastEvent["colorEnd"], lastEvent["ease"]);
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistColor(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColor(beat);
         }
     }
 }

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
-
-using DG.Tweening;
+using HeavenStudio.Games.Scripts_ForkLifter;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -16,86 +15,80 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("flick", "Flick Food")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.Flick(e.beat, e["type"]); }, 
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        ForkLifter.Flick(e.beat);
+                    },
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        ForkLifter.Flick(e.beat);
+                        ForkLifter.instance.FlickActive(e.beat, e["type"]);
+                    },
                     defaultLength = 3,
                     parameters = new List<Param>()
                     {
-                        new Param("type", ForkLifter.FlickType.Pea, "Object", "The object to be flicked")
-                    }
+                        new Param("type", ForkLifter.FlickType.Pea, "Object", "Choose the object to be flicked.")
+                    },
                 },
                 new GameAction("prepare", "Prepare Hand")
                 {
-                    function = delegate { ForkLifter.instance.ForkLifterHand.Prepare(); }, 
-                    defaultLength = 0.5f
+                    function = delegate { ForkLifter.instance.ForkLifterHand.Prepare(eventCaller.currentEntity["mute"]); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute", "Toggle if the prepare sound effect should play.")
+                    }
                 },
                 new GameAction("gulp", "Swallow")
                 {
-                    function = delegate { ForkLifter.playerInstance.Eat(); }
+                    function = delegate { ForkLifter.playerInstance.Eat(eventCaller.currentEntity["sfx"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("sfx", ForkLifterPlayer.EatType.Default, "SFX", "Choose the SFX to play.")
+                    }
                 },
                 new GameAction("sigh", "Sigh")
                 {
-
-                    function = delegate { Jukebox.PlayOneShot("games/forkLifter/sigh"); }
+                    function = delegate { SoundByte.PlayOneShot("games/forkLifter/sigh"); }
                 },
-                new GameAction("color", "Background Color")
+                new GameAction("color", "Background Appearance")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["instant"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("start", Color.white, "Start Color", "The color to start fading from."),
-                        new Param("end", Color.white, "End Color", "The color to end the fade."),
-                        new Param("instant", false, "Instant", "If checked, the background color will instantly change to the start color.")
+                        new Param("start", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("end", Color.white, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     },
-                    resizable = true
                 },
-                new GameAction("colorGrad", "Gradient Color")
+                new GameAction("colorGrad", "Gradient Appearance")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.FadeGradientColor(e["start"], e["end"], e.length, e["instant"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColorGrad(e.beat, e.length, e["start"], e["end"], e["ease"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("start", Color.white, "Start Color", "The color to start fading from."),
-                        new Param("end", Color.white, "End Color", "The color to end the fade."),
-                        new Param("instant", false, "Instant", "If checked, the gradient color will instantly change to the start color.")
+                        new Param("start", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("end", Color.white, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     },
-                    resizable = true
                 },
-                // These are still here for backwards-compatibility but are hidden in the editor
-                new GameAction("pea", "")
-                {
-                    function = delegate { ForkLifter.instance.Flick(eventCaller.currentEntity.beat, 0); }, 
-                    defaultLength = 3, 
-                    hidden = true
-                },
-                new GameAction("topbun", "")
-                {
-                    function = delegate { ForkLifter.instance.Flick(eventCaller.currentEntity.beat, 1); }, 
-                    defaultLength = 3, 
-                    hidden = true
-                },
-                new GameAction("burger", "")
-                {
-                    function = delegate { ForkLifter.instance.Flick(eventCaller.currentEntity.beat, 2); }, 
-                    defaultLength = 3, 
-                    hidden = true
-                },
-                new GameAction("bottombun", "")
-                {
-                    function = delegate { ForkLifter.instance.Flick(eventCaller.currentEntity.beat, 3); }, 
-                    defaultLength = 3, 
-                    hidden = true
-                },
-            });
+            },
+            new List<string>() {"rvl", "normal"},
+            "rvlfork", "en",
+            new List<string>() {}
+            );
         }
     }
 }
 
 namespace HeavenStudio.Games
 {
+    using Jukebox;
     using Scripts_ForkLifter;
 
     public class ForkLifter : Minigame
     {
-
         public enum FlickType
         {
             Pea,
@@ -119,11 +112,6 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer viewerCircle;
         [SerializeField] SpriteRenderer playerShadow;
         [SerializeField] SpriteRenderer handShadow;
-        Tween bgColorTween;
-        Tween bgGradientColorTween;
-        Tween viewerCircleColorTween;
-        Tween playerShadowColorTween;
-        Tween handShadowColorTween;
 
         public Sprite[] peaSprites;
         public Sprite[] peaHitSprites;
@@ -133,16 +121,54 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
-        public override void OnGameSwitch(float beat)
+        private void Update()
         {
-            base.OnGameSwitch(beat);
+            BackgroundColorUpdate();
+        }
+
+        public override void OnPlay(double beat)
+        {
+            OnGameSwitch(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            var actions = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] == "forkLifter");
+
+            var actionsBefore = actions.FindAll(e => e.beat < beat);
+
+            var lastColor = actionsBefore.FindLast(e => e.datamodel == "forkLifter/color");
+            if (lastColor != null) {
+                BackgroundColor(lastColor.beat, lastColor.length, lastColor["start"], lastColor["end"], lastColor["ease"]);
+            }
+
+            var lastColorGrad = actionsBefore.FindLast(e => e.datamodel == "forkLifter/colorGrad");
+            if (lastColorGrad != null) {
+                BackgroundColorGrad(lastColorGrad.beat, lastColorGrad.length, lastColorGrad["start"], lastColorGrad["end"], lastColorGrad["ease"]);
+            }
+
+            var tempFlicks = actions.FindAll(e => e.datamodel == "forkLifter/flick");
+
+            foreach (var e in tempFlicks.FindAll(e => e.beat < beat && e.beat + 2 > beat)) {
+                FlickActive(e.beat, e["type"]);
+            }
+
+            ForkLifterHand.allFlickEntities = tempFlicks.FindAll(e => e.beat >= beat);
             ForkLifterHand.CheckNextFlick();
         }
 
-        public void Flick(float beat, int type)
+        public static void Flick(double beat)
         {
-            Jukebox.PlayOneShotGame("forkLifter/flick");
-            handAnim.Play("Hand_Flick", 0, 0);
+            var offset = SoundByte.GetClipLengthGame("forkLifter/zoomFast") - 0.03;
+            SoundByte.PlayOneShotGame("forkLifter/zoomFast", beat + 2, offset: offset, forcePlay: true);
+
+            SoundByte.PlayOneShotGame("forkLifter/flick", forcePlay: true);
+        }
+
+        public void FlickActive(double beat, int type)
+        {
+
+            handAnim.DoScaledAnimationFromBeatAsync("Hand_Flick", 0.5f, beat);
             ForkLifterHand.currentFlickIndex++;
             GameObject fo = Instantiate(flickedObject);
             fo.transform.parent = flickedObject.transform.parent;
@@ -152,61 +178,61 @@ namespace HeavenStudio.Games
             fo.SetActive(true);
         }
 
-        public void ChangeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = Color.white; //obviously put to the default color of the game
+        private Color colorEnd = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        private double colorStartBeatGrad = -1;
+        private float colorLengthGrad = 0f;
+        private Color colorStartGrad = Color.white; //obviously put to the default color of the game
+        private Color colorEndGrad = Color.white;
+        private Util.EasingFunction.Ease colorEaseGrad; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
-            if (viewerCircleColorTween != null)
-                viewerCircleColorTween.Kill(true);
-            if (handShadowColorTween != null) handShadowColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
-            {
-                bg.color = color;
-                viewerCircle.color = color;
-                handShadow.color = color;
-            }
-            else
-            {
-                bgColorTween = bg.DOColor(color, seconds);
-                handShadowColorTween = handShadow.DOColor(color, seconds);
-                viewerCircleColorTween = viewerCircle.DOColor(color, seconds);
-            }
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+            viewerCircle.color = new Color(newR, newG, newB);
+            handShadow.color = new Color(newR, newG, newB);
+
+            float normalizedBeatGrad = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeatGrad, colorLengthGrad));
+
+            var funcGrad = Util.EasingFunction.GetEasingFunction(colorEaseGrad);
+
+            float newRGrad = funcGrad(colorStartGrad.r, colorEndGrad.r, normalizedBeatGrad);
+            float newGGrad = funcGrad(colorStartGrad.g, colorEndGrad.g, normalizedBeatGrad);
+            float newBGrad = funcGrad(colorStartGrad.b, colorEndGrad.b, normalizedBeatGrad);
+
+            bgGradient.color = new Color(newRGrad, newGGrad, newBGrad);
+            playerShadow.color = new Color(newRGrad, newGGrad, newBGrad);
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
         {
-            ChangeBackgroundColor(start, 0f);
-            if (!instant) ChangeBackgroundColor(end, beats);
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
         }
 
-        public void ChangeGradientColor(Color color, float beats)
+        public void BackgroundColorGrad(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
-
-            if (bgGradientColorTween != null)
-                bgGradientColorTween.Kill(true);
-            if (playerShadowColorTween != null) playerShadowColorTween.Kill(true);
-
-            if (seconds == 0)
-            {
-                bgGradient.color = color;
-                playerShadow.color = color;
-            }
-            else
-            {
-                bgGradientColorTween = bgGradient.DOColor(color, seconds);
-                playerShadowColorTween = playerShadow.DOColor(color, seconds);
-            }
-        }
-
-        public void FadeGradientColor(Color start, Color end, float beats, bool instant)
-        {
-            ChangeGradientColor(start, 0f);
-            if (!instant) ChangeGradientColor(end, beats);
+            colorStartBeatGrad = beat;
+            colorLengthGrad = length;
+            colorStartGrad = colorStartSet;
+            colorEndGrad = colorEndSet;
+            colorEaseGrad = (Util.EasingFunction.Ease)ease;
         }
     }
-
 }

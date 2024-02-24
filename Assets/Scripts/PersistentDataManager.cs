@@ -30,10 +30,10 @@ namespace HeavenStudio.Common
                 GlobalGameManager.DEFAULT_SCREEN_SIZES[1].height,
                 0.8f,
                 512,
-                44100,
+                48000,
                 true,
                 true,
-                PerfectChallengeType.On,
+                PerfectChallengeType.Off,
                 true,
                 false,
                 true,
@@ -48,7 +48,7 @@ namespace HeavenStudio.Common
             
             gameSettings.timingDisplayComponents = new List<OverlaysManager.TimingDisplayComponent>()
             {
-                OverlaysManager.TimingDisplayComponent.CreateDefaultDual()
+                OverlaysManager.TimingDisplayComponent.CreateDefaultSingle()
             };
             gameSettings.skillStarComponents = new List<OverlaysManager.SkillStarComponent>()
             {
@@ -67,7 +67,22 @@ namespace HeavenStudio.Common
             if (File.Exists(Application.persistentDataPath + "/settings.json"))
             {
                 string json = File.ReadAllText(Application.persistentDataPath + "/settings.json");
-                gameSettings = JsonUtility.FromJson<GameSettings>(json);
+                if (json == "")
+                {
+                    GlobalGameManager.IsFirstBoot = true;
+                    CreateDefaultSettings();
+                    return;
+                }
+                try
+                {
+                    gameSettings = JsonConvert.DeserializeObject<GameSettings>(json);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Error while loading settings, creating default settings;\n{e.Message}");
+                    GlobalGameManager.IsFirstBoot = true;
+                    CreateDefaultSettings();
+                }
             }
             else
             {
@@ -113,7 +128,9 @@ namespace HeavenStudio.Common
                 bool timingDisplayMinMode = false,
                 bool overlaysInEditor = true,
                 bool letterboxBgEnable = true,
-                bool letterboxFxEnable = true
+                bool letterboxFxEnable = true,
+                int editorScale = 0,
+                bool scaleWScreenSize = false
                 )
             {
                 this.showSplash = showSplash;
@@ -132,6 +149,8 @@ namespace HeavenStudio.Common
                     this.discordRPCEnable = false;
                 else
                     this.discordRPCEnable = true;
+                this.editorScale = editorScale;
+                this.scaleWScreenSize = scaleWScreenSize;
 
                 this.perfectChallengeType = perfectChallengeType;
                 this.isMedalOn = isMedalOn;
@@ -169,6 +188,8 @@ namespace HeavenStudio.Common
             // Editor Settings
             public bool editorCursorEnable;
             public bool discordRPCEnable;
+            public int editorScale;
+            public bool scaleWScreenSize;
 
             // Gameplay Settings
             public PerfectChallengeType perfectChallengeType;
@@ -180,6 +201,8 @@ namespace HeavenStudio.Common
             public List<OverlaysManager.TimingDisplayComponent> timingDisplayComponents;
             public List<OverlaysManager.SkillStarComponent> skillStarComponents;
             public List<OverlaysManager.SectionComponent> sectionComponents;
+            // public List<OverlaysManager.DurationComponent> durationComponents;
+            // public List<OverlaysManager.WordJudgementComponent> wordJudgementComponents;
         }
     }
 }

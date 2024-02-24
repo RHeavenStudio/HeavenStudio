@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
-using Starpelly;
+
 
 using HeavenStudio.Util;
 using HeavenStudio.Editor;
@@ -28,7 +28,7 @@ namespace HeavenStudio.Editor
             colorPreview.colorPicker.onColorChanged += _ =>
                 parameterManager.chart[propertyName] = colorPreview.colorPicker.color;
 
-            Color paramCol = parameterManager.chart[propertyName];
+            Color paramCol = (Color)parameterManager.chart[propertyName];
 
             ColorBTN.onClick.AddListener(
                 () =>

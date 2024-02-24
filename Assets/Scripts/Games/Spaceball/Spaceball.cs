@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -20,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2, 
                     parameters = new List<Param>()
                     {
-                        new Param("type", Spaceball.BallType.Baseball, "Type", "The type of ball/object to shoot") 
+                        new Param("type", Spaceball.BallType.Baseball, "Type", "Set the object to shoot.") 
                     } 
                 },
 				new GameAction("shootHigh", "Pitch High Ball")
@@ -31,37 +32,44 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3,
                     parameters = new List<Param>()
                     {
-                        new Param("type", Spaceball.BallType.Baseball, "Type", "The type of ball/object to shoot") 
+                        new Param("type", Spaceball.BallType.Baseball, "Type", "Set the object to shoot.") 
                     } 
                 },
-				new GameAction("costume", "Change Batter Costume")
+				new GameAction("costume", "Batter Costume")
                 {
                     function = delegate { Spaceball.instance.Costume(eventCaller.currentEntity["type"]); },
                     parameters = new List<Param>() 
                     {
-                        new Param("type", Spaceball.CostumeType.Standard, "Type", "The costume to change to") 
+                        new Param("type", Spaceball.CostumeType.Standard, "Type", "Set the costume for the batter to wear.") 
                     } 
                 },
-                new GameAction("alien", "Show Alien")
+                new GameAction("alien", "Space Umpire Animation")
                 {
-                    function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat); } 
+                    function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat, eventCaller.currentEntity["hide"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("hide", false, "Hide", "Toggle if Space Umpire should be hidden from the scene.")
+                    }
                 },
                 new GameAction("camera", "Zoom Camera")
                 {
-                    function = delegate { Spaceball.instance.OverrideCurrentZoom(); }, 
                     defaultLength = 4, 
                     resizable = true, 
                     parameters = new List<Param>() 
                     {
-                        new Param("valA", new EntityTypes.Integer(1, 320, 10), "Zoom", "The camera's zoom level (Lower value = Zoomed in)"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The easing function to use while zooming") 
+                        new Param("valA", new EntityTypes.Integer(1, 320, 10), "Zoom", "Set the level to zoom to."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.") 
                     } 
                 },
                 new GameAction("prepare dispenser", "Dispenser Prepare")
                 {
                     function = delegate { Spaceball.instance.PrepareDispenser(); }, 
                 },
-            });;
+            },
+            new List<string>() {"agb", "normal"},
+            "agbbatter", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -85,10 +93,10 @@ namespace HeavenStudio.Games
             SphereHead
         }
 
-        public GameObject Ball;
-        public GameObject BallsHolder;
+        [SerializeField] GameObject Ball;
+        [SerializeField] GameObject BallsHolder;
 
-        public GameObject Dispenser;
+        [SerializeField] GameObject Dispenser;
         public GameObject Dust;
 
         private float lastCamDistance;
@@ -98,25 +106,21 @@ namespace HeavenStudio.Games
 
         private int currentZoomIndex;
 
-        public Sprite[] BallSprites;
-        public Material[] CostumeColors;
+        [SerializeField] Sprite[] BallSprites;
+        [SerializeField] Material[] CostumeColors;
 
-        private List<DynamicBeatmap.DynamicEntity> _allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> _allCameraEvents = new List<RiqEntity>();
 
         public Alien alien;
 
-        private EasingFunction.Ease lastEase;
+        private Util.EasingFunction.Ease lastEase;
 
         public static Spaceball instance { get; set; }
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
             for (int i = 1; i < BallsHolder.transform.childCount; i++)
                 Destroy(BallsHolder.transform.GetChild(i).gameObject);
-            GameCamera.instance.camera.orthographic = false;
-
-            if (EligibleHits.Count > 0)
-                EligibleHits.RemoveRange(0, EligibleHits.Count);
         }
 
         public override void OnTimeChange()
@@ -128,10 +132,10 @@ namespace HeavenStudio.Games
         {
             instance = this;
             var camEvents = EventCaller.GetAllInGameManagerList("spaceball", new string[] { "camera" });
-            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
-                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(camEvents[i]);
                 }
@@ -139,7 +143,7 @@ namespace HeavenStudio.Games
 
             _allCameraEvents = tempEvents;
 
-            UpdateCameraZoom();
+            currentZoomCamDistance = -10;
         }
 
         private void Update()
@@ -148,7 +152,7 @@ namespace HeavenStudio.Games
             {
                 if (currentZoomIndex < _allCameraEvents.Count && currentZoomIndex >= 0)
                 {
-                    if (Conductor.instance.songPositionInBeats >= _allCameraEvents[currentZoomIndex].beat)
+                    if (Conductor.instance.songPositionInBeatsAsDouble >= _allCameraEvents[currentZoomIndex].beat)
                     {
                         UpdateCameraZoom();
                         currentZoomIndex++;
@@ -161,27 +165,27 @@ namespace HeavenStudio.Games
                 {
                     if (normalizedBeat > 1)
                     {
-                        GameCamera.additionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
+                        GameCamera.AdditionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
                     }
                     else
                     {
                         if (currentZoomCamLength < 0)
                         {
-                            GameCamera.additionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
 
                             float newPosZ = func(lastCamDistance + 10, currentZoomCamDistance + 10, normalizedBeat);
-                            GameCamera.additionalPosition = new Vector3(0, 0, newPosZ);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, newPosZ);
                         }
                     }
                 }
                 else
                 {
                     // ?
-                    GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                    GameCamera.AdditionalPosition = new Vector3(0, 0, 0);
                 }
             }
         }
@@ -203,7 +207,7 @@ namespace HeavenStudio.Games
                         lastCamDistance = _allCameraEvents[0]["valA"] * -1;
                 }
 
-                currentZoomCamBeat = _allCameraEvents[currentZoomIndex].beat;
+                currentZoomCamBeat = (float)_allCameraEvents[currentZoomIndex].beat;
                 currentZoomCamLength = _allCameraEvents[currentZoomIndex].length;
 
                 float dist = _allCameraEvents[currentZoomIndex]["valA"] * -1;
@@ -213,16 +217,11 @@ namespace HeavenStudio.Games
                 else
                     currentZoomCamDistance = dist;
 
-                lastEase = (EasingFunction.Ease) _allCameraEvents[currentZoomIndex]["ease"];
+                lastEase = (Util.EasingFunction.Ease) _allCameraEvents[currentZoomIndex]["ease"];
             }
         }
 
-        public void OverrideCurrentZoom()
-        {
-            // lastCamDistance = GameCamera.instance.camera.transform.localPosition.z;
-        }
-
-        public void Shoot(float beat, bool high, int type)
+        public void Shoot(double beat, bool high, int type)
         {
             GameObject ball = Instantiate(Ball);
             ball.transform.parent = Ball.transform.parent;
@@ -232,11 +231,11 @@ namespace HeavenStudio.Games
             if (high)
             {
                 ball.GetComponent<SpaceballBall>().high = true;
-                Jukebox.PlayOneShotGame("spaceball/longShoot");
+                SoundByte.PlayOneShotGame("spaceball/longShoot");
             }
             else
             {
-                Jukebox.PlayOneShotGame("spaceball/shoot");
+                SoundByte.PlayOneShotGame("spaceball/shoot");
             }
 
             ball.GetComponent<SpaceballBall>().Sprite.sprite = BallSprites[type];

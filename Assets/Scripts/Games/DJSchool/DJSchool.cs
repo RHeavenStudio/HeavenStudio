@@ -18,8 +18,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle2", true, "Bop", "Whether both will bop to the beat or not"),
-                        new Param("toggle", false, "Bop (Auto)", "Whether both will auto bop to the beat or not")
+                        new Param("toggle2", true, "Bop", "Toggle if the the DJs should bop for the duration of this event."),
+                        new Param("toggle", false, "Bop (Auto)", "Toggle if the DJs should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("and stop ooh", "And Stop!")
@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { var e = eventCaller.currentEntity; DJSchool.WarnAndStop(e.beat, e["toggle"]);  },
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Ooh", "Whether or not the \"ooh\" sound should be played")
+                        new Param("toggle", true, "Ooh", "Toggle if DJ Yellow should say \"Ooh!\"")
                     }
                 },
                 new GameAction("break c'mon ooh", "Break, C'mon!")
@@ -39,8 +39,8 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { var e = eventCaller.currentEntity; DJSchool.WarnBreakCmon(e.beat, e["type"], e["toggle"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
-                        new Param("toggle", true, "Ooh", "Whether or not the \"ooh\" sound should be played")
+                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "Choose the type of voice for DJ Yellow to use."),
+                        new Param("toggle", true, "Ooh", "Toggle if DJ Yellow should say \"Ooh!\"")
                     }
                 },
                 new GameAction("scratch-o hey", "Scratch-o")
@@ -49,9 +49,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
-                        new Param("toggle2", true, "Cheering", "Should cheering play when successfully hitting this cue?"),
-                        new Param("toggle", false, "Fast Hey", "Activate Remix 4 (DS) beat")
+                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "Choose the type of voice for DJ Yellow to use."),
+                        new Param("toggle2", true, "Cheering", "Toggle if cheering should play if you successfully hit this cue."),
+                        new Param("toggle", false, "Fast Hey", "Toggle if this cue should use the faster timing from Remix 4 (DS).")
                     }
                 },
                 new GameAction("dj voice lines", "DJ Yellow Banter")
@@ -61,16 +61,16 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { DJSchool.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  },
                     parameters = new List<Param>()
                     {
-                        new Param("type", DJSchool.DJVoiceLines.CheckItOut, "Voice Lines", "The voice line to play"),
+                        new Param("type", DJSchool.DJVoiceLines.CheckItOut, "Voice Line", "Choose what DJ Yellow should say."),
                     }
                 },
-                new GameAction("sound FX", "Scratchy Music")
+                new GameAction("sound FX", "Set Radio FX")
                 {
                     function = delegate { DJSchool.SoundFX(eventCaller.currentEntity["toggle"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Radio FX", "Toggle on and off for Radio Effects")
+                        new Param("toggle", true, "Radio FX", "Toggle if holding down the record will trigger scratchy radio effects like in the original game.")
                     }
                 },
                 new GameAction("forceHold", "Force Hold")
@@ -113,20 +113,22 @@ namespace HeavenStudio.Games
         [SerializeField] private Student student;
         [SerializeField] private GameObject djYellow;
         private Animator djYellowAnim;
-        private float lastReportedBeat = 0f;
         public DJYellow djYellowScript;
 
         [Header("Properties")]
         public GameEvent bop = new GameEvent();
         public bool djYellowHolding;
         public bool andStop;
-        public bool goBop;
-        public float beatOfInstance;
+        public double beatOfInstance;
         private bool djYellowBopLeft;
         public bool shouldBeHolding = false;
-        public float smileBeat = -10f;
+        public double smileBeat = double.MinValue;
 
         public static DJSchool instance { get; private set; }
+
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("NtrDjTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
 
         private void Awake()
         {
@@ -134,149 +136,102 @@ namespace HeavenStudio.Games
             djYellowAnim = djYellow.GetComponent<Animator>();
             djYellowScript = djYellow.GetComponent<DJYellow>();
             student.Init();
-            goBop = true;
+            SetupBopRegion("djSchool", "bop", "toggle");
         }
 
         //For inactive game purposes
-        static float wantBreak = Single.MinValue;
-        static float wantAndStop = Single.MinValue;
-        static float wantDJVoiceLines = Single.MinValue;
+        static double wantBreak = double.MinValue;
+        static double wantAndStop = double.MinValue;
+        static double wantDJVoiceLines = double.MinValue;
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
-            if (wantBreak != Single.MinValue)
+            if (wantBreak != double.MinValue)
             {
                 BreakCmon(wantBreak, 0, false, false);
-                wantBreak = Single.MinValue;
+                wantBreak = double.MinValue;
             }
-            else if(wantAndStop != Single.MinValue)
+            else if(wantAndStop != double.MinValue)
             {
                 AndStop(wantAndStop, false, false);
-                wantAndStop = Single.MinValue;
+                wantAndStop = double.MinValue;
             }
-            else if(wantDJVoiceLines != Single.MinValue)
+            else if(wantDJVoiceLines != double.MinValue)
             {
                 VoiceLines(wantDJVoiceLines, 0);
-                wantDJVoiceLines = Single.MinValue;
+                wantDJVoiceLines = double.MinValue;
+            }
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (!BeatIsInBopRegion(beat)) return;
+            if (student.isHolding && !student.swiping)
+            {
+                student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
+            }
+            else if (student.anim.IsAnimationNotPlaying() && !student.swiping)
+            {
+                student.anim.DoScaledAnimationAsync("IdleBop", 0.5f);
+            }
+
+            var yellowState = djYellowAnim.GetCurrentAnimatorStateInfo(0);
+            if (yellowState.IsName("Hey"))
+            {
+                //PostScratchoFace();
+            }
+            if (!andStop && !djYellowHolding)
+            {
+                float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
+                else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed)) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralLeft);
+                djYellowScript.Reverse(djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
+                if (djYellowBopLeft)
+                {
+                    djYellowAnim.DoScaledAnimationAsync("IdleBop2", 0.5f);
+                }
+                else
+                {
+                    djYellowAnim.DoScaledAnimationAsync("IdleBop", 0.5f);
+                }
+                djYellowBopLeft = !djYellowBopLeft;
+
+            }
+            else if (djYellowHolding)
+            {
+                djYellowAnim.DoScaledAnimationAsync("HoldBop", 0.5f);
             }
         }
 
         private void Update()
         {
-            #region old script
-            //var cond = Conductor.instance;
-
-            //if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            //{
-            //    if (cond.songPositionInBeats >= bop.startBeat && cond.songPositionInBeats < bop.startBeat + bop.length)
-            //    {
-            //        if (student.anim.IsAnimationNotPlaying())
-            //        {
-            //            if (student.isHolding)
-            //            {
-            //                student.anim.Play("HoldBop", 0, 0);
-            //            }
-            //            else
-            //            {
-            //                student.anim.Play("IdleBop", 0, 0);
-            //            }
-            //        }
-            //        if (djYellowAnim.IsAnimationNotPlaying())
-            //        {
-            //            var yellowState = djYellowAnim.GetCurrentAnimatorStateInfo(0);
-            //            if (yellowState.IsName("Hey"))
-            //            {
-            //                PostScratchoFace();
-            //            }
-
-            //            if (djYellowHolding)
-            //            {
-            //                djYellowAnim.Play("HoldBop", 0, 0);
-            //            }
-            //            else
-            //            {
-            //                // todo: split between left and right bop based on beat
-            //                djYellowAnim.Play("IdleBop", 0, 0);
-            //            }
-            //        }
-            //    }
-            //}
-            #endregion
-
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
-            {
-                if (goBop)
-                {
-                    if (student.isHolding)
-                    {
-                        student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
-                    }
-                    else if (!student.swiping && student.anim.IsAnimationNotPlaying())
-                    {
-                        student.anim.DoScaledAnimationAsync("IdleBop", 0.5f);
-                    }
-
-                    var yellowState = djYellowAnim.GetCurrentAnimatorStateInfo(0);
-                    if (yellowState.IsName("Hey"))
-                    {
-                        //PostScratchoFace();
-                    }
-                    if (!andStop && !djYellowHolding)
-                    {
-                        float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
-                        if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
-                        else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed)) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralLeft);
-                        djYellowScript.Reverse(djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
-                        if (djYellowBopLeft)
-                        {
-                            djYellowAnim.DoScaledAnimationAsync("IdleBop2", 0.5f);
-                        }
-                        else
-                        {
-                            djYellowAnim.DoScaledAnimationAsync("IdleBop", 0.5f);
-                        }
-                        djYellowBopLeft = !djYellowBopLeft;
-
-                    }
-                    else if (djYellowHolding)
-                    {
-                        djYellowAnim.DoScaledAnimationAsync("HoldBop", 0.5f);
-                    }
-                }
-                
-            }
-            else if (Conductor.instance.songPositionInBeats < lastReportedBeat)
-            {
-                lastReportedBeat = Mathf.Round(Conductor.instance.songPositionInBeats);
-            }
-
-            if(PlayerInput.Pressed() && !IsExpectingInputNow() && !student.isHolding) //Start hold miss
+            if(PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && !student.isHolding) //Start hold miss
             {
                 student.OnMissHoldForPlayerInput();
                 student.isHolding = true;
                 ScoreMiss();
             }
-            else if(PlayerInput.PressedUp() && !IsExpectingInputNow() && student.isHolding) //Let go during hold
+            else if(((PlayerInput.GetIsAction(InputAction_BasicRelease) && !IsExpectingInputNow(InputAction_FlickRelease))
+                || PlayerInput.GetIsAction(InputAction_TouchRelease))
+                && student.isHolding) //Let go during hold
             {
                 student.UnHold();
                 shouldBeHolding = false;
+                ScoreMiss();
             }
-            else if (!GameManager.instance.autoplay && shouldBeHolding && !PlayerInput.Pressing() && !IsExpectingInputNow(InputType.STANDARD_UP))
+            else if(PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease) && student.isHolding) //Flick during hold
+            {
+                student.OnFlickSwipe();
+                shouldBeHolding = false;
+                ScoreMiss();
+            }
+            else if (!GameManager.instance.autoplay && shouldBeHolding && !PlayerInput.GetIsAction(InputAction_BasicPressing) && !IsExpectingInputNow(InputAction_FlickRelease))
             {
                 student.UnHold();
                 shouldBeHolding = false;
+                ScoreMiss();
             }
-            //else if(PlayerInput.PressedUp() && !IsExpectingInputNow() && !student.isHolding)
-            //{
-            //    student.OnMissSwipeForPlayerInput();
-            //}
         }
-
-        //public void Bop(float beat, float length)
-        //{
-        //    bop.startBeat = beat;
-        //    bop.length = length;
-        //}
 
         public void ForceHold()
         {
@@ -287,22 +242,21 @@ namespace HeavenStudio.Games
             shouldBeHolding = true;
         }
 
-        public void Bop(float beat, float length, bool isBopping, bool autoBop)
+        public void Bop(double beat, float length, bool isBopping, bool autoBop)
         {
-            goBop = autoBop;
             if (isBopping)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
-                            if (student.isHolding)
+                            if (student.isHolding && !student.swiping)
                             {
                                 student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
                             }
-                            else if (!student.swiping && student.anim.IsAnimationNotPlaying())
+                            else if (student.anim.IsAnimationNotPlaying() && !student.swiping)
                             {
                                 student.anim.DoScaledAnimationAsync("IdleBop", 0.5f);
                             }
@@ -314,7 +268,7 @@ namespace HeavenStudio.Games
                             }
                             if (!andStop && !djYellowHolding)
                             {
-                                float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                                double normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
                                 if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
                                 else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed)) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralLeft);
                                 djYellowScript.Reverse((normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) || djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
@@ -339,7 +293,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void BreakCmon(float beat, int type, bool ooh, bool doSound = true)
+        public void BreakCmon(double beat, int type, bool ooh, bool doSound = true)
         {
             if (djYellowHolding) return;
 
@@ -363,7 +317,7 @@ namespace HeavenStudio.Games
             }
             
 
-            BeatAction.New(djYellow, new List<BeatAction.Action>()
+            BeatAction.New(djYellowScript, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate 
                 { 
@@ -401,10 +355,10 @@ namespace HeavenStudio.Games
                 }),
             });
             andStop = true;
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
-        public void AndStop(float beat, bool ooh, bool doSound = true)
+        public void AndStop(double beat, bool ooh, bool doSound = true)
         {
             if (djYellowHolding) return;
 
@@ -422,12 +376,12 @@ namespace HeavenStudio.Games
             }
             
 
-            BeatAction.New(djYellow, new List<BeatAction.Action>()
+            BeatAction.New(djYellowScript, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.5f, delegate 
                 {
                     djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f);
-                    float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                    double normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
                     if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f)
                     {
                         djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
@@ -447,24 +401,24 @@ namespace HeavenStudio.Games
             });
             andStop = true;
 
-            ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
+            ScheduleInput(beat, 1.5f, InputAction_BasicPress, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
-        public void ScratchoHey(float beat, int type, bool remix4, bool cheer)
+        public void ScratchoHey(double beat, int type, bool remix4, bool cheer)
         {
             string[] sounds = new string[] { };
 
-            if (type == 0)
+            switch (type)
             {
+                case 0:
                 sounds = new string[] { "djSchool/scratchoHey1", "djSchool/scratchoHey2", "djSchool/scratchoHey3", "djSchool/scratchoHey4", "djSchool/hey" };
-            }
-            else if (type == 1)
-            {
+                break;
+                case 1:
                 sounds = new string[] { "djSchool/scratchoHeyAlt1", "djSchool/scratchoHeyAlt2", "djSchool/scratchoHeyAlt3", "djSchool/scratchoHeyAlt4", "djSchool/heyAlt" };
-            }
-            else if (type == 2)
-            {
+                break;
+                default:
                 sounds = new string[] { "djSchool/scratchoHeyLoud1", "djSchool/scratchoHeyLoud2", "djSchool/scratchoHeyLoud3", "djSchool/scratchoHeyLoud4", "djSchool/heyLoud" };
+                break;
             }
 
             float timing = 0f;
@@ -494,7 +448,7 @@ namespace HeavenStudio.Games
             });
 
 
-            BeatAction.New(djYellow, new List<BeatAction.Action>()
+            BeatAction.New(djYellowScript, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Scratcho", 0.5f); }),
                 new BeatAction.Action(beat + .5f, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Scratcho2", 0.5f); }),
@@ -511,35 +465,21 @@ namespace HeavenStudio.Games
 
             if (cheer)
             {
-                ScheduleInput(beat, timing, InputType.STANDARD_UP, student.OnHitSwipeCheer, student.OnMissSwipe, student.OnEmpty);
+                ScheduleInput(beat, timing, InputAction_FlickRelease, student.OnHitSwipeCheer, student.OnMissSwipe, student.OnEmpty);
             }
             else
             {
-                ScheduleInput(beat, timing, InputType.STANDARD_UP, student.OnHitSwipe, student.OnMissSwipe, student.OnEmpty);
+                ScheduleInput(beat, timing, InputAction_FlickRelease, student.OnHitSwipe, student.OnMissSwipe, student.OnEmpty);
             }
             andStop = false;
-
-
-
-
         }
-
-        //void SetupCue(float beat, bool swipe)
-        //{
-        //    if (swipe)
-        //        student.swipeBeat = beat;
-        //    else
-        //        student.holdBeat = beat;
-            
-        //    student.eligible = true;
-        //    student.ResetState();
-        //}
 
         public static void SoundFX(bool toggle)
         {
             Student.soundFX = toggle;
         }
-        public static void VoiceLines(float beat, int type)
+
+        public static void VoiceLines(double beat, int type)
         {
             string[] sounds;
             var sound = new MultiSound.Sound[] { };
@@ -592,18 +532,19 @@ namespace HeavenStudio.Games
                     break;
 
                 case 4:
-                    Jukebox.PlayOneShotGame("djSchool/yay", forcePlay: true);
+                    SoundByte.PlayOneShotGame("djSchool/yay", forcePlay: true);
                     break;
             }
         }
 
         #region Inactive Game Commands
-        public static void WarnBreakCmon(float beat, int type, bool ooh)
+        public static void WarnBreakCmon(double beat, int type, bool ooh)
         {
             string[] sounds = type switch {
                 0 => new string[] { "djSchool/breakCmon1", "djSchool/breakCmon2", "djSchool/ooh" },
                 1 => new string[] { "djSchool/breakCmonAlt1", "djSchool/breakCmonAlt2", "djSchool/oohAlt" },
                 2 => new string[] { "djSchool/breakCmonLoud1", "djSchool/breakCmonLoud2", "djSchool/oohLoud" },
+                _ => new string[] { "djSchool/breakCmon1", "djSchool/breakCmon2", "djSchool/ooh" },
             };
 
             List<MultiSound.Sound> sound = new List<MultiSound.Sound>()
@@ -618,7 +559,7 @@ namespace HeavenStudio.Games
             wantBreak = beat;
         }
 
-        public static void WarnAndStop(float beat, bool ooh)
+        public static void WarnAndStop(double beat, bool ooh)
         {
             List<MultiSound.Sound> sound = new List<MultiSound.Sound>()
             {

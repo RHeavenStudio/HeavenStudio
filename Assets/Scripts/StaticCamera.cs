@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using HeavenStudio.Util;
 using HeavenStudio.Common;
 using HeavenStudio.Editor;
+using Jukebox;
+using Jukebox.Legacy;
+using System;
 
 namespace HeavenStudio
 {
@@ -17,6 +20,10 @@ namespace HeavenStudio
         [SerializeField] Image ambientBg;
         [SerializeField] GameObject ambientBgGO;
         [SerializeField] GameObject letterboxBgGO;
+
+        [SerializeField] RectTransform overlayCanvas;
+        [SerializeField] RectTransform letterboxMask;
+        [SerializeField] RectTransform parentView;
 
         public static StaticCamera instance { get; private set; }
         public new Camera camera;
@@ -31,9 +38,10 @@ namespace HeavenStudio
         const float AspectRatioWidth = 1;
         const float AspectRatioHeight = 1;
 
-        private List<DynamicBeatmap.DynamicEntity> panEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> scaleEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> rotationEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> panEvents = new();
+        private List<RiqEntity> scaleEvents = new();
+        private List<RiqEntity> rotationEvents = new();
+        private List<RiqEntity> fitScreenEvents = new();
 
         static Vector3 defaultPan = new Vector3(0, 0, 0);
         static Vector3 defaultScale = new Vector3(1, 1, 1);
@@ -68,13 +76,14 @@ namespace HeavenStudio
             ToggleLetterboxGlow(PersistentDataManager.gameSettings.letterboxFxEnable);
         }
 
-        public void OnBeatChanged(float beat)
+        public void OnBeatChanged(double beat)
         { 
             Reset();
 
             panEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "pan view" });
             scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale view" });
             rotationEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "rotate view" });
+            fitScreenEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "fitScreen" });
 
             panLast = defaultPan;
             scaleLast = defaultScale;
@@ -83,6 +92,11 @@ namespace HeavenStudio
             UpdatePan();
             UpdateRotation();
             UpdateScale();
+            UpdateGameScreenFit();
+
+            canvas.localPosition = pan;
+            canvas.eulerAngles = new Vector3(0, 0, rotation);
+            canvas.localScale = scale;
         }
 
         // Update is called once per frame
@@ -91,10 +105,32 @@ namespace HeavenStudio
             UpdatePan();
             UpdateRotation();
             UpdateScale();
+            UpdateGameScreenFit();
 
             canvas.localPosition = pan;
             canvas.eulerAngles = new Vector3(0, 0, rotation);
             canvas.localScale = scale;
+        }
+
+        private void UpdateGameScreenFit()
+        {
+            var curBeat = Conductor.instance.songPositionInBeatsAsDouble;
+            letterboxMask.localScale = new Vector3(1, 1, 1);
+            overlayCanvas.localScale = new Vector3(1, 1, 1);
+            foreach (var e in fitScreenEvents)
+            {
+                if (curBeat < e.beat) break;
+                if (e["enable"])
+                {
+                    letterboxMask.localScale = new Vector3(parentView.sizeDelta.x / 16, parentView.sizeDelta.y / 9, 1);
+                    overlayCanvas.localScale = new Vector3(parentView.sizeDelta.x / 16, parentView.sizeDelta.y / 9, 1);
+                }
+                else
+                {
+                    letterboxMask.localScale = new Vector3(1, 1, 1);
+                    overlayCanvas.localScale = new Vector3(1, 1, 1);
+                }
+            }
         }
 
         private void UpdatePan()
@@ -104,7 +140,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
@@ -145,7 +181,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     rotation = func(rotationLast, -e["valA"], Mathf.Min(prog, 1f));
                 }
                 if (prog > 1f)
@@ -162,7 +198,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
@@ -208,8 +244,11 @@ namespace HeavenStudio
             overlayView.SetActive(toggle);
         }
 
-        public void SetAmbientGlowColour(Color colour)
+        [NonSerialized] public bool usingMinigameAmbientColor;
+
+        public void SetAmbientGlowColour(Color colour, bool minigameColor, bool overrideMinigameColor = true)
         {
+            if (overrideMinigameColor) usingMinigameAmbientColor = minigameColor;
             ambientBg.color = colour;
             GameSettings.UpdatePreviewAmbient(colour);
         }

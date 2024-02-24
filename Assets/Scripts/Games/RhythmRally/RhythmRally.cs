@@ -2,16 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyBezierCurves;
-using DG.Tweening;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
+
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
     public static class NtrPingpongLoader
     {
-        public static Minigame AddGame(EventCaller eventCaller) {
+        public static Minigame AddGame(EventCaller eventCaller)
+        {
             return new Minigame("rhythmRally", "Rhythm Rally", "ffffff", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
@@ -20,8 +23,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Bop", "Will the paddlers bop?"),
-                        new Param("bopAuto", false, "Bop (Auto)", "Will the paddlers auto bop?")
+                        new Param("bop", true, "Bop", "Toggle if the paddlers should bop for the duration of this event."),
+                        new Param("bopAuto", false, "Bop (Auto)", "Toggle if the paddlers should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("whistle", "Whistle")
@@ -53,7 +56,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 6f,
                     parameters = new List<Param>()
                     {
-                        new Param("muteAudio", false, "Mute Cowbell", "Whether the cowbell sound should play or not.")
+                        new Param("muteAudio", false, "Mute Cowbell", "Toggle if the cowbell \"tonk-tink-tonk\" sound should be muted.")
                     }
                 },
                 new GameAction("superfast rally", "Superfast Rally")
@@ -62,7 +65,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 12f,
                     parameters = new List<Param>()
                     {
-                        new Param("muteAudio", false, "Mute Cowbell", "Whether the cowbell sound should play or not.")
+                        new Param("muteAudio", false, "Mute Cowbell", "Toggle if the cowbell \"tonk-tink-tonk\" sound should be muted.")
                     }
                 },
                 new GameAction("tonktinktonk", "Tonk-Tink-Tonk (Stretchable)")
@@ -86,19 +89,37 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        var rotation = new Vector3(0, e["valA"], 0);
-                        RhythmRally.instance.ChangeCameraAngle(rotation, e["valB"], e.length, (Ease)e["type"], (RotateMode)e["type2"]);
+                        // var rotation = new Vector3(0, e["valA"], 0);
+                        RhythmRally.instance.ChangeCameraAngle(e.beat, e["valA"], e["valB"], e.length, (Util.EasingFunction.Ease)e["type"], e["additive"]);
                     },
                     defaultLength = 4,
                     resizable = true,
                     parameters = new List<Param>() {
-                        new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Angle", "The rotation of the camera around the center of the table"),
-                        new Param("valB", new EntityTypes.Float(0.5f, 4f, 1), "Zoom", "The camera's level of zoom (Lower value = Zoomed in)"),
-                        new Param("type", Ease.Linear, "Ease", "The easing function to use"),
-                        new Param("type2", RotateMode.Fast, "Rotation Mode", "The rotation mode to use")
+                        new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Rotation", "Set the rotation of the camera around the center of the table."),
+                        new Param("valB", new EntityTypes.Float(0.5f, 4f, 1), "Zoom", "Set the camera's level of zoom."),
+                        new Param("type", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                        new Param("additive", true, "Additive Rotation", "Toggle if the above rotation should be added to the current angle instead of setting the target angle to travel to.")
                     }
                 },
-            });
+                // todo: background recolouring
+                // new GameAction("bg colour", "Background Colour")
+                // {
+                //     function = delegate {
+                //         var e = eventCaller.currentEntity;
+                //     },
+                //     defaultLength = 1,
+                //     resizable = true,
+                //     parameters = new List<Param>() {
+                //         new Param("bottomColour", new Color(0,0,0,0), "Bottom Colour", "The colour at the bottom of the skybox"),
+                //         new Param("topColour", new Color(1,1,1,1), "Top Colour", "The colour at the top of the skybox"),
+                //         new Param("type", Util.EasingFunction.Ease.Linear, "Ease", "The easing function to use"),
+                //     }
+                // },
+            },
+            new List<string>() { "ntr", "keep" },
+            "ntrpingpong", "en",
+            new List<string>() { }
+            );
         }
     }
 }
@@ -119,7 +140,7 @@ namespace HeavenStudio.Games
         [Header("Ball and curve info")]
         public GameObject ball;
         public GameObject ballShadow;
-        public TrailRenderer ballTrail;
+        public ParticleSystem ballTrail;
         public BezierCurve3D serveCurve;
         public BezierCurve3D returnCurve;
         public BezierCurve3D tossCurve;
@@ -137,36 +158,48 @@ namespace HeavenStudio.Games
         public bool missed;
         public bool served;
         public bool tossing;
-        public float serveBeat;
-        public float targetBeat;
-        public float tossBeat;
-        public float missBeat;
+        public double serveBeat;
+        public double targetBeat;
+        public double tossBeat;
+        public double missBeat;
         public float tossLength;
         private bool inPose;
 
         public Paddlers paddlers;
 
-        public GameEvent bop = new GameEvent();
-        private bool goBop = true;
-        
         public static RhythmRally instance;
 
         private void Awake()
         {
+            GameCamera.AdditionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
+            GameCamera.AdditionalFoV = cameraFOV;
             instance = this;
             paddlers.Init();
 
             playerAnim.Play("Idle", 0, 0);
             opponentAnim.Play("Idle", 0, 0);
+            SetupBopRegion("rhythmRally", "bop", "bopAuto");
+        }
+
+        private void Start()
+        {
+            EntityPreCheck(Conductor.instance.songPositionInBeatsAsDouble);
         }
 
         const float tableHitTime = 0.58f;
         bool opponentServing = false; // Opponent serving this frame?
+        double cameraRotateBeat = double.MaxValue;
+        double cameraRotateLength;
+        Util.EasingFunction.Ease cameraRotateEase;
+        float cameraRotateLast = 0, cameraScaleLast = 1;
+        float cameraRotateNext = 0, cameraScaleNext = 1;
+
         void Update()
         {
             var cond = Conductor.instance;
-            var currentBeat = cond.songPositionInBeats;
-            
+            var currentBeat = cond.songPositionInBeatsAsDouble;
+
             var hitBeat = serveBeat; // Beat when the last paddler hit the ball
             var beatDur1 = 1f; // From paddle to table
             var beatDur2 = 1f; // From table to other paddle
@@ -267,16 +300,14 @@ namespace HeavenStudio.Games
                     }
                 }
 
-                // TODO: Make conditional so ball shadow only appears when over table.
                 ballShadow.transform.position = new Vector3(ball.transform.position.x, -0.399f, ball.transform.position.z);
-
 
                 var timeBeforeNextHit = hitBeat + beatDur1 + beatDur2 - currentBeat;
 
                 // Check if the opponent should swing.
                 if (!served && timeBeforeNextHit <= 0f)
                 {
-                    var rallies = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "rhythmRally/rally" || c.datamodel == "rhythmRally/slow rally");
+                    var rallies = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel == "rhythmRally/rally" || c.datamodel == "rhythmRally/slow rally");
                     for (int i = 0; i < rallies.Count; i++)
                     {
                         var rally = rallies[i];
@@ -310,8 +341,11 @@ namespace HeavenStudio.Games
                 {
                     if (served)
                     {
-                        if ((playerState.IsName("Swing") && playerAnim.IsAnimationNotPlaying()) || (!playerState.IsName("Swing") && !playerState.IsName("Ready1")))
-                            playerAnim.Play("Ready1");
+                        if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch || GameManager.instance.autoplay)
+                        {
+                            if ((playerState.IsName("Swing") && playerAnim.IsAnimationNotPlaying()) || (!playerState.IsName("Swing") && !playerState.IsName("Ready1")))
+                                playerAnim.Play("Ready1");
+                        }
                     }
                     else if (!opponentServing)
                     {
@@ -330,9 +364,10 @@ namespace HeavenStudio.Games
                                 Toss(hitBeat + beatDur1, beatDur2, tossHeight);
                             }
                         }
-                        
+
                         // If player never swung and is still in ready state, snap them out of it.
-                        if (missed && playerState.IsName("Ready1"))
+                        // only if they're not manually preparing via touch controls
+                        if (missed && playerState.IsName("Ready1") && (!paddlers.PlayerDown))
                             playerAnim.Play("Beat");
                     }
                 }
@@ -345,32 +380,71 @@ namespace HeavenStudio.Games
                 }
             }
 
-
-            // Paddler bop animation.
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (goBop && !inPose)
-                {
-                    BopSingle();
-                }
-            }
-
             opponentServing = false;
 
             //update camera
-            GameCamera.additionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
-            GameCamera.additionalRotEluer = cameraPos.rotation.eulerAngles;
-            GameCamera.additionalFoV = cameraFOV;
+            UpdateCamera(currentBeat);
         }
 
-        public void Bop(float beat, float length, bool bop, bool bopAuto)
+        public override void OnPlay(double beat)
         {
-            goBop = bopAuto;
+            EntityPreCheck(beat);
+        }
+
+        void EntityPreCheck(double beat)
+        {
+            cameraRotateBeat = double.MaxValue;
+            cameraRotateLength = 0;
+            cameraRotateEase = Util.EasingFunction.Ease.Linear;
+            cameraRotateLast = 0; cameraScaleLast = 1;
+            cameraRotateNext = 0; cameraScaleNext = 1;
+
+            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat < beat && c.datamodel.Split(0) == "rhythmRally");
+            RiqEntity lastGameSwitch = GameManager.instance.Beatmap.Entities.FindLast(c => c.beat <= beat && c.datamodel == "gameManager/switchGame/rhythmRally");
+
+            if (lastGameSwitch == null) return;
+            List<RiqEntity> cameraEntities = prevEntities.FindAll(c => c.beat >= lastGameSwitch.beat && c.datamodel == "rhythmRally/camera");
+
+            foreach (var entity in cameraEntities)
+            {
+                ChangeCameraAngle(entity.beat, entity["valA"], entity["valB"], entity.length, (Util.EasingFunction.Ease)entity["type"], entity["additive"]);
+            }
+
+            UpdateCamera(beat);
+        }
+
+        void UpdateCamera(double beat)
+        {
+            if (beat >= cameraRotateBeat)
+            {
+                Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(cameraRotateEase);
+                float rotProg = Conductor.instance.GetPositionFromBeat(cameraRotateBeat, cameraRotateLength, true);
+                rotProg = Mathf.Clamp01(rotProg);
+                float rot = func(cameraRotateLast, cameraRotateNext, rotProg);
+                cameraPivot.rotation = Quaternion.Euler(0, rot, 0);
+                cameraPivot.localScale = Vector3.one * func(cameraScaleLast, cameraScaleNext, rotProg);
+            }
+
+            GameCamera.AdditionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
+            GameCamera.AdditionalFoV = cameraFOV;
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat) && !inPose)
+            {
+                BopSingle();
+            }
+        }
+
+        public void Bop(double beat, float length, bool bop, bool bopAuto)
+        {
             if (bop)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -388,14 +462,14 @@ namespace HeavenStudio.Games
 
             bool playerPrepping = false; // Player using prep animation?
             bool opponentPrepping = false; // Opponent using prep animation?
-            if (!playerPrepping && (playerAnim.IsAnimationNotPlaying() || playerState.IsName("Idle") || playerState.IsName("Beat")))
+            if ((!playerPrepping) && (!paddlers.PlayerDown) && (playerAnim.IsAnimationNotPlaying() || playerState.IsName("Idle") || playerState.IsName("Beat")))
                 playerAnim.DoScaledAnimationAsync("Beat", 0.5f);
 
-            if (!opponentPrepping && !opponentServing && !tossing && (opponentAnim.IsAnimationNotPlaying() || opponentState.IsName("Idle") || opponentState.IsName("Beat")))
+            if ((!opponentPrepping) && (!opponentServing) && (!tossing) && (opponentAnim.IsAnimationNotPlaying() || opponentState.IsName("Idle") || opponentState.IsName("Beat")))
                 opponentAnim.DoScaledAnimationAsync("Beat", 0.5f);
         }
 
-        public void Serve(float beat, RallySpeed speed)
+        public void Serve(double beat, RallySpeed speed)
         {
             if (!ball.activeSelf)
                 ball.SetActive(true);
@@ -408,11 +482,11 @@ namespace HeavenStudio.Games
             started = true;
             opponentServing = true;
             tossing = false;
-            
+
             serveBeat = beat;
             rallySpeed = speed;
 
-            var bounceBeat = 0f;
+            double bounceBeat = 0f;
 
             switch (rallySpeed)
             {
@@ -435,16 +509,16 @@ namespace HeavenStudio.Games
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Serve", serveBeat), new MultiSound.Sound("rhythmRally/ServeBounce", bounceBeat) });
             paddlers.BounceFX(bounceBeat);
 
-            ScheduleInput(serveBeat, targetBeat, InputType.STANDARD_DOWN, paddlers.Just, paddlers.Miss, paddlers.Out);
+            ScheduleInput(serveBeat, targetBeat, InputAction_FlickPress, paddlers.Just, paddlers.Miss, paddlers.Out);
         }
 
-        public void Toss(float beat, float length, float height, bool firstToss = false)
+        public void Toss(double beat, float length, float height, bool firstToss = false)
         {
             // Hide trail while tossing to prevent weirdness while teleporting ball.
             ballTrail.gameObject.SetActive(false);
 
             if (firstToss)
-                height *= length/2f;
+                height *= length / 2f;
 
             tossCurve.transform.localScale = new Vector3(1f, height, 1f);
             tossBeat = beat;
@@ -460,7 +534,7 @@ namespace HeavenStudio.Games
                 ball.SetActive(true);
         }
 
-        private void TossUpdate(float beat, float duration)
+        private void TossUpdate(double beat, float duration)
         {
             var tossPosition = Conductor.instance.GetPositionFromBeat(beat, duration);
             ball.transform.position = tossCurve.GetPoint(Mathf.Clamp(tossPosition, 0, 1));
@@ -469,7 +543,7 @@ namespace HeavenStudio.Games
                 ball.SetActive(false);
         }
 
-        public static void PlayWhistle(float beat)
+        public static void PlayWhistle(double beat)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -485,18 +559,29 @@ namespace HeavenStudio.Games
             inPose = true;
         }
 
-        public void ChangeCameraAngle(Vector3 rotation, float camZoom, float length, Ease ease, RotateMode rotateMode)
+        public void ChangeCameraAngle(double beat, float rotation, float camZoom, double length, Util.EasingFunction.Ease ease, bool additive = true)
         {
-            var len = length * Conductor.instance.secPerBeat;
-            cameraPivot.DORotate(rotation, len, rotateMode).SetEase(ease);
-            cameraPivot.DOScale(camZoom, len).SetEase(ease);
+            cameraRotateBeat = beat;
+            cameraRotateLength = length;
+            cameraRotateEase = ease;
+            cameraRotateLast = cameraRotateNext % 360f;
+            cameraScaleLast = cameraScaleNext;
+            cameraScaleNext = camZoom;
+            if (additive)
+            {
+                cameraRotateNext = cameraRotateLast + rotation;
+            }
+            else
+            {
+                cameraRotateNext = rotation;
+            }
         }
 
-        public void PrepareFastRally(float beat, RallySpeed speedChange, bool muteAudio = false)
+        public void PrepareFastRally(double beat, RallySpeed speedChange, bool muteAudio = false)
         {
             if (speedChange == RallySpeed.Fast)
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 2f, delegate { Serve(beat + 2f, RallySpeed.Fast); })
                 });
@@ -513,11 +598,11 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void TonkTinkTonkStretchable(float beat, float length)
+        public static void TonkTinkTonkStretchable(double beat, float length)
         {
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>();
             bool tink = false;
-            for (float i = 0; i < length; i += 0.5f) 
+            for (float i = 0; i < length; i += 0.5f)
             {
                 soundsToPlay.Add(new MultiSound.Sound(tink ? "rhythmRally/Tink" : "rhythmRally/Tonk", beat + i));
                 tink = !tink;
@@ -525,16 +610,16 @@ namespace HeavenStudio.Games
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
         }
 
-        public void SuperFastRallyStretchable(float beat, float length)
+        public void SuperFastRallyStretchable(double beat, float length)
         {
             List<BeatAction.Action> servesToPerform = new List<BeatAction.Action>();
 
             for (int i = 0; i < length; i += 2)
             {
-                float beatToSpawn = beat + i;
-                servesToPerform.Add( new BeatAction.Action(beatToSpawn, delegate { Serve(beatToSpawn, RallySpeed.SuperFast); }) );
+                double beatToSpawn = beat + i;
+                servesToPerform.Add(new BeatAction.Action(beatToSpawn, delegate { Serve(beatToSpawn, RallySpeed.SuperFast); }));
             }
-            BeatAction.New(gameObject, servesToPerform);
+            BeatAction.New(this, servesToPerform);
         }
     }
 }

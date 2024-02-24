@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -13,6 +14,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("tapTroupe", "Tap Troupe", "999999", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Toggle if the tall tappers should bop for the duration of this event."),
+                        new Param("bopAuto", false, "Bop (Auto)", "Toggle if the tall tappers should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("stepping", "Stepping")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreStepping(e.beat, e.length, e["startTap"]); },
@@ -20,66 +31,67 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("startTap", false, "Start Tap Voice Line", "Whether or not it should say -Tap!- on the first step.")
+                        new Param("startTap", false, "Tap Voice Line", "Toggle if the \"Tap!\" voice line should be played on the first tap.")
                     }
                 },
                 new GameAction("tapping", "Tapping")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"], e["animType"], e["popperBeats"], e["randomVoiceLine"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"], e["animType"], e["popperBeats"], e["randomVoiceLine"], e["noReady"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("okay", true, "Okay Voice Line", "Whether or not the tappers should say -Okay!- after successfully tapping."),
-                        new Param("okayType", TapTroupe.OkayType.OkayA, "Okay Type", "Which version of the okay voice line should the tappers say?"),
-                        new Param("animType", TapTroupe.OkayAnimType.Normal, "Okay Animation", "Which animations should be played when the tapper say OK?"),
-                        new Param("popperBeats", new EntityTypes.Float(0f, 80f, 2f), "Popper Beats", "How many beats until the popper will pop?"),
-                        new Param("randomVoiceLine", true, "Extra Random Voice Line", "Whether there should be randomly said woos or laughs after the tappers say OK!")
+                        new Param("okay", true, "OK", "Toggle if the tall tappers should say \"OK!\" after successfully tapping.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "okayType" })
+                        }),
+                        new Param("okayType", TapTroupe.OkayType.OkayA, "Type", "Set the version of the voice line the tall tappers should say."),
+                        new Param("animType", TapTroupe.OkayAnimType.Normal, "Animation", "Set the animation that should be played when the tall tappers say \"OK!\"", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (int)x == (int)TapTroupe.OkayAnimType.Popper, new string[]{ "popperBeats"})
+                        }),
+                        new Param("popperBeats", new EntityTypes.Float(0f, 80f, 2f), "Popper Beats", "Set how many beats it should take for the party popper to pop."),
+                        new Param("randomVoiceLine", true, "Extra Random Voice Line", "Whether there should be randomly said woos or laughs after the tappers say OK!"),
+                        new Param("noReady", false, "Mute Ready", "Toggle if the \"Rea-dy!\" cue should be muted.")
                     }
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Bop", "Should the tappers bop?"),
-                        new Param("bopAuto", false, "Bop (Auto)", "Should the tappers auto bop?")
-                    }
-                },
-                new GameAction("spotlights", "Toggle Spotlights")
+                new GameAction("spotlights", "Spotlights")
                 {
                     function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Spotlights(e["toggle"], e["player"], e["middleLeft"], e["middleRight"], e["leftMost"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Darkness On", "Whether or not it should be dark."),
-                        new Param("player", true, "Player Spotlight", "Whether or not the player spotlight should be turned on or off."),
-                        new Param("middleRight", false, "Middleright Tapper Spotlight", "Whether or not the middleright tapper spotlight should be turned on or off."),
-                        new Param("middleLeft", false, "Middleleft Tapper Spotlight", "Whether or not the middleleft tapper spotlight should be turned on or off."),
-                        new Param("leftMost", false, "Leftmost Tapper Spotlight", "Whether or not the leftmost tapper spotlight should be turned on or off."),
+                        new Param("toggle", true, "Darkness", "Toggle if the scene should be dark and the spotlights should appear."),
+                        new Param("leftMost", false, "Leftmost Spotlight", "Toggle if the leftmost spotlight should be turned on or off."),
+                        new Param("middleLeft", false, "Middle-Left Spotlight", "Toggle if the middle-left spotlight should be turned on or off."),
+                        new Param("middleRight", false, "Middle-Light Spotlight", "Toggle if the middle-right spotlight should be turned on or off."),
+                        new Param("player", true, "Player Spotlight", "Toggle if the player's spotlight should be turned on or off."),
                     }
                 },
-                new GameAction("zoomOut", "Special Zoom Out")
+                new GameAction("zoomOut", "Zoom Out")
                 {
                     function = delegate { TapTroupe.instance.ToggleZoomOut(); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Camera Ease", "What ease should the camera use?"),
+                        new Param("ease", Util.EasingFunction.Ease.EaseOutQuad, "Ease", "Set the easing of the action."),
                     },
                 },
-                new GameAction("tutorialMissFace", "Toggle Tutorial Miss Face")
+                new GameAction("tutorialMissFace", "Tutorial Miss Face")
                 {
                     function = delegate { var e = eventCaller.currentEntity;  TapTroupe.instance.ToggleMissFace(e["toggle"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Use it?", "Use the faces they do when you miss in the tutorial of Tap Troupe?")
+                        new Param("toggle", true, "Tutorial Miss Face", "Toggle if the NPC tappers should use the miss face as seen in the original tutorial.")
                     }
                 }
-            });
+            },
+            new List<string>() {"rvl", "keep"},
+            "rvllegs", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }
@@ -101,13 +113,13 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject darkness;
         private Animator zoomOutAnim;
         [Header("Properties")]
-        private float currentZoomCamBeat;
+        private double currentZoomCamBeat;
         private float currentZoomCamLength;
-        private EasingFunction.Ease lastEase;
+        private Util.EasingFunction.Ease lastEase;
 
         private int currentZoomIndex;
 
-        private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allCameraEvents = new List<RiqEntity>();
         private bool keepZoomOut;
         private static List<QueuedSteps> queuedSteps = new List<QueuedSteps>();
         private static List<QueuedTaps> queuedTaps = new List<QueuedTaps>();
@@ -124,13 +136,13 @@ namespace HeavenStudio.Games
         public GameEvent bop = new GameEvent();
         public struct QueuedSteps
         {
-            public float beat;
+            public double beat;
             public float length;
             public bool startTap;
         }
         public struct QueuedTaps
         {
-            public float beat;
+            public double beat;
             public float length;
             public bool okay;
             public int okayType;
@@ -161,6 +173,10 @@ namespace HeavenStudio.Games
             if (queuedSteps.Count > 0) queuedSteps.Clear();
             if (queuedTaps.Count > 0) queuedTaps.Clear();
             prepareTap = false;
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public override void OnTimeChange()
@@ -173,10 +189,10 @@ namespace HeavenStudio.Games
             instance = this;
             zoomOutAnim = GetComponent<Animator>();
             var camEvents = EventCaller.GetAllInGameManagerList("tapTroupe", new string[] { "zoomOut" });
-            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
-                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(camEvents[i]);
                 }
@@ -209,7 +225,7 @@ namespace HeavenStudio.Games
                     foreach (var tap in queuedTaps)
                     {
                         Tapping(tap.beat, tap.length, tap.okay, tap.okayType, tap.animType, tap.popperBeats, tap.randomVoiceLine);
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(tap.beat - 1.1f, delegate { prepareTap = true; }),
                             new BeatAction.Action(tap.beat, delegate { prepareTap = false; })
@@ -217,10 +233,10 @@ namespace HeavenStudio.Games
                     }
                     queuedTaps.Clear();
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
-                    if (canSpit && !useTutorialMissFace) Jukebox.PlayOneShotGame("tapTroupe/spit", -1, 1, 0.5f);
-                    Jukebox.PlayOneShotGame("tapTroupe/miss");
+                    if (canSpit && !useTutorialMissFace) SoundByte.PlayOneShotGame("tapTroupe/spit", -1, 1, 0.5f);
+                    SoundByte.PlayOneShotGame("tapTroupe/miss");
                     TapTroupe.instance.ScoreMiss(0.5f);
                     foreach (var corner in npcCorners)
                     {
@@ -251,7 +267,7 @@ namespace HeavenStudio.Games
             {
                 if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
                 {
-                    if (Conductor.instance.songPositionInBeats >= allCameraEvents[currentZoomIndex].beat)
+                    if (Conductor.instance.songPositionInBeatsAsDouble >= allCameraEvents[currentZoomIndex].beat)
                     {
                         UpdateCameraZoom();
                         currentZoomIndex++;
@@ -265,19 +281,19 @@ namespace HeavenStudio.Games
                 {
                     if (!keepZoomOut)
                     {
-                        GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                        GameCamera.AdditionalPosition = new Vector3(0, 0, 0);
                         zoomOutAnim.Play("NoZoomOut", 0, 0);
                     }
                     else 
                     {
-                        EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                        Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
                         if (normalizedBeat > 1)
-                            GameCamera.additionalPosition = new Vector3(0, 30, -100);
+                            GameCamera.AdditionalPosition = new Vector3(0, 30, -100);
                         else
                         {
                             float newPosY = func(0, 30, normalizedBeat);
                             float newPosZ = func(0, -100, normalizedBeat);
-                            GameCamera.additionalPosition = new Vector3(0, newPosY, newPosZ);
+                            GameCamera.AdditionalPosition = new Vector3(0, newPosY, newPosZ);
                         }
                         if (normalizedAnimBeat > 1)
                         {
@@ -309,7 +325,7 @@ namespace HeavenStudio.Games
             {
                 currentZoomCamLength = allCameraEvents[currentZoomIndex].length;
                 currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
-                lastEase = (EasingFunction.Ease)allCameraEvents[currentZoomIndex]["ease"];
+                lastEase = (Util.EasingFunction.Ease)allCameraEvents[currentZoomIndex]["ease"];
             }
         }
 
@@ -318,7 +334,7 @@ namespace HeavenStudio.Games
             keepZoomOut = true;
         }
 
-        public static void PreStepping(float beat, float length, bool startTap)
+        public static void PreStepping(double beat, float length, bool startTap)
         {
             if (GameManager.instance.currentGame == "tapTroupe")
             {
@@ -331,21 +347,21 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Stepping(float beat, float length, bool startTap)
+        public void Stepping(double beat, float length, bool startTap)
         {
             for (int i = 0; i < length; i++)
             {
-                TapTroupe.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, TapTroupe.instance.JustStep, TapTroupe.instance.MissStep, TapTroupe.instance.Nothing);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                TapTroupe.instance.ScheduleInput(beat - 1, 1 + i, InputAction_BasicPress, TapTroupe.instance.JustStep, TapTroupe.instance.MissStep, TapTroupe.instance.Nothing);
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
                     {
                         TapTroupe.instance.NPCStep();
-                        Jukebox.PlayOneShotGame("tapTroupe/other1", -1, 1, 0.75f);
+                        SoundByte.PlayOneShotGame("tapTroupe/other1", -1, 1, 0.75f);
                     })
                 });
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1, delegate
                 {
@@ -354,22 +370,25 @@ namespace HeavenStudio.Games
                     TapTroupe.instance.playerTapper.Step(false, false);
                     TapTroupe.instance.playerCorner.Bop();
                 }),
-                new BeatAction.Action(beat, delegate { if (startTap) Jukebox.PlayOneShotGame("tapTroupe/startTap"); stepping = true; }),
+                new BeatAction.Action(beat, delegate { if (startTap) SoundByte.PlayOneShotGame("tapTroupe/startTap"); stepping = true; }),
                 new BeatAction.Action(beat + length + 1, delegate { stepping = false; }),
             });
         }
 
-        public static void PreTapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
+        public static void PreTapping(double beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine, bool noReady)
         {
-            MultiSound.Play(new MultiSound.Sound[]
+            if (!noReady)
             {
-                new MultiSound.Sound("tapTroupe/tapReady1", beat - 2f),
-                new MultiSound.Sound("tapTroupe/tapReady2", beat - 1f),
-            }, forcePlay: true);
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("tapTroupe/tapReady1", beat - 2f),
+                    new MultiSound.Sound("tapTroupe/tapReady2", beat - 1f),
+                }, forcePlay: true);
+            }
             if (GameManager.instance.currentGame == "tapTroupe")
             {
                 TapTroupe.instance.Tapping(beat, length, okay, okayType, animType, popperBeats, randomVoiceLine);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - 1.1f, delegate { prepareTap = true; }),
                     new BeatAction.Action(beat, delegate { prepareTap = false; })
@@ -381,12 +400,12 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Tapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
+        public void Tapping(double beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
         {
             float actualLength = length - 0.5f;
             actualLength -= actualLength % 0.75f;
             bool secondBam = false;
-            float finalBeatToSpawn = 0f;
+            double finalBeatToSpawn = 0f;
             if (actualLength < 2.25f) actualLength = 2.25f;
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>
             {
@@ -396,14 +415,14 @@ namespace HeavenStudio.Games
             {
                 string soundToPlay = "bamvoice1";
                 string otherSoundToPlay = "other3";
-                float beatToSpawn = beat + i + 0.5f;
+                double beatToSpawn = beat + i + 0.5f;
                 if (i + 0.75f >= actualLength)
                 {
                     soundToPlay = "startTap";
                     otherSoundToPlay = "other2";
-                    beatToSpawn = Mathf.Ceil(beat + i);
+                    beatToSpawn = Math.Ceiling(beat + i);
                     finalBeatToSpawn = beatToSpawn;
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.LastTap; shouldSwitchStep = false; }),
                         new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.LastTap, true, false);}),
@@ -413,7 +432,7 @@ namespace HeavenStudio.Games
                 else if (i + 1.5f >= actualLength)
                 {
                     soundToPlay = "tapvoice2";
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = false; }),
                         new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap, true, false); })
@@ -424,7 +443,7 @@ namespace HeavenStudio.Games
                     soundToPlay = "tapvoice1";
                     if (actualLength == 2.25f)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = true; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap); })
@@ -432,7 +451,7 @@ namespace HeavenStudio.Games
                     }
                     else
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = false; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap, true, false); })
@@ -446,7 +465,7 @@ namespace HeavenStudio.Games
                     {
                         if (actualLength == 3f)
                         {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(instance, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = true; }),
                                 new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap); })
@@ -454,7 +473,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(instance, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.BamTapReady; shouldSwitchStep = true; }),
                                 new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.BamTapReady); })
@@ -463,7 +482,7 @@ namespace HeavenStudio.Games
                     }
                     else if (i == 0)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.BamReady; shouldSwitchStep = false; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.BamReady, true, false); })
@@ -472,7 +491,7 @@ namespace HeavenStudio.Games
                     else
                     {
                         
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Bam; shouldSwitchStep = true; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Bam); }),
@@ -484,7 +503,7 @@ namespace HeavenStudio.Games
                 soundsToPlay.Add(new MultiSound.Sound($"tapTroupe/{otherSoundToPlay}", beatToSpawn));
                 shouldDoSecondBam = secondBam;
                 secondBam = !secondBam;
-                ScheduleInput(beatToSpawn - 1, 1f, InputType.STANDARD_DOWN, JustTap, MissTap, Nothing);
+                ScheduleInput(beatToSpawn - 1, 1f, InputAction_BasicPress, JustTap, MissTap, Nothing);
             }
             int actualOkayType = okayType;
             if (actualOkayType == (int)OkayType.Random) actualOkayType = UnityEngine.Random.Range(0, 3);
@@ -521,7 +540,7 @@ namespace HeavenStudio.Games
                     okayOneVoiceLine = "A";
                     break;
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1f, delegate 
                 { 
@@ -556,11 +575,11 @@ namespace HeavenStudio.Games
                 {
                     if (!missedTaps && okay && randomVoiceLine && UnityEngine.Random.Range(1, 50) == 1)
                     {
-                        Jukebox.PlayOneShotGame("tapTroupe/woo");
+                        SoundByte.PlayOneShotGame("tapTroupe/woo");
                     }
                     else if (!missedTaps && okay && randomVoiceLine && UnityEngine.Random.Range(1, 50) == 1)
                     {
-                        Jukebox.PlayOneShotGame("tapTroupe/laughter", -1, 1, 0.4f);
+                        SoundByte.PlayOneShotGame("tapTroupe/laughter", -1, 1, 0.4f);
                     }
                     if (missedTaps || animType != (int)OkayAnimType.OkSign) return;
                     playerCorner.OkaySign();
@@ -573,14 +592,14 @@ namespace HeavenStudio.Games
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
         }
 
-        public void Bop(float beat, float length, bool shouldBop, bool autoBop)
+        public void Bop(double beat, float length, bool shouldBop, bool autoBop)
         {
             goBop = autoBop;
             if (shouldBop)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -661,7 +680,7 @@ namespace HeavenStudio.Games
                 canSpit = true;
                 playerTapper.Step(false);
                 playerCorner.Bop();
-                Jukebox.PlayOneShotGame("tapTroupe/tink");
+                SoundByte.PlayOneShotGame("tapTroupe/tink");
                 if (stepSound == 1)
                 {
                     stepSound = 2;
@@ -692,7 +711,7 @@ namespace HeavenStudio.Games
             playerTapper.Step();
             
             playerCorner.Bop();
-            Jukebox.PlayOneShotGame($"tapTroupe/step{stepSound}");
+            SoundByte.PlayOneShotGame($"tapTroupe/step{stepSound}");
             if (stepSound == 1)
             {
                 stepSound = 2;
@@ -705,7 +724,7 @@ namespace HeavenStudio.Games
             {
                 corner.ResetFace();
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 0.1f, delegate { if (playerTapper.transform.localScale.x != npcTappers[0].transform.localScale.x) playerTapper.dontSwitchNextStep = true; })
             });
@@ -713,7 +732,7 @@ namespace HeavenStudio.Games
 
         void MissStep(PlayerActionEvent caller)
         {
-            if (canSpit && !useTutorialMissFace) Jukebox.PlayOneShotGame("tapTroupe/spit", -1, 1, 0.5f);
+            if (canSpit && !useTutorialMissFace) SoundByte.PlayOneShotGame("tapTroupe/spit", -1, 1, 0.5f);
             foreach (var corner in npcCorners)
             {
                 if (useTutorialMissFace)
@@ -739,10 +758,10 @@ namespace HeavenStudio.Games
                 switch (currentTapAnim)
                 {
                     case TapTroupeTapper.TapAnim.LastTap:
-                        Jukebox.PlayOneShotGame("tapTroupe/tap3");
+                        SoundByte.PlayOneShotGame("tapTroupe/tap3");
                         break;
                     default:
-                        Jukebox.PlayOneShotGame("tapTroupe/tink");
+                        SoundByte.PlayOneShotGame("tapTroupe/tink");
                         break;
                 }
                 foreach (var corner in npcCorners)
@@ -769,10 +788,10 @@ namespace HeavenStudio.Games
             switch (currentTapAnim)
             {
                 case TapTroupeTapper.TapAnim.LastTap:
-                    Jukebox.PlayOneShotGame("tapTroupe/tap3");
+                    SoundByte.PlayOneShotGame("tapTroupe/tap3");
                     break;
                 default:
-                    Jukebox.PlayOneShotGame("tapTroupe/player3");
+                    SoundByte.PlayOneShotGame("tapTroupe/player3");
                     break;
             }
             foreach (var corner in npcCorners)
@@ -784,7 +803,7 @@ namespace HeavenStudio.Games
         void MissTap(PlayerActionEvent caller)
         {
             missedTaps = true;
-            if (canSpit && !useTutorialMissFace) Jukebox.PlayOneShotGame("tapTroupe/spit", -1, 1, 0.5f);
+            if (canSpit && !useTutorialMissFace) SoundByte.PlayOneShotGame("tapTroupe/spit", -1, 1, 0.5f);
             foreach (var corner in npcCorners)
             {
                 if (useTutorialMissFace)

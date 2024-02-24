@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Starpelly;
+
 
 using HeavenStudio.Util;
 
@@ -20,8 +20,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Bop", "Should the drummers bop?"),
-                        new Param("autoBop", true, "Bop (Auto)", "Should the drummers auto bop?")
+                        new Param("bop", true, "Bop", "Toggle if the drummers should bop for the duration of this event."),
+                        new Param("autoBop", false, "Bop (Auto)", "Toggle if the drummers should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("drum", "Hit Drum")
@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f, 
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Applause", "Whether or not an applause should be played on a successful hit")
+                        new Param("toggle", true, "Applause", "Toggle if applause should be played on a successful hit.")
                     }
                 },
                 new GameAction("set mii", "Set Miis")
@@ -39,35 +39,47 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f, 
                     parameters = new List<Param>()
                     {
-                        new Param("type", DrummingPractice.MiiType.Random, "Player Mii", "The Mii that the player will control"),
-                        new Param("type2", DrummingPractice.MiiType.Random, "Left Mii", "The Mii on the left"),
-                        new Param("type3", DrummingPractice.MiiType.Random, "Right Mii", "The Mii on the right"),
-                        new Param("toggle", false, "Set All to Player", "Sets all Miis to the Player's Mii")
+                        new Param("toggle", false, "Set All To Player", "Toggle if all Miis should be set to the player's (middle) Mii.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => !(bool)x, new string[] { "type", "type2", "type3" })
+                        }),
+                        new Param("type", DrummingPractice.MiiType.Random, "Player Mii", "Set the Mii that the player will control."),
+                        new Param("type2", DrummingPractice.MiiType.Random, "Left Mii", "Set the Mii on the left."),
+                        new Param("type3", DrummingPractice.MiiType.Random, "Right Mii", "Set the Mii on the right."),
                     }
                 },
-                new GameAction("move npc drummers", "NPC Drummers Enter or Exit")
+                new GameAction("move npc drummers", "NPC Drummers")
                 {
                     function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.NPCDrummersEnterOrExit(e.beat, e.length, e["exit"], e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("exit", false, "Exit?", "Should the NPC drummers exit or enter?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
+                        new Param("exit", false, "Exit", "Toggle if the NPC drummers should enter or exit the scene."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
-                new GameAction("set background color", "Set Background Color")
+                new GameAction("set background color", "Background Appearance")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.SetBackgroundColor(e["colorA"], e["colorB"], e["colorC"]); }, 
-                    defaultLength = 0.5f,
+                    function = delegate {var e = eventCaller.currentEntity;
+                    DrummingPractice.instance.BackgroundColor(e.beat, e.length, e["colorAStart"], e["colorA"], e["colorBStart"], e["colorB"], e["colorC"], e["ease"]); }, 
+                    defaultLength = 4f,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Color A", "The top-most color of the background gradient"),
-                        new Param("colorB", new Color(1, 1, 1), "Color B", "The bottom-most color of the background gradient"),
-                        new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "The color of streaks that appear on a successful hit")
+                        new Param("colorAStart", new Color(43/255f, 207/255f, 51/255f), "Color A Start", "Set the top-most color of the background gradient at the start of the event."),
+                        new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Color A End", "Set the top-most color of the background gradient at the end of the event."),
+                        new Param("colorBStart", new Color(1, 1, 1), "Color B Start", "Set the bottom-most color of the background gradient at the start of the event."),
+                        new Param("colorB", new Color(1, 1, 1), "Color B End", "Set the bottom-most color of the background gradient at the end of the event."),
+                        new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "Set the color of the streaks that appear upon a successful hit."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 }
-            });
+            },
+            new List<string>() {"ctr", "normal"},
+            "ctrintro", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -105,13 +117,10 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         float movingLength;
-        float movingStartBeat;
+        double movingStartBeat;
         bool isMoving;
         string moveAnim;
         EasingFunction.Ease lastEase;
-        bool goBop = true;
-
-        public GameEvent bop = new GameEvent();
         public int count = 0;
 
         public static DrummingPractice instance;
@@ -120,27 +129,30 @@ namespace HeavenStudio.Games
         {
             instance = this;
             SetMiis();
+            SetupBopRegion("drummingPractice", "bop", "autoBop");
         }
         
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
-            var changeMii = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
+            var changeMii = GameManager.instance.Beatmap.Entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
             if(changeMii != null)
             {
                 EventCaller.instance.CallEvent(changeMii, true);
+            }
+            PersistColor(beat);
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat))
+            {
+                Bop();
             }
         }
 
         private void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (goBop)
-                {
-                    Bop();
-                }
-            }
 
             if (isMoving && cond.isPlaying && !cond.isPaused) 
             {
@@ -158,29 +170,30 @@ namespace HeavenStudio.Games
                 Color col = streak.color;
                 streak.color = new Color(col.r, col.g, col.b, Mathf.Lerp(col.a, 0, 3.5f * Time.deltaTime));
             }
+
+            BackgroundColorUpdate();
         }
 
-        public void NPCDrummersEnterOrExit(float beat, float length, bool exit, int ease)
+        public void NPCDrummersEnterOrExit(double beat, float length, bool exit, int ease)
         {
             movingStartBeat = beat;
             movingLength = length;
             moveAnim = exit ? "NPCDrummersExit" : "NPCDrummersEnter";
             isMoving = true;
             lastEase = (EasingFunction.Ease)ease;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.01f, delegate { isMoving = false; })
             });
         }
 
-        public void SetBop(float beat, float length, bool shouldBop, bool autoBop)
+        public void SetBop(double beat, float length, bool shouldBop, bool autoBop)
         {
-            goBop = autoBop;
             if (shouldBop)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate { Bop(); })
                     });
@@ -195,7 +208,7 @@ namespace HeavenStudio.Games
             rightDrummer.Bop();
         }
 
-        public void Prepare(float beat, bool applause)
+        public void Prepare(double beat, bool applause)
         {
             int type = count % 2;
             player.Prepare(beat, type);
@@ -204,7 +217,7 @@ namespace HeavenStudio.Games
             count++;
 
             SetFaces(0);
-            Jukebox.PlayOneShotGame("drummingPractice/prepare");
+            SoundByte.PlayOneShotGame("drummingPractice/prepare");
 
             GameObject hit = Instantiate(hitPrefab);
             hit.transform.parent = hitPrefab.transform.parent;
@@ -267,14 +280,65 @@ namespace HeavenStudio.Games
             SetFaces(0);
         }
 
-        public void SetBackgroundColor(Color col1, Color col2, Color col3)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = new Color(43 / 255f, 207 / 255f, 51 / 255f); //obviously put to the default color of the game
+        private Color colorEnd = new Color(43 / 255f, 207 / 255f, 51 / 255f);
+        private Color colorStartB = Color.white; //obviously put to the default color of the game
+        private Color colorEndB = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            backgroundGradient.color = col1;
-            background.color = col2;
-            foreach(SpriteRenderer streak in streaks)
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
+
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
+
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            backgroundGradient.color = new Color(newR, newG, newB);
+
+            float newRB = func(colorStartB.r, colorEndB.r, normalizedBeat);
+            float newGB = func(colorStartB.g, colorEndB.g, normalizedBeat);
+            float newBB = func(colorStartB.b, colorEndB.b, normalizedBeat);
+
+            background.color = new Color(newRB, newGB, newBB);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color colorStartSetB, Color colorEndSetB, Color setStreak, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorStartB = colorStartSetB;
+            colorEndB = colorEndSetB;
+            colorEase = (Util.EasingFunction.Ease)ease;
+
+            foreach (SpriteRenderer streak in streaks)
             {
-                streak.color = new Color(col3.r, col3.g, col3.b, streak.color.a);
+                streak.color = new Color(setStreak.r, setStreak.g, setStreak.b, streak.color.a);
             }
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("drummingPractice", new string[] { "set background color" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorAStart"], lastEvent["colorA"], lastEvent["colorBStart"], lastEvent["colorB"], lastEvent["colorC"], lastEvent["ease"]);
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistColor(beat);
         }
 
         public void Streak()

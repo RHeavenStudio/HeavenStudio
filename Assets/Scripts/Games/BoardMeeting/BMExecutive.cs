@@ -22,6 +22,14 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
             game = BoardMeeting.instance;
         }
 
+        private void OnDestroy()
+        {
+            if (rollLoop != null)
+            {
+                rollLoop.Stop();
+            }
+        }
+
         public void Prepare()
         {
             if (spinning) return;
@@ -39,7 +47,7 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
             if (this == game.firstSpinner) anim.DoUnscaledAnimation("Spin", 0);
             else anim.DoUnscaledAnimation(forceStart ? "Spin" : animToPlay, forceStart ? 0 : game.firstSpinner.anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
             canBop = false;
-            Jukebox.PlayOneShotGame("boardMeeting/rollPrepare" + soundToPlay);
+            SoundByte.PlayOneShotGame("boardMeeting/rollPrepare" + soundToPlay);
             float offset = 0;
             switch (soundToPlay)
             {
@@ -55,7 +63,7 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
                     offset = 0;
                     break;
             }
-            rollLoop = Jukebox.PlayOneShotGame("boardMeeting/roll" + soundToPlay, Conductor.instance.songPositionInBeats + 0.5f - Conductor.instance.GetRestFromRealTime(offset), 1, 1, true);
+            rollLoop = SoundByte.PlayOneShotGame("boardMeeting/roll" + soundToPlay, Conductor.instance.songPositionInBeatsAsDouble + 0.5f - Conductor.instance.GetRestFromRealTime(offset), 1, 1, true);
         }
 
         public void Stop(bool hit = true)
@@ -68,16 +76,17 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
                 rollLoop.KillLoop(0);
                 rollLoop = null;
             }
+            game.StopChairLoopSoundIfLastToStop();
 
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.5f, delegate { canBop = true; })
+                new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1.5f, delegate { canBop = true; })
             });
         }
 
         public void Bop()
         {
-            if (!canBop || spinning || !anim.IsAnimationNotPlaying() || preparing) return;
+            if (!canBop || spinning || preparing) return;
             if (smileCounter > 0)
             {
                 anim.DoScaledAnimationAsync("SmileBop", 0.5f);

@@ -8,7 +8,7 @@ namespace HeavenStudio.Games.Scripts_SneakySpirits
     public class SneakySpiritsGhostDeath : MonoBehaviour
     {
         public string animToPlay;
-        public float startBeat;
+        public double startBeat;
         public float length;
         [SerializeField] Animator anim;
 

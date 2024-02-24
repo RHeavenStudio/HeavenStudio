@@ -17,37 +17,30 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             UpSecond = 6,
         }
         [SerializeField] List<Sprite> djYellowHeadSprites = new List<Sprite>();
-        [SerializeField] SpriteRenderer djYellowHeadSrpite;
+        [SerializeField] SpriteRenderer djYellowHeadSprite;
         float normalXScale;
         float negativeXScale;
 
         void Awake()
         {
-            normalXScale = djYellowHeadSrpite.transform.localScale.x;
+            normalXScale = djYellowHeadSprite.transform.localScale.x;
             negativeXScale = -normalXScale;
         }
 
         public void ChangeHeadSprite(DJExpression expression)
         {
             if (expression == DJExpression.UpFirst && HeadSpriteCheck(DJExpression.UpSecond)) return;
-            djYellowHeadSrpite.sprite = djYellowHeadSprites[(int)expression];
+            djYellowHeadSprite.sprite = djYellowHeadSprites[(int)expression];
         }
 
         public bool HeadSpriteCheck(DJExpression expression)
         {
-            return djYellowHeadSrpite.sprite == djYellowHeadSprites[(int)expression];
+            return djYellowHeadSprite.sprite == djYellowHeadSprites[(int)expression];
         }
 
         public void Reverse(bool should = false)
         {
-            if (should)
-            {
-                djYellowHeadSrpite.transform.localScale = new Vector3(negativeXScale, normalXScale, normalXScale);
-            }
-            else
-            {
-                djYellowHeadSrpite.transform.localScale = new Vector3(normalXScale, normalXScale, normalXScale);
-            }
+            djYellowHeadSprite.transform.localScale = new Vector3(should ? negativeXScale : normalXScale, normalXScale, normalXScale);
         }
     }
 }

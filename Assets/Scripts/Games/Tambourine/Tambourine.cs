@@ -1,8 +1,9 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -13,42 +14,43 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("tambourine", "Tambourine", "388cd0", false, false, new List<GameAction>()
             {
-                new GameAction("beat intervals", "Start Interval")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.StartInterval(e.beat, e.length); },
-                    defaultLength = 8f,
-                    resizable = true,
-                    priority = 1
-                },
-                new GameAction("shake", "Shake")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput(e.beat, false); },
-                    defaultLength = 0.5f,
-                    priority = 2
-                },
-                new GameAction("hit", "Hit")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput(e.beat, true); },
-                    defaultLength = 0.5f,
-                    priority = 2
-                },
-                new GameAction("pass turn", "Pass Turn")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.PassTurn(e.beat, e.length); },
-                    defaultLength = 1f,
-                    resizable = true,
-                    priority = 3
-                },
                 new GameAction("bop", "Bop")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("whoBops", Tambourine.WhoBops.Both, "Who Bops", "Who will bop."),
-                        new Param("whoBopsAuto", Tambourine.WhoBops.None, "Who Bops (Auto)", "Who will auto bop."),
+                        new Param("whoBops", Tambourine.WhoBops.Both, "Bop", "Set the character(s) to bop for the duration of this event."),
+                        new Param("whoBopsAuto", Tambourine.WhoBops.None, "Bop (Auto)", "Set the character(s) to automatically bop until another Bop event is reached."),
                     },
                     resizable = true,
                     priority = 4
+                },
+                new GameAction("beat intervals", "Start Interval")
+                {
+                    preFunction = delegate {var e = eventCaller.currentEntity; Tambourine.PreInterval(e.beat, e.length, e["auto"]); },
+                    defaultLength = 7f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
+                    }
+                },
+                new GameAction("shake", "Shake")
+                {
+                    defaultLength = 0.5f,
+                },
+                new GameAction("hit", "Hit")
+                {
+                    defaultLength = 0.5f,
+                },
+                new GameAction("pass turn", "Pass Turn")
+                {
+                    preFunction = delegate
+                    {
+                        Tambourine.PrePassTurn(eventCaller.currentEntity.beat);
+                    },
+                    resizable = true,
+                    preFunctionLength = 1f
                 },
                 new GameAction("success", "Success")
                 {
@@ -58,28 +60,21 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("fade background", "Background Color")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length, e["instant"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorA", Color.white, "Start Color", "The starting color of the fade."),
-                        new Param("colorB", Tambourine.defaultBGColor, "End Color", "The ending color of the fade."),
-                        new Param("instant", false, "Instant", "Instantly set the color of the background to the start color?")
+                        new Param("colorStart", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("colorEnd", Tambourine.defaultBGColor, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
-                //backwards-compatibility
-                new GameAction("set background color", "Background Color")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.ChangeBackgroundColor(e["colorA"], 0f); },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("colorA", Tambourine.defaultBGColor, "Background Color", "The background color to change to.")
-                    },
-                    hidden = true
-                },
-            });
+            },
+            new List<string>() {"rvl", "repeat"},
+            "rvldrum", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -109,15 +104,10 @@ namespace HeavenStudio.Games
         [SerializeField] Animator frogAnimator;
 
         [Header("Variables")]
-        bool intervalStarted;
-        float intervalStartBeat;
-        float beatInterval = 8f;
         float misses;
         bool frogPresent;
         bool monkeyGoBop;
         bool handsGoBop;
-
-        Tween bgColorTween;
         public GameEvent bop = new GameEvent();
 
         public enum WhoBops
@@ -128,14 +118,35 @@ namespace HeavenStudio.Games
             None
         }
 
-        static List<QueuedTambourineInput> queuedInputs = new List<QueuedTambourineInput>();
-        struct QueuedTambourineInput
+        public static Tambourine instance;
+
+        const int IA_AltPress = IAMAXCAT;
+        protected static bool IA_TouchNrmPress(out double dt)
         {
-            public bool hit;
-            public float beatAwayFromStart;
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Alt);
         }
 
-        public static Tambourine instance;
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Nrm =
+            new("RvlDrumAlt", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchNrmPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlDrumAlt", new int[] { IA_AltPress, IA_AltPress, IA_AltPress },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
 
         void Awake()
         {
@@ -144,18 +155,13 @@ namespace HeavenStudio.Games
             frogAnimator.Play("FrogExited", 0, 0);
             handsAnimator.Play("Idle", 0, 0);
             monkeyAnimator.Play("MonkeyIdle", 0, 0);
-        }
-
-        void OnDestroy()
-        {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
-            }
+            colorStart = defaultBGColor;
+            colorEnd = defaultBGColor;
         }
 
         void Update()
         {
+            BackgroundColorUpdate();
             if (Conductor.instance.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
                 if (monkeyGoBop)
@@ -167,127 +173,216 @@ namespace HeavenStudio.Games
                     handsAnimator.Play("Bop", 0, 0);
                 }
             }
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
-            }
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused && intervalStarted)
-            {
-                intervalStarted = false;
-            }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Nrm) && !IsExpectingInputNow(InputAction_Nrm))
             {
                 handsAnimator.Play("Shake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
                 ScoreMiss();
-                if (!intervalStarted)
+                if (!IntervalIsGoingOn())
                 {
                     sadFace.SetActive(true);
                 }
             }
-            else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+            else if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt))
             {
                 handsAnimator.Play("Smack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
                 ScoreMiss();
-                if (!intervalStarted)
+                if (!IntervalIsGoingOn())
                 {
                     sadFace.SetActive(true);
                 }
             }
-        }
 
-        public void StartInterval(float beat, float interval)
-        {
-            intervalStartBeat = beat;
-            beatInterval = interval;
-            if (!intervalStarted)
+            if (passedTurns.Count > 0)
             {
-                DesummonFrog();
-                sadFace.SetActive(false);
-                //queuedInputs.Clear();
-                misses = 0;
-                intervalStarted = true;
+                foreach (var pass in passedTurns)
+                {
+                    PassTurnStandalone(pass);
+                }
+                passedTurns.Clear();
             }
         }
 
-        public void MonkeyInput(float beat, bool hit)
+        private bool IntervalIsGoingOn()
         {
-            if (!intervalStarted)
+            double beat = Conductor.instance.songPositionInBeats;
+            return EventCaller.GetAllInGameManagerList("tambourine", new string[] { "beat intervals" }).Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
+        }
+
+        private List<RiqEntity> GetAllInputsBetweenBeat(double beat, double endBeat)
+        {
+            return EventCaller.GetAllInGameManagerList("tambourine", new string[] { "shake", "hit" }).FindAll(x => x.beat >= beat && x.beat < endBeat);
+        }
+
+        public static void PreInterval(double beat, float interval, bool autoPassTurn)
+        {
+            if (GameManager.instance.currentGame == "tambourine")
             {
-                StartInterval(beat, beatInterval);
-            }
-            if (hit)
-            {
-                monkeyAnimator.Play("MonkeySmack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/monkey/hit/{UnityEngine.Random.Range(1, 6)}");
+                instance.StartInterval(beat, interval, beat, autoPassTurn);
             }
             else
             {
-                monkeyAnimator.Play("MonkeyShake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/monkey/shake/{UnityEngine.Random.Range(1, 6)}");
-            }
-            queuedInputs.Add(new QueuedTambourineInput()
-            {
-                hit = hit,
-                beatAwayFromStart = beat - intervalStartBeat,
-            });
-        }
-
-        public void PassTurn(float beat, float length)
-        {
-            if (queuedInputs.Count == 0) return;
-            monkeyAnimator.Play("MonkeyPassTurn", 0, 0);
-            Jukebox.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}");
-            happyFace.SetActive(true);
-            intervalStarted = false;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 0.3f, delegate { happyFace.SetActive(false); })
-            });
-            foreach (var input in queuedInputs)
-            {
-                if (input.hit)
+                queuedIntervals.Add(new QueuedInterval()
                 {
-                    ScheduleInput(beat, length + input.beatAwayFromStart, InputType.STANDARD_ALT_DOWN , JustHit, Miss , Nothing);
-                }
-                else
-                {
-                    ScheduleInput(beat, length + input.beatAwayFromStart, InputType.STANDARD_DOWN, JustShake, Miss, Nothing);
-                }
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + length + input.beatAwayFromStart, delegate { Bop(beat + length + input.beatAwayFromStart, 1, (int)WhoBops.Monkey, (int)WhoBops.None); })
+                    beat = beat,
+                    interval = interval,
+                    autoPassTurn = autoPassTurn
                 });
             }
-            queuedInputs.Clear();
         }
 
-        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
+        public override void OnGameSwitch(double beat)
+        {
+            if (queuedIntervals.Count > 0)
+            {
+                foreach (var interval in queuedIntervals)
+                {
+                    StartInterval(interval.beat, interval.interval, beat, interval.autoPassTurn);
+                }
+                queuedIntervals.Clear();
+            }
+            PersistColor(beat);
+        }
+
+        private struct QueuedInterval
+        {
+            public double beat;
+            public float interval;
+            public bool autoPassTurn;
+        }
+
+        private static List<QueuedInterval> queuedIntervals = new();
+
+        private void StartInterval(double beat, float interval, double gameSwitchBeat, bool autoPassTurn)
+        {
+            List<BeatAction.Action> actions = new()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    DesummonFrog();
+                    sadFace.SetActive(false);
+                })
+            };
+
+            var relevantInputs = GetAllInputsBetweenBeat(beat, beat + interval);
+            relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            List<MultiSound.Sound> sounds = new();
+            for (int i = 0; i < relevantInputs.Count; i++)
+            {
+                bool isHit = relevantInputs[i].datamodel == "tambourine/hit";
+                double inputBeat = relevantInputs[i].beat;
+                if (inputBeat >= gameSwitchBeat)
+                {
+                    actions.Add(new BeatAction.Action(inputBeat, delegate
+                    {
+                        MonkeyInput(inputBeat, isHit);
+                    }));
+                    sounds.Add(new MultiSound.Sound($"tambourine/monkey/{(isHit ? "hit" : "shake")}/m{(isHit ? "h" : "s")}{UnityEngine.Random.Range(1, 6)}", inputBeat));
+                }
+            }
+
+            BeatAction.New(this, actions);
+            MultiSound.Play(sounds.ToArray(), true, true);
+
+            if (autoPassTurn)
+            {
+                PassTurn(beat + interval, beat, interval, 1);
+            }
+        }
+
+        public void MonkeyInput(double beat, bool hit)
+        {
+            if (hit)
+            {
+                monkeyAnimator.DoScaledAnimationAsync("MonkeySmack", 0.5f);
+            }
+            else
+            {
+                monkeyAnimator.DoScaledAnimationAsync("MonkeyShake", 0.5f);
+            }
+        }
+
+        private RiqEntity GetLastIntervalBeforeBeat(double beat)
+        {
+            return EventCaller.GetAllInGameManagerList("tambourine", new string[] { "beat intervals" }).FindLast(x => x.beat <= beat);
+        }
+
+        public static void PrePassTurn(double beat)
+        {
+            if (GameManager.instance.currentGame == "tambourine")
+            {
+                instance.PassTurnStandalone(beat);
+            }
+            else
+            {
+                passedTurns.Add(beat);
+            }
+        }
+
+        private static List<double> passedTurns = new();
+
+        private void PassTurnStandalone(double beat)
+        {
+            var lastInterval = GetLastIntervalBeforeBeat(beat);
+            float length = EventCaller.GetAllInGameManagerList("tambourine", new string[] { "pass turn" }).Find(x => x.beat == beat).length;
+            if (lastInterval != null) PassTurn(beat, lastInterval.beat, lastInterval.length, length);
+        }
+
+        private void PassTurn(double beat, double intervalBeat, float intervalLength, float length)
+        {
+            SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/tp{UnityEngine.Random.Range(1, 6)}", beat);
+            List<BeatAction.Action> actions = new()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                                monkeyAnimator.DoScaledAnimationAsync("MonkeyPassTurn", 0.5f);
+                    happyFace.SetActive(true);
+                }),
+                new BeatAction.Action(beat + 0.3f, delegate { happyFace.SetActive(false); })
+            };
+            var relevantInputs = GetAllInputsBetweenBeat(intervalBeat, intervalBeat + intervalLength);
+            relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
+            for (int i = 0; i < relevantInputs.Count; i++)
+            {
+                bool isHit = relevantInputs[i].datamodel == "tambourine/hit";
+                double inputBeat = relevantInputs[i].beat - intervalBeat;
+                actions.Add(new BeatAction.Action(inputBeat, delegate
+                {
+                    if (isHit) ScheduleInput(beat + length, inputBeat, InputAction_Alt, JustHit, Miss, Nothing);
+                    else ScheduleInput(beat + length, inputBeat, InputAction_Nrm, JustShake, Miss, Nothing);
+                    Bop(beat + length + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
+                }));
+            }
+            BeatAction.New(this, actions);
+        }
+
+        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
             monkeyGoBop = whoBopsAuto == (int)WhoBops.Monkey || whoBopsAuto == (int)WhoBops.Both;
             handsGoBop = whoBopsAuto == (int)WhoBops.Player || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
                     {
                         switch (whoBops)
                         {
                             case (int) WhoBops.Monkey:
-                                monkeyAnimator.Play("MonkeyBop", 0, 0);
+                                monkeyAnimator.DoScaledAnimationAsync("MonkeyBop", 0.5f);
                                 break;
                             case (int) WhoBops.Player:
-                                handsAnimator.Play("Bop", 0, 0);
+                                handsAnimator.DoScaledAnimationAsync("Bop", 0.5f);
                                 break;
                             case (int) WhoBops.Both:
-                                monkeyAnimator.Play("MonkeyBop", 0, 0);
-                                handsAnimator.Play("Bop", 0, 0);
+                                monkeyAnimator.DoScaledAnimationAsync("MonkeyBop", 0.5f);
+                                handsAnimator.DoScaledAnimationAsync("Bop", 0.5f);
                                 break;
                             default: 
                                 break;
@@ -298,12 +393,12 @@ namespace HeavenStudio.Games
 
         }
 
-        public void SuccessFace(float beat)
+        public void SuccessFace(double beat)
         {
             DesummonFrog();
             if (misses > 0) return;
             flowerParticles.Play();
-            Jukebox.PlayOneShotGame($"tambourine/player/turnPass/sweep");
+            SoundByte.PlayOneShotGame($"tambourine/player/turnPass/sweep");
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("tambourine/player/turnPass/note1", beat),
@@ -312,7 +407,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tambourine/player/turnPass/note3", beat + 0.3f),
             }, forcePlay: true);
             happyFace.SetActive(true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1, delegate { happyFace.SetActive(false); }),
             });
@@ -322,12 +417,12 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                handsAnimator.Play("Smack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
-                Jukebox.PlayOneShotGame("tambourine/miss");
-                sweatAnimator.Play("Sweating", 0, 0);
+                handsAnimator.DoScaledAnimationAsync("Smack", 0.5f);
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/ph{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame("tambourine/miss");
+                sweatAnimator.DoScaledAnimationAsync("Sweating", 0.5f);
                 misses++;
-                if (!intervalStarted)
+                if (!IntervalIsGoingOn())
                 {
                     sadFace.SetActive(true);
                 }
@@ -340,12 +435,12 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                handsAnimator.Play("Shake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
-                Jukebox.PlayOneShotGame("tambourine/miss");
-                sweatAnimator.Play("Sweating", 0, 0);
+                handsAnimator.DoScaledAnimationAsync("Shake", 0.5f);
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/ps{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame("tambourine/miss");
+                sweatAnimator.DoScaledAnimationAsync("Sweating", 0.5f);
                 misses++;
-                if (!intervalStarted)
+                if (!IntervalIsGoingOn())
                 {
                     sadFace.SetActive(true);
                 }
@@ -359,54 +454,77 @@ namespace HeavenStudio.Games
             sadFace.SetActive(false);
             if (hit)
             {
-                handsAnimator.Play("Smack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                handsAnimator.DoScaledAnimationAsync("Smack", 0.5f);
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/ph{UnityEngine.Random.Range(1, 6)}");
             }
             else
             {
-                handsAnimator.Play("Shake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                handsAnimator.DoScaledAnimationAsync("Shake", 0.5f);
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/ps{UnityEngine.Random.Range(1, 6)}");
             }
         }
 
         public void Miss(PlayerActionEvent caller)
         {
             SummonFrog();
-            sweatAnimator.Play("Sweating", 0, 0);
+            sweatAnimator.DoScaledAnimationAsync("Sweating", 0.5f);
             misses++;
-            if (!intervalStarted)
+            if (!IntervalIsGoingOn())
             {
                 sadFace.SetActive(true);
             }
         }
 
-        public void ChangeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = Color.white; //obviously put to the default color of the game
+        private Color colorEnd = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("tambourine", new string[] { "fade background" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
             {
-                bg.color = color;
-            }
-            else
-            {
-                bgColorTween = bg.DOColor(color, seconds);
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorStart"], lastEvent["colorEnd"], lastEvent["ease"]);
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        public override void OnPlay(double beat)
         {
-            ChangeBackgroundColor(start, 0f);
-            if (!instant) ChangeBackgroundColor(end, beats);
+            PersistColor(beat);
         }
 
         public void SummonFrog()
         {
             if (frogPresent) return;
-            Jukebox.PlayOneShotGame("tambourine/frog");
+            SoundByte.PlayOneShotGame("tambourine/frog");
             frogAnimator.Play("FrogEnter", 0, 0);
             frogPresent = true;
         }

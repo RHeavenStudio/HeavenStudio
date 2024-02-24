@@ -5,6 +5,7 @@ using UnityEngine;
 using DG.Tweening;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Scripts_RhythmRally
 {
@@ -14,6 +15,9 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
         private Animator playerAnim;
         private Animator opponentAnim;
         private Conductor cond;
+
+        public bool PlayerDown { get { return playerDown; } }
+        bool playerDown = false;
 
         public void Init()
         {
@@ -25,12 +29,28 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
 
         void Update()
         {
-            if (!game.served || game.missed || !game.started) return;
-
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !GameManager.instance.autoplay)
+            {
+                if (PlayerInput.GetIsAction(RhythmRally.InputAction_BasicPress))
+                {
+                    playerAnim.Play("Ready1");
+                    playerDown = true;
+                }
+                if (PlayerInput.GetIsAction(RhythmRally.InputAction_BasicRelease))
+                {
+                    playerAnim.Play("UnReady1");
+                    playerDown = false;
+                }
+            }
+            else
+            {
+                if (!game.started) return;
+            }
+            if (PlayerInput.GetIsAction(RhythmRally.InputAction_FlickPress) && !game.IsExpectingInputNow(RhythmRally.InputAction_FlickPress))
             {
                 // Play "whoosh" sound here
-                playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
+                playerAnim.DoScaledAnimationAsync("Swing", 0.5f);
+                playerDown = false;
             }
         }
 
@@ -38,7 +58,7 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
         {
             game.served = false;
 
-            var hitBeat = cond.songPositionInBeats;
+            var hitBeat = cond.songPositionInBeatsAsDouble;
 
             var bounceBeat = game.serveBeat + game.targetBeat + 1f;
 
@@ -51,7 +71,8 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
                 bounceBeat = game.serveBeat + game.targetBeat + 0.5f;
             }
 
-            playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
+            playerAnim.DoScaledAnimationAsync("Swing", 0.5f);
+            playerDown = false;
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Return", hitBeat), new MultiSound.Sound("rhythmRally/ReturnBounce", bounceBeat) });
             BounceFX(bounceBeat);
             game.ball.SetActive(true);
@@ -60,12 +81,13 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
         void NearMiss(float state)
         {
             MissBall();
-            Jukebox.PlayOneShot("miss");
-            playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
+            SoundByte.PlayOneShot("miss");
+            playerAnim.DoScaledAnimationAsync("Swing", 0.5f);
+            playerDown = false;
 
             game.missCurve.KeyPoints[0].Position = game.ball.transform.position;
             game.missCurve.transform.localScale = new Vector3(-state, 1f, 1f);
-            game.missBeat = cond.songPositionInBeats;
+            game.missBeat = cond.songPositionInBeatsAsDouble;
             game.ball.SetActive(true);
         }
 
@@ -88,9 +110,9 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Whistle", whistleBeat) });
         }
 
-        public void BounceFX(float bounceBeat)
+        public void BounceFX(double bounceBeat)
         {
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(bounceBeat, delegate
                 {
@@ -104,18 +126,19 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
 
         public void Just(PlayerActionEvent caller, float state)
         {
-            if (state >= 1f || state <= -1f) {
+            if (state >= 1f || state <= -1f)
+            {
                 NearMiss(state);
-                return; 
+                return;
             }
             Ace();
         }
 
-        public void Miss(PlayerActionEvent caller) 
+        public void Miss(PlayerActionEvent caller)
         {
             MissBall();
         }
 
-        public void Out(PlayerActionEvent caller) {}
+        public void Out(PlayerActionEvent caller) { }
     }
 }

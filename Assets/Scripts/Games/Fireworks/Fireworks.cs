@@ -19,11 +19,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Where to spawn?", "Where should the firework spawn?"),
-                        new Param("explosionType", Fireworks.ExplosionType.MixedCircular, "Explosion Pattern", "What pattern should the firework explode with?"),
-                        new Param("applause", false, "Applause", "Should an applause play after successfully hitting this cue?"),
-                        new Param("offSet", new EntityTypes.Float(0, 4, 0), "Vertical Offset", "What vertical Offset should the rocket have?"),
-                        new Param("toggle", false, "Practice Count-In", "Should the count-in from the fireworks practice play?")
+                        new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Side", "Choose the side this firework should spawn on."),
+                        new Param("explosionType", Fireworks.ExplosionType.MixedCircular, "Pattern", "Choose the pattern that this firework should explode into."),
+                        new Param("applause", false, "Applause", "Toggle if applause should play if you successfully hit this cue."),
+                        new Param("offSet", new EntityTypes.Float(0, 4, 0), "Vertical Offset", "Choose the verical offset for this firework."),
+                        new Param("toggle", false, "Count-In", "Toggle if a count-in should automatically play for this cue, as shown in the practice of the original game.")
                     }
                 },
                 new GameAction("sparkler", "Sparkler")
@@ -32,11 +32,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Where to spawn?", "Where should the firework spawn?"),
-                        new Param("explosionType", Fireworks.ExplosionType.MixedCircular, "Explosion Pattern", "What pattern should the firework explode with?"),
-                        new Param("applause", false, "Applause", "Should an applause play after successfully hitting this cue?"),
-                        new Param("offSet", new EntityTypes.Float(0, 4, 0), "Vertical Offset", "What vertical Offset should the rocket have?"),
-                        new Param("toggle", false, "Practice Count-In", "Should the count-in from the fireworks practice play?")
+                        new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Side", "Choose the side this firework should spawn on."),
+                        new Param("explosionType", Fireworks.ExplosionType.MixedCircular, "Pattern", "Choose the pattern that this sparkler should explode into."),
+                        new Param("applause", false, "Applause", "Toggle if applause should play if you successfully hit this cue."),
+                        new Param("offSet", new EntityTypes.Float(0, 4, 0), "Vertical Offset", "Choose the vertical offset for this sparkler."),
+                        new Param("toggle", false, "Count-In", "Toggle if a count-in should automatically play for this cue, as shown in the practice of the original game.")
                     }
                 },
                 new GameAction("bomb", "Bomb")
@@ -45,8 +45,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("applause", false, "Applause", "Should an applause play after successfully hitting this cue?"),
-                        new Param("toggle", false, "Practice Count-In", "Should the count-in from the fireworks practice play?")
+                        new Param("applause", false, "Applause", "Toggle if applause should play if you successfully hit this cue."),
+                        new Param("toggle", false, "Count-In", "Toggle if a count-in should automatically play for this cue, as shown in the practice of the original game.")
                     }
                 },
                 new GameAction("countIn", "Count-In")
@@ -55,7 +55,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("count", Fireworks.CountInType.CountOne, "Count", "Which count should be said?")
+                        new Param("count", Fireworks.CountInType.CountOne, "Type", "Set the number to be said.")
                     }
                 },
                 new GameAction("altBG", "Background Appearance")
@@ -64,10 +64,14 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Remix 5", "Should the background from Remix 5 tengoku appear?")
+                        new Param("toggle", true, "Remix 5", "Togle if the background from Remix 5 (GBA) should appear.")
                     }
                 }
-            });
+            },
+            new List<string>() {"agb", "normal"},
+            "agbexplode", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -87,7 +91,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedFirework
         {
-            public float beat;
+            public double beat;
             public bool isSparkler;
             public int whereToSpawn;
             public bool practice;
@@ -128,6 +132,10 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedFireworks.Count > 0) queuedFireworks.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Awake()
@@ -158,7 +166,7 @@ namespace HeavenStudio.Games
             stars.SetActive(!doIt);
         }
 
-        public static void CountIn(float beat, int count)
+        public static void CountIn(double beat, int count)
         {
             switch (count)
             {
@@ -189,7 +197,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void PreSpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
+        public static void PreSpawnFirework(double beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
         {
             if (isSparkler)
             {
@@ -207,7 +215,7 @@ namespace HeavenStudio.Games
             }
             if (GameManager.instance.currentGame == "fireworks")
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate
                     {
@@ -222,7 +230,7 @@ namespace HeavenStudio.Games
 
         }
 
-        void SpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
+        void SpawnFirework(double beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
         {
             if (isSparkler && practice)
             {
@@ -262,9 +270,9 @@ namespace HeavenStudio.Games
             spawnedRocket.Init(beat, explosionType);
         }
 
-        public void SpawnBomb(float beat, bool practice, bool applause)
+        public void SpawnBomb(double beat, bool practice, bool applause)
         {
-            Jukebox.PlayOneShotGame("fireworks/tamaya_4");
+            SoundByte.PlayOneShotGame("fireworks/tamaya_4");
             if (practice)
             {
                 MultiSound.Play(new MultiSound.Sound[]
@@ -272,7 +280,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("fireworks/practiceHai", beat + 2),
                 }, forcePlay: true);
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1, delegate
                 {

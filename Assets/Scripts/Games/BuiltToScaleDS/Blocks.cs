@@ -8,15 +8,15 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
     using HeavenStudio.Util;
     public class Blocks : MonoBehaviour
     {
-        public float createBeat;
+        public double createBeat;
         public float createLength;
         public Animator anim;
 
         private bool moving = true;
         private BuiltToScaleDS game;
-        float windupBeat;
-        float hitBeat;
-        float sinkBeat;
+        double windupBeat;
+        double hitBeat;
+        double sinkBeat;
 
         private void Awake()
         {
@@ -30,16 +30,17 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
             hitBeat = windupBeat + createLength;
             sinkBeat = hitBeat + (createLength * 2f);
 
-            game.ScheduleInput(windupBeat, createLength, InputType.STANDARD_DOWN, Just, Miss, Out);
+            game.ScheduleInput(windupBeat, createLength, BuiltToScaleDS.InputAction_FlickPress, Just, Miss, Out);
         }
 
         private void Update()
         {
             if (!moving) return;
-            float currentBeat = Conductor.instance.songPositionInBeats;
+            double currentBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
             var shooterState = game.shooterAnim.GetCurrentAnimatorStateInfo(0);
-            if (currentBeat > windupBeat && currentBeat < hitBeat
+            if ((PlayerInput.CurrentControlStyle != InputSystem.InputController.ControlStyles.Touch || !PlayerInput.PlayerHasControl())
+                && currentBeat > windupBeat && currentBeat < hitBeat
                 && !shooterState.IsName("Windup")
                 && !game.lastShotOut)
             {
@@ -52,9 +53,6 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
 
         private void Just(PlayerActionEvent caller, float state)
         {
-            var shooterState = game.shooterAnim.GetCurrentAnimatorStateInfo(0);
-            if (!shooterState.IsName("Windup")) return;
-
             // near miss
             if (state >= 1f || state <= -1f) {
                 NearMiss();
@@ -66,14 +64,14 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
 
         private void Miss(PlayerActionEvent caller) 
         {
-            float sinkBeat = hitBeat + (createLength * 2f);
+            double sinkBeat = hitBeat + (createLength * 2f);
             MultiSound.Play(
                 new MultiSound.Sound[] {
                     new MultiSound.Sound("builtToScaleDS/Sink", sinkBeat),
                 }, forcePlay: true
             );
 
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(sinkBeat, delegate { moving = false; }),
             });
@@ -90,7 +88,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
             game.SpawnObject(BuiltToScaleDS.BTSObject.HitPieces);
             Destroy(gameObject);
 
-            Jukebox.PlayOneShotGame("builtToScaleDS/Hit");
+            SoundByte.PlayOneShotGame("builtToScaleDS/Hit");
         }
 
         void NearMiss()
@@ -102,7 +100,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
             game.SpawnObject(BuiltToScaleDS.BTSObject.MissPieces);
             Destroy(gameObject);
 
-            Jukebox.PlayOneShotGame("builtToScaleDS/Crumble");
+            SoundByte.PlayOneShotGame("builtToScaleDS/Crumble");
         }
     }
 }

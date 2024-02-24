@@ -1,5 +1,6 @@
 using HeavenStudio.Util;
-using System.Collections;
+using HeavenStudio.InputSystem;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,152 +8,113 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 {
     public class Octopus : MonoBehaviour
     {
-        [SerializeField] Animator anim;
-        [SerializeField] SpriteRenderer sr;
+        [SerializeField] SpriteRenderer[] sr;
+        [SerializeField] SpriteRenderer[] srAll;
         [SerializeField] bool player;
+        public Animator anim;
+
+        public bool cantBop;
+        public bool isSqueezed;
+        public bool isPreparing;
+        public double queuePrepare;
+        double lastSqueezeBeat;
+        bool isActive = true;
 
         private OctopusMachine game;
-        public static Octopus instance;
 
         void Awake()
         {
             game = OctopusMachine.instance;
+            queuePrepare = double.MaxValue;
         }
 
         void Update()
         {
-            
-        }
+            if (queuePrepare <= Conductor.instance.songPositionInBeatsAsDouble && Conductor.instance.NotStopped()) {
+                if (!(isPreparing || isSqueezed || anim.IsPlayingAnimationNames("Release", "Pop"))) 
+                {
+                    anim.DoScaledAnimationFromBeatAsync("Prepare", 0.5f, queuePrepare);
+                    isPreparing = true;
+                    queuePrepare = double.MaxValue;
+                }
+            }
 
-        void LateUpdate()
-        {
-            if (Conductor.instance.ReportBeat(ref game.lastReportedBeat)/* && !game.isPreparing && game.bopOn*/)
+            if (isActive && player)
             {
-                //if (anim.IsAnimationNotPlaying() || anim.IsPlayingAnimationName("Idle"))
-                if (game.isHappy) {
-                    anim.DoScaledAnimation("Happy", 0.5f);
-                } else if (game.isAngry) {
-                    anim.DoScaledAnimation("Angry", 0.5f);
-                } else if (game.isShocked) {
-                    anim.DoScaledAnimation("Oops", 0.5f);
-                } else {
-                    anim.DoScaledAnimation("Bop", 0.5f);
+                if (PlayerInput.GetIsAction(OctopusMachine.InputAction_BasicPress) && !game.IsExpectingInputNow(OctopusMachine.InputAction_BasicPress))
+                {
+                    OctoAction("Squeeze");
+                    SoundByte.PlayOneShotGame("nearMiss");
+                    game.hasMissed = true;
+                }
+
+                if (PlayerInput.GetIsAction(OctopusMachine.InputAction_BasicRelease) && !game.IsExpectingInputNow(OctopusMachine.InputAction_BasicRelease))
+                {
+                    OctoAction("Release");
+                    SoundByte.PlayOneShotGame("nearMiss");
+                    game.hasMissed = true;
+                }
+                else if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch
+                    && PlayerInput.GetIsAction(OctopusMachine.InputAction_FlickRelease) && !game.IsExpectingInputNow(OctopusMachine.InputAction_FlickRelease))
+                {
+                    OctoAction("Pop");
+                    SoundByte.PlayOneShotGame("nearMiss");
+                    game.hasMissed = true;
                 }
             }
         }
 
-        void OnDestroy()
+        public void RequestBop()
         {
-            
-        }
-
-        public void TogglePresence(bool disappear)
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void MissPose()
-        {
-            
-        }
-
-        public void StartCrouch()
-        {
-            
-        }
-
-        public void StartYell()
-        {
-            /*
-            if (singing || disappeared) return;
-            singing = true;
-            anim.SetBool("Mega", true);
-            anim.Play("OpenMouth", 0, 0);
-            shouldMegaClose = true;
-            if (currentSound != null) Jukebox.KillLoop(currentSound, 0f);
-            Jukebox.PlayOneShotGame("gleeClub/LoudWailStart");
-            currentSound = Jukebox.PlayOneShotGame("gleeClub/LoudWailLoop", -1, currentPitch, 1f, true);
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            if (!anim.IsPlayingAnimationNames("Bop", "Happy", "Angry", "Oops", "Release", "Pop") && !isPreparing && !isSqueezed && !cantBop)
             {
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { UnYell(); })
-            });
-            */
-        }
-
-        void UnYell()
-        {
-            //if (singing && !anim.GetCurrentAnimatorStateInfo(0).IsName("YellIdle")) anim.Play("YellIdle", 0, 0);
-        }
-
-        public void StartSinging(bool forced = false)
-        {
-            /*
-            if ((singing && !forced) || disappeared) return;
-            singing = true;
-            anim.SetBool("Mega", false);
-            shouldMegaClose = false;
-            anim.Play("OpenMouth", 0, 0);
-            if (currentSound != null) Jukebox.KillLoop(currentSound, 0f);
-            currentSound = Jukebox.PlayOneShotGame("gleeClub/WailLoop", -1, currentPitch, 1f, true);
-            */
-        }
-
-        public void StopSinging(bool mega = false, bool playSound = true)
-        {
-            /*
-            if (!singing || disappeared) return;
-            singing = false;
-            anim.Play(mega ? "MegaCloseMouth" : "CloseMouth", 0, 0);
-            if (currentSound != null) Jukebox.KillLoop(currentSound, 0f);
-            if (playSound) Jukebox.PlayOneShotGame("gleeClub/StopWail");
-            */
-        }
-
-        public void Bop(float beat)
-        {
-            if (!game.isPreparing && game.bopOn)
-            {
-                if (anim.IsAnimationNotPlaying() || anim.IsPlayingAnimationName("Idle"))
-                if (game.isHappy) {
-                    anim.DoScaledAnimation("Happy", 0.5f);
-                } else if (game.isAngry) {
-                    anim.DoScaledAnimation("Angry", 0.5f);
-                } else if (game.isShocked) {
-                    anim.DoScaledAnimation("Oops", 0.5f);
-                } else {
-                    anim.DoScaledAnimation("Bop", 0.5f);
-                }
+                PlayAnimation(game.bopStatus);
             }
         }
 
-        public void PlayAnimation(float beat, bool keepBopping, int whichBop)
+        public void PlayAnimation(int whichBop)
         {
-            switch (whichBop)
+            if (whichBop == 2 && player) whichBop = 3;
+            anim.DoScaledAnimationAsync(whichBop switch
             {
-                case 0:
-                anim.DoScaledAnimation("Bop", 0.5f);
-                break;
-                case 1:
-                anim.DoScaledAnimation("Happy", 0.5f);
-                break;
-                case 2:
-                anim.DoScaledAnimation("Angry", 0.5f);
-                break;
-                case 3:
-                anim.DoScaledAnimation("Oops", 0.5f);
-                break;
-            }
-            if (keepBopping) {
-                game.isHappy =   whichBop == 1 ? keepBopping : !keepBopping;
-                game.isAngry =   whichBop == 2 ? keepBopping : !keepBopping;
-                game.isShocked = whichBop == 3 ? keepBopping : !keepBopping;
-            }
+                0 => "Bop",
+                1 => "Happy",
+                2 => "Angry",
+                3 => "Oops",
+                _ => "Bop"
+            }, 0.5f);
+            isPreparing =
+            isSqueezed = false;
         }
 
-        public void GameplayModifiers(bool isActive, Color octoColor)
+        public void ForceSqueeze()
         {
-            gameObject.SetActive(isActive);
-            sr.color = octoColor;
+            anim.DoScaledAnimationAsync("ForceSqueeze", 0.5f);
+            isSqueezed = true;
+        }
+
+        public void OctopusModifiers(float x, float y, bool enable)
+        {
+            gameObject.transform.position = new Vector3(x, y, 0);
+            foreach (var sprite in srAll) sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, enable ? 1 : 0);
+            isActive = enable;
+        }
+
+        public void OctoAction(string action)
+        {
+            if (action != "Release" || (Conductor.instance.songPositionInBeatsAsDouble - lastSqueezeBeat) > 0.15f) SoundByte.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
+            if (action == "Squeeze") lastSqueezeBeat = Conductor.instance.songPositionInBeatsAsDouble;
+
+            anim.DoScaledAnimationAsync(action, 0.5f);
+            isSqueezed = action == "Squeeze";
+            isPreparing = false;
+            queuePrepare = double.MaxValue;
+        }
+
+        public void AnimationColor(int poppingColor)
+        {
+            foreach (var sprite in sr) sprite.material.SetColor("_ColorAlpha", (poppingColor == 0 ? OctopusMachine.octopodesColor : OctopusMachine.octopodesSqueezedColor));
+            if (poppingColor == 1) isSqueezed = true;
         }
     }
 }

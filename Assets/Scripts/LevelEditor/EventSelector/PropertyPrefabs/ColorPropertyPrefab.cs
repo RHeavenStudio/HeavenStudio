@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
-using Starpelly;
+
 
 using HeavenStudio.Util;
 using HeavenStudio.Editor;
@@ -20,13 +20,39 @@ namespace HeavenStudio.Editor
         public RectTransform ColorTable;
         public bool colorTableActive;
         public ColorPreview colorPreview;
+        public TMP_InputField hex;
+
+        private Color _defaultColor;
 
         new public void SetProperties(string propertyName, object type, string caption)
         {
             InitProperties(propertyName, caption);
 
-            colorPreview.colorPicker.onColorChanged += _ =>
+            hex.onSelect.AddListener(
+                _ =>
+                    Editor.instance.editingInputField = true
+            );
+            hex.onEndEdit.AddListener(
+                _ =>
+                {;
+                    Editor.instance.editingInputField = false;
+                }
+            );
+
+            colorPreview.colorPicker.onColorChanged += _ => 
+            {
                 parameterManager.entity[propertyName] = colorPreview.colorPicker.color;
+                if (colorPreview.colorPicker.color != _defaultColor)
+                {
+                    this.caption.text = _captionText + "*";
+                }
+                else
+                {
+                    this.caption.text = _captionText;
+                }
+            };
+
+            _defaultColor = (Color)type;
 
             Color paramCol = parameterManager.entity[propertyName];
 
@@ -43,6 +69,17 @@ namespace HeavenStudio.Editor
             ColorTable.gameObject.SetActive(false);
         }
 
+        public void ResetValue()
+        {
+            colorPreview.ChangeColor(_defaultColor);
+        }
+
+        public override void SetCollapses(object type)
+        {
+            colorPreview.colorPicker.onColorChanged += _ => UpdateCollapse(colorPreview.colorPicker.color);
+            UpdateCollapse(colorPreview.colorPicker.color);
+        }
+
         private void Update()
         {
             if (colorTableActive)
@@ -53,6 +90,7 @@ namespace HeavenStudio.Editor
                     {
                         ColorTable.gameObject.SetActive(false);
                         colorTableActive = false;
+                        Editor.instance.editingInputField = false;
                     }
                 }
             }

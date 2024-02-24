@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
         [Header("Objects")]
         public Animator anim;
 
-        public float startBeat = Single.MinValue;
+        public double startBeat = double.MinValue;
         public bool isMain = true;
 
         // Update is called once per frame

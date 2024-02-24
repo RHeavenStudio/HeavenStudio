@@ -4,6 +4,8 @@ using UnityEngine;
 
 using HeavenStudio.Util;
 using HeavenStudio.Games;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Common
 {
@@ -59,9 +61,9 @@ namespace HeavenStudio.Common
             }
         }
 
-        public void OnSectionChange(DynamicBeatmap.ChartSection section)
+        public void OnSectionChange(RiqEntity newSection, RiqEntity lastSection)
         {
-            if (section == null) return;
+            if (newSection == null) return;
             if (!PersistentDataManager.gameSettings.isMedalOn) return;
             if (PersistentDataManager.gameSettings.isMedalOn && !isMedalsStarted)
             {
@@ -70,19 +72,19 @@ namespace HeavenStudio.Common
             }
             else
             {
-                GameManager.instance.ClearedSection = isMedalsEligible;
+                GameManager.instance.DoSectionCompletion(newSection.beat, isMedalsEligible, lastSection["sectionName"], 1);
                 GameObject medal = Instantiate(isMedalsEligible ? MedalOkPrefab : MedalMissPrefab, MedalsHolder.transform);
                 medal.SetActive(true);
                 isMedalsEligible = true;
             }
         }
 
-        public void OnRemixEnd()
+        public void OnRemixEnd(double beat, RiqEntity lastSection)
         {
             if (!PersistentDataManager.gameSettings.isMedalOn) return;
-            if (PersistentDataManager.gameSettings.isMedalOn && isMedalsStarted)
+            if (PersistentDataManager.gameSettings.isMedalOn && isMedalsStarted && lastSection != null)
             {
-                GameManager.instance.ClearedSection = isMedalsEligible;
+                GameManager.instance.DoSectionCompletion(beat, isMedalsEligible, lastSection["sectionName"], 1);
                 GameObject medal = Instantiate(isMedalsEligible ? MedalOkPrefab : MedalMissPrefab, MedalsHolder.transform);
                 medal.SetActive(true);
             }

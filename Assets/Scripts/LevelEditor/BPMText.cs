@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
 
-namespace HeavenStudio.Editor 
+namespace HeavenStudio.Editor
 {
     public class BPMText : MonoBehaviour
     {
@@ -12,9 +13,9 @@ namespace HeavenStudio.Editor
         [SerializeField] private TMP_Text BPM;
         [SerializeField] private TMP_Text BPMRounded;
 
-        private List<float> pressTimes = new List<float>();
+        private List<double> pressTimes = new();
 
-        public void ChangeText(float timePressed)
+        public void ChangeText(double timePressed)
         {
             pressTimes.Add(timePressed);
 
@@ -25,18 +26,35 @@ namespace HeavenStudio.Editor
             if (pressTimes.Count > maxPressTimes)
                 pressTimes.RemoveAt(0);
 
-            var averageTime = pressTimes.GetRange(1, pressTimes.Count - 1).Average();
+            double averageTime = pressTimes.GetRange(1, pressTimes.Count - 1).Average();
 
-            float thisBPM = 60 / averageTime; // BPM = 60/t
-            BPM.text = $"{thisBPM}";
-            BPMRounded.text = $"{Mathf.RoundToInt(thisBPM)}";
+            double thisBPM = 60 / averageTime;
+            BPM.text = $"{thisBPM:0.000}";
+            BPMRounded.text = $"{(int)Math.Round(thisBPM)}";
         }
+
         public void ResetText()
         {
             pressTimes.Clear();
 
             BPM.text = "---";
             BPMRounded.text = "---";
+        }
+
+        public void ClearSamples()
+        {
+            if (pressTimes.Count < 2) return;
+
+            if (pressTimes.Count > maxPressTimes)
+                pressTimes.RemoveAt(0);
+
+            double averageTime = pressTimes.GetRange(1, pressTimes.Count - 1).Average();
+
+            double thisBPM = 60 / averageTime;
+            BPM.text = $"<color=\"yellow\">{thisBPM:0.000}";
+            BPMRounded.text = $"<color=\"yellow\">{(int)Math.Round(thisBPM)}";
+
+            pressTimes.Clear();
         }
     }
 }

@@ -1470,6 +1470,7 @@ MonoBehaviour:
   camPos: {fileID: 90712470157425058}
   cameraFoV: 13
   environmentRenderer: {fileID: 3593377758750892331}
+  elevatorRenderer: {fileID: 4969674003393652015}
   flyingRodBase: {fileID: 4881628242623067222}
   movingBlocksBase: {fileID: 6531576029795059484}
   hitPartsBase: {fileID: 1518590174126965879}
@@ -1478,6 +1479,10 @@ MonoBehaviour:
   blocksHolder: {fileID: 835389391171181030}
   shooterAnim: {fileID: 327112291406064303}
   elevatorAnim: {fileID: 1613410199122163856}
+  shooterMaterial: {fileID: 2100000, guid: 97aebf98db2a0bb4a974fbbbbf03fda8, type: 2}
+  objectMaterial: {fileID: 2100000, guid: 05418807da86e2146bc9e10ad24a33aa, type: 2}
+  gridPlaneMaterial: {fileID: 2100000, guid: 3df450e97190f504d9ac4f14283b2e0a, type: 2}
+  elevatorMaterial: {fileID: 0}
   beltSpeed: 4.33
 --- !u!1 &8373923870426321472
 GameObject:
@@ -1987,23 +1992,23 @@ PrefabInstance:
     - target: {fileID: 6244928046365892280, guid: 26c46c4ecd6e69145a6e971ac2cf6dcf, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 05418807da86e2146bc9e10ad24a33aa, type: 2}
+      objectReference: {fileID: 2100000, guid: 97aebf98db2a0bb4a974fbbbbf03fda8, type: 2}
     - target: {fileID: 6244928046365892280, guid: 26c46c4ecd6e69145a6e971ac2cf6dcf, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 05418807da86e2146bc9e10ad24a33aa, type: 2}
+      objectReference: {fileID: 2100000, guid: 97aebf98db2a0bb4a974fbbbbf03fda8, type: 2}
     - target: {fileID: 6244928046365892280, guid: 26c46c4ecd6e69145a6e971ac2cf6dcf, type: 3}
       propertyPath: m_Materials.Array.data[2]
       value: 
-      objectReference: {fileID: 2100000, guid: 05418807da86e2146bc9e10ad24a33aa, type: 2}
+      objectReference: {fileID: 2100000, guid: 97aebf98db2a0bb4a974fbbbbf03fda8, type: 2}
     - target: {fileID: 6244928046365892280, guid: 26c46c4ecd6e69145a6e971ac2cf6dcf, type: 3}
       propertyPath: m_Materials.Array.data[3]
       value: 
-      objectReference: {fileID: 2100000, guid: 05418807da86e2146bc9e10ad24a33aa, type: 2}
+      objectReference: {fileID: 2100000, guid: 97aebf98db2a0bb4a974fbbbbf03fda8, type: 2}
     - target: {fileID: 6244928046365892280, guid: 26c46c4ecd6e69145a6e971ac2cf6dcf, type: 3}
       propertyPath: m_Materials.Array.data[4]
       value: 
-      objectReference: {fileID: 2100000, guid: 05418807da86e2146bc9e10ad24a33aa, type: 2}
+      objectReference: {fileID: 2100000, guid: 97aebf98db2a0bb4a974fbbbbf03fda8, type: 2}
     - target: {fileID: 6261893698081059527, guid: 26c46c4ecd6e69145a6e971ac2cf6dcf, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -2570,17 +2575,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14f44ccc2c565b14781c7f959aeef848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 0}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
   createBeat: 0
   createLength: 0
   anim: {fileID: 7940570394249237327}
@@ -2865,6 +2859,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 266571bf0a87816428e18a51e3c57d0f, type: 3}
+--- !u!137 &4969674003393652015 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3783149753680359203, guid: 266571bf0a87816428e18a51e3c57d0f, type: 3}
+  m_PrefabInstance: {fileID: 8104129143664069132}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6995055239062017402 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7970022061681008778, guid: 266571bf0a87816428e18a51e3c57d0f, type: 3}

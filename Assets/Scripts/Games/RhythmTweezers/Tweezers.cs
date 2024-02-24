@@ -5,6 +5,7 @@ using System;
 
 using HeavenStudio.Util;
 
+
 namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class Tweezers : MonoBehaviour
@@ -17,6 +18,10 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         private bool holdingHair;
         public SpriteRenderer heldHairSprite;
         public Transform tweezerSpriteTrans;
+        private double passTurnBeat = -1;
+        private double passTurnEndBeat = -1;
+        [NonSerialized] public int hairsLeft;
+        private int eyeSize = 0;
 
         private void Awake()
         {
@@ -26,45 +31,72 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             game = RhythmTweezers.instance;
         }
 
-        private void LateUpdate()
+        public void Init(double beat, double endBeat)
         {
-            if (PlayerInput.Pressed(true))
+            passTurnBeat = beat;
+            passTurnEndBeat = endBeat;
+            Update();
+        }
+
+        private void Update()
+        {
+            if (passTurnBeat != -1)
             {
-                if (!pluckingThisFrame) // Did you do a successful pluck earlier in the frame?
+                // Set tweezer angle.
+                float tweezerTime = Conductor.instance.GetPositionFromBeat(passTurnBeat, Math.Max(passTurnEndBeat - 1f - passTurnBeat, 1));
+                var unclampedAngle = -58f + (116 * tweezerTime);
+                var tweezerAngle = Mathf.Clamp(unclampedAngle, -180f, 180f);
+
+                transform.eulerAngles = new Vector3(0, 0, tweezerAngle);
+
+                // Set tweezer to follow vegetable.
+                var currentTweezerPos = transform.localPosition;
+                var vegetablePos = game.Vegetable.transform.localPosition;
+                var vegetableHolderPos = game.VegetableHolder.transform.localPosition;
+                transform.localPosition = new Vector3(vegetableHolderPos.x, vegetablePos.y + 1f, currentTweezerPos.z);
+
+                if (tweezerAngle == 180)
                 {
-                    DropHeldHair();
-                    anim.Play("Tweezers_Pluck", 0, 0);
+                    Destroy(gameObject);
                 }
             }
+            if (PlayerInput.GetIsAction(RhythmTweezers.InputAction_Press) && !game.IsExpectingInputNow(RhythmTweezers.InputAction_Press))
+            {
+                DropHeldHair();
+                anim.Play("Tweezers_Pluck", 0, 0);
+            }
+        }
 
-            pluckingThisFrame = false;
+        private void LateUpdate()
+        {
         }
 
         public void Pluck(bool ace, Hair hair)
         {
             DropHeldHair();
+            if (hair == null) return;
 
             if (ace)
             {
-                Jukebox.PlayOneShotGame($"rhythmTweezers/shortPluck{UnityEngine.Random.Range(1, 21)}");
+                SoundByte.PlayOneShotGame($"rhythmTweezers/shortPluck{UnityEngine.Random.Range(1, 21)}");
 
                 hair.hairSprite.SetActive(false);
                 hair.stubbleSprite.SetActive(true);
 
-                game.hairsLeft--;
-                game.eyeSize = Mathf.Clamp(game.eyeSize + 1, 0, 10);
+                hairsLeft--;
+                eyeSize = Mathf.Clamp(eyeSize + 1, 0, 10);
 
-                if (game.hairsLeft <= 0)
+                if (hairsLeft <= 0)
                     vegetableAnim.Play("HopFinal", 0, 0);
                 else
-                    vegetableAnim.Play("Hop" + game.eyeSize.ToString(), 0, 0);
+                    vegetableAnim.Play("Hop" + eyeSize.ToString(), 0, 0);
 
                 anim.Play("Tweezers_Pluck_Success", 0, 0);
             }
             else
             {
-                Jukebox.PlayOneShotGame($"rhythmTweezers/shortPluck{UnityEngine.Random.Range(1, 21)}");
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShotGame($"rhythmTweezers/shortPluck{UnityEngine.Random.Range(1, 21)}");
+                SoundByte.PlayOneShot("miss");
 
                 hair.hairSprite.SetActive(false);
                 hair.missedSprite.SetActive(true);
@@ -74,35 +106,36 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 anim.Play("Tweezers_Pluck_Fail", 0, 0);
             }
 
-            pluckingThisFrame = true; // Prevents standard pluck from playing in LateUpdate().
+            // pluckingThisFrame = true; // Prevents standard pluck from playing in LateUpdate().
             holdingHair = true;
         }
 
         public void LongPluck(bool ace, LongHair hair)
         {
             DropHeldHair();
+            if (hair == null) return;
 
             if (ace)
             {
-                Jukebox.PlayOneShotGame("rhythmTweezers/longPullEnd");
+                SoundByte.PlayOneShotGame("rhythmTweezers/longPullEnd");
 
                 hair.hairSprite.SetActive(false);
                 hair.stubbleSprite.SetActive(true);
                 // Making transparent instead of disabling because animators are silly.
                 hair.loop.GetComponent<SpriteRenderer>().color = Color.clear;
 
-                game.hairsLeft--;
-                game.eyeSize = Mathf.Clamp(game.eyeSize + 1, 0, 10);
+                hairsLeft--;
+                eyeSize = Mathf.Clamp(eyeSize + 1, 0, 10);
 
-                if (game.hairsLeft <= 0)
+                if (hairsLeft <= 0)
                     vegetableAnim.Play("HopFinal", 0, 0);
                 else
-                    vegetableAnim.Play("Hop" + game.eyeSize.ToString(), 0, 0);
+                    vegetableAnim.Play("Hop" + eyeSize.ToString(), 0, 0);
 
                 anim.Play("Tweezers_Pluck_Success", 0, 0);
             }
 
-            pluckingThisFrame = true;
+            // pluckingThisFrame = true;
             holdingHair = true;
         }
 

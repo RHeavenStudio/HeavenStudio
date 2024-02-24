@@ -12,6 +12,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         [SerializeField] GameObject blushLeft;
         [SerializeField] GameObject blushRight;
         public bool bookIsWhite = true;
+        public bool isSpinning;
         public GameObject posterBook;
         bool bookIsOpen;
         bool noBop;
@@ -136,6 +137,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             BaseAnim.Play(bookIsWhite ? "MissWhite" : "MissBlack", 0, 0);
             noBop = true;
             missed = true;
+            isSpinning = false;
         }
 
         public void Stare()
@@ -146,12 +148,13 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         public void FlipBook(bool hit = true)
         {
             posterBook.SetActive(false);
-            if (hit) canOpenBook = false;
+            canOpenBook = !hit;
+            isSpinning = false;
             if (bookIsWhite != game.shouldBeBlack && hit && player) 
             {
                 RepositionBook(); 
                 return;
-            } 
+            }
             BaseAnim.DoScaledAnimationAsync(bookIsWhite ? "WhitetoBlack" : "BlacktoWhite", 0.5f);
             bookIsWhite = !bookIsWhite;
             bookIsOpen = true;
@@ -173,6 +176,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             BaseAnim.DoScaledAnimationAsync(bookIsWhite ? "SpinfromWhite" : "SpinfromBlack", 0.5f);
             bookIsOpen = true;
             noBop = true;
+            isSpinning = true;
         }
 
         public void StopSpinBook()
@@ -182,6 +186,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             BaseAnim.DoScaledAnimationAsync("OpenBook", 0.5f);
             bookIsOpen = true;
             noBop = true;
+            isSpinning = false;
         }
     }
 }

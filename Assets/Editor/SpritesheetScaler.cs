@@ -77,7 +77,8 @@ public class SpritesheetScaler : EditorWindow
         for (int i = 0; i < ti1.spritesheet.Length; i++)
         {
             SpriteMetaData d = ti1.spritesheet[i];
-            Vector2 oldPivot = Rect.NormalizedToPoint(d.rect, d.pivot) * multiplier;
+            // pivot relative to the origin of the rect in pixels
+            Vector2 oldPivot = new Vector2(d.pivot.x * d.rect.width, d.pivot.y * d.rect.height);
             d.rect = ScaleRect(d.rect, multiplier, inflateX, inflateY);
 
             d.border.x += d.border.x > 0 ? inflateX : 0;
@@ -85,10 +86,12 @@ public class SpritesheetScaler : EditorWindow
             d.border.z += d.border.z > 0 ? inflateX : 0;
             d.border.w += d.border.w > 0 ? inflateY : 0;
 
-            if (inflateX > 0 || inflateY > 0)
+            if (d.alignment != (int)SpriteAlignment.Center && (inflateX > 0 || inflateY > 0))
             {
                 d.alignment = (int)SpriteAlignment.Custom;
-                d.pivot = Rect.PointToNormalized(d.rect, oldPivot);
+                oldPivot += new Vector2(inflateX, inflateY);
+                Vector2 newPivot = oldPivot * multiplier;
+                d.pivot = new Vector2(newPivot.x / d.rect.width, newPivot.y / d.rect.height);
             }
 
             d.border *= multiplier;

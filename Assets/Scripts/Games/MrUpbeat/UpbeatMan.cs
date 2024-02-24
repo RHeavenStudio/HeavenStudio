@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using Starpelly;
 using TMPro;
 
 using HeavenStudio.Util;
@@ -14,59 +11,95 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         [Header("References")]
         [SerializeField] Animator anim;
         [SerializeField] Animator blipAnim;
-        [SerializeField] Animator letterAnim;
+        [SerializeField] Transform antennaLight;
         [SerializeField] GameObject[] shadows;
         [SerializeField] TMP_Text blipText;
 
-        public int stepTimes = 0;
         public int blipSize = 0;
+        public bool shouldGrow;
+        public bool shouldBlip = true;
         public string blipString = "M";
+        public int blipLength = 4;
+        public bool canStep = false; // just disabled when you normally couldn't step, which is anything less than 2 beats before you would start stepping and any time after the Ding!
+        public bool canStepFromAnim = true; // disabled when stepping, then reenabled in the animation events. you can step JUST BARELY before the animation ends in fever
 
-        public void Blip()
+        private static MrUpbeat game;
+
+        void Awake()
         {
-            float c = Conductor.instance.songPositionInBeats;
-            // checks if the position is on an offbeat; accurate until you get down to 20 fps or so (i.e unplayable)
-            float pos = ((MathF.Floor(c * 10)/10 % 1) == 0.5f) ? MathF.Floor(c) : MathF.Round(c);
+            game = MrUpbeat.instance;
 
-            // recursive, should happen on the offbeat (unless downbeatMod is different)
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(pos + MrUpbeat.downbeatMod, delegate {
-                    if (MrUpbeat.shouldBlip) {
-                        Jukebox.PlayOneShotGame("mrUpbeat/blip");
-                        blipAnim.Play("Blip"+(blipSize+1), 0, 0);
-                        blipText.text = (blipSize == 4 && blipString != "") ? blipString : "";
-                    }
-                }),
-                new BeatAction.Action(pos + MrUpbeat.downbeatMod + 0.999f, delegate { 
-                    Blip();
-                }),
+            canStep = false;
+        }
+
+        void Update()
+        {
+            blipText.transform.localPosition = new Vector3(antennaLight.position.x, antennaLight.position.y + 0.7f);
+
+            if (PlayerInput.GetIsAction(MrUpbeat.InputAction_BasicPress) && !game.IsExpectingInputNow(MrUpbeat.InputAction_BasicPress)
+                && canStep && canStepFromAnim) {
+                Step(true);
+            }
+        }
+
+        public void RecursiveBlipping(double beat)
+        {
+            if (game.stopBlipping) {
+                game.stopBlipping = false;
+                return;
+            }
+            if (shouldBlip) {
+                Blipping();
+            }
+            BeatAction.New(this, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat + 1, delegate { RecursiveBlipping(beat + 1); })
             });
         }
 
-        public void Step()
+        public void Blipping()
         {
-            stepTimes++;
+            int blipLengthReal = blipLength - 4;
+            SoundByte.PlayOneShotGame("mrUpbeat/blip");
+            blipAnim.Play("Blip" + (blipSize + 1 - blipLengthReal), 0, 0);
+            blipText.gameObject.SetActive(blipSize - blipLengthReal >= 4);
             
-            bool x = (stepTimes % 2 == 1);
-            shadows[0].SetActive(!x);
-            shadows[1].SetActive(x);
-            transform.localScale = new Vector3(x ? -1 : 1, 1);
+            blipText.text = blipString != "" ? blipString : "";
+            if (shouldGrow && blipSize - blipLengthReal < 4) blipSize++;
+        }
 
+        public void Step(bool isInput = false)
+        {
+            if (isInput || FacingCorrectly()) {
+                shadows[0].SetActive(transform.localScale.x < 0);
+                shadows[1].SetActive(transform.localScale.x > 0);
+                Flip();
+            }
+            
             anim.DoScaledAnimationAsync("Step", 0.5f);
-            letterAnim.DoScaledAnimationAsync(x ? "StepRight" : "StepLeft", 0.5f);
-            Jukebox.PlayOneShotGame("mrUpbeat/step");
+            SoundByte.PlayOneShotGame("mrUpbeat/step");
         }
 
         public void Fall()
         {
-            blipSize = 0;
-            blipAnim.Play("Idle", 0, 0);
-            blipText.text = "";
-            
-            anim.DoScaledAnimationAsync("Fall", 0.5f);
-            Jukebox.PlayOneShot("miss");
+            anim.DoScaledAnimationAsync(FacingCorrectly() ? "FallR" : "FallL", 1f);
+            SoundByte.PlayOneShot("miss");
             shadows[0].SetActive(false);
             shadows[1].SetActive(false);
+            Flip();
+        }
+
+        void Flip() {
+            var scale = transform.localScale;
+            transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
+        }
+
+
+        public bool FacingCorrectly() => (game.stepIterate % 2 == 0) == (transform.localScale.x < 0);
+
+        // animation event
+        public void ToggleStepping(int canStep) // why do unity animation events not support booleans??? this is a 1 for true or 0 for false
+        {
+            canStepFromAnim = canStep == 1;
         }
     }
 }

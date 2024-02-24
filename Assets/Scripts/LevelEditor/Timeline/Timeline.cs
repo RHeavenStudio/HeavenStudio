@@ -6,7 +6,11 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 using TMPro;
-using Starpelly;
+using Jukebox;
+using Newtonsoft.Json;
+using System.Linq;
+
+using HeavenStudio.Util;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -18,9 +22,6 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text CurrentTempo;
 
         [Header("Timeline Properties")]
-        private float lastBeatPos = 0;
-        private Vector2 lastMousePos;
-        public List<TimelineEventObj> eventObjs = new List<TimelineEventObj>();
         private bool lastFrameDrag;
         public int LayerCount = 5;
         public bool metronomeEnabled;
@@ -31,6 +32,22 @@ namespace HeavenStudio.Editor.Track
 
         [Header("Components")]
         [SerializeField] private RawImage waveform;
+        [SerializeField] private Image layerBG;
+        [SerializeField] private TimelineZoom zoomComponent;
+        public Texture2D resizeCursor;
+
+        public float WidthPerBeat { get; private set; } = 100.0f;
+        public float PixelsPerBeat => WidthPerBeat * Zoom;
+        public float Zoom { get; private set; } = 1.0f;
+        public float VerticalZoom { get; private set; } = 1.0f;
+        public float MousePos2Beat { get; private set; }
+        public float MousePos2Layer { get; private set; }
+        public float MousePos2BeatSnap => HeavenStudio.Util.MathUtils.Round2Nearest(MousePos2Beat + (SnapInterval() * 0.5f), SnapInterval());
+        public bool MouseInTimeline { get; private set; }
+
+        private Vector2 relativeMousePos;
+        public Vector2 RelativeMousePos => relativeMousePos;
+        public float PlaybackBeat = 0.0f;
 
         public static float SnapInterval() { return instance.snapInterval; }
 
@@ -120,16 +137,24 @@ namespace HeavenStudio.Editor.Track
             }
         }
 
+        [Header("Panels")]
+        [SerializeField] private RectTransform TopPanel;
+        [SerializeField] private RectTransform TopPanelContent;
+        [SerializeField] private RectTransform ContentPanel;
+        [SerializeField] private RectTransform OverlayPanel, OverlayPanelContent;
+
         [Header("Timeline Components")]
         [SerializeField] private RectTransform TimelineSlider;
         [SerializeField] private RectTransform TimelineGridSelect;
         [SerializeField] private RectTransform TimelineEventGrid;
         [SerializeField] private TMP_Text TimelinePlaybackBeat;
         public ScrollRect TimelineScroll;
-        public RectTransform TimelineContent;
-        [SerializeField] private ZoomComponent zoomComponent;
+        [SerializeField] private RectTransform RealTimelineContent;
+        [SerializeField] private RectTransform TimelineContent;
+        public RectTransform EventContent;
         [SerializeField] private RectTransform TimelineSongPosLineRef;
         [SerializeField] private RectTransform TimelineEventObjRef;
+        public RectTransform TimelineEventsHolder;
         [SerializeField] private RectTransform LayersRect;
 
         [Header("Timeline Inputs")]
@@ -159,10 +184,20 @@ namespace HeavenStudio.Editor.Track
 
         public Vector3[] LayerCorners = new Vector3[4];
 
-        public float leftSide => (TimelineContent.localPosition.x / TimelineContent.localScale.x) * -1;
-        public float rightSide => (TimelineScroll.viewport.rect.width / TimelineContent.localScale.x) + leftSide;
-        
+        // Beats
+        public float leftSide => (RealTimelineContent.anchoredPosition.x / PixelsPerBeat) * -1;
+        public float rightSide => (TimelineScroll.viewport.rect.width / PixelsPerBeat) + leftSide;
+
+        // Layer Height
+        public float topSide => RealTimelineContent.anchoredPosition.y / LayerHeight();
+        public float bottomSide => topSide + (TimelineScroll.viewport.rect.height / LayerHeight());
+
+        private Vector2 lastScreenSize;
+
         public static Timeline instance { get; private set; }
+
+        [HideInInspector]
+        public List<RiqEntity> CopiedEntities = new();
 
         public bool userIsEditingInputField
         {
@@ -177,29 +212,35 @@ namespace HeavenStudio.Editor.Track
 
         public void LoadRemix()
         {
-            // beatmap entities
-            for (int i = 0; i < eventObjs.Count; i++)
+            /*
+            for (int i = 0; i < GameManager.instance.Beatmap.Entities.Count; i++)
             {
-                Destroy(eventObjs[i].gameObject);
-            }
-            eventObjs.Clear();
+                var e = GameManager.instance.Beatmap.Entities[i];
 
-            for (int i = 0; i < GameManager.instance.Beatmap.entities.Count; i++)
-            {
-                var e = GameManager.instance.Beatmap.entities[i];
-
-                AddEventObject(e.datamodel, false, new Vector3(e.beat, -e.track * LayerHeight()), e, false, RandomID());
+                AddEventObject(e.datamodel, false, new Vector3((float)e.beat, -e["track"] * LayerHeight()), e, false);
             }
+            */
+
+            TimelineBlockManager.Instance.Load();
 
             SpecialInfo.Setup();
             UpdateOffsetText();
             UpdateStartingBPMText();
             UpdateStartingVolText();
+
+            GameManager.instance.SortEventsList();
         }
 
         public void Init()
         {
             instance = this;
+
+            for (var i = 0; i < LayerCount; i++)
+            {
+                var bg = Instantiate(layerBG.gameObject, layerBG.rectTransform.parent).GetComponent<Image>();
+                if (i % 2 == 0) bg.enabled = false;
+            }
+            layerBG.gameObject.SetActive(false);
 
             LoadRemix();
 
@@ -209,25 +250,25 @@ namespace HeavenStudio.Editor.Track
             TimelineSlider.GetChild(3).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.BeatMarkerCol.Hex2RGB();
             TimelineSongPosLineRef.GetComponent<Image>().color = EditorTheme.theme.properties.CurrentTimeMarkerCol.Hex2RGB();
 
-            PlayBTN.onClick.AddListener(delegate 
+            PlayBTN.onClick.AddListener(delegate
             {
                 if (Conductor.instance.isPaused)
                     PlayCheck(false);
                 else
-                    PlayCheck(true); 
+                    PlayCheck(true);
             });
-            PauseBTN.onClick.AddListener(delegate 
+            PauseBTN.onClick.AddListener(delegate
             {
                 if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
-                PlayCheck(false); 
+                    PlayCheck(false);
             });
-            StopBTN.onClick.AddListener(delegate 
+            StopBTN.onClick.AddListener(delegate
             {
                 if (Conductor.instance.isPlaying || Conductor.instance.isPaused)
-                PlayCheck(true);
+                    PlayCheck(true);
             });
 
-            MetronomeBTN.onClick.AddListener(delegate 
+            MetronomeBTN.onClick.AddListener(delegate
             {
                 MetronomeToggle();
             });
@@ -255,11 +296,11 @@ namespace HeavenStudio.Editor.Track
 
             ZoomInBTN.onClick.AddListener(delegate
             {
-                zoomComponent.ZoomIn(1, Vector2.zero);
+                zoomComponent.Zoom(0.25f * zoomComponent.Scale.x, Vector2.zero, true);
             });
             ZoomOutBTN.onClick.AddListener(delegate
             {
-                zoomComponent.ZoomOut(-1, Vector2.zero);
+                zoomComponent.Zoom(-0.2f * zoomComponent.Scale.x, Vector2.zero, true);
             });
             ZoomResetBTN.onClick.AddListener(delegate
             {
@@ -270,56 +311,36 @@ namespace HeavenStudio.Editor.Track
                 WaveformToggle();
             });
 
-            Tooltip.AddTooltip(SongBeat.gameObject, "Current Beat");
-            Tooltip.AddTooltip(SongPos.gameObject, "Current Time");
-            Tooltip.AddTooltip(CurrentTempo.gameObject, "Current Tempo (BPM)");
-
-            Tooltip.AddTooltip(PlayBTN.gameObject, "Play <color=#adadad>[Space]</color>");
-            Tooltip.AddTooltip(PauseBTN.gameObject, "Pause <color=#adadad>[Shift + Space]</color>");
-            Tooltip.AddTooltip(StopBTN.gameObject, "Stop <color=#adadad>[Space]</color>");
-
-            Tooltip.AddTooltip(MetronomeBTN.gameObject, "Metronome <color=#adadad>[M]</color>");
-            Tooltip.AddTooltip(AutoplayBTN.gameObject, "Autoplay <color=#adadad>[P]</color>");
-
-            Tooltip.AddTooltip(SelectionsBTN.gameObject, "Tool: Selection <color=#adadad>[1]</color>");
-            Tooltip.AddTooltip(TempoChangeBTN.gameObject, "Tool: Tempo Change <color=#adadad>[2]</color>");
-            Tooltip.AddTooltip(MusicVolumeBTN.gameObject, "Tool: Music Volume <color=#adadad>[3]</color>");
-            Tooltip.AddTooltip(ChartSectionBTN.gameObject, "Tool: Beatmap Sections <color=#adadad>[4]</color>");
-
-            Tooltip.AddTooltip(StartingTempoSpecialAll.gameObject, "Starting Tempo (BPM)");
-            Tooltip.AddTooltip(StartingTempoSpecialTempo.gameObject, "Starting Tempo (BPM)");
-            Tooltip.AddTooltip(StartingVolumeSpecialVolume.gameObject, "Starting Volume (%)");
-
-            Tooltip.AddTooltip(ZoomInBTN.gameObject, "Zoom In");
-            Tooltip.AddTooltip(ZoomOutBTN.gameObject, "Zoom Out");
-            Tooltip.AddTooltip(ZoomResetBTN.gameObject, "Zoom Reset");
             Tooltip.AddTooltip(WaveformBTN.gameObject, "Waveform Toggle");
-
-            Tooltip.AddTooltip(PlaybackSpeed.gameObject, "The preview's playback speed. Right click to reset to 1.0");
 
             SetTimeButtonColors(true, false, false);
             MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+            MetronomeBTN.transform.GetChild(1).GetComponent<Image>().color = Color.gray;
+            MetronomeBTN.transform.GetChild(2).GetComponent<Image>().color = Color.gray;
 
             timelineState.SetState(CurrentTimelineState.State.Selection);
 
             AutoBtnUpdate();
+
+            resizeCursor = Resources.Load<Texture2D>("Cursors/horizontal_resize");
         }
 
         public void FitToSong()
         {
-            var currentSizeDelta = TimelineContent.sizeDelta;
+            var currentSizeDelta = RealTimelineContent.sizeDelta;
             float songBeats = Conductor.instance.SongLengthInBeats();
             if (songBeats == 0) songBeats = 320;
             else songBeats += 10;
-            TimelineContent.sizeDelta = new Vector2(songBeats, currentSizeDelta.y);
-            TimelineEventGrid.sizeDelta = new Vector2(songBeats, currentSizeDelta.y);
+
+            TimelineContent.sizeDelta = new Vector2(songBeats * PixelsPerBeat, currentSizeDelta.y * RealTimelineContent.localScale.y);
+            // TimelineEventGrid.sizeDelta = new Vector2(songBeats * PixelsPerBeat, currentSizeDelta.y);
+            RealTimelineContent.sizeDelta = new Vector2(TimelineContent.sizeDelta.x / Zoom, RealTimelineContent.sizeDelta.y);
         }
 
         public void CreateWaveform()
         {
-            Debug.Log("what");
             // DrawWaveform();
-            StartCoroutine(DrawWaveformRealtime());
+            // StartCoroutine(DrawWaveformRealtime());
         }
 
         public void AutoBtnUpdate()
@@ -333,62 +354,149 @@ namespace HeavenStudio.Editor.Track
             if (!GameManager.instance.autoplay)
             {
                 AutoplayBTN.GetComponent<Animator>().Play("Idle", 0, 0);
-                GameManager.instance.autoplay = true;
+                GameManager.instance.ToggleAutoplay(true);
             }
             else
             {
                 AutoplayBTN.GetComponent<Animator>().Play("Disabled", 0, 0);
-                GameManager.instance.autoplay = false;
+                GameManager.instance.ToggleAutoplay(false);
             }
         }
-
 
         public void MetronomeToggle()
         {
             if (!Conductor.instance.metronome)
             {
                 MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = "009FC6".Hex2RGB();
+                MetronomeBTN.transform.GetChild(1).GetComponent<Image>().color = "009FC6".Hex2RGB();
+                MetronomeBTN.transform.GetChild(2).GetComponent<Image>().color = "009FC6".Hex2RGB();
                 Conductor.instance.metronome = true;
             }
             else
             {
                 MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+                MetronomeBTN.transform.GetChild(1).GetComponent<Image>().color = Color.gray;
+                MetronomeBTN.transform.GetChild(2).GetComponent<Image>().color = Color.gray;
                 Conductor.instance.metronome = false;
             }
-        }
-
-        public static string RandomID()
-        {
-            return Starpelly.Random.Strings.RandomString(Starpelly.Enums.Strings.StringType.Alphanumeric, 128);
         }
 
         #endregion
 
         private void Update()
         {
-            waveform.rectTransform.anchoredPosition = new Vector2(
-                -(GameManager.instance.Beatmap.firstBeatOffset / (60.0f / GameManager.instance.Beatmap.bpm)), 
-                waveform.rectTransform.anchoredPosition.y);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(EventContent, Input.mousePosition, Editor.instance.EditorCamera, out relativeMousePos);
 
-            WaveformBTN.transform.GetChild(0).GetComponent<Image>().color = (Conductor.instance.musicSource.clip != null && waveform.gameObject.activeInHierarchy) ? Color.white : Color.gray;
-
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
+            MouseInTimeline = this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(EventContent, Input.mousePosition, Editor.instance.EditorCamera);
+            if (MouseInTimeline)
+                MouseInTimeline = RectTransformUtility.RectangleContainsScreenPoint(TimelineScroll.viewport,
+                    Input.mousePosition, Editor.instance.EditorCamera);
+            
+            PlaybackSpeed.interactable = !Conductor.instance.isPaused;
+            
+            foreach (var rect in GameObject.FindGameObjectsWithTag("BlocksEditor"))
             {
-                SongBeat.text = $"Beat {string.Format("{0:0.000}", TimelineSlider.localPosition.x)}";
-                SongPos.text = FormatTime((float) Conductor.instance.GetSongPosFromBeat(TimelineSlider.localPosition.x));
+                if (!rect.activeInHierarchy) continue;
+                if (rect.TryGetComponent(out RectTransform rectTransform))
+                {
+                    if (RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Camera.main))
+                    {
+                        MouseInTimeline = false;
+                        break;
+                    }
+                }
+            }
+
+            /*
+            if (MouseInTimeline)
+            {
+                var wheel = Input.mouseScrollDelta.y;
+
+                if (wheel != 0)
+                {
+                    var incre = 0.0f;
+                    if (wheel > 0)
+                    {
+                        incre += wheel * (Zoom * 0.25f);
+                    }
+                    else
+                    {
+                        incre += wheel * (Zoom * 0.2f);
+                    }
+
+                    var v = new Vector3[4];
+                    TimelineScroll.viewport.GetWorldCorners(v);
+                    var viewportPos = Editor.instance.EditorCamera.WorldToScreenPoint(v[0]);
+
+                    var left = leftSide;
+                    var viewportWidth = TimelineScroll.viewport.rect.width;
+                    var localPointRec = Mathf.Lerp(left, left + (viewportWidth / Zoom),
+                        MathUtils.Normalize(Input.mousePosition.x, viewportPos.x, viewportPos.x + viewportWidth));
+
+                    var xPixels = (localPointRec * incre);
+                    xPixels *= (Zoom);
+
+                    TimelineContent.anchoredPosition = new Vector2(
+                        TimelineContent.anchoredPosition.x - xPixels,
+                        TimelineContent.anchoredPosition.y
+                        );
+
+                    Zoom += incre;
+                    Zoom = Mathf.Clamp(Zoom, 1, 1000);
+                }
+            }
+            */
+
+            MousePos2Beat = relativeMousePos.x / PixelsPerBeat;
+            MousePos2Layer = Mathf.Clamp(Mathf.FloorToInt(-(relativeMousePos.y) / LayerHeight()), 0, LayerCount - 1);
+
+            Conductor cond = Conductor.instance;
+            // waveform.rectTransform.anchoredPosition = new Vector2(
+            //     -(GameManager.instance.Beatmap.data.offset / (60.0f / GameManager.instance.Beatmap.bpm)), 
+            //     waveform.rectTransform.anchoredPosition.y);
+
+            // WaveformBTN.transform.GetChild(0).GetComponent<Image>().color = (cond.musicSource.clip != null && waveform.gameObject.activeInHierarchy) ? Color.white : Color.gray;
+
+            if (!cond.isPlaying && !cond.isPaused)
+            {
+                SongBeat.text = $"Beat {string.Format("{0:0.000}", PlaybackBeat)}";
+                SongPos.text = FormatTime(cond.GetSongPosFromBeat(PlaybackBeat));
             }
             else
             {
-                SongBeat.text = $"Beat {string.Format("{0:0.000}", Conductor.instance.songPositionInBeats)}";
-                SongPos.text = FormatTime(Conductor.instance.songPosition);
+                SongBeat.text = $"Beat {string.Format("{0:0.000}", cond.songPositionInBeats)}";
+                SongPos.text = FormatTime(cond.songPositionAsDouble);
             }
+
+            // Metronome animation
+            {
+                var rectTransform = MetronomeBTN.transform.GetChild(1).GetComponent<RectTransform>();
+                var rot = 0.0f;
+                if (Conductor.instance.metronome)
+                {
+                    var startBeat = Mathf.FloorToInt(Conductor.instance.songPositionInBeats - 0.5f);
+                    var nm = Conductor.instance.GetLoopPositionFromBeat(0.5f, 1f);
+                    var loop = (startBeat % 2 == 0) ? Mathf.SmoothStep(-1.1f, 1f, nm) : Mathf.SmoothStep(1f, -1f, nm);
+
+                    rot = loop * 45f;
+                }
+                else
+                {
+                    rot = Mathf.LerpAngle(rectTransform.localEulerAngles.z, 0.0f, Time.deltaTime * 16);
+                }
+
+                rectTransform.localEulerAngles =
+                    new Vector3(rectTransform.localEulerAngles.x, rectTransform.localEulerAngles.y,
+                    rot);
+            }
+
 
             SliderControl();
 
             #region Keyboard Shortcuts
             if ((!userIsEditingInputField) && Editor.instance.isShortcutsEnabled)
             {
-                
+
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
@@ -438,48 +546,78 @@ namespace HeavenStudio.Editor.Track
 
                 if (Input.GetKey(KeyCode.LeftArrow) || (!Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.A)))
                 {
-                    TimelineContent.transform.localPosition += new Vector3(moveSpeed * Time.deltaTime, 0);
+                    RealTimelineContent.transform.localPosition += new Vector3(moveSpeed * Time.deltaTime, 0);
                 }
                 else if (Input.GetKey(KeyCode.RightArrow) || (!Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.D)))
                 {
-                    TimelineContent.transform.localPosition += new Vector3(-moveSpeed * Time.deltaTime, 0);
+                    RealTimelineContent.transform.localPosition += new Vector3(-moveSpeed * Time.deltaTime, 0);
                 }
             }
             #endregion
 
-            if (Input.GetMouseButton(1) && !Conductor.instance.isPlaying && Editor.MouseInRectTransform(TimelineGridSelect))
+            if (Input.GetMouseButton(1) && !cond.isPlaying && Editor.MouseInRectTransform(TimelineGridSelect))
             {
                 movingPlayback = true;
             }
-            else if (Input.GetMouseButtonUp(1) || Conductor.instance.isPlaying)
+            else if (Input.GetMouseButtonUp(1) || cond.isPlaying)
             {
                 movingPlayback = false;
             }
             if (movingPlayback)
             {
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(TimelineContent, Input.mousePosition, Editor.instance.EditorCamera, out lastMousePos);
-                TimelineSlider.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(lastMousePos.x + 0.12f, Timeline.SnapInterval()), 0), TimelineSlider.transform.localPosition.y);
+                var playbackBeat = Mathf.Max(MousePos2BeatSnap, 0);
+                TimelineSlider.localPosition = new Vector3(playbackBeat * PixelsPerBeat, TimelineSlider.transform.localPosition.y);
 
-                if (TimelineSlider.localPosition.x != lastBeatPos)
-                    Conductor.instance.SetBeat(TimelineSlider.transform.localPosition.x);
-
-                lastBeatPos = TimelineSlider.localPosition.x;
+                cond.SetBeat(playbackBeat);
+                this.PlaybackBeat = playbackBeat;
             }
 
-            if (Conductor.instance.isPlaying)
+            if (cond.isPlaying)
                 PlaybackFocus(true);
 
-            TimelineContent.transform.localPosition = new Vector3(Mathf.Clamp(TimelineContent.transform.localPosition.x, Mathf.NegativeInfinity, 0), TimelineContent.transform.localPosition.y);
+            RealTimelineContent.transform.localPosition = new Vector3(Mathf.Clamp(RealTimelineContent.transform.localPosition.x, Mathf.NegativeInfinity, 0), RealTimelineContent.transform.localPosition.y);
 
-            CurrentTempo.text = $"    = {Conductor.instance.songBpm}";
+            CurrentTempo.text = $"    = {cond.songBpm}";
 
             LayersRect.GetWorldCorners(LayerCorners);
+
+            for (var i = 0; i < LayersRect.childCount; i++)
+            {
+                var layerRect = LayersRect.GetChild(i).GetComponent<RectTransform>();
+                layerRect.anchoredPosition = new Vector2(layerRect.anchoredPosition.x, -LayerHeight() * (i - 1));
+                layerRect.sizeDelta = new Vector2(layerRect.sizeDelta.x, LayerHeight());
+            }
+
+            for (var i = 0; i < layerBG.rectTransform.parent.childCount; i++)
+            {
+                var layerRect = layerBG.rectTransform.parent.GetChild(i).GetComponent<RectTransform>();
+                layerRect.anchoredPosition = new Vector2(layerRect.anchoredPosition.x, -LayerHeight() * (i - 1));
+                layerRect.sizeDelta = new Vector2(layerRect.sizeDelta.x, LayerHeight());
+            }
+
+            RealTimelineContent.sizeDelta = new Vector2(RealTimelineContent.sizeDelta.x, (LayerHeight() * LayerCount) / VerticalZoom);
+        }
+
+        public void LateUpdate()
+        {
+            TimelineBlockManager.Instance.UpdateMarkers();
+            BoxSelection.instance.LayerSelectUpdate();
+
+            TimelineContent.anchoredPosition = RealTimelineContent.anchoredPosition;
+
+            TopPanelContent.anchoredPosition = new Vector2(TimelineContent.anchoredPosition.x, TopPanelContent.anchoredPosition.y);
+            TopPanelContent.sizeDelta = new Vector2(TimelineContent.sizeDelta.x, TopPanelContent.sizeDelta.y);
+
+            OverlayPanelContent.anchoredPosition = new Vector2(TimelineContent.anchoredPosition.x, OverlayPanelContent.anchoredPosition.y);
+            OverlayPanelContent.sizeDelta = new Vector2(TimelineContent.sizeDelta.x, OverlayPanelContent.sizeDelta.y);
+
+            LayersRect.anchoredPosition = new Vector2(LayersRect.anchoredPosition.x, TimelineContent.anchoredPosition.y);
         }
 
         public static float GetScaleModifier()
         {
             Camera cam = Editor.instance.EditorCamera;
-            return Mathf.Pow(cam.pixelWidth/1280f, 1f) * Mathf.Pow(cam.pixelHeight/720f, 0f);
+            return Mathf.Pow(cam.pixelWidth / 1280f, 1f) * Mathf.Pow(cam.pixelHeight / 720f, 0f);
         }
 
         public Vector2 LayerCornersToDist()
@@ -490,12 +628,11 @@ namespace HeavenStudio.Editor.Track
 
         private void SliderControl()
         {
-            TimelinePlaybackBeat.text = $"Beat {string.Format("{0:0.000}", TimelineSlider.localPosition.x)}";
+            TimelinePlaybackBeat.text = $"Beat {string.Format("{0:0.000}", PlaybackBeat)}";
 
             if (TimelineSongPosLine != null)
             {
-                TimelineSongPosLine.transform.localPosition = new Vector3(Conductor.instance.songPositionInBeats, TimelineSongPosLine.transform.localPosition.y);
-                TimelineSongPosLine.transform.localScale = new Vector3(1f / TimelineContent.transform.localScale.x, TimelineSongPosLine.transform.localScale.y, 1);
+                TimelineSongPosLine.transform.localPosition = new Vector3(Conductor.instance.songPositionInBeats * PixelsPerBeat, TimelineSongPosLine.transform.localPosition.y);
             }
         }
 
@@ -506,13 +643,13 @@ namespace HeavenStudio.Editor.Track
             {
                 if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
                 {
-                    Play(false, TimelineSlider.transform.localPosition.x);
+                    Play(false, PlaybackBeat);
                 }
                 else
                 {
-                    Stop(TimelineSlider.transform.localPosition.x);
+                    Stop(PlaybackBeat);
                 }
-                    
+
             }
             else
             {
@@ -520,11 +657,11 @@ namespace HeavenStudio.Editor.Track
                 {
                     if (TimelineSongPosLine == null)
                     {
-                        Play(false, TimelineSlider.transform.localPosition.x);
+                        Play(false, PlaybackBeat);
                     }
                     else
                     {
-                        Play(false, TimelineSongPosLine.transform.localPosition.x);
+                        Play(false, Conductor.instance.songPositionInBeats);
                     }
                 }
                 else if (!Conductor.instance.isPaused)
@@ -544,7 +681,7 @@ namespace HeavenStudio.Editor.Track
                 TimelineSongPosLine.gameObject.SetActive(true);
             }
 
-            GameManager.instance.Play(time);
+            GameManager.instance.SafePlay(time, 0, false);
 
             SetTimeButtonColors(false, true, true);
         }
@@ -563,7 +700,7 @@ namespace HeavenStudio.Editor.Track
             // timelineSlider.value = 0;
 
             if (TimelineSongPosLine != null)
-            Destroy(TimelineSongPosLine.gameObject);
+                Destroy(TimelineSongPosLine.gameObject);
 
             GameManager.instance.Stop(time);
 
@@ -589,10 +726,11 @@ namespace HeavenStudio.Editor.Track
                 PauseBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             }
             else
-            {   PauseBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+            {
+                PauseBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
                 PauseBTN.enabled = false;
             }
-            
+
             if (stopEnabled)
             {
                 StopBTN.enabled = true;
@@ -608,17 +746,12 @@ namespace HeavenStudio.Editor.Track
 
 
         #region Extras
-        private string FormatTime(float time)
+        private string FormatTime(double time)
         {
             int minutes = (int)time / 60;
             int seconds = (int)time - 60 * minutes;
             int milliseconds = (int)(1000 * (time - minutes * 60 - seconds));
             return string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
-        }
-
-        public bool CheckIfMouseInTimeline()
-        {
-            return (this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(TimelineEventGrid, Input.mousePosition, Editor.instance.EditorCamera));
         }
 
         #endregion
@@ -629,16 +762,18 @@ namespace HeavenStudio.Editor.Track
         {
             var lerpSpd = (lerp) ? 12f : 10000000; // im lazy
 
-            var newPos = new Vector3((-Conductor.instance.songPositionInBeats * TimelineContent.localScale.x) + 200, TimelineContent.transform.localPosition.y);
-            TimelineContent.transform.localPosition =
-                Vector3.Lerp(TimelineContent.transform.localPosition, newPos, Time.deltaTime * lerpSpd);
+            var newPos = new Vector3((-Conductor.instance.songPositionInBeats * PixelsPerBeat) + 200, RealTimelineContent.transform.localPosition.y);
+            newPos.x = Mathf.Max(newPos.x, -(TimelineContent.rect.width - TimelineScroll.viewport.rect.width));
+            RealTimelineContent.transform.localPosition =
+                Vector3.Lerp(RealTimelineContent.transform.localPosition, newPos, Time.deltaTime * lerpSpd);
         }
 
         public void WaveformToggle()
         {
             if (Conductor.instance.musicSource.clip == null) return;
 
-            waveform.gameObject.SetActive(!waveform.gameObject.activeInHierarchy);
+            // waveform.gameObject.SetActive(!waveform.gameObject.activeInHierarchy);
+            waveform.gameObject.SetActive(false);
         }
 
         public IEnumerator DrawWaveformRealtime()
@@ -685,7 +820,7 @@ namespace HeavenStudio.Editor.Track
                 }
             }
             int height = 200;
-            Color col = Colors.Hex2RGB("727272");
+            Color col = "727272".Hex2RGB();
             col.a = 0.25f;
 
             Texture2D tex = new Texture2D(wave.Length, height, TextureFormat.RGBA32, false);
@@ -731,74 +866,18 @@ namespace HeavenStudio.Editor.Track
             return tex2D;
         }
 
-        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), DynamicBeatmap.DynamicEntity entity = null, bool addEvent = false, string eventId = "")
+        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), RiqEntity entity = null, bool addEvent = false)
         {
-            var game = EventCaller.instance.GetMinigame(eventName.Split(0));
-            var action = EventCaller.instance.GetGameAction(game, eventName.Split(1));
-            GameObject g = Instantiate(TimelineEventObjRef.gameObject, TimelineEventObjRef.parent);
-            g.transform.localPosition = pos;
-            g.transform.GetChild(3).GetComponent<TMP_Text>().text = action.displayName;
-
-            TimelineEventObj eventObj = g.GetComponent<TimelineEventObj>();
-
-            if (eventName.Split(1) == "switchGame")
-            eventObj.Icon.sprite = Editor.GameIcon(eventName.Split(2));
-                else
-            eventObj.Icon.sprite = Editor.GameIcon(eventName.Split(0));
-
-            Minigames.GameAction gameAction = EventCaller.instance.GetGameAction(EventCaller.instance.GetMinigame(eventName.Split(0)), eventName.Split(1));
-
-            if (gameAction != null)
-            {
-                if (gameAction.resizable == false)
-                {
-                    g.GetComponent<RectTransform>().sizeDelta = new Vector2(gameAction.defaultLength, LayerHeight());
-                    float length = gameAction.defaultLength;
-                    eventObj.length = length;
-                }
-                else
-                {
-                    eventObj.resizable = true;
-                    if (entity != null && gameAction.defaultLength != entity.length && dragNDrop == false)
-                    {
-                        g.GetComponent<RectTransform>().sizeDelta = new Vector2(entity.length, LayerHeight());
-                    }
-                    else
-                    {
-                        g.GetComponent<RectTransform>().sizeDelta = new Vector2(gameAction.defaultLength, LayerHeight());
-                    }
-                }
-            }
-
-            g.SetActive(true);
-
-            if (dragNDrop)
-            {
-                var mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
-                g.transform.position = new Vector3(mousePos.x, mousePos.y, 0);
-
-                Selections.instance.ClickSelect(eventObj);
-                eventObj.moving = true;
-            }
-            else
-            {
-                entity.eventObj = g.GetComponent<TimelineEventObj>();
-                entity.track = entity.eventObj.GetTrack();
-            }
-
+            string[] split = eventName.Split('/');
+            var action = EventCaller.instance.GetGameAction(split[0], split[1]);
 
             if (addEvent)
             {
-                DynamicBeatmap.DynamicEntity tempEntity = entity;
+                RiqEntity tempEntity = entity;
 
                 if (entity == null)
                 {
-                    DynamicBeatmap.DynamicEntity en = new DynamicBeatmap.DynamicEntity();
-                    en.datamodel = eventName;
-                    en.eventObj = eventObj;
-
-                    GameManager.instance.Beatmap.entities.Add(en);
-                    GameManager.instance.SortEventsList();
+                    RiqEntity en = GameManager.instance.Beatmap.AddNewEntity(eventName, 0, action.defaultLength);
 
                     tempEntity = en;
 
@@ -822,7 +901,7 @@ namespace HeavenStudio.Editor.Track
                             }
                             else if (propertyType.IsEnum)
                             {
-                                returnVal = (int) ep[i].parameter;
+                                returnVal = (int)ep[i].parameter;
                             }
 
                             //tempEntity[ep[i].propertyName] = returnVal;
@@ -832,80 +911,115 @@ namespace HeavenStudio.Editor.Track
                 }
                 else
                 {
-                    GameManager.instance.Beatmap.entities.Add(entity);
-                    GameManager.instance.SortEventsList();
+                    // GameManager.instance.Beatmap.Entities.Add(tempEntity);
+                    Debug.LogWarning("Weird as fuck case called?");
                 }
+
+                GameManager.instance.SortEventsList();
+                TimelineBlockManager.Instance.SetEntityToSet(tempEntity);
+            }
+            else
+            {
+                TimelineBlockManager.Instance.SetEntityToSet(entity);
             }
 
-            eventObjs.Add(eventObj);
+            var marker = TimelineBlockManager.Instance.Pool.Get();
 
-            eventObj.eventObjID = eventId;
+            marker.SetMarkerInfo();
 
-            return eventObj;
+            if (dragNDrop)
+            {
+                Selections.instance.ClickSelect(marker);
+                marker.moving = true;
+                marker.entity.beat = Mathf.Max(MousePos2BeatSnap, 0);
+            }
+            else
+            {
+                entity["track"] = marker.GetTrack();
+            }
+
+            CommandManager.Instance.AddCommand(new Commands.Place(marker.entity, marker.entity.guid));
+
+            return marker;
+        }
+
+        public void CopySelected()
+        {
+            CopyEntities(Selections.instance.eventsSelected.Select(c => c.entity).ToList());
+        }
+
+        public void CopyEntities(List<RiqEntity> original)
+        {
+            if (original.Count <= 0) return;
+
+            CopiedEntities.Clear();
+
+            foreach (RiqEntity entity in original)
+            {
+                CopiedEntities.Add(entity.DeepCopy());
+            }
+        }
+
+        public void Paste()
+        {
+            CommandManager.Instance.AddCommand(new Commands.Paste(CopiedEntities));
         }
 
         private List<TimelineEventObj> duplicatedEventObjs = new List<TimelineEventObj>();
         public TimelineEventObj CopyEventObject(TimelineEventObj e)
         {
-            DynamicBeatmap.DynamicEntity clone = e.entity.DeepCopy();
-            TimelineEventObj dup = AddEventObject(clone.datamodel, false, new Vector3(clone.beat, -clone.track * Timeline.instance.LayerHeight()), clone, true, RandomID());
+            RiqEntity clone = e.entity.DeepCopy();
+            TimelineEventObj dup = AddEventObject(clone.datamodel, false, new Vector3((float)clone.beat, -clone["track"] * Timeline.instance.LayerHeight()), clone, true);
             duplicatedEventObjs.Add(dup);
 
             return dup;
         }
 
-        public void FinalizeDuplicateEventStack()
-        {
-            CommandManager.instance.Execute(new Commands.Duplicate(duplicatedEventObjs));
-            duplicatedEventObjs = new List<TimelineEventObj>();
-        }
-
-        public void DestroyEventObject(DynamicBeatmap.DynamicEntity entity)
-        {
-            if (EventParameterManager.instance.entity == entity)
-                EventParameterManager.instance.Disable();
-
-            eventObjs.Remove(entity.eventObj);
-            GameManager.instance.Beatmap.entities.Remove(entity);
-            Timeline.instance.eventObjs.Remove(entity.eventObj);
-
-            Destroy(entity.eventObj.gameObject);
-            GameManager.instance.SortEventsList();
-        }
-
-        public bool IsMouseAboveEvents()
-        {
-            return Timeline.instance.eventObjs.FindAll(c => c.mouseHovering == true).Count > 0;
-        }
-
-        public bool InteractingWithEvents()
-        {
-            return eventObjs.FindAll(c => c.moving == true).Count > 0 || eventObjs.FindAll(c => c.resizing == true).Count > 0;
-        }
-
         public float SnapToLayer(float y)
         {
             float size = LayerHeight();
-            return Mathf.Clamp(Mathp.Round2Nearest(y, size), -size * 4f, 0f);
+            return Mathf.Clamp(MathUtils.Round2Nearest(y, size), -size * (LayerCount - 1), 0f);
         }
 
         public float LayerHeight()
         {
-            return LayersRect.rect.height / 5f;
+            var defaultHeight = 32 * VerticalZoom;
+            return Mathf.Max(defaultHeight, (LayersRect.rect.height / LayerCount) * VerticalZoom);
+            // return LayersRect.rect.height / LayerCount;
+        }
+
+        public float LayerToY(int layer)
+        {
+            return (-layer * LayerHeight());
         }
 
         const float SpeedSnap = 0.25f;
         public void SetPlaybackSpeed(float speed)
         {
-            float spd = Mathp.Round2Nearest(speed, SpeedSnap);
-            PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
-            Conductor.instance.SetTimelinePitch(spd);
-            PlaybackSpeed.value = spd;
+            if (Conductor.instance.isPaused)
+            {
+                float spd = Conductor.instance.TimelinePitch;
+                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+                PlaybackSpeed.value = spd;
+            }
+            else
+            {
+                float spd = MathUtils.Round2Nearest(speed, SpeedSnap);
+                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+                Conductor.instance.SetTimelinePitch(spd);
+                PlaybackSpeed.value = spd;
+            }
         }
 
         public void ResetPlaybackSpeed()
         {
-            if (Input.GetMouseButton(1))
+            if (Conductor.instance.isPaused)
+            {
+                float spd = Conductor.instance.TimelinePitch;
+                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+                PlaybackSpeed.value = spd;
+            }
+            else if (Input.GetMouseButton(1))
             {
                 PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: 1x";
                 PlaybackSpeed.value = 1f;
@@ -913,9 +1027,28 @@ namespace HeavenStudio.Editor.Track
             }
         }
 
+        public void OnZoom(float zoom)
+        {
+            Zoom = zoom;
+
+            TimelineSlider.localPosition = new Vector3(Conductor.instance.songPositionInBeats * PixelsPerBeat, TimelineSlider.transform.localPosition.y);
+
+            FitToSong();
+            TimelineBlockManager.Instance.OnZoom();
+        }
+
+        public void OnZoomVertical(float zoom)
+        {
+            VerticalZoom = zoom;
+
+            FitToSong();
+            TimelineBlockManager.Instance.OnZoom();
+        }
+
         public void UpdateOffsetText()
         {
-            FirstBeatOffset.text = (GameManager.instance.Beatmap.firstBeatOffset * 1000f).ToString("G");
+            // show up to 4 decimal places
+            FirstBeatOffset.text = (GameManager.instance.Beatmap.data.offset * 1000f).ToString("F0");
         }
 
         public void UpdateOffsetFromText()
@@ -923,21 +1056,19 @@ namespace HeavenStudio.Editor.Track
             // Failsafe against empty string.
             if (String.IsNullOrEmpty(FirstBeatOffset.text))
                 FirstBeatOffset.text = "0";
-            
+
             // Convert ms to s.
-            var newOffset = Convert.ToSingle(FirstBeatOffset.text) / 1000f;
+            double newOffset = Convert.ToDouble(FirstBeatOffset.text) / 1000f;
 
-            // Limit decimal places to 4.
-            newOffset = (float)System.Math.Round(newOffset, 4);
-
-            GameManager.instance.Beatmap.firstBeatOffset = newOffset;
+            GameManager.instance.Beatmap.data.offset = newOffset;
 
             UpdateOffsetText();
+            FitToSong();
         }
 
         public void UpdateStartingBPMText()
         {
-            StartingTempoSpecialAll.text = GameManager.instance.Beatmap.bpm.ToString("G");
+            StartingTempoSpecialAll.text = GameManager.instance.Beatmap.TempoChanges[0]["tempo"].ToString("G");
             StartingTempoSpecialTempo.text = StartingTempoSpecialAll.text;
         }
 
@@ -947,7 +1078,7 @@ namespace HeavenStudio.Editor.Track
             // Failsafe against empty string.
             if (String.IsNullOrEmpty(text))
                 text = "120";
-            
+
             var newBPM = Convert.ToDouble(text);
 
             // Failsafe against negative BPM.
@@ -960,7 +1091,9 @@ namespace HeavenStudio.Editor.Track
             // Limit decimal places to 4.
             newBPM = System.Math.Round(newBPM, 4);
 
-            GameManager.instance.Beatmap.bpm = (float) newBPM;
+            RiqEntity tempoChange = GameManager.instance.Beatmap.TempoChanges[0];
+            tempoChange["tempo"] = (float)newBPM;
+            GameManager.instance.Beatmap.TempoChanges[0] = tempoChange;
 
             // In case the newBPM ended up differing from the inputted string.
             UpdateStartingBPMText();
@@ -970,7 +1103,7 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateStartingVolText()
         {
-            StartingVolumeSpecialVolume.text = (GameManager.instance.Beatmap.musicVolume).ToString("G");
+            StartingVolumeSpecialVolume.text = (GameManager.instance.Beatmap.VolumeChanges[0]["volume"]).ToString("G");
         }
 
         public void UpdateStartingVolFromText()
@@ -978,11 +1111,13 @@ namespace HeavenStudio.Editor.Track
             // Failsafe against empty string.
             if (String.IsNullOrEmpty(StartingVolumeSpecialVolume.text))
                 StartingVolumeSpecialVolume.text = "100";
-            
+
             var newVol = Convert.ToInt32(StartingVolumeSpecialVolume.text);
             newVol = Mathf.Clamp(newVol, 0, 100);
 
-            GameManager.instance.Beatmap.musicVolume = newVol;
+            RiqEntity volChange = GameManager.instance.Beatmap.VolumeChanges[0];
+            volChange["volume"] = newVol;
+            GameManager.instance.Beatmap.VolumeChanges[0] = volChange;
 
             UpdateStartingVolText();
         }
@@ -992,7 +1127,7 @@ namespace HeavenStudio.Editor.Track
         #region Commands
 
         public void Move()
-        { 
+        {
         }
 
         public void Undo()

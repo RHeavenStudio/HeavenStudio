@@ -5,6 +5,8 @@ using UnityEngine;
 using TMPro;
 
 using DG.Tweening;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -13,8 +15,7 @@ namespace HeavenStudio.Editor.Track
         [Header("Components")]
         [SerializeField] private TMP_Text volumeTXT;
         [SerializeField] private GameObject volumeLine;
-
-        public DynamicBeatmap.VolumeChange volumeChange;
+        [SerializeField] private VolumeDialog volumeDialog;
 
         new private void Update()
         {
@@ -22,6 +23,7 @@ namespace HeavenStudio.Editor.Track
             if (hovering)
             {
                 SpecialTimeline.hoveringTypes |= SpecialTimeline.HoveringTypes.VolumeChange;
+
                 if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
                 {
                     float newVolume = Input.mouseScrollDelta.y;
@@ -29,21 +31,33 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftShift))
                         newVolume *= 5f;
                     if (Input.GetKey(KeyCode.LeftControl))
-                        newVolume /= 100f;
+                        newVolume *= 0.01f;
 
-                    volumeChange.volume += newVolume;
-
-                    //make sure volume is positive
-                    volumeChange.volume = Mathf.Clamp(volumeChange.volume, 0, 100);
+                    if (newVolume != 0)
+                    {
+                        SetVolume(chartEntity["volume"] + newVolume);
+                        volumeDialog.RefreshDialog();
+                    }
                 }
             }
+            UpdateVolume();
+        }
 
+        public void SetVolume(float volume)
+        {
+            chartEntity["volume"] = Mathf.Clamp(volume, 0, 100);
+            if (first)
+            {
+                Timeline.instance.UpdateStartingVolText();
+            }
             UpdateVolume();
         }
 
         private void UpdateVolume()
         {
-            volumeTXT.text = $"{volumeChange.volume}%";
+            volumeTXT.text = $"{chartEntity["volume"].ToString("F")}%";
+            if (!moving)
+                SetX(chartEntity);
         }
 
         public override void Init()
@@ -61,21 +75,25 @@ namespace HeavenStudio.Editor.Track
         {
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
             {
-                GameManager.instance.Beatmap.volumeChanges.Remove(volumeChange);
-                DeleteObj();
+                volumeDialog.SetVolumeObj(this);
+                volumeDialog.SwitchVolumeDialog();
             }
         }
 
-        public override bool OnMove(float beat)
+        public override bool OnMove(float beat, bool final = false)
         {
-            foreach (var volumeChange in GameManager.instance.Beatmap.volumeChanges)
+            if (beat < 0) beat = 0;
+            foreach (var volumeChange in GameManager.instance.Beatmap.VolumeChanges)
             {
-                if (this.volumeChange == volumeChange)
+                if (this.chartEntity == volumeChange)
                     continue;
                 if (beat > volumeChange.beat - Timeline.instance.snapInterval && beat < volumeChange.beat + Timeline.instance.snapInterval)
                     return false;
             }
-            this.volumeChange.beat = beat;
+            if (final)
+                CommandManager.Instance.AddCommand(new Commands.MoveMarker(chartEntity.guid, beat, type));
+            else
+                SetX(beat);
             return true;
         }
 
@@ -91,6 +109,15 @@ namespace HeavenStudio.Editor.Track
             }
             else
                 gameObject.SetActive(false);   
+        }
+
+        public void Remove()
+        {
+            if (first) return;
+            if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
+            {
+                DeleteObj();
+            }
         }
     }
 }

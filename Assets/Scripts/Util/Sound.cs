@@ -1,6 +1,7 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 namespace HeavenStudio.Util
 {
@@ -8,6 +9,7 @@ namespace HeavenStudio.Util
     {
         public AudioClip clip;
         public float pitch = 1;
+        public float bendedPitch = 1; //only used with rockers
         public float volume = 1;
 
         // For use with PlayOneShotScheduled
@@ -15,77 +17,141 @@ namespace HeavenStudio.Util
         public double scheduledTime;
 
         public bool looping;
-        public float loopEndBeat = -1;
-        public float fadeTime;
-        int loopIndex = 0;
+        public double loopEndBeat = -1;
+        public double fadeTime;
+        bool loopDone;
 
         private AudioSource audioSource;
+        private Conductor cond;
 
-        private int pauseTimes = 0;
 
         private double startTime;
 
-        public float beat;
-        public float offset;
+        public double beat;
+        public double offset;
         public float scheduledPitch = 1f;
 
         bool playInstant = false;
         bool played = false;
+        bool paused = false;
+        bool queued = false;
+        public bool available = true;
+
+        const double PREBAKE_TIME = 0.25;
 
         private void Start()
         {
+        }
+
+        public void LerpVolume(double beat, double length, float volumeStart, float volumeEnd)
+        {
+            if (!gameObject.activeSelf) return;
+            StartCoroutine(LerpVolumeCo(beat, length, volumeStart, volumeEnd));
+        }
+
+        private IEnumerator LerpVolumeCo(double beat, double length, float volumeStart, float volumeEnd)
+        {
+            float normalized = 0;
+            while (normalized <= 1)
+            {
+                normalized = cond.GetPositionFromBeat(beat, length);
+                audioSource.volume = Mathf.Lerp(volumeStart, volumeEnd, normalized);
+                yield return null;
+            }
+        }
+
+        public void Play()
+        {
+            if (!available)
+            {
+                GameManager.instance.SoundObjects.Release(this);
+                return;
+            }
+
             audioSource = GetComponent<AudioSource>();
+            cond = Conductor.instance;
+            double dspTime = AudioSettings.dspTime;
+
+            available = false;
             audioSource.clip = clip;
             audioSource.pitch = pitch;
             audioSource.volume = volume;
             audioSource.loop = looping;
-            Conductor cnd = Conductor.instance;
+
+            loopEndBeat = -1;
+            loopDone = false;
+            audioSource.Stop();
 
             if (beat == -1 && !scheduled)
             {
-                audioSource.Play();
                 playInstant = true;
                 played = true;
-                startTime = cnd.songPositionAsDouble;
-                StartCoroutine(NotRelyOnBeatSound());
+                startTime = dspTime;
+                audioSource.Play();
             }
             else
             {
                 playInstant = false;
-                scheduledPitch = cnd.SongPitch;
-                startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch) - offset;
-                audioSource.PlayScheduled(startTime);
+                if (cond != null)
+                {
+                    scheduledPitch = cond.SongPitch;
+                    startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch) - offset;
+                }
+
+                if (scheduledPitch != 0 && dspTime >= startTime)
+                {
+                    audioSource.PlayScheduled(startTime);
+                    played = true;
+                    queued = true;
+                }
             }
+            Update();
         }
 
         private void Update()
         {
-            Conductor cnd = Conductor.instance;
-            if (!played)
+            cond = Conductor.instance;
+            double dspTime = AudioSettings.dspTime;
+            if (!(available || played))
             {
+                if (!(cond.isPlaying || cond.isPaused))
+                {
+                    GameManager.instance.SoundObjects.Release(this);
+                    return;
+                }
                 if (scheduled)
                 {
-                    if (scheduledPitch != 0 && AudioSettings.dspTime > scheduledTime)
+                    if (!queued && dspTime > scheduledTime - PREBAKE_TIME)
                     {
-                        StartCoroutine(NotRelyOnBeatSound());
+                        audioSource.PlayScheduled(scheduledTime);
+                        queued = true;
+                    }
+                    if (scheduledPitch != 0 && dspTime > scheduledTime)
+                    {
                         played = true;
                     }
                 }
                 else if (!playInstant)
                 {
-                    if (scheduledPitch != 0 && AudioSettings.dspTime > startTime)
+                    if (!queued && dspTime > startTime - PREBAKE_TIME)
+                    {
+                        startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch) - offset;
+                        audioSource.PlayScheduled(startTime);
+                        queued = true;
+                    }
+                    if (scheduledPitch != 0 && dspTime > startTime)
                     {
                         played = true;
-                        StartCoroutine(NotRelyOnBeatSound());
                     }
                     else
                     {
-                        if (!played && scheduledPitch != cnd.SongPitch)
+                        if (!played && scheduledPitch != cond.SongPitch)
                         {
-                            if (cnd.SongPitch == 0)
+                            if (cond.SongPitch == 0)
                             {
-                                scheduledPitch = cnd.SongPitch;
-                                audioSource.Pause();
+                                scheduledPitch = cond.SongPitch;
+                                if (queued)
+                                    audioSource.Pause();
                             }
                             else
                             {
@@ -93,73 +159,182 @@ namespace HeavenStudio.Util
                                 {
                                     audioSource.UnPause();
                                 }
-                                scheduledPitch = cnd.SongPitch;
-                                startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch);
-                                audioSource.SetScheduledStartTime(startTime);
+                                scheduledPitch = cond.SongPitch;
+                                startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch) - offset;
+                                if (queued)
+                                    audioSource.SetScheduledStartTime(startTime);
                             }
                         }
                     }
                 }
             }
 
-            if (loopIndex < 1)
+            if (played)
+            {
+                if (!(cond.isPlaying || cond.isPaused))
+                {
+                    GameManager.instance.SoundObjects.Release(this);
+                    return;
+                }
+                if (!(looping || paused || audioSource.isPlaying))
+                {
+                    GameManager.instance.SoundObjects.Release(this);
+                    return;
+                }
+
+                if (cond.isPaused || cond.SongPitch == 0)
+                {
+                    if (!paused)
+                    {
+                        // Debug.Log($"Pausing {gameObject.name}");
+                        audioSource.Pause();
+                        paused = true;
+                    }
+                }
+                else
+                {
+                    if (paused)
+                    {
+                        // Debug.Log($"Unpausing {gameObject.name}");
+                        audioSource.UnPause();
+                        paused = false;
+                    }
+                }
+            }
+
+            if (!loopDone)
             {
                 if (looping && loopEndBeat != -1) // Looping sounds play forever unless params are set.
                 {
-                    if (cnd.songPositionInBeats > loopEndBeat)
+                    if (cond.songPositionInBeatsAsDouble >= loopEndBeat)
                     {
                         KillLoop(fadeTime);
-                        loopIndex++;
+                        loopDone = true;
                     }
                 }
             }
         }
 
-        IEnumerator NotRelyOnBeatSound()
-        {
-            if (!looping) // Looping sounds are destroyed manually.
-            {
-                yield return new WaitForSeconds(clip.length / pitch);
-                Delete();
-            }
-        }
-
-        public void SetLoopParams(float endBeat, float fadeTime)
+        public void SetLoopParams(double endBeat, double fadeTime)
         {
             loopEndBeat = endBeat;
             this.fadeTime = fadeTime;
         }
 
-        public void Stop()
+        public void Pause()
         {
             if (audioSource != null)
-                audioSource.Stop();
+                audioSource.Pause();
         }
 
-        public void Delete()
+        public void UnPause()
         {
-            GameManager.instance.SoundObjects.Remove(gameObject);
-            Destroy(gameObject);
+            if (audioSource != null)
+                audioSource.UnPause();
         }
 
-        public void KillLoop(float fadeTime)
+        public void Stop()
         {
+            available = true;
+            played = false;
+            paused = false;
+            queued = false;
+            playInstant = false;
+            looping = false;
+            scheduled = false;
+            beat = 0;
+            loopEndBeat = -1;
+            loopDone = false;
+            startTime = 0;
+
+            audioSource.loop = false;
+            audioSource.Stop();
+
+            gameObject.SetActive(false);
+        }
+
+        #region Bend
+        // All of these should only be used with rockers.
+        // minenice: consider doing these in the audio thread so they can work per-sample?
+        public void BendUp(float bendTime, float bendedPitch)
+        {
+            if (!gameObject.activeSelf) return;
+            this.bendedPitch = bendedPitch;
+            if (bendTime == 0)
+            {
+                audioSource.pitch = bendedPitch;
+                return;
+            }
+            StartCoroutine(BendUpLoop(bendTime));
+        }
+
+        public void BendDown(float bendTime)
+        {
+            if (!gameObject.activeSelf) return;
+            if (bendTime == 0)
+            {
+                audioSource.pitch = pitch;
+                return;
+            }
+            StartCoroutine(BendDownLoop(bendTime));
+        }
+
+        IEnumerator BendUpLoop(float bendTime)
+        {
+            float startingPitch = audioSource.pitch;
+            float bendTimer = 0f;
+
+            while (bendTimer < bendTime)
+            {
+                bendTimer += Time.deltaTime;
+                float normalizedProgress = MathUtils.Normalize(bendTimer, 0, bendTime);
+                float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, normalizedProgress);
+                audioSource.pitch = Mathf.Min(currentPitch, bendedPitch);
+                yield return null;
+            }
+        }
+
+        IEnumerator BendDownLoop(float bendTime)
+        {
+            float bendTimer = 0f;
+            float startingPitch = pitch;
+
+            while (bendTimer < bendTime)
+            {
+                bendTimer += Time.deltaTime;
+                float normalizedProgress = MathUtils.Normalize(bendTimer, 0, bendTime);
+                float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, 1 - normalizedProgress);
+                audioSource.pitch = Mathf.Max(currentPitch, pitch);
+                yield return null;
+            }
+        }
+
+        #endregion
+
+        public void KillLoop(double fadeTime)
+        {
+            if (!gameObject.activeSelf) return;
+            if (fadeTime == 0)
+            {
+                GameManager.instance.SoundObjects.Release(this);
+                return;
+            }
             StartCoroutine(FadeLoop(fadeTime));
         }
 
-        float loopFadeTimer = 0f;
-        IEnumerator FadeLoop(float fadeTime)
+        double loopFadeTimer = 0f;
+        IEnumerator FadeLoop(double fadeTime)
         {
             float startingVol = audioSource.volume;
 
             while (loopFadeTimer < fadeTime)
             {
                 loopFadeTimer += Time.deltaTime;
-                audioSource.volume = Mathf.Max((1f - (loopFadeTimer / fadeTime)) * startingVol, 0f);
+                audioSource.volume = (float)Math.Max((1f - (loopFadeTimer / fadeTime)) * startingVol, 0.0);
                 yield return null;
             }
-
-            Delete();
+            yield return null;
+            GameManager.instance.SoundObjects.Release(this);
         }
     }
 }

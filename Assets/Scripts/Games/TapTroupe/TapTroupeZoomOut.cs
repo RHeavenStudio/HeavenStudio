@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
 
         void Update()
         {
-            transform.localPosition = new Vector3(transform.localPosition.x, GameCamera.additionalPosition.y + yOffset, GameCamera.additionalPosition.z + zoomOffset);
+            transform.localPosition = new Vector3(transform.localPosition.x, GameCamera.AdditionalPosition.y + yOffset, GameCamera.AdditionalPosition.z + zoomOffset);
         }
     }
 }

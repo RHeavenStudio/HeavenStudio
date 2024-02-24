@@ -1,56 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 using TMPro;
 using DG.Tweening;
-using Starpelly;
 
+using HeavenStudio.Util;
 using HeavenStudio.Editor.Track;
-
+using System.Text;
 
 namespace HeavenStudio.Editor
 {
+    // I hate the antichrist.
     public class GridGameSelector : MonoBehaviour
     {
-        public string SelectedMinigame;
+        public Minigames.Minigame SelectedMinigame;
 
         [Header("Components")]
         public GameObject SelectedGameIcon;
         public GameObject GameEventSelector;
         public GameObject EventRef;
         public GameObject CurrentSelected;
+        public Scrollbar Scrollbar;
+        public RectTransform GameSelectionRect;
         public RectTransform GameEventSelectorCanScroll;
+        public TMP_InputField SearchBar;
         private RectTransform GameEventSelectorRect;
         private RectTransform eventsParent;
 
         [Header("Properties")]
         [SerializeField] private int currentEventIndex;
-        private Minigames.Minigame mg;
-        private bool gameOpen;
-        private int dragTimes;
+        public List<RectTransform> mgsActive = new List<RectTransform>();
+        public List<RectTransform> fxActive = new List<RectTransform>();
         public float posDif;
         public int ignoreSelectCount;
+        private int dragTimes;
+        private bool gameOpen;
         private float selectorHeight;
         private float eventSize;
+        private float timeSinceUpdateIndex = 0.0f;
+
+        public static GridGameSelector instance;
 
         private void Start()
         {
+            instance = this;
             GameEventSelectorRect = GameEventSelector.GetComponent<RectTransform>();
             selectorHeight = GameEventSelectorRect.rect.height;
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
 
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
-            SelectGame("Game Manager", 1);
-
-            SetColors();
+            SelectGame(fxActive[0].name);
         }
 
         private void Update()
         {
-            if (!(EventParameterManager.instance.active || Conductor.instance.NotStopped()) && !IsPointerOverUIElement())
+            if (!EventParameterManager.instance.active && !IsPointerOverUIElement())
             {
                 if (gameOpen)
                 {
@@ -88,86 +96,102 @@ namespace HeavenStudio.Editor
                 currentEventIndex = 0;
 
             CurrentSelected.transform.DOLocalMoveY(eventsParent.transform.GetChild(currentEventIndex).localPosition.y + eventsParent.transform.localPosition.y, 0.35f).SetEase(Ease.OutExpo);
-
-            if (updateCol)
-            SetColors(currentEventIndex);
+            timeSinceUpdateIndex = 0;
         }
 
         private void UpdateScrollPosition()
         {
             selectorHeight = GameEventSelectorRect.rect.height;
-            eventSize = EventRef.GetComponent<RectTransform>().rect.height;
-            // EventRef.transform.parent.DOKill();
-            float lastLocalY = EventRef.transform.parent.transform.localPosition.y;
+            //eventSize = EventRef.GetComponent<RectTransform>().rect.height;
+            
+            Vector3 lastPos = EventRef.transform.parent.transform.localPosition;
+            float end = 0;
 
-            if (currentEventIndex * eventSize >= selectorHeight/2 && eventsParent.childCount * eventSize >= selectorHeight)
+            if ((currentEventIndex * eventSize >= selectorHeight/2) && (eventsParent.childCount * eventSize >= selectorHeight))
             {
                 if (currentEventIndex * eventSize < eventsParent.childCount * eventSize - selectorHeight/2)
-                {
-                    EventRef.transform.parent.transform.localPosition = new Vector3(
-                        EventRef.transform.parent.transform.localPosition.x, 
-                        Mathf.Lerp(lastLocalY, (currentEventIndex * eventSize) - selectorHeight/2, 12 * Time.deltaTime),
-                        EventRef.transform.parent.transform.localPosition.z
-                    );
-                }
+                    end = (currentEventIndex * eventSize) - selectorHeight/2;
                 else
-                {
-                    EventRef.transform.parent.transform.localPosition = new Vector3(
-                        EventRef.transform.parent.transform.localPosition.x, 
-                        Mathf.Lerp(lastLocalY, (eventsParent.childCount * eventSize) - selectorHeight + (eventSize*0.33f), 12 * Time.deltaTime),
-                        EventRef.transform.parent.transform.localPosition.z
-                    );
-                }
+                    end = (eventsParent.childCount * eventSize) - selectorHeight + (eventSize * 0.33f);
             }
-            else
-            {
-                EventRef.transform.parent.transform.localPosition = new Vector3(
-                    EventRef.transform.parent.transform.localPosition.x, 
-                    Mathf.Lerp(lastLocalY, 0, 12 * Time.deltaTime),
-                    EventRef.transform.parent.transform.localPosition.z
-                );
-            }
+            EventRef.transform.parent.transform.localPosition = new Vector3(
+                lastPos.x, 
+                Mathf.Lerp(lastPos.y, end, 12 * Time.deltaTime),
+                lastPos.z
+            );
+
+            timeSinceUpdateIndex += Time.deltaTime;
+
+            CurrentSelected.GetComponent<RectTransform>().anchoredPosition =
+                new Vector2(
+                    (Mathf.Cos(timeSinceUpdateIndex * 2.65f) * 12) + 12,
+                    CurrentSelected.GetComponent<RectTransform>().anchoredPosition.y);
+            SetColors();
         }
 
-        public void SelectGame(string gameName, int index)
+        // will automatically select game + game icon, and (eventually?) scroll to the game if it's offscreen
+        // index is the event it will highlight (which was basically just added for pick block)
+        // TODO: automatically scroll if the game is offscreen, because i can't figure out a good way to do it rn. -AJ
+        public void SelectGame(string gameName, int index = 0)
         {
             if (SelectedGameIcon != null)
             {
                 SelectedGameIcon.GetComponent<GridGameSelectorGame>().UnClickIcon();
             }
-            mg = EventCaller.instance.minigames.Find(c => c.displayName == gameName);
-            SelectedMinigame = gameName;
+
+            SelectedMinigame = EventCaller.instance.GetMinigame(gameName);
+            if (SelectedMinigame == null) {
+                SelectGame("gameManager");
+                Debug.LogWarning($"SelectGame() has failed, did you mean to input '{gameName}'?");
+                return;
+            }
+
+            EventParameterManager.instance.Disable();
+
             gameOpen = true;
 
             DestroyEvents();
-            AddEvents();
+            AddEvents(index);
 
-            // transform.GetChild(index).GetChild(0).gameObject.SetActive(true);
-            SelectedGameIcon = transform.GetChild(index).gameObject;
+            SelectedGameIcon = transform.Find(gameName).gameObject;
             SelectedGameIcon.GetComponent<GridGameSelectorGame>().ClickIcon();
 
-            currentEventIndex = 0;
-            UpdateIndex(0, false);
+            currentEventIndex = index;
+            UpdateIndex(index, false);
 
-            Editor.instance?.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
+            Editor.instance?.SetGameEventTitle($"Select game event for {SelectedMinigame.displayName.Replace("\n", "")}");
         }
 
-        private void AddEvents()
+        private void AddEvents(int index = 0)
         {
-            if (!EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(mg.name)))
+            if (!EventCaller.FXOnlyGames().Contains(SelectedMinigame))
             {
                 GameObject sg = Instantiate(EventRef, eventsParent);
-                sg.GetComponent<TMP_Text>().text = "Switch Game";
+                sg.GetComponentInChildren<TMP_Text>().text = "Switch Game";
                 sg.SetActive(true);
-                sg.GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+                if (index == 0) sg.GetComponentInChildren<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+            } else {
+                index++;
+                if (SelectedMinigame.name == "gameManager") index++;
             }
 
-            for (int i = 0; i < mg.actions.Count; i++)
+            for (var i = 0; i < SelectedMinigame.actions.Count; i++)
             {
-                if (mg.actions[i].actionName == "switchGame" || mg.actions[i].hidden) continue;
-                GameObject g = Instantiate(EventRef, eventsParent);
-                g.GetComponent<TMP_Text>().text = mg.actions[i].displayName;
+                var action = SelectedMinigame.actions[i];
+                if (action.actionName == "switchGame" || action.hidden) continue;
+
+                var g = Instantiate(EventRef, eventsParent);
+                var label = g.GetComponentInChildren<TMP_Text>();
+
+                label.text = action.displayName;
+                if (action.parameters != null && action.parameters.Count > 0)
+                    g.transform.GetChild(1).gameObject.SetActive(true);
+
+                if (index - 1 == i)
+                    label.color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+
                 g.SetActive(true);
+
             }
         }
 
@@ -184,14 +208,153 @@ namespace HeavenStudio.Editor
             }
         }
 
-        private void SetColors(int index = 0)
+        private void SetColors()
         {
-            CurrentSelected.GetComponent<Image>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+            //CurrentSelected.GetComponent<Image>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
 
             for (int i = 0; i < eventsParent.transform.childCount; i++)
-                eventsParent.GetChild(i).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
+            {
+                var eventTxt = eventsParent.GetChild(i).GetChild(0).GetComponent<TMP_Text>();
+                var goalX = -25;
+                if (i == currentEventIndex)
+                {
+                    eventTxt.color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+                    goalX = 16;
+                }
+                else
+                {
+                    eventTxt.color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
+                }
+                eventTxt.rectTransform.anchoredPosition =
+                    new Vector2(
+                        Mathf.Lerp(eventTxt.rectTransform.anchoredPosition.x, goalX, Time.deltaTime * 12f),
+                        eventTxt.rectTransform.anchoredPosition.y);
+            }
+        }
 
-            eventsParent.GetChild(index).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+        // TODO: find the equation to get the sizes automatically, nobody's been able to figure one out yet (might have to be manual?)
+        public void Zoom()
+        {
+            if (!Input.GetKey(KeyCode.LeftControl)) return;
+            var glg = GetComponent<GridLayoutGroup>();
+            var sizes = new List<float>() {
+                209.5f,
+                102.3f,
+                66.6f,
+                48.6f,
+                37.9f,
+                30.8f,
+                25.7f,
+                //21.9f,
+            };
+
+            if (glg.constraintCount + 1 > sizes.Count && Input.GetAxisRaw("Mouse ScrollWheel") < 0) return;
+
+            glg.constraintCount += (Input.GetAxisRaw("Mouse ScrollWheel") > 0) ? -1 : 1;
+            glg.cellSize = Vector2.one * sizes[glg.constraintCount - 1];
+        }
+
+        // method called when clicking the sort button in the editor, skips sorting fx only "games"
+        // sorts depending on which sorting button you click
+        public void Sort(string type)
+        {
+            var mgsSort = mgsActive;
+            mgsSort.Sort((x, y) => string.Compare(x.name, y.name));
+
+            switch (type)
+            {
+                case "favorites":
+                SortFavorites(mgsSort);
+                break;
+                case "chronologic":
+                SortChronologic(mgsSort);
+                break;
+                default: // "alphabet"
+                SortAlphabet(mgsSort);
+                break;
+            }
+        }
+
+        void SortAlphabet(List<RectTransform> mgs)
+        {
+            for (int i = 0; i < mgsActive.Count; i++) {
+                mgs[i].SetSiblingIndex(i + fxActive.Count + 1);
+            }
+        }
+
+        // if there are no favorites, the games will sort alphabetically
+        void SortFavorites(List<RectTransform> allMgs)
+        {
+            var favs = allMgs.FindAll(mg => mg.GetComponent<GridGameSelectorGame>().StarActive);
+            var mgs  = allMgs.FindAll(mg => !mg.GetComponent<GridGameSelectorGame>().StarActive);
+
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                foreach (var fav in favs)
+                    fav.GetComponent<GridGameSelectorGame>().Star();
+                return;
+            }
+
+            for (int i = 0; i < favs.Count; i++) {
+                favs[i].SetSiblingIndex(i + fxActive.Count + 1);
+            }
+            for (int i = 0; i < mgs.Count; i++) {
+                mgs[i].SetSiblingIndex(i + fxActive.Count + favs.Count + 1);
+            }
+        }
+
+        void SortChronologic(List<RectTransform> mgs)
+        {
+            var systems = new List<RectTransform>[] {
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+            };
+            for (int i = 0; i < mgs.Count; i++)
+            {
+                var mg = EventCaller.instance.GetMinigame(mgs[i].name);
+                var tags = mg.tags;
+                if (tags.Count != 0) {
+                    systems[tags[0] switch {
+                        "agb" => 0,
+                        "ntr" => 1,
+                        "rvl" => 2,
+                        "ctr" => 3,
+                        "mob" => 4,
+                        _     => 5,
+                    }].Add(mgs[i]);
+                } else if (mg.inferred) {
+                    systems[^1].Add(mgs[i]);
+                } else {
+                    Debug.LogWarning($"Chronological sorting has failed, does \"{mg.displayName}\" ({mg.name}) have an asset bundle assigned to it?");
+                }
+            }
+            int j = fxActive.Count + 1;
+            foreach (var system in systems)
+            {
+                system.OrderBy(mg => mg.name);
+                for (int i = 0; i < system.Count; i++)
+                {
+                    system[i].SetSiblingIndex(j);
+                    j++;
+                }
+            }
+        }
+
+        public void Search()
+        {
+            for (int i = 0; i < mgsActive.Count; i++)
+            {
+                mgsActive[i].gameObject.SetActive(
+                    System.Text.RegularExpressions.Regex.IsMatch(
+                        EventCaller.instance.GetMinigame(mgsActive[i].name).displayName,
+                        SearchBar.text,
+                        System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                    )
+                );
+            }
         }
 
         public bool IsPointerOverUIElement()
@@ -227,7 +390,7 @@ namespace HeavenStudio.Editor
         {
             if (Conductor.instance.NotStopped() || Editor.instance.inAuthorativeMenu) return;
             
-            if (Timeline.instance.CheckIfMouseInTimeline() && dragTimes < 1)
+            if (Timeline.instance.MouseInTimeline && dragTimes < 1)
             {
                 Timeline.instance.timelineState.SetState(Timeline.CurrentTimelineState.State.Selection);
                 dragTimes++;
@@ -236,39 +399,39 @@ namespace HeavenStudio.Editor
 
                 if (currentEventIndex == 0)
                 {
-                    if (EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(mg.name)))
+                    if (EventCaller.FXOnlyGames().Contains(SelectedMinigame))
                     {
                         int index = currentEventIndex + 1;
-                        if (currentEventIndex - 1 > mg.actions.Count)
+                        if (currentEventIndex - 1 > SelectedMinigame.actions.Count)
                         {
                             index = currentEventIndex;
                         }
                         else if (currentEventIndex - 1 < 0)
                         {
-                            if (mg.actions[0].actionName == "switchGame")
+                            if (SelectedMinigame.actions[0].actionName == "switchGame")
                                 index = 1;
                             else
                                 index = 0;
                         }
 
-                        eventObj = Timeline.instance.AddEventObject(mg.name + "/" + mg.actions[index].actionName, true, new Vector3(0, 0), null, true, Timeline.RandomID());
+                        eventObj = Timeline.instance.AddEventObject(SelectedMinigame.name + "/" + SelectedMinigame.actions[index].actionName, true, new Vector3(0, 0), null, true);
                     }
                     else
-                        eventObj = Timeline.instance.AddEventObject($"gameManager/switchGame/{mg.name}", true, new Vector3(0, 0), null, true, Timeline.RandomID());
+                        eventObj = Timeline.instance.AddEventObject($"gameManager/switchGame/{SelectedMinigame.name}", true, new Vector3(0, 0), null, true);
                 }
                 else
                 {
                     int index = currentEventIndex - 1;
-                    if (mg.actions[0].actionName == "switchGame")
+                    if (SelectedMinigame.actions[0].actionName == "switchGame")
                     {
                         index = currentEventIndex + 1;
                     }
-                    else if (EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(mg.name)) && mg.actions[0].actionName != "switchGame")
+                    else if (EventCaller.FXOnlyGames().Contains(SelectedMinigame) && SelectedMinigame.actions[0].actionName != "switchGame")
                     {
                         index = currentEventIndex;
                     }
 
-                    eventObj = Timeline.instance.AddEventObject(mg.name + "/" + mg.actions[index].actionName, true, new Vector3(0, 0), null, true, Timeline.RandomID());
+                    eventObj = Timeline.instance.AddEventObject(SelectedMinigame.name + "/" + SelectedMinigame.actions[index].actionName, true, new Vector3(0, 0), null, true);
                 }
 
                 eventObj.isCreating = true;

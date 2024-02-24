@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
     public class ClappyTrioPlayer : MonoBehaviour
     {
         ClappyTrio game;
-        private float lastClapBeat;
+        private double lastClapBeat;
         private float lastClapLength;
 
         public bool clapStarted = false;
@@ -25,19 +25,19 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
 
         private void Update()
         {
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(ClappyTrio.InputAction_BasicPress) && !game.IsExpectingInputNow(ClappyTrio.InputAction_BasicPress.inputLockCategory))
             {
                 Clap(false);
                 game.ScoreMiss();
             }
         }
 
-        public void QueueClap(float startBeat, float length)
+        public void QueueClap(double startBeat, float length)
         {
             lastClapBeat = startBeat;
             lastClapLength = length;
 
-            game.ScheduleInput(startBeat, length, InputType.STANDARD_DOWN, Just, Miss, Out);
+            game.ScheduleInput(startBeat, length, ClappyTrio.InputAction_BasicPress, Just, Miss, Out);
         }
 
         private void Just(PlayerActionEvent caller, float state)
@@ -54,8 +54,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
         }
 
         private void Miss(PlayerActionEvent caller) {
-            game.playerHitLast = false;
-            game.missed = true;
+            game.misses++;
             game.emoCounter = 2;
 
             if (clapStarted)
@@ -70,17 +69,13 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
             if (just)
             {
                 clapEffect.SetActive(true);
-                Jukebox.PlayOneShotGame("clappyTrio/rightClap");
-
-                if (this.canHit)
-                    game.playerHitLast = true;
+                SoundByte.PlayOneShotGame("clappyTrio/rightClap");
             }
             else
             {
                 clapEffect.SetActive(false);
-                Jukebox.PlayOneShot("miss");
-                game.playerHitLast = false;
-                game.missed = true;
+                SoundByte.PlayOneShot("miss");
+                game.misses++;
 
                 if (clapStarted)
                     this.canHit = false;

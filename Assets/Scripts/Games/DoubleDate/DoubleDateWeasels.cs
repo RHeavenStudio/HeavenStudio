@@ -42,13 +42,13 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             }
         }
 
-        public void Hide(float beat)
+        public void Hide(double beat)
         {
             if (notHit)
             {
                 notHit = false;
                 anim.DoScaledAnimationAsync("WeaselsHide", 0.5f);
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 1.45f, delegate
                     {
@@ -69,13 +69,13 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             }
         }
 
-        public void Hit(float beat)
+        public void Hit(double beat)
         {
             if (notHit)
             {
                 notHit = false;
                 anim.DoScaledAnimationAsync("WeaselsHit", 0.5f);
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 2f, delegate
                     {
