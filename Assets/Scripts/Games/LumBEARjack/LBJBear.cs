@@ -59,7 +59,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         public void Bop()
         {
             if (_anim.IsPlayingAnimationNames("BeastWhiff", "BeastRest") || _rested) return;
-            _anim.DoScaledAnimationAsync("BeastBop", 0.5f);
+            _anim.DoScaledAnimationAsync("BeastBop", 0.75f);
         }
 
         public void Rest(bool instant, LumBEARjack.RestSoundChoice sound)

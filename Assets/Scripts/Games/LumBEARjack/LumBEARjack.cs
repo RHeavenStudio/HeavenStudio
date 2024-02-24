@@ -124,6 +124,22 @@ namespace HeavenStudio.Games.Loaders
                         new("sound", LumBEARjack.RestSoundChoice.Random, "Sound")
                     }
                 },
+                new("snow", "Snow")
+                {
+                    function = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        LumBEARjack.instance.SetSnow(e["on"], e["instant"], e["wS"], e["pS"]);
+                    },
+                    defaultLength = 0.5f,
+                    parameters = new()
+                    {
+                        new("on", true, "Visible"),
+                        new("instant", false, "Instant"),
+                        new("pS", new EntityTypes.Float(0f, 100f, 1f), "Particle Strength"),
+                        new("wS", new EntityTypes.Float(-100f, 100f, 1f), "Wind Strength")
+                    }
+                },
 
                 // Stretchable Objects
 
@@ -302,6 +318,10 @@ namespace HeavenStudio.Games
         [SerializeField] private ParticleSystem _peachHitParticle;
         [SerializeField] private ParticleSystem _peachCutParticle;
 
+        [Header("Snow")]
+        [SerializeField] private ParticleSystem _snowParticle;
+        [SerializeField] private WindZone _wind;
+
         [Header("Parameters")]
         [SerializeField] private double _catAnimationOffsetStart = -0.5;
         [SerializeField] private double _catAnimationOffsetEnd = 0.5;
@@ -417,6 +437,7 @@ namespace HeavenStudio.Games
             PersistObjects(beat);
             HandleBops(beat);
             HandleCatAnimation(beat);
+            HandleSnow(beat);
         }
 
         public override void OnPlay(double beat)
@@ -425,6 +446,16 @@ namespace HeavenStudio.Games
             PersistObjects(beat);
             HandleBops(beat);
             HandleCatAnimation(beat);
+            HandleSnow(beat);
+        }
+
+        private void HandleSnow(double beat)
+        {
+            var lastSnow = EventCaller.GetAllInGameManagerList("lumbearjack", new string[] { "snow" }).FindLast(x => x.beat < beat);
+            if (lastSnow != null)
+            {
+                SetSnow(lastSnow["on"], true, lastSnow["wS"], lastSnow["pS"]);
+            }
         }
 
         private void HandleCatPresence(double beat)
@@ -667,15 +698,15 @@ namespace HeavenStudio.Games
             {
                 case WhoBops.Both:
                     if (!_bearNoBopBeats.Contains(beat)) _bear.Bop();
-                    if (!_catRight.IsPlayingAnimationNames("CatGrab")) _catRight.DoScaledAnimationAsync("CatBop", 0.5f);
-                    if (!_catLeft.IsPlayingAnimationNames("CatGrab")) _catLeft.DoScaledAnimationAsync("CatBop", 0.5f);
+                    if (!_catRight.IsPlayingAnimationNames("CatGrab")) _catRight.DoScaledAnimationAsync("CatBop", 0.75f);
+                    if (!_catLeft.IsPlayingAnimationNames("CatGrab")) _catLeft.DoScaledAnimationAsync("CatBop", 0.75f);
                     break;
                 case WhoBops.Bear:
                     if (!_bearNoBopBeats.Contains(beat)) _bear.Bop();
                     break;
                 case WhoBops.Cats:
-                    if (!_catRight.IsPlayingAnimationNames("CatGrab")) _catRight.DoScaledAnimationAsync("CatBop", 0.5f);
-                    if (!_catLeft.IsPlayingAnimationNames("CatGrab")) _catLeft.DoScaledAnimationAsync("CatBop", 0.5f);
+                    if (!_catRight.IsPlayingAnimationNames("CatGrab")) _catRight.DoScaledAnimationAsync("CatBop", 0.75f);
+                    if (!_catLeft.IsPlayingAnimationNames("CatGrab")) _catLeft.DoScaledAnimationAsync("CatBop", 0.75f);
                     break;
                 default:
                     break;
@@ -698,15 +729,15 @@ namespace HeavenStudio.Games
                     {
                         case WhoBops.Both:
                             _bear.Bop();
-                            if (!_catRight.IsPlayingAnimationNames("CatGrab")) _catRight.DoScaledAnimationAsync("CatBop", 0.5f);
-                            if (!_catLeft.IsPlayingAnimationNames("CatGrab")) _catLeft.DoScaledAnimationAsync("CatBop", 0.5f);
+                            if (!_catRight.IsPlayingAnimationNames("CatGrab")) _catRight.DoScaledAnimationAsync("CatBop", 0.75f);
+                            if (!_catLeft.IsPlayingAnimationNames("CatGrab")) _catLeft.DoScaledAnimationAsync("CatBop", 0.75f);
                             break;
                         case WhoBops.Bear:
                             _bear.Bop();
                             break;
                         case WhoBops.Cats:
-                            if (!_catRight.IsPlayingAnimationNames("CatGrab")) _catRight.DoScaledAnimationAsync("CatBop", 0.5f);
-                            if (!_catLeft.IsPlayingAnimationNames("CatGrab")) _catLeft.DoScaledAnimationAsync("CatBop", 0.5f);
+                            if (!_catRight.IsPlayingAnimationNames("CatGrab")) _catRight.DoScaledAnimationAsync("CatBop", 0.75f);
+                            if (!_catLeft.IsPlayingAnimationNames("CatGrab")) _catLeft.DoScaledAnimationAsync("CatBop", 0.75f);
                             break;
                         default:
                             break;
@@ -984,6 +1015,26 @@ namespace HeavenStudio.Games
         #endregion
 
         #region Particles and Effects
+
+        public void SetSnow(bool isOn, bool instant, float windStrength, float particleStrength)
+        {
+            _snowParticle.gameObject.SetActive(isOn);
+            if (!isOn)
+            {
+                _snowParticle.Stop();
+                return;
+            }
+
+            var emm = _snowParticle.emission;
+            var main = _snowParticle.main;
+
+            emm.rateOverTimeMultiplier = particleStrength;
+            main.prewarm = instant;
+
+            _wind.windMain = 0.5f * windStrength;
+
+            _snowParticle.Play();
+        }
 
         public void DoSmallObjectEffect(SmallType type)
         {
