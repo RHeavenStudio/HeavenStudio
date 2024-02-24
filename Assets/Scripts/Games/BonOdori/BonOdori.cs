@@ -145,7 +145,7 @@ namespace HeavenStudio.Games.Loaders
                 // },
                     new GameAction("toggle bg", "Toggle Darker Background")
                 {
-                    function = delegate {BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]);},
+                    function = delegate {BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity.length);},
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
@@ -173,6 +173,7 @@ namespace HeavenStudio.Games
        string prefix;
        double beatUniversal;
         string suffix;
+        SpriteRenderer darkPlane;
         bool goBopDonpans;
         bool goBopJudge;
         bool bopDonpans;
@@ -188,6 +189,7 @@ namespace HeavenStudio.Games
         Coroutine Scroll3;
         Coroutine Scroll4;
         Coroutine Scroll5;
+        Coroutine DarkerBG;
         bool darkBgIsOn = false;
         TextMeshProUGUI Text1_GUI;
         TextMeshProUGUI Text2_GUI;
@@ -213,9 +215,9 @@ namespace HeavenStudio.Games
         [SerializeField] TMP_Text Text8;
         [SerializeField] TMP_Text Text9;
         [SerializeField] TMP_Text Text10;
-        [SerializeField] Animator DarkPlane;
         [SerializeField] Animator Player;
         [SerializeField] Animator Judge;
+        [SerializeField] GameObject DarkPlane;
 
         [SerializeField] Animator CPU1;
         [SerializeField] Animator CPU2;
@@ -276,6 +278,10 @@ namespace HeavenStudio.Games
         public void Awake()
 
         {
+            darkPlane = DarkPlane.GetComponent<SpriteRenderer>();
+
+
+
 
 
             
@@ -296,7 +302,11 @@ namespace HeavenStudio.Games
 
 
         }
-
+        public void OnStop()
+        {
+            DarkPlane.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f); 
+        
+        }
         public void Update()
         {
             Conductor con = new Conductor();
@@ -319,16 +329,17 @@ namespace HeavenStudio.Games
                 StopCoroutine(Scroll3);
                 StopCoroutine(Scroll4);
                 StopCoroutine(Scroll5);
+                StopCoroutine(DarkerBG);
                 Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
                 Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                DarkPlane.Play("StayOff");
+
 
 
             }
-            
+    
 
             
             if (PlayerInput.GetIsAction(BonOdori.InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)){
@@ -364,6 +375,8 @@ namespace HeavenStudio.Games
         }
 
         }
+
+            
         
 
 
@@ -814,21 +827,69 @@ namespace HeavenStudio.Games
                 Judge.Play("Bop");
             }
         }
-public void DarkBG(double beat, bool toggle)
+public void DarkBG(double beat, bool toggle, float length)
+{
+    DarkerBG = StartCoroutine(DarkBGCoroutine(beat, toggle, length));
+
+}
+IEnumerator DarkBGCoroutine(double beat, bool toggle, float length)
 {
     if (toggle)
-    {
-        DarkPlane.Play("Appear");
+    {   
+        if (darkBgIsOn)
+        {
+            yield return null;
+        }
+        else
+        {
+
+        
+        float startTime = Time.time;
+        Conductor con = new Conductor();
+        float realLength = length / con.GetBpmAtBeat(beat) * 60;
+        while (Time.time < realLength + startTime)
+        {
+
+
+    
+    
+        darkPlane.color = new Color(1f, 1f, 1f, Mathf.Lerp(0f, 0.4666f, (Time.time - startTime) / realLength)); 
         darkBgIsOn = true;
-    }
+        yield return null;
+
+
+
+    }}}
     else
     {
-        DarkPlane.Play("GoAway");
-        darkBgIsOn = false;
+        if (!darkBgIsOn)
+        {
+            yield return null;
+        }
+        else
+        {
+
+        
+        float startTime = Time.time;
+        Conductor con = new Conductor();
+        float realLength = length / con.GetBpmAtBeat(beat) * 60;
+        while (Time.time < realLength + startTime)
+        {
+
+
+    
+    
+        darkPlane.color = new Color(1f, 1f, 1f, Mathf.Lerp(0.4666f,0f, (Time.time - startTime) / realLength)); 
+
+        darkBgIsOn = true;
+        yield return null;
+
+
     }
+
 }
         
 
 
     }
-}
+}}}
