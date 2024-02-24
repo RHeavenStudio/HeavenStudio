@@ -951,7 +951,13 @@ namespace HeavenStudio.Editor.Track
 
             foreach (RiqEntity entity in original)
             {
-                CopiedEntities.Add(entity.DeepCopy());
+                var newEntity = entity.DeepCopy();
+                foreach (var key in newEntity.dynamicData.Keys) {
+                    if (newEntity[key] is EntityTypes.DropdownObj dd) {
+                        newEntity[key] = new EntityTypes.DropdownObj(dd.value, dd.Values);
+                    }
+                }
+                CopiedEntities.Add(newEntity);
             }
         }
 

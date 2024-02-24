@@ -95,7 +95,7 @@ namespace HeavenStudio
             }
             public int value;
             public List<string> Values { get; private set; }
-            [JsonIgnore] public string CurrentValue => value < Values?.Count - 1 ? Values?[value] : null;
+            [JsonIgnore] public string CurrentValue => value < Values?.Count ? Values?[value] : null;
             [JsonIgnore] public Action<List<string>> onValueChanged;
 
             public DropdownObj(int defaultValue = 0, List<string> values = null)
