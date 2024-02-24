@@ -34,7 +34,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("rhythmTestGBA", "Rhythm Test (GBA) \n<color=#adadad>(Rhythm-kan Check)</color>", "ffffff", false, false, new List<GameAction>()
+            return new Minigame("rhythmTestGBA", "Rhythm Test (GBA) \n<color=#adadad>(Rhythm-kan Check)</color>", "2DD816", false, false, new List<GameAction>()
             {
 
                 new GameAction("countin", "Start Beeping")
@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("countdown", "Countdown")
                 {
-                    preFunction = delegate {RhythmTestGBA.instance.PreCountDown(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["val1"]);},
+                    function = delegate {RhythmTestGBA.instance.PreCountDown(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["val1"]);},
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
