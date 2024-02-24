@@ -134,7 +134,14 @@ namespace HeavenStudio.Editor.Commands
 
             foreach (var entity in entities)
             {
-                dupEntityData.Add(entity.DeepCopy());
+                var newEntity = entity.DeepCopy();
+                // there's gotta be a better way to do this. i just don't know how... -AJ
+                foreach ((var key, var value) in new Dictionary<string, dynamic>(newEntity.dynamicData)) {
+                    if (value is EntityTypes.DropdownObj dd) {
+                        newEntity[key] = new EntityTypes.DropdownObj(dd.value, dd.Values);
+                    }
+                }
+                dupEntityData.Add(newEntity);
             }
 
             for (var i = 0; i < original.Count; i++)

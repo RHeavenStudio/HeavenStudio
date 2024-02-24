@@ -45,8 +45,6 @@ namespace HeavenStudio.Editor
             //     buttonText.text = entity[propertyName];
             // }
 
-            Debug.Log(buttonTextRect.sizeDelta.x > minButtonSize ? "buttonTextRect.sizeDelta.x : " + buttonTextRect.sizeDelta.x : "minButtonSize : " + minButtonSize);
-
             buttonRect.sizeDelta = new(Mathf.Max(buttonTextRect.sizeDelta.x, minButtonSize), buttonRect.sizeDelta.y);
         }
 

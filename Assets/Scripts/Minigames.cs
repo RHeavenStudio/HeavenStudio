@@ -16,6 +16,7 @@ using SatorImaging.UnitySourceGenerator;
 using System;
 using System.IO;
 using System.Linq;
+using UnityEngine.Assertions.Must;
 
 namespace HeavenStudio
 {
@@ -870,7 +871,7 @@ namespace HeavenStudio
                         {
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Set the position on the X axis."),
                             new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Set the position on the Y axis."),
-                            new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out", "Set the position on the Z axis."),
+                            new Param("valC", new EntityTypes.Float(-250, 250, 10), "In / Out", "Set the position on the Z axis."),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "Set if only a specific axis should be modified." )
                         }
@@ -900,8 +901,8 @@ namespace HeavenStudio
                     ),
                     new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Set the width of the viewport."),
-                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Set the height of the viewport."),
+                            new Param("valA", new EntityTypes.Float(-50f, 50, 1), "Width", "Set the width of the viewport."),
+                            new Param("valB", new EntityTypes.Float(-50f, 50, 1), "Height", "Set the height of the viewport."),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "Set if only a specific axis should be modified." )
                         }
@@ -911,10 +912,10 @@ namespace HeavenStudio
                         resizable = true,
                         parameters = new()
                         {
-                            new("x1", new EntityTypes.Float(0f, 50f, 1f), "Start Width", "Set the width at the start of the event."),
-                            new("x2", new EntityTypes.Float(0f, 50f, 1f), "End Width", "Set the width at the end of the event."),
-                            new("y1", new EntityTypes.Float(0f, 50f, 1f), "Start Height", "Set the height at the start of the event."),
-                            new("y2", new EntityTypes.Float(0f, 50f, 1f), "End Height", "Set the height at the end of the event."),
+                            new("x1", new EntityTypes.Float(-50f, 50f, 1f), "Start Width", "Set the width at the start of the event."),
+                            new("x2", new EntityTypes.Float(-50f, 50f, 1f), "End Width", "Set the width at the end of the event."),
+                            new("y1", new EntityTypes.Float(-50f, 50f, 1f), "Start Height", "Set the height at the start of the event."),
+                            new("y2", new EntityTypes.Float(-50f, 50f, 1f), "End Height", "Set the height at the end of the event."),
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "x1", "y1" })
@@ -1167,8 +1168,9 @@ namespace HeavenStudio
                                     ((EntityTypes.DropdownObj)e["animator"]).SetValues(animators.Select(anim => {
                                         var obj = anim.gameObject;
                                         List<string> path = new() { obj.name };
-                                        while (obj.transform.parent != null && obj.transform.parent.name != game.name)
+                                        for (int i = 0; i < 10; i++)
                                         {
+                                            if (obj.transform.parent == null || obj.transform.parent.name == game.name) break;
                                             obj = obj.transform.parent.gameObject;
                                             path.Add(obj.name);
                                         }
@@ -1177,7 +1179,7 @@ namespace HeavenStudio
                                 }
                                 return game?.displayName ?? "No Game";
                             }), "Get Animators", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)", new() {
-                                new((x, _) => { Debug.Log(x.GetType()); return (string)x != "No Game"; }, "animator", "getAnimations")
+                                new((x, _) => (string)x != "No Game", "animator", "getAnimations")
                             }),
                             new Param("animator", new EntityTypes.Dropdown(), "Animator", "Specify which animator in the scene to play an animation on."),
                             new Param("getAnimations", new EntityTypes.Button("", e => {
@@ -1189,16 +1191,17 @@ namespace HeavenStudio
                                 if (!string.IsNullOrEmpty(animPath)) {
                                     var animObj = gm.minigameObj.transform.Find(animPath);
                                     if (animObj != null && animObj.TryGetComponent(out animator) && animator != null) {
-                                        var animations = animator
-                                            .runtimeAnimatorController
-                                            .animationClips
-                                            .Select(x => x.name)
-                                            .ToList();
-                                        ((EntityTypes.DropdownObj)e["animation"]).SetValues(animations);
+                                        List<string> animationClips = new();
+                                        foreach (var clip in animator.runtimeAnimatorController.animationClips) {
+                                            if (clip != null) {
+                                                animationClips.Add(clip.name);
+                                            }
+                                        }
+                                        ((EntityTypes.DropdownObj)e["animation"]).SetValues(animationClips);
                                     }
                                 }
                                 return animator != null ? animator.name : "";
-                            }), "Get Animations", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)", new() {
+                            }), "Get Animations", "Get all the animations in the selected animator.", new() {
                                 new((x, _) => (string)x != "", "animation", "scale")
                             }),
                             new Param("animation", new EntityTypes.Dropdown(), "Animation", "Specify the name of the animation to play."),
@@ -1213,18 +1216,24 @@ namespace HeavenStudio
                         new List<Param>()
                         {
                             new Param("game", new EntityTypes.Dropdown(), "Which Game", "Specify the game's sfx to play. An empty input will play global sfx."),
-                            new Param("getAnimations", new EntityTypes.Button("", e => {
+                            new Param("getSfx", new EntityTypes.Button("", e => {
                                 string gameName = ((EntityTypes.DropdownObj)e["game"]).CurrentValue;
-                                Minigame game = eventCaller.minigames[gameName];
-                                IEnumerable<AudioClip> audioClips = game.GetCommonAssetBundle().LoadAllAssets<AudioClip>();
-                                var localAssBun = game.GetLocalizedAssetBundle();
-                                if (localAssBun != null) {
-                                    audioClips = audioClips.Concat(localAssBun.LoadAllAssets<AudioClip>());
+                                List<string> clips;
+                                if (eventCaller.minigames.TryGetValue(gameName, out Minigame game) && game != null) {
+                                    IEnumerable<AudioClip> audioClips = game.GetCommonAssetBundle().LoadAllAssets<AudioClip>();
+                                    var localAssBun = game.GetLocalizedAssetBundle();
+                                    if (localAssBun != null) {
+                                        audioClips = audioClips.Concat(localAssBun.LoadAllAssets<AudioClip>());
+                                    }
+                                    clips = audioClips.Select(x => x.name).ToList();
+                                } else {
+                                    // this is probably the best way to do it?
+                                    clips = new() { "applause", "metronome", "miss", "nearMiss", "perfectMiss", "skillStar" };
                                 }
                                 EntityTypes.DropdownObj sfxDD = e["sfxName"];
-                                sfxDD.SetValues(audioClips.Select(x => x.name).ToList());
-                                return !string.IsNullOrEmpty(gameName) ? eventCaller.minigames[gameName]?.displayName : "N/A";
-                            }), "Get Animations", "Get all the animators in the current minigame scene. (Make sure to have the minigame you want loaded!)"),
+                                sfxDD.SetValues(clips);
+                                return game != null ? game.displayName : "Common";
+                            }), "Get SFX", "Get all the sfx in the selected minigame."),
                             new Param("sfxName", new EntityTypes.Dropdown(), "SFX Name", "The name of the sfx to play."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The sfx's pitch."),
                             new Param("offset", new EntityTypes.Integer(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),
@@ -1246,7 +1255,7 @@ namespace HeavenStudio
 
             // im so sorry
             eventCaller.minigames["advanced"].actions
-                .Find(a => a.actionName == "play sfx").parameters[0].parameter = new EntityTypes.Dropdown(0, eventCaller.minigames.Keys.Skip(defaultGames.Count).Concat(new string[] { "" }).ToArray());
+                .Find(a => a.actionName == "play sfx").parameters[0].parameter = new EntityTypes.Dropdown(0, new string[] { "common" }.Concat(eventCaller.minigames.Keys.Skip(defaultGames.Count)).ToArray());
         }
     }
 }
