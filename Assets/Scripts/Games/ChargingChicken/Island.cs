@@ -13,14 +13,22 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         #region Definitions
 
         [SerializeField] public Animator ChargerAnim;
+        [SerializeField] public Animator FakeChickenAnim;
         [SerializeField] public Transform IslandPos;
+        [SerializeField] public Transform CollapsedLandmass;
         [SerializeField] public GameObject BigLandmass;
+        [SerializeField] public GameObject SmallLandmass;
 
+        [NonSerialized]public double journeySave = 0;
         [NonSerialized]public double journeyStart = 0;
         [NonSerialized]public double journeyEnd = 0;
         [NonSerialized]public double journeyBlastOffTime = 0;
         [NonSerialized]public double journeyLength = 0;
         [NonSerialized]public bool isMoving = false;
+
+        [NonSerialized]public double respawnStart = 0;
+        [NonSerialized]public double respawnEnd = 0;
+        [NonSerialized]public bool isRespawning = false;
 
         #endregion
 
@@ -31,9 +39,15 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         {
             if (isMoving)
             {
-                float value = (Conductor.instance.GetPositionFromBeat(journeyBlastOffTime, journeyLength));
-                float newX = Util.EasingFunction.EaseOutCubic((float)journeyStart, (float)journeyEnd, value);
-                IslandPos.localPosition = new Vector3(newX, 0, 0);
+                float value1 = (Conductor.instance.GetPositionFromBeat(journeyBlastOffTime, journeyLength));
+                float newX1 = Util.EasingFunction.EaseOutCubic((float)journeyStart, (float)journeyEnd, value1);
+                IslandPos.localPosition = new Vector3(newX1, 0, 0);
+            }
+            if (respawnStart < Conductor.instance.songPositionInBeatsAsDouble && isRespawning)
+            {
+                float value2 = (Conductor.instance.GetPositionFromBeat(respawnStart, respawnEnd - respawnStart));
+                float newX2 = Util.EasingFunction.Linear((float)journeyStart - (float)journeySave, (float)journeyEnd, 1 - value2);
+                IslandPos.localPosition = new Vector3(newX2, 0, 0);
             }
         }
 
@@ -61,6 +75,17 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         public void BlastoffAnimation()
         {
             ChargerAnim.DoScaledAnimationAsync("Idle", 0.5f);
+        }
+
+        public void PositionIsland(float state)
+        {
+            CollapsedLandmass.localPosition = new Vector3(state, 0, 0);
+        }
+
+        public void CollapseUnderPlayer()
+        {
+            SoundByte.PlayOneShotGame("chargingChicken/complete");
+            SmallLandmass.SetActive(false);
         }
 
         #endregion
