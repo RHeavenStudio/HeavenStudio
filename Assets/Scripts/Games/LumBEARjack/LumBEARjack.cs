@@ -141,8 +141,8 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new("on", true, "Visible"),
                         new("instant", false, "Instant"),
-                        new("pS", new EntityTypes.Float(0f, 100f, 1f), "Particle Strength"),
-                        new("wS", new EntityTypes.Float(-100f, 100f, 1f), "Wind Strength")
+                        new("pS", new EntityTypes.Float(30f, 200f, 30f), "Particle Strength"),
+                        new("wS", new EntityTypes.Float(-25f, 25f, 1f), "Wind Strength")
                     }
                 },
 
