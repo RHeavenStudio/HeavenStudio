@@ -892,7 +892,7 @@ namespace HeavenStudio.Editor.Track
                                 EntityTypes.Integer intVal => intVal.val,
                                 EntityTypes.Float floatVal => floatVal.val,
                                 EntityTypes.Button buttonVal => buttonVal.defaultLabel,
-                                EntityTypes.Dropdown ddVal => new EntityTypes.DropdownObj(ddVal.defaultValue, ddVal.values),
+                                EntityTypes.Dropdown ddVal => new EntityTypes.DropdownObj(ddVal),
                                 _ => ep[i].parameter,
                             };
 
