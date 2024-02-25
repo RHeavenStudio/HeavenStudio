@@ -88,15 +88,20 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        LumBEARjack.instance.SpawnHugeObject(e.beat, e.length, (LumBEARjack.HugeType)e["type"], (LumBEARjack.CatPutChoice)e["cat"], e["zoom"]);
+                        LumBEARjack.instance.SpawnHugeObject(e.beat, e.length, (LumBEARjack.HugeType)e["type"], (LumBEARjack.CatPutChoice)e["cat"], e["zoom"], e["baby"]);
                     },
                     defaultLength = 6,
                     parameters = new()
                     {
-                        new("type", LumBEARjack.HugeType.log, "Type"),
+                        new("type", LumBEARjack.HugeType.log, "Type", "", new()
+                        {
+                            new((x, _) => (LumBEARjack.HugeType)x == LumBEARjack.HugeType.peach, new string [] { "baby", "pBaby" })
+                        }),
                         new("sound", true, "Cue Sound"),
                         new("cat", LumBEARjack.CatPutChoice.Alternate, "Side"),
-                        new("zoom", true, "Zoom-In")
+                        new("zoom", true, "Zoom-In"),
+                        new("baby", true, "Baby"),
+                        new("pBaby", true, "Persist Baby")
                     }
                 },
                 new("cats", "Cats Presence")
@@ -199,15 +204,20 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        LumBEARjack.instance.SpawnHugeObject(e.beat, e.length, (LumBEARjack.HugeType)e["type"], (LumBEARjack.CatPutChoice)e["cat"], e["zoom"]);
+                        LumBEARjack.instance.SpawnHugeObject(e.beat, e.length, (LumBEARjack.HugeType)e["type"], (LumBEARjack.CatPutChoice)e["cat"], e["zoom"], e["baby"]);
                     },
                     defaultLength = 6,
                     parameters = new()
                     {
-                        new("type", LumBEARjack.HugeType.log, "Type"),
+                        new("type", LumBEARjack.HugeType.log, "Type", "", new()
+                        {
+                            new((x, _) => (LumBEARjack.HugeType)x == LumBEARjack.HugeType.peach, new string [] { "baby", "pBaby" })
+                        }),
                         new("sound", true, "Cue Sound"),
                         new("cat", LumBEARjack.CatPutChoice.Alternate, "Side"),
-                        new("zoom", true, "Zoom-In")
+                        new("zoom", true, "Zoom-In"),
+                        new("baby", true, "Baby"),
+                        new("pBaby", true, "Persist Baby")
                     },
                     resizable = true
                 },
@@ -282,6 +292,7 @@ namespace HeavenStudio.Games
 
         [Header("Components")]
         [SerializeField] private LBJBear _bear;
+        [SerializeField] private LBJBaby _baby;
         [SerializeField] private LBJSmallObject _smallObjectPrefab;
         [SerializeField] private LBJBigObject _bigObjectPrefab;
         [SerializeField] private LBJHugeObject _hugeObjectPrefab;
@@ -325,6 +336,8 @@ namespace HeavenStudio.Games
         [Header("Parameters")]
         [SerializeField] private double _catAnimationOffsetStart = -0.5;
         [SerializeField] private double _catAnimationOffsetEnd = 0.5;
+
+        private int _babyIndex = 0;
 
         private List<double> _bearNoBopBeats = new();
         private Dictionary<double, CatPutChoice> _catPuts = new();
@@ -381,14 +394,14 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void SpawnHugeObject(double beat, double length, HugeType type, CatPutChoice cat, bool zoom, double startUpBeat = -1)
+        public void SpawnHugeObject(double beat, double length, HugeType type, CatPutChoice cat, bool zoom, bool baby, double startUpBeat = -1)
         {
             BeatAction.New(this, new()
             {
                 new(beat + (length / 6), delegate
                 {
                     LBJHugeObject spawnedObject = Instantiate(_hugeObjectPrefab, _cutObjectHolder);
-                    spawnedObject.Init(_bear, beat, length, type, ShouldBeRight(beat, cat), zoom, startUpBeat);
+                    spawnedObject.Init(_bear, beat, length, type, ShouldBeRight(beat, cat), zoom, baby, startUpBeat);
                 })
             });
         }
@@ -438,6 +451,7 @@ namespace HeavenStudio.Games
             HandleBops(beat);
             HandleCatAnimation(beat);
             HandleSnow(beat);
+            HandleBaby(beat, false);
         }
 
         public override void OnPlay(double beat)
@@ -447,6 +461,23 @@ namespace HeavenStudio.Games
             HandleBops(beat);
             HandleCatAnimation(beat);
             HandleSnow(beat);
+            HandleBaby(beat, true);
+        }
+
+        private void HandleBaby(double beat, bool onPlay)
+        {
+            var allBaby = EventCaller.GetAllInGameManagerList("lumbearjack", new string[] { "huge", "hugeS" }).FindAll(x => x["baby"] && (HugeType)x["type"] == HugeType.peach && x.beat + x.length - (x.length / 6) < beat);
+            var lastGameSwitch = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).Find(x => x.beat < beat && x.datamodel.Split(2) == "lumbearjack");
+
+            double lastGameSwitchBeat = onPlay ? 0 : beat;
+            if (lastGameSwitch != null) lastGameSwitchBeat = onPlay ? lastGameSwitch.beat : beat;
+            foreach (var e in allBaby)
+            {
+                if (e["pBaby"] || e.beat >= lastGameSwitchBeat)
+                {
+                    ActivateBaby(e.beat + e.length - (e.length / 6), e.length / 6);
+                }
+            }
         }
 
         private void HandleSnow(double beat)
@@ -577,7 +608,7 @@ namespace HeavenStudio.Games
                     case "huge":
                     case "hugeS":
                         HugeObjectSound(e.beat, e.length, (HugeType)e["type"], beat);
-                        SpawnHugeObject(e.beat, e.length, (HugeType)e["type"], (CatPutChoice)e["cat"], e["zoom"], beat);
+                        SpawnHugeObject(e.beat, e.length, (HugeType)e["type"], (CatPutChoice)e["cat"], e["zoom"], e["baby"], beat);
                         break;
                 }
             }
@@ -1015,6 +1046,13 @@ namespace HeavenStudio.Games
         #endregion
 
         #region Particles and Effects
+
+        public void ActivateBaby(double beat, float durationMult)
+        {
+            LBJBaby newBaby = Instantiate(_baby, transform);
+            newBaby.Activate(beat, durationMult, _babyIndex);
+            _babyIndex++;
+        }
 
         public void SetSnow(bool isOn, bool instant, float windStrength, float particleStrength)
         {
