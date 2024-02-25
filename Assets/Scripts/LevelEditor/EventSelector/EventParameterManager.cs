@@ -97,7 +97,14 @@ namespace HeavenStudio.Editor
                 eventSelector.SetActive(false);
                 this.entity = entity;
 
-                string col = EditorTheme.theme.properties.LayerColors[(int)entity["track"]];
+                string col = (int)entity["track"] switch
+                {
+                    1 => EditorTheme.theme.properties.Layer2Col,
+                    2 => EditorTheme.theme.properties.Layer3Col,
+                    3 => EditorTheme.theme.properties.Layer4Col,
+                    4 => EditorTheme.theme.properties.Layer5Col,
+                    _ => EditorTheme.theme.properties.Layer1Col
+                };
                 Editor.instance.SetGameEventTitle($"Properties for <color=#{col}>{action.displayName}</color> on Beat {entity.beat.ToString("F2")} on <color=#{col}>Track {(int)entity["track"] + 1}</color>");
 
                 DestroyParams();
@@ -138,7 +145,6 @@ namespace HeavenStudio.Editor
                 Debug.LogError("Can't make property interface of type: " + typeType);
                 return null;
             }
-            print(propertyPrefab.name);
 
             GameObject input = Instantiate(propertyPrefab, transform);
             input.SetActive(true);

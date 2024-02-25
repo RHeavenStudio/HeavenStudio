@@ -105,6 +105,14 @@ namespace HeavenStudio
 
                 onValueChanged = null;
             }
+
+            public DropdownObj(Dropdown dd)
+            {
+                value = dd.defaultValue;
+                Values = dd.values ?? new();
+
+                onValueChanged = null;
+            }
         }
 
         public struct Resource
