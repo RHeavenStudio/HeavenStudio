@@ -163,11 +163,21 @@ namespace HeavenStudio.Games
         [Header("Animators")]
         public Animator dollHead;
         public Animator dollArms;
+        public Animator dollBody;
         public Animator clapEffect;
         public Animator sword;
 
         [Header("Sword")]
         public GameObject swordObj;
+
+        [Header("Shadows")]
+        public GameObject shadowHead;
+        public GameObject shadowLeftArm;
+        public GameObject shadowLeftGlove;
+        public GameObject shadowLeftGloveRim;
+        public GameObject shadowRightArm;
+        public GameObject shadowRightGlove;
+        public GameObject shadowRightGloveRim;
 
         [Header("Properties")]
         private bool canClap = true;
@@ -178,6 +188,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+
 
             spotlightMaterial.SetColor("_ColorAlpha", glowSpotlight);
             spotlightMaterial.SetColor("_ColorBravo", glowSpotlight);
@@ -202,6 +213,18 @@ namespace HeavenStudio.Games
                 });
             }
 
+            shadowHead.SetActive(spotlight.activeSelf);
+            shadowLeftArm.SetActive(spotlight.activeSelf);
+            shadowLeftGlove.SetActive(spotlight.activeSelf);
+            shadowLeftGloveRim.SetActive(spotlight.activeSelf);
+            shadowRightArm.SetActive(spotlight.activeSelf);
+            shadowRightGlove.SetActive(spotlight.activeSelf);
+            shadowRightGloveRim.SetActive(spotlight.activeSelf);
+            
+            if (spotlight.activeSelf) { dollBody.DoScaledAnimationAsync("BodyIdleLit", 0.5f); }
+            else { dollBody.DoScaledAnimationAsync("BodyIdle", 0.5f); }
+            
+            
             if (spotlight.activeSelf && currentSpotlightClaps == 0 && forceSpotlight == false)
             {
                 spotlight.SetActive(false);
