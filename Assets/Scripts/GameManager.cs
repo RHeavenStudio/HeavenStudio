@@ -620,14 +620,20 @@ namespace HeavenStudio
             }
         }
 
-        public static void PlaySFXArbitrary(double beat, string game, string name, float pitch, int offset)
+        public static void PlaySFXArbitrary(double beat, float length, string game, string name, float pitch, float volume, bool looping, int offset)
         {
             if (string.IsNullOrEmpty(name)) return;
+            Sound sound;
             if (game == "common") {
-                SoundByte.PlayOneShot(name, beat, pitch, offset: offset);
+                sound = SoundByte.PlayOneShot(name, beat, pitch, volume, looping, null, (offset / 1000f));
             } else {
                 SoundByte.PreloadGameAudioClips(game);
-                SoundByte.PlayOneShotGame(game + "/" + name, beat, pitch, forcePlay: true, offset: (offset / 1000f));
+                sound = SoundByte.PlayOneShotGame(game + "/" + name, beat, pitch, volume, looping, true, (offset / 1000f));
+            }
+            if (looping) {
+                BeatAction.New(null, new() {
+                    new(beat + length, () => sound.KillLoop(0)),
+                });
             }
         }
 

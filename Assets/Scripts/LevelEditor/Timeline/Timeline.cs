@@ -952,8 +952,9 @@ namespace HeavenStudio.Editor.Track
             foreach (RiqEntity entity in original)
             {
                 var newEntity = entity.DeepCopy();
-                foreach (var key in newEntity.dynamicData.Keys) {
-                    if (newEntity[key] is EntityTypes.DropdownObj dd) {
+                // there's gotta be a better way to do this. i just don't know how... -AJ
+                foreach ((var key, var value) in new Dictionary<string, dynamic>(newEntity.dynamicData)) {
+                    if (value is EntityTypes.DropdownObj dd) {
                         newEntity[key] = new EntityTypes.DropdownObj(dd.value, dd.Values);
                     }
                 }

@@ -1194,7 +1194,6 @@ namespace HeavenStudio
                                 var gm = GameManager.instance;
                                 Minigame game = gm.GetGameInfo(gm.currentGame);
                                 string animPath = ((EntityTypes.DropdownObj)e["animator"]).CurrentValue;
-                                Debug.Log(animPath);
                                 Animator animator = null;
                                 if (!string.IsNullOrEmpty(animPath)) {
                                     var animObj = gm.minigameObj.transform.Find(animPath);
@@ -1220,7 +1219,7 @@ namespace HeavenStudio
                             GameManager.instance.PlayAnimationArbitrary(e["animator"].CurrentValue, e["animation"].CurrentValue, e["scale"]);
                         }
                     ),
-                    new GameAction("play sfx", "Play SFX", 0.5f, false,
+                    new GameAction("play sfx", "Play SFX", 0.5f, true,
                         new List<Param>()
                         {
                             new Param("game", new EntityTypes.Dropdown(), "Which Game", "Specify the game's sfx to play. An empty input will play global sfx."),
@@ -1238,17 +1237,26 @@ namespace HeavenStudio
                                     // this is probably the best way to do it?
                                     clips = new() { "applause", "metronome", "miss", "nearMiss", "perfectMiss", "skillStar" };
                                 }
+                                clips.Sort((s1, s2) => s1.CompareTo(s2));
                                 EntityTypes.DropdownObj sfxDD = e["sfxName"];
                                 sfxDD.SetValues(clips);
-                                return game != null ? game.displayName : "Common";
+                                return clips.Count > 0 ? (game != null ? game.displayName : "Common") : "Empty!";
                             }), "Get SFX", "Get all the sfx in the selected minigame."),
                             new Param("sfxName", new EntityTypes.Dropdown(), "SFX Name", "The name of the sfx to play."),
-                            new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The sfx's pitch."),
-                            new Param("offset", new EntityTypes.Integer(-500, 500), "Offset (ms)", "The sfx's offset in milliseconds."),
+                            new Param("useSemitones", false, "Use Semitones", "Toggle to use semitones instead of straight pitch.", new() {
+                                new((x, e) => (bool)x, "semitones"),
+                                new((x, e) => !(bool)x, "pitch"),
+                            }),
+                            new Param("semitones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The semitones of the sfx."),
+                            new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The pitch of the sfx."),
+                            new Param("volume", new EntityTypes.Float(0, 2, 1), "Volume", "The volume of the sfx."),
+                            new Param("offset", new EntityTypes.Integer(-500, 500), "Offset (ms)", "The offset of the sfx in milliseconds."),
+                            new Param("loop", false, "Loop", "Loop the sfx for the length of the block."),
                         },
                         preFunction : delegate {
                             var e = eventCaller.currentEntity;
-                            GameManager.PlaySFXArbitrary(e.beat, e["game"].CurrentValue, e["sfxName"].CurrentValue, e["pitch"], e["offset"]);
+                            float pitch = e["useSemitones"] ? SoundByte.GetPitchFromSemiTones(e["semitones"], true) : e["pitch"];
+                            GameManager.PlaySFXArbitrary(e.beat, e.length, e["game"].CurrentValue, e["sfxName"].CurrentValue, pitch, e["volume"], e["loop"], e["offset"]);
                         }
                     ),
                 }),
