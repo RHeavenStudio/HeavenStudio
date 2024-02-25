@@ -313,6 +313,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader ntrMunchyMonkLoader failed!");
             }
 
+            game = PcoNailLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader PcoNailLoader failed!");
+            }
+
             game = AgbNightWalkLoader.AddGame(eventCaller);
             if (game != null)
             {
