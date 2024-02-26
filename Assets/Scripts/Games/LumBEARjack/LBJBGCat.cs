@@ -36,19 +36,17 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _anim.DoNormalizedAnimation("CatDance", normalized);
         }
 
-        public void Activate(double beat, double length, bool inToScene, bool moveInstant, bool dance, bool instant)
+        public void Activate(double beat, double length, bool inToScene, bool moveInstant, bool dance, bool instantStart, bool instantEnd)
         {
             _moveScript.Move(beat, moveInstant ? 0 : length, inToScene);
 
             double overflowBeat = beat % 2;
             double toBeat = 2.0 - overflowBeat;
 
-            _danceBeat = beat + (instant ? -overflowBeat : toBeat) - 0.5;
-
+            _danceBeat = beat + (instantStart ? -overflowBeat : toBeat) - 0.5;
             if (!inToScene) _danceBeat = double.MaxValue;
 
-            _stopDanceBeat = beat + (instant ? -overflowBeat : toBeat) - 0.5;
-
+            _stopDanceBeat = beat + (instantEnd ? -overflowBeat : toBeat) - 0.5;
             if (dance) _stopDanceBeat = double.MaxValue;
         }
     }

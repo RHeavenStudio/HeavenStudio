@@ -981,20 +981,21 @@ namespace HeavenStudio.Games
             bgCats = Math.Clamp(bgCats, 0, 12);
             bgCats -= 1;
             beforeBgCats -= 1;
+            Debug.Log(bgCats - beforeBgCats);
             
             for (int i = 0; i < _bgCats.Length; i++)
             {
                 if (bgCats < beforeBgCats)
                 {
-                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > bgCats && i <= beforeBgCats), dance, instant || i <= bgCats);
+                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > bgCats && i <= beforeBgCats), dance, instant || i <= bgCats, instant);
                 }
                 else if (bgCats > beforeBgCats)
                 {
-                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > beforeBgCats && i <= bgCats), dance, instant || i <= beforeBgCats);
+                    _bgCats[i].Activate(beat, length, bgCats >= i, instant || !(i > beforeBgCats && i <= bgCats), dance, instant || i <= beforeBgCats, instant);
                 }
                 else
                 {
-                    _bgCats[i].Activate(beat, length, bgCats >= i, true, dance, instant);
+                    _bgCats[i].Activate(beat, length, bgCats >= i, true, dance, true, instant);
                 }
             }
         }
