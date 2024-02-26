@@ -1244,11 +1244,11 @@ namespace HeavenStudio
                             }), "Get SFX", "Get all the sfx in the selected minigame."),
                             new Param("sfxName", new EntityTypes.Dropdown(), "SFX Name", "The name of the sfx to play."),
                             new Param("useSemitones", false, "Use Semitones", "Toggle to use semitones instead of straight pitch.", new() {
-                                new((x, e) => (bool)x, "semitones", "semitonesFine"),
+                                new((x, e) => (bool)x, "semitones", "cents"),
                                 new((x, e) => !(bool)x, "pitch"),
                             }),
                             new Param("semitones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The semitones of the sfx."),
-                            new Param("semitonesFine", new EntityTypes.Float(-1, 1, 0), "Fine Semitones", "The semitones of the sfx."),
+                            new Param("cents", new EntityTypes.Integer(-100, 100, 0), "Cents", "The cents of the sfx."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The pitch of the sfx."),
                             new Param("volume", new EntityTypes.Float(0, 2, 1), "Volume", "The volume of the sfx."),
                             new Param("offset", new EntityTypes.Integer(-500, 500), "Offset (ms)", "The offset of the sfx in milliseconds."),
@@ -1257,7 +1257,7 @@ namespace HeavenStudio
                         preFunction : delegate {
                             var e = eventCaller.currentEntity;
                             float pitch = e["pitch"];
-                            if (e["useSemitones"]) pitch = SoundByte.GetPitchFromSemiTones(e["semitones"], false) + SoundByte.GetPitchFromCents(e["semitonesFine"], false);
+                            if (e["useSemitones"]) pitch = SoundByte.GetPitchFromCents((e["semitones"] * 100) + e["cents"], false);
                             GameManager.PlaySFXArbitrary(e.beat, e.length, e["game"].CurrentValue, e["sfxName"].CurrentValue, pitch, e["volume"], e["loop"], e["offset"]);
                         }
                     ),
