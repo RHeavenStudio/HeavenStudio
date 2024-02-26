@@ -458,7 +458,7 @@ namespace HeavenStudio.Util
         /// <summary>
         /// Gets a pitch multiplier from semitones.
         /// </summary>
-        public static float GetPitchFromSemiTones(float semiTones, bool pitchToMusic)
+        public static float GetPitchFromSemiTones(int semiTones, bool pitchToMusic)
         {
             var newSemitones = Mathf.Pow(2f, (1f / 12f) * semiTones);
             if (pitchToMusic) newSemitones *= Conductor.instance.musicSource.pitch;

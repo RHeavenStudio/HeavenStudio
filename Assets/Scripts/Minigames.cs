@@ -1256,7 +1256,8 @@ namespace HeavenStudio
                         },
                         preFunction : delegate {
                             var e = eventCaller.currentEntity;
-                            float pitch = e["useSemitones"] ? SoundByte.GetPitchFromSemiTones(e["semitones"] + e["semitonesFine"], false) : e["pitch"];
+                            float pitch = e["pitch"];
+                            if (e["useSemitones"]) pitch = SoundByte.GetPitchFromSemiTones(e["semitones"], false) + SoundByte.GetPitchFromCents(e["semitonesFine"], false);
                             GameManager.PlaySFXArbitrary(e.beat, e.length, e["game"].CurrentValue, e["sfxName"].CurrentValue, pitch, e["volume"], e["loop"], e["offset"]);
                         }
                     ),
