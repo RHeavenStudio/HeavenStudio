@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                    function = delegate {
   var e = eventCaller.currentEntity;
   string variation = "variation" + (new string[] { "Pan", "Pa", "Pa_n" })[e["type"]];
-  BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"],e["clapType"]);
+  BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"],e["clapType"], e["semitone"]);
 },
                     defaultLength = 1f,
                     parameters = new List<Param>()
@@ -51,7 +51,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("variationPan", BonOdori.variationPan.PanC, "Pan Type", "Set the variation of the voice line."),
                         new Param("variationPa", BonOdori.variationPa.PaG, "Pa Type", "Set the variation of the voice line."),
                         new Param("variationPa_n", BonOdori.variationPa_n.Pa_nA , "Pa-n Type", "Set the variation of the voice line."),
-                        new Param("clapType", BonOdori.typeClap.SideClap, "Clap Type", "Set the type of clap.")
+                        new Param("clapType", BonOdori.typeClap.SideClap, "Clap Type", "Set the type of clap."),
+                        new Param("semitone", new EntityTypes.Integer(-24, 24, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
 
@@ -61,7 +62,7 @@ namespace HeavenStudio.Games.Loaders
                    function = delegate {
   var e = eventCaller.currentEntity;
   string variation = "variation" + (new string[] { "Don", "Do", "Do_n" })[e["type"]];
-  BonOdori.instance.Sound(e.beat, e[variation], e["type"]);
+  BonOdori.instance.Sound(e.beat, e[variation], e["type"], e["semitone"]);
 },
                     defaultLength = 1f,
                     parameters = new List<Param>()
@@ -74,6 +75,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("variationDon", BonOdori.variationDon.DonA, "Don Type", "Set the variation of the voice line."),
                         new Param("variationDo", BonOdori.variationDo.DoC, "Do Type", "Set the variation of the voice line."),
                         new Param("variationDo_n", BonOdori.variationDo_n.Do_nA, "Do-n Type", "Set the variation of the voice line."),
+                        new Param("semitone", new EntityTypes.Integer(-24, 24, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
 
@@ -378,7 +380,7 @@ namespace HeavenStudio.Games
 
 
 
-        public void Clap(double beat, int variation, int typeSpeak, bool muted, int clapType)
+        public void Clap(double beat, int variation, int typeSpeak, bool muted, int clapType, int semitone)
 
         {
             if (clapType == 1)
@@ -403,7 +405,8 @@ namespace HeavenStudio.Games
                     1 => "pa_n",
                     2 or _ => "pa",
                 };
-                SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1));
+                var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
+                SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), -1, pitch);
 
 
 
@@ -412,7 +415,7 @@ namespace HeavenStudio.Games
                 ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
             }
         }
-        public void Sound(double beat, int variation, int typeSpeak)
+        public void Sound(double beat, int variation, int typeSpeak, int semitone)
         {
             string clip = typeSpeak switch
             {
@@ -421,7 +424,9 @@ namespace HeavenStudio.Games
                 2 or _ => "do",
 
             };
-            SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1));
+             var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
+
+            SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), -1, pitch);
 
         }
 
@@ -716,7 +721,7 @@ namespace HeavenStudio.Games
         public void Bop(double beat, float length, bool shouldBop, bool autoBop)
         {
             goBopDonpans = autoBop; goBopJudge = autoBop;
-            if (autoBop && shouldBop) { return;}
+            if (autoBop && shouldBop) { return; }
             if (shouldBop)
             {
                 for (int i = 0; i < length; i++)
