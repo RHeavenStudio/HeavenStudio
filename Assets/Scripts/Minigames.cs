@@ -1171,16 +1171,16 @@ namespace HeavenStudio
                                 var gm = GameManager.instance;
                                 Minigame game = gm.GetGameInfo(gm.currentGame);
                                 if (game != null) {
-                                    var animators = gm.minigameObj.transform.GetComponentsInChildren<Animator>();
+                                    Animator[] animators = gm.minigameObj.transform.GetComponentsInChildren<Animator>();
                                     // not in an update loop so it's fine :3
                                     ((EntityTypes.DropdownObj)e["animator"]).SetValues(animators.Select(anim => {
-                                        var obj = anim.gameObject;
+                                        Transform obj = anim.transform;
                                         List<string> path = new() { obj.name };
-                                        for (int i = 0; i < 10; i++)
+                                        for (int i = 0; i < 10; i++) // not a while loop because i don't trust myself
                                         {
-                                            if (obj.transform.parent == null || obj.transform.parent.name == game.name) break;
-                                            obj = obj.transform.parent.gameObject;
-                                            path.Add(obj.name);
+                                            if (obj.parent.name == game.name || obj.parent == null) break;
+                                            obj = obj.parent;
+                                            path.Insert(0, obj.name);
                                         }
                                         return string.Join('/', path);
                                     }).ToList());
@@ -1244,10 +1244,11 @@ namespace HeavenStudio
                             }), "Get SFX", "Get all the sfx in the selected minigame."),
                             new Param("sfxName", new EntityTypes.Dropdown(), "SFX Name", "The name of the sfx to play."),
                             new Param("useSemitones", false, "Use Semitones", "Toggle to use semitones instead of straight pitch.", new() {
-                                new((x, e) => (bool)x, "semitones"),
+                                new((x, e) => (bool)x, "semitones", "cents"),
                                 new((x, e) => !(bool)x, "pitch"),
                             }),
                             new Param("semitones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The semitones of the sfx."),
+                            new Param("cents", new EntityTypes.Integer(-100, 100, 0), "Cents", "The cents of the sfx."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The pitch of the sfx."),
                             new Param("volume", new EntityTypes.Float(0, 2, 1), "Volume", "The volume of the sfx."),
                             new Param("offset", new EntityTypes.Integer(-500, 500), "Offset (ms)", "The offset of the sfx in milliseconds."),
@@ -1255,7 +1256,8 @@ namespace HeavenStudio
                         },
                         preFunction : delegate {
                             var e = eventCaller.currentEntity;
-                            float pitch = e["useSemitones"] ? SoundByte.GetPitchFromSemiTones(e["semitones"], true) : e["pitch"];
+                            float pitch = e["pitch"];
+                            if (e["useSemitones"]) pitch = SoundByte.GetPitchFromCents((e["semitones"] * 100) + e["cents"], false);
                             GameManager.PlaySFXArbitrary(e.beat, e.length, e["game"].CurrentValue, e["sfxName"].CurrentValue, pitch, e["volume"], e["loop"], e["offset"]);
                         }
                     ),
