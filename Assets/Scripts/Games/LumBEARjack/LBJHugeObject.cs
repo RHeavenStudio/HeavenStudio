@@ -8,11 +8,6 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 {
     public class LBJHugeObject : MonoBehaviour
     {
-        [Header("Parameters")]
-        [SerializeField] private float _rotationStart = -22f;
-        [SerializeField] private float _rotationEnd = 22f;
-        [SerializeField] private EasingFunction.Ease _ease = EasingFunction.Ease.EaseInOutQuad;
-
         [Header("Components")]
         [SerializeField] private SpriteRenderer _logSR;
         [SerializeField] private Sprite[] _logCutSprites = new Sprite[3];
@@ -22,6 +17,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         [SerializeField] private Sprite[] _peachCutSprites = new Sprite[3];
 
         private LBJBear _bear;
+        private LBJObjectRotate _rotateObject;
         private LumBEARjack.HugeType _type;
         private bool _right = true;
         private bool _zoom = true;
@@ -37,6 +33,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _logSR.gameObject.SetActive(false);
             _freezerSR.gameObject.SetActive(false);
             _peachSR.gameObject.SetActive(false);
+
+            _rotateObject = GetComponent<LBJObjectRotate>();
         }
 
         public void Init(LBJBear bear, double beat, double length, LumBEARjack.HugeType type, bool right, bool zoom, bool baby, double startUpBeat = -1)
@@ -92,12 +90,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private void Update()
         {
-            float normalized = Conductor.instance.GetPositionFromBeat(_rotationBeat - _rotationLength, _rotationLength * 2);
-
-            var func = EasingFunction.GetEasingFunction(_ease);
-
-            float newRotation = func(_rotationStart, _rotationEnd, normalized);
-            transform.localEulerAngles = new Vector3(0, 0, newRotation * (_right ? 1 : -1));
+            _rotateObject.Move(_rotationBeat, _rotationLength, _right);
         }
 
         private void SetObjectCutSprite(int step)

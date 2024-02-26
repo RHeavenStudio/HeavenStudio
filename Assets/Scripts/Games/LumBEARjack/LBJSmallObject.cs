@@ -8,11 +8,6 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 {
     public class LBJSmallObject : MonoBehaviour
     {
-        [Header("Parameters")]
-        [SerializeField] private float _rotationStart = -22f;
-        [SerializeField] private float _rotationEnd = 22f;
-        [SerializeField] private EasingFunction.Ease _ease = EasingFunction.Ease.EaseInOutQuad;
-
         [Header("Components")]
         [SerializeField] private GameObject _log;
         [SerializeField] private GameObject _can;
@@ -20,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         [SerializeField] private GameObject _broom;
 
         private LBJBear _bear;
+        private LBJObjectRotate _rotateObject;
         private LumBEARjack.SmallType _type;
         private LumBEARjack.HuhChoice _huh;
         private bool _right = true;
@@ -33,6 +29,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _can.SetActive(false);
             _bat.SetActive(false);
             _broom.SetActive(false);
+            _rotateObject = GetComponent<LBJObjectRotate>();
         }
 
         public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type, LumBEARjack.HuhChoice huh, bool right, double startUpBeat = -1)
@@ -68,12 +65,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private void Update()
         {
-            float normalized = Conductor.instance.GetPositionFromBeat(_rotationBeat - _rotationLength, _rotationLength * 2);
-
-            var func = EasingFunction.GetEasingFunction(_ease);
-
-            float newRotation = func(_rotationStart, _rotationEnd, normalized);
-            transform.localEulerAngles = new Vector3(0, 0, newRotation * (_right ? 1 : -1));
+            _rotateObject.Move(_rotationBeat, _rotationLength, _right);
         }
 
         private void Just(PlayerActionEvent caller, float state)
