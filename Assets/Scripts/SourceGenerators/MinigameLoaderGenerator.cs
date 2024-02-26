@@ -83,7 +83,6 @@ namespace {context.TargetClass.Namespace}
             string fullMethodLabel = $"{callingClass}.{method}";
 
             sb.Append($@"
-            Debug.Log(""Running game loader {callingClass}"");
             game = {fullMethodLabel}(eventCaller);
             if (game != null)
             {{

@@ -259,6 +259,16 @@ namespace HeavenStudio.InputSystem
             currentBindings = newBinds;
         }
 
+        public override ControlBindings UpdateBindings(ControlBindings lastBinds)
+        {
+            return lastBinds;
+        }
+
+        public override int GetBindingsVersion()
+        {
+            return 0;
+        }
+
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
             return action is 0;
@@ -393,24 +403,6 @@ namespace HeavenStudio.InputSystem
         public override Vector2 GetPointer()
         {
             return realPos;
-        }
-
-        //todo: directionals
-        public override bool GetHatDirection(InputDirection direction)
-        {
-            return false;
-        }
-
-        public override bool GetHatDirectionDown(InputDirection direction, out double dt)
-        {
-            dt = 0;
-            return false;
-        }
-
-        public override bool GetHatDirectionUp(InputDirection direction, out double dt)
-        {
-           dt = 0;
-            return false;
         }
 
         public override void SetPlayer(int? playerNum)
