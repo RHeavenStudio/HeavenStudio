@@ -128,9 +128,17 @@ namespace HeavenStudio.Games
         Island nextIsland;
         Island currentIsland;
         Island staleIsland;
+        Island stone;
         double journeyIntendedLength;
+        StonePlatform[] stonePlatformJourney;
 
-        double platformDistanceConstant = 5.35;
+        private struct StonePlatform
+        {
+            public int stoneNumber;
+            public Island thisPlatform;
+        }
+
+        double platformDistanceConstant = 5.35 / 2;
         int platformsPerBeat = 4;
 
         public enum DrumLoopList
@@ -443,18 +451,20 @@ namespace HeavenStudio.Games
             //set up the big beataction
             var actions = new List<BeatAction.Action>();
 
-            //"X yards to goal" text
+            //"X yards to goal" text, spawn the journey
             double yardsTextLength = length;
+            double journeyBeat = beat + yardsTextLength;
             actions.Add(new(beat - 2, delegate {
                 yardsText.text = $"<color=yellow>{yardsTextLength}</color> yards to the goal.";
+                SpawnStones(journeyBeat, yardsTextLength - 1);
             }));
 
-            //chicken ducks into the car window and the next island is spawned, and the bubble text is set up
-            double journeyBeat = beat + yardsTextLength;
+            //chicken ducks into the car window, and the bubble text is set up, and the platform noise plays, and next island spawns
             actions.Add(new(beat - 1, delegate {
                 ChickenAnim.DoScaledAnimationAsync("Prepare", 0.5f);
-                SpawnJourney(journeyBeat, yardsTextLength - 1);
                 bubbleEndCount = beat + length;
+                SoundByte.PlayOneShotGame("chargingChicken/platformSet");
+                SpawnJourney(journeyBeat, yardsTextLength - 1);
             }));
 
             //spawns the countdown bubble
@@ -586,14 +596,14 @@ namespace HeavenStudio.Games
             nextIsland.transform.localPosition = new Vector3((float)(length * platformDistanceConstant * platformsPerBeat), 0, 0);
             nextIsland.BigLandmass.SetActive(true);
 
-            nextIsland.journeySave = length * platformDistanceConstant * platformsPerBeat;
-            nextIsland.journeyStart = length * platformDistanceConstant * platformsPerBeat;
+            nextIsland.journeySave = length * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
+            nextIsland.journeyStart = length * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
             nextIsland.journeyEnd = 0;
             nextIsland.journeyLength = length;
 
-            currentIsland.journeySave = length * platformDistanceConstant * platformsPerBeat;
+            currentIsland.journeySave = length * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
             currentIsland.journeyStart = 0;
-            currentIsland.journeyEnd = -length * platformDistanceConstant * platformsPerBeat;
+            currentIsland.journeyEnd = -length * platformDistanceConstant * platformsPerBeat - (platformDistanceConstant / 2);
             currentIsland.journeyLength = length;
 
             journeyIntendedLength = beat - length - 1;
@@ -611,6 +621,31 @@ namespace HeavenStudio.Games
                         Explode();
                     }),
                 });
+        }
+
+        public void SpawnStones(double beat, double length)
+        {
+            stonePlatformJourney = new StonePlatform[(int)(length * 4 - 1)];
+            for ( int i = 0; i < length * 4 - 1; i++ )
+            {
+                stonePlatformJourney[i].thisPlatform = Instantiate(IslandBase, transform).GetComponent<Island>();
+                stonePlatformJourney[i].stoneNumber = i;
+            }
+
+            foreach (var a in stonePlatformJourney)
+            {
+                stone = a.thisPlatform;
+                stone.transform.localPosition = new Vector3((float)(((a.stoneNumber + 1) * platformDistanceConstant) + (platformDistanceConstant / 2)), 0, 0);
+                stone.BecomeStonePlatform();
+                stone.StoneFall();
+
+                stone.journeySave = length * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
+                stone.journeyStart = ((a.stoneNumber + 1) * platformDistanceConstant) + (platformDistanceConstant / 2);
+                stone.journeyEnd = ((a.stoneNumber) * platformDistanceConstant) + (platformDistanceConstant / 2) - (length * platformDistanceConstant * platformsPerBeat - (platformDistanceConstant / 2));
+                stone.journeyLength = length;
+
+                stone.respawnEnd = beat + length;
+            }
         }
 
         public void BlastOff(float state = 0, bool missed = true)
@@ -638,21 +673,40 @@ namespace HeavenStudio.Games
             nextIsland.journeyBlastOffTime = Conductor.instance.songPositionInBeatsAsDouble;
             currentIsland.journeyBlastOffTime = Conductor.instance.songPositionInBeatsAsDouble;
 
+            foreach (var a in stonePlatformJourney)
+            {
+                stone = a.thisPlatform;
+                stone.isMoving = true;
+                stone.journeyBlastOffTime = Conductor.instance.songPositionInBeatsAsDouble;
+            }
+
             nextIsland.PositionIsland(state);
 
             if(missed)
             {
-                nextIsland.journeyEnd += (nextIsland.journeyLength - ((nextIsland.journeyBlastOffTime - journeyIntendedLength)) * (nextIsland.journeyLength / (nextIsland.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat;
-                nextIsland.journeyLength = Math.Clamp(((nextIsland.journeyBlastOffTime - journeyIntendedLength) / 2) + (nextIsland.journeyLength / 2) - 1, 0, nextIsland.journeyLength - 1);
+                nextIsland.journeyEnd += (nextIsland.journeyLength - ((nextIsland.journeyBlastOffTime - journeyIntendedLength)) * (nextIsland.journeyLength / (nextIsland.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
+                nextIsland.journeyLength = Math.Clamp(((nextIsland.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (nextIsland.journeyLength / 3) - 1, 0, nextIsland.journeyLength - 1);
 
-                currentIsland.journeyEnd += ((currentIsland.journeyLength - (currentIsland.journeyBlastOffTime - journeyIntendedLength) + 1) * (currentIsland.journeyLength / (currentIsland.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat;
-                currentIsland.journeyLength = Math.Clamp(((currentIsland.journeyBlastOffTime - journeyIntendedLength) / 2) + (currentIsland.journeyLength / 2) - 1, 0, currentIsland.journeyLength - 1.5);
+                currentIsland.journeyEnd += ((currentIsland.journeyLength - (currentIsland.journeyBlastOffTime - journeyIntendedLength) + 1) * (currentIsland.journeyLength / (currentIsland.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
+                currentIsland.journeyLength = Math.Clamp(((currentIsland.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (currentIsland.journeyLength / 3) - 1, 0, currentIsland.journeyLength - 1.5);
+
+                foreach (var a in stonePlatformJourney)
+                {
+                    stone = a.thisPlatform;
+                    stone.journeyEnd += (stone.journeyLength - ((stone.journeyBlastOffTime - journeyIntendedLength)) * (stone.journeyLength / (stone.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
+                    stone.journeyLength = Math.Clamp(((stone.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (stone.journeyLength / 3) - 1, 0, stone.journeyLength - 1);
+                }
 
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + currentIsland.journeyLength, delegate { 
                         nextIsland.isMoving = false;
                         currentIsland.isMoving = false;
+                        foreach (var a in stonePlatformJourney)
+                        {
+                            stone = a.thisPlatform;
+                            stone.isMoving = false;
+                        }
                         ChickenFall();
                     }),
                 });
@@ -663,11 +717,22 @@ namespace HeavenStudio.Games
 
                 currentIsland.journeyEnd -= state * 1.03f;
 
+                foreach (var a in stonePlatformJourney)
+                {
+                    stone = a.thisPlatform;
+                    stone.journeyEnd -= state * 1.03f;
+                }
+
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(journeyIntendedLength + (currentIsland.journeyLength * 2) + 1, delegate { 
                         nextIsland.isMoving = false;
                         currentIsland.isMoving = false;
+                        foreach (var a in stonePlatformJourney)
+                        {
+                            stone = a.thisPlatform;
+                            stone.isMoving = false;
+                        }
                     }),
                 });
             }
@@ -694,6 +759,11 @@ namespace HeavenStudio.Games
             isInputting = false;
             nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat;
             currentIsland.journeyEnd = 0;
+            foreach (var a in stonePlatformJourney)
+            {
+                stone = a.thisPlatform;
+                stone.journeyEnd = ((a.stoneNumber + 1) * platformDistanceConstant) + (platformDistanceConstant / 2);
+            }
 
             //erase text
             yardsText.text = "";
@@ -713,6 +783,11 @@ namespace HeavenStudio.Games
             isInputting = false;
             nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat;
             currentIsland.journeyEnd = 0;
+            foreach (var a in stonePlatformJourney)
+            {
+                stone = a.thisPlatform;
+                stone.journeyEnd = ((a.stoneNumber + 1) * platformDistanceConstant) + (platformDistanceConstant / 2);
+            }
 
             //erase text
             yardsText.text = "";
@@ -747,6 +822,13 @@ namespace HeavenStudio.Games
             nextIsland.isRespawning = true;
             nextIsland.FakeChickenAnim.DoScaledAnimationAsync("Respawn", 0.5f);
 
+            foreach (var a in stonePlatformJourney)
+            {
+                stone = a.thisPlatform;
+                stone.respawnStart = Conductor.instance.songPositionInBeatsAsDouble + 0.5;
+                stone.isRespawning = true;
+            }
+
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(nextIsland.respawnEnd, delegate { 
@@ -756,6 +838,11 @@ namespace HeavenStudio.Games
                     staleIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     currentIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     nextIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
+                    foreach (var a in stonePlatformJourney)
+                    {
+                        stone = a.thisPlatform;
+                        stone.isRespawning = false;
+                    }
                 }),
             });
         }

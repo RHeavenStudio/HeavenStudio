@@ -14,10 +14,13 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         [SerializeField] public Animator ChargerAnim;
         [SerializeField] public Animator FakeChickenAnim;
+        [SerializeField] public Animator PlatformAnim;
         [SerializeField] public Transform IslandPos;
         [SerializeField] public Transform CollapsedLandmass;
         [SerializeField] public GameObject BigLandmass;
         [SerializeField] public GameObject SmallLandmass;
+        [SerializeField] public GameObject FullLandmass;
+        [SerializeField] public GameObject StonePlatform;
 
         [NonSerialized]public double journeySave = 0;
         [NonSerialized]public double journeyStart = 0;
@@ -29,6 +32,9 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [NonSerialized]public double respawnStart = 0;
         [NonSerialized]public double respawnEnd = 0;
         [NonSerialized]public bool isRespawning = false;
+
+        [NonSerialized]public bool isStonePlatform = false;
+        [NonSerialized]public bool canFall = false;
 
         #endregion
 
@@ -48,6 +54,12 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                 float value2 = (Conductor.instance.GetPositionFromBeat(respawnStart, respawnEnd - respawnStart));
                 float newX2 = Util.EasingFunction.Linear((float)journeyStart - (float)journeySave, (float)journeyEnd, 1 - value2);
                 IslandPos.localPosition = new Vector3(newX2, 0, 0);
+            }
+            if (canFall && IslandPos.localPosition.x < 0 && !isRespawning)
+            {
+                PlatformAnim.DoScaledAnimationAsync("Fall", 0.5f);
+                SoundByte.PlayOneShotGame("chargingChicken/platformFall", volume: 0.5f);
+                canFall = false;
             }
         }
 
@@ -86,6 +98,26 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         {
             SoundByte.PlayOneShotGame("chargingChicken/complete");
             SmallLandmass.SetActive(false);
+        }
+
+        #endregion
+
+        //stone platform methods
+        #region Stone Platform Methods
+
+        public void BecomeStonePlatform()
+        {
+            isStonePlatform = true;
+            canFall = true;
+
+            BigLandmass.SetActive(false);
+            FullLandmass.SetActive(false);
+            StonePlatform.SetActive(true);
+        }
+
+        public void StoneFall()
+        {
+            PlatformAnim.DoScaledAnimationAsync("Set", 0.5f);
         }
 
         #endregion
