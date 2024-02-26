@@ -460,14 +460,9 @@ namespace HeavenStudio.Util
         /// </summary>
         public static float GetPitchFromSemiTones(int semiTones, bool pitchToMusic)
         {
-            if (pitchToMusic)
-            {
-                return Mathf.Pow(2f, (1f / 12f) * semiTones) * Conductor.instance.musicSource.pitch;
-            }
-            else
-            {
-                return Mathf.Pow(2f, (1f / 12f) * semiTones);
-            }
+            var newSemitones = Mathf.Pow(2f, (1f / 12f) * semiTones);
+            if (pitchToMusic) newSemitones *= Conductor.instance.musicSource.pitch;
+            return newSemitones;
         }
         /// <summary>
         /// Returns the semitones from a pitch.
