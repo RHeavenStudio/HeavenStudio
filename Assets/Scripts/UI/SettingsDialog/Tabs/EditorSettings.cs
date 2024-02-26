@@ -8,17 +8,19 @@ namespace HeavenStudio.Editor
 {
     public class EditorSettings : TabsContent
     {
-        public Toggle cursorCheckbox;
-        public Toggle discordRPCCheckbox;
-        public Button editorScaleDecre, editorScaleIncre;
-        public Toggle scaleWSS;
+        [SerializeField] Toggle cursorCheckbox;
+        [SerializeField] Toggle discordRPCCheckbox;
+        [SerializeField] Button editorScaleDecre, editorScaleIncre;
+        [SerializeField] Toggle scaleWSS;
+        [SerializeField] Toggle paramTooltipsToggle;
+        // [SerializeField] Toggle cornerTooltipsToggle;
 
         private void Start()
         {
             cursorCheckbox.isOn = PersistentDataManager.gameSettings.editorCursorEnable;
             discordRPCCheckbox.isOn = PersistentDataManager.gameSettings.discordRPCEnable;
             scaleWSS.isOn = PersistentDataManager.gameSettings.scaleWScreenSize;
-
+            paramTooltipsToggle.isOn = PersistentDataManager.gameSettings.showParamTooltips;
 
             SetDecreIncreInteractable();
         }
@@ -41,12 +43,7 @@ namespace HeavenStudio.Editor
 
         public override void OnOpenTab()
         {
-            cursorCheckbox.isOn = PersistentDataManager.gameSettings.editorCursorEnable;
-            discordRPCCheckbox.isOn = PersistentDataManager.gameSettings.discordRPCEnable;
-            scaleWSS.isOn = PersistentDataManager.gameSettings.scaleWScreenSize;
-
-
-            SetDecreIncreInteractable();
+            Start();
         }
 
         public override void OnCloseTab()
@@ -58,6 +55,16 @@ namespace HeavenStudio.Editor
             PersistentDataManager.gameSettings.scaleWScreenSize = scaleWSS.isOn;
             scaleWSS.isOn = PersistentDataManager.gameSettings.scaleWScreenSize;
         }
+
+        public void OnParamTooltipsChanged()
+        {
+            PersistentDataManager.gameSettings.showParamTooltips = paramTooltipsToggle.isOn;
+        }
+
+        // public void OnCornerTooltipsChanged()
+        // {
+        //     PersistentDataManager.gameSettings.showParamTooltips = cornerTooltipsToggle.isOn;
+        // }
 
         public void OnEditorScaleDecre()
         {
