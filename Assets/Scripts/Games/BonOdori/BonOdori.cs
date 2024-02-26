@@ -503,7 +503,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
                 });
                 }
-SoundByte.PlayOneShotGame("bonOdori/clap")
+            SoundByte.PlayOneShotGame("bonOdori/clap");
         }
         
         public void Miss(PlayerActionEvent caller)
