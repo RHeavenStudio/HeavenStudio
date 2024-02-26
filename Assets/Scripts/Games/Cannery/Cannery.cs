@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Loaders
             // new List<string>() { "mob", "normal" },
             // "mobcannery", "en",
             // new List<string>() { }
-            );A;
+            );
         }
     }
 }
