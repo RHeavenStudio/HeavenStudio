@@ -44,27 +44,28 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("background color", "Background Colors")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ClapTrap.instance.FadeBackgroundColor(e["bgColor"], e["fade"], e["spotlightTop"], e["spotlightBottom"], e["spotlightGlow"], e.length); },
+                    function = delegate { var e = eventCaller.currentEntity; ClapTrap.instance.BackgroundColor(e["bgColor"], e["bgColorEnd"], e["ease"], e.length, e.beat); },
                     defaultLength = 0.5f,
                     resizable = true, 
                     parameters = new List<Param>()
                     {
-                        new Param("bgColor", ClapTrap.defaultBgColor, "Background", "The background color"),
-                        new Param("fade", false, "Fade?", "Should the background color fade from the current color to the new one?"),
-                        new Param("spotlightBottom", ClapTrap.defaultBgColor, "Spotlight Bottom", "The color at the bottom of the spotlight"),
-                        new Param("spotlightTop", ClapTrap.glowSpotlight, "Spotlight Top", "The color at the top of the spotlight"),
-                        new Param("spotlightGlow", ClapTrap.glowSpotlight, "Spotlight Glow", "The color that glows around the spotlight")
+                        new Param("bgColor", ClapTrap.defaultBgColor, "Start Color", "Set the color at the start of the event"),
+                        new Param("bgColorEnd", ClapTrap.defaultBgColor, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
 
                     }, 
                 },
-                new GameAction("hand color", "Hand Colors")
+                new GameAction("hand color", "Object Colors")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ClapTrap.instance.ChangeHandColor(e["stageLeftHandColor"], e["stageRightHandColor"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ClapTrap.instance.ChangeHandColor(e["left"], e["right"], e["spotlightTop"], e["spotlightBottom"], e["spotlightGlow"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("stageLeftHandColor", ClapTrap.defaultLeftColor, "Left Hand Color", "The color used on the dummy's hand (stage left)"),
-                        new Param("stageRightHandColor", ClapTrap.defaultRightColor, "Right Hand Color", "The color used on the dummy's hand (stage right)")
+                        new Param("left", ClapTrap.defaultLeftColor, "Left Hand", "The color used on the doll's right hand."),
+                        new Param("right", ClapTrap.defaultRightColor, "Right Hand", "The color used on the doll's left hand."),
+                        new Param("spotlightBottom", ClapTrap.defaultBgColor, "Spotlight Bottom", "The color at the bottom of the spotlight"),
+                        new Param("spotlightTop", ClapTrap.glowSpotlight, "Spotlight Top", "The color at the top of the spotlight"),
+                        new Param("spotlightGlow", ClapTrap.glowSpotlight, "Spotlight Glow", "The color that glows around the spotlight")
                     }, 
                 },
                 
@@ -146,6 +147,12 @@ namespace HeavenStudio.Games
         [Header("Colors")]
         public SpriteRenderer bg;
 
+        // i stole these from rhythm tweezers lol
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart; //obviously put to the default color of the game
+        private Color colorEnd;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
         Tween bgColorTween;
 
         public SpriteRenderer stageLeft;
@@ -161,6 +168,7 @@ namespace HeavenStudio.Games
         public Material spotlightMaterial;
 
         [Header("Animators")]
+        public Animator doll;
         public Animator dollHead;
         public Animator dollArms;
         public Animator dollBody;
@@ -195,6 +203,8 @@ namespace HeavenStudio.Games
             spotlightMaterial.SetColor("_ColorDelta", defaultBgColor);
 
             backgroundColor = defaultBgColor;
+            colorStart = defaultBgColor;
+            colorEnd = defaultBgColor;
         }
 
         private void Update()
@@ -213,6 +223,11 @@ namespace HeavenStudio.Games
                 });
             }
 
+            if (spotlight.activeSelf && currentSpotlightClaps == 0 && forceSpotlight == false)
+            {
+                spotlight.SetActive(false);
+            }
+
             shadowHead.SetActive(spotlight.activeSelf);
             shadowLeftArm.SetActive(spotlight.activeSelf);
             shadowLeftGlove.SetActive(spotlight.activeSelf);
@@ -222,13 +237,8 @@ namespace HeavenStudio.Games
             shadowRightGloveRim.SetActive(spotlight.activeSelf);
             
             if (spotlight.activeSelf) { dollBody.DoScaledAnimationAsync("BodyIdleLit", 0.5f); }
-            else { dollBody.DoScaledAnimationAsync("BodyIdle", 0.5f); }
-            
-            
-            if (spotlight.activeSelf && currentSpotlightClaps == 0 && forceSpotlight == false)
-            {
-                spotlight.SetActive(false);
-                bg.color = backgroundColor;
+            else { dollBody.DoScaledAnimationAsync("BodyIdle", 0.5f);
+            BackgroundColorUpdate();
             }
         }
 
@@ -324,9 +334,15 @@ namespace HeavenStudio.Games
             backgroundColor = color;
         }
 
-        public void FadeBackgroundColor(Color end, bool fade, Color topSpotlightColor, Color bottomSpotlightColor, Color glowSpotlightColor, float length)
+        public void BackgroundColor(Color start, Color end, int ease, float length, double beat)
         {
-            if (fade)
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = start;
+            colorEnd = end;
+            colorEase = (Util.EasingFunction.Ease)ease;
+
+            /*if (fade)
             {
                 ChangeBackgroundColor(bg.color, 0f);
                 ChangeBackgroundColor(end, length - 0.0001f);
@@ -334,19 +350,32 @@ namespace HeavenStudio.Games
             else
             {
                 ChangeBackgroundColor(end, 0f);
-            }
-
-            spotlightMaterial.SetColor("_ColorAlpha", topSpotlightColor);
-            spotlightMaterial.SetColor("_ColorBravo", glowSpotlightColor);
-            spotlightMaterial.SetColor("_ColorDelta", bottomSpotlightColor);
+            }*/
         }
 
-        public void ChangeHandColor(Color stageLeftHandColor, Color stageRightHandColor)
+        private void BackgroundColorUpdate() // stolen from tweezers too lol
         {
-            stageLeft.color = stageLeftHandColor;
-            stageLeftRim.color = stageLeftHandColor;
-            stageRight.color = stageRightHandColor;
-            stageRightRim.color = stageRightHandColor;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
+
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
+
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+        }
+
+        public void ChangeHandColor(Color leftHand, Color rightHand, Color topSpot, Color bottomSpot, Color glowSpot)
+        {
+            stageLeft.color = leftHand;
+            stageLeftRim.color = leftHand;
+            stageRight.color = rightHand;
+            stageRightRim.color = rightHand;
+
+            spotlightMaterial.SetColor("_ColorAlpha", topSpot);
+            spotlightMaterial.SetColor("_ColorBravo", glowSpot);
+            spotlightMaterial.SetColor("_ColorDelta", bottomSpot);
         }
 
     }

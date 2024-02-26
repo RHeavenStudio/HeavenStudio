@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
 
         private Animator dollHead;
         private Animator dollArms;
+        
 
         private ClapTrap game;
 
@@ -52,7 +53,7 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
                 SoundByte.PlayOneShotGame($"clapTrap/barely{UnityEngine.Random.Range(1, 2)}");
                 dollHead.DoScaledAnimationAsync("HeadBarely", 0.5f);
             }
-            else if (state >= -0.01f && state <= 0.01f)
+            else if (state >= -0.2 && state <= 0.2)
             {
                 SoundByte.PlayOneShotGame($"clapTrap/aceClap{UnityEngine.Random.Range(1, 4)}");
                 dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
@@ -64,6 +65,7 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
             }
 
             dollArms.DoScaledAnimationAsync("ArmsHit", 0.5f);
+            game.doll.DoScaledAnimationAsync("DollHit", 0.5f);
             game.clapEffect.DoScaledAnimationAsync("ClapEffect", 0.5f);
 
             gameObject.SetActive(true);
@@ -79,6 +81,7 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
             SoundByte.PlayOneShotGame($"clapTrap/miss");
             dollHead.DoScaledAnimationAsync("HeadMiss", 0.5f);
             dollArms.DoScaledAnimationAsync("ArmsMiss", 0.5f);
+            game.doll.DoScaledAnimationAsync("DollMiss", 0.5f);
 
             gameObject.SetActive(true);
             GetComponent<Animator>().DoScaledAnimationAsync("sword" + cueType + "Miss", 0.5f);
