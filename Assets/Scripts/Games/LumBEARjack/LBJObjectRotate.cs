@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         [Header("References")]
         [SerializeField] private Transform _pivotLeft;
         [SerializeField] private Transform _pivotRight;
+        [SerializeField] private Transform _pivotSingle;
         [SerializeField] private Transform[] _objectsToMove;
 
 
@@ -42,6 +43,20 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 float newRotation = Mathf.Max(func(-_rotationLeft, _rotationLeft, normalized), 0);
                 _pivotLeft.localEulerAngles = new Vector3(0, 0, newRotation);
             }
+        }
+
+        
+        public void SingleMove(double beat, double length, bool right)
+        {
+            float normalized = Conductor.instance.GetPositionFromBeat(beat - length, length * 2, false);
+            if (!right) normalized = 1 - normalized;
+            var func = EasingFunction.GetEasingFunction(_ease);
+            foreach (var o in _objectsToMove)
+            {
+                if (o.parent != _pivotSingle) o.SetParent(_pivotSingle, true);
+            }
+            float newRotation = func(_rotationRight, _rotationLeft, normalized);
+            _pivotSingle.localEulerAngles = new Vector3(0, 0, newRotation);
         }
     }
 }

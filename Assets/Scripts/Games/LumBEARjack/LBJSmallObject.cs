@@ -65,6 +65,11 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private void Update()
         {
+            if (_type == LumBEARjack.SmallType.bat)
+            {
+                _rotateObject.SingleMove(_rotationBeat, _rotationLength, _right);
+                return;
+            }
             _rotateObject.Move(_rotationBeat, _rotationLength, _right);
         }
 

@@ -199,6 +199,37 @@ Transform:
   m_Father: {fileID: 7609283403775189878}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2876489453856083489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 951742979905966104}
+  m_Layer: 0
+  m_Name: PivotSingle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &951742979905966104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2876489453856083489}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7609283403775189878}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5920352441626343011
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,6 +350,7 @@ Transform:
   - {fileID: 4398076241187744673}
   - {fileID: 3145076079615732040}
   - {fileID: 5921619119855021811}
+  - {fileID: 951742979905966104}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -355,6 +387,7 @@ MonoBehaviour:
   _ease: 4
   _pivotLeft: {fileID: 3145076079615732040}
   _pivotRight: {fileID: 5921619119855021811}
+  _pivotSingle: {fileID: 951742979905966104}
   _objectsToMove:
   - {fileID: 1948694922747606563}
   - {fileID: 2854676978937244060}
