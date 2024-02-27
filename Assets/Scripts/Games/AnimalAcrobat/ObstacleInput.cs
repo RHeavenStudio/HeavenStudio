@@ -26,8 +26,8 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 
         public void Init(double beat, bool beforeGiraffe)
         {
-            _game.ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, beforeGiraffe ? JustHoldGiraffe : JustHold, Miss, Empty);
-            _releaseAction = _game.ScheduleInput(beat, _holdLength, InputType.STANDARD_UP, JustRelease, Miss, Empty);
+            _game.ScheduleInput(beat - 1, 1, Minigame.InputAction_BasicPress, beforeGiraffe ? JustHoldGiraffe : JustHold, Miss, Empty);
+            _releaseAction = _game.ScheduleInput(beat, _holdLength, Minigame.InputAction_FlickRelease, JustRelease, Miss, Empty);
             _monkey.gameObject.SetActive(false);
 
             MultiSound.Play(new MultiSound.Sound[]

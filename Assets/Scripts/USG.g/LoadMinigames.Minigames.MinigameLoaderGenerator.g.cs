@@ -23,6 +23,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader RvlBadmintonLoader failed!");
             }
 
+            game = CtrAnimalAcrobatLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader CtrAnimalAcrobatLoader failed!");
+            }
+
             game = CtrBearLoader.AddGame(eventCaller);
             if (game != null)
             {
