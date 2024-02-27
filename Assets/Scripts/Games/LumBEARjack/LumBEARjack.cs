@@ -315,6 +315,8 @@ namespace HeavenStudio.Games
 
         [SerializeField] private LBJBGCat[] _bgCats = new LBJBGCat[12];
 
+        [SerializeField] private LBJMissObject _missObjectRef;
+
         [Header("Particles")]
         [SerializeField] private ParticleSystem _smallLogCutParticle;
         [SerializeField] private ParticleSystem _canCutParticle;
@@ -1047,6 +1049,13 @@ namespace HeavenStudio.Games
         #endregion
 
         #region Particles and Effects
+
+        public void ActivateMissEffect(Transform objectToMove, SpriteRenderer objectSr)
+        {
+            LBJMissObject spawnedMiss = Instantiate(_missObjectRef, transform);
+            spawnedMiss.gameObject.SetActive(true);
+            spawnedMiss.Activate(objectToMove, objectSr);
+        }
 
         public void ActivateBaby(double beat, float durationMult)
         {

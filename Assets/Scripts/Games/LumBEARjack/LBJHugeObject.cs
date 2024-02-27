@@ -189,6 +189,14 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 s.Disable();
                 s.QueueDeletion();
             }
+            SpriteRenderer sr = _type switch
+            {
+                LumBEARjack.HugeType.log => _logSR,
+                LumBEARjack.HugeType.freezer => _freezerSR,
+                LumBEARjack.HugeType.peach => _peachSR,
+                _ => throw new System.NotImplementedException(),
+            };
+            LumBEARjack.instance.ActivateMissEffect(sr.transform, sr);
             Destroy(gameObject);
         }
 

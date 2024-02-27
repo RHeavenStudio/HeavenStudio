@@ -117,6 +117,15 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private void Miss(PlayerActionEvent caller)
         {
             SoundByte.PlayOneShot("miss");
+            SpriteRenderer sr = _type switch
+            {
+                LumBEARjack.SmallType.log => _log.GetComponent<SpriteRenderer>(),
+                LumBEARjack.SmallType.can => _can.GetComponent<SpriteRenderer>(),
+                LumBEARjack.SmallType.bat => _bat.GetComponent<SpriteRenderer>(),
+                LumBEARjack.SmallType.broom => _broom.GetComponent<SpriteRenderer>(),
+                _ => throw new System.NotImplementedException(),
+            };
+            LumBEARjack.instance.ActivateMissEffect(sr.transform, sr);
             Destroy(gameObject);
         }
 
