@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
             hitBeat = windupBeat + createLength;
             sinkBeat = hitBeat + (createLength * 2f);
 
-            game.ScheduleInput(windupBeat, createLength, InputType.STANDARD_DOWN, Just, Miss, Out);
+            game.ScheduleInput(windupBeat, createLength, BuiltToScaleDS.InputAction_FlickPress, Just, Miss, Out);
         }
 
         private void Update()
@@ -39,7 +39,8 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
             double currentBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
             var shooterState = game.shooterAnim.GetCurrentAnimatorStateInfo(0);
-            if (currentBeat > windupBeat && currentBeat < hitBeat
+            if ((PlayerInput.CurrentControlStyle != InputSystem.InputController.ControlStyles.Touch || !PlayerInput.PlayerHasControl())
+                && currentBeat > windupBeat && currentBeat < hitBeat
                 && !shooterState.IsName("Windup")
                 && !game.lastShotOut)
             {
@@ -52,9 +53,6 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
 
         private void Just(PlayerActionEvent caller, float state)
         {
-            var shooterState = game.shooterAnim.GetCurrentAnimatorStateInfo(0);
-            if (!shooterState.IsName("Windup")) return;
-
             // near miss
             if (state >= 1f || state <= -1f) {
                 NearMiss();

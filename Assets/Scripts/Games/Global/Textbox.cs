@@ -229,7 +229,15 @@ namespace HeavenStudio.Games.Global
                 float prog = cond.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f && prog <= 1f)
                 {
-                    float inp = cond.GetPositionFromBeat(e.beat, 1);
+                    float inp;
+                    if (e["instantOn"])
+                    {
+                        inp = 1;
+                    }
+                    else
+                    {
+                        inp = cond.GetPositionFromBeat(e.beat, 1);
+                    }
                     IdolSongLabel.text = e["text1"];
                     IdolArtistLabel.text = e["text2"];
 
@@ -242,7 +250,7 @@ namespace HeavenStudio.Games.Global
                 }
                 else if (idolShown)
                 {
-                    if (prog < 1f)
+                    if (prog < 1f || e["instantOff"])
                     {
                         IdolAnimator.Play("NoPose", -1, 0);
                         IdolAnimator.speed = 1;

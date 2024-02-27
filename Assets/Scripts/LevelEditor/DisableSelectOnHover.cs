@@ -11,6 +11,7 @@ namespace HeavenStudio.Editor
 
         private void LateUpdate()
         {
+            if (Editor.instance == null) return;
             for (int i = 0; i < transform.childCount; i++)
             {
                 if (Editor.MouseInRectTransform(transform.GetChild(i).GetComponent<RectTransform>()))

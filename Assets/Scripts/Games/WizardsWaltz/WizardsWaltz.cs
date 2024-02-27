@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
-using Starpelly;
+
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -22,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     },
                     preFunctionLength = 1
                 },
@@ -71,6 +72,18 @@ namespace HeavenStudio.Games
 
         private static CallAndResponseHandler crHandlerInstance;
 
+        protected static bool IA_PadAnyDown(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        public static PlayerInput.InputAction InputAction_Press =
+            new("AgbWizardPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadAnyDown, IA_TouchBasicPress, IA_BatonBasicPress);
+
         private void Awake()
         {
             instance = this;
@@ -81,6 +94,8 @@ namespace HeavenStudio.Games
         {
             SetWizardOffset(beat);
             crHandlerInstance = null;
+            queuedIntervals.Clear();
+            passedTurns.Clear();
         }
 
         public override void OnGameSwitch(double beat)

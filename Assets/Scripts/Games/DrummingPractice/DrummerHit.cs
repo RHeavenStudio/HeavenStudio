@@ -20,7 +20,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
         void Start() 
         { 
-            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
+            game.ScheduleInput(startBeat, 1f, DrummingPractice.InputAction_BasicPress, Just, Miss, Out);
 
             BeatAction.New(game, new List<BeatAction.Action>()
             {

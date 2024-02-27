@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using HeavenStudio.Util;
 using UnityEngine;
 
 namespace HeavenStudio.Games.Scripts_NtrSamurai
@@ -17,15 +18,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             stepping = false;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            
-        }
-
         public void Bop()
         {
-            if (!stepping && !(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Slash"))
+            if (!stepping && !animator.IsPlayingAnimationNames("Beat", "Unstep", "Slash"))
                 animator.Play("Beat", -1, 0);
         }
 
@@ -34,11 +29,11 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             stepping = !off;
             if (off)
             {
-                animator.Play("Beat", -1, 0);
+                animator.Play("Unstep", -1, 0);
             }
             else
             {
-                if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Slash")
+                if (animator.IsPlayingAnimationNames("Slash"))
                     animator.Play("StepSeathe", -1, 0);
                 else
                     animator.Play("Step", -1, 0);
@@ -51,7 +46,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             animator.Play("Slash", -1, 0);
         }
 
-        public bool isStepping()
+        public bool IsStepping()
         {
             return stepping;
         }

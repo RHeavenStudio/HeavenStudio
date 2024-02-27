@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Threading;
+
 using HeavenStudio.Util;
 using Jukebox;
 using Jukebox.Legacy;
@@ -14,47 +16,47 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("clappyTrio", "The Clappy Trio", "deffff", false, false, new List<GameAction>()
             {
-                new GameAction("clap", "Clap")
-                {
-                    function = delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity.beat); }, 
-                    resizable = true
-                },
                 new GameAction("bop", "Bop")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.BopToggle(e.beat, e.length, e["bop"], e["autoBop"], e["emo"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Bop", "Should the lions bop?"),
-                        new Param("autoBop", false, "Bop (Auto)", "Should the lions auto bop?"),
-                        new Param("emo", false, "Disable Emotion", "Should the lions just show the neutral face while bopping?")
+                        new Param("bop", true, "Bop", "Toggle if the lions should bop for the duration of this event."),
+                        new Param("autoBop", false, "Bop (Auto)", "Toggle if the lions should automatically bop until another Bop event is reached."),
+                        new Param("emo", false, "Disable Emotion", "Toggle if the (non-player) lions should react to the player's performance when bopping.")
                     }
                 },
-                new GameAction("prepare", "Prepare Stance")
+                new GameAction("clap", "Clap")
+                {
+                    function = delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity.beat); }, 
+                    resizable = true
+                },
+                new GameAction("prepare", "Prepare")
                 {
                     function = delegate { ClappyTrio.instance.Prepare(eventCaller.currentEntity["toggle"] ? 3 : 0); }, 
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
+                        new Param("toggle", false, "Alternate Pose", "Toggle if the lions should prepare using the alternate \"determined\" pose.")
                     }
                 },
-                new GameAction("sign", "Sign Enter")
+                new GameAction("sign", "Sign Control")
                 {
                     function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign(e.beat, e.length, e["ease"], e["down"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the sign move with?"),
-                        new Param("down", true, "Down", "Should the sign go down?")
+                        new Param("down", true, "Enter", "Toggle if the sign should enter or exit the scene."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     },
                     resizable = true
                 },
-                new GameAction("change lion count", "Change Lion Count")
+                new GameAction("change lion count", "Change Lion Number")
                 {
                     function = delegate { ClappyTrio.instance.ChangeLionCount((int)eventCaller.currentEntity["valA"]); }, 
                     defaultLength = 0.5f,  
                     parameters = new List<Param>()
                     {
-                        new Param("valA", new EntityTypes.Integer(3, 8, 3), "Lion Count", "The amount of lions")
+                        new Param("valA", new EntityTypes.Integer(3, 8, 3), "Lions", "Set how many lions there will be. The player is always the rightmost lion.")
                     }
                 },
                 // This is still here for backwards-compatibility but is hidden in the editor
@@ -79,7 +81,6 @@ namespace HeavenStudio.Games
     public class ClappyTrio : Minigame
     {
         public int lionCount = 3;
-
         public List<GameObject> Lion;
 
         [SerializeField] private Sprite[] faces;
@@ -101,7 +102,7 @@ namespace HeavenStudio.Games
         public static ClappyTrio instance { get; set; }
 
         MultiSound clapSounds = null;
-        BeatAction clapAction = null;
+        CancellationTokenSource clapAction = null;
 
         private void Awake()
         {
@@ -133,13 +134,14 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (shouldBop) Bop(Conductor.instance.songPositionInBeatsAsDouble);
+        }
+
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (shouldBop) Bop(cond.songPositionInBeatsAsDouble);
-            }
             if (cond.isPlaying && !cond.isPaused)
             {
                 float normalizedBeat = cond.GetPositionFromBeat(signStartBeat, signLength);
@@ -188,7 +190,10 @@ namespace HeavenStudio.Games
                 clapSounds.Delete();
 
             if (clapAction != null)
-                clapAction.Delete();
+            {
+                clapAction.Cancel();
+                clapAction.Dispose();
+            }
         }
 
         public void Clap(double beat, float length, double gameSwitchBeat)

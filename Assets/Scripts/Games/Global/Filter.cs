@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Starpelly;
+
 using UnityEngine;
 using Jukebox;
 using Jukebox.Legacy;
@@ -86,6 +86,12 @@ namespace HeavenStudio.Games.Global
 
             GameManager.instance.onBeatChanged += OnBeatChanged;
 
+            for (int i = 0; i < 10; i++)
+            {
+                var newAmplify = GameManager.instance.GameCamera.gameObject.AddComponent<AmplifyColorEffect>();
+                amplifies.Add(newAmplify);
+            }
+
             // Don't use this because of serialization, add to the "FilterType" enum above manually.
             // GenerateFilterTypeEnum();
         }
@@ -97,77 +103,30 @@ namespace HeavenStudio.Games.Global
         private void OnBeatChanged(double beat)
         {
             allFilterEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "filter" });
+            allFilterEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+            foreach (var a in amplifies)
+            {
+                a.LutTexture = null;
+                a.BlendAmount = 1;
+            }
         }
 
         private void Update()
         {
-            var songPosBeat = Conductor.instance.songPositionInBeatsAsDouble;
+            var songPosBeat = Math.Max(Conductor.instance.songPositionInBeatsAsDouble, 0);
 
-            var filterIndexes = new List<int>();
-            for (int i = 0; i < allFilterEvents.Count; i++)
+            foreach (var e in allFilterEvents)
             {
-                var filter = allFilterEvents[i];
+                if (e.beat > songPosBeat) continue;
+                var func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease)e["ease"]);
+                int slot = e["slot"];
+                float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(e.beat, e.length));
 
-                if (filter.beat > songPosBeat)
-                    break;
-                if (filter.beat + filter.length < songPosBeat)
-                    continue;
+                float intensity = func(1 - e["start"], 1 - e["end"], normalizedBeat);
 
-                filterIndexes.Add(i);
+                amplifies[slot - 1].LutTexture = amplifyTextures[(int)e["filter"]];
+                amplifies[slot - 1].BlendAmount = intensity;
             }
-
-            bool indexCountChanged = filterIndexes.Count != lastFilterIndexesCount;
-
-            if (indexCountChanged)
-            {
-                for (int i = 0; i < amplifies.Count; i++)
-                {
-                    Destroy(amplifies[i]);
-                }
-                amplifies.Clear();
-            }
-
-            for (int i = 0; i < filterIndexes.Count; i++)
-            {
-                var filter = allFilterEvents[filterIndexes[i]];
-
-                if (filter.beat <= songPosBeat && filter.beat + filter.length >= songPosBeat)
-                {
-                    var fadeInTime = filter["fadein"] * 0.01f;
-                    var fadeOutTime = filter["fadeout"] * 0.01f;
-
-                    var intensity = filter["inten"];
-                    intensity = Mathf.Lerp(1, 0, Mathp.Normalize(intensity, 0, 100));
-                    var blendAmount = intensity;
-
-                    var endFadeInTime = Mathf.Lerp((float) filter.beat, (float) filter.beat + filter.length, fadeInTime);
-                    var startFadeOutTime = (float) filter.beat + (Mathf.Lerp(0, filter.length, Mathf.Lerp(1, 0, fadeOutTime)));
-
-                    if (songPosBeat < endFadeInTime)
-                    {
-                        var normalizedFadeIn = Mathp.Normalize((float) songPosBeat, (float) filter.beat, endFadeInTime);
-                        blendAmount = Mathf.Lerp(1f, intensity, normalizedFadeIn);
-                    }
-                    else if (songPosBeat >= startFadeOutTime)
-                    {
-                        var normalizedFadeOut = Mathf.Clamp01(Mathp.Normalize((float) songPosBeat, startFadeOutTime, (float) filter.beat + filter.length));
-                        blendAmount = Mathf.Lerp(intensity, 1f, normalizedFadeOut);
-                    }
-
-                    var newAmplify = 
-                        (indexCountChanged) ? 
-                        GameManager.instance.GameCamera.gameObject.AddComponent<AmplifyColorEffect>() :
-                        (AmplifyColorEffect)GameManager.instance.GameCamera.GetComponents(typeof(AmplifyColorEffect))[i];
-
-                    var texIndex = (int)filter["filter"];
-                    newAmplify.LutTexture = amplifyTextures[texIndex];
-                    newAmplify.BlendAmount = blendAmount;
-
-                    amplifies.Add(newAmplify);
-                }
-            }
-
-            lastFilterIndexesCount = filterIndexes.Count;
         }
 
         /// <summary>

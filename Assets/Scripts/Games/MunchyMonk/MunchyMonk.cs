@@ -17,14 +17,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Bop(e.beat, e["bop"], e["autoBop"]); 
+                        MunchyMonk.instance.Bop(e.beat, e.length, e["bop"]); 
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Monk Bops?", "Does the monk bop?"),
-                        new Param("autoBop", false, "Monk Bops? (Auto)", "Does the monk auto bop?"),
+                        new Param("bop", true, "Bop", "Toggle if Munchy Monk should bop for the duration of this event."),
+                        new Param("autoBop", false, "Bop (Auto)", "Toggle if Munchy Monk should automatically bop until another Bop event is reached."),
                     },
-                    defaultLength = 0.5f,
+                    resizable = true
                 },
                 new GameAction("MonkMove", "Monk Move")
                 {
@@ -36,8 +36,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("goToSide", MunchyMonk.WhichSide.Right, "Go to Which Side?", "Which side the Monk will move to"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?"),
+                        new Param("goToSide", MunchyMonk.WhichSide.Right, "Side", "Choose the side that Munchy Monk will move to."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                     },
                 },
                 new GameAction("One", "One")
@@ -53,7 +53,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("oneColor", new Color(1, 1, 1, 1), "Color", "Change the color of the dumpling")
+                        new Param("oneColor", new Color(1, 1, 1, 1), "Color", "Set the color of the dumpling.")
                     },
                 },
                 new GameAction("TwoTwo", "Two Two")
@@ -61,8 +61,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("twoColor1", new Color(1, 0.51f, 0.45f, 1), "1st Dumpling Color", "Change the color of the first dumpling"),
-                        new Param("twoColor2", new Color(1, 0.51f, 0.45f, 1), "2nd Dumpling Color", "Change the color of the second dumpling"),
+                        new Param("twoColor1", new Color(1, 0.51f, 0.45f, 1), "1st Dumpling Color", "Set the color of the first dumpling."),
+                        new Param("twoColor2", new Color(1, 0.51f, 0.45f, 1), "2nd Dumpling Color", "Set the color of the second dumpling."),
                     },
                     preFunctionLength = 0.5f,
                     preFunction = delegate {
@@ -83,9 +83,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("threeColor1", new Color(0.34f, 0.77f, 0.36f, 1), "1st Dumpling Color", "Change the color of the first dumpling"),
-                        new Param("threeColor2", new Color(0.34f, 0.77f, 0.36f, 1), "2nd Dumpling Color", "Change the color of the second dumpling"),
-                        new Param("threeColor3", new Color(0.34f, 0.77f, 0.36f, 1), "3rd Dumpling Color", "Change the color of the third dumpling"),
+                        new Param("threeColor1", new Color(0.34f, 0.77f, 0.36f, 1), "1st Dumpling Color", "Set the color of the first dumpling."),
+                        new Param("threeColor2", new Color(0.34f, 0.77f, 0.36f, 1), "2nd Dumpling Color", "Set the color of the second dumpling."),
+                        new Param("threeColor3", new Color(0.34f, 0.77f, 0.36f, 1), "3rd Dumpling Color", "Set the color of the third dumpling."),
                     },
                 },
                 new GameAction("Modifiers", "Modifiers")
@@ -97,11 +97,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("inputsTil", new EntityTypes.Integer(0, 50, 10), "How Many 'til Growth?", "How many dumplings are needed to grow the stache?"),
-                        new Param("resetLevel", false, "Remove Hair", "Instantly remove all hair"),
-                        new Param("setLevel", new EntityTypes.Integer(0, 4, 0), "Set Growth Level", "Instantly grow hair"),
-                        new Param("disableBaby", false, "Disable Baby?", "Make baby active or not"),
-                        new Param("shouldBlush", true, "Should Monk Blush?", "Makes the Monk blush or not after eating"),
+                        new Param("inputsTil", new EntityTypes.Integer(0, 50, 10), "Moustache Growth Requirement", "Set how many dumplings Munchy Monk needs to eat for his moustache to grow."),
+                        new Param("resetLevel", false, "Reset Hair Growth", "Toggle if the current amount of moustache growth should be reset."),
+                        new Param("setLevel", new EntityTypes.Integer(0, 4, 0), "Instant Growth", "Set how much hair Munchy Monk should instantly grow at the start of this event."),
+                        new Param("disableBaby", false, "Disable Baby", "Toggle if the baby should appear or not."),
+                        new Param("shouldBlush", true, "Blush", "Toggle if Munchy Monk should blush after eating a dumpling."),
                     },
                 },
                 new GameAction("MonkAnimation", "Monk Animations")
@@ -116,8 +116,8 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("whichAnim", MunchyMonk.WhichMonkAnim.Stare, "Which Animation", "Which animation will the Monk play?"),
-                        new Param("vineBoom", false, "Vine Boom", "Just guess with this one."),
+                        new Param("whichAnim", MunchyMonk.WhichMonkAnim.Stare, "Animation", "Set the animation to play."),
+                        new Param("vineBoom", false, "Vine Boom", "Toggle if a certain sound effect should play."),
                     }
                 },
                 new GameAction("ScrollBackground", "Scroll Background")
@@ -130,8 +130,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("scrollSpeed", new EntityTypes.Float(0, 20, 5), "Scroll Speed", "What should the scroll speed be?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the scroll ramp up have?"),
+                        new Param("scrollSpeed", new EntityTypes.Float(0, 20, 5), "Speed", "Set the speed that the background should scroll."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                     }
                 },
                 new GameAction("CloudMonkey", "Cloud Monkey")
@@ -142,8 +142,8 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("start", true, "Start Moving", "Start moving the monkey"),
-                        new Param("direction", MunchyMonk.WhichSide.Right, "Direction", "The direction the monkey will move."),
+                        new Param("start", true, "Start", "Toggle if the monkey should start moving."),
+                        new Param("direction", MunchyMonk.WhichSide.Right, "Direction", "Set the direction that the monkey will move."),
                     },
                     defaultLength = 8f,
                     resizable = true,
@@ -209,7 +209,6 @@ namespace HeavenStudio.Games
         public double lastReportedBeat = 0f;
         public bool needBlush;
         public bool isStaring;
-        bool monkBop = true;
 
         // these variables are static so that they can be set outside of the game/stay the same between game switches
         static public int howManyGulps;
@@ -241,6 +240,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             Baby.SetActive(!disableBaby);
+            SetupBopRegion("munchyMonk", "Bop", "autoBop");
         }
 
         private void Start() 
@@ -278,26 +278,12 @@ namespace HeavenStudio.Games
         private void Update() 
         {
             // input stuff
-            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
-                Debug.Log("ooops" + PlayerInput.Pressed(true));
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)) {
                 MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
                 SoundByte.PlayOneShotGame(sfxName+"slap");
                 isStaring = false;
                 // early input stuff
                 if (dumplings.Count != 0) InputFunctions(3);
-            }
-
-            // blushes when done eating but not when staring
-            if (needBlush 
-                && !MonkAnim.IsPlayingAnimationName("Eat")
-                && !MonkAnim.IsPlayingAnimationName("Stare")
-                && !MonkAnim.IsPlayingAnimationName("Barely")
-                && !MonkAnim.IsPlayingAnimationName("Miss")
-                && !isStaring
-                && !noBlush) 
-            {
-                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
-                needBlush = false;
             }
 
             // sets hair stuff active when it needs to be
@@ -350,36 +336,57 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void LateUpdate() 
+        private void LateUpdate()
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat)) {
-                if ((MonkAnim.IsAnimationNotPlaying() || MonkAnim.IsPlayingAnimationName("Bop") || MonkAnim.IsPlayingAnimationName("Idle"))
-                && monkBop
-                && !isStaring) 
-                {
-                    MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                }
-
-                if (!MonkAnim.IsPlayingAnimationName("Blush") || !MonkAnim.IsPlayingAnimationName("Stare")) {
-                    if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                    if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
-                }
-
-                if (CloudMonkey.activeInHierarchy) {
-                    CloudMonkey.GetComponent<Animator>().DoScaledAnimationAsync("Bop", 0.5f);
-                }
+            // blushes when done eating but not when staring
+            if (needBlush
+                && !MonkAnim.IsPlayingAnimationNames("Eat", "Stare", "Barely", "Miss")
+                && !isStaring
+                && !noBlush)
+            {
+                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
+                needBlush = false;
             }
         }
 
-        public void Bop(double beat, bool bop, bool autoBop)
+        public override void OnBeatPulse(double beat)
         {
-            monkBop = autoBop;
-            if (bop) {
-                needBlush = false;
+            if ((MonkAnim.IsAnimationNotPlaying() || MonkAnim.IsPlayingAnimationNames("Bop", "Idle"))
+                && BeatIsInBopRegion(beat)
+                && !isStaring)
+            {
                 MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            }
+
+            if (!MonkAnim.IsPlayingAnimationNames("Blush", "Stare"))
+            {
                 if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
             }
+
+            if (CloudMonkey.activeInHierarchy) //Why activeInHierarchy? - Rasmus
+            {
+                CloudMonkey.GetComponent<Animator>().DoScaledAnimationAsync("Bop", 0.5f); //DONT DO THIS!!! GetComponent is a really expensive operation - Rasmus
+            }
+        }
+
+        public void Bop(double beat, double length, bool bop)
+        {
+            if (!bop) return;
+            List<BeatAction.Action> actions = new();
+
+            for (int i = 0; i < length; i++)
+            {
+                actions.Add(new(beat + i, delegate
+                {
+                    needBlush = false;
+                    MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                    if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                    if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
+                }));
+            }
+
+            if (actions.Count > 0) BeatAction.New(this, actions);
         }
 
         public void InputFunctions(int whichVar, float state = 0)
@@ -432,7 +439,7 @@ namespace HeavenStudio.Games
                     DumplingClone.startBeat = beat;
                     DumplingClone.sr.sprite = dumplingSprites[0];
                     dumplings.Add(DumplingClone);
-                    ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early); 
+                    ScheduleInput(beat, 1f, InputAction_BasicPress, Hit, Miss, Early); 
                 }),
                 new BeatAction.Action(beat+0.5f, delegate { 
                     OneGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); 
@@ -462,7 +469,7 @@ namespace HeavenStudio.Games
                     DumplingClone1.startBeat = beat-0.5f;
                     DumplingClone1.sr.sprite = dumplingSprites[1];
                     dumplings.Add(DumplingClone1);
-                    ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early);
+                    ScheduleInput(beat, 1f, InputAction_BasicPress, Hit, Miss, Early);
                     //DumplingClone1.otherAnim = DumplingClone2.gameObject.GetComponent<Animator>();
                 }),
                 new BeatAction.Action(beat, delegate { 
@@ -473,7 +480,7 @@ namespace HeavenStudio.Games
                     DumplingClone2.startBeat = beat-0.5f;
                     DumplingClone2.sr.sprite = dumplingSprites[2];
                     dumplings.Add(DumplingClone2);
-                    ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, Hit, Miss, Early);
+                    ScheduleInput(beat, 1.5f, InputAction_BasicPress, Hit, Miss, Early);
                 }),
             });
         }
@@ -502,7 +509,7 @@ namespace HeavenStudio.Games
                     DumplingClone1.startBeat = beat;
                     DumplingClone1.sr.sprite = dumplingSprites[3];
                     dumplings.Add(DumplingClone1);
-                    ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early); }),
+                    ScheduleInput(beat, 1f, InputAction_BasicPress, Hit, Miss, Early); }),
 
                 new BeatAction.Action(beat+0.5f, delegate { 
                     // first out
@@ -517,7 +524,7 @@ namespace HeavenStudio.Games
                     DumplingClone2.startBeat = beat+1.3f;
                     DumplingClone2.sr.sprite = dumplingSprites[4];
                     dumplings.Add(DumplingClone2);
-                    ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, Hit, Miss, Early); }),
+                    ScheduleInput(beat, 2f, InputAction_BasicPress, Hit, Miss, Early); }),
 
                 new BeatAction.Action(beat+1.75f, delegate { 
                     // second out
@@ -532,7 +539,7 @@ namespace HeavenStudio.Games
                     DumplingClone3.startBeat = beat+2.3f;
                     DumplingClone3.sr.sprite = dumplingSprites[5];
                     dumplings.Add(DumplingClone3);
-                    ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, Hit, Miss, Early); }),
+                    ScheduleInput(beat, 3f, InputAction_BasicPress, Hit, Miss, Early); }),
 
                 new BeatAction.Action(beat+2.75f, delegate {
                     // third out

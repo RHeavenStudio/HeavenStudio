@@ -125,10 +125,10 @@ namespace HeavenStudio.Editor.Commands
             }
             if (deletedEntity != null)
             {
-                var marker = SpecialTimeline.instance.specialTimelineObjs[deletedEntity.guid];
+                SpecialTimelineObj marker = SpecialTimeline.instance.specialTimelineObjs[deletedEventID];
 
                 deletedEntityData = deletedEntity.DeepCopy();
-                deletedEntityData.guid = deletedEntity.guid;
+                deletedEntityData.guid = deletedEventID;
 
                 switch (type)
                 {
@@ -143,7 +143,7 @@ namespace HeavenStudio.Editor.Commands
                         break;
                 }
 
-                SpecialTimeline.instance.specialTimelineObjs.Remove(deletedEntity.guid);
+                SpecialTimeline.instance.specialTimelineObjs.Remove(deletedEventID);
                 GameObject.Destroy(marker.gameObject);
 
                 GameManager.instance.SortEventsList();
@@ -171,6 +171,8 @@ namespace HeavenStudio.Editor.Commands
                         break;
                 }
                 deletedEntityData = null;
+
+                GameManager.instance.SortEventsList();
             }
         }
     }

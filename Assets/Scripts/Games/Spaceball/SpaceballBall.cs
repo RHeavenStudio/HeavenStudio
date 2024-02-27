@@ -25,8 +25,6 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 
         #region Private
 
-        private Minigame.Eligible e = new Minigame.Eligible();
-
         [SerializeField] private BezierCurve3D pitchLowCurve;
         [SerializeField] private BezierCurve3D pitchHighCurve;
 
@@ -43,14 +41,12 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 
         private void Awake()
         {
-            e.gameObject = this.gameObject;
-
             startRot = Random.Range(0, 360);
         }
 
         private void Start()
         {
-            Spaceball.instance.ScheduleInput(startBeat, high ? 2f : 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
+            Spaceball.instance.ScheduleInput(startBeat, high ? 2f : 1f, Spaceball.InputAction_BasicPress, Just, Miss, Out);
         }
 
         private void Update()

@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,10 +21,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", Kitties.SpawnType.Straight, "Spawn", "The way in which the kitties will spawn"),
-                        new Param("toggle", false, "Mice", "Replaces kitties as mice"),
-                        new Param("toggle1", false, "Invert Direction", "Inverts the direction they clap in"),
-                        new Param("toggle2", false, "Keep Cats Spawned", "Sets whether or not cats stay spawned after their cue"),
+                        new Param("type", Kitties.SpawnType.Straight, "Direction", "Choose the direction that the kitties will spawn in."),
+                        new Param("toggle", false, "Mice", "Toggle if the non-player kitties should be replaced with mice."),
+                        new Param("toggle1", false, "Invert Direction", "Toggle if the spawn direction should be inverted."),
+                        new Param("toggle2", false, "Keep Cats Spawned", "Toggle if the kitties should stay spawned after their cue. This is required for some other events."),
                     }
                 },
 
@@ -35,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
 
                         parameters = new List<Param>()
                         {
-                            new Param("toggle", false, "Keep Cats spawned", "Sets whether or not cats stay spawned after their cue"),
+                            new Param("toggle", false, "Keep Cats Spawned", "Toggle if the kitties should stay spawned after their cue. This is required for some other events."),
                         }
                     },
 
@@ -53,14 +54,14 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", Kitties.SpawnType.Straight, "Spawn", "The way in which the kitties will spawn"),
-                        new Param("toggle", false, "Mice", "Replaces kitties as mice"),
-                        new Param("toggle1", false, "Invert Direction", "Inverts the direction they clap in"),
-                        new Param("toggle2", false, "Keep Cats Spawned", "Sets whether or not cats stay spawned after their cue"),
+                        new Param("type", Kitties.SpawnType.Straight, "Direction", "Choose the direction that the kitties will spawn in."),
+                        new Param("toggle", false, "Mice", "Toggle if the non-player kitties should be replaced with mice."),
+                        new Param("toggle1", false, "Invert Direction", "Toggle if the spawn direction should be inverted."),
+                        new Param("toggle2", false, "Keep Cats Spawned", "Toggle if the kitties should stay spawned after their cue. This is required for some other events."),
                     }
                 },
 
-                new GameAction("bgcolor", "Background Color")
+                new GameAction("bgcolor", "Background Appearance")
                 {
                     function = delegate
                     {
@@ -71,9 +72,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorStart", Color.white, "Start Color"),
-                        new Param("colorEnd", Color.white, "End Color"),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("colorStart", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("colorEnd", Color.white, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 }
             },
@@ -109,6 +110,42 @@ namespace HeavenStudio.Games
         }
 
         public static Kitties instance;
+
+        const int IAAltDownCat = IAMAXCAT;
+        const int IAAltUpCat = IAMAXCAT + 1;
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_AltStart);
+        }
+
+        protected static bool IA_PadAltRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltRelease(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_AltStart =
+            new("CtrTeppanAltStart", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_AltFinish =
+            new("CtrTeppanAltFinish", new int[] { IAAltUpCat, IAFlickCat, IAAltUpCat },
+            IA_PadAltRelease, IA_TouchFlick, IA_BatonAltRelease);
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("CtrTeppanTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
 
         void Awake()
         {
@@ -229,7 +266,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 1.5f, delegate { kitties[0].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + 2f, delegate { kitties[0].Play("Rolling", 0, 0); }),
                     new BeatAction.Action(beat + 2.75f, delegate { kitties[0].Play("RollEnd", 0, 0); })
-                    });
+                });
 
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
@@ -246,9 +283,8 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat, delegate { kitties[2].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + .5f, delegate { kitties[2].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + 1f, delegate { kitties[2].Play("RollStart", 0, 0); }),
-                    new BeatAction.Action(beat + 1.5f, delegate { kitties[2].Play("RollStart", 0, 0); }),
-                    new BeatAction.Action(beat + 2f, delegate { player.ScheduleRollFinish(beat); })
-                    });
+                    new BeatAction.Action(beat + 1.5f, delegate { kitties[2].Play("RollStart", 0, 0); })
+                });
 
             if (!keepSpawned)
             {

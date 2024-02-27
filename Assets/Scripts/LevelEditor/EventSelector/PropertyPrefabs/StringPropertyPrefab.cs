@@ -5,10 +5,11 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
-using Starpelly;
+
 
 using HeavenStudio.Util;
 using HeavenStudio.Editor;
+using UnityEngine.UIElements;
 
 namespace HeavenStudio.Editor
 {
@@ -18,11 +19,15 @@ namespace HeavenStudio.Editor
         [Space(10)]
         public TMP_InputField inputFieldString;
 
-        new public void SetProperties(string propertyName, object type, string caption)
-        {
-            InitProperties(propertyName, caption);
+        private string _defaultValue;
 
-            inputFieldString.text = (string) parameterManager.entity[propertyName];
+        public override void SetProperties(string propertyName, object type, string caption)
+        {
+            base.SetProperties(propertyName, type, caption);
+
+            _defaultValue = (string)type;
+
+            inputFieldString.text = (string)entity[propertyName];
 
             inputFieldString.onSelect.AddListener(
                 _ =>
@@ -30,30 +35,36 @@ namespace HeavenStudio.Editor
             );
             inputFieldString.onValueChanged.AddListener(
                 _ =>
-                {;
-                    parameterManager.entity[propertyName] = inputFieldString.text;
+                {
+                    entity[propertyName] = inputFieldString.text;
+                    this.caption.text = (inputFieldString.text != _defaultValue) ? (_captionText + "*") : _captionText;
                 }
             );
+
             inputFieldString.onEndEdit.AddListener(
                 _ =>
-                {;
+                {
                     Editor.instance.editingInputField = false;
                 }
             );
         }
 
+        public void ResetValue()
+        {
+            inputFieldString.text = _defaultValue;
+        }
+
         public override void SetCollapses(object type)
         {
-            inputFieldString.onValueChanged.AddListener(
-                _ =>
-                {
-                    UpdateCollapse(inputFieldString.text);
-                });
+            inputFieldString.onValueChanged.AddListener(newVal => UpdateCollapse(newVal));
             UpdateCollapse(inputFieldString.text);
         }
 
-        private void Update()
+        private void LateUpdate()
         {
+            if (entity[propertyName] != inputFieldString.text) {
+                inputFieldString.text =entity[propertyName];
+            }
         }
     }
 }

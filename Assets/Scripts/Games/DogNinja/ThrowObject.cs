@@ -47,7 +47,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             barelyCurve = fromLeft ? BarelyRightCurve : BarelyLeftCurve;
             
-            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Out);
+            game.ScheduleInput(startBeat, 1f, DogNinja.InputAction_Press, Hit, Miss, Out);
         }
 
         private void Update()
@@ -84,7 +84,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             {
                 0 => "Left",
                 1 => "Right",
-                2 => "Both",
+                _ => "Both",
             };
 
             DogAnim.DoScaledAnimationAsync(slice, 0.5f);

@@ -29,13 +29,14 @@ namespace HeavenStudio.Common
                 GlobalGameManager.DEFAULT_SCREEN_SIZES[1].width,
                 GlobalGameManager.DEFAULT_SCREEN_SIZES[1].height,
                 0.8f,
-                512,
-                44100,
+                340,
+                48000,
                 true,
                 true,
-                PerfectChallengeType.On,
+                PerfectChallengeType.Off,
                 true,
                 false,
+                true,
                 true,
                 true
             );
@@ -48,7 +49,7 @@ namespace HeavenStudio.Common
             
             gameSettings.timingDisplayComponents = new List<OverlaysManager.TimingDisplayComponent>()
             {
-                OverlaysManager.TimingDisplayComponent.CreateDefaultDual()
+                OverlaysManager.TimingDisplayComponent.CreateDefaultSingle()
             };
             gameSettings.skillStarComponents = new List<OverlaysManager.SkillStarComponent>()
             {
@@ -67,7 +68,22 @@ namespace HeavenStudio.Common
             if (File.Exists(Application.persistentDataPath + "/settings.json"))
             {
                 string json = File.ReadAllText(Application.persistentDataPath + "/settings.json");
-                gameSettings = JsonUtility.FromJson<GameSettings>(json);
+                if (json == "")
+                {
+                    GlobalGameManager.IsFirstBoot = true;
+                    CreateDefaultSettings();
+                    return;
+                }
+                try
+                {
+                    gameSettings = JsonConvert.DeserializeObject<GameSettings>(json);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Error while loading settings, creating default settings;\n{e.Message}");
+                    GlobalGameManager.IsFirstBoot = true;
+                    CreateDefaultSettings();
+                }
             }
             else
             {
@@ -104,7 +120,7 @@ namespace HeavenStudio.Common
                 int resolutionWidth = 1280,
                 int resolutionHeight = 720,
                 float masterVolume = 0.8f,
-                int dspSize = 512,
+                int dspSize = 340,
                 int sampleRate = 44100,
                 bool editorCursorEnable = true,
                 bool discordRPCEnable = true,
@@ -113,7 +129,10 @@ namespace HeavenStudio.Common
                 bool timingDisplayMinMode = false,
                 bool overlaysInEditor = true,
                 bool letterboxBgEnable = true,
-                bool letterboxFxEnable = true
+                bool letterboxFxEnable = true,
+                int editorScale = 0,
+                bool scaleWScreenSize = false,
+                bool showParamTooltips = true
                 )
             {
                 this.showSplash = showSplash;
@@ -132,6 +151,9 @@ namespace HeavenStudio.Common
                     this.discordRPCEnable = false;
                 else
                     this.discordRPCEnable = true;
+                this.editorScale = editorScale;
+                this.scaleWScreenSize = scaleWScreenSize;
+                this.showParamTooltips = showParamTooltips;
 
                 this.perfectChallengeType = perfectChallengeType;
                 this.isMedalOn = isMedalOn;
@@ -169,6 +191,10 @@ namespace HeavenStudio.Common
             // Editor Settings
             public bool editorCursorEnable;
             public bool discordRPCEnable;
+            public int editorScale;
+            public bool scaleWScreenSize;
+            public bool showParamTooltips;
+            // public bool showCornerTooltips;
 
             // Gameplay Settings
             public PerfectChallengeType perfectChallengeType;
@@ -180,6 +206,8 @@ namespace HeavenStudio.Common
             public List<OverlaysManager.TimingDisplayComponent> timingDisplayComponents;
             public List<OverlaysManager.SkillStarComponent> skillStarComponents;
             public List<OverlaysManager.SectionComponent> sectionComponents;
+            // public List<OverlaysManager.DurationComponent> durationComponents;
+            // public List<OverlaysManager.WordJudgementComponent> wordJudgementComponents;
         }
     }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using Starpelly;
+
 using Jukebox;
 using TMPro;
 using System.Linq;
@@ -60,11 +60,11 @@ namespace HeavenStudio.Editor.Track
         private bool altWhenClicked = false;
         private bool dragging = false;
 
-        private float initMoveX = 0.0f;
-        private float initMoveY = 0.0f;
+        private double initMoveX = 0;
+        private float initMoveY = 0;
 
         private bool movedEntity = false;
-        private float lastBeat = 0.0f;
+        private double lastBeat = 0;
         private int lastLayer = 0;
 
         private int lastSiblingIndex;
@@ -87,32 +87,31 @@ namespace HeavenStudio.Editor.Track
 
             var eventName = entity.datamodel;
 
-            var game = EventCaller.instance.GetMinigame(eventName.Split(0));
-            var action = EventCaller.instance.GetGameAction(game, eventName.Split(1));
-            var gameAction = EventCaller.instance.GetGameAction(EventCaller.instance.GetMinigame(eventName.Split(0)), eventName.Split(1));
+            string[] split = eventName.Split('/');
+            var action = EventCaller.instance.GetGameAction(split[0], split[1]);
 
-            if (eventName.Split(1) == "switchGame")
-                Icon.sprite = Editor.GameIcon(eventName.Split(2));
+            if (split[1] == "switchGame")
+                Icon.sprite = Editor.GameIcon(split[2]);
             else
-                Icon.sprite = Editor.GameIcon(eventName.Split(0));
+                Icon.sprite = Editor.GameIcon(split[0]);
 
-            if (gameAction != null)
+            if (action != null)
             {
-                this.resizable = gameAction.resizable;
-                if (gameAction.resizable == false)
+                this.resizable = action.resizable;
+                if (action.resizable == false)
                 {
-                    rectTransform.sizeDelta = new Vector2(gameAction.defaultLength * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
-                    this.length = gameAction.defaultLength;
+                    rectTransform.sizeDelta = new Vector2(action.defaultLength * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
+                    this.length = action.defaultLength;
                 }
                 else
                 {
-                    if (entity != null && gameAction.defaultLength != entity.length)
+                    if (entity != null && action.defaultLength != entity.length)
                     {
                         rectTransform.sizeDelta = new Vector2(entity.length * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
                     }
                     else
                     {
-                        rectTransform.sizeDelta = new Vector2(gameAction.defaultLength * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
+                        rectTransform.sizeDelta = new Vector2(action.defaultLength * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
                     }
                 }
             }
@@ -126,6 +125,12 @@ namespace HeavenStudio.Editor.Track
             SetColor((int)entity["track"]);
             SetWidthHeight();
             selectedImage.gameObject.SetActive(false);
+
+            lastBeat = entity.beat;
+            initMoveX = 0.0f;
+            initMoveY = 0.0f;
+            lastResizeBeat = 0;
+            lastResizeLength = 0;
         }
 
         public void SetEntity(RiqEntity entity)
@@ -141,15 +146,18 @@ namespace HeavenStudio.Editor.Track
         public void UpdateMarker()
         {
             mouseOver = Timeline.instance.timelineState.selected && Timeline.instance.MouseInTimeline &&
-                Timeline.instance.MousePos2Beat.IsWithin((float)entity.beat, (float)entity.beat + entity.length) &&
+                HeavenStudio.Util.MathUtils.IsBetween(Timeline.instance.MousePos2Beat, (float)entity.beat, (float)entity.beat + entity.length) &&
                 Timeline.instance.MousePos2Layer == (int)entity["track"];
 
             eventLabel.overflowMode = (mouseHovering || moving || resizing || inResizeRegion) ? TextOverflowModes.Overflow : TextOverflowModes.Ellipsis;
 
             if (selected)
             {
-                if (moving)
+                if (TimelineBlockManager.Instance.MovingAnyEvents)
+                {
                     outline.color = Color.magenta;
+                    SetColor((int)entity["track"]);
+                }
                 else
                     outline.color = Color.cyan;
             }
@@ -200,6 +208,7 @@ namespace HeavenStudio.Editor.Track
 
                         if (!isCreating && movedEntity)
                         {
+                            // NOTE (PELLY): Replace with arrays soon
                             List<double> lastBeats = new();
                             List<int> lastLayers = new();
                             foreach (var marker in Selections.instance.eventsSelected)
@@ -229,7 +238,7 @@ namespace HeavenStudio.Editor.Track
                 {
                     foreach (var marker in Selections.instance.eventsSelected)
                     {
-                        marker.entity.beat = Mathf.Max(Timeline.instance.MousePos2BeatSnap - marker.initMoveX, 0);
+                        marker.entity.beat = System.Math.Max(Timeline.instance.MousePos2BeatSnap - marker.initMoveX, 0);
                         marker.entity["track"] = Mathf.Clamp(Timeline.instance.MousePos2Layer - marker.initMoveY, 0, Timeline.instance.LayerCount - 1);
                         marker.SetColor((int)entity["track"]);
                         marker.SetWidthHeight();
@@ -278,10 +287,10 @@ namespace HeavenStudio.Editor.Track
             foreach (var marker in Selections.instance.eventsSelected)
             {
                 if (setMovedEntity) marker.movedEntity = true;
-                marker.lastBeat = (float)marker.entity.beat;
+                marker.lastBeat = marker.entity.beat;
                 marker.lastLayer = (int)marker.entity["track"];
 
-                marker.initMoveX = Timeline.instance.MousePos2BeatSnap - (float)marker.entity.beat;
+                marker.initMoveX = Timeline.instance.MousePos2BeatSnap - marker.entity.beat;
                 marker.initMoveY = Timeline.instance.MousePos2Layer - (int)marker.entity["track"];
             }
         }
@@ -318,7 +327,8 @@ namespace HeavenStudio.Editor.Track
 
             if (Input.GetMouseButton(1) || Input.GetMouseButton(2)) return;
             if (!moving)
-                altWhenClicked = Input.GetKey(KeyCode.LeftAlt);
+                if (!altWhenClicked)
+                    altWhenClicked = Input.GetKey(KeyCode.LeftAlt);
 
             if (!altWhenClicked)
             {
@@ -378,20 +388,19 @@ namespace HeavenStudio.Editor.Track
             }
             else if (Input.GetMouseButton(2))
             {
-                var mgs = EventCaller.instance.minigames;
                 string[] datamodels = entity.datamodel.Split('/');
                 Debug.Log("Selected entity's datamodel : " + entity.datamodel);
 
                 bool isSwitchGame = datamodels[1] == "switchGame";
-                int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
-                int block = isSwitchGame ? 0 : mgs[gameIndex].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
+                var game = EventCaller.instance.minigames[datamodels[isSwitchGame ? 2 : 0]];
+                int block = isSwitchGame ? 0 : game.actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
 
                 if (!isSwitchGame)
                 {
                     // hardcoded stuff
                     // needs to happen because hidden blocks technically change the event index
-                    if (datamodels[0] == "gameManager") block -= 2;
-                    else if (datamodels[0] is "countIn" or "vfx") block -= 1;
+                    if (game.fxOnly) block--;
+                    if (datamodels[0] == "gameManager") block --;
                 }
 
                 GridGameSelector.instance.SelectGame(datamodels[isSwitchGame ? 2 : 0], block);
@@ -500,7 +509,7 @@ namespace HeavenStudio.Editor.Track
 
         public void SetColor(int type)
         {
-            var c = EditorTheme.theme.LayersGradient.Evaluate(type / (float)(Timeline.instance.LayerCount - 1));
+            var c = EditorTheme.theme.LayerGradientIndex(type);
             transform.GetChild(0).GetComponent<Image>().color = c;
 
             if (resizable)

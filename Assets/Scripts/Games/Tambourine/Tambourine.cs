@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,17 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("tambourine", "Tambourine", "388cd0", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("whoBops", Tambourine.WhoBops.Both, "Bop", "Set the character(s) to bop for the duration of this event."),
+                        new Param("whoBopsAuto", Tambourine.WhoBops.None, "Bop (Auto)", "Set the character(s) to automatically bop until another Bop event is reached."),
+                    },
+                    resizable = true,
+                    priority = 4
+                },
                 new GameAction("beat intervals", "Start Interval")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; Tambourine.PreInterval(e.beat, e.length, e["auto"]); },
@@ -20,7 +32,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     }
                 },
                 new GameAction("shake", "Shake")
@@ -40,17 +52,6 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     preFunctionLength = 1f
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("whoBops", Tambourine.WhoBops.Both, "Who Bops", "Who will bop."),
-                        new Param("whoBopsAuto", Tambourine.WhoBops.None, "Who Bops (Auto)", "Who will auto bop."),
-                    },
-                    resizable = true,
-                    priority = 4
-                },
                 new GameAction("success", "Success")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.SuccessFace(e.beat); },
@@ -64,9 +65,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorStart", Color.white, "Start Color", "The starting color of the fade."),
-                        new Param("colorEnd", Tambourine.defaultBGColor, "End Color", "The ending color of the fade."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("colorStart", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("colorEnd", Tambourine.defaultBGColor, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
             },
@@ -119,6 +120,34 @@ namespace HeavenStudio.Games
 
         public static Tambourine instance;
 
+        const int IA_AltPress = IAMAXCAT;
+        protected static bool IA_TouchNrmPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Nrm =
+            new("RvlDrumAlt", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchNrmPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlDrumAlt", new int[] { IA_AltPress, IA_AltPress, IA_AltPress },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+
         void Awake()
         {
             instance = this;
@@ -144,7 +173,7 @@ namespace HeavenStudio.Games
                     handsAnimator.Play("Bop", 0, 0);
                 }
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Nrm) && !IsExpectingInputNow(InputAction_Nrm))
             {
                 handsAnimator.Play("Shake", 0, 0);
                 SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
@@ -156,7 +185,7 @@ namespace HeavenStudio.Games
                     sadFace.SetActive(true);
                 }
             }
-            else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+            else if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt))
             {
                 handsAnimator.Play("Smack", 0, 0);
                 SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
@@ -243,6 +272,7 @@ namespace HeavenStudio.Games
             var relevantInputs = GetAllInputsBetweenBeat(beat, beat + interval);
             relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
 
+            List<MultiSound.Sound> sounds = new();
             for (int i = 0; i < relevantInputs.Count; i++)
             {
                 bool isHit = relevantInputs[i].datamodel == "tambourine/hit";
@@ -253,10 +283,12 @@ namespace HeavenStudio.Games
                     {
                         MonkeyInput(inputBeat, isHit);
                     }));
+                    sounds.Add(new MultiSound.Sound($"tambourine/monkey/{(isHit ? "hit" : "shake")}/m{(isHit ? "h" : "s")}{UnityEngine.Random.Range(1, 6)}", inputBeat));
                 }
             }
 
             BeatAction.New(this, actions);
+            MultiSound.Play(sounds.ToArray(), true, true);
 
             if (autoPassTurn)
             {
@@ -269,12 +301,10 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 monkeyAnimator.DoScaledAnimationAsync("MonkeySmack", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/monkey/hit/{UnityEngine.Random.Range(1, 6)}");
             }
             else
             {
                 monkeyAnimator.DoScaledAnimationAsync("MonkeyShake", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/monkey/shake/{UnityEngine.Random.Range(1, 6)}");
             }
         }
 
@@ -306,7 +336,7 @@ namespace HeavenStudio.Games
 
         private void PassTurn(double beat, double intervalBeat, float intervalLength, float length)
         {
-            SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}", beat);
+            SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/tp{UnityEngine.Random.Range(1, 6)}", beat);
             List<BeatAction.Action> actions = new()
             {
                 new BeatAction.Action(beat, delegate
@@ -324,8 +354,8 @@ namespace HeavenStudio.Games
                 double inputBeat = relevantInputs[i].beat - intervalBeat;
                 actions.Add(new BeatAction.Action(inputBeat, delegate
                 {
-                    if (isHit) ScheduleInput(beat + length, inputBeat, InputType.STANDARD_ALT_DOWN, JustHit, Miss, Nothing);
-                    else ScheduleInput(beat + length, inputBeat, InputType.STANDARD_DOWN, JustShake, Miss, Nothing);
+                    if (isHit) ScheduleInput(beat + length, inputBeat, InputAction_Alt, JustHit, Miss, Nothing);
+                    else ScheduleInput(beat + length, inputBeat, InputAction_Nrm, JustShake, Miss, Nothing);
                     Bop(beat + length + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
                 }));
             }
@@ -388,7 +418,7 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 handsAnimator.DoScaledAnimationAsync("Smack", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/ph{UnityEngine.Random.Range(1, 6)}");
                 SoundByte.PlayOneShotGame("tambourine/miss");
                 sweatAnimator.DoScaledAnimationAsync("Sweating", 0.5f);
                 misses++;
@@ -406,7 +436,7 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 handsAnimator.DoScaledAnimationAsync("Shake", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/ps{UnityEngine.Random.Range(1, 6)}");
                 SoundByte.PlayOneShotGame("tambourine/miss");
                 sweatAnimator.DoScaledAnimationAsync("Sweating", 0.5f);
                 misses++;
@@ -425,12 +455,12 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 handsAnimator.DoScaledAnimationAsync("Smack", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/ph{UnityEngine.Random.Range(1, 6)}");
             }
             else
             {
                 handsAnimator.DoScaledAnimationAsync("Shake", 0.5f);
-                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/ps{UnityEngine.Random.Range(1, 6)}");
             }
         }
 

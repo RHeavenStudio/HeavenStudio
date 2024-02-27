@@ -5,10 +5,6 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
-using Starpelly;
-
-using HeavenStudio.Util;
-using HeavenStudio.Editor;
 
 namespace HeavenStudio.Editor
 {
@@ -18,28 +14,31 @@ namespace HeavenStudio.Editor
         [Space(10)]
         public Toggle toggle;
 
-        new public void SetProperties(string propertyName, object type, string caption)
+        private bool _defaultValue;
+
+        public override void SetProperties(string propertyName, object type, string caption)
         {
-            InitProperties(propertyName, caption);
+            base.SetProperties(propertyName, type, caption);
 
-            // ' (bool)type ' always results in false
-            toggle.isOn = Convert.ToBoolean(parameterManager.entity[propertyName]);
+            _defaultValue = (bool)type;
+            toggle.isOn = Convert.ToBoolean(entity[propertyName]);
 
-            toggle.onValueChanged.AddListener(
-                _ => parameterManager.entity[propertyName] = toggle.isOn
-            );
+            toggle.onValueChanged.AddListener(_ =>
+            {
+                entity[propertyName] = toggle.isOn;
+                this.caption.text = (toggle.isOn != _defaultValue) ? (_captionText + "*") : _captionText;
+            });
+        }
+
+        public void ResetValue()
+        {
+            toggle.isOn = _defaultValue;
         }
 
         public override void SetCollapses(object type)
         {
-            toggle.onValueChanged.AddListener(
-             _ => UpdateCollapse(toggle.isOn)
-            );
+            toggle.onValueChanged.AddListener(newVal => UpdateCollapse(newVal));
             UpdateCollapse(toggle.isOn);
-        }
-
-        private void Update()
-        {
         }
     }
 }

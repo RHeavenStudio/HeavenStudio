@@ -124,10 +124,10 @@ namespace HeavenStudio.Games.Scripts_Splashdown
             Instantiate(splashPrefab, splashHolder).Init("Appearsplash");
         }
 
-        public void GoDown()
+        public void GoDown(bool splash = true)
         {
             SetState(MovementState.Dive, startBeat);
-            Instantiate(splashPrefab, splashHolder).Init("GodownSplash");
+            if (splash) Instantiate(splashPrefab, splashHolder).Init("GodownSplash");
         }
 
         public void Bop()

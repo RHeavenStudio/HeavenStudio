@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
 
         private void Update()
         {
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(ClappyTrio.InputAction_BasicPress) && !game.IsExpectingInputNow(ClappyTrio.InputAction_BasicPress.inputLockCategory))
             {
                 Clap(false);
                 game.ScoreMiss();
@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
             lastClapBeat = startBeat;
             lastClapLength = length;
 
-            game.ScheduleInput(startBeat, length, InputType.STANDARD_DOWN, Just, Miss, Out);
+            game.ScheduleInput(startBeat, length, ClappyTrio.InputAction_BasicPress, Just, Miss, Out);
         }
 
         private void Just(PlayerActionEvent caller, float state)

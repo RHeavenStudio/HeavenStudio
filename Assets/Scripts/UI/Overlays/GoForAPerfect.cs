@@ -61,9 +61,9 @@ namespace HeavenStudio.Common
                     currentBlink++;
                 }
             }
-            else if (cond.songPositionInBeats < lastReportedBeat)
+            else if (cond.songPositionInBeatsAsDouble < lastReportedBeat)
             {
-                lastReportedBeat = Mathf.Round(cond.songPositionInBeats);
+                lastReportedBeat = System.Math.Round(cond.songPositionInBeatsAsDouble);
             }
         }
 

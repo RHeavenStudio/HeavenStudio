@@ -60,7 +60,9 @@ namespace Rellac.Windows
 
 		public static Vector3 MousePosition()
         {
-            var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			Vector3 anchoredPosition = Input.mousePosition;
+			anchoredPosition.z = 0;
+            var mousePos = Camera.main.ScreenToWorldPoint(anchoredPosition);
             return new Vector3(mousePos.x, mousePos.y, 0);
         }
 	}

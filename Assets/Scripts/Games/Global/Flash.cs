@@ -100,9 +100,8 @@ namespace HeavenStudio.Games.Global
 
         private void Update()
         {
-            FindFadeFromBeat(Conductor.instance.songPositionInBeatsAsDouble);
+            FindFadeFromBeat(Math.Max(Conductor.instance.songPositionInBeatsAsDouble, 0));
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, length);
-            // normalizedBeat = Mathf.Clamp01(normalizedBeat);
 
             currentCol = new Color(func(startColor.r, endColor.r, normalizedBeat), func(startColor.g, endColor.g, normalizedBeat), func(startColor.b, endColor.b, normalizedBeat), func(startColor.a, endColor.a, normalizedBeat));
             spriteRenderer.color = currentCol;

@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,22 +13,32 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("flipperFlop", "Flipper-Flop", "ffc3fc", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("whoBops", FlipperFlop.WhoBops.Both, "Bop", "Set the character(s) to bop for the duration of this event."),
+                        new Param("whoBopsAuto", FlipperFlop.WhoBops.None, "Bop (Auto)", "Set the character(s) to automatically bop until another Bop event is reached."),
+                    }
+                },
                 new GameAction("attentionCompany", "Attention Company!")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat, e["toggle"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Mute VoiceLine", "Mute Captain Tuck's voiceline?")
+                        new Param("toggle", false, "Mute", "Toggle if Captain Tuck's voice line should be muted.")
                     }
                 },
-                new GameAction("attentionCompanyAlt", "Attention Company! (Remix 5)")
+                new GameAction("attentionCompanyAlt", "Attention Company! (Remix 5 Wii)")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat, e["toggle"], true); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Mute VoiceLine", "Mute Captain Tuck's voiceline?")
+                        new Param("toggle", false, "Mute", "Toggle if Captain Tuck's voice line should be muted.")
                     }
                 },
                 new GameAction("flipping", "Flipping")
@@ -46,8 +57,8 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.FlipperRollVoiceLine(e.beat, e["amount"], e["toggle"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("amount", new EntityTypes.Integer(1, 10, 1), "Amount", "1, 2, 3... etc. - flipper rolls"),
-                        new Param("toggle", false, "Now", "Whether Captain Tuck should say -Now!- instead of numbers.")
+                        new Param("amount", new EntityTypes.Integer(1, 10, 1), "Amount", "Set the number that Captain Tuck should announce."),
+                        new Param("toggle", false, "Now", "Toggle if Captain Tuck should say \"Now\" instead of a number.")
                     },
                     defaultLength = 2f
                 },
@@ -56,30 +67,20 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.Flipping(e.beat, e.length, true, e["uh"], e["thatsIt"], e["appreciation"], e["heart"], e["barber"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("uh", new EntityTypes.Integer(0, 3, 0), "Uh Count", "How many Uhs should Captain Tuck say after the flippers roll?"),
-                        new Param("appreciation", FlipperFlop.AppreciationType.None, "Appreciation", "Which appreciation line should Captain Tuck say?", new List<Param.CollapseParam>()
+                        new Param("uh", new EntityTypes.Integer(0, 3, 0), "Grunt Count", "Choose how many grunts Captain Tuck should say after the flipper-rolls."),
+                        new Param("appreciation", FlipperFlop.AppreciationType.None, "Appreciation", "Choose the appreciation voice line that Captain Tuck should say if the flipper-roll is carried out successfully.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (int)x != (int)FlipperFlop.AppreciationType.None, new string[] { "heart" })
+                            new Param.CollapseParam((x, _) => (int)x != (int)FlipperFlop.AppreciationType.None, new string[] { "heart" })
                         }),
-                        new Param("heart", false, "Hearts", "Should Captain Tuck blush and make hearts appear when he expresses his appreciation?"),
-                        new Param("thatsIt", false, "That's it!", "Whether or not Captain Tuck should say -That's it!- on the final flipper roll.", new List<Param.CollapseParam>()
+                        new Param("heart", false, "Hearts", "Toggle if Captain Tuck should blush and make hearts appear when he expresses his appreciation."),
+                        new Param("thatsIt", false, "That's it!", "Toggle if Captain Tuck should say \"That's it!\" after the flipper-rolls. This is usually used for the end of a level or segment.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "barber" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "barber" })
                         }),
-                        new Param("barber", false, "Barbershop that's it variant", "Should captain tuck use the Barbershop remix variant of that's it?")
+                        new Param("barber", false, "Barbershop", "Toggle if Captain Tuck should use the variant of \"That's it!\" seen in Barbershop Remix (3DS).")
                     },
                     defaultLength = 4f,
                     resizable = true
-                },
-                new GameAction("bop", "Bop") 
-                {
-                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("whoBops", FlipperFlop.WhoBops.Both, "Who Bops?", "Who will bop?"),
-                        new Param("whoBopsAuto", FlipperFlop.WhoBops.None, "Who Bops? (Auto)", "Who will auto bop?"),
-                    }
                 },
                 new GameAction("walk", "Captain Tuck Walk")
                 {
@@ -88,7 +89,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the animation be played at?")
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing for the action.")
                     }
                 },
                 new GameAction("toggleCaptain", "Disable/Enable Captain Tuck")
@@ -97,9 +98,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f
                 }
             },
-            new List<string>() {"ntr", "keep"},
+            new List<string>() { "rvl", "keep" },
             "rvlseal", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
@@ -132,6 +133,7 @@ namespace HeavenStudio.Games
         float lastCameraXPos;
         float currentCameraXPos;
         bool isWalking;
+        bool readyRoll;
         public GameEvent bop = new GameEvent();
         bool goBopFlip;
         bool goBopTuck;
@@ -182,6 +184,34 @@ namespace HeavenStudio.Games
         }
         public static FlipperFlop instance;
 
+        const int IAAltDownCat = IAMAXCAT;
+
+        protected static bool IA_TouchPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && (instance.IsExpectingInputNow(InputAction_Nrm) || !(instance.IsExpectingInputNow(InputAction_Alt) || instance.readyRoll));
+        }
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetSlide(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlSealAlt", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_Nrm =
+            new("RvlSealNrm", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchPress, IA_BatonBasicPress);
+
         void Awake()
         {
             instance = this;
@@ -199,17 +229,24 @@ namespace HeavenStudio.Games
                 evt.Disable();
             }
         }
+        public override void OnPlay(double beat)
+        {
+            queuedInputs.Clear();
+            queuedAttentions.Clear();
+            queuedFlipperRollVoiceLines.Clear();
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (goBopFlip) SingleBop((int)WhoBops.Flippers);
+            if (goBopTuck) SingleBop((int)WhoBops.CaptainTuck);
+        }
 
         private void Update()
         {
             var cond = Conductor.instance;
-            if(cond.isPlaying && !cond.isPaused)
+            if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (goBopFlip) SingleBop((int)WhoBops.Flippers);
-                    if (goBopTuck) SingleBop((int)WhoBops.CaptainTuck);
-                }
                 if (isWalking)
                 {
                     float normalizedBeat = cond.GetPositionFromBeat(walkStartBeat, walkLength);
@@ -221,14 +258,14 @@ namespace HeavenStudio.Games
                         isWalking = false;
                     }
                 }
-                if ((PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN)) || (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)))
+                if ((PlayerInput.GetIsAction(InputAction_Nrm) && !IsExpectingInputNow(InputAction_Nrm)) || (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt)))
                 {
                     flipperPlayer.Flip(false, false, false, true);
                 }
                 if (queuedInputs.Count > 0)
                 {
-                    foreach (var input in queuedInputs) 
-                    { 
+                    foreach (var input in queuedInputs)
+                    {
                         QueueFlips(input.beat, input.length, input.roll, input.uh, input.thatsIt, input.appreciation, input.heart, input.thatsItBarberShop);
                     }
                     queuedInputs.Clear();
@@ -257,7 +294,7 @@ namespace HeavenStudio.Games
                         {
                             currentXPos = flippersMovement.position.x + (moveLeft ? -rollDistance : rollDistance);
                             isMoving = true;
-                            currentCameraXPos = GameCamera.additionalPosition.x + (moveLeft ? -rollDistance : rollDistance);
+                            currentCameraXPos = GameCamera.AdditionalPosition.x + (moveLeft ? -rollDistance : rollDistance);
                             if (moveLeft)
                             {
                                 rightSnow.Play();
@@ -280,7 +317,7 @@ namespace HeavenStudio.Games
                         {
                             EasingFunction.Function funcCam = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuad);
                             float newCameraPosX = funcCam(lastCameraXPos, currentCameraXPos, normalizedCamBeat);
-                            GameCamera.additionalPosition = new Vector3(newCameraPosX, 0, 0);
+                            GameCamera.AdditionalPosition = new Vector3(newCameraPosX, 0, 0);
                         }
                         if (1f >= normalizedBeat)
                         {
@@ -291,17 +328,11 @@ namespace HeavenStudio.Games
                     }
                 }
             }
-            else if (!cond.isPlaying)
-            {
-                queuedInputs.Clear();
-                queuedAttentions.Clear();
-                queuedFlipperRollVoiceLines.Clear();
-            }
         }
 
         public void ToggleTuck()
         {
-            captainTuckAnim.gameObject.SetActive(!captainTuckAnim.gameObject.active);
+            captainTuckAnim.gameObject.SetActive(!captainTuckAnim.gameObject.activeSelf);
         }
 
         public void BumpIntoOtherSeal(bool toTheLeft)
@@ -408,11 +439,12 @@ namespace HeavenStudio.Games
             {
                 if (roll)
                 {
-                    ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, JustFlipperRoll, MissFlipperRoll, Nothing);
+                    ScheduleInput(beat - 1, 1 + i, InputAction_Alt, JustFlipperRoll, MissFlipperRoll, Nothing);
                     queuedMovements.Add(beat + i);
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + i - 0.5f, delegate { moveLeft = flippers[0].left;})
+                        new BeatAction.Action(beat + i - NgEarlyTime() - 1.5, delegate { readyRoll = true; }),
+                        new BeatAction.Action(beat + i - 0.5, delegate { moveLeft = flippers[0].left; readyRoll = true; }),
                     });
                     foreach (var flipper in flippers)
                     {
@@ -439,8 +471,6 @@ namespace HeavenStudio.Games
                             soundToPlay = $"flipperFlop/count/flopCount{flopCount}B";
                         }
                     }
-
-
 
                     if (thatsIt && i + 1 == length)
                     {
@@ -469,9 +499,9 @@ namespace HeavenStudio.Games
                                     SoundByte.PlayOneShotGame("flipperFlop/appreciation/thatsit1");
                                     captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f);
                                 }),
-                                new BeatAction.Action(beat + i, delegate 
-                                { 
-                                    SoundByte.PlayOneShotGame("flipperFlop/appreciation/thatsit2"); 
+                                new BeatAction.Action(beat + i, delegate
+                                {
+                                    SoundByte.PlayOneShotGame("flipperFlop/appreciation/thatsit2");
                                     captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f);
                                     SoundByte.PlayOneShotGame(soundToPlay);
                                     captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f);
@@ -500,7 +530,7 @@ namespace HeavenStudio.Games
                                 }
                                 CaptainTuckBop();
 
-                                SoundByte.PlayOneShotGame(voiceLine); 
+                                SoundByte.PlayOneShotGame(voiceLine);
                             }),
                         });
                     }
@@ -556,7 +586,11 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-                    ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+                    ScheduleInput(beat - 1, 1 + i, InputAction_Nrm, JustFlip, MissFlip, Nothing);
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i - NgEarlyTime() - 1, delegate { readyRoll = false; }),
+                    });
                     foreach (var flipper in flippers)
                     {
                         BeatAction.New(instance, new List<BeatAction.Action>()
@@ -566,11 +600,18 @@ namespace HeavenStudio.Games
                     }
                 }
             }
+            if (roll)
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + length + NgLateTime() - 1, delegate { readyRoll = false; }),
+                });
+            }
             if (uh > 0 && flopCount != 4)
             {
                 for (int i = 0; i < uh; i++)
                 {
-                    int voiceLineIndex = i + 1;
+                    int voiceLineIndex = 3 - uh + i + 1;
                     string voiceLine = $"flipperFlop/uh{voiceLineIndex}";
                     string failVoiceLine = $"flipperFlop/uhfail{voiceLineIndex}";
 
@@ -579,7 +620,7 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(beat + length + i, delegate {
                             string voiceLineToPlay = voiceLine;
                             string failVoiceLineToPlay = failVoiceLine;
-                            if (missed) 
+                            if (missed)
                             {
                                 voiceLineToPlay = failVoiceLineToPlay;
                                 currentCaptainBop = CaptainTuckBopType.Miss;
@@ -592,14 +633,14 @@ namespace HeavenStudio.Games
                             }
 
                             CaptainTuckBop();
-                            SoundByte.PlayOneShotGame(voiceLineToPlay); 
+                            SoundByte.PlayOneShotGame(voiceLineToPlay);
                         }),
                     });
                 }
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + length + uh, delegate 
-                    { 
+                    new BeatAction.Action(beat + length + uh, delegate
+                    {
                         AppreciationVoiceLine(beat + length + uh, appreciation, heart);
                         if (!missed && appreciation != (int)AppreciationType.None)
                         {
@@ -611,7 +652,7 @@ namespace HeavenStudio.Games
                             captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
                         }
                         CaptainTuckBop();
-                        missed = false; 
+                        missed = false;
                     }),
                     new BeatAction.Action(beat + length + uh + 1f, delegate
                     {
@@ -765,9 +806,9 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("flipperFlop/ding", beat + 1f),
             }, forcePlay: true);
 
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
-            ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
-            ScheduleInput(beat, 3, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2, InputAction_Nrm, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2.5f, InputAction_Nrm, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 3, InputAction_Nrm, JustFlip, MissFlip, Nothing);
             foreach (var flipper in flippers)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
@@ -779,6 +820,7 @@ namespace HeavenStudio.Games
             }
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
+                new BeatAction.Action(beat + 3 - NgEarlyTime(), delegate {readyRoll = false; }),
                 new BeatAction.Action(beat + 2, delegate {captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f); }),
                 new BeatAction.Action(beat + 3, delegate {captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f); }),
             });
@@ -823,9 +865,9 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat - 0.25f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
                 new BeatAction.Action(beat, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
                 new BeatAction.Action(beat + 0.5f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.0625f); }),
-                new BeatAction.Action(beat + 2f, delegate 
-                { 
-                    captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); 
+                new BeatAction.Action(beat + 2f, delegate
+                {
+                    captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f);
                     if (remix5)
                     {
                         foreach (var flipper in flippers)
@@ -837,7 +879,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 2.25f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
                 new BeatAction.Action(beat + 2.5f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
-                new BeatAction.Action(beat + 3f, delegate 
+                new BeatAction.Action(beat + 3f, delegate
                 {
                     if (remix5) return;
                     foreach (var flipper in flippers)
@@ -1082,6 +1124,6 @@ namespace HeavenStudio.Games
             missed = true;
         }
 
-        public void Nothing(PlayerActionEvent caller) {}
+        public void Nothing(PlayerActionEvent caller) { }
     }
 }

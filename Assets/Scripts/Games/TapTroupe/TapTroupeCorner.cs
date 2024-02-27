@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
 
         public void ResetFace()
         {
-            if (expressionAnim.IsPlayingAnimationName("Okay")) return;
+            if (expressionAnim.IsPlayingAnimationNames("Okay")) return;
             expressionAnim.Play("NoExpression", 0, 0);
         }
 

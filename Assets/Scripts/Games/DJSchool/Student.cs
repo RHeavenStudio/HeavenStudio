@@ -5,7 +5,6 @@ using UnityEngine.Audio;
 
 using DG.Tweening;
 using HeavenStudio.Util;
-using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_DJSchool
 {
@@ -45,38 +44,8 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
         private void Update()
         {
-            
+
         }
-
-        #region old hold
-        //public void Hold(bool ace)
-        //{
-        //    isHolding = true;
-
-        //    if (ace)
-        //    {
-        //        missed = false;
-        //        shouldBeHolding = true;
-        //        game.SetDJYellowHead(1);
-        //    }
-
-        //    Jukebox.PlayOneShotGame("djSchool/recordStop");
-
-        //    anim.Play("Hold", 0, 0);
-        //    tableAnim.Play("Student_Turntable_Hold", 0, 0);
-        //    if (ace)
-        //    {
-        //        if (soundFX)
-        //        {
-        //            Conductor.instance.djSchoolHold.TransitionTo(.01f);
-        //        }
-
-        //        FlashFX(true);
-        //    }
-
-        //    // Settings.GetMusicMixer().audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(0.15f);
-        //}
-        #endregion
 
         public void ForceHold()
         {
@@ -90,7 +59,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             if (soundFX)
             {
-                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.01f);
+                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.1f);
             }
         }
 
@@ -114,7 +83,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             if (soundFX)
             {
-                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.01f);
+                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.1f);
             }
             FlashFX(true);
         }
@@ -127,7 +96,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", -1, 1, 0.8f);
                 CancelInvoke();
                 canBoo = false;
-                Invoke("EnableBoo", booSound.clip.length);
+                Invoke("EnableBoo", 1f);
             }
 
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
@@ -146,9 +115,13 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             missed = true;
 
             SoundByte.PlayOneShotGame("djSchool/recordStop");
-            
+
             anim.DoScaledAnimationAsync("Hold", 0.5f);
             tableAnim.DoScaledAnimationAsync("Student_Turntable_StartHold", 0.5f);
+            if (soundFX)
+            {
+                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.1f);
+            }
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
             {
                 game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
@@ -173,10 +146,10 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", -1, 1, 0.8f);
                 CancelInvoke();
                 canBoo = false;
-                Invoke("EnableBoo", booSound.clip.length);
+                Invoke("EnableBoo", 1f);
             }
             missed = true;
-            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
             tableAnim.DoScaledAnimationAsync("Student_Turntable_Idle", 0.5f);
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
             {
@@ -195,23 +168,21 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         public void OnHitSwipe(PlayerActionEvent caller, float beat)
         {
             game.shouldBeHolding = false;
+            isHolding = false;
+            swiping = true;
+            SoundByte.PlayOneShotGame("djSchool/recordSwipe");
+            anim.Play("Swipe", 0, 0);
             if (beat >= 1f || beat <= -1f) missed = true;
             if (!missed)
             {
-                isHolding = false;
-
                 missed = false;
                 shouldBeHolding = false;
-                SoundByte.PlayOneShotGame("djSchool/recordSwipe");
                 FlashFX(false);
-                swiping = true;
 
                 BeatAction.New(this, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat, delegate { anim.Play("Swipe", 0, 0); }),
                     new BeatAction.Action(beat + 4f, delegate { swiping = false; }),
                 });
-                //anim.Play("Swipe", 0, 0);
                 game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.UpSecond);
                 game.djYellowScript.Reverse();
                 game.smileBeat = caller.timer + caller.startBeat + 1f;
@@ -220,25 +191,22 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
 
                 //Instantiate(slamFX, this.transform.parent).SetActive(true);
-                mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+                mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
             }
             else
             {
-                OnMissSwipeForPlayerInput(caller.timer + caller.startBeat + 1f);
-                SoundByte.PlayOneShotGame("djSchool/recordSwipe");
+                OnMissSwipeForPlayerInput(caller.timer + caller.startBeat + 1);
                 BeatAction.New(this, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat, delegate { anim.Play("Swipe", 0, 0); }),
                     new BeatAction.Action(beat + 4f, delegate { swiping = false; }),
                 });
-                //anim.Play("Swipe", 0, 0);
                 tableAnim.speed = 1;
                 tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
 
                 //Instantiate(slamFX, this.transform.parent).SetActive(true);
-                mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+                mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
             }
-            
+
         }
 
         public void OnMissSwipe(PlayerActionEvent caller)
@@ -246,19 +214,19 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             isHolding = false;
             //swiping = false;
             missed = true;
-            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+            // mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
             if (canBoo)
             {
                 Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", caller.timer + caller.startBeat + 1f, 1, 0.8f);
                 CancelInvoke();
                 canBoo = false;
-                Invoke("EnableBoo", booSound.clip.length);
+                Invoke("EnableBoo", 1);
             }
             BeatAction.New(game, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
+                new BeatAction.Action(caller.timer + caller.startBeat + 1, delegate
                 {
-                    if (game.goBop)
+                    if (game.BeatIsInBopRegion(caller.timer + caller.startBeat + 1))
                     {
                         game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
                         if (game.djYellowHolding) game.djYellowScript.Reverse();
@@ -273,14 +241,13 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             isHolding = false;
 
             missed = true;
-            //swiping = false;
-            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
 
             BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
-                    if (game.goBop)
+                    if (game.BeatIsInBopRegion(beat))
                     {
                         game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
                         if (game.djYellowHolding) game.djYellowScript.Reverse();
@@ -290,52 +257,19 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             });
         }
 
-        #endregion
+        public void OnFlickSwipe()
+        {
+            anim.Play("Swipe", 0, 0);
+            tableAnim.speed = 1;
+            tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
 
-        #region old swipe
-        //public void Swipe(bool ace)
-        //{
-        //    isHolding = false;
+            isHolding = false;
 
-        //    if (ace)
-        //    {
-        //        missed = false;
-        //        shouldBeHolding = false;
-        //        Jukebox.PlayOneShotGame("djSchool/recordSwipe");
-        //        FlashFX(false);
-        //        swiping = true;
-        //    }
-        //    else
-        //    {
-        //        // Missed record swipe sound should play here.
-        //    }
+            missed = true;
 
-        //    anim.Play("Swipe", 0, 0);
-
-        //    tableAnim.speed = 1;
-        //    tableAnim.Play("Student_Turntable_Swipe", 0, 0);
-
-        //    Instantiate(slamFX).SetActive(true);
-        //    Conductor.instance.normal.TransitionTo(.01f);
-        //    // Settings.GetMusicMixer().audioMixer.FindSnapshot("Main").TransitionTo(0.15f);
-        //    swiping = false;
-
-        //}
-
-        //public override void OnAce()
-        //{
-        //    if (!shouldBeHolding)
-        //    {
-        //        //Hold(true);
-        //    }
-        //    else
-        //    {
-        //        Conductor.instance.normal.TransitionTo(.01f);
-        //        //Swipe(true);
-        //    }
-
-        //    eligible = false;
-        //}
+            OnMissSwipeForPlayerInput(Conductor.instance.songPositionAsDouble + 1);
+            SoundByte.PlayOneShotGame("djSchool/recordSwipe");
+        }
 
         #endregion
 
@@ -351,7 +285,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             flash.color = "D0FBFF".Hex2RGB();
             flash.color = new Color(flash.color.r, flash.color.g, flash.color.b, 0.85f);
             flash.DOColor(new Color(flash.color.r, flash.color.g, flash.color.b, 0), 0.15f);
-            Destroy(flashFX_, 0.5f);         
+            Destroy(flashFX_, 0.5f);
         }
 
         public void TransitionBackToIdle()
@@ -364,11 +298,10 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             }
         }
 
-
         //Not sure but will do?
         private void OnDestroy()
         {
-            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.04f);
         }
     }
 }

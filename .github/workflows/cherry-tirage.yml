@@ -1,0 +1,25 @@
+on:
+    pull_request_target:
+      branches:
+        - master
+      types: ["closed"]
+
+jobs:
+    cherry_no_future_to_current:
+      runs-on: ubuntu-latest
+      name: Cherry pick into current release
+      if: ${{ !contains(github.event.pull_request.labels.*.name, 'release-2') }}
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+        - name: Cherry pick into current release
+          uses: xealth/cherry-pick-action@v1.0.0
+          with:
+            branch: release_1_patches
+            labels: |
+              cherry-pick
+
+env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

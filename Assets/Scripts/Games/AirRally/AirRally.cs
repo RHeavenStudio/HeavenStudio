@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    
+
     public static class RvlBadmintonLoader
     {
         public static Minigame AddGame(EventCaller e)
@@ -16,18 +17,18 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("rally", "Rally")
                 {
-                    preFunction = delegate { AirRally.PreStartRally(e.currentEntity.beat); }, 
-                    defaultLength = 2f, 
+                    preFunction = delegate { AirRally.PreStartRally(e.currentEntity.beat); },
+                    defaultLength = 2f,
                     preFunctionLength = 1
                 },
                 new GameAction("ba bum bum bum", "Ba Bum Bum Bum")
                 {
                     preFunction = delegate { AirRally.PreStartBaBumBumBum(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity["toggle2"]); },
-                    defaultLength = 6f, 
+                    defaultLength = 6f,
                     parameters = new List<Param>()
-                    { 
-                        new Param("toggle", true, "Count", "Make Forthington Count"),
-                        new Param("toggle2", false, "Alternate Voiceline")
+                    {
+                        new Param("toggle", true, "Count", "Toggle if Forthington should count after the event."),
+                        new Param("toggle2", false, "Alternate Voice Line", "Toggle if Forthington should use an alternate voice line.")
                     },
                     preFunctionLength = 1
                 },
@@ -36,8 +37,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { AirRally.instance.SetDistance(e.currentEntity.beat, e.currentEntity["type"], e.currentEntity["ease"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?"),
-                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease")
+                        new Param("type", AirRally.DistanceSound.close, "Type", "Set Forthington's distance."),
+                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("catch", "Catch Birdie"),
@@ -51,10 +52,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease")
+                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease", "Set the easing of the action.")
                     }
                 },
-                new GameAction("forward", "Animals Look Forward")
+                new GameAction("forward", "Look Forward")
                 {
                     function = delegate
                     {
@@ -62,7 +63,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("reset", false, "Reset", "Reset to Idle pose?")
+                        new Param("reset", false, "Reset", "Toggle this to reset the animals to their idle pose.")
                     }
                 },
                 new GameAction("4beat", "4 Beat Count-In")
@@ -94,10 +95,10 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("forthington voice lines", "Count")
                 {
                     function = delegate { AirRally.instance.ForthVoiceDo(e.currentEntity.beat); },
-                    preFunction = delegate { AirRally.ForthVoice(e.currentEntity.beat, e.currentEntity["type"]); }, 
+                    preFunction = delegate { AirRally.ForthVoice(e.currentEntity.beat, e.currentEntity["type"]); },
                     parameters = new List<Param>()
-                    { 
-                        new Param("type", AirRally.CountSound.one, "Type", "The number Forthington will say"),
+                    {
+                        new Param("type", AirRally.CountSound.one, "Type", "Set the number Forthington will say."),
                     },
                 },
                 new GameAction("spawnBird", "Spawn Birds")
@@ -109,14 +110,14 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("type", AirRally.BirdType.Pterosaurs, "Type"),
-                        new Param("xSpeed", new EntityTypes.Float(-10, 10, 1), "X Speed Multiplier"),
-                        new Param("zSpeed", new EntityTypes.Float(-10, 10, 1), "Z Speed Multiplier"),
-                        new Param("startZ", new EntityTypes.Float(0, 1000, 200), "Z Start Position"),
-                        new Param("invert", false, "Invert X Direction")
+                        new Param("type", AirRally.BirdType.Pterosaurs, "Type", "Choose the type of bird to spawn."),
+                        new Param("xSpeed", new EntityTypes.Float(-10, 10, 1), "X Speed", "Change the horizontal speed of the birds."),
+                        new Param("zSpeed", new EntityTypes.Float(-10, 10, 1), "Z Speed", "Change how fast the birds approach the camera."),
+                        new Param("startZ", new EntityTypes.Float(0, 1000, 200), "Z Start Position", "Change how close to the camera the birds spawn."),
+                        new Param("invert", false, "Flip Horizontally", "Toggle if the birds should fly left to right.")
                     }
                 },
-                new GameAction("rainbow", "Rainbow")
+                new GameAction("rainbow", "Spawn Rainbow")
                 {
                     function = delegate
                     {
@@ -124,13 +125,13 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("start", new EntityTypes.Float(0, 500, 100), "Start Position"),
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier")
+                        new Param("start", new EntityTypes.Float(0, 500, 100), "Start Position", "Change how close to the camera the rainbow spawns."),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed", "Change how fast the rainbow approaches the camera.")
                     }
                 },
-                new GameAction("day", "Day/Night Cycle")
+                new GameAction("day", "Time Of Day")
                 {
-                    function = delegate 
+                    function = delegate
                     {
                         AirRally.instance.SetDayNightCycle(e.currentEntity.beat, e.currentEntity.length,
                             (AirRally.DayNightCycle)e.currentEntity["start"], (AirRally.DayNightCycle)e.currentEntity["end"],
@@ -139,43 +140,43 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("start", AirRally.DayNightCycle.Day, "Start Time"),
-                        new Param("end", AirRally.DayNightCycle.Noon, "End Time"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("start", AirRally.DayNightCycle.Day, "Start Time", "Set the time of day for the start of the event."),
+                        new Param("end", AirRally.DayNightCycle.Twilight, "End Time", "Set the time of day for the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("cloud", "Cloud Density")
                 {
                     function = delegate
                     {
-                        AirRally.instance.SetCloudRates(e.currentEntity.beat, e.currentEntity.length, e.currentEntity["main"], e.currentEntity["side"], e.currentEntity["top"], 
+                        AirRally.instance.SetCloudRates(e.currentEntity.beat, e.currentEntity.length, e.currentEntity["main"], e.currentEntity["side"], e.currentEntity["top"],
                             e.currentEntity["speed"], e.currentEntity["endSpeed"], e.currentEntity["ease"]);
                     },
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("main", new EntityTypes.Integer(0, 300, 30), "Main Clouds", "How many clouds per second?"),
-                        new Param("side", new EntityTypes.Integer(0, 100, 10), "Side Clouds", "How many clouds per second?"),
-                        new Param("top", new EntityTypes.Integer(0, 100, 0), "Top Clouds", "How many clouds per second?"),
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier"),
-                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed Multiplier"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("main", new EntityTypes.Integer(0, 300, 30), "Main Clouds", "Set how many clouds per second should be spawned in the center."),
+                        new Param("side", new EntityTypes.Integer(0, 100, 10), "Side Clouds", "Set how many clouds per second should be spawned on the sides."),
+                        new Param("top", new EntityTypes.Integer(0, 100, 0), "Top Clouds", "Set how many clouds per second should be spawned on the top."),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Start Speed", "Change how fast the clouds are moving at the start of the event."),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed", "Change how fast the clouds are moving at the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("snowflake", "Snowflake Density")
                 {
                     function = delegate
                     {
-                        AirRally.instance.SetSnowflakeRates(e.currentEntity.beat, e.currentEntity.length, e.currentEntity["cps"], 
+                        AirRally.instance.SetSnowflakeRates(e.currentEntity.beat, e.currentEntity.length, e.currentEntity["cps"],
                             e.currentEntity["speed"], e.currentEntity["endSpeed"], e.currentEntity["ease"]);
                     },
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("cps", new EntityTypes.Integer(0, 200, 0), "Snowflakes per Second"),
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier"),
-                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed Multiplier"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("cps", new EntityTypes.Integer(0, 200, 0), "Snowflakes Amount", "Set how many snowflakes should be spawned per second."),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Start Speed", "Change fow fast the snowflakes are moving at the start of the event."),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed", "Change how fast the snowflakes are moving at the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("tree", "Trees")
@@ -188,18 +189,18 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("enable", true, "Enable", "", new List<Param.CollapseParam>()
+                        new Param("enable", true, "Enable", "Toggle if the trees are enabled.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "main", "side", "speed", "endSpeed", "ease" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "main", "side", "speed", "endSpeed", "ease" })
                         }),
-                        new Param("main", new EntityTypes.Integer(0, 300, 50), "Main Trees", "How many trees per second?"),
-                        new Param("side", new EntityTypes.Integer(0, 100, 30), "Side Trees", "How many trees per second?"),
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier"),
-                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed Multiplier"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("main", new EntityTypes.Integer(0, 300, 50), "Main Trees", "Set how many trees per second should be spawned in the center."),
+                        new Param("side", new EntityTypes.Integer(0, 100, 30), "Side Trees", "Set how many trees per second should be spawned on the sides."),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Start Speed", "Change how fast the trees are moving at the start of the event."),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed", "Change how fast the trees are moving at the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
-                new GameAction("islandSpeed", "Islands Speed")
+                new GameAction("islandSpeed", "Island Speed")
                 {
                     function = delegate
                     {
@@ -209,9 +210,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed"),
-                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Start Speed", "Change how fast the islands are moving at the start of the event."),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed", "Change how fast the islands are moving at the end of the event."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
                 new GameAction("silence", "Silence")
@@ -220,9 +221,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                 }
             },
-            new List<string>() {"rvl", "normal"},
+            new List<string>() { "rvl", "keep" },
             "rvlbadminton", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
@@ -377,12 +378,23 @@ namespace HeavenStudio.Games
             {
                 InitClouds(0);
             }
-        }      
+        }
 
         // Update is called once per frame
         void Update()
         {
-            if(PlayerInput.Pressed() && !IsExpectingInputNow())
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !GameManager.instance.autoplay)
+            {
+                if (PlayerInput.GetIsAction(InputAction_BasicPress))
+                {
+                    Baxter.DoScaledAnimationAsync(GetDistanceStringAtBeat(Conductor.instance.songPositionInBeatsAsDouble, false, true) + "Ready", 0.5f);
+                }
+                if (PlayerInput.GetIsAction(InputAction_BasicRelease))
+                {
+                    Baxter.DoScaledAnimationAsync("Idle", 0.5f);
+                }
+            }
+            if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress))
             {
                 Baxter.DoScaledAnimationAsync("Hit", 0.5f);
                 SoundByte.PlayOneShotGame("airRally/swing");
@@ -466,7 +478,7 @@ namespace HeavenStudio.Games
             spawnedBird.speedMultX = invert ? -xSpeed : xSpeed;
             spawnedBird.speedMultZ = zSpeed;
             spawnedBird.transform.position =
-                new Vector3(invert ? -spawnedBird.transform.position.x : spawnedBird.transform.position.x, 
+                new Vector3(invert ? -spawnedBird.transform.position.x : spawnedBird.transform.position.x,
                 spawnedBird.transform.position.y, startZ);
             spawnedBird.transform.localScale = new Vector3(invert ? -1 : 1, 1, 1);
         }
@@ -672,20 +684,20 @@ namespace HeavenStudio.Games
             timeEase = ease;
             objectsColorFrom = lastTime switch
             {
-                DayNightCycle.Noon => Color.black,
+                DayNightCycle.Twilight => Color.black,
                 _ => Color.white,
             };
 
             objectsColorTo = currentTime switch
             {
-                DayNightCycle.Noon => Color.black,
+                DayNightCycle.Twilight => Color.black,
                 _ => Color.white,
             };
 
             bgColorFrom = lastTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColor,
+                DayNightCycle.Twilight => noonColor,
                 DayNightCycle.Night => nightColor,
                 _ => throw new System.NotImplementedException()
             };
@@ -693,7 +705,7 @@ namespace HeavenStudio.Games
             bgColorTo = currentTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColor,
+                DayNightCycle.Twilight => noonColor,
                 DayNightCycle.Night => nightColor,
                 _ => throw new System.NotImplementedException()
             };
@@ -701,7 +713,7 @@ namespace HeavenStudio.Games
             cloudColorFrom = lastTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColorCloud,
+                DayNightCycle.Twilight => noonColorCloud,
                 DayNightCycle.Night => nightColorCloud,
                 _ => throw new System.NotImplementedException()
             };
@@ -709,7 +721,7 @@ namespace HeavenStudio.Games
             cloudColorTo = currentTime switch
             {
                 DayNightCycle.Day => Color.white,
-                DayNightCycle.Noon => noonColorCloud,
+                DayNightCycle.Twilight => noonColorCloud,
                 DayNightCycle.Night => nightColorCloud,
                 _ => throw new System.NotImplementedException()
             };
@@ -747,7 +759,7 @@ namespace HeavenStudio.Games
         public enum DayNightCycle
         {
             Day = 0,
-            Noon = 1,
+            Twilight = 1,
             Night = 2
         }
 
@@ -785,7 +797,7 @@ namespace HeavenStudio.Games
 
                     Forthington.DoScaledAnimationAsync("Hit", 0.5f);
                 })
-            });     
+            });
         }
 
         public void ReturnObject(double beat, double targetBeat, bool type)
@@ -806,10 +818,10 @@ namespace HeavenStudio.Games
             float realLength = length / 4;
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("airRally/countIn1" + GetDistanceStringAtBeat(beat, true), beat, 1, 1, false, countInOffsets[0]),
-                new MultiSound.Sound("airRally/countIn2" + GetDistanceStringAtBeat(beat + (1 * realLength), true), beat + (1 * realLength), 1, 1, false, countInOffsets[1]),
-                new MultiSound.Sound("airRally/countIn3" + GetDistanceStringAtBeat(beat + (2 * realLength), true), beat + (2 * realLength), 1, 1, false, countInOffsets[2]),
-                new MultiSound.Sound("airRally/countIn4" + GetDistanceStringAtBeat(beat + (3 * realLength), true), beat + (3 * realLength), 1, 1, false, countInOffsets[3]),
+                new MultiSound.Sound("airRally/en/countIn1" + GetDistanceStringAtBeat(beat, true), beat, 1, 1, false, countInOffsets[0]),
+                new MultiSound.Sound("airRally/en/countIn2" + GetDistanceStringAtBeat(beat + (1 * realLength), true), beat + (1 * realLength), 1, 1, false, countInOffsets[1]),
+                new MultiSound.Sound("airRally/en/countIn3" + GetDistanceStringAtBeat(beat + (2 * realLength), true), beat + (2 * realLength), 1, 1, false, countInOffsets[2]),
+                new MultiSound.Sound("airRally/en/countIn4" + GetDistanceStringAtBeat(beat + (3 * realLength), true), beat + (3 * realLength), 1, 1, false, countInOffsets[3]),
             }, forcePlay: true);
         }
 
@@ -886,12 +898,12 @@ namespace HeavenStudio.Games
             float realLength = length / 8;
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("airRally/countIn1" + GetDistanceStringAtBeat(beat, true), beat, 1, 1, false, countInOffsets[0]),
-                new MultiSound.Sound("airRally/countIn2" + GetDistanceStringAtBeat(beat + (2 * realLength), true), beat + (2 * realLength), 1, 1, false, countInOffsets[1]),
-                new MultiSound.Sound("airRally/countIn1" + GetDistanceStringAtBeat(beat + (4 * realLength), true), beat + (4 * realLength), 1, 1, false, countInOffsets[0]),
-                new MultiSound.Sound("airRally/countIn2" + GetDistanceStringAtBeat(beat + (5 * realLength), true), beat + (5 * realLength), 1, 1, false, countInOffsets[1]),
-                new MultiSound.Sound("airRally/countIn3" + GetDistanceStringAtBeat(beat + (6 * realLength), true), beat + (6 * realLength), 1, 1, false, countInOffsets[2]),
-                new MultiSound.Sound("airRally/countIn4" + GetDistanceStringAtBeat(beat + (7 * realLength), true), beat + (7 * realLength), 1, 1, false, countInOffsets[3]),
+                new MultiSound.Sound("airRally/en/countIn1" + GetDistanceStringAtBeat(beat, true), beat, 1, 1, false, countInOffsets[0]),
+                new MultiSound.Sound("airRally/en/countIn2" + GetDistanceStringAtBeat(beat + (2 * realLength), true), beat + (2 * realLength), 1, 1, false, countInOffsets[1]),
+                new MultiSound.Sound("airRally/en/countIn1" + GetDistanceStringAtBeat(beat + (4 * realLength), true), beat + (4 * realLength), 1, 1, false, countInOffsets[0]),
+                new MultiSound.Sound("airRally/en/countIn2" + GetDistanceStringAtBeat(beat + (5 * realLength), true), beat + (5 * realLength), 1, 1, false, countInOffsets[1]),
+                new MultiSound.Sound("airRally/en/countIn3" + GetDistanceStringAtBeat(beat + (6 * realLength), true), beat + (6 * realLength), 1, 1, false, countInOffsets[2]),
+                new MultiSound.Sound("airRally/en/countIn4" + GetDistanceStringAtBeat(beat + (7 * realLength), true), beat + (7 * realLength), 1, 1, false, countInOffsets[3]),
             }, forcePlay: true);
         }
 
@@ -910,37 +922,37 @@ namespace HeavenStudio.Games
                 instance.ForthVoiceAction(beat)
             });
         }
-        
+
         public static void ForthVoice(double beat, int type)
         {
             float offset = countInOffsets[type];
 
             DistanceSound distance = DistanceAtBeat(beat);
-            
+
             switch (distance)
             {
                 case DistanceSound.close:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound($"airRally/countIn{type + 1}", beat, 1, 1, false, offset),
+                        new MultiSound.Sound($"airRally/en/countIn{type + 1}", beat, 1, 1, false, offset),
                     }, forcePlay: true);
                     break;
                 case DistanceSound.far:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound($"airRally/countIn{type + 1}Far", beat, 1, 1, false, offset),
+                        new MultiSound.Sound($"airRally/en/countIn{type + 1}Far", beat, 1, 1, false, offset),
                     }, forcePlay: true);
                     break;
                 case DistanceSound.farther:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound($"airRally/countIn{type + 1}Farther", beat, 1, 1, false, offset),
+                        new MultiSound.Sound($"airRally/en/countIn{type + 1}Farther", beat, 1, 1, false, offset),
                     }, forcePlay: true);
                     break;
                 case DistanceSound.farthest:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound($"airRally/countIn{type + 1}Farthest", beat, 1, 1, false, offset),
+                        new MultiSound.Sound($"airRally/en/countIn{type + 1}Farthest", beat, 1, 1, false, offset),
                     }, forcePlay: true);
                     break;
             }
@@ -1010,11 +1022,11 @@ namespace HeavenStudio.Games
         private static bool TryGetLastDistanceEvent(double beat, out RiqEntity distanceEvent)
         {
             var allDistances = EventCaller.GetAllInGameManagerList("airRally", new string[] { "set distance" }).FindAll(x => x.beat <= beat);
-            if (allDistances.Count == 0) 
+            if (allDistances.Count == 0)
             {
                 distanceEvent = null;
                 return false;
-            } 
+            }
             distanceEvent = allDistances[^1];
             return true;
         }
@@ -1037,11 +1049,11 @@ namespace HeavenStudio.Games
                 SetDistance(distanceEvent.beat, distanceEvent["type"], distanceEvent["ease"]);
             }
 
-            if (wantStartRally >= beat && IsRallyBeat(wantStartRally))
+            if (wantStartRally >= beat && IsRallyBeat(wantStartRally) && wantStartRally < nextGameSwitchBeatGlobal)
             {
                 StartRally(wantStartRally);
             }
-            else if (wantStartBaBum >= beat && IsBaBumBeat(wantStartBaBum))
+            else if (wantStartBaBum >= beat && IsBaBumBeat(wantStartBaBum) && wantStartBaBum < nextGameSwitchBeatGlobal)
             {
                 StartBaBumBumBum(wantStartBaBum, wantCount, wantAlt);
             }
@@ -1088,7 +1100,7 @@ namespace HeavenStudio.Games
             var cloudEvent = EventCaller.GetAllInGameManagerList("airRally", new string[] { "cloud" }).Find(x => x.beat == beat);
             if (cloudEvent != null)
             {
-                SetCloudRates(cloudEvent.beat, cloudEvent.length, cloudEvent["main"], cloudEvent["side"], cloudEvent["top"], 
+                SetCloudRates(cloudEvent.beat, cloudEvent.length, cloudEvent["main"], cloudEvent["side"], cloudEvent["top"],
                     cloudEvent["speed"], cloudEvent["endSpeed"], cloudEvent["ease"]);
             }
             cloudManagerMain.Init();
@@ -1099,7 +1111,7 @@ namespace HeavenStudio.Games
             var snowflakeEvent = EventCaller.GetAllInGameManagerList("airRally", new string[] { "snowflake" }).Find(x => x.beat == beat);
             if (snowflakeEvent != null)
             {
-                SetSnowflakeRates(snowflakeEvent.beat, snowflakeEvent.length, snowflakeEvent["cps"], snowflakeEvent["speed"], 
+                SetSnowflakeRates(snowflakeEvent.beat, snowflakeEvent.length, snowflakeEvent["cps"], snowflakeEvent["speed"],
                     snowflakeEvent["endSpeed"], snowflakeEvent["ease"]);
             }
 
@@ -1217,8 +1229,8 @@ namespace HeavenStudio.Games
 
             string distanceString = GetDistanceStringAtBeat(beat);
             if (distanceString != "Close") SoundByte.PlayOneShotGame("airRally/whooshForth_" + distanceString, beat + 1, 1, 1, false, false, whooshOffsetsRally[(int)DistanceAtBeat(beat)]);
-            if (!(silent || isBaBumBeat) || (isCatch && !silent)) 
-                SoundByte.PlayOneShotGame("airRally/nya_" + distanceString, beat, 1, 1, false, false, nyaOffsets[(int)DistanceAtBeat(beat)]);
+            if (!(silent || isBaBumBeat) || (isCatch && !silent))
+                SoundByte.PlayOneShotGame("airRally/en/nya_" + distanceString, beat, 1, 1, false, false, nyaOffsets[(int)DistanceAtBeat(beat)]);
 
             BeatAction.New(this, new List<BeatAction.Action>()
             {
@@ -1234,7 +1246,10 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate
                 {
                     string distanceString = GetDistanceStringAtBeat(beat);
-                    Baxter.DoScaledAnimationAsync((distanceString == "Close") ? "CloseReady" : "FarReady", 0.5f);
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch || GameManager.instance.autoplay)
+                    {
+                        Baxter.DoScaledAnimationAsync((distanceString == "Close") ? "CloseReady" : "FarReady", 0.5f);
+                    }
                     SoundByte.PlayOneShotGame("airRally/hitForth_" + distanceString);
                 }),
                 new BeatAction.Action(beat + 1, delegate
@@ -1243,9 +1258,9 @@ namespace HeavenStudio.Games
                 })
             });
 
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, RallyOnHit, RallyOnMiss, RallyEmpty);
-        }    
-        
+            ScheduleInput(beat, 1f, InputAction_FlickPress, RallyOnHit, RallyOnMiss, RallyEmpty);
+        }
+
         private bool IsBaBumBeat(double beat)
         {
             return EventCaller.GetAllInGameManagerList("airRally", new string[] { "ba bum bum bum" }).Find(x => x.beat == beat) != null;
@@ -1286,18 +1301,18 @@ namespace HeavenStudio.Games
 
             sounds.AddRange(new List<MultiSound.Sound>()
             {
-                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAlt(beat - 0.5) + "1", beat - 0.5, offset: GetBaBumOffset(beat - 0.5, 0)),
-                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAlt(beat) + "2", beat, offset: GetBaBumOffset(beat, 0)),
-                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAlt(beat + 1f) + "3", beat + 1, offset: GetBaBumOffset(beat + 1, 0)),
-                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAlt(beat + 2f) + "4", beat + 2, offset: GetBaBumOffset(beat + 2, 0)),
-                
+                new MultiSound.Sound("airRally/en/baBumBumBum_" + GetDistanceStringAlt(beat - 0.5) + "1", beat - 0.5, offset: GetBaBumOffset(beat - 0.5, 0)),
+                new MultiSound.Sound("airRally/en/baBumBumBum_" + GetDistanceStringAlt(beat) + "2", beat, offset: GetBaBumOffset(beat, 0)),
+                new MultiSound.Sound("airRally/en/baBumBumBum_" + GetDistanceStringAlt(beat + 1f) + "3", beat + 1, offset: GetBaBumOffset(beat + 1, 0)),
+                new MultiSound.Sound("airRally/en/baBumBumBum_" + GetDistanceStringAlt(beat + 2f) + "4", beat + 2, offset: GetBaBumOffset(beat + 2, 0)),
+
             });
 
-            if (distanceStringTwoBeat != "Close") 
+            if (distanceStringTwoBeat != "Close")
             {
                 sounds.Add(new MultiSound.Sound("airRally/whooshForth_" + distanceStringTwoBeat + "2", beat + 4, 1, 1, false, whooshOffsetsBaBum[(int)DistanceAtBeat(beat + 2)]));
                 sounds.Add(new MultiSound.Sound("airRally/hitForth_" + distanceStringTwoBeat + "2", beat + 2));
-            } 
+            }
             else
             {
                 sounds.Add(new MultiSound.Sound("airRally/hitForth_Close", beat + 2));
@@ -1328,9 +1343,9 @@ namespace HeavenStudio.Games
             {
                 sounds.AddRange(new List<MultiSound.Sound>()
                 {
-                    new MultiSound.Sound("airRally/countIn2" + GetDistanceStringAtBeat(beat + 3f, true), beat + 3, 1, 1, false, countInOffsets[1]),
-                    new MultiSound.Sound("airRally/countIn3" + GetDistanceStringAtBeat(beat + 4f, true), beat + 4, 1, 1, false, countInOffsets[2]),
-                    new MultiSound.Sound("airRally/countIn4" + GetDistanceStringAtBeat(beat + 5f, true), beat + 5, 1, 1, false, countInOffsets[3]),
+                    new MultiSound.Sound("airRally/en/countIn2" + GetDistanceStringAtBeat(beat + 3f, true), beat + 3, 1, 1, false, countInOffsets[1]),
+                    new MultiSound.Sound("airRally/en/countIn3" + GetDistanceStringAtBeat(beat + 4f, true), beat + 4, 1, 1, false, countInOffsets[2]),
+                    new MultiSound.Sound("airRally/en/countIn4" + GetDistanceStringAtBeat(beat + 5f, true), beat + 5, 1, 1, false, countInOffsets[3]),
                 });
             }
 
@@ -1338,31 +1353,34 @@ namespace HeavenStudio.Games
 
             BeatAction.New(this, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate 
+                new BeatAction.Action(beat, delegate
                 {
                     if (isCatch) return;
                     if (isBaBumBeat) BaBumBumBum(beat + 4, countBaBum, altBum);
-                    else RallyRecursion(beat + 6); 
+                    else RallyRecursion(beat + 6);
                 }),
-                new BeatAction.Action(beat + 1f, delegate 
-                { 
+                new BeatAction.Action(beat + 1f, delegate
+                {
                     Forthington.DoScaledAnimationAsync("Ready", 0.5f);
                     ServeObject(beat + 2f, beat + 4f, true);
                 }),
-                new BeatAction.Action(beat + 2f, delegate 
-                { 
-                    Baxter.DoScaledAnimationAsync(GetDistanceStringAtBeat(beat + 2f, false, true) + "Ready", 0.5f);
-                } ),
+                new BeatAction.Action(beat + 2f, delegate
+                {
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch || GameManager.instance.autoplay)
+                    {
+                        Baxter.DoScaledAnimationAsync(GetDistanceStringAtBeat(beat + 2f, false, true) + "Ready", 0.5f);
+                    }
+                }),
                 new BeatAction.Action(beat + 3f, delegate { Forthington.DoScaledAnimationAsync("TalkShort", 0.5f); }),
                 new BeatAction.Action(beat + 3.5f, delegate { if(!count || isBaBumBeat) Forthington.DoScaledAnimationAsync("TalkShort", 0.5f); }),
                 new BeatAction.Action(beat + 4f, delegate { Forthington.DoScaledAnimationAsync("Ready", 0.5f); }),
             });
 
-            ScheduleInput(beat, 4f, InputType.STANDARD_DOWN, LongShotOnHit, RallyOnMiss, RallyEmpty);
+            ScheduleInput(beat, 4f, InputAction_FlickPress, LongShotOnHit, RallyOnMiss, RallyEmpty);
         }
 
 
-        private void CatchBirdie() 
+        private void CatchBirdie()
         {
             Forthington.DoScaledAnimationAsync("Catch", 0.5f);
             SoundByte.PlayOneShotGame("airRally/birdieCatch");
@@ -1376,7 +1394,7 @@ namespace HeavenStudio.Games
             Baxter.DoScaledAnimationAsync("Hit", 0.5f);
 
             if (state >= 1 || state <= -1)
-            { 
+            {
                 ActiveShuttle.DoNearMiss();
                 hasMissed = true;
                 shuttleActive = false;
@@ -1416,7 +1434,7 @@ namespace HeavenStudio.Games
             Baxter.DoScaledAnimationAsync("Hit", 0.5f);
 
             if (state >= 1 || state <= -1)
-            { 
+            {
                 ActiveShuttle.DoThrough();
                 hasMissed = true;
                 shuttleActive = false;

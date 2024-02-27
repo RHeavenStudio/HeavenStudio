@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -25,8 +26,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Bop", "Should the stepswitchers bop?"),
-                        new Param("toggle2", false, "Bop (Auto)", "Should the stepswitchers auto bop?"),
+                        new Param("toggle", true, "Bop", "Toggle if the stepswitchers should bop for the duration of this event."),
+                        new Param("toggle2", false, "Bop (Auto)", "Toggle if the stepswitchers should automatically bop until another Bop event is reached."),
                     },
                 },
                 new GameAction("stepping", "Stepping")
@@ -34,12 +35,12 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e["sound"], e["amount"], e["visual"]);},
                     parameters = new List<Param>()
                     {
-                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat.", new List<Param.CollapseParam>()
+                        new Param("sound", false, "Voice", "Toggle if voice sounds should play automatically when stepping starts. It will automatically switch between \"Hai!\" and \"Ho!\" if it is on or off beat.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "amount" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "amount" })
                         }),
-                        new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
-                        new Param("visual", true, "Background Visual")
+                        new Param("amount", new EntityTypes.Integer(1, 50, 1), "Amount", "Set how many sounds will play."),
+                        new Param("visual", true, "Background Visual", "Toggle if the background will automatically flip depending on if it's on or off beat.")
                     },
                     preFunctionLength = 1
                 },
@@ -49,9 +50,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("sound", true, "Sound Cue"),
-                        new Param("ho", true, "Ho Sounds", "Will the <ho, ho, ho, ho> sound be present?"),
-                        new Param("visual", true, "Background Visual")
+                        new Param("sound", true, "Sound Cue", "Toggle if the \"Hai! Hai! Hai! Ha-Ha!\" sound should be played."),
+                        new Param("ho", true, "End Sounds", "Toggle if the \"Ho! Ho! Ho! Ho!\" sound should be played."),
+                        new Param("visual", true, "Background Visual", "Toggle if the background will automatically flip depending on if it's on or off beat.")
                     }
                 },
                 new GameAction("onbeatSwitch", "Switch to Onbeat")
@@ -60,9 +61,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("sound", true, "Sound Cue"),
-                        new Param("hai", new EntityTypes.Integer(0, 100, 1), "Hai Amount"),
-                        new Param("visual", true, "Background Visual")
+                        new Param("sound", true, "Sound Cue", "Toggle if the \"Mm-ha! Mm-ha! Hai!\" sound should be played."),
+                        new Param("hai", new EntityTypes.Integer(0, 100, 1), "Set how many \"Hai!\" sounds will play."),
+                        new Param("visual", true, "Background Visual", "Toggle if the background will automatically flip depending on if it's on or off beat.")
                     }
                 },
                 new GameAction("hai", "Hai")
@@ -73,25 +74,25 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate { Lockstep.HoSound(eventCaller.currentEntity.beat); }
                 },
-                new GameAction("set colours", "Set Colours")
+                new GameAction("set colours", "Set Colors")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Lockstep.instance.SetBackgroundColours(e["colorA"], e["colorB"], e["objColA"], e["objColB"], e["objColC"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("colorA", Lockstep.defaultBGColorOn, "Background Onbeat", "Select the color that appears for the onbeat."),
-                        new Param("colorB", Lockstep.defaultBGColorOff, "Background Offbeat", "Select the color that appears for the offbeat."),
-                        new Param("objColA", Lockstep.stepperOut, "Stepper Outline", "Select the color used for the outline of the stepswitchers."),
-                        new Param("objColB", Lockstep.stepperDark, "Stepper Dark", "Select the color that appears for the dark side of the stepwitchers."),
-                        new Param("objColC", Lockstep.stepperLight, "Stepper Light", "Select the color that appears for the light side of the stepwitchers."),
+                        new Param("colorA", Lockstep.defaultBGColorOn, "Background Onbeat", "Set the color that appears for the onbeat."),
+                        new Param("colorB", Lockstep.defaultBGColorOff, "Background Offbeat", "Set the color that appears for the offbeat."),
+                        new Param("objColA", Lockstep.stepperOut, "Stepper Outline", "Set the color used for the outline of the stepswitchers."),
+                        new Param("objColB", Lockstep.stepperDark, "Stepper Dark", "Set the color that appears for the dark side of the stepwitchers."),
+                        new Param("objColC", Lockstep.stepperLight, "Stepper Light", "Set the color that appears for the light side of the stepwitchers."),
                     },
                     defaultLength = 0.5f,
                 },
-                new GameAction("zoom", "Preset Zooms")
+                new GameAction("zoom", "Zoom Camera")
                 {
                     function = delegate { Lockstep.instance.SetZoom(eventCaller.currentEntity["zoom"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("zoom", Lockstep.ZoomPresets.Regular, "Zoom Level")
+                        new Param("zoom", Lockstep.ZoomPresets.Regular, "Zoom Level", "Set the level to zoom to.")
                     }
                 },
                 new GameAction("bach", "Show Bach")
@@ -104,12 +105,12 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e["sound"], e["amount"], e["visual"], true, e.length);},
                     parameters = new List<Param>()
                     {
-                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat.", new List<Param.CollapseParam>()
+                        new Param("sound", false, "Voice", "Toggle if voice sounds should play automatically when stepping starts. It will automatically switch between \"Hai!\" and \"Ho!\" if it is on or off beat.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "amount" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "amount" })
                         }),
-                        new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
-                        new Param("visual", true, "Background Visual")
+                        new Param("amount", new EntityTypes.Integer(1, 50, 1), "Amount", "Set how many sounds will play."),
+                        new Param("visual", true, "Background Visual", "Toggle if the background will automatically flip depending on if it's on or off beat."),
                     },
                     preFunctionLength = 1,
                     resizable = true,
@@ -197,13 +198,16 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer[] slaveSteppers;
 
         // rendertextures update when the slave steppers change sprites
-        [SerializeField] CustomRenderTexture[] renderTextures;
+        [SerializeField] Vector2 rtSize;
+        [SerializeField] Camera cameraNear1, cameraNear2, cameraDV;
+        [SerializeField] RawImage topT, topN, bottomL, bottomC, bottomR, bottomN;
 
         [SerializeField] SpriteRenderer background;
         [SerializeField] Material stepperMaterial;
 
         [Header("Properties")]
         static List<QueuedMarch> queuedInputs = new();
+        RenderTexture[] renderTextures;
         Sprite masterSprite;
         HowMissed currentMissStage;
         bool lessSteppers = false;
@@ -243,6 +247,40 @@ namespace HeavenStudio.Games
             }
 
             bachEvents = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "bach" });
+
+            renderTextures = new RenderTexture[3];
+            renderTextures[0] = new RenderTexture((int)rtSize.x, (int)rtSize.y, 24, RenderTextureFormat.ARGB32)
+            {
+                wrapMode = TextureWrapMode.Repeat,
+            };
+            renderTextures[1] = new RenderTexture((int)rtSize.x, (int)rtSize.y, 24, RenderTextureFormat.ARGB32)
+            {
+                wrapMode = TextureWrapMode.Repeat,
+            };
+            renderTextures[2] = new RenderTexture((int)rtSize.x, (int)rtSize.y, 24, RenderTextureFormat.ARGB32)
+            {
+                wrapMode = TextureWrapMode.Repeat,
+            };
+
+            cameraNear1.targetTexture = renderTextures[0];
+            cameraNear2.targetTexture = renderTextures[1];
+            cameraDV.targetTexture = renderTextures[2];
+
+            topT.texture = renderTextures[2];
+            topN.texture = renderTextures[0];
+            bottomL.texture = renderTextures[2];
+            bottomC.texture = renderTextures[2];
+            bottomR.texture = renderTextures[2];
+            bottomN.texture = renderTextures[1];
+        }
+
+        void OnDestroy()
+        {
+            foreach (var rt in renderTextures)
+            {
+                rt.Release();
+            }
+            queuedInputs.Clear();
         }
 
         private static bool ForceStepOnBeat(double beat)
@@ -273,6 +311,7 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
+            queuedInputs.Clear();
             QueueSwitchBGs(beat);
             PersistColors(beat);
         }
@@ -312,6 +351,10 @@ namespace HeavenStudio.Games
             masterStepperAnim.gameObject.SetActive(!lessSteppers);
 
             UpdateAndRenderSlaves();
+
+            cameraNear1.Render();
+            cameraNear2.Render();
+            cameraDV.Render();
         }
 
         void UpdateAndRenderSlaves()
@@ -336,18 +379,19 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (goBop)
+            {
+                PlayStepperAnim("Bop", true, 0.5f);
+            }
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (goBop)
-                    {
-                        PlayStepperAnim("Bop", true, 0.5f);
-                    }
-                }
                 if (queuedInputs.Count > 0)
                 {
                     foreach (var input in queuedInputs)
@@ -363,7 +407,7 @@ namespace HeavenStudio.Games
                     }
                     queuedInputs.Clear();
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
                     currentMissStage = HowMissed.NotMissed;
                     double beatAnimCheck = cond.songPositionInBeatsAsDouble - 0.25;
@@ -392,7 +436,7 @@ namespace HeavenStudio.Games
 
         public void SetZoom(int zoom)
         {
-            GameCamera.additionalPosition = new Vector3(0, 0, (ZoomPresets)zoom switch
+            GameCamera.AdditionalPosition = new Vector3(0, 0, (ZoomPresets)zoom switch
             {
                 ZoomPresets.Regular => 0,
                 ZoomPresets.NotThatFar => -4.5f,
@@ -423,12 +467,12 @@ namespace HeavenStudio.Games
 
         public static void HaiSound(double beat)
         {
-            SoundByte.PlayOneShot("games/lockstep/hai", beat, 1, 1, false, null, 0.02314814814f);
+            SoundByte.PlayOneShot("games/lockstep/hai", beat, 1, 1, false, null, 0.018);
         }
         
         public static void HoSound(double beat)
         {
-            SoundByte.PlayOneShot("games/lockstep/ho", beat, 1, 1, false, null, 0.03086419753);
+            SoundByte.PlayOneShot("games/lockstep/ho", beat, 1, 1, false, null, 0.015);
         }
 
         public static void OnbeatSwitchSound(double beat, int hais, bool sound)
@@ -437,10 +481,10 @@ namespace HeavenStudio.Games
             {
                 MultiSound.Play(new MultiSound.Sound[]
                 {
-                new MultiSound.Sound("lockstep/nha1", beat, 1, 1, false, 0.03086419753),
-                new MultiSound.Sound("lockstep/nha2", beat + 0.5f, 1, 1, false, 0.04629629629),
-                new MultiSound.Sound("lockstep/nha1", beat + 1f, 1, 1, false, 0.03086419753),
-                new MultiSound.Sound("lockstep/nha2", beat + 1.5f, 1, 1, false, 0.04629629629)
+                new MultiSound.Sound("lockstep/nha1", beat, 1, 1, false, 0),
+                new MultiSound.Sound("lockstep/nha2", beat + 0.5f, 1, 1, false, 0.01),
+                new MultiSound.Sound("lockstep/nha1", beat + 1f, 1, 1, false, 0),
+                new MultiSound.Sound("lockstep/nha2", beat + 1.5f, 1, 1, false, 0.01)
                 }, forcePlay: true);
             }
 
@@ -450,7 +494,7 @@ namespace HeavenStudio.Games
 
                 for (int i = 0; i < hais; i++)
                 {
-                    haisList.Add(new MultiSound.Sound("lockstep/hai", beat + 2 + i, 1, 1, false, 0.02314814814));
+                    haisList.Add(new MultiSound.Sound("lockstep/hai", beat + 2 + i, 1, 1, false, 0.018));
                 }
 
                 double nextOffBeat = double.MaxValue;
@@ -502,21 +546,21 @@ namespace HeavenStudio.Games
             {
                 MultiSound.Play(new MultiSound.Sound[]
                 {
-                    new MultiSound.Sound("lockstep/hai", beat, 1, 1, false, 0.02314814814),
-                    new MultiSound.Sound("lockstep/hai", beat + 1f, 1, 1, false, 0.02314814814),
-                    new MultiSound.Sound("lockstep/hai", beat + 2f, 1, 1, false, 0.02314814814),
-                    new MultiSound.Sound("lockstep/hahai1", beat + 3f, 1, 1, false, 0.03086419753),
-                    new MultiSound.Sound("lockstep/hahai2", beat + 3.5f, 1, 1, false, 0.03086419753),
+                    new MultiSound.Sound("lockstep/hai", beat, 1, 1, false, 0.018),
+                    new MultiSound.Sound("lockstep/hai", beat + 1f, 1, 1, false, 0.018),
+                    new MultiSound.Sound("lockstep/hai", beat + 2f, 1, 1, false, 0.018),
+                    new MultiSound.Sound("lockstep/hahai1", beat + 3f, 1, 1, false, 0),
+                    new MultiSound.Sound("lockstep/hahai2", beat + 3.5f, 1, 1, false, 0.014),
                 }, forcePlay: true);
             }
             if (hoSound)
             {
                 List<MultiSound.Sound> hos = new List<MultiSound.Sound>
                 {
-                    new MultiSound.Sound("lockstep/ho", beat + 4.5f, 1, 1, false, 0.03086419753),
-                    new MultiSound.Sound("lockstep/ho", beat + 5.5f, 1, 0.6835514f, false, 0.03086419753),
-                    new MultiSound.Sound("lockstep/ho", beat + 6.5f, 1, 0.3395127f, false, 0.03086419753),
-                    new MultiSound.Sound("lockstep/ho", beat + 7.5f, 1, 0.1200322f, false, 0.03086419753),
+                    new MultiSound.Sound("lockstep/ho", beat + 4.5f, 1, 1, false, 0.015),
+                    new MultiSound.Sound("lockstep/ho", beat + 5.5f, 1, 0.6835514f, false, 0.015),
+                    new MultiSound.Sound("lockstep/ho", beat + 6.5f, 1, 0.3395127f, false, 0.015),
+                    new MultiSound.Sound("lockstep/ho", beat + 7.5f, 1, 0.1200322f, false, 0.015),
                 };
 
                 double nextOnBeat = double.MaxValue;
@@ -603,7 +647,7 @@ namespace HeavenStudio.Games
                 MultiSound.Sound[] sounds = new MultiSound.Sound[amount];
                 for (int i = 0; i < amount; i++)
                 {
-                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.03086419753 : 0.02314814814);
+                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.015 : 0.018);
                 }
                 MultiSound.Play(sounds, true, true);
             }
@@ -616,7 +660,7 @@ namespace HeavenStudio.Games
                     EvaluateMarch(offBeat);
                 })
             };
-            ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            ScheduleInput(beat - 1, 1, InputAction_BasicPress, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             for (int i = 1; i < length; i++)
             {
                 double stepBeat = beat + i;
@@ -625,7 +669,7 @@ namespace HeavenStudio.Games
                     if (BachOnBeat(stepBeat)) bach.DoScaledAnimationAsync(offBeat ? "BachOff" : "BachOn", 0.5f);
                     EvaluateMarch(offBeat);
                 }));
-                ScheduleInput(stepBeat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+                ScheduleInput(stepBeat - 1, 1, InputAction_BasicPress, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             }
             BeatAction.New(this, steps);
         }
@@ -646,7 +690,7 @@ namespace HeavenStudio.Games
                 MultiSound.Sound[] sounds = new MultiSound.Sound[amount];
                 for (int i = 0; i < amount; i++)
                 {
-                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.03086419753 : 0.02314814814);
+                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.015 : 0.018);
                 }
                 MultiSound.Play(sounds, true, true);
             }
@@ -660,7 +704,7 @@ namespace HeavenStudio.Games
             if (NextStepIsSwitch(beat)) beat -= 0.5;
             bool offBeat = beat % 1 != 0;
             bool bachOnBeat = BachOnBeat(beat);
-            ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            ScheduleInput(beat - 1, 1, InputAction_BasicPress, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate 
@@ -692,7 +736,7 @@ namespace HeavenStudio.Games
         private void JustOn(PlayerActionEvent caller, float state)
         {
             currentMissStage = HowMissed.NotMissed;
-            stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+            stepswitcherPlayer?.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("nearMiss");
@@ -705,7 +749,7 @@ namespace HeavenStudio.Games
         private void JustOff(PlayerActionEvent caller, float state)
         {
             currentMissStage = HowMissed.NotMissed;
-            stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+            stepswitcherPlayer?.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("nearMiss");
@@ -718,7 +762,7 @@ namespace HeavenStudio.Games
         private void MissOn(PlayerActionEvent caller)
         {
             if (currentMissStage == HowMissed.MissedOn) return;
-            stepswitcherPlayer.Play("OnbeatMiss", 0, 0);
+            stepswitcherPlayer?.Play("OnbeatMiss", 0, 0);
             SoundByte.PlayOneShotGame("lockstep/wayOff");
             currentMissStage = HowMissed.MissedOn;
         }
@@ -726,7 +770,7 @@ namespace HeavenStudio.Games
         private void MissOff(PlayerActionEvent caller)
         {
             if (currentMissStage == HowMissed.MissedOff) return;
-            stepswitcherPlayer.Play("OffbeatMiss", 0, 0);
+            stepswitcherPlayer?.Play("OffbeatMiss", 0, 0);
             SoundByte.PlayOneShotGame("lockstep/wayOff");
             currentMissStage = HowMissed.MissedOff;
         }

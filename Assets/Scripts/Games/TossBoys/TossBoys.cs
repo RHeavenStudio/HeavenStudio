@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
@@ -11,17 +12,36 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("tossBoys", "Toss Boys", "9cfff7", false, false, new List<GameAction>()
+            return new Minigame("tossBoys", "Toss Boys \n<color=#adadad>(Tosu Bōizu)</color>", "9cfff7", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Bop(e.beat, e.length, e["auto"], e["bop"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Toggle if the toss boys should bop for the duration of this event."),
+                        new Param("auto", false, "Bop (Auto)", "Toggle if the toss boys should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("dispense", "Dispense")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense(e.beat, e.length, e["who"], e["call"]); },
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense(e.beat, e.length, e["who"], e["auto"], e["interval"], e["ignore"], e["callAuto"], true, e["call"]); },
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; TossBoys.DispenseSound(e.beat, e["who"], e["call"]); },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?"),
-                        new Param("call", false, "Name Call", "Should the other kids than the receiver call their name?")
+                        new Param("who", TossBoys.KidChoice.Akachan, "Target", "Set who will receive the ball."),
+                        new Param("call", false, "Name Call", "Toggle if the non-recieving kids should call the reciever's name."),
+                        //auto dispense stuff
+                        new Param("auto", true, "Auto Redispense", "Toggle if a ball should automatically be redispensed if the player lets it pop prematurely.", new()
+                        {
+                            new((x, _) => (bool)x, new string[] { "interval", "ignore", "callAuto" })
+                        }),
+                        new Param("interval", new EntityTypes.Integer(1, 20, 2), "Redispense Interval", "Set how many passes it should take for a ball to be redispensed."),
+                        new Param("ignore", true, "Ignore Special Passes", "Toggle if the redispense interval should ignore special passes."),
+                        new Param("callAuto", false, "Name Call On Redispense", "Toggle if the recieving kid's name should be called out when a ball is redispensed.")
                     }
                 },
                 new GameAction("pass", "Normal Toss")
@@ -30,7 +50,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Aokun, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Aokun, "Target", "Set who will receive the ball.")
                     }
                 },
                 new GameAction("dual", "Dual Toss")
@@ -39,7 +59,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Akachan, "Target", "Set who will receive the ball.")
                     }
                 },
                 new GameAction("high", "High Toss")
@@ -48,7 +68,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Kiiyan, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Kiiyan, "Target", "Set who will receive the ball.")
                     }
                 },
                 new GameAction("lightning", "Lightning Toss")
@@ -57,7 +77,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Aokun, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Aokun, "Target", "Set who will receive the ball.")
                     }
                 },
                 new GameAction("blur", "Blur Toss")
@@ -68,16 +88,6 @@ namespace HeavenStudio.Games.Loaders
                 {
                     defaultLength = 1f,
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Bop(e.beat, e.length, e["auto"], e["bop"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("bop", true, "Bop", "Should the toss boys bop to the beat?"),
-                        new Param("auto", false, "Bop (Auto)", "Should the toss boys auto bop to the beat?")
-                    }
-                },
                 new GameAction("changeBG", "Change Background Color")
                 {
                     function = delegate {var e = eventCaller.currentEntity; TossBoys.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
@@ -85,14 +95,14 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("start", TossBoys.defaultBGColor, "Start Color", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
-                        new Param("end", TossBoys.defaultBGColor, "End Color", "The end color for the fade."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
+                        new Param("start", TossBoys.defaultBGColor, "Start Color", "Set the color at the start of the event."),
+                        new Param("end", TossBoys.defaultBGColor, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
                 },
             },
             new List<string>() {"agb", "normal"},
-            "agbtoss", "en",
+            "agbtoss", "jp",
             new List<string>() {}
             );
         }
@@ -146,15 +156,89 @@ namespace HeavenStudio.Games
         Dictionary<double, RiqEntity> passBallDict = new();
         string currentPassType;
         public static TossBoys instance;
-        bool shouldBop = true;
-        public GameEvent bop = new GameEvent();
         float currentEventLength;
+
+        const int IAAka = IAMAXCAT;
+        const int IAAo = IAMAXCAT + 1;
+        const int IAKii = IAMAXCAT + 2;
+
+        protected static bool IA_PadDir(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_PadAlt(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+
+        protected static bool IA_TouchNrm(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && ((instance.currentReceiver is WhichTossKid.Akachan or WhichTossKid.None)
+                    || instance.IsExpectingInputNow(InputAction_Aka))
+                && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii));
+        }
+        protected static bool IA_TouchDir(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && ((instance.currentReceiver is WhichTossKid.Kiiyan)
+                    || instance.IsExpectingInputNow(InputAction_Kii))
+                && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Aka));
+        }
+        protected static bool IA_TouchAlt(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && ((instance.currentReceiver is WhichTossKid.Aokun)
+                    || instance.IsExpectingInputNow(InputAction_Ao))
+                && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii));
+        }
+
+        protected static bool IA_BatonNrm(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && (instance.currentReceiver is WhichTossKid.Akachan
+                    || (instance.lastReceiver is WhichTossKid.Akachan or WhichTossKid.None
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Aka)
+                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+        protected static bool IA_BatonDir(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && (instance.currentReceiver is WhichTossKid.Kiiyan
+                    || (instance.lastReceiver is WhichTossKid.Kiiyan
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Ao)
+                        && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+        protected static bool IA_BatonAlt(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && (instance.currentReceiver is WhichTossKid.Aokun
+                    || (instance.lastReceiver is WhichTossKid.Aokun
+                        && instance.currentReceiver is WhichTossKid.None));
+        }
+
+        public static PlayerInput.InputAction InputAction_Aka =
+            new("BasicPress", new int[] { IAAka, IAAka, IAAka },
+            IA_PadBasicPress, IA_TouchNrm, IA_BatonNrm);
+        public static PlayerInput.InputAction InputAction_Ao =
+            new("BasicPress", new int[] { IAAo, IAAo, IAAo },
+            IA_PadAlt, IA_TouchAlt, IA_BatonAlt);
+        public static PlayerInput.InputAction InputAction_Kii =
+            new("BasicPress", new int[] { IAKii, IAKii, IAKii },
+            IA_PadDir, IA_TouchDir, IA_BatonDir);
 
         private void Awake()
         {
             instance = this;
             colorStart = defaultBGColor;
             colorEnd = defaultBGColor;
+            SetupBopRegion("tossBoys", "bop", "auto");
+            SetPassBallEvents();
         }
 
         new void OnDrawGizmos()
@@ -181,28 +265,29 @@ namespace HeavenStudio.Games
             return default(SuperCurveObject.Path);
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat))
+            {
+                SingleBop();
+            }
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
             BackgroundColorUpdate();
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (shouldBop)
-                    {
-                        SingleBop();
-                    }
-                }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_Aka) && !IsExpectingInputNow(InputAction_Aka))
                 {
                     akachan.HitBall(false);
                 }
-                if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_Ao) && !IsExpectingInputNow(InputAction_Ao))
                 {
                     aokun.HitBall(false);
                 }
-                if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_Kii) && !IsExpectingInputNow(InputAction_Kii))
                 {
                     kiiyan.HitBall(false);
                 }
@@ -258,6 +343,17 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             PersistColor(beat);
+            HandleDispenses(beat);
+        }
+
+        private void HandleDispenses(double beat)
+        {
+            var allRelevantDispenses = EventCaller.GetAllInGameManagerList("tossBoys", new string[] { "dispense" }).FindAll(x => x.beat < beat && x.beat + x.length >= beat);
+            if (allRelevantDispenses.Count == 0) return;
+
+            var e = allRelevantDispenses[^1];
+
+            Dispense(e.beat, e.length, e["who"], e["auto"], e["interval"], e["ignore"], e["callAuto"], false, e["call"]);
         }
 
         #region Bop 
@@ -270,7 +366,6 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, float length, bool auto, bool goBop)
         {
-            shouldBop = auto;
             if (goBop)
             {
                 List<BeatAction.Action> bops = new List<BeatAction.Action>();
@@ -283,13 +378,119 @@ namespace HeavenStudio.Games
         }
         #endregion
 
-        public void Dispense(double beat, float length, int who, bool call)
+        public static void DispenseSound(double beat, int who, bool call)
+        {
+            SoundByte.PlayOneShotGame("tossBoys/ballStart" + GetColorBasedOnTossKid((WhichTossKid)who, true), beat, forcePlay: true);
+            if (!call) return;
+            double callBeat = beat;
+            switch (who)
+            {
+                case (int)WhichTossKid.Akachan:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("tossBoys/blueRedHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/yellowRedHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/blueRedHigh2", callBeat + 0.25f),
+                        new MultiSound.Sound("tossBoys/yellowRedHigh2", callBeat + 0.25f),
+                        new MultiSound.Sound("tossBoys/blueRedHigh3", callBeat + 0.5f),
+                        new MultiSound.Sound("tossBoys/yellowRedHigh3", callBeat + 0.5f),
+                    }, forcePlay: true);
+                    break;
+                case (int)WhichTossKid.Aokun:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("tossBoys/redBlueHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/yellowBlueHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/redBlueHigh2", callBeat + 0.5f),
+                        new MultiSound.Sound("tossBoys/yellowBlueHigh2", callBeat + 0.5f),
+                    }, forcePlay: true);
+                    break;
+                case (int)WhichTossKid.Kiiyan:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("tossBoys/redYellowHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/blueYellowHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/redYellowHigh2", callBeat + 0.5f),
+                        new MultiSound.Sound("tossBoys/blueYellowHigh2", callBeat + 0.5f),
+                    }, forcePlay: true);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void Dispense(double beat, float length, int who, bool auto, int autoInterval, bool ignoreSpecial, bool callAuto, bool playSound, bool call)
+        {
+            if (playSound) DispenseSound(beat, who, call);
+            DispenseExec(beat, length, who, false, "");
+            if (auto && passBallDict.TryGetValue(beat + length, out var e))
+            {
+                if (e.datamodel == "tossBoys/blur")
+                {
+                    DispenseRecursion(beat + length, -1, autoInterval, ignoreSpecial, callAuto, (int)WhichTossKid.None, who, false, e.length, true, true, e.datamodel);
+                }
+                else DispenseRecursion(beat + length, -1, autoInterval, ignoreSpecial, callAuto, e["who"], who, false, e.length, IsSpecialEvent(e.datamodel), false, e.datamodel);
+            }
+        }
+
+        public void DispenseRecursion(double beat, int index, int interval, bool ignore, bool call, int curReceiver, int previousReceiver, bool isBlur, float currentLength, bool isSpecial, bool shouldForce, string eventDatamodel)
+        {
+            if (index % interval == 0 && !isBlur && !(ignore && isSpecial))
+            {
+                double dispenseBeat = beat - 2;
+                BeatAction.New(this, new()
+                {
+                    new(dispenseBeat, delegate 
+                    {
+                        if (currentBall != null) return;
+                        DispenseSound(dispenseBeat, curReceiver, call);
+                        DispenseExec(dispenseBeat, 2, curReceiver, shouldForce, eventDatamodel);
+                    })
+                });
+            }
+            if (!isBlur && !(ignore && isSpecial)) index++;
+
+            var tempLastReceiver = previousReceiver;
+            var lastLength = isBlur ? 1 : currentLength;
+            previousReceiver = curReceiver;
+            var nextIsSpecial = isSpecial;
+
+            var blurSet = isBlur;
+            var nextForce = false;
+            if (passBallDict.TryGetValue(beat + lastLength, out var e))
+            {
+                if (e.datamodel == "tossBoys/pop") return;
+                blurSet = e.datamodel == "tossBoys/blur";
+                if (blurSet)
+                {
+                    curReceiver = (int)WhichTossKid.None;
+                }
+                else
+                {
+                    curReceiver = e["who"];
+                }
+                currentLength = e.length;
+                nextIsSpecial = IsSpecialEvent(e.datamodel);
+                eventDatamodel = e.datamodel;
+            }
+            else
+            {
+                curReceiver = tempLastReceiver;
+                nextForce = true;
+            }
+            // let's not do a stack overflow, alright?
+            BeatAction.New(this, new()
+            {
+                new(beat + lastLength - 2, delegate { DispenseRecursion(beat + lastLength, index, interval, ignore, call, curReceiver, previousReceiver, blurSet, currentLength, nextIsSpecial, nextForce, eventDatamodel); })
+            });
+        }
+
+        public void DispenseExec(double beat, float length, int who, bool forcePass, string eventDatamodel)
         {
             if (currentBall != null) return;
-            SetPassBallEvents();
             SetReceiver(who);
             GetCurrentReceiver().ShowArrow(beat, length - 1);
-            SoundByte.PlayOneShotGame("tossBoys/ballStart" + GetColorBasedOnTossKid(currentReceiver, true));
+
             hatchAnim.Play("HatchOpen", 0, 0);
             currentBall = Instantiate(ballPrefab, transform);
             currentBall.gameObject.SetActive(true);
@@ -308,50 +509,10 @@ namespace HeavenStudio.Games
                     break;
             }
 
-            if (call)
-            {
-                double callBeat = beat;
-                switch (who)
-                {
-                    case (int)WhichTossKid.Akachan:
-                        MultiSound.Play(new MultiSound.Sound[]
-                        {
-                        new MultiSound.Sound("tossBoys/blueRedHigh1", callBeat),
-                        new MultiSound.Sound("tossBoys/yellowRedHigh1", callBeat),
-                        new MultiSound.Sound("tossBoys/blueRedHigh2", callBeat + 0.25f),
-                        new MultiSound.Sound("tossBoys/yellowRedHigh2", callBeat + 0.25f),
-                        new MultiSound.Sound("tossBoys/blueRedHigh3", callBeat + 0.5f),
-                        new MultiSound.Sound("tossBoys/yellowRedHigh3", callBeat + 0.5f),
-                        });
-                        break;
-                    case (int)WhichTossKid.Aokun:
-                        MultiSound.Play(new MultiSound.Sound[]
-                        {
-                        new MultiSound.Sound("tossBoys/redBlueHigh1", callBeat),
-                        new MultiSound.Sound("tossBoys/yellowBlueHigh1", callBeat),
-                        new MultiSound.Sound("tossBoys/redBlueHigh2", callBeat + 0.5f),
-                        new MultiSound.Sound("tossBoys/yellowBlueHigh2", callBeat + 0.5f),
-                        });
-                        break;
-                    case (int)WhichTossKid.Kiiyan:
-                        MultiSound.Play(new MultiSound.Sound[]
-                        {
-                        new MultiSound.Sound("tossBoys/redYellowHigh1", callBeat),
-                        new MultiSound.Sound("tossBoys/blueYellowHigh1", callBeat),
-                        new MultiSound.Sound("tossBoys/redYellowHigh2", callBeat + 0.5f),
-                        new MultiSound.Sound("tossBoys/blueYellowHigh2", callBeat + 0.5f),
-                        });
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-
             if (passBallDict.ContainsKey(beat + length))
             {
                 ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
-                if (passBallDict[beat + length].datamodel == "tossBoys/dual" || passBallDict[beat + length].datamodel == "tossBoys/lightning" || passBallDict[beat + length].datamodel == "tossBoys/blur")
+                if (IsSpecialEvent(passBallDict[beat + length].datamodel))
                 {
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
@@ -360,10 +521,32 @@ namespace HeavenStudio.Games
                 }
                 else if (passBallDict[beat + length].datamodel == "tossBoys/pop")
                 {
+                    currentBall.willBePopped = true;
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                        BeatAction.New(instance, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + length - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
+                        });
+                }
+            }
+            else if (forcePass)
+            {
+                ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
+                if (IsSpecialEvent(eventDatamodel))
+                {
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + length - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
+                        new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                     });
+                }
+                else if (eventDatamodel == "tossBoys/pop")
+                {
+                    currentBall.willBePopped = true;
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                        BeatAction.New(instance, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + length - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
+                        });
                 }
             }
             else
@@ -379,36 +562,32 @@ namespace HeavenStudio.Games
         {
             passBallDict.Clear();
             var passBallEvents = EventCaller.GetAllInGameManagerList("tossBoys", new string[] { "pass", "dual", "pop", "high", "lightning", "blur" });
-            for (int i = 0;  i < passBallEvents.Count; i++)
+            for (int i = 0; i < passBallEvents.Count; i++)
             {
-                if (passBallEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
-                {
-                    if (passBallDict.ContainsKey(passBallEvents[i].beat)) continue;
-                    passBallDict.Add(passBallEvents[i].beat, passBallEvents[i]);
-                }
+                if (passBallDict.ContainsKey(passBallEvents[i].beat)) continue;
+                passBallDict.Add(passBallEvents[i].beat, passBallEvents[i]);
             }
         }
 
-        void DeterminePass(double beat, bool barely)
+        private void DeterminePassValues(double beat)
         {
             var tempLastReceiver = lastReceiver;
             lastReceiver = currentReceiver;
             if (passBallDict.TryGetValue(beat, out var receiver))
             {
-                currentReceiver = (WhichTossKid)receiver["who"];
+                if (receiver.datamodel != "tossBoys/blur") currentReceiver = (WhichTossKid)receiver["who"];
                 currentPassType = receiver.datamodel;
                 currentEventLength = receiver.length;
             }
             else
             {
-                /*
-                RiqEntity spawnedEntity = new RiqEntity();
-                spawnedEntity.DynamicData.Add("who", (int)tempLastReceiver);
-                spawnedEntity.datamodel = currentPassType;
-                passBallDict.Add(beat, spawnedEntity);
-                */
                 currentReceiver = tempLastReceiver;
             }
+        }
+
+        void DeterminePass(double beat, bool barely)
+        {
+            DeterminePassValues(beat);
             switch (currentPassType)
             {
                 case "tossBoys/pass":
@@ -426,20 +605,15 @@ namespace HeavenStudio.Games
                 default:
                     break;
             }
-            if (barely)
-            {
-                currentBall.anim.DoScaledAnimationAsync("WiggleBall", 0.5f);
-            }
-            else
-            {
-                currentBall.anim.DoScaledAnimationAsync("Hit", 0.5f);
-            }
+            currentBall.anim.DoScaledAnimationAsync(barely ? "WiggleBall" : "Hit", 0.5f);
             if (passBallDict.ContainsKey(beat + currentEventLength) && passBallDict[beat + currentEventLength].datamodel == "tossBoys/pop")
             {
-                BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + currentEventLength - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
-                });
+                currentBall.willBePopped = true;
+                if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + currentEventLength - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
+                    });
             }
         }
 
@@ -964,6 +1138,7 @@ namespace HeavenStudio.Games
             Destroy(currentBall.gameObject);
             currentBall = null;
             SoundByte.PlayOneShotGame("tossBoys/misshit");
+            if (caller != null) DeterminePassValues(caller.startBeat + caller.timer);
         }
 
         void Empty(PlayerActionEvent caller) { }
@@ -978,7 +1153,9 @@ namespace HeavenStudio.Games
             specialKii.SetActive(false);
             if (currentSpecialKid != null) currentSpecialKid.crouch = false;
             currentSpecialKid = GetCurrentReceiver();
+
             GetCurrentReceiver().Crouch();
+
             GetSpecialBasedOnReceiver().SetActive(true);
             switch (currentReceiver)
             {
@@ -1024,7 +1201,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        string GetColorBasedOnTossKid(WhichTossKid tossKid, bool capital)
+        public static string GetColorBasedOnTossKid(WhichTossKid tossKid, bool capital)
         {
             switch (tossKid)
             {
@@ -1044,23 +1221,21 @@ namespace HeavenStudio.Games
             currentReceiver = (WhichTossKid)who;
         }
 
-        InputType GetInputTypeBasedOnCurrentReceiver()
+        PlayerInput.InputAction GetInputTypeBasedOnCurrentReceiver()
         {
             return GetInputBasedOnTossKid(currentReceiver);
         }
 
-        InputType GetInputBasedOnTossKid(WhichTossKid tossKid)
+        PlayerInput.InputAction GetInputBasedOnTossKid(WhichTossKid tossKid)
         {
             switch (tossKid)
             {
-                case WhichTossKid.Akachan:
-                    return InputType.STANDARD_DOWN;
                 case WhichTossKid.Aokun:
-                    return InputType.STANDARD_ALT_DOWN;
+                    return InputAction_Ao;
                 case WhichTossKid.Kiiyan:
-                    return InputType.DIRECTION_DOWN;
+                    return InputAction_Kii;
                 default:
-                    return InputType.ANY;
+                    return InputAction_Aka;
             }
         }
 
@@ -1078,6 +1253,24 @@ namespace HeavenStudio.Games
                     return null;
             }
         }
+
+        private bool IsSpecialEvent(string e)
+        {
+            bool b = false;
+
+            switch (e)
+            {
+                case "tossBoys/dual":
+                case "tossBoys/lightning":
+                case "tossBoys/blur":
+                    b = true; break;
+                default:
+                    return b;
+            }
+
+            return b;
+        }
+
         #endregion
     }
 }

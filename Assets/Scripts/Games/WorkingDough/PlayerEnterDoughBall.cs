@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyBezierCurves;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Scripts_WorkingDough
 {
@@ -35,6 +36,8 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
         private PlayerActionEvent wrongInput;
         private PlayerActionEvent rightInput;
 
+        bool canJust, canWrong;
+
         [SerializeField] private GameObject gandw;
 
         private void Awake()
@@ -46,13 +49,18 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
         {
             startBeat = beat;
             big = isBig;
+            canJust = true;
+            canWrong = true;
             enterPath = game.GetPath("PlayerEnter");
             hitPath = game.GetPath("PlayerHit");
             barelyPath = game.GetPath("PlayerBarely");
             missPath = game.GetPath("PlayerMiss");
             weakPath = game.GetPath("PlayerWeak");
-            rightInput = game.ScheduleInput(beat, 1, isBig ? InputType.STANDARD_ALT_DOWN : InputType.STANDARD_DOWN, Just, Miss, Empty);
-            wrongInput = game.ScheduleUserInput(beat, 1, isBig ? InputType.STANDARD_DOWN : InputType.STANDARD_ALT_DOWN, WrongInput, Empty, Empty);
+            rightInput = game.ScheduleInput(beat, 1, isBig ? WorkingDough.InputAction_Alt : WorkingDough.InputAction_Nrm, Just, Miss, Empty, CanJust);
+
+            if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                wrongInput = game.ScheduleUserInput(beat, 1, isBig ? WorkingDough.InputAction_Nrm : WorkingDough.InputAction_Alt, WrongInput, Empty, Empty, CanWrong);
+
             currentState = State.Entering;
             if (gandw != null) gandw.SetActive(hasGandw);
             Update();
@@ -110,15 +118,31 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             }
         }
 
+        bool CanJust()
+        {
+            return canJust;
+        }
+
+        bool CanWrong()
+        {
+            return canWrong;
+        }
+
         private void Just(PlayerActionEvent caller, float state)
         {
-            wrongInput.Disable();
-            double beat = Conductor.instance.songPositionInBeats;
+            if (wrongInput != null)
+            {
+                canWrong = false;
+                wrongInput.Disable();
+                wrongInput.CleanUp();
+            }
+            if (currentState is State.Hit or State.Barely or State.Weak) return;
+            double beat = Conductor.instance.songPositionInBeatsAsDouble;
             startBeat = beat;
             game.playerImpact.SetActive(true);
             BeatAction.New(game, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 0.1f, delegate { game.playerImpact.SetActive(false); }),
+                new BeatAction.Action(beat + 0.1, delegate { game.playerImpact.SetActive(false); }),
             });
             if (state >= 1f || state <= -1f)
             {
@@ -155,17 +179,23 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             if (gandw != null) hasGandw = gandw.activeSelf;
             BeatAction.New(game, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 0.9f, delegate { game.arrowSRRightPlayer.sprite = game.redArrowSprite; }),
-                new BeatAction.Action(beat + 1f, delegate { game.arrowSRRightPlayer.sprite = game.whiteArrowSprite; }),
-                new BeatAction.Action(beat + 2f, delegate { game.SpawnBGBall(beat + 2f, big, hasGandw); }),
+                new BeatAction.Action(beat + 0.9, delegate { game.arrowSRRightPlayer.sprite = game.redArrowSprite; }),
+                new BeatAction.Action(beat + 1, delegate { game.arrowSRRightPlayer.sprite = game.whiteArrowSprite; }),
+                new BeatAction.Action(beat + 2, delegate { game.SpawnBGBall(beat + 2f, big, hasGandw); }),
             });
             Update();
         }
 
         private void WrongInput(PlayerActionEvent caller, float state)
         {
+            if (rightInput != null)
+            {
+                canJust = false;
+                rightInput.Disable();
+                rightInput.CleanUp();
+            }
+            if (currentState is State.Hit or State.Barely or State.Weak) return;
             double beat = Conductor.instance.songPositionInBeats;
-            rightInput.Disable();
             game.playerImpact.SetActive(true);
             BeatAction.New(game, new List<BeatAction.Action>()
             {
@@ -188,6 +218,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
                 SoundByte.PlayOneShotGame("workingDough/tooSmall");
                 Destroy(gameObject);
             }
+            game.ScoreMiss();
         }
 
         private void Miss(PlayerActionEvent caller)

@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using HeavenStudio.Util;
 using HeavenStudio.Editor.Track;
 
 using DG.Tweening;
-using Starpelly;
 
 namespace HeavenStudio.Editor
 {
@@ -106,6 +106,20 @@ namespace HeavenStudio.Editor
                 sizeText.text = (boxLength).ToString("F");
             else
                 sizeText.text = string.Empty;
+
+            // Keeps the text always in view
+            var sizeTextLeft = Timeline.instance.leftSide - start.x;
+            sizeTextLeft = Mathf.Max(sizeTextLeft, 0);
+            var sizeTextRight = -(Timeline.instance.rightSide - end.x);
+            sizeTextRight = Mathf.Max(sizeTextRight, 0);
+
+            var sizeTextTop = Timeline.instance.topSide - start.y;
+            sizeTextTop = Mathf.Max(sizeTextTop, 0);
+            var sizeTextBottom = -(Timeline.instance.bottomSide - end.y);
+            sizeTextBottom = Mathf.Max(sizeTextBottom, 0);
+
+            sizeText.rectTransform.offsetMin = new Vector2(sizeTextLeft * Timeline.instance.PixelsPerBeat, -sizeTextTop * Timeline.instance.LayerHeight());
+            sizeText.rectTransform.offsetMax = new Vector2(-sizeTextRight * Timeline.instance.PixelsPerBeat, sizeTextBottom * Timeline.instance.LayerHeight());
 
             Select(start, end);
         }

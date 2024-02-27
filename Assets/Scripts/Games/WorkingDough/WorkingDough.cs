@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn", "Will the turn automatically be passed at the end of this event?")
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.")
                     }
                 },
                 new GameAction("small ball", "Small Ball")
@@ -33,7 +34,7 @@ namespace HeavenStudio.Games.Loaders
                     priority = 1,
                     parameters = new List<Param>()
                     {
-                        new Param("hasGandw", false, "Has Mr. Game & Watch")
+                        new Param("hasGandw", false, "Mr. Game & Watch", "Toggle if Mr. Game & Watch should be riding on the ball.")
                     }
                 },
                 new GameAction("passTurn", "Pass Turn")
@@ -41,16 +42,16 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { WorkingDough.PrePassTurn(eventCaller.currentEntity.beat); },
                     preFunctionLength = 1
                 },
-                new GameAction("launch spaceship", "Launch Spaceship")
+                new GameAction("rise spaceship", "Rise Up Spaceship")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip(e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip(e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
                     priority = 0
                 },
-                new GameAction("rise spaceship", "Rise Up Spaceship")
+                new GameAction("launch spaceship", "Launch Spaceship")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip(e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip(e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
                     priority = 0
@@ -61,7 +62,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                    new Param("toggle", false, "Go Up?", "Toggle to go Up or Down.")
+                    new Param("toggle", false, "Up", "Toggle if the dough dudes should go up or down.")
                     },
                     resizable = true,
                     priority = 0
@@ -71,7 +72,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.InstantElevation(e["toggle"]);  },
                     parameters = new List<Param>()
                     {
-                    new Param("toggle", true, "Go Up?", "Toggle to go Up or Down.")
+                    new Param("toggle", true, "Up", "Toggle if the dough dudes should go up or down.")
                     },
                     defaultLength = 0.5f,
                     priority = 0
@@ -82,7 +83,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                    new Param("toggle", false, "Should exit?", "Toggle to make him leave or enter.")
+                    new Param("toggle", false, "Exit", "Toggle if Mr. Game & Watch should exit or enter the scene.")
                     },
                     resizable = true,
                     priority = 0
@@ -92,7 +93,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.InstantGANDWEnterOrExit(e["toggle"]);  },
                     parameters = new List<Param>()
                     {
-                    new Param("toggle", false, "Exit?", "Toggle to make him leave or enter.")
+                    new Param("toggle", false, "Exit", "Toggle if Mr. Game & Watch should exit or enter the scene.")
                     },
                     defaultLength = 0.5f,
                     priority = 0
@@ -103,7 +104,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("ship", false, "Spaceship Only", "Will only the spaceship be affected by this event?")
+                        new Param("ship", false, "Spaceship Only", "Toggle if the only the spaceship should be toggled.")
                     }
                 }
             },
@@ -207,6 +208,34 @@ namespace HeavenStudio.Games
 
         public static WorkingDough instance;
 
+        const int IA_AltPress = IAMAXCAT;
+        protected static bool IA_TouchNrmPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Nrm =
+            new("RvlDoughAlt", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchNrmPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlDoughAlt", new int[] { IA_AltPress, IA_AltPress, IA_AltPress },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+
         void Awake()
         {
             instance = this;
@@ -234,15 +263,8 @@ namespace HeavenStudio.Games
         private List<RiqEntity> GetAllBallsInBetweenBeat(double beat, double endBeat)
         {
             List<RiqEntity> ballEvents = EventCaller.GetAllInGameManagerList("workingDough", new string[] { "small ball", "big ball" });
-            List<RiqEntity> tempEvents = new();
-
-            foreach (var entity in ballEvents)
-            {
-                if (entity.beat >= beat && entity.beat < endBeat)
-                {
-                    tempEvents.Add(entity);
-                }
-            }
+            List<RiqEntity> tempEvents = ballEvents.FindAll(x => x.beat >= beat && x.beat < endBeat);
+            tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
             return tempEvents;
         }
 
@@ -269,7 +291,6 @@ namespace HeavenStudio.Games
                 }
                 if (isBig) hasBigBall = true;
             }
-            Debug.Log(autoPassTurn);
             if (autoPassTurn)
             {
                 PassTurn(beat + interval, interval, beat);
@@ -283,7 +304,7 @@ namespace HeavenStudio.Games
                     {
                         NPCBallTransporters.GetComponent<Animator>().Play("NPCGoBigMode", 0, 0);
                     }
-                    if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationName("BallTransporterLeftOpened"))
+                    if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationNames("BallTransporterLeftOpened"))
                     {
                         instance.ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
                         instance.ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
@@ -338,9 +359,12 @@ namespace HeavenStudio.Games
                         }
                     }
                 }),
+                new BeatAction.Action(beat, delegate
+                {
+                    if (gandwHasEntered && !bgDisabled) gandwAnim.Play("MrGameAndWatchLeverDown", 0, 0);
+                }),
                 new BeatAction.Action(beat + 1, delegate 
                 { 
-                    if (gandwHasEntered && !bgDisabled) gandwAnim.Play("MrGameAndWatchLeverDown", 0, 0);
                     if (beat + 1 > GetLastIntervalBeforeBeat(beat + 1).beat + GetLastIntervalBeforeBeat(beat + 1).length) 
                     {
                         ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0);
@@ -450,6 +474,12 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnPlay(double beat)
+        {
+            queuedIntervals.Clear();
+            passedTurns.Clear();
+        }
+
         void Update()
         {
             if (spaceshipRising && !bgDisabled) spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength);
@@ -463,12 +493,12 @@ namespace HeavenStudio.Games
                 }
                 passedTurns.Clear();
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Nrm) && !IsExpectingInputNow(InputAction_Nrm))
             {
                 doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("SmallDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/smallPlayer");
             }
-            else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+            else if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt))
             {
                 doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("BigDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/bigPlayer");

@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using static JSL;
-
 namespace HeavenStudio.InputSystem.Loaders
 {
     public static class InputKeyboardInitializer
@@ -40,7 +38,8 @@ namespace HeavenStudio.InputSystem
         .Where(k => ((int)k < (int)KeyCode.Mouse0))
         .ToArray();
 
-        static ControlBindings defaultBindings {
+        static ControlBindings defaultBindings
+        {
             get
             {
                 return new ControlBindings()
@@ -53,12 +52,13 @@ namespace HeavenStudio.InputSystem
                         (int)KeyCode.D,
                         (int)KeyCode.J,
                         (int)KeyCode.K,
+                        (int)KeyCode.U,
                         (int)KeyCode.I,
-                        (int)KeyCode.U,
                         (int)KeyCode.E,
-                        (int)KeyCode.U,
+                        (int)KeyCode.O,
                         (int)KeyCode.Escape,
                     },
+                    PointerSensitivity = 3,
                 };
             }
         }
@@ -77,10 +77,10 @@ namespace HeavenStudio.InputSystem
         }
 
         public override void OnSelected()
-        { 
+        {
 
         }
-        
+
         public override string GetDeviceName()
         {
             return "Keyboard";
@@ -131,12 +131,22 @@ namespace HeavenStudio.InputSystem
             currentBindings = newBinds;
         }
 
+        public override ControlBindings UpdateBindings(ControlBindings lastBinds)
+        {
+            return lastBinds;
+        }
+
+        public override int GetBindingsVersion()
+        {
+            return 0;
+        }
+
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
             return false;
         }
 
-        public override int GetLastButtonDown()
+        public override int GetLastButtonDown(bool strict = false)
         {
             if (Input.anyKeyDown)
             {
@@ -151,7 +161,7 @@ namespace HeavenStudio.InputSystem
 
         public override int GetLastActionDown()
         {
-            for (int i = 0; i < BINDS_MAX; i++)
+            for (int i = 0; i < currentBindings.Pad.Length; i++)
             {
                 if (Input.GetKeyDown((KeyCode)currentBindings.Pad[i]))
                     return i;
@@ -159,20 +169,23 @@ namespace HeavenStudio.InputSystem
             return -1;
         }
 
-        public override bool GetAction(int button)
+        public override bool GetAction(ControlStyles style, int button)
         {
+            if (button < 0) return false;
             return Input.GetKey((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetActionDown(int button, out double dt)
+        public override bool GetActionDown(ControlStyles style, int button, out double dt)
         {
             dt = 0;
+            if (button < 0) return false;
             return Input.GetKeyDown((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetActionUp(int button, out double dt)
+        public override bool GetActionUp(ControlStyles style, int button, out double dt)
         {
             dt = 0;
+            if (button < 0) return false;
             return Input.GetKeyUp((KeyCode)currentBindings.Pad[button]);
         }
 
@@ -180,59 +193,18 @@ namespace HeavenStudio.InputSystem
         {
             return 0;
         }
-        
-        //todo: directionals
-        public override bool GetHatDirection(InputDirection direction)
+
+        public override Vector3 GetVector(InputVector vec)
         {
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[0]);
-                case InputDirection.Down:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[1]);
-                case InputDirection.Left:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[2]);
-                case InputDirection.Right:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[3]);
-                default:
-                    return false;
-            }
+            return Vector3.zero;
         }
 
-        public override bool GetHatDirectionDown(InputDirection direction, out double dt)
+        public override Vector2 GetPointer()
         {
-            dt = 0;
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[0]);
-                case InputDirection.Down:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[1]);
-                case InputDirection.Left:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[2]);
-                case InputDirection.Right:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[3]);
-                default:
-                    return false;
-            }
-        }
-
-        public override bool GetHatDirectionUp(InputDirection direction, out double dt)
-        {
-            dt = 0;
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[0]);
-                case InputDirection.Down:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[1]);
-                case InputDirection.Left:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[2]);
-                case InputDirection.Right:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[3]);
-                default:
-                    return false;
-            }
+            Camera cam = GameManager.instance.CursorCam;
+            Vector3 rawPointerPos = Input.mousePosition;
+            rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
+            return cam.ScreenToWorldPoint(rawPointerPos);
         }
 
         public override void SetPlayer(int? playerNum)
@@ -242,12 +214,70 @@ namespace HeavenStudio.InputSystem
                 this.playerNum = null;
                 return;
             }
-            this.playerNum = (int) playerNum;
+            this.playerNum = (int)playerNum;
         }
 
         public override int? GetPlayer()
         {
             return playerNum;
+        }
+
+        public override bool GetFlick(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSlide(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override void SetMaterialProperties(Material m)
+        {
+            bool b = ColorUtility.TryParseHtmlString("#F4F4F4", out Color colour);
+            m.SetColor("_BodyColor", b ? colour : Color.white);
+        }
+
+        public override bool GetCurrentStyleSupported()
+        {
+            return PlayerInput.CurrentControlStyle is ControlStyles.Pad; // or ControlStyles.Baton
+        }
+
+        public override ControlStyles GetDefaultStyle()
+        {
+            return ControlStyles.Pad;
+        }
+
+        public override bool GetSqueezeDown(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueezeUp(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueeze()
+        {
+            return false;
+        }
+
+        public override void TogglePointerLock(bool locked)
+        {
+        }
+
+        public override void RecentrePointer()
+        {
+        }
+
+        public override bool GetPointerLeftRight()
+        {
+            return false;
         }
     }
 }

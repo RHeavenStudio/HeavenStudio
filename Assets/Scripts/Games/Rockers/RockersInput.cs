@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             this.sample = sample;
             this.sampleTones = sampleTones;
             this.jump = jump;
-            game.ScheduleInput(beat, length, InputType.STANDARD_UP, Just, Miss, Empty);
+            game.ScheduleInput(beat, length, Rockers.InputAction_FlickRelease, Just, Miss, Empty);
         }
 
         private void Just(PlayerActionEvent caller, float state)

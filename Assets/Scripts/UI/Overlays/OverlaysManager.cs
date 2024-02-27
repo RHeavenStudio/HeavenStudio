@@ -26,11 +26,17 @@ namespace HeavenStudio.Common
 
         List<OverlaysManager.OverlayOption> lytElements = new List<OverlaysManager.OverlayOption>();
 
-        public static bool OverlaysReady {get { return instance != null && 
-                                                TimingAccuracyDisplay.instance != null &&  
-                                                SkillStarManager.instance != null && 
-                                                SectionMedalsManager.instance != null &&
-                                                HeavenStudio.Games.Global.Textbox.instance != null;}}
+        public static bool OverlaysReady
+        {
+            get
+            {
+                return instance != null &&
+                    TimingAccuracyDisplay.instance != null &&
+                    SkillStarManager.instance != null &&
+                    SectionMedalsManager.instance != null &&
+                    HeavenStudio.Games.Global.Textbox.instance != null;
+            }
+        }
 
         // Start is called before the first frame update
         public void Start()
@@ -42,7 +48,7 @@ namespace HeavenStudio.Common
         // Update is called once per frame
         void Update()
         {
-            
+
         }
 
         public void TogleOverlaysVisibility(bool visible)
@@ -87,16 +93,19 @@ namespace HeavenStudio.Common
 
             foreach (var c in lytElements)
             {
-                if (c is TimingDisplayComponent) { 
-                    c.CreateElement(TimingDisplayPrefab, ComponentHolder); 
+                if (c is TimingDisplayComponent)
+                {
+                    c.CreateElement(TimingDisplayPrefab, ComponentHolder);
                     Debug.Log("Create TimingDisplayComponent");
                 }
-                else if (c is SkillStarComponent) { 
-                    c.CreateElement(SkillStarPrefab, ComponentHolder); 
+                else if (c is SkillStarComponent)
+                {
+                    c.CreateElement(SkillStarPrefab, ComponentHolder);
                     Debug.Log("Create SkillStarComponent");
                 }
-                else if (c is SectionComponent) { 
-                    c.CreateElement(ChartSectionPrefab, ComponentHolder); 
+                else if (c is SectionComponent)
+                {
+                    c.CreateElement(ChartSectionPrefab, ComponentHolder);
                     Debug.Log("Create SectionComponent");
                 }
                 c.PositionElement();
@@ -114,7 +123,7 @@ namespace HeavenStudio.Common
                 c.PositionElement();
             }
         }
-        
+
         [Serializable]
         public class TimingDisplayComponent : OverlayOption
         {
@@ -169,10 +178,10 @@ namespace HeavenStudio.Common
                             break;
                     }
                 }
-            } 
+            }
 
-            public override void EnablePreview() {}
-            public override void DisablePreview() {}
+            public override void EnablePreview() { }
+            public override void DisablePreview() { }
 
             public static TimingDisplayComponent CreateDefaultDual()
             {
@@ -261,6 +270,44 @@ namespace HeavenStudio.Common
                 return new SectionComponent(true, new Vector2(0.7f, 0.765f), 1f, 0f);
             }
 
+        }
+
+        [Serializable]
+        public class DurationComponent : OverlayOption
+        {
+            public override void DisablePreview()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void EnablePreview()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void PositionElement()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [Serializable]
+        public class WordJudgementComponent : OverlayOption
+        {
+            public override void DisablePreview()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void EnablePreview()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void PositionElement()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         [Serializable]

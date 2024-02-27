@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Scripts_TapTrial
 
         private void Update()
         {
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(TapTrial.InputAction_BasicPress) && !game.IsExpectingInputNow(TapTrial.InputAction_BasicPress))
             {
                 WhiffTap();
             }

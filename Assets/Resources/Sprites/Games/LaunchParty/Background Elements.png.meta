@@ -85,7 +85,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -138,10 +138,10 @@ TextureImporter:
       name: Background Elements_0
       rect:
         serializedVersion: 2
-        x: 12
-        y: 6
-        width: 3374
-        height: 1568
+        x: 0
+        y: 0
+        width: 3875
+        height: 1611
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -248,7 +248,7 @@ TextureImporter:
         width: 1555
         height: 1594
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -256,6 +256,48 @@ TextureImporter:
       bones: []
       spriteID: e67c4f5277ac8f300800000000000000
       internalID: 286201189424744302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background Elements_6
+      rect:
+        serializedVersion: 2
+        x: 2227
+        y: 3857
+        width: 187
+        height: 233
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de9cc5d0d3a97ca45b7b5616c90d8448
+      internalID: -695422399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background Elements_7
+      rect:
+        serializedVersion: 2
+        x: 2432
+        y: 3752
+        width: 223
+        height: 296
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 049567212cb2e7a48adf4d1be630af99
+      internalID: 519812580
       vertices: []
       indices: 
       edges: []
@@ -277,6 +319,8 @@ TextureImporter:
       Background Elements_3: 2356066476548809487
       Background Elements_4: -3829839989203116485
       Background Elements_5: 286201189424744302
+      Background Elements_6: -695422399
+      Background Elements_7: 519812580
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

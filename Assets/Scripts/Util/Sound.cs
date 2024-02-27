@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Starpelly;
+
 
 namespace HeavenStudio.Util
 {
@@ -19,12 +19,11 @@ namespace HeavenStudio.Util
         public bool looping;
         public double loopEndBeat = -1;
         public double fadeTime;
-        int loopIndex = 0;
+        bool loopDone;
 
         private AudioSource audioSource;
         private Conductor cond;
 
-        private int pauseTimes = 0;
 
         private double startTime;
 
@@ -34,10 +33,11 @@ namespace HeavenStudio.Util
 
         bool playInstant = false;
         bool played = false;
+        bool paused = false;
         bool queued = false;
         public bool available = true;
 
-        const double PREBAKE_TIME = 0.5;
+        const double PREBAKE_TIME = 0.25;
 
         private void Start()
         {
@@ -70,6 +70,7 @@ namespace HeavenStudio.Util
 
             audioSource = GetComponent<AudioSource>();
             cond = Conductor.instance;
+            double dspTime = AudioSettings.dspTime;
 
             available = false;
             audioSource.clip = clip;
@@ -78,38 +79,42 @@ namespace HeavenStudio.Util
             audioSource.loop = looping;
 
             loopEndBeat = -1;
-            loopIndex = 0;
+            loopDone = false;
             audioSource.Stop();
 
             if (beat == -1 && !scheduled)
             {
                 playInstant = true;
                 played = true;
-                startTime = AudioSettings.dspTime;
-                audioSource.PlayScheduled(startTime);
-                StartCoroutine(NotRelyOnBeatSound());
+                startTime = dspTime;
+                audioSource.Play();
             }
             else
             {
                 playInstant = false;
-                scheduledPitch = cond.SongPitch;
-                startTime = (AudioSettings.dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch) - offset;
+                if (cond != null)
+                {
+                    scheduledPitch = cond.SongPitch;
+                    startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch) - offset;
+                }
 
-                if (scheduledPitch != 0 && AudioSettings.dspTime >= startTime)
+                if (scheduledPitch != 0 && dspTime >= startTime)
                 {
                     audioSource.PlayScheduled(startTime);
+                    played = true;
                     queued = true;
                 }
             }
+            Update();
         }
 
         private void Update()
         {
             cond = Conductor.instance;
             double dspTime = AudioSettings.dspTime;
-            if (!available)
+            if (!(available || played))
             {
-                if (!Conductor.instance.isPlaying)
+                if (!(cond.isPlaying || cond.isPaused))
                 {
                     GameManager.instance.SoundObjects.Release(this);
                     return;
@@ -123,7 +128,6 @@ namespace HeavenStudio.Util
                     }
                     if (scheduledPitch != 0 && dspTime > scheduledTime)
                     {
-                        StartCoroutine(NotRelyOnBeatSound());
                         played = true;
                     }
                 }
@@ -138,7 +142,6 @@ namespace HeavenStudio.Util
                     if (scheduledPitch != 0 && dspTime > startTime)
                     {
                         played = true;
-                        StartCoroutine(NotRelyOnBeatSound());
                     }
                     else
                     {
@@ -157,7 +160,7 @@ namespace HeavenStudio.Util
                                     audioSource.UnPause();
                                 }
                                 scheduledPitch = cond.SongPitch;
-                                startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch);
+                                startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch) - offset;
                                 if (queued)
                                     audioSource.SetScheduledStartTime(startTime);
                             }
@@ -166,31 +169,49 @@ namespace HeavenStudio.Util
                 }
             }
 
-            if (loopIndex < 1)
+            if (played)
             {
-                if (looping && loopEndBeat != -1) // Looping sounds play forever unless params are set.
+                if (!(cond.isPlaying || cond.isPaused))
                 {
-                    if (cond.songPositionInBeatsAsDouble > loopEndBeat)
+                    GameManager.instance.SoundObjects.Release(this);
+                    return;
+                }
+                if (!(looping || paused || audioSource.isPlaying))
+                {
+                    GameManager.instance.SoundObjects.Release(this);
+                    return;
+                }
+
+                if (cond.isPaused || cond.SongPitch == 0)
+                {
+                    if (!paused)
                     {
-                        KillLoop(fadeTime);
-                        loopIndex++;
+                        // Debug.Log($"Pausing {gameObject.name}");
+                        audioSource.Pause();
+                        paused = true;
+                    }
+                }
+                else
+                {
+                    if (paused)
+                    {
+                        // Debug.Log($"Unpausing {gameObject.name}");
+                        audioSource.UnPause();
+                        paused = false;
                     }
                 }
             }
-        }
 
-        IEnumerator NotRelyOnBeatSound()
-        {
-            if (!Conductor.instance.isPlaying)
+            if (!loopDone)
             {
-                GameManager.instance.SoundObjects.Release(this);
-                yield break;
-            }
-            WaitUntil yieldIsAudioPlaying = new WaitUntil(() => !audioSource.isPlaying || !Conductor.instance.isPlaying);
-            if (played && !looping) // Looping sounds are destroyed manually.
-            {
-                yield return yieldIsAudioPlaying;
-                GameManager.instance.SoundObjects.Release(this);
+                if (looping && loopEndBeat != -1) // Looping sounds play forever unless params are set.
+                {
+                    if (cond.songPositionInBeatsAsDouble >= loopEndBeat)
+                    {
+                        KillLoop(fadeTime);
+                        loopDone = true;
+                    }
+                }
             }
         }
 
@@ -216,13 +237,14 @@ namespace HeavenStudio.Util
         {
             available = true;
             played = false;
+            paused = false;
             queued = false;
             playInstant = false;
             looping = false;
             scheduled = false;
             beat = 0;
             loopEndBeat = -1;
-            loopIndex = 0;
+            loopDone = false;
             startTime = 0;
 
             audioSource.loop = false;
@@ -238,12 +260,22 @@ namespace HeavenStudio.Util
         {
             if (!gameObject.activeSelf) return;
             this.bendedPitch = bendedPitch;
+            if (bendTime == 0)
+            {
+                audioSource.pitch = bendedPitch;
+                return;
+            }
             StartCoroutine(BendUpLoop(bendTime));
         }
 
         public void BendDown(float bendTime)
         {
             if (!gameObject.activeSelf) return;
+            if (bendTime == 0)
+            {
+                audioSource.pitch = pitch;
+                return;
+            }
             StartCoroutine(BendDownLoop(bendTime));
         }
 
@@ -255,7 +287,7 @@ namespace HeavenStudio.Util
             while (bendTimer < bendTime)
             {
                 bendTimer += Time.deltaTime;
-                float normalizedProgress = Mathp.Normalize(bendTimer, 0, bendTime);
+                float normalizedProgress = MathUtils.Normalize(bendTimer, 0, bendTime);
                 float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, normalizedProgress);
                 audioSource.pitch = Mathf.Min(currentPitch, bendedPitch);
                 yield return null;
@@ -270,7 +302,7 @@ namespace HeavenStudio.Util
             while (bendTimer < bendTime)
             {
                 bendTimer += Time.deltaTime;
-                float normalizedProgress = Mathp.Normalize(bendTimer, 0, bendTime);
+                float normalizedProgress = MathUtils.Normalize(bendTimer, 0, bendTime);
                 float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, 1 - normalizedProgress);
                 audioSource.pitch = Mathf.Max(currentPitch, pitch);
                 yield return null;
@@ -282,6 +314,11 @@ namespace HeavenStudio.Util
         public void KillLoop(double fadeTime)
         {
             if (!gameObject.activeSelf) return;
+            if (fadeTime == 0)
+            {
+                GameManager.instance.SoundObjects.Release(this);
+                return;
+            }
             StartCoroutine(FadeLoop(fadeTime));
         }
 

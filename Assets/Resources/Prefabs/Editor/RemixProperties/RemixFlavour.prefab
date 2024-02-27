@@ -577,15 +577,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -822,19 +824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   propertyHolder: {fileID: 5427527515324160293}
-  IntegerP: {fileID: 0}
-  FloatP: {fileID: 0}
-  BooleanP: {fileID: 0}
-  DropdownP: {fileID: 0}
-  ColorP: {fileID: 0}
-  StringP: {fileID: 0}
-  DividerP: {fileID: 0}
-  HeaderP: {fileID: 0}
-  SubHeaderP: {fileID: 0}
   tags:
-  - tag: header
-    label: Rating Screen Text
-    isReadOnly: 0
-  - tag: subheader
-    label: Coming Soon!
+  - tag: resultmessagediag
+    label: 
     isReadOnly: 0

@@ -1,13 +1,7 @@
 using HeavenStudio.Util;
-using JetBrains.Annotations;
-using Starpelly.Transformer;
-using System;
+using HeavenStudio.InputSystem;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static HeavenStudio.EntityTypes;
-using static HeavenStudio.Games.CheerReaders;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
@@ -19,13 +13,23 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("cheerReaders", "Cheer Readers", "ffffde", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e.beat, e.length, e["toggle"], e["toggle2"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Bop", "Toggle if the girls should bop for the duration of this event."),
+                        new Param("toggle2", false, "Bop (Auto)", "Toggle if the girls should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("oneTwoThree", "One! Two! Three!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line.")
                     }
                 },
                 new GameAction("itsUpToYou", "It's Up To You!")
@@ -34,7 +38,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line.")
                     }
                 },
                 new GameAction("letsGoReadABunchaBooks", "Let's Go Read A Buncha Books!")
@@ -43,7 +47,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line.")
                     }
                 },
                 new GameAction("rahRahSisBoomBaBoom", "Rah-Rah Sis Boom Bah-BOOM!")
@@ -52,8 +56,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                        new Param("consecutive", false, "Consecutive", "Is this cue using the alternate consecutive version?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line."),
+                        new Param("consecutive", false, "Consecutive Version", "Toggle if this cue should use the consecutive version of the cue. This mutes the first book flip so it doesn't overlap with a previous cue.")
                     }
                 },
                 new GameAction("okItsOn", "OK, It's On!")
@@ -62,10 +66,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                        new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
-                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the School Library Pep Squad display?"),
-                        new Param("happy", true, "Make Happy Face?", "Will the School Library Pep Squad smile happily 2 beats after flipping their books?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line."),
+                        new Param("toggle", true, "Whistle", "Toggle if the whistle sounds should play."),
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Image", "Choose the image to display inside the books."),
+                        new Param("happy", true, "Smile", "Toggle if the girls will smile two beats after the input.")
                     }
                 },
                 new GameAction("okItsOnStretch", "OK, It's On! (Stretchable)")
@@ -75,10 +79,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                        new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
-                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the School Library Pep Squad display?"),
-                        new Param("happy", true, "Do Happy Face?", "Will the School Library Pep Squad smile happily 2 beats after showing off their books?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line."),
+                        new Param("toggle", true, "Whistle", "Toggle if the whistle sounds should play."),
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Image", "Choose the image to display inside the books."),
+                        new Param("happy", true, "Smile", "Toggle if the girls should smile two beats after the input.")
                     }
                 },
                 new GameAction("yay", "Yay!")
@@ -87,17 +91,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                    }
-                },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e.beat, e.length, e["toggle"], e["toggle2"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle", true, "Should bop?", "Should the girls bop?"),
-                        new Param("toggle2", false, "Should auto bop?", "Should the girls bop automatically?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Speaker", "Choose who says the voice line."),
                     }
                 },
                 new GameAction("resetPose", "Reset Pose")
@@ -106,9 +100,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f
                 }
             },
-            new List<string>() {"rvl", "normal"},
+            new List<string>() { "rvl", "normal" },
             "rvlbooks", "en",
-             new List<string>() {"en"}
+             new List<string>() { "en" }
             );
         }
     }
@@ -162,7 +156,6 @@ namespace HeavenStudio.Games
         Sound SpinningLoop;
         [Header("Variables")]
         [SerializeField] List<PosterImages> posters = new List<PosterImages>();
-        bool shouldBop = true;
         bool canBop = true;
         public bool doingCue;
         double cueLength;
@@ -170,11 +163,46 @@ namespace HeavenStudio.Games
         bool shouldYay;
         bool shouldDoSuccessZoom;
         public bool shouldBeBlack = false;
-        public GameEvent bop = new GameEvent();
         int currentZoomIndex;
         double currentZoomCamBeat;
         float currentZoomCamLength;
         private List<RiqEntity> allCameraEvents = new List<RiqEntity>();
+
+        const int IAAltDownCat = IAMAXCAT;
+        const int IAAltUpCat = IAMAXCAT + 1;
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_AltStart);
+        }
+
+        protected static bool IA_PadAltRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltRelease(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_AltStart =
+            new("RvlBookAltStart", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_AltFinish =
+            new("RvlBookAltFinish", new int[] { IAAltUpCat, IAFlickCat, IAAltUpCat },
+            IA_PadAltRelease, IA_TouchFlick, IA_BatonAltRelease);
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("RvlBookTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
 
         void OnDestroy()
         {
@@ -193,6 +221,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("cheerReaders", "bop", "toggle2");
             for (int i = 0; i < topMasks.Count; i++)
             {
                 firstRow[i].posterBook = topMasks[i];
@@ -225,13 +254,15 @@ namespace HeavenStudio.Games
             UpdateCameraZoom();
         }
 
+        public override void OnBeatPulse(double beat)
+        {
+            if (!BeatIsInBopRegion(beat)) return;
+            BopSingle();
+        }
+
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
-            {
-                BopSingle();
-            }
 
             if (cond.isPlaying && !cond.isPaused)
             {
@@ -253,50 +284,65 @@ namespace HeavenStudio.Games
                     {
                         if (normalizedZoomOutAgainBeat > 1)
                         {
-                            GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, 0);
                         }
                         else
                         {
                             Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuint);
                             float newZoom = func(shouldDoSuccessZoom ? 4f : 1.5f, 0, normalizedZoomOutAgainBeat);
-                            GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, newZoom);
                         }
                     }
                     else if (normalizedZoomInBeat >= 0)
                     {
                         if (normalizedZoomInBeat > 1)
                         {
-                            GameCamera.additionalPosition = new Vector3(0, 0, shouldDoSuccessZoom ? 4f : 1.5f);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, shouldDoSuccessZoom ? 4f : 1.5f);
                         }
                         else
                         {
                             Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuint);
                             float newZoom = func(-1, shouldDoSuccessZoom ? 4f : 1.5f, normalizedZoomInBeat);
-                            GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, newZoom);
                         }
                     }
                     else if (normalizedZoomOutBeat >= 0)
                     {
                         if (normalizedZoomOutBeat > 1)
                         {
-                            GameCamera.additionalPosition = new Vector3(0, 0, -1);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, -1);
                         }
                         else
                         {
                             Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuint);
                             float newZoom = func(0f, 1f, normalizedZoomOutBeat);
-                            GameCamera.additionalPosition = new Vector3(0, 0, newZoom * -1);
+                            GameCamera.AdditionalPosition = new Vector3(0, 0, newZoom * -1);
                         }
                     }
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
-                    player.FlipBook(false);
-                    missPoster.SetActive(false);
-                    SoundByte.PlayOneShotGame("cheerReaders/miss");
-                    ScoreMiss(1f);
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch
+                        || (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !IsExpectingInputNow(InputAction_AltStart)))
+                    {
+                        player.FlipBook(false);
+                        missPoster.SetActive(false);
+                        SoundByte.PlayOneShotGame("cheerReaders/miss");
+                        ScoreMiss(1f);
+                    }
                 }
-                if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)) 
+                if (PlayerInput.GetIsAction(InputAction_TouchRelease) && player.isSpinning)
+                {
+                    if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !IsExpectingInputNow(InputAction_AltFinish))
+                    {
+                        player.FlipBook(false);
+                        missPoster.SetActive(false);
+                        SoundByte.PlayOneShotGame("cheerReaders/miss");
+                        SoundByte.KillLoop(SpinningLoop, 0f);
+                        ScoreMiss(1f);
+                    }
+                }
+                if (PlayerInput.GetIsAction(InputAction_AltStart) && !IsExpectingInputNow(InputAction_AltStart))
                 {
                     SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                     player.StartSpinBook();
@@ -304,7 +350,7 @@ namespace HeavenStudio.Games
                     SpinningLoop = SoundByte.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
                     ScoreMiss(1f);
                 }
-                if (PlayerInput.AltPressedUp() && !IsExpectingInputNow(InputType.STANDARD_ALT_UP))
+                if (PlayerInput.GetIsAction(InputAction_AltFinish) && !IsExpectingInputNow(InputAction_AltFinish) && player.isSpinning)
                 {
                     SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                     player.StopSpinBook();
@@ -428,7 +474,6 @@ namespace HeavenStudio.Games
 
         public void BopToggle(double beat, float length, bool startBop, bool bopAuto)
         {
-            shouldBop = bopAuto;
             if (startBop)
             {
                 for (int i = 0; i < length; i++)
@@ -485,7 +530,7 @@ namespace HeavenStudio.Games
         public void OneTwoThree(double beat, int whoSpeaks)
         {
             canBop = false;
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2, InputAction_BasicPress, JustFlip, MissFlip, Nothing);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("cheerReaders/bookHorizontal", beat),
@@ -613,7 +658,7 @@ namespace HeavenStudio.Games
         public void ItsUpToYou(double beat, int whoSpeaks)
         {
             canBop = false;
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2, InputAction_BasicPress, JustFlip, MissFlip, Nothing);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("cheerReaders/bookVertical", beat),
@@ -771,7 +816,7 @@ namespace HeavenStudio.Games
         public void LetsGoReadABunchaBooks(double beat, int whoSpeaks)
         {
             canBop = false;
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2, InputAction_BasicPress, JustFlip, MissFlip, Nothing);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("cheerReaders/letsGoRead", beat),
@@ -957,7 +1002,7 @@ namespace HeavenStudio.Games
         public void RahRahSisBoomBaBoom(double beat, int whoSpeaks, bool consecutive)
         {
             canBop = false;
-            ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustFlipBoom, MissFlip, Nothing);
+            ScheduleInput(beat, 2.5f, InputAction_BasicPress, JustFlipBoom, MissFlip, Nothing);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 0.5f),
@@ -1168,8 +1213,8 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             float actualLength = length * 0.25f;
-            ScheduleInput(beat, 2 * actualLength, InputType.STANDARD_ALT_DOWN, JustHoldSpin, MissFlip, Nothing);
-            ScheduleInput(beat, 3 * actualLength, InputType.STANDARD_ALT_UP, JustReleaseSpin, MissFlip, Nothing);
+            ScheduleInput(beat, 2 * actualLength, InputAction_AltStart, JustHoldSpin, MissFlip, Nothing);
+            ScheduleInput(beat, 3 * actualLength, InputAction_AltFinish, JustReleaseSpin, MissFlip, Nothing).IsHittable = IsReleaseSpinHittable;
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>();
             if (whistle)
             {
@@ -1442,6 +1487,10 @@ namespace HeavenStudio.Games
             playerMask.SetActive(false);
             missPoster.SetActive(false);
             SoundByte.PlayOneShotGame("cheerReaders/doingoing");
+
+            if (SpinningLoop != null)
+                SoundByte.KillLoop(SpinningLoop, 0f);
+
             player.Miss();
             shouldDoSuccessZoom = false;
             foreach (var girl in allGirls)
@@ -1450,6 +1499,11 @@ namespace HeavenStudio.Games
             }
         }
 
-        void Nothing(PlayerActionEvent caller) {}
+        void Nothing(PlayerActionEvent caller) { }
+
+        bool IsReleaseSpinHittable()
+        {
+            return player.isSpinning;
+        }
     }
 }

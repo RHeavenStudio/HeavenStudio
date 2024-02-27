@@ -2,14 +2,13 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using Jukebox;
-using Jukebox.Legacy;
 
 namespace HeavenStudio
 {
     public class EventCaller : MonoBehaviour
     {
+        public GameManager gameManager { get; private set; }
         public Transform GamesHolder;
         public RiqEntity currentEntity = new RiqEntity();
         public string currentSwitchGame;
@@ -18,11 +17,16 @@ namespace HeavenStudio
 
         public static EventCaller instance { get; private set; }
 
-        public List<Minigames.Minigame> minigames = new List<Minigames.Minigame>();
+        public Dictionary<string, Minigames.Minigame> minigames = new();
+
 
         public Minigames.Minigame GetMinigame(string gameName)
         {
-            return minigames.Find(c => c.name == gameName);
+            if (!minigames.ContainsKey(gameName))
+            {
+                return null;
+            }
+            return minigames[gameName];
         }
 
         public Minigames.GameAction GetGameAction(Minigames.Minigame game, string action)
@@ -30,45 +34,43 @@ namespace HeavenStudio
             return game.actions.Find(c => c.actionName == action);
         }
 
+        public Minigames.GameAction GetGameAction(string gameName, string action)
+        {
+            if (minigames.ContainsKey(gameName))
+            {
+                return minigames[gameName].actions.Find(c => c.actionName == action);
+            }
+            else
+            {
+                Debug.LogWarning($"Game {gameName} not found!");
+                return null;
+            }
+        }
+
         public Minigames.Param GetGameParam(Minigames.Minigame game, string action, string param)
         {
             return GetGameAction(game, action).parameters.Find(c => c.propertyName == param);
         }
 
-        public void Init()
+        public Minigames.Param GetGameParam(string gameName, string action, string param)
         {
+            return GetGameAction(gameName, action).parameters.Find(c => c.propertyName == param);
+        }
+
+        public void Init(GameManager mgr)
+        {
+            gameManager = mgr;
             instance = this;
 
             currentEntity = new RiqEntity();
 
             Minigames.Init(this);
-
-            List<Minigames.Minigame> minigamesInBeatmap = new List<Minigames.Minigame>();
-            for (int i = 0; i < GameManager.instance.Beatmap.Entities.Count; i++)
-            {
-                //go through every entity in the timeline and add the game that they're from to the minigamesInBeatmap list (ignore entities from FX only categories, i.e. Game Manager and Count-Ins)
-                Minigames.Minigame game = GetMinigame(GameManager.instance.Beatmap.Entities[i].datamodel.Split('/')[0]);
-                if (!minigamesInBeatmap.Contains(game) && !FXOnlyGames().Contains(game))
-                {
-                    minigamesInBeatmap.Add(game);
-                }
-            }
-
-            for (int i = 0; i < minigamesInBeatmap.Count; i++)
-            {
-                // minigames[minigames.FindIndex(c => c.name == minigamesInBeatmap[i].name)].holder = Resources.Load<GameObject>($"Games/{minigamesInBeatmap[i].name}");
-            }
-        }
-
-        private void Update()
-        {
-            
         }
 
         public void CallEvent(RiqEntity entity, bool gameActive)
         {
             string[] details = entity.datamodel.Split('/');
-            Minigames.Minigame game = minigames.Find(c => c.name == details[0]);
+            Minigames.Minigame game = minigames[details[0]];
             try
             {
                 currentEntity = entity;
@@ -94,7 +96,7 @@ namespace HeavenStudio
         public void CallPreEvent(RiqEntity entity)
         {
             string[] details = entity.datamodel.Split('/');
-            Minigames.Minigame game = minigames.Find(c => c.name == details[0]);
+            Minigames.Minigame game = minigames[details[0]];
             try
             {
                 currentEntity = entity;
@@ -108,30 +110,9 @@ namespace HeavenStudio
             }
         }
 
-        static bool StringStartsWith(string a, string b)
-        {
-            int aLen = a.Length;
-            int bLen = b.Length;
-        
-            int ap = 0; int bp = 0;
-        
-            while (ap < aLen && bp < bLen && a [ap] == b [bp])
-            {
-                ap++;
-                bp++;
-            }
-        
-            return (bp == bLen);
-        }
-
-        public static bool IsGameSwitch(RiqEntity entity)
-        {
-            return StringStartsWith(entity.datamodel, "gameManager/switchGame");
-        }
-
         public static List<RiqEntity> GetAllInGameManagerList(string gameName, string[] include)
         {
-            List<RiqEntity> temp1 = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
+            List<RiqEntity> temp1 = instance.gameManager.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
             List<RiqEntity> temp2 = new List<RiqEntity>();
             foreach (string s in include)
             {
@@ -142,7 +123,7 @@ namespace HeavenStudio
 
         public static List<RiqEntity> GetAllInGameManagerListExclude(string gameName, string[] exclude)
         {
-            List<RiqEntity> temp1 = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
+            List<RiqEntity> temp1 = instance.gameManager.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
             List<RiqEntity> temp2 = new List<RiqEntity>();
             foreach (string s in exclude)
             {
@@ -153,7 +134,7 @@ namespace HeavenStudio
 
         public static List<Minigames.Minigame> FXOnlyGames()
         {
-            return instance.minigames.FindAll(c => c.fxOnly == true).ToList();
+            return instance.minigames.Values.ToList().FindAll(c => c.fxOnly);
         }
     }
 }

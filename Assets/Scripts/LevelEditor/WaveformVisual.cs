@@ -33,6 +33,7 @@ namespace HeavenStudio.Editor
         // This two are from unity answer (I mixed up)
         public void CreateWaveForm()
         {
+            if (audio == null || audio.clip == null) return;
             resolution = audio.clip.frequency / resolution;
 
             samples = new float[audio.clip.samples * audio.clip.channels];

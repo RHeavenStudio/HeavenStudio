@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,20 +29,15 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("slowDown", true, "Slowdown Effect", "Should there be a slowdown effect when the ghost is hit?"),
-                        new Param("volume1", new EntityTypes.Integer(0, 100, 100), "Move Volume 1", "What height and what volume should this move be at?"),
-                        new Param("volume2", new EntityTypes.Integer(0, 100, 100), "Move Volume 2", "What height and what volume should this move be at?"),
-                        new Param("volume3", new EntityTypes.Integer(0, 100, 100), "Move Volume 3", "What height and what volume should this move be at?"),
-                        new Param("volume4", new EntityTypes.Integer(0, 100, 100), "Move Volume 4", "What height and what volume should this move be at?"),
-                        new Param("volume5", new EntityTypes.Integer(0, 100, 100), "Move Volume 5", "What height and what volume should this move be at?"),
-                        new Param("volume6", new EntityTypes.Integer(0, 100, 100), "Move Volume 6", "What height and what volume should this move be at?"),
-                        new Param("volume7", new EntityTypes.Integer(0, 100, 100), "Move Volume 7", "What height and what volume should this move be at?"),
+                        new Param("slowDown", true, "Slowdown Effect", "Toggle if there should be a slowdown effect when the ghost is hit."),
+                        new Param("volume1", new EntityTypes.Integer(0, 100, 100), "Move Volume 1", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume2", new EntityTypes.Integer(0, 100, 100), "Move Volume 2", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume3", new EntityTypes.Integer(0, 100, 100), "Move Volume 3", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume4", new EntityTypes.Integer(0, 100, 100), "Move Volume 4", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume5", new EntityTypes.Integer(0, 100, 100), "Move Volume 5", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume6", new EntityTypes.Integer(0, 100, 100), "Move Volume 6", "Set the height and volume the ghost should have at this position."),
+                        new Param("volume7", new EntityTypes.Integer(0, 100, 100), "Move Volume 7", "Set the height and volume the ghost should have at this position."),
                     }
-                },
-                new GameAction("forceReload", "Bow Force Reload")
-                {
-                    function = delegate { SneakySpirits.instance.ForceReload(); },
-                    defaultLength = 1f,
                 },
                 new GameAction("movebow", "Bow Enter or Exit")
                 {
@@ -50,9 +46,14 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("exit", true, "Enter?", "Should the bow exit or enter?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
+                        new Param("exit", true, "Enter", "Toggle if the bow should enter or exit the scene."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
+                },
+                new GameAction("forceReload", "Bow Force Reload")
+                {
+                    function = delegate { SneakySpirits.instance.ForceReload(); },
+                    defaultLength = 1f,
                 },
             },
             new List<string>() {"agb", "aim"},
@@ -83,6 +84,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject slowTree;
 
         private bool hasArrowLoaded;
+        private bool hasArrowDrawn;
         float movingLength;
         double movingStartBeat;
         bool isMoving;
@@ -93,16 +95,20 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            Conductor.instance.SetMinigamePitch(1f);
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
+            }
+            if (Conductor.instance.isPlaying)
+            {
+                Conductor.instance.SetMinigamePitch(1f);
             }
         }
 
         public override void OnGameSwitch(double beat)
         {
             InitGhosts(beat);
+            Conductor.instance.SetMinigamePitch(1f);
         }
 
         private void InitGhosts(double beat)
@@ -125,7 +131,6 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
-            Conductor.instance.SetMinigamePitch(1f);
         }
 
         void Update()
@@ -133,9 +138,23 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && hasArrowLoaded)
+                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                {
+                    if (PlayerInput.GetIsAction(InputAction_BasicPress) && hasArrowLoaded && !hasArrowDrawn)
+                    {
+                        hasArrowDrawn = true;
+                        bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f);
+                    }
+                    if (PlayerInput.GetIsAction(InputAction_BasicRelease) && hasArrowLoaded && hasArrowDrawn)
+                    {
+                        hasArrowDrawn = false;
+                        bowAnim.DoScaledAnimationAsync("BowRelease", 0.5f);
+                    }
+                }
+                if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress) && hasArrowLoaded)
                 {
                     WhiffArrow(cond.songPositionInBeatsAsDouble);
+                    hasArrowDrawn = false;
                 }
                 if (isMoving)
                 {
@@ -149,17 +168,21 @@ namespace HeavenStudio.Games
                     }
                 }
             }
-            else if (!cond.isPlaying)
-            {
-                Conductor.instance.SetMinigamePitch(1f);
-            }
         }
 
         public void ForceReload()
         {
             if (hasArrowLoaded) return;
-            bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f); 
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !GameManager.instance.autoplay)
+            {
+                bowAnim.DoScaledAnimationAsync("BowIdle", 1f);
+            }
+            else
+            {
+                bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f);
+            }
             hasArrowLoaded = true;
+            hasArrowDrawn = false;
         }
 
         public void MoveBow(double beat, float length, bool enter, int ease)
@@ -175,13 +198,13 @@ namespace HeavenStudio.Games
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("sneakySpirits/moving", beat, 1f, volume1 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length, 1f, volume2 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 2, 1f, volume3 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 3, 1f, volume4 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 4, 1f, volume5 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 5, 1f, volume6 * 0.01f),
-                new MultiSound.Sound("sneakySpirits/moving", beat + length * 6, 1f, volume7 * 0.01f),
+                new MultiSound.Sound("sneakySpirits/moving", beat, 1f, volume1 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length, 1f, volume2 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 2, 1f, volume3 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 3, 1f, volume4 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 4, 1f, volume5 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 5, 1f, volume6 * 0.01f, false, 0.019),
+                new MultiSound.Sound("sneakySpirits/moving", beat + length * 6, 1f, volume7 * 0.01f, false, 0.019),
             }, forcePlay: true);
         }
 
@@ -189,16 +212,26 @@ namespace HeavenStudio.Games
         {
             if (slowDown)
             {
-                ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, Just, Miss, Out);
+                ScheduleInput(beat, length * 7, InputAction_FlickPress, Just, Miss, Out);
             }
             else
             {
-                ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, JustNoSlowDown, Miss, Out);
+                ScheduleInput(beat, length * 7, InputAction_FlickPress, JustNoSlowDown, Miss, Out);
             }
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !GameManager.instance.autoplay)
             {
-                new BeatAction.Action(beat + length * 3, delegate { ForceReload(); })
-            });
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { ForceReload(); })
+                });
+            }
+            else
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + length * 3, delegate { ForceReload(); })
+                });
+            }
 
             List<BeatAction.Action> ghostSpawns = new List<BeatAction.Action>();
             for(int i = 0; i < 7; i++)
@@ -313,7 +346,6 @@ namespace HeavenStudio.Games
                 slowTree.SetActive(true);
                 normalTree.SetActive(false);
                 Conductor.instance.SetMinigamePitch(0.25f);
-                Conductor.instance.SetMinigamePitch(1f, caller.startBeat + caller.timer + 1f); 
             }
 
             doorAnim.DoScaledAnimationAsync("DoorOpen", 0.5f);
@@ -321,6 +353,7 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate 
                 { 
+                    Conductor.instance.SetMinigamePitch(1f);
                     doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);
                     slowRain.SetActive(false);
                     normalRain.SetActive(true);
@@ -341,7 +374,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate {
                     if (GameManager.instance.currentGame == "sneakySpirits")
                     {
-                        SoundByte.PlayOneShotGame("sneakySpirits/laugh", -1, 1.2f);
+                        SoundByte.PlayOneShotGame("sneakySpirits/laugh", -1, 1f);
                         spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostLaugh", 0.25f);
                     }
                 }),

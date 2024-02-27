@@ -21,6 +21,8 @@ namespace HeavenStudio.Editor
         public TMP_Dropdown dspSizeDropdown;
         public TMP_Dropdown sampleRateDropdown;
 
+        int wantSampleRate, wantDspSize;
+
         private void Start() {
             List<TMP_Dropdown.OptionData> dropDownData = new List<TMP_Dropdown.OptionData>();
             var vals = GlobalGameManager.DEFAULT_SCREEN_SIZES_STRING;
@@ -119,10 +121,11 @@ namespace HeavenStudio.Editor
             sampleRateDropdown.AddOptions(GlobalGameManager.SAMPLE_RATES.Select(x => x.ToString()).ToList());
             dspSizeDropdown.value = GlobalGameManager.DSP_BUFFER_SIZES.ToList().IndexOf(GlobalGameManager.currentDspSize);
             sampleRateDropdown.value = GlobalGameManager.SAMPLE_RATES.ToList().IndexOf(GlobalGameManager.currentSampleRate);
+
+            wantSampleRate = GlobalGameManager.currentSampleRate;
+            wantDspSize = GlobalGameManager.currentDspSize;
         }
 
-        public override void OnCloseTab()
-        {
-        }
+        public override void OnCloseTab() {}
     }
 }

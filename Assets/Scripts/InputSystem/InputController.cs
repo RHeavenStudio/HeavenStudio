@@ -19,8 +19,20 @@ namespace HeavenStudio.InputSystem
             AxisLStickY = 1,
             AxisRStickX = 2,
             AxisRStickY = 3,
-            TouchpadX = 6,
-            TouchpadY = 7
+            PointerX = 6,
+            PointerY = 7,
+            PointerDeltaX = 8,
+            PointerDeltaY = 9
+        }
+
+        public enum InputVector : int
+        {
+            LStick = 0,
+            RStick = 1,
+            Pointer = 2,
+            PointerSpeed = 3,
+            Gyroscope = 4,
+            Accelerometer = 5,
         }
 
         //D-Pad directions, usable to adapt analogue sticks to cardinal directions
@@ -37,31 +49,31 @@ namespace HeavenStudio.InputSystem
         public enum InputFeatures
         {
             //readable properties
-            Readable_ShellColour        = 1 << 0,
-            Readable_ButtonColour       = 1 << 1,
-            Readable_LeftGripColour     = 1 << 2,
-            Readable_RightGripColour    = 1 << 3,
-            Readable_AnalogueTriggers   = 1 << 4,
-            Readable_StringInput        = 1 << 5,
-            Readable_Pointer            = 1 << 6,
-            Readable_MotionSensor       = 1 << 7,
+            Readable_ShellColour = 1 << 0,
+            Readable_ButtonColour = 1 << 1,
+            Readable_LeftGripColour = 1 << 2,
+            Readable_RightGripColour = 1 << 3,
+            Readable_AnalogueTriggers = 1 << 4,
+            Readable_StringInput = 1 << 5,
+            Readable_Pointer = 1 << 6,
+            Readable_MotionSensor = 1 << 7,
 
             //writable properties
-            Writable_PlayerLED          = 1 << 8,
-            Writable_LightBar           = 1 << 9,
-            Writable_Chroma             = 1 << 10,
-            Writable_Speaker            = 1 << 11,
+            Writable_PlayerLED = 1 << 8,
+            Writable_LightBar = 1 << 9,
+            Writable_Chroma = 1 << 10,
+            Writable_Speaker = 1 << 11,
 
             //other / "special" properties
-            Extra_SplitControllerLeft   = 1 << 12,
-            Extra_SplitControllerRight  = 1 << 13,
-            Extra_Rumble                = 1 << 14,
-            Extra_HDRumble              = 1 << 15,
+            Extra_SplitControllerLeft = 1 << 12,
+            Extra_SplitControllerRight = 1 << 13,
+            Extra_Rumble = 1 << 14,
+            Extra_HDRumble = 1 << 15,
 
             //supported control styles
-            Style_Pad                   = 1 << 16,
-            Style_Baton                 = 1 << 17,
-            Style_Touch                 = 1 << 18,
+            Style_Pad = 1 << 16,
+            Style_Baton = 1 << 17,
+            Style_Touch = 1 << 18,
         };
 
         //Following enums are specific to Heaven Studio, can be removed in other applications
@@ -69,9 +81,9 @@ namespace HeavenStudio.InputSystem
         public enum ControlStyles
         {
             Pad,
-            Baton,
             Touch,
-            Move
+            Baton,
+            // Move
         }
 
         public const int BINDS_MAX = 12; //maximum number of binds per controller
@@ -87,42 +99,54 @@ namespace HeavenStudio.InputSystem
             East = 5,
             West = 6,
             North = 7,
-            L = 8,
-            R = 9,
+            ButtonL = 8,
+            ButtonR = 9,
             Pause = 10,
         }
 
-        //FUTURE: buttons used in Heaven Studio gameplay ("Form Baton" / WiiMote Style)
+        //buttons used in Heaven Studio gameplay ("Form Baton" / WiiMote Style)
         public enum ActionsBaton : int
         {
-            South = 0,      //-- all these...
-            East = 1,       // |
+            North = 0,      //-- all these...
+            South = 1,      // |
             West = 2,       // |
-            North = 3,      //--
-            Face = 4,       // < ...are also equivalent to this, but with added directionality
-            Trigger = 5,    // should never be used alone, but still bindable separately (controller logic should handle confirming & timestamping face + trigger input)
-            Up = 6,     // Wiimote 1
-            Down = 7,   // Wiimote 2
+            East = 3,       //--
+            Trigger = 4,    // < ...are also equivalent to this, but with added directionality
+            Face = 5,
+            Down = 6,     // Wiimote 1
+            Up = 7,   // Wiimote 2
             Pause = 8,
         }
 
-        //FUTURE: buttons used in Heaven Studio gameplay (Touch Style)
+        //buttons used in Heaven Studio gameplay (Touch Style)
         public enum ActionsTouch : int
         {
-            Tap = 0,   // flicks are handled like a motion, don't have a binding
-            Left = 1,     // also maps to tap, but with directionality (tap the left side of the panel)
-            Right = 2,    // also maps to tap, but with directionality (tap the right side of the panel)
+            // flicks and swipes are handled as motions, and don't have bindings
+            Tap = 0,
+            Left = 1,     // also maps to tap, but with directionality (tap the left side of the panel). internally, maps to Pointer 1
+            Right = 2,    // also maps to tap, but with directionality (tap the right side of the panel). internally, maps to Pointer 2
             ButtonL = 3,
             ButtonR = 4,
-            Pause = 5,
+            PointerReset = 5,
+            Pause = 6,
+        }
+
+        //buttons used in Heaven Studio gameplay (Move Style)
+        public enum ActionsMove : int
+        {
+            Button = 0,
+            Pause = 1,
         }
 
         [System.Serializable]
         public struct ControlBindings
         {
+            public int version;
             public int[] Pad;
             public int[] Baton;
             public int[] Touch;
+            public int[] Move;
+            public float PointerSensitivity;
         }
 
         // FUTURE: Move Style needs to be implemented per-game (maybe implement checks for common actions?)
@@ -159,7 +183,26 @@ namespace HeavenStudio.InputSystem
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
-                currentBindings = JsonUtility.FromJson<ControlBindings>(json);
+                if (json is not null or "")
+                {
+                    try
+                    {
+                        currentBindings = JsonUtility.FromJson<ControlBindings>(json);
+                        if (currentBindings.version != GetBindingsVersion())
+                        {
+                            currentBindings = UpdateBindings(currentBindings);
+                            SaveBindings();
+                        }
+                    }
+                    catch (System.Exception)
+                    {
+                        ResetBindings();
+                    }
+                }
+                else
+                {
+                    ResetBindings();
+                }
             }
             else
             {
@@ -191,6 +234,19 @@ namespace HeavenStudio.InputSystem
         public abstract void SetCurrentBindings(ControlBindings newBinds);
 
         /// <summary>
+        /// updates controller bindings to new versions
+        /// </summary>
+        /// <param name="lastBinds">bindings of a previous version</param>
+        /// <returns></returns>
+        public abstract ControlBindings UpdateBindings(ControlBindings lastBinds);
+
+        /// <summary>
+        /// gets the current bindings version for this controller
+        /// </summary>
+        /// <returns></returns>
+        public abstract int GetBindingsVersion();
+
+        /// <summary>
         /// Whether a given action can have be rebount
         /// </summary>
         /// <param name="action">action to check</param>
@@ -202,7 +258,7 @@ namespace HeavenStudio.InputSystem
         /// Gets the last pressed physical button
         /// </summary>
         /// <returns></returns>
-        public abstract int GetLastButtonDown();
+        public abstract int GetLastButtonDown(bool strict = false);
 
         /// <summary>
         /// Gets the last pressed virtual action
@@ -215,7 +271,7 @@ namespace HeavenStudio.InputSystem
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        public abstract bool GetAction(int action);
+        public abstract bool GetAction(ControlStyles style, int action);
 
         /// <summary>
         /// True if the action was just pressed this Update
@@ -223,7 +279,7 @@ namespace HeavenStudio.InputSystem
         /// <param name="action"></param>
         /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
         /// <returns></returns>
-        public abstract bool GetActionDown(int action, out double dt);
+        public abstract bool GetActionDown(ControlStyles style, int action, out double dt);
 
         /// <summary>
         /// True if the action was just released this Update
@@ -231,7 +287,7 @@ namespace HeavenStudio.InputSystem
         /// <param name="action"></param>
         /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
         /// <returns></returns>
-        public abstract bool GetActionUp(int action, out double dt);
+        public abstract bool GetActionUp(ControlStyles style, int action, out double dt);
 
         /// <summary>
         /// Get the value of an analogue axis
@@ -241,27 +297,26 @@ namespace HeavenStudio.InputSystem
         public abstract float GetAxis(InputAxis axis);
 
         /// <summary>
-        /// True if the current direction is active
+        /// Get the value of a 3d vector (2d vectors have z set to 0)
         /// </summary>
-        /// <param name="direction"></param>
+        /// <param name="vector"></param>
         /// <returns></returns>
-        public abstract bool GetHatDirection(InputDirection direction);
+        public abstract Vector3 GetVector(InputVector vector);
 
         /// <summary>
-        /// True if the current direction just became active this Update
+        /// Get the value of a pointer mapped to world coordinates
         /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
         /// <returns></returns>
-        public abstract bool GetHatDirectionDown(InputDirection direction, out double dt);
+        public abstract Vector2 GetPointer();
+        public abstract bool GetPointerLeftRight();
+        public abstract void TogglePointerLock(bool locked);
+        public abstract void RecentrePointer();
 
-        /// <summary>
-        /// True if the current direction just became inactive this Update
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
-        /// <returns></returns>
-        public abstract bool GetHatDirectionUp(InputDirection direction, out double dt);
+        public abstract bool GetFlick(out double dt);
+        public abstract bool GetSlide(out double dt);
+        public abstract bool GetSqueezeDown(out double dt);
+        public abstract bool GetSqueezeUp(out double dt);
+        public abstract bool GetSqueeze();
 
         /// <summary>
         /// Sets the player number (starts at 1, set to -1 or null for no player)
@@ -275,7 +330,9 @@ namespace HeavenStudio.InputSystem
         /// <returns></returns>
         public abstract int? GetPlayer();
 
-        //public abstract Sprite GetDisplayIcon();    //"big icon" for the controller in the settings menu
-        //public abstract Sprite GetPlaybackIcon();   //"small icon" for the controller during playback
+        public abstract void SetMaterialProperties(Material m);
+
+        public abstract bool GetCurrentStyleSupported();
+        public abstract ControlStyles GetDefaultStyle();
     }
 }

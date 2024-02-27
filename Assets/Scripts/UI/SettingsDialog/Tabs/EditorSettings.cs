@@ -8,12 +8,21 @@ namespace HeavenStudio.Editor
 {
     public class EditorSettings : TabsContent
     {
-        public Toggle cursorCheckbox;
-        public Toggle discordRPCCheckbox;
+        [SerializeField] Toggle cursorCheckbox;
+        [SerializeField] Toggle discordRPCCheckbox;
+        [SerializeField] Button editorScaleDecre, editorScaleIncre;
+        [SerializeField] Toggle scaleWSS;
+        [SerializeField] Toggle paramTooltipsToggle;
+        // [SerializeField] Toggle cornerTooltipsToggle;
 
-        private void Start() {
+        private void Start()
+        {
             cursorCheckbox.isOn = PersistentDataManager.gameSettings.editorCursorEnable;
             discordRPCCheckbox.isOn = PersistentDataManager.gameSettings.discordRPCEnable;
+            scaleWSS.isOn = PersistentDataManager.gameSettings.scaleWScreenSize;
+            paramTooltipsToggle.isOn = PersistentDataManager.gameSettings.showParamTooltips;
+
+            SetDecreIncreInteractable();
         }
 
         public void OnCursorCheckboxChanged()
@@ -34,12 +43,57 @@ namespace HeavenStudio.Editor
 
         public override void OnOpenTab()
         {
-            cursorCheckbox.isOn = PersistentDataManager.gameSettings.editorCursorEnable;
-            discordRPCCheckbox.isOn = PersistentDataManager.gameSettings.discordRPCEnable;
+            Start();
         }
 
         public override void OnCloseTab()
         {
+        }
+
+        public void OnSWSSChanged()
+        {
+            PersistentDataManager.gameSettings.scaleWScreenSize = scaleWSS.isOn;
+            scaleWSS.isOn = PersistentDataManager.gameSettings.scaleWScreenSize;
+        }
+
+        public void OnParamTooltipsChanged()
+        {
+            PersistentDataManager.gameSettings.showParamTooltips = paramTooltipsToggle.isOn;
+        }
+
+        // public void OnCornerTooltipsChanged()
+        // {
+        //     PersistentDataManager.gameSettings.showParamTooltips = cornerTooltipsToggle.isOn;
+        // }
+
+        public void OnEditorScaleDecre()
+        {
+            PersistentDataManager.gameSettings.editorScale--;
+            if (PersistentDataManager.gameSettings.editorScale < -3)
+                PersistentDataManager.gameSettings.editorScale = -3;
+
+            SetDecreIncreInteractable();
+        }
+
+        public void OnEditorScaleIncre()
+        {
+            PersistentDataManager.gameSettings.editorScale++;
+            if (PersistentDataManager.gameSettings.editorScale > 5)
+                PersistentDataManager.gameSettings.editorScale = 5;
+
+            SetDecreIncreInteractable();
+        }
+
+        public void OnEditorScaleReset()
+        {
+            PersistentDataManager.gameSettings.editorScale = 0;
+            SetDecreIncreInteractable();
+        }
+
+        private void SetDecreIncreInteractable()
+        {
+            editorScaleDecre.interactable = PersistentDataManager.gameSettings.editorScale > -3; // hardcoded? We might not change.
+            editorScaleIncre.interactable = PersistentDataManager.gameSettings.editorScale < 5;
         }
     }
 }

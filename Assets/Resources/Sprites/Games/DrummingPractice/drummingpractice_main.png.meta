@@ -77,10 +77,10 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 96
+  spritePixelsToUnits: 192
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,7 +100,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 1024
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -141,16 +141,16 @@ TextureImporter:
       name: drummingpractice_drum
       rect:
         serializedVersion: 2
-        x: 32
-        y: 644
-        width: 316
-        height: 376
+        x: 64
+        y: 1288
+        width: 632
+        height: 752
       alignment: 9
       pivot: {x: 0, y: 0.1748477}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: eb83d8cf7b5cbb8d0800000000000000
       internalID: -2829450546865424194
@@ -162,16 +162,16 @@ TextureImporter:
       name: drummingpractice_hit_fx
       rect:
         serializedVersion: 2
-        x: 4
-        y: 260
-        width: 184
-        height: 376
+        x: 8
+        y: 520
+        width: 368
+        height: 752
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: aeaad2aa6c7466c50800000000000000
       internalID: 6658088017698073322
@@ -183,16 +183,16 @@ TextureImporter:
       name: drummingpractice_hand
       rect:
         serializedVersion: 2
-        x: 4
-        y: 68
-        width: 184
-        height: 184
+        x: 8
+        y: 136
+        width: 368
+        height: 368
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 41f9cb4dd1f95c660800000000000000
       internalID: 7405500112752647956
@@ -204,16 +204,16 @@ TextureImporter:
       name: drummingpractice_drumstick
       rect:
         serializedVersion: 2
-        x: 196
-        y: 4
-        width: 120
-        height: 344
+        x: 392
+        y: 8
+        width: 240
+        height: 688
       alignment: 9
       pivot: {x: 0.5, y: 0.2207514}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d057a3360af23a8a0800000000000000
       internalID: -6295135488227773171
@@ -225,16 +225,16 @@ TextureImporter:
       name: drummingpractice_bg
       rect:
         serializedVersion: 2
-        x: 352
+        x: 704
         y: 0
-        width: 92
-        height: 1024
+        width: 184
+        height: 2046
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 0, y: 2039, z: 0, w: 1}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 557be578313c92cf0800000000000000
       internalID: -276475413463648427
@@ -246,16 +246,16 @@ TextureImporter:
       name: drummingpractice_screen_fx
       rect:
         serializedVersion: 2
-        x: 452
-        y: 4
-        width: 152
-        height: 1016
+        x: 904
+        y: 8
+        width: 304
+        height: 2032
       alignment: 9
       pivot: {x: 0.5, y: 0.027308613}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: cde83d3cc02ec73f0800000000000000
       internalID: -901597280928035108
@@ -267,16 +267,16 @@ TextureImporter:
       name: drummingpractice_drumstick_hit_0
       rect:
         serializedVersion: 2
-        x: 740
-        y: 388
-        width: 120
-        height: 248
+        x: 1480
+        y: 776
+        width: 240
+        height: 496
       alignment: 9
       pivot: {x: 0.5, y: 0.3869881}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8b8801e09e6917480800000000000000
       internalID: -8903169060627248968
@@ -288,16 +288,16 @@ TextureImporter:
       name: drummingpractice_drumstick_hit_1
       rect:
         serializedVersion: 2
-        x: 196
-        y: 356
-        width: 120
-        height: 248
+        x: 392
+        y: 712
+        width: 240
+        height: 496
       alignment: 9
       pivot: {x: 0.5, y: 0.2419852}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 212aebfd18ad844a0800000000000000
       internalID: -6608792201826754030
@@ -309,16 +309,16 @@ TextureImporter:
       name: drummingpractice_drumstick_hit_2
       rect:
         serializedVersion: 2
-        x: 612
-        y: 388
-        width: 120
-        height: 280
+        x: 1224
+        y: 776
+        width: 240
+        height: 560
       alignment: 9
       pivot: {x: 0.5, y: 0.1567883}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6b423be0267852d80800000000000000
       internalID: -8276059885000252234
@@ -330,16 +330,16 @@ TextureImporter:
       name: drummingpractice_body
       rect:
         serializedVersion: 2
-        x: 612
-        y: 4
-        width: 248
-        height: 376
+        x: 1224
+        y: 8
+        width: 496
+        height: 752
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3819b26484ed309e0800000000000000
       internalID: -1656235835945938557
@@ -351,16 +351,16 @@ TextureImporter:
       name: drummingpractice_drumstick_smear_fx
       rect:
         serializedVersion: 2
-        x: 868
-        y: 4
-        width: 152
-        height: 600
+        x: 1736
+        y: 8
+        width: 304
+        height: 1200
       alignment: 9
       pivot: {x: 0.5, y: 0.11327524}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d552106bde89efd20800000000000000
       internalID: 3314254522519463261

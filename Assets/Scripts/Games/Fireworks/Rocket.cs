@@ -67,7 +67,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         {
             startBeat = beat;
             startY = transform.position.y - offSet;
-            game.ScheduleInput(beat, isSparkler ? 1f : 3f, InputType.STANDARD_DOWN, Just, Out, Out);
+            game.ScheduleInput(beat, isSparkler ? 1f : 3f, Fireworks.InputAction_BasicPress, Just, Out, Out);
             anim.DoScaledAnimationAsync(isSparkler ? "Sparkler" : "Rocket", isSparkler ? 1f : 0.5f);
             selectedParticleEffect = particleEffects[explosionToChoose];
         }

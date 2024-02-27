@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         {
             game = RhythmTweezers.instance;
             tweezers = tweezer;
-            game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
+            game.ScheduleInput(beat, length, RhythmTweezers.InputAction_Press, Just, Miss, Out);
         }
 
         public void Ace()

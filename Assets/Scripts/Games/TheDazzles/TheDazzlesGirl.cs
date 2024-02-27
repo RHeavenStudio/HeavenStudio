@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             });
         }
 
-        public void Pose(bool hit = true)
+        public void Pose(bool hit = true, bool flash = true)
         {
             if (hit)
             {
@@ -84,7 +84,8 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             else
             {
                 anim.DoScaledAnimationAsync("MissPose", 0.5f);
-                lightingAnim.DoScaledAnimationAsync("MissFlash", 0.5f);
+                if (flash)
+                    lightingAnim.DoScaledAnimationAsync("MissFlash", 0.5f);
                 currentEmotion = Emotion.Ouch;
                 hasOuched = true;
             }

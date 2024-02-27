@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -14,13 +15,23 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("theDazzles", "The Dazzles", "9cfff7", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; TheDazzles.instance.Bop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle2", true, "Bop", "Toggle if the dazzles should bop for the duration of this event."),
+                        new Param("toggle", false, "Bop (Auto)", "Toggle if the dazzles should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("crouch", "Crouch")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PreCrouch(e.beat, e.length, e["countIn"]);  },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Should the count-In be from megamix, DS or random?")
+                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Set if the count-in should be from Megamix, DS or random.")
                     }
                 },
                 new GameAction("crouchStretch", "Crouch (Stretchable)")
@@ -30,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Should the count-In be from megamix, DS or random?")
+                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Set if the count-in should be from Megamix, DS or random.")
                     }
                 },
                 new GameAction("poseThree", "Pose Horizontal")
@@ -39,8 +50,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", false, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("poseTwo", "Pose Vertical")
@@ -49,8 +60,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", true, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("poseSixDiagonal", "Pose Diagonal")
@@ -59,8 +70,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", false, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("poseSixColumns", "Pose Rows")
@@ -69,8 +80,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", false, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("poseSix", "Pose Six")
@@ -79,8 +90,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("toggle", true, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("customPose", "Custom Pose")
@@ -90,14 +101,14 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("upLeft", new EntityTypes.Float(0, 30f, 0f), "Up Left Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("upMiddle", new EntityTypes.Float(0, 30f, 1f), "Up Middle Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("upRight", new EntityTypes.Float(0, 30f, 2f), "Up Right Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("downLeft", new EntityTypes.Float(0, 30f, 0f), "Down Left Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("downMiddle", new EntityTypes.Float(0, 30f, 1f), "Down Middle Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
-                        new Param("player", new EntityTypes.Float(0, 30f, 2f), "Player Pose Beat", "How many beats after the event has started should the player pose?"),
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
-                        new Param("toggle2", true, "Cheer Sounds")
+                        new Param("upLeft", new EntityTypes.Float(0, 30f, 0f), "Up Left Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("upMiddle", new EntityTypes.Float(0, 30f, 1f), "Up Middle Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("upRight", new EntityTypes.Float(0, 30f, 2f), "Up Right Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("downLeft", new EntityTypes.Float(0, 30f, 0f), "Down Left Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("downMiddle", new EntityTypes.Float(0, 30f, 1f), "Down Middle Girl Pose Beat", "Set how many beats after the event has started this girl will pose."),
+                        new Param("player", new EntityTypes.Float(0, 30f, 2f), "Player Pose Beat", "Set how many beats after the event has started the player will pose."),
+                        new Param("toggle", false, "Stars", "Toggle if stars should appear when successfully posing."),
+                        new Param("toggle2", true, "Cheer Sounds", "Toggle if cheering sounds should be played when successfully posing.")
                     }
                 },
                 new GameAction("forceHold", "Force Hold")
@@ -105,17 +116,6 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { TheDazzles.instance.ForceHold(); },
                     defaultLength = 0.5f
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; TheDazzles.instance.Bop(e.beat, e.length, e["toggle2"], e["toggle"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle2", true, "Should bop?", "Should the dazzles bop?"),
-                        new Param("toggle", false, "Should auto bop?", "Should the dazzles auto bop?")
-                    }
-                },
-
             },
             new List<string>() {"ntr", "normal"},
             "ntrboxshow", "en",
@@ -227,8 +227,6 @@ namespace HeavenStudio.Games
         bool doingPoses = false;
         bool shouldHold = false;
         double crouchEndBeat;
-        public bool shouldBop = true;
-        public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
         static List<QueuedCrouch> queuedCrouches = new List<QueuedCrouch>();
         [Header("Components")]
@@ -236,6 +234,10 @@ namespace HeavenStudio.Games
         [SerializeField] TheDazzlesGirl player;
         [SerializeField] ParticleSystem poseEffect;
         [SerializeField] ParticleSystem starsEffect;
+
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("NtrBoxshowTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
 
         void OnDestroy()
         {
@@ -250,25 +252,31 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("theDazzles", "bop", "toggle");
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat))
+            {
+                foreach (var girl in npcGirls)
+                {
+                    girl.Bop();
+                }
+                player.Bop();
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            if (queuedPoses.Count > 0) queuedPoses.Clear();
+            if (queuedCrouches.Count > 0) queuedCrouches.Clear();
         }
 
         void Update()
         {
-            var cond = Conductor.instance;
-
-            if (cond.isPlaying && !cond.isPaused)
+            if (conductor.isPlaying && !conductor.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-                {
-                    if (shouldBop)
-                    {
-                        foreach (var girl in npcGirls)
-                        {
-                            girl.Bop();
-                        }
-                        player.Bop();
-                    }
-                }
                 if (queuedPoses.Count > 0)
                 {
                     foreach (var pose in queuedPoses)
@@ -285,7 +293,8 @@ namespace HeavenStudio.Games
                     }
                     queuedCrouches.Clear();
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
                     player.Prepare(false);
                     SoundByte.PlayOneShotGame("theDazzles/miss");
@@ -294,15 +303,18 @@ namespace HeavenStudio.Games
                         if (girl.currentEmotion != TheDazzlesGirl.Emotion.Ouch) girl.currentEmotion = TheDazzlesGirl.Emotion.Angry;
                     }
                 }
-                if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
+                if (PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease))
                 {
-                    if (doingPoses)
+                    if (doingPoses || PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
                     {
-                        player.Pose(false);
+                        player.Pose(false, doingPoses);
                         SoundByte.PlayOneShotGame("theDazzles/miss");
-                        foreach (var girl in npcGirls)
+                        if (doingPoses)
                         {
-                            girl.Ouch();
+                            foreach (var girl in npcGirls)
+                            {
+                                girl.Ouch();
+                            }
                         }
                     }
                     else
@@ -311,34 +323,39 @@ namespace HeavenStudio.Games
                     }
                     shouldHold = false;
                 }
-                else if (!PlayerInput.Pressing() && !IsExpectingInputNow(InputType.STANDARD_UP) && shouldHold && !GameManager.instance.autoplay)
+                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
                 {
-                    if (doingPoses)
-                    {
-                        player.Pose(false);
-                        SoundByte.PlayOneShotGame("theDazzles/miss");
-                        foreach (var girl in npcGirls)
-                        {
-                            girl.Ouch();
-                        }
-                    }
-                    else
+                    if (PlayerInput.GetIsAction(InputAction_TouchRelease) && !gameManager.autoplay)
                     {
                         player.UnPrepare();
+                        shouldHold = false;
                     }
-                    shouldHold = false;
                 }
-            }
-            else if (!cond.isPlaying && !cond.isPaused)
-            {
-                if (queuedPoses.Count > 0) queuedPoses.Clear();
-                if (queuedCrouches.Count > 0) queuedCrouches.Clear();
+                else
+                {
+                    if (PlayerInput.GetIsAction(InputAction_BasicRelease) && shouldHold && (!gameManager.autoplay) && !IsExpectingInputNow(InputAction_FlickRelease))
+                    {
+                        if (doingPoses)
+                        {
+                            player.Pose(false);
+                            SoundByte.PlayOneShotGame("theDazzles/miss");
+                            foreach (var girl in npcGirls)
+                            {
+                                girl.Ouch();
+                            }
+                        }
+                        else
+                        {
+                            player.UnPrepare();
+                        }
+                        shouldHold = false;
+                    }
+                }
             }
         }
 
         public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
-            shouldBop = autoBop;
             if (goBop)
             {
                 for (int i = 0; i < length; i++)
@@ -410,7 +427,7 @@ namespace HeavenStudio.Games
         {
             float actualLength = length / 3;
             crouchEndBeat = beat + length;
-            ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, Nothing, Nothing);
+            ScheduleInput(beat, 2f * actualLength, InputAction_BasicPress, JustCrouch, Nothing, Nothing);
 
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
@@ -453,11 +470,11 @@ namespace HeavenStudio.Games
         {
             if (stars)
             {
-                ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, cheer ? JustPoseStars : JustPoseStarsNoCheer, MissPose, Nothing);
+                ScheduleInput(beat, playerBeat, InputAction_FlickRelease, cheer ? JustPoseStars : JustPoseStarsNoCheer, MissPose, Nothing);
             }
             else
             {
-                ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, cheer ? JustPose : JustPoseNoCheer, MissPose, Nothing);
+                ScheduleInput(beat, playerBeat, InputAction_FlickRelease, cheer ? JustPose : JustPoseNoCheer, MissPose, Nothing);
             }
             double crouchBeat = beat - 1f;
             if (crouchBeat < crouchEndBeat) 

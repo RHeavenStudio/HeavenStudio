@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HeavenStudio.Games.Loaders
@@ -21,14 +22,14 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("auto", true, "Auto Pass Turn", "", new List<Param.CollapseParam>()
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (bool)x, new string[] { "sound", "con", "visual", "audio" })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "sound", "con", "visual", "audio" })
                         }),
-                        new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
-                        new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),
-                        new Param("visual", true, "Stopwatch (Visual)", "Should the stopwatch visually appear?"),
-                        new Param("audio", QuizShow.ClockAudio.Both, "Stopwatch (Audio)", "Should the sounds of the stopwatch play?")
+                        new Param("sound", true, "Time-Up Sound", "Toggle if the time-up sound should play at the end of the interval."),
+                        new Param("con", false, "Consecutive", "Toggle if everything that happens at the end of the interval should be disabled. This should only be used when you're having two intervals back-to-back."),
+                        new Param("visual", true, "Stopwatch (Visual)", "Toggle if the stopwatch should visually appear."),
+                        new Param("audio", QuizShow.ClockAudio.Both, "Stopwatch (Audio)", "Toggle if the sounds of the stopwatch should play.")
                     }
                 },
                 new GameAction("prepare", "Prepare Host Hands")
@@ -47,10 +48,10 @@ namespace HeavenStudio.Games.Loaders
                 {
                     parameters = new List<Param>()
                     {
-                        new Param("min", new EntityTypes.Integer(0, 666, 0), "Minimum", "The minimum number of presses this block will do."),
-                        new Param("max", new EntityTypes.Integer(0, 666, 1), "Maximum", "The maximum number of presses this block will do."),
-                        new Param("random", QuizShow.WhichButtonRandom.Random, "Which Buttons", "Which buttons will be pressed randomly?"),
-                        new Param("con", true, "Consecutive Presses", "Will the presses be consecutive? As in if the first press doesn't trigger, the ones proceeding will not either.")
+                        new Param("min", new EntityTypes.Integer(0, 666, 0), "Minimum", "Set the minimum number of presses this event will do."),
+                        new Param("max", new EntityTypes.Integer(0, 666, 1), "Maximum", "Set the maximum number of presses this event will do."),
+                        new Param("random", QuizShow.WhichButtonRandom.Random, "Buttons", "Set the buttons to be pressed randomly."),
+                        new Param("con", true, "Consecutive Presses", "Toggle if the presses will be consecutive? This means that if the first press doesn't trigger, the ones proceeding will not either.")
                     },
                     resizable = true
                 },
@@ -59,10 +60,10 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; QuizShow.PrePassTurn(e.beat, e["sound"], e["con"], e["visual"], e["audio"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
-                        new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),
-                        new Param("visual", true, "Stopwatch (Visual)", "Should the stopwatch visually appear?"),
-                        new Param("audio", QuizShow.ClockAudio.Both, "Stopwatch (Audio)", "Should the sounds of the stopwatch play?")
+                        new Param("sound", true, "Time-Up Sound", "Toggle if the time-up sound should play at the end of the interval."),
+                        new Param("con", false, "Consecutive", "Toggle if everything that happens at the end of the interval should be disabled. This should only be used when you're having two intervals back-to-back."),
+                        new Param("visual", true, "Stopwatch (Visual)", "Toggle if the stopwatch should visually appear."),
+                        new Param("audio", QuizShow.ClockAudio.Both, "Stopwatch (Audio)", "Toggle if the sounds of the stopwatch should play.")
                     },
                     resizable = true
                 },
@@ -77,18 +78,18 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.AnswerReaction(e["audience"], e["jingle"], e["reveal"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("audience", true, "Audience", "Should the audience make a sound?"),
-                        new Param("jingle", false, "Jingle", "Should the quiz show jingle play?"),
-                        new Param("reveal", false, "Reveal Answer (Instant)", "Should the answer be revealed when this block starts?")
+                        new Param("audience", true, "Audience Reaction", "Toggle if there should be an audience reaction.."),
+                        new Param("jingle", false, "Jingle", "Toggle if the quiz show jingle should."),
+                        new Param("reveal", false, "Instant", "Toggle if the answer should be revealed insantly when this event starts.")
                     }
                 },
-                new GameAction("changeStage", "Change Expression Stage")
+                new GameAction("changeStage", "Change Expression")
                 {
                     function = delegate {QuizShow.instance.ChangeStage(eventCaller.currentEntity["value"]);},
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("value", QuizShow.HeadStage.Stage1, "Stage", "What's the current stage of the expressions?")
+                        new Param("value", QuizShow.HeadStage.Stage1, "Stage", "Set the current stage of the expressions.")
                     }
                 },
                 new GameAction("countMod", "Count Modifier")
@@ -97,7 +98,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("value", true, "Should Reset Count?", "Will the contestant's counter reset to 0 each time it hits 100 instead of exploding?")
+                        new Param("value", true, "Auto Reset Count", "Toggle if the contestant's counter will reset to 0 each time it hits 100 instead of exploding.")
                     }
                 },
                 new GameAction("forceExplode", "Force Explode")
@@ -106,7 +107,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("value", QuizShow.ShouldExplode.Contestant, "What To Explode", "What will explode?")
+                        new Param("value", QuizShow.ShouldExplode.Contestant, "Target", "Set the object to explode.")
                     }
                 }
             },
@@ -198,6 +199,39 @@ namespace HeavenStudio.Games
 
         private List<RandomPress> randomPresses = new();
 
+        const int IALeft = 0;
+        const int IARight = 1;
+
+        protected static bool IA_PadLeft(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_TouchLeft(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Left, out dt);
+        }
+
+        protected static bool IA_PadRight(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt);
+        }
+        protected static bool IA_TouchRight(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Right, out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Left =
+            new("AgbQuizLeft", new int[] { IALeft, IALeft, IALeft },
+            IA_PadLeft, IA_TouchLeft, IA_BatonBasicPress);
+
+        // Baton Style only has one button
+        public static PlayerInput.InputAction InputAction_Right =
+            new("AgbQuizRight", new int[] { IARight, IARight, IAEmptyCat },
+            IA_PadRight, IA_TouchRight, IA_Empty);
+
         void Awake()
         {
             instance = this;
@@ -225,11 +259,11 @@ namespace HeavenStudio.Games
                 float normalizedBeat = cond.GetPositionFromBeat(playerStartBeat, playerLength);
                 if (normalizedBeat >= 0f && normalizedBeat <= 1f)
                 {
-                    if (PlayerInput.Pressed())
+                    if (PlayerInput.GetIsAction(InputAction_Right))
                     {
                         ContesteePressButton(false);
                     }
-                    if (PlayerInput.GetAnyDirectionDown())
+                    if (PlayerInput.GetIsAction(InputAction_Left))
                     {
                         ContesteePressButton(true);
                     }
@@ -532,23 +566,14 @@ namespace HeavenStudio.Games
                 bool isDpad = relevantInputs[i].datamodel == "quizShow/dPad";
                 if (isDpad)
                 {
-                    ScheduleAutoplayInput(beat, length + inputBeat, InputType.DIRECTION_DOWN, AutoplayDPad, Nothing, Nothing);
+                    ScheduleAutoplayInput(beat, length + inputBeat, InputAction_Left, AutoplayDPad, Nothing, Nothing);
                 }
                 else
                 {
-                    ScheduleAutoplayInput(beat, length + inputBeat, InputType.STANDARD_DOWN, AutoplayAButton, Nothing, Nothing);
+                    ScheduleAutoplayInput(beat, length + inputBeat, InputAction_Right, AutoplayAButton, Nothing, Nothing);
                 }
             }
-
-            if (doingConsectiveIntervals)
-            {
-                countToMatch += relevantInputs.Count;
-            }
-            else
-            {
-                countToMatch = relevantInputs.Count;
-            }
-            int hundredLoops = Mathf.FloorToInt(countToMatch / 100);
+            int hundredLoops = Mathf.FloorToInt((float)countToMatch / 100f);
             countToMatch -= hundredLoops * 100;
             doingConsectiveIntervals = consecutive;
             float timeUpBeat = 0f;
@@ -564,6 +589,14 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat, delegate
                 {
+                    if (doingConsectiveIntervals)
+                    {
+                        countToMatch += relevantInputs.Count;
+                    }
+                    else
+                    {
+                        countToMatch = relevantInputs.Count;
+                    }
                     if (shouldPrepareArms)
                     {
                         contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);

@@ -40,6 +40,10 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             YellowKeep
         }
 
+        public State BallState { get { return currentState; } }
+
+        public bool willBePopped;
+
         private State currentState;
 
         private double startBeat;

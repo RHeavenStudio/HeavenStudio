@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         private double pathStartBeat = double.MinValue;
         private Conductor conductor;
         private GameObject shadow;
+        private bool _jump;
 
         void Awake()
         {
@@ -37,9 +38,10 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             shadow.transform.localScale = Vector3.one * Mathf.Clamp(((transform.position.y) - game.shadowDepthScaleMin) / (game.shadowDepthScaleMax - game.shadowDepthScaleMin), 0f, 1f);
         }
 
-        public void Init(double beat)
+        public void Init(double beat, bool shouldJump)
         {
-            game.ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, Just, Miss, Empty);
+            _jump = shouldJump;
+            game.ScheduleInput(beat, 1.5f, DoubleDate.InputAction_FlickPress, Just, Miss, Empty);
             path = game.GetPath("FootBallInNoHit");  // there's a second path for footballs that hit the weasels, use that if the weasels haven't been hit recently
             UpdateLastRealPos();
             pathStartBeat = beat - 1f;
@@ -96,7 +98,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             UpdateLastRealPos();
             pathStartBeat = conductor.songPositionInBeatsAsDouble;
             path = game.GetPath("FootBallJust");
-            game.Kick(true, true, jump: true);
+            game.Kick(true, true, jump: _jump);
             SoundByte.PlayOneShotGame("doubleDate/footballKick");
         }
 

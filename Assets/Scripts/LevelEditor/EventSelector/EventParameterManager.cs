@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using HeavenStudio.Editor.Track;
 using Jukebox;
-using Jukebox.Legacy;
+using System.Linq;
+using System;
+using static HeavenStudio.EntityTypes;
+using HeavenStudio.Common;
 
 namespace HeavenStudio.Editor
 {
@@ -17,10 +19,12 @@ namespace HeavenStudio.Editor
         [Header("Property Prefabs")]
         [SerializeField] private GameObject IntegerP;
         [SerializeField] private GameObject FloatP;
+        [SerializeField] private GameObject ButtonP;
         [SerializeField] private GameObject BooleanP;
         [SerializeField] private GameObject DropdownP;
         [SerializeField] private GameObject ColorP;
         [SerializeField] private GameObject StringP;
+        private static Dictionary<Type, GameObject> PropertyPrefabs;
 
         public RiqEntity entity;
 
@@ -35,6 +39,18 @@ namespace HeavenStudio.Editor
         private void Awake()
         {
             instance = this;
+
+            if (PropertyPrefabs == null) {
+                PropertyPrefabs = new() {
+                    { typeof(Integer), IntegerP },
+                    { typeof(Float), FloatP },
+                    { typeof(Dropdown), DropdownP },
+                    { typeof(Button), ButtonP },
+                    { typeof(Color), ColorP },
+                    { typeof(bool), BooleanP },
+                    { typeof(string), StringP },
+                };
+            }
         }
 
         private void Start()
@@ -69,19 +85,11 @@ namespace HeavenStudio.Editor
             AddParams(entity);
         }
 
-        static string TrackToThemeColour(int track) => track switch
-        {
-            1 => EditorTheme.theme.properties.Layer2Col,
-            2 => EditorTheme.theme.properties.Layer3Col,
-            3 => EditorTheme.theme.properties.Layer4Col,
-            4 => EditorTheme.theme.properties.Layer5Col,
-            _ => EditorTheme.theme.properties.Layer1Col
-        };
-
         private void AddParams(RiqEntity entity)
         {
-            var minigame = EventCaller.instance.GetMinigame(entity.datamodel.Split(0));
-            int actionIndex = minigame.actions.IndexOf(minigame.actions.Find(c => c.actionName == entity.datamodel.Split(1)));
+            string[] split = entity.datamodel.Split('/');
+            var minigame = EventCaller.instance.GetMinigame(split[0]);
+            int actionIndex = minigame.actions.IndexOf(minigame.actions.Find(c => c.actionName == split[1]));
             Minigames.GameAction action = minigame.actions[actionIndex];
 
             if (action.parameters != null)
@@ -89,7 +97,14 @@ namespace HeavenStudio.Editor
                 eventSelector.SetActive(false);
                 this.entity = entity;
 
-                string col = TrackToThemeColour((int)entity["track"]);
+                string col = (int)entity["track"] switch
+                {
+                    1 => EditorTheme.theme.properties.Layer2Col,
+                    2 => EditorTheme.theme.properties.Layer3Col,
+                    3 => EditorTheme.theme.properties.Layer4Col,
+                    4 => EditorTheme.theme.properties.Layer5Col,
+                    _ => EditorTheme.theme.properties.Layer1Col
+                };
                 Editor.instance.SetGameEventTitle($"Properties for <color=#{col}>{action.displayName}</color> on Beat {entity.beat.ToString("F2")} on <color=#{col}>Track {(int)entity["track"] + 1}</color>");
 
                 DestroyParams();
@@ -98,28 +113,18 @@ namespace HeavenStudio.Editor
 
                 for (int i = 0; i < action.parameters.Count; i++)
                 {
-                    object param = action.parameters[i].parameter;
-                    string caption = action.parameters[i].propertyCaption;
-                    string propertyName = action.parameters[i].propertyName;
-                    string tooltip = action.parameters[i].tooltip;
-                    ePrefabs.Add(propertyName, AddParam(propertyName, param, caption, tooltip));
+                    var p = action.parameters[i];
+                    ePrefabs.Add(p.propertyName, AddParam(p.propertyName, p.parameter, p.caption, p.tooltip));
                 }
-
-                Debug.Log(action.parameters);
 
                 foreach (var p in action.parameters)
                 {
-                    Debug.Log(p.collapseParams);
                     if (p.collapseParams == null || p.collapseParams.Count == 0) continue;
                     EventPropertyPrefab input = ePrefabs[p.propertyName].GetComponent<EventPropertyPrefab>();
                     foreach (var c in p.collapseParams)
                     {
-                        List<GameObject> collapseables = new();
-                        foreach (var s in c.collapseables)
-                        {
-                            collapseables.Add(ePrefabs[s]);
-                        }
-                        input.propertyCollapses.Add(new EventPropertyPrefab.PropertyCollapse(collapseables, c.CollapseOn));
+                        List<GameObject> collapseables = c.collapseables.Select(x => ePrefabs[x]).ToList();
+                        input.propertyCollapses.Add(new EventPropertyPrefab.PropertyCollapse(collapseables, c.CollapseOn, entity));
                     }
                     input.SetCollapses(p.parameter);
                 }
@@ -134,70 +139,27 @@ namespace HeavenStudio.Editor
 
         private GameObject AddParam(string propertyName, object type, string caption, string tooltip = "")
         {
-            GameObject prefab = IntegerP;
-            GameObject input;
-
-            var objType = type.GetType();
-
-            if (objType == typeof(EntityTypes.Integer))
-            {
-                prefab = IntegerP;
-                input = InitPrefab(prefab, tooltip);
-                var property = input.GetComponent<NumberPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if (objType == typeof(EntityTypes.Float))
-            {
-                prefab = FloatP;
-                input = InitPrefab(prefab, tooltip);
-                var property = input.GetComponent<NumberPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if(type is bool)
-            {
-                prefab = BooleanP;
-                input = InitPrefab(prefab, tooltip);
-                var property = input.GetComponent<BoolPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if (objType.IsEnum)
-            {
-                prefab = DropdownP;
-                input = InitPrefab(prefab, tooltip);
-                var property = input.GetComponent<EnumPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if (objType == typeof(Color))
-            {
-                prefab = ColorP;
-                input = InitPrefab(prefab, tooltip);
-                var property = input.GetComponent<ColorPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else if(objType == typeof(string))
-            {
-                prefab = StringP;
-                input = InitPrefab(prefab, tooltip);
-                var property = input.GetComponent<StringPropertyPrefab>();
-                property.SetProperties(propertyName, type, caption);
-            }
-            else
-            {
-                Debug.LogError("Can't make property interface of type: " + type.GetType());
+            Type typeType = type.GetType();
+            GameObject propertyPrefab = DropdownP; // enum check is hardcoded because enums are awesome (lying)
+            if (!typeType.IsEnum && !PropertyPrefabs.TryGetValue(typeType, out propertyPrefab)) {
+                Debug.LogError("Can't make property interface of type: " + typeType);
                 return null;
             }
-            return input;
-        }
 
-        private GameObject InitPrefab(GameObject prefab, string tooltip = "")
-        {
-            GameObject input = Instantiate(prefab);
-            input.transform.SetParent(this.gameObject.transform);
+            GameObject input = Instantiate(propertyPrefab, transform);
             input.SetActive(true);
             input.transform.localScale = Vector3.one;
 
-            if(tooltip != string.Empty)
-                Tooltip.AddTooltip(input, "", tooltip);
+            if (tooltip != string.Empty) {
+                if (PersistentDataManager.gameSettings.showParamTooltips) {
+                    Tooltip.AddTooltip(input, tooltip);
+                } else {
+                    Tooltip.AddTooltip(input, "", tooltip);
+                }
+            }
+            
+            EventPropertyPrefab property = input.GetComponent<EventPropertyPrefab>();
+            property.SetProperties(propertyName, type, caption);
 
             return input;
         }
