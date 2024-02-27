@@ -96,6 +96,7 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer bgLow;
         [SerializeField] SpriteRenderer bgHigh;
         [SerializeField] Animator ChickenAnim;
+        [SerializeField] Animator WaterAnim;
         [SerializeField] Transform sea;
         [SerializeField] TMP_Text yardsText;
         [SerializeField] TMP_Text bubbleText;
@@ -123,8 +124,6 @@ namespace HeavenStudio.Games
 
         double bubbleEndCount = 0;
 
-        float seaPos = 0;
-
         Island nextIsland;
         Island currentIsland;
         Island staleIsland;
@@ -140,6 +139,8 @@ namespace HeavenStudio.Games
 
         double platformDistanceConstant = 5.35 / 2;
         int platformsPerBeat = 4;
+
+        float forgivenessConstant = 1.3f;
 
         public enum DrumLoopList
         {
@@ -387,6 +388,14 @@ namespace HeavenStudio.Games
 
                 isInputting = false; //stops the drums
             }
+
+            if (nextIsland.isMoving)
+            //chicken/water movement speed
+            {
+                float newAnimScale = Util.EasingFunction.EaseOutQuad(1, 0, nextIsland.value1);
+                ChickenAnim.SetScaledAnimationSpeed((newAnimScale * 0.8f) + 0.2f);
+                WaterAnim.SetScaledAnimationSpeed((nextIsland.speed1) + (nextIsland.speed2) + 0.2f);
+            }
         }
 
         public override void OnPlay(double beat)
@@ -407,6 +416,8 @@ namespace HeavenStudio.Games
             colorTo2 = defaultBGColorBottom;
 
             nextIsland = Instantiate(IslandBase, transform).GetComponent<Island>();
+            nextIsland.SmallLandmass.SetActive(true);
+            WaterAnim.DoScaledAnimationAsync("Scroll", 0.2f);
         }
 
         #endregion
@@ -435,12 +446,13 @@ namespace HeavenStudio.Games
             //hose count animation
             nextIsland.ChargerArmCountIn(beat);
 
-            //TO DO: GET RID OF THIS THIS IS JUST FOR DEMO PURPOSES, IT PLAYS THE LITTLE "COLLAPSE" NOISE BUT IT NEEDS TO BE REPLACED WITH A PROPER DISTANCE CHECK
+            //collapse island (successful)
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + (length * 2) - 1, delegate { 
                     SoundByte.PlayOneShotGame("chargingChicken/complete");
                     nextIsland.BigLandmass.SetActive(false);
+                    nextIsland.SmallLandmass.SetActive(true);
                 }),
             });
 
@@ -463,13 +475,18 @@ namespace HeavenStudio.Games
             actions.Add(new(beat - 1, delegate {
                 ChickenAnim.DoScaledAnimationAsync("Prepare", 0.5f);
                 bubbleEndCount = beat + length;
-                SoundByte.PlayOneShotGame("chargingChicken/platformSet");
+                SoundByte.PlayOneShotGame("chargingChicken/platformSet", volume: 0.5f);
                 SpawnJourney(journeyBeat, yardsTextLength - 1);
             }));
 
-            //spawns the countdown bubble
+            //spawns the countdown bubble, allows stones to fall
             actions.Add(new(beat, delegate {
-                    countBubble.SetActive(bubble);
+                countBubble.SetActive(bubble);
+                foreach (var a in stonePlatformJourney)
+                {
+                    stone = a.thisPlatform;
+                    stone.isBeingSet = false;
+                }
             }));
 
             length += 1;
@@ -636,8 +653,9 @@ namespace HeavenStudio.Games
             {
                 stone = a.thisPlatform;
                 stone.transform.localPosition = new Vector3((float)(((a.stoneNumber + 1) * platformDistanceConstant) + (platformDistanceConstant / 2)), 0, 0);
-                stone.BecomeStonePlatform();
-                stone.StoneFall();
+                stone.BecomeStonePlatform(a.stoneNumber);
+                stone.StoneFall(a.stoneNumber);
+                stone.isBeingSet = true;
 
                 stone.journeySave = length * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
                 stone.journeyStart = ((a.stoneNumber + 1) * platformDistanceConstant) + (platformDistanceConstant / 2);
@@ -680,21 +698,21 @@ namespace HeavenStudio.Games
                 stone.journeyBlastOffTime = Conductor.instance.songPositionInBeatsAsDouble;
             }
 
-            nextIsland.PositionIsland(state);
+            nextIsland.PositionIsland(state * forgivenessConstant);
 
             if(missed)
             {
                 nextIsland.journeyEnd += (nextIsland.journeyLength - ((nextIsland.journeyBlastOffTime - journeyIntendedLength)) * (nextIsland.journeyLength / (nextIsland.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
-                nextIsland.journeyLength = Math.Clamp(((nextIsland.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (nextIsland.journeyLength / 3) - 1, 0, nextIsland.journeyLength - 1);
+                nextIsland.journeyLength = Math.Clamp(((nextIsland.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (nextIsland.journeyLength / 3) - 1, 0, nextIsland.journeyLength - 2);
 
                 currentIsland.journeyEnd += ((currentIsland.journeyLength - (currentIsland.journeyBlastOffTime - journeyIntendedLength) + 1) * (currentIsland.journeyLength / (currentIsland.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
-                currentIsland.journeyLength = Math.Clamp(((currentIsland.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (currentIsland.journeyLength / 3) - 1, 0, currentIsland.journeyLength - 1.5);
+                currentIsland.journeyLength = Math.Clamp(((currentIsland.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (currentIsland.journeyLength / 3) - 1, 0, currentIsland.journeyLength - 2);
 
                 foreach (var a in stonePlatformJourney)
                 {
                     stone = a.thisPlatform;
                     stone.journeyEnd += (stone.journeyLength - ((stone.journeyBlastOffTime - journeyIntendedLength)) * (stone.journeyLength / (stone.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
-                    stone.journeyLength = Math.Clamp(((stone.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (stone.journeyLength / 3) - 1, 0, stone.journeyLength - 1);
+                    stone.journeyLength = Math.Clamp(((stone.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (stone.journeyLength / 3) - 1, 0, stone.journeyLength - 2);
                 }
 
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
@@ -713,14 +731,14 @@ namespace HeavenStudio.Games
             }
             else
             {
-                nextIsland.journeyEnd -= state * 1.03f;
+                nextIsland.journeyEnd -= state * 1.03f * forgivenessConstant;
 
-                currentIsland.journeyEnd -= state * 1.03f;
+                currentIsland.journeyEnd -= state * 1.03f * forgivenessConstant;
 
                 foreach (var a in stonePlatformJourney)
                 {
                     stone = a.thisPlatform;
-                    stone.journeyEnd -= state * 1.03f;
+                    stone.journeyEnd -= state * 1.03f * forgivenessConstant;
                 }
 
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
@@ -820,7 +838,7 @@ namespace HeavenStudio.Games
 
             nextIsland.respawnStart = Conductor.instance.songPositionInBeatsAsDouble + 0.5;
             nextIsland.isRespawning = true;
-            nextIsland.FakeChickenAnim.DoScaledAnimationAsync("Respawn", 0.5f);
+            nextIsland.FakeChickenAnim.DoUnscaledAnimation("Respawn");
 
             foreach (var a in stonePlatformJourney)
             {

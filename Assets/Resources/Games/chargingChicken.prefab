@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5079513360686983010}
   - component: {fileID: 369622609815772378}
+  - component: {fileID: 7426045041154988916}
   m_Layer: 0
   m_Name: Sea
   m_TagString: Untagged
@@ -90,6 +91,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7426045041154988916
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801850082581195523}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9a74c07cf0dcf544d91c240670d0e2a7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &858171601846565751
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,15 +602,14 @@ MonoBehaviour:
   bgLow: {fileID: 6514028314290566012}
   bgHigh: {fileID: 6392346911876790710}
   ChickenAnim: {fileID: 122590160896605966}
+  WaterAnim: {fileID: 7426045041154988916}
   sea: {fileID: 5079513360686983010}
-  islandBaseTransform: {fileID: 0}
   yardsText: {fileID: 8575941321201979456}
   bubbleText: {fileID: 5637715493577622280}
   countBubble: {fileID: 8579964775969778696}
   IslandBase: {fileID: 452761269397350257, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
   chickenColors: {fileID: 2100000, guid: acc543038ca31514fa57524efa7642f9, type: 2}
   headlightColor: {fileID: 1126427993834615640}
-  isInputting: 0
 --- !u!1 &3828967778714515104
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,7 +683,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 6
   m_Sprite: {fileID: -326528370, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -746,7 +767,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 0
   m_Sprite: {fileID: 1414815060, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1168,7 +1189,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 0
   m_Sprite: {fileID: 1414815060, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1510,7 +1531,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 15
+  m_SortingOrder: 7
   m_Sprite: {fileID: -2039604112, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

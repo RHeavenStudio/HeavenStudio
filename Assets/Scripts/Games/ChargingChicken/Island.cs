@@ -22,6 +22,10 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [SerializeField] public GameObject FullLandmass;
         [SerializeField] public GameObject StonePlatform;
 
+        [SerializeField] public GameObject Platform1;
+        [SerializeField] public GameObject Platform2;
+        [SerializeField] public GameObject Platform3;
+
         [NonSerialized]public double journeySave = 0;
         [NonSerialized]public double journeyStart = 0;
         [NonSerialized]public double journeyEnd = 0;
@@ -35,6 +39,13 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         [NonSerialized]public bool isStonePlatform = false;
         [NonSerialized]public bool canFall = false;
+        [NonSerialized]public bool isFalling = false;
+
+        [NonSerialized]public bool isBeingSet = false;
+
+        [NonSerialized]public float value1 = 0f;
+        [NonSerialized]public float speed1 = 0f;
+        [NonSerialized]public float speed2 = 0f;
 
         #endregion
 
@@ -45,7 +56,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         {
             if (isMoving)
             {
-                float value1 = (Conductor.instance.GetPositionFromBeat(journeyBlastOffTime, journeyLength));
+                value1 = (Conductor.instance.GetPositionFromBeat(journeyBlastOffTime, journeyLength));
                 float newX1 = Util.EasingFunction.EaseOutCubic((float)journeyStart, (float)journeyEnd, value1);
                 IslandPos.localPosition = new Vector3(newX1, 0, 0);
             }
@@ -55,10 +66,14 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                 float newX2 = Util.EasingFunction.Linear((float)journeyStart - (float)journeySave, (float)journeyEnd, 1 - value2);
                 IslandPos.localPosition = new Vector3(newX2, 0, 0);
             }
-            if (canFall && IslandPos.localPosition.x < 0 && !isRespawning)
+            if (canFall && IslandPos.localPosition.x < -0.5)
             {
-                PlatformAnim.DoScaledAnimationAsync("Fall", 0.5f);
+                PlatformAnim.DoScaledAnimationAsync("Fall", 0.3f);
                 SoundByte.PlayOneShotGame("chargingChicken/platformFall", volume: 0.5f);
+                BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.30, delegate { StoneSplash(); }),
+                });
                 canFall = false;
             }
         }
@@ -105,7 +120,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         //stone platform methods
         #region Stone Platform Methods
 
-        public void BecomeStonePlatform()
+        public void BecomeStonePlatform(int offset)
         {
             isStonePlatform = true;
             canFall = true;
@@ -113,11 +128,23 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
             BigLandmass.SetActive(false);
             FullLandmass.SetActive(false);
             StonePlatform.SetActive(true);
+
+            switch (offset % 3) {
+                case 0: Platform1.SetActive(true); break;
+                case 1: Platform2.SetActive(true); break;
+                case 2: Platform3.SetActive(true); break;
+            }
+
         }
 
-        public void StoneFall()
+        public void StoneFall(int offset)
         {
-            PlatformAnim.DoScaledAnimationAsync("Set", 0.5f);
+            PlatformAnim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble + ((double)offset / 16), timeScale: 0.5f);
+        }
+
+        public void StoneSplash()
+        {
+            if (IslandPos.localPosition.x > -6) SoundByte.PlayOneShotGame("chargingChicken/platformSplash", volume: 0.4f);
         }
 
         #endregion
