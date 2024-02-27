@@ -7,7 +7,7 @@ using UnityEngine;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    public static class MobCanneryLoader
+    public static class PcoCanneryLoader
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
@@ -15,7 +15,11 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { Cannery.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["auto"], eventCaller.currentEntity["toggle"]); },
+                    function = delegate {
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out Cannery instance)) {
+                            instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["auto"], eventCaller.currentEntity["toggle"]);
+                        }
+                    },
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Bop", "Toggle if the alarm should bop for the duration of this event."),
@@ -26,22 +30,28 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate {
                         Cannery.CanSFX(eventCaller.currentEntity.beat);
-                        if (GameManager.instance.currentGame == "cannery") {
-                            Cannery.instance.SendCan(eventCaller.currentEntity.beat);
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out Cannery instance)) {
+                            instance.SendCan(eventCaller.currentEntity.beat);
                         }
                     },
                     defaultLength = 2,
                 },
                 new GameAction("blackout", "Blackout")
                 {
-                    function = delegate { Cannery.instance.Blackout(); },
+                    function = delegate {
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out Cannery instance)) {
+                            instance.Blackout();
+                        }
+                    },
                     defaultLength = 0.5f,
                 },
                 new GameAction("backgroundColor", "Background Color")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        Cannery.instance.BackgroundColorChange(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out Cannery instance)) {
+                            instance.BackgroundColorChange(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
+                        }
                     },
                     defaultLength = 1f,
                     resizable = true,
@@ -85,7 +95,7 @@ namespace HeavenStudio.Games
     public class Cannery : Minigame
     {
         [Header("Objects")]
-        [SerializeField] GameObject canGO;
+        [SerializeField] Can can;
         [SerializeField] GameObject blackout;
         [SerializeField] Material alarmMat;
         [SerializeField] SpriteRenderer bgPlaneSR;
@@ -96,8 +106,8 @@ namespace HeavenStudio.Games
         public Animator dingAnim;
         public Animator cannerAnim;
 
-        private ColorEase bgColorEase;
-        private ColorEase alarmColorEase;
+        private ColorEase bgColorEase = new(Color.white);
+        private ColorEase alarmColorEase = new(new Color(0.862f, 0.372f, 0.031f));
 
         private bool alarmBop = true;
 
@@ -106,7 +116,9 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             // instance = this;
-            canGO.SetActive(false);
+            can.gameObject.SetActive(false);
+            // bgColorEase = new(Color.white);
+            // alarmColorEase = new(new Color(0.86f, 0.37f, 0.03f));
         }
 
         private void Update()
@@ -181,11 +193,11 @@ namespace HeavenStudio.Games
 
         public void SendCan(double beat)
         {
+            Debug.Log(dingAnim);
             // do the ding animation on the beat
-            BeatAction.New(this, new() { new(beat, delegate { dingAnim.DoScaledAnimationFromBeatAsync("Ding", 0.5f, beat); }) });
+            BeatAction.New(this, new() { new(beat, delegate { dingAnim.DoScaledAnimationAsync("Ding", 0.5f); }) });
 
-            Can newCan = Instantiate(canGO, transform).GetComponent<Can>();
-            newCan.game = this;
+            Can newCan = Instantiate(can, transform);
             newCan.startBeat = beat;
             newCan.gameObject.SetActive(true);
         }

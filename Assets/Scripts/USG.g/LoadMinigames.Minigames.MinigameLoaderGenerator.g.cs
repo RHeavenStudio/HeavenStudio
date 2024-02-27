@@ -57,6 +57,17 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader NtrFlickLoader failed!");
             }
 
+            Debug.Log("Running game loader PcoCanneryLoader");
+            game = PcoCanneryLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader PcoCanneryLoader failed!");
+            }
+
             Debug.Log("Running game loader CtrCatchLoader");
             game = CtrCatchLoader.AddGame(eventCaller);
             if (game != null)
@@ -341,17 +352,6 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader AgbQuizShowLoader failed!");
-            }
-
-            Debug.Log("Running game loader MobCanneryLoader");
-            game = MobCanneryLoader.AddGame(eventCaller);
-            if (game != null)
-            {
-                eventCaller.minigames.Add(game.name, game);
-            }
-            else
-            {
-                Debug.LogWarning("Game loader MobRhythmCanneryLoader failed!");
             }
 
             Debug.Log("Running game loader NtrPingpongLoader");
