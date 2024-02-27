@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
                 SoundByte.PlayOneShot("miss");
                 return;
             }
-            SoundByte.PlayOneShotGame("nailCarpenter/somen_catch");
+            SoundByte.PlayOneShotGame("nailCarpenter/HammerStrong");
             nailAnim.DoScaledAnimationAsync("longNailHammered", 0.5f);
         }
 
@@ -45,8 +45,8 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
                 SoundByte.PlayOneShot("miss");
                 return;
             }
+            SoundByte.PlayOneShotGame("nailCarpenter/HammerWeak");
             nailAnim.DoScaledAnimationAsync("longNailWeakHammered", 0.5f);
-            SoundByte.PlayOneShotGame("nailCarpenter/somen_catch");
         }
 
         private void HammmerMiss(PlayerActionEvent caller)

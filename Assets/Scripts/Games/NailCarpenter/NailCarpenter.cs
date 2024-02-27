@@ -144,7 +144,7 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
-                SoundByte.PlayOneShotGame("nailCarpenter/somen_mistake");
+                SoundByte.PlayOneShot("miss");
                 HammerArm.DoScaledAnimationAsync("hammerHit", 0.5f);
                 hasSlurped = false;
                 EffectSweat.DoScaledAnimationAsync("BlobSweating", 0.5f);
@@ -195,7 +195,7 @@ namespace HeavenStudio.Games
 
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
-                            sounds.Add(new MultiSound.Sound("nailCarpenter/somen_drop", targetNailBeat));
+                            sounds.Add(new MultiSound.Sound("nailCarpenter/one", targetNailBeat));
                             SpawnPudding(targetNailBeat, startBeat, (int)sweetsType.Pudding);
                             SpawnNail(targetNailBeat+0.5f, startBeat);
                         }
@@ -216,7 +216,7 @@ namespace HeavenStudio.Games
                         var targetNailBeat = nailBeat + (2f * b);
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
-                            sounds.Add(new MultiSound.Sound("nailCarpenter/somen_drop", targetNailBeat));
+                            sounds.Add(new MultiSound.Sound("nailCarpenter/three", targetNailBeat));
                             SpawnPudding(targetNailBeat, startBeat, (int)sweetsType.Pudding);
                             SpawnNail(targetNailBeat+0.5f, startBeat);
                             SpawnNail(targetNailBeat+1.0f, startBeat);
@@ -239,7 +239,7 @@ namespace HeavenStudio.Games
                         var targetNailBeat = nailBeat + (2f * b);
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
-                            sounds.Add(new MultiSound.Sound("nailCarpenter/somen_doublealarm", targetNailBeat));
+                            sounds.Add(new MultiSound.Sound("nailCarpenter/alarm", targetNailBeat));
                             SpawnPudding(targetNailBeat, startBeat, (int)sweetsType.Pudding);
                             SpawnNail(targetNailBeat+0.5f, startBeat);
                             SpawnPudding(targetNailBeat+1.0f, startBeat, (int)sweetsType.Pudding);
@@ -263,8 +263,8 @@ namespace HeavenStudio.Games
                         var targetNailBeat = nailBeat + (2f * b);
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
-                            sounds.Add(new MultiSound.Sound("nailCarpenter/somen_drop", targetNailBeat));
-                            sounds.Add(new MultiSound.Sound("nailCarpenter/somen_lowerfar", targetNailBeat+1f));
+                            sounds.Add(new MultiSound.Sound("nailCarpenter/signal1", targetNailBeat));
+                            sounds.Add(new MultiSound.Sound("nailCarpenter/signal2", targetNailBeat+1f));
                             SpawnPudding(targetNailBeat, startBeat, (int)sweetsType.LayerCake);
                             SpawnNail(targetNailBeat+0.5f, startBeat);
                             SpawnLongNail(targetNailBeat+1f, startBeat);
