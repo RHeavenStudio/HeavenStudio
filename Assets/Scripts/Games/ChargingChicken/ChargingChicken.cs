@@ -35,6 +35,37 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     preFunctionLength = 4,
                 },
+                new GameAction("bubbleShrink", "Shrink Countdown Bubble")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.BubbleShrink(e.beat, e.length, e["grow"], e["instant"]);
+                        }
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("grow", false, "Grow Bubble", "Make the bubble grow instead."),
+                        new Param("instant", false, "Instant", "Make the bubble appear or disappear instantly."),
+                    },
+                    defaultLength = 4,
+                    resizable = true,
+                },
+                new GameAction("textEdit", "Edit Cue Text")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.TextEdit(e.beat, e["text"], e["color"]);
+                        }
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("text", "# yards to the goal.", "Cue Text", "The text to display for a cue ('#' is the length of the cue in beats)."),
+                        new Param("color", ChargingChicken.defaultHighlightColor, "Highlight Color", "Set the color of the cue number."),
+                    },
+                    defaultLength = 0.5f,
+                },
                 new GameAction("changeBgColor", "Background Appearance")
                 {
                     function = delegate { 
@@ -123,6 +154,23 @@ namespace HeavenStudio.Games
         float lightTo2 = 0;
 
         double bubbleEndCount = 0;
+        double bubbleSizeChangeStart = 0;
+        double bubbleSizeChangeEnd = 0;
+        bool bubbleSizeChangeGrows = false;
+
+        string yardsTextString = "# yards to the goal.";
+        bool yardsTextIsEditable = false;
+        double yardsTextLength = 0;
+        private static Color _defaultHighlightColor;
+        public static Color defaultHighlightColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FFFF00", out _defaultHighlightColor);
+                return _defaultHighlightColor;
+            }
+        }
+
 
         Island nextIsland;
         Island currentIsland;
@@ -396,16 +444,28 @@ namespace HeavenStudio.Games
                 ChickenAnim.SetScaledAnimationSpeed((newAnimScale * 0.8f) + 0.2f);
                 WaterAnim.SetScaledAnimationSpeed((nextIsland.speed1) + (nextIsland.speed2) + 0.2f);
             }
+
+            if (bubbleSizeChangeStart < Conductor.instance.songPositionInBeatsAsDouble && Conductor.instance.songPositionInBeatsAsDouble <= bubbleSizeChangeEnd)
+            {
+                float value = (Conductor.instance.GetPositionFromBeat(bubbleSizeChangeStart, bubbleSizeChangeEnd - bubbleSizeChangeStart));
+                float newScale = Util.EasingFunction.Linear(1, 0, value);
+                countBubble.transform.localScale = bubbleSizeChangeGrows ? new Vector3(1 - newScale, 1 - newScale, 1) : new Vector3(newScale, newScale, 1);
+                if (bubbleSizeChangeGrows) //refresh the text to remove mipmapping
+                {
+                    bubbleText.text = "";
+                    bubbleText.text = ($"{Math.Clamp(Math.Ceiling(bubbleEndCount - Conductor.instance.songPositionInBeatsAsDouble - 1), 0, bubbleEndCount)}");
+                }
+            }
         }
 
         public override void OnPlay(double beat)
         {
-            PersistColor(beat);
+            PersistThings(beat);
         }
 
         public override void OnGameSwitch(double beat)
         {
-            PersistColor(beat);
+            PersistThings(beat);
         }
 
         private void Awake()
@@ -418,6 +478,11 @@ namespace HeavenStudio.Games
             nextIsland = Instantiate(IslandBase, transform).GetComponent<Island>();
             nextIsland.SmallLandmass.SetActive(true);
             WaterAnim.DoScaledAnimationAsync("Scroll", 0.2f);
+
+            string textColor = ColorUtility.ToHtmlStringRGBA(defaultHighlightColor);
+            yardsTextString = yardsTextString.Replace("#", $"<color=#{textColor}>%</color>");
+
+            PersistThings(Conductor.instance.songPositionInBeatsAsDouble);
         }
 
         #endregion
@@ -446,7 +511,7 @@ namespace HeavenStudio.Games
             //hose count animation
             nextIsland.ChargerArmCountIn(beat);
 
-            //collapse island (successful)
+            //collapse island (successful) TO DO: MAKE THIS PER-ISLAND SO IT'S NOT A FUCKING RACE CONDITION
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + (length * 2) - 1, delegate { 
@@ -464,10 +529,12 @@ namespace HeavenStudio.Games
             var actions = new List<BeatAction.Action>();
 
             //"X yards to goal" text, spawn the journey
-            double yardsTextLength = length;
+            yardsTextLength = length;
             double journeyBeat = beat + yardsTextLength;
             actions.Add(new(beat - 2, delegate {
-                yardsText.text = $"<color=yellow>{yardsTextLength}</color> yards to the goal.";
+                string yardsTextStringTemp = yardsTextString.Replace("%", $"{yardsTextLength}");
+                yardsText.text = yardsTextStringTemp;
+                yardsTextIsEditable = true;
                 SpawnStones(journeyBeat, yardsTextLength - 1);
             }));
 
@@ -549,6 +616,7 @@ namespace HeavenStudio.Games
             isInputting = false; //ends the drums (just in case)
 
             //erase text TO DO: make this happen later (but for now it's fine here)
+            yardsTextIsEditable = false;
             yardsText.text = "";
 
             //despawn the counting bubble TO DO: make this happen later (but for now it's fine here)
@@ -672,10 +740,11 @@ namespace HeavenStudio.Games
             isInputting = false; //ends the drums
             SoundByte.PlayOneShotGame("chargingChicken/blastoff");
 
-            //TO DO: remove this and make it better
+            //make him go :)
             ChickenAnim.DoScaledAnimationAsync("Ride", 0.5f);
 
             //erase text
+            yardsTextIsEditable = false;
             yardsText.text = "";
 
             //despawn the counting bubble
@@ -764,6 +833,7 @@ namespace HeavenStudio.Games
             isInputting = false;
 
             //erase text
+            yardsTextIsEditable = false;
             yardsText.text = "";
 
             //despawn the counting bubble
@@ -784,6 +854,7 @@ namespace HeavenStudio.Games
             }
 
             //erase text
+            yardsTextIsEditable = false;
             yardsText.text = "";
 
             //despawn the counting bubble
@@ -808,6 +879,7 @@ namespace HeavenStudio.Games
             }
 
             //erase text
+            yardsTextIsEditable = false;
             yardsText.text = "";
 
             //despawn the counting bubble
@@ -865,6 +937,45 @@ namespace HeavenStudio.Games
             });
         }
 
+        public void BubbleShrink(double beat, double length, bool grows, bool instant)
+        {
+            if (nextIsland.isRespawning || !isInputting) return;
+
+            if (instant)
+            {
+                countBubble.SetActive(grows);
+                countBubble.transform.localScale = new Vector3(1, 1, 1);
+                return;
+            }
+
+            if (grows) countBubble.SetActive(true);
+
+            bubbleSizeChangeStart = beat;
+            bubbleSizeChangeEnd = beat + length;
+            bubbleSizeChangeGrows = grows;
+
+            BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length, delegate { 
+                    if (!grows) { countBubble.SetActive(false); countBubble.transform.localScale = new Vector3(1, 1, 1); }
+                }),
+            });
+        }
+
+        public void TextEdit(double beat, string text, Color highlightColor)
+        {
+            yardsTextString = text;
+
+            string textColor = ColorUtility.ToHtmlStringRGBA(highlightColor);
+            yardsTextString = yardsTextString.Replace("#", $"<color=#{textColor}>%</color>");
+
+            if(yardsTextIsEditable) 
+            {
+                string yardsTextStringTemp = yardsTextString.Replace("%", $"{yardsTextLength}");
+                yardsText.text = yardsTextStringTemp;
+            }
+        }
+
         #region ColorShit
 
         public void ChangeColor(double beat, float length, Color color1, Color color2, Color color3, Color color4, int ease)
@@ -889,7 +1000,7 @@ namespace HeavenStudio.Games
             lastEase = (Util.EasingFunction.Ease)ease;
         }
 
-        private void PersistColor(double beat)
+        private void PersistThings(double beat)
         {
             var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeBgColor" }).FindAll(x => x.beat < beat);
             if (allEventsBeforeBeat.Count > 0)
@@ -905,6 +1016,14 @@ namespace HeavenStudio.Games
                 allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
                 var lastEvent = allEventsBeforeBeat[^1];
                 ChangeLight(lastEvent.beat, lastEvent.length, lastEvent["lightFrom"], lastEvent["lightTo"], lastEvent["headLightFrom"], lastEvent["headLightTo"], lastEvent["ease"]);
+            }
+
+            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "textEdit" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                TextEdit(lastEvent.beat, lastEvent["text"], lastEvent["color"]);
             }
         }
 
