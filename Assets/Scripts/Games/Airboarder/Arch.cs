@@ -14,6 +14,8 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         public double targetBeat;
         public double appearBeat;
 
+        
+
         [Header("Components")]
 
         public Animator anim;
@@ -40,7 +42,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(appearBeat, 40f);
             anim.DoNormalizedAnimation("move", normalizedBeat, 0);
             anim.speed = 0;
-            if (normalizedBeat > 1) Destroy(gameObject);
+            
             
             
         }

@@ -51,9 +51,9 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("duck", "Duck")
                 {
-                    function = delegate {Airboarder.instance.RequestArch(eventCaller.currentEntity.beat);},
                     defaultLength = 4f,
-                    resizable = false
+                    resizable = false,
+                    priority = 1
                 },
 
                 new GameAction("crouch", "Charged Duck")
@@ -144,41 +144,49 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            SetupBopRegion("airboarder", "bop", "auto");
-            
-            
-            
-            
+            SetupBopRegion("airboarder", "bop", "auto");    
         }
 
         public override void OnGameSwitch(double beat)
         {
+            List<BeatAction.Action> actions = new()
+            {};
+
             endBeat = maxValue;
             var entities = GameManager.instance.Beatmap.Entities;
             //find when the next game switch/remix end happens
             RiqEntity firstEnd = entities.Find(c => c.datamodel is "gameManager/switchGame/airboarder" or "gameManager/end" && c.beat > beat);
             endBeat = firstEnd?.beat ?? maxValue;
             
-            //lists arch and wall events
-            List<RiqEntity> archEvents = EventCaller.GetAllInGameManagerList("airboarder", new string[] { "duck"});
-            List<RiqEntity> crouchEvents = EventCaller.GetAllInGameManagerList("airboarder", new string[] { "crouch"});
+            List<RiqEntity> relevantArches = GetAllArches(beat, endBeat);
+            relevantArches.Sort((x, y) => x.beat.CompareTo(y.beat));
+    //        for (int i = 0; i < relevantArches.Count; i++)
+    //        {
+     //           double archSpawnBeat = relevantArches[i].beat - 28;
+     //           actions.Add(new BeatAction.Action(archSpawnBeat, delegate
+     //           {
+   //                 if (archSpawnBeat >= 0)
+    //                {RequestArch(archSpawnBeat);}
+    //            }));
+    //        }
+
+    //        BeatAction.New(this, actions);
+
+            
 
 
             //spawns an arch for each arch event
-            for (int i = 0; i <archEvents.Count; i++){
-                var archBeat = archEvents[i].beat;
-
-                if (startBeat <= archBeat - 28){
-                        
-                            var targetArchBeat = archBeat - 28f;
-                            if (switchBeat <= targetArchBeat){
-                                RequestArch(targetArchBeat);
-                                
-                            }
-                        
-                    }    
-            }
+            foreach (var archReg in relevantArches)
+             {
+                if(archReg.beat - 28 >= switchBeat)
+                {
+                   BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(archReg.beat-28f, delegate {RequestArch(archReg.beat);})
+                  });
+              }
         }    
+        }
         
 
         public override void OnPlay(double beat)
@@ -186,6 +194,11 @@ namespace HeavenStudio.Games
             OnGameSwitch(beat);
         }
 
+        private List<RiqEntity> GetAllArches(double beat, double endBeat)
+        {
+            //lists arch and wall events
+            return EventCaller.GetAllInGameManagerList("airboarder", new string[] { "duck"}).FindAll(x => x.beat >= beat && x.beat < endBeat);
+        }
 
         public void Update()
         {
@@ -206,36 +219,20 @@ namespace HeavenStudio.Games
                 if (PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease)){
                 Player.GetComponent<Animator>().DoScaledAnimationAsync("hold",1f);
                 playerCantBop = false;}
-                              
-
             }
 
         }
 
-        public void FloorMovement (double beat)
-        {
-            
-        }
-
-
-
-
         public override void OnBeatPulse(double beat)
         {
-            
             if (goBop)
             {
                 Bop();
             }
-           
-
         }
-
 
         public void BopToggle(double beat, float length, bool shouldBop, bool autoBop)
         {
-
-
             goBop = autoBop;
             if (shouldBop)
             {
@@ -263,8 +260,6 @@ namespace HeavenStudio.Games
             if (!cpu2CantBop){
             CPU2.GetComponent<Animator>().DoScaledAnimationAsync("bop",0.5f);
             }
-
-
         }
 
         public void YeahLetsGo(double beat, bool voiceOn)
@@ -290,14 +285,10 @@ namespace HeavenStudio.Games
             Arch newArch = Instantiate(archBasic);
             newArch.appearBeat = beat;
             newArch.gameObject.SetActive(true);
-            
         }
-
-
 
         public void CueDuck(double beat)
         {
-            
             BeatAction.New(instance, new List<BeatAction.Action>() {
                 
                 new BeatAction.Action(beat, delegate {cpu1CantBop = true;} ),  
