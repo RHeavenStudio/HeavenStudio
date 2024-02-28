@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c40623a0469766b4095282517245602d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoEmitOnScriptUpdate: 0
+  AutoEmitOnScriptUpdate: 1
   AutoEmitDisabledPaths: []
   DenseViewWidthThreshold: 512
   _disableAutoReloadInBackground: 0
   ImportedScriptPaths:
+  - Assets/Scripts/Games/Airboarder/Arch.cs
   - Assets/Scripts/Games/Airboarder/Airboarder.cs
+  - Assets/Scripts/Games/Airboarder/Scrollng_Floor.cs
   PathsToSkipImportEvent: []
   PathsToIgnoreOverwriteSettingOnAttribute: []

@@ -3,7 +3,12 @@ guid: 94df92b5e5343dd40b32bcc24267b22b
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: airboy_sdwMt
+    second: {fileID: 2100000, guid: 88c6b20a5757e1047b66d40ca9f60a3e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
