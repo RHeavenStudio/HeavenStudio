@@ -139,6 +139,8 @@ namespace HeavenStudio.Games
         bool isInputting = false;
         bool canBlastOff = false;
 
+        bool flowForward = true;
+
         double bgColorStartBeat = -1;
         float bgColorLength = 0;
         double fgLightStartBeat = -1;
@@ -437,14 +439,30 @@ namespace HeavenStudio.Games
                 isInputting = false; //stops the drums
             }
 
-            if (nextIsland.isMoving)
             //chicken/water movement speed
+            float newAnimScale = Util.EasingFunction.EaseOutQuad(1, 0, nextIsland.value1);
+            if (nextIsland.isMoving) ChickenAnim.SetScaledAnimationSpeed((newAnimScale * 0.8f) + 0.4f);
+            float waterFlowSpeed = (nextIsland.speed1 / 5.83f) + ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f);
+            if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.4f) < 0) 
             {
-                float newAnimScale = Util.EasingFunction.EaseOutQuad(1, 0, nextIsland.value1);
-                ChickenAnim.SetScaledAnimationSpeed((newAnimScale * 0.8f) + 0.2f);
-                WaterAnim.SetScaledAnimationSpeed((nextIsland.speed1) + (nextIsland.speed2) + 0.2f);
+                if (waterFlowSpeed > 0) WaterAnim.speed = waterFlowSpeed;
+                if (!flowForward)
+                {
+                    WaterAnim.DoScaledAnimationAsync("Scroll", waterFlowSpeed);
+                    flowForward = true; 
+                }
+            }
+            else 
+            { 
+                if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.4f) > 0) WaterAnim.speed = (-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.4f);
+                if (flowForward)
+                {
+                    WaterAnim.DoScaledAnimationAsync("AntiScroll", (-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.4f));
+                    flowForward = false; 
+                }
             }
 
+            //bubble shrinkage
             if (bubbleSizeChangeStart < Conductor.instance.songPositionInBeatsAsDouble && Conductor.instance.songPositionInBeatsAsDouble <= bubbleSizeChangeEnd)
             {
                 float value = (Conductor.instance.GetPositionFromBeat(bubbleSizeChangeStart, bubbleSizeChangeEnd - bubbleSizeChangeStart));
@@ -586,6 +604,7 @@ namespace HeavenStudio.Games
         {
             //sound
             isInputting = true; //starts the drums
+            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f); //TO DO: maybe change this
 
             //chicken animation
             ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
@@ -601,6 +620,7 @@ namespace HeavenStudio.Games
             isInputting = true; //starts the drums
             SoundByte.PlayOneShotGame("chargingChicken/kick");
             SoundByte.PlayOneShotGame("chargingChicken/hihat");
+            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f); //TO DO: maybe change this
 
             //chicken animation
             ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
@@ -922,10 +942,10 @@ namespace HeavenStudio.Games
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(nextIsland.respawnEnd, delegate { 
-                    staleIsland.isRespawning = false;
+                    if (staleIsland != null) staleIsland.isRespawning = false;
                     currentIsland.isRespawning = false;
                     nextIsland.isRespawning = false;
-                    staleIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
+                    if (staleIsland != null) staleIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     currentIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     nextIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     foreach (var a in stonePlatformJourney)

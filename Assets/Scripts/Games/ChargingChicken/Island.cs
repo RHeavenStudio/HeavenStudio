@@ -54,6 +54,8 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         private void Update()
         {
+            float previousPosition = IslandPos.localPosition.x;
+
             if (isMoving)
             {
                 value1 = (Conductor.instance.GetPositionFromBeat(journeyBlastOffTime, journeyLength));
@@ -76,6 +78,9 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                 });
                 canFall = false;
             }
+
+            float currentPosition = IslandPos.localPosition.x;
+            speed1 = (previousPosition - currentPosition) / Time.deltaTime;
         }
 
         #endregion
