@@ -14,16 +14,18 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         [Header("Properties")]
         [SerializeField] private double _zoomInLength = 0.25;
         [SerializeField] private float _zoomInPower = 4f;
+        [SerializeField] private EasingFunction.Ease _ease = EasingFunction.Ease.EaseOutBounce;
 
         private bool _rested = false;
         private LumBEARjack.RestSoundChoice _restSound;
 
         private float _cameraPointZFrom;
-        private EasingFunction.Function _cameraFunc = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutBounce);
+        private EasingFunction.Function _cameraFunc;
 
         private void Awake()
         {
             _cameraPointZFrom = _cameraPoint.localPosition.z;
+            _cameraFunc = EasingFunction.GetEasingFunction(_ease);
         }
 
         public void SwingWhiff(bool sound = true)

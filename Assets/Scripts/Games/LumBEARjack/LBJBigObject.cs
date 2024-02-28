@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using UnityEngine.UIElements;
 
 namespace HeavenStudio.Games.Scripts_LumBEARjack
 {
@@ -16,6 +17,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private LumBEARjack.BigType _type;
         private bool _right = true;
 
+        private PlayerActionEvent _hitActionEvent;
         private PlayerActionEvent _cutActionEvent;
 
         private double _rotationBeat;
@@ -34,7 +36,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
             _rotationBeat = beat + (length / 4 * 2);
             _rotationLength = length / 4;
-            if (startUpBeat <= beat + (length / 4 * 2)) LumBEARjack.instance.ScheduleInput(beat, length / 4 * 2, Minigame.InputAction_BasicPress, JustHit, Miss, Blank);
+            if (startUpBeat <= beat + (length / 4 * 2)) _hitActionEvent = LumBEARjack.instance.ScheduleInput(beat, length / 4 * 2, Minigame.InputAction_BasicPress, JustHit, Miss, Blank);
             else
             {
                 _rotationBeat = beat + (length / 4 * 3);
@@ -46,6 +48,17 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private void Update()
         {
+            if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !LumBEARjack.instance.IsExpectingInputNow(Minigame.InputAction_BasicPress))
+            {
+                LumBEARjack.instance.ScoreMiss();
+                Miss(null);
+                if (_hitActionEvent != null)
+                {
+                    _hitActionEvent.Disable();
+                    _hitActionEvent.QueueDeletion();
+                }
+                return;
+            }
             _rotateObject.Move(_rotationBeat, _rotationLength, _right);
         }
 

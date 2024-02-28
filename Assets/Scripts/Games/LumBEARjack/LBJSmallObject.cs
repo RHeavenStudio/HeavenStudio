@@ -23,6 +23,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private double _rotationBeat;
         private double _rotationLength;
 
+        private PlayerActionEvent _inputEvent;
+
         private void Awake()
         {
             _log.SetActive(false);
@@ -59,12 +61,20 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
             _rotationBeat = beat + (length / 3 * 2);
             _rotationLength = length / 3;
-            LumBEARjack.instance.ScheduleInput(beat, length / 3 * 2, Minigame.InputAction_BasicPress, Just, Miss, Blank);
+            _inputEvent = LumBEARjack.instance.ScheduleInput(beat, length / 3 * 2, Minigame.InputAction_BasicPress, Just, Miss, Blank);
             Update();
         }
 
         private void Update()
         {
+            if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !LumBEARjack.instance.IsExpectingInputNow(Minigame.InputAction_BasicPress))
+            {
+                LumBEARjack.instance.ScoreMiss();
+                Miss(_inputEvent);
+                _inputEvent.Disable();
+                _inputEvent.QueueDeletion();
+                return;
+            }
             if (_type == LumBEARjack.SmallType.bat)
             {
                 _rotateObject.SingleMove(_rotationBeat, _rotationLength, _right);

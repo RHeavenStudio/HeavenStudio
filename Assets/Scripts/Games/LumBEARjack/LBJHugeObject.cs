@@ -23,6 +23,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private bool _zoom = true;
         private bool _baby = true;
 
+        private PlayerActionEvent _initialAction;
         private PlayerActionEvent[] _soundsToDeleteIfMiss = new PlayerActionEvent[3];
 
         private double _rotationBeat;
@@ -63,7 +64,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _rotationBeat = beat + (length / 6 * 2);
             _rotationLength = length / 6;
 
-            if (startUpBeat <= beat + (length / 6 * 2)) LumBEARjack.instance.ScheduleInput(beat, length / 6 * 2, Minigame.InputAction_BasicPress, JustHit1, Miss, Blank);
+            if (startUpBeat <= beat + (length / 6 * 2)) _initialAction = LumBEARjack.instance.ScheduleInput(beat, length / 6 * 2, Minigame.InputAction_BasicPress, JustHit1, Miss, Blank);
             else
             {
                 _rotationBeat = beat + (length / 6 * 3);
@@ -90,6 +91,17 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private void Update()
         {
+            if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress) && !LumBEARjack.instance.IsExpectingInputNow(Minigame.InputAction_BasicPress))
+            {
+                LumBEARjack.instance.ScoreMiss();
+                Miss(null);
+                if (_initialAction != null)
+                {
+                    _initialAction.Disable();
+                    _initialAction.QueueDeletion();
+                }
+                return;
+            }
             _rotateObject.Move(_rotationBeat, _rotationLength, _right);
         }
 
