@@ -123,11 +123,11 @@ namespace HeavenStudio.Games
         [SerializeField] Arch archBasic;
 
         [Header("Animators")]
-        [SerializeField] Animator CPU1;
-        [SerializeField] Animator CPU2;
+        [SerializeField] public Animator CPU1;
+        [SerializeField] public Animator CPU2;
         [SerializeField] public Animator Player;
-        [SerializeField] Animator Dog;
-        [SerializeField] Animator Floor;
+        [SerializeField] public Animator Dog;
+        [SerializeField] public Animator Floor;
 
         bool goBop;
         public bool cpu1CantBop = false;
@@ -177,15 +177,16 @@ namespace HeavenStudio.Games
 
             //spawns an arch for each arch event
             foreach (var archReg in relevantArches)
-             {
-                if(archReg.beat - 28 >= switchBeat)
+            {
+                if(archReg.beat - 28f >= switchBeat)
                 {
                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(archReg.beat-28f, delegate {RequestArch(archReg.beat);})
-                  });
+                        new BeatAction.Action(archReg.beat-28, delegate {RequestArch(archReg.beat);}),
+                        new BeatAction.Action(archReg.beat, delegate {CueDuck(archReg.beat);})
+                   });
               }
-        }    
+            }    
         }
         
 
@@ -289,6 +290,7 @@ namespace HeavenStudio.Games
 
         public void CueDuck(double beat)
         {
+            ScheduleInput(beat, 3f, InputAction_BasicPress, DuckSuccess, DuckMiss, DuckEmpty);
             BeatAction.New(instance, new List<BeatAction.Action>() {
                 
                 new BeatAction.Action(beat, delegate {cpu1CantBop = true;} ),  
@@ -312,6 +314,8 @@ namespace HeavenStudio.Games
         public void CueCrouch(double beat)
         {
 
+            ScheduleInput(beat, 3f, InputAction_FlickRelease, CrouchSuccess, CrouchMiss, CrouchEmpty);
+
             BeatAction.New(instance, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat, delegate {cpu1CantBop = true;}),
                 new BeatAction.Action(beat, delegate {CPU1.GetComponent<Animator>().DoScaledAnimationAsync("letsgo", 1f);}),
@@ -321,7 +325,6 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1, delegate {SoundByte.PlayOneShotGame("airboarder/crouchCharge");}),
                 new BeatAction.Action(beat+1, delegate {CPU1.GetComponent<Animator>().DoScaledAnimationAsync("charge", 1f);}),
                 new BeatAction.Action(beat+1, delegate {CPU2.GetComponent<Animator>().DoScaledAnimationAsync("letsgo", 1f);}), 
-
                             
                 new BeatAction.Action(beat+2, delegate {CPU2.GetComponent<Animator>().DoScaledAnimationAsync("charge", 1f);}),                
                 new BeatAction.Action(beat+2, delegate {Player.GetComponent<Animator>().DoScaledAnimationAsync("letsgo", 1f);}),                
@@ -340,6 +343,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(instance, new List<BeatAction.Action>() {
 
+                
                 new BeatAction.Action(beat+1, delegate {CPU1.GetComponent<Animator>().DoScaledAnimationAsync("jump", 1f);}),
                 new BeatAction.Action(beat+1, delegate {cpu1CantBop = false;} ),              
                 new BeatAction.Action(beat + 1, delegate {SoundByte.PlayOneShotGame("airboarder/jump");}),
@@ -351,32 +355,32 @@ namespace HeavenStudio.Games
         }
 
 
-        public void DuckSuccess(double beat)
+        public void DuckSuccess(PlayerActionEvent caller, float state)
         {
             Player.GetComponent<Animator>().DoScaledAnimationAsync("duck", 1f);
             SoundByte.PlayOneShotGame("airboarder/crouch");
         }
 
-        public void DuckMiss(double beat){
+        public void DuckMiss(PlayerActionEvent caller){
             Player.GetComponent<Animator>().DoScaledAnimationAsync("hit1",1f);
         }
 
-        public void DuckEmpty(double beat){
+        public void DuckEmpty(PlayerActionEvent caller){
             Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f);
         }
 
-        public void CrouchSuccess(double beat)
+        public void CrouchSuccess(PlayerActionEvent caller, float state)
         {
             Player.GetComponent<Animator>().DoScaledAnimationAsync("charge", 1f);
             SoundByte.PlayOneShotGame("airboarder/crouchCharge");
             playerCantBop = true;
         }
 
-        public void CrouchMiss(double beat){
+        public void CrouchMiss(PlayerActionEvent caller){
             Player.GetComponent<Animator>().DoScaledAnimationAsync("hit1",1f);
         }
 
-        public void CrouchEmpty(double beat){
+        public void CrouchEmpty(PlayerActionEvent caller){
             Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f);
         }
 
