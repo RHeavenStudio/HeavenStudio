@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
 
         public float normalizedStart;
 
-
+        
         
 
         [Header("Components")]
@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         private void Awake()
         {
             game = Airboarder.instance;
-            gameObject.transform.position = new Vector3(-140f, -1f, 0.8f);
+            
 
         }
 
@@ -66,7 +66,10 @@ namespace HeavenStudio.Games.Scripts_Airboarder
             var cond = Conductor.instance;
             var currentBeat = cond.songPositionInBeatsAsDouble;
             float normalizedStart = Conductor.instance.GetPositionFromBeat(appearBeat, 40f);
+            float horizArch = (5*normalizedStart) - 140;
             anim.Play("move", 0, normalizedStart);
+//            gameObject.transform.position = new Vector3(horizArch, -1f, 0.8f);
+
             
         }
 

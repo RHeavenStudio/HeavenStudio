@@ -276,7 +276,7 @@ namespace HeavenStudio.Games
 
         public void RequestArch(double beat)
         {
-            Arch newArch = Instantiate(archBasic);
+            Arch newArch = Instantiate(archBasic, transform);
             newArch.appearBeat = beat;
             newArch.gameObject.SetActive(true);
         }
@@ -307,7 +307,7 @@ namespace HeavenStudio.Games
         public void CueCrouch(double beat)
         {
 
-            ScheduleInput(beat, 3f, InputAction_FlickRelease, CrouchSuccess, CrouchMiss, CrouchEmpty);
+            ScheduleInput(beat, 3f, InputAction_BasicPress, CrouchSuccess, CrouchMiss, CrouchEmpty);
 
             BeatAction.New(instance, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat, delegate {cpu1CantBop = true;}),
