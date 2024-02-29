@@ -127,6 +127,7 @@ namespace HeavenStudio.Games
         [SerializeField] public Animator CPU2;
         [SerializeField] public Animator Player;
         [SerializeField] public Animator Dog;
+        [SerializeField] public Animator Tail;
         [SerializeField] public Animator Floor;
 
         bool goBop;
@@ -152,6 +153,8 @@ namespace HeavenStudio.Games
             List<BeatAction.Action> actions = new()
             {};
 
+            double switchBeat = beat;
+
             endBeat = maxValue;
             var entities = GameManager.instance.Beatmap.Entities;
             //find when the next game switch/remix end happens
@@ -159,18 +162,6 @@ namespace HeavenStudio.Games
             endBeat = firstEnd?.beat ?? maxValue;
             
             List<RiqEntity> relevantArches = GetAllArches(beat, endBeat);
-            relevantArches.Sort((x, y) => x.beat.CompareTo(y.beat));
-    //        for (int i = 0; i < relevantArches.Count; i++)
-    //        {
-     //           double archSpawnBeat = relevantArches[i].beat - 28;
-     //           actions.Add(new BeatAction.Action(archSpawnBeat, delegate
-     //           {
-   //                 if (archSpawnBeat >= 0)
-    //                {RequestArch(archSpawnBeat);}
-    //            }));
-    //        }
-
-    //        BeatAction.New(this, actions);
 
             
 
@@ -178,15 +169,27 @@ namespace HeavenStudio.Games
             //spawns an arch for each arch event
             foreach (var archReg in relevantArches)
             {
-                if(archReg.beat - 28f >= switchBeat)
+                
+                double scheduledInput = archReg.beat;
+                if (archReg.beat >= beat + 25)
                 {
-                   BeatAction.New(instance, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(archReg.beat-28, delegate {RequestArch(archReg.beat);}),
-                        new BeatAction.Action(archReg.beat, delegate {CueDuck(archReg.beat);})
-                   });
+                    
+
+                    RequestArch(scheduledInput-25);
+                    archBasic.CueDuck(scheduledInput);
+                    
+                }
+                else
+                {
+                    RequestArch(-1 * (archReg.beat-25));
+
+                    archBasic.CueDuck(scheduledInput);
+                    
+                }
+                    
               }
-            }    
+
+                
         }
         
 
@@ -206,9 +209,14 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             var currentBeat = cond.songPositionInBeatsAsDouble;
             
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 2f);
-            Floor.Play("moving", -1, normalizedBeat);
+            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 5f);
+           
+            Floor.Play("moving", 0, normalizedBeat);
             Floor.speed = 0;
+            Dog.Play("run", 0, normalizedBeat*5);
+            Dog.speed = 0;
+            Tail.Play("wag",0,normalizedBeat*5);
+            Tail.speed = 0;
             
           
             if (cond.isPlaying && !cond.isPaused){
@@ -290,7 +298,7 @@ namespace HeavenStudio.Games
 
         public void CueDuck(double beat)
         {
-            ScheduleInput(beat, 3f, InputAction_BasicPress, DuckSuccess, DuckMiss, DuckEmpty);
+            ScheduleInput(beat, 3f, InputAction_BasicPress, archBasic.DuckSuccess, archBasic.DuckMiss, archBasic.DuckEmpty);
             BeatAction.New(instance, new List<BeatAction.Action>() {
                 
                 new BeatAction.Action(beat, delegate {cpu1CantBop = true;} ),  
@@ -355,19 +363,19 @@ namespace HeavenStudio.Games
         }
 
 
-        public void DuckSuccess(PlayerActionEvent caller, float state)
-        {
-            Player.GetComponent<Animator>().DoScaledAnimationAsync("duck", 1f);
-            SoundByte.PlayOneShotGame("airboarder/crouch");
-        }
+ //       public void DuckSuccess(PlayerActionEvent caller, float state)
+ //       {
+ //           Player.GetComponent<Animator>().DoScaledAnimationAsync("duck", 1f);
+  //          SoundByte.PlayOneShotGame("airboarder/crouch");
+ //       }
 
-        public void DuckMiss(PlayerActionEvent caller){
-            Player.GetComponent<Animator>().DoScaledAnimationAsync("hit1",1f);
-        }
+ //       public void DuckMiss(PlayerActionEvent caller){
+ //           Player.GetComponent<Animator>().DoScaledAnimationAsync("hit1",1f);
+ //       }
 
-        public void DuckEmpty(PlayerActionEvent caller){
-            Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f);
-        }
+ //       public void DuckEmpty(PlayerActionEvent caller){
+ //           Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f);
+ //       }
 
         public void CrouchSuccess(PlayerActionEvent caller, float state)
         {

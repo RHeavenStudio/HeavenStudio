@@ -3,7 +3,17 @@ guid: 2b191f0019f7a454da1d277016908992
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: dog
+    second: {fileID: 2100000, guid: c466e7c7047232045bc7f7da99a96309, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: dog_sdw
+    second: {fileID: 2100000, guid: d60ea1e87341a3a4fbad986e8d3b2aec, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
