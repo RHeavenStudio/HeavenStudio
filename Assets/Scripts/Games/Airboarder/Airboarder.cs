@@ -137,8 +137,7 @@ namespace HeavenStudio.Games
         
         public double startBeat;
         public double switchBeat;
-        public double endBeat;
-        public double maxValue;
+
 
         public float startFloor;
 
@@ -154,14 +153,15 @@ namespace HeavenStudio.Games
             {};
 
             double switchBeat = beat;
-
-            endBeat = maxValue;
+            double startBeat = double.MaxValue;
+            double endBeat = double.MaxValue;
+            
             var entities = GameManager.instance.Beatmap.Entities;
             //find when the next game switch/remix end happens
-            RiqEntity firstEnd = entities.Find(c => c.datamodel is "gameManager/switchGame/airboarder" or "gameManager/end" && c.beat > beat);
-            endBeat = firstEnd?.beat ?? maxValue;
+            var nextGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat > beat && x.datamodel != "gameManager/switchGame/airboarder");
+            double nextGameSwitchBeat = double.MaxValue;
             
-            List<RiqEntity> relevantArches = GetAllArches(beat, endBeat);
+            List<RiqEntity> relevantArches = GetAllArches(beat, nextGameSwitchBeat);
 
             
 
@@ -169,24 +169,9 @@ namespace HeavenStudio.Games
             //spawns an arch for each arch event
             foreach (var archReg in relevantArches)
             {
-                
-                double scheduledInput = archReg.beat;
-                if (archReg.beat >= beat + 25)
-                {
-                    
-
-                    RequestArch(scheduledInput-25);
-                    archBasic.CueDuck(scheduledInput);
-                    
-                }
-                else
-                {
-                    RequestArch(-1 * (archReg.beat-25));
-
-                    archBasic.CueDuck(scheduledInput);
-                    
-                }
-                    
+                RequestArch(archReg.beat-25);
+                archBasic.CueDuck(archReg.beat);
+          
               }
 
                 
