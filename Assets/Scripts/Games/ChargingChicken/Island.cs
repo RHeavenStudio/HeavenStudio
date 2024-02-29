@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
             }
             if (canFall && IslandPos.localPosition.x < -0.5)
             {
-                PlatformAnim.DoScaledAnimationAsync("Fall", 0.3f);
+                PlatformAnim.DoScaledAnimationAsync("Fall", 0.3f); // TO DO: MAKE THIS SCALE TO TEMPO PROPERLY
                 SoundByte.PlayOneShotGame("chargingChicken/platformFall", volume: 0.5f);
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
@@ -112,6 +112,19 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         public void PositionIsland(float state)
         {
             CollapsedLandmass.localPosition = new Vector3(state, 0, 0);
+        }
+
+        public void SetUpCollapse(double collapseTime)
+        {
+            //collapse island (successful) TO DO: MAKE THIS PER-ISLAND SO IT'S NOT A FUCKING RACE CONDITION
+            BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(collapseTime, delegate { 
+                    SoundByte.PlayOneShotGame("chargingChicken/complete");
+                    BigLandmass.SetActive(false);
+                    SmallLandmass.SetActive(true);
+                }),
+            });
         }
 
         public void CollapseUnderPlayer()
