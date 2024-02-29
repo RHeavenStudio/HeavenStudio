@@ -1,8 +1,10 @@
-using HeavenStudio.Util;
-using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
+
 using UnityEngine;
+
+using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -29,7 +31,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("can", "Can")
                 {
                     preFunction = delegate {
-                        Cannery.CanSFX(eventCaller.currentEntity.beat);
+                        SoundByte.PlayOneShotGame("cannery/ding", eventCaller.currentEntity.beat, forcePlay: true);
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out Cannery instance)) {
                             instance.SendCan(eventCaller.currentEntity.beat);
                         }
@@ -45,23 +47,6 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 0.5f,
                 },
-                new GameAction("backgroundColor", "Background Color")
-                {
-                    function = delegate {
-                        var e = eventCaller.currentEntity;
-                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out Cannery instance)) {
-                            instance.BackgroundColorChange(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
-                        }
-                    },
-                    defaultLength = 1f,
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("startColor", new Color(1, 1, 1), "Start Color", "Set the color at the start of the event."),
-                        new Param("endColor",   new Color(1, 1, 1), "End Color",   "Set the color at the end of the event."),
-                        new Param("ease", Util.EasingFunction.Ease.Instant, "Ease", "Set the easing of the action."),
-                    },
-                },
                 new GameAction("alarmColor", "Alarm Color")
                 {
                     function = delegate {
@@ -73,8 +58,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("startColor", new Color(0.8627f, 0.3725f, 0.0313f), "Start Color", "Set the color at the start of the event.", new() { new((_, _) => true, new string[] { "startColor" }) }),
-                        new Param("endColor",   new Color(0.8627f, 0.3725f, 0.0313f), "End Color",   "Set the color at the end of the event."),
+                        new Param("startColor", Cannery.alarmColor , "Start Color", "Set the color at the start of the event.", new() { new((_, _) => true, new string[] { "startColor" }) }),
+                        new Param("endColor",   Cannery.alarmColor, "End Color",   "Set the color at the end of the event."),
                         new Param("ease", Util.EasingFunction.Ease.Instant, "Ease", "Set the easing of the action."),
                     }
                 },
@@ -106,29 +91,47 @@ namespace HeavenStudio.Games
         public Animator dingAnim;
         public Animator cannerAnim;
 
-        private ColorEase bgColorEase = new(Color.white);
-        private ColorEase alarmColorEase = new(new Color(0.862f, 0.372f, 0.031f));
+        // private ColorEase bgColorEase = new(Color.white);
+        public static readonly Color alarmColor = new Color(0.8627f, 0.3725f, 0.0313f);
+        public double aStartBeat;
+        public float aLength;
+        public Color aStartColor, aEndColor;
+        public Util.EasingFunction.Ease aEase = Util.EasingFunction.Ease.Instant;
+        public Util.EasingFunction.Function aEaseFunc;
 
         private bool alarmBop = true;
 
-        // public static Cannery instance;
-
         private void Awake()
         {
-            // instance = this;
             can.gameObject.SetActive(false);
-            // bgColorEase = new(Color.white);
-            // alarmColorEase = new(new Color(0.86f, 0.37f, 0.03f));
+            aStartColor = aEndColor = alarmColor;
         }
 
         private void Update()
         {
-            conveyorBeltAnim.DoNormalizedAnimation("Move", (Conductor.instance.songPositionInBeats / 2) % 1);
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)) {
+                cannerAnim.DoScaledAnimationAsync("CanEmpty", 0.5f);
+                SoundByte.PlayOneShotGame("cannery/can");
+                SoundByte.PlayOneShot("nearMiss");
+            }
+            conveyorBeltAnim.DoNormalizedAnimation("Move", (conductor.songPositionInBeats / 2) % 1);
 
-            bgPlaneSR.color = GetNewColor(bgColorEase);
-            alarmMat.SetColor("_ColorAlpha", GetNewColor(alarmColorEase));
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(conductor.songPositionInBeatsAsDouble, aLength));
+
+            Color newColor = alarmColor;
+            if (!double.IsNaN(normalizedBeat)) {
+                aEaseFunc ??= Util.EasingFunction.GetEasingFunction(aEase);
+                float newR = aEaseFunc(aStartColor.r, aEndColor.r, normalizedBeat);
+                float newG = aEaseFunc(aStartColor.g, aEndColor.g, normalizedBeat);
+                float newB = aEaseFunc(aStartColor.b, aEndColor.b, normalizedBeat);
+                newColor = new Color(newR, newG, newB);
+            }
+
+            alarmMat.SetColor("_ColorAlpha", newColor);
         }
 
+        public override void OnPlay(double beat) => OnGameSwitch(beat);
+        public override void OnStop(double beat) => OnGameSwitch(beat);
         public override void OnGameSwitch(double beat)
         {
             List<RiqEntity> events = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] == "cannery");
@@ -136,25 +139,14 @@ namespace HeavenStudio.Games
             foreach (var can in cans) {
                 SendCan(can.beat);
             }
-            RiqEntity bgEvent = events.FindLast(e => e.datamodel == "cannery/backgroundColor" && e.beat < beat);
-            if (bgEvent != null) {
-                var e = bgEvent;
-                BackgroundColorChange(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
-            } else {
-                BackgroundColorChange(0, 0, new Color(0.8627f, 0.3725f, 0.0313f), new Color(0.8627f, 0.3725f, 0.0313f), 0);
-            }
+
             RiqEntity alarmEvent = events.FindLast(e => e.datamodel == "cannery/alarmColor" && e.beat < beat);
             if (alarmEvent != null) {
                 var e = alarmEvent;
-                BackgroundColorChange(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
+                AlarmColor(e.beat, e.length, e["startColor"], e["endColor"], e["ease"]);
             } else {
-                BackgroundColorChange(0, 0, Color.white, Color.white, 0);
+                AlarmColor(0, 0, alarmColor, alarmColor, (int)Util.EasingFunction.Ease.Instant);
             }
-        }
-
-        public override void OnPlay(double beat)
-        {
-            OnGameSwitch(beat);
         }
 
         public override void OnLateBeatPulse(double beat)
@@ -178,22 +170,16 @@ namespace HeavenStudio.Games
 
         public void AlarmColor(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            alarmColorEase = new(beat, length, startColor, endColor, ease);
-        }
-
-        public void BackgroundColorChange(double beat, float length, Color startColor, Color endColor, int ease)
-        {
-            bgColorEase = new(beat, length, startColor, endColor, ease);
-        }
-
-        public static void CanSFX(double beat)
-        {
-            SoundByte.PlayOneShotGame("cannery/ding", beat);
+            aStartBeat = beat;
+            aLength = length;
+            aStartColor = startColor;
+            aEndColor = endColor;
+            aEase = (Util.EasingFunction.Ease)ease;
+            aEaseFunc = Util.EasingFunction.GetEasingFunction(aEase);
         }
 
         public void SendCan(double beat)
         {
-            Debug.Log(dingAnim);
             // do the ding animation on the beat
             BeatAction.New(this, new() { new(beat, delegate { dingAnim.DoScaledAnimationAsync("Ding", 0.5f); }) });
 
