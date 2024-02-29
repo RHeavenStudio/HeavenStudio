@@ -12,17 +12,13 @@ namespace HeavenStudio.Games.Scripts_Cannery
         public double startBeat;
 
         [Header("Components")]
-        // [SerializeField] Animator parentAnim;
         [SerializeField] Animator anim;
-        // [SerializeField] SpriteRenderer sr;
 
         public Cannery game;
 
         private void Awake()
         {
-            int random = Random.Range(-1, 1);
-            var pos = transform.position;
-            pos.x *= random;
+            if (Random.Range(0, 1f) >= 0.5f) anim.Play("Flip", 0);
 
             game.ScheduleInput(startBeat, 1, Minigame.InputAction_BasicPress, Hit, null, null);
         }
@@ -38,7 +34,14 @@ namespace HeavenStudio.Games.Scripts_Cannery
         {
             game.cannerAnim.DoScaledAnimationAsync("Can", 0.5f);
             SoundByte.PlayOneShotGame("cannery/can");
-            anim.DoScaledAnimationAsync("CanCan", 0.5f, 0, 1);
+            anim.DoScaledAnimationAsync("Can", 0.5f, 0, 1);
+            if (state is >= 1 or <= (-1)) {
+                SoundByte.PlayOneShot("nearMiss");
+                double beat = caller.startBeat + caller.timer;
+                BeatAction.New(this, new() {
+                    new(beat + 0.35f, () => anim.DoScaledAnimationAsync("Reopen", 0.5f, 0, 1))
+                });
+            }
         }
     }
 }
