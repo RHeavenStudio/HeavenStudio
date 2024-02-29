@@ -34,7 +34,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("pan", "Pan")
                 {
 
-                   function = delegate {
+                   preFunction = delegate {
   var e = eventCaller.currentEntity;
   string variation = "variation" + (new string[] { "Pan", "Pa", "Pa_n" })[e["type"]];
   BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"],e["clapType"], e["semitone"]);
@@ -406,7 +406,7 @@ namespace HeavenStudio.Games
                     2 or _ => "pa",
                 };
                 var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
-                SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), -1, pitch);
+                SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
 
 
 
@@ -426,7 +426,7 @@ namespace HeavenStudio.Games
             };
              var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
 
-            SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), -1, pitch);
+            SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
 
         }
 
