@@ -208,7 +208,7 @@ namespace HeavenStudio.Games.Loaders
                                 offSet = 0.034f;
                                 break;
                         }
-                        SoundByte.PlayOneShot($"games/rockers/count/{e["count"]}", e.beat, 1, 1, false, null, offSet);
+                        SoundByte.PlayOneShot($"games/rockers/count/count{e["count"]}", e.beat, 1, 1, false, null, offSet);
                     }
                 },
                 new GameAction("voiceLine", "Together Voice Line")

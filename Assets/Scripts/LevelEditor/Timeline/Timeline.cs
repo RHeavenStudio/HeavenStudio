@@ -6,10 +6,11 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 using TMPro;
-using Starpelly;
 using Jukebox;
 using Newtonsoft.Json;
 using System.Linq;
+
+using HeavenStudio.Util;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -41,7 +42,7 @@ namespace HeavenStudio.Editor.Track
         public float VerticalZoom { get; private set; } = 1.0f;
         public float MousePos2Beat { get; private set; }
         public float MousePos2Layer { get; private set; }
-        public float MousePos2BeatSnap => Mathp.Round2Nearest(MousePos2Beat + (SnapInterval() * 0.5f), SnapInterval());
+        public float MousePos2BeatSnap => HeavenStudio.Util.MathUtils.Round2Nearest(MousePos2Beat + (SnapInterval() * 0.5f), SnapInterval());
         public bool MouseInTimeline { get; private set; }
 
         private Vector2 relativeMousePos;
@@ -380,11 +381,6 @@ namespace HeavenStudio.Editor.Track
             }
         }
 
-        public static string RandomID()
-        {
-            return Starpelly.Random.Strings.RandomString(Starpelly.Enums.Strings.StringType.Alphanumeric, 128);
-        }
-
         #endregion
 
         private void Update()
@@ -435,7 +431,7 @@ namespace HeavenStudio.Editor.Track
                     var left = leftSide;
                     var viewportWidth = TimelineScroll.viewport.rect.width;
                     var localPointRec = Mathf.Lerp(left, left + (viewportWidth / Zoom),
-                        Mathp.Normalize(Input.mousePosition.x, viewportPos.x, viewportPos.x + viewportWidth));
+                        MathUtils.Normalize(Input.mousePosition.x, viewportPos.x, viewportPos.x + viewportWidth));
 
                     var xPixels = (localPointRec * incre);
                     xPixels *= (Zoom);
@@ -824,7 +820,7 @@ namespace HeavenStudio.Editor.Track
                 }
             }
             int height = 200;
-            Color col = Colors.Hex2RGB("727272");
+            Color col = "727272".Hex2RGB();
             col.a = 0.25f;
 
             Texture2D tex = new Texture2D(wave.Length, height, TextureFormat.RGBA32, false);
@@ -892,23 +888,18 @@ namespace HeavenStudio.Editor.Track
                     {
                         for (int i = 0; i < ep.Count; i++)
                         {
-                            object returnVal = ep[i].parameter;
+                            object returnVal = ep[i].parameter switch {
+                                EntityTypes.Integer intVal => intVal.val,
+                                EntityTypes.Float floatVal => floatVal.val,
+                                EntityTypes.Button buttonVal => buttonVal.defaultLabel,
+                                EntityTypes.Dropdown ddVal => new EntityTypes.DropdownObj(ddVal),
+                                _ => ep[i].parameter,
+                            };
 
-                            var propertyType = returnVal.GetType();
-                            if (propertyType == typeof(EntityTypes.Integer))
-                            {
-                                returnVal = ((EntityTypes.Integer)ep[i].parameter).val;
-                            }
-                            else if (propertyType == typeof(EntityTypes.Float))
-                            {
-                                returnVal = ((EntityTypes.Float)ep[i].parameter).val;
-                            }
-                            else if (propertyType.IsEnum)
-                            {
+                            if (returnVal.GetType().IsEnum) {
                                 returnVal = (int)ep[i].parameter;
                             }
 
-                            //tempEntity[ep[i].propertyName] = returnVal;
                             tempEntity.CreateProperty(ep[i].propertyName, returnVal);
                         }
                     }
@@ -960,7 +951,14 @@ namespace HeavenStudio.Editor.Track
 
             foreach (RiqEntity entity in original)
             {
-                CopiedEntities.Add(entity.DeepCopy());
+                var newEntity = entity.DeepCopy();
+                // there's gotta be a better way to do this. i just don't know how... -AJ
+                foreach ((var key, var value) in new Dictionary<string, dynamic>(newEntity.dynamicData)) {
+                    if (value is EntityTypes.DropdownObj dd) {
+                        newEntity[key] = new EntityTypes.DropdownObj(dd.value, dd.Values);
+                    }
+                }
+                CopiedEntities.Add(newEntity);
             }
         }
 
@@ -982,7 +980,7 @@ namespace HeavenStudio.Editor.Track
         public float SnapToLayer(float y)
         {
             float size = LayerHeight();
-            return Mathf.Clamp(Mathp.Round2Nearest(y, size), -size * (LayerCount - 1), 0f);
+            return Mathf.Clamp(MathUtils.Round2Nearest(y, size), -size * (LayerCount - 1), 0f);
         }
 
         public float LayerHeight()
@@ -1008,7 +1006,7 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
-                float spd = Mathp.Round2Nearest(speed, SpeedSnap);
+                float spd = MathUtils.Round2Nearest(speed, SpeedSnap);
                 PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
                 Conductor.instance.SetTimelinePitch(spd);
                 PlaybackSpeed.value = spd;

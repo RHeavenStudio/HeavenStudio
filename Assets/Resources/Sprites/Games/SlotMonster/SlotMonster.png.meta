@@ -1,0 +1,991 @@
+fileFormatVersion: 2
+guid: 878a62db1eeb38d46a0db8e2b67b9730
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 150
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SlotMonster_0
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 1294
+        width: 570
+        height: 449
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0932a323dd613fc4b933ddcadafee437
+      internalID: -1233838809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_1
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 1285
+        width: 575
+        height: 449
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f35868fbc58f67e43821eadd0324cbe1
+      internalID: 1054018960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_2
+      rect:
+        serializedVersion: 2
+        x: 1383
+        y: 1271
+        width: 571
+        height: 449
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 560162e1f50e72c46a760093c8eb4b38
+      internalID: -1142193204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_3
+      rect:
+        serializedVersion: 2
+        x: 2062
+        y: 1271
+        width: 571
+        height: 449
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0aee5b13967960249b6be1ff9a5b2f77
+      internalID: -1746768715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_4
+      rect:
+        serializedVersion: 2
+        x: 2757
+        y: 1294
+        width: 570
+        height: 449
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 204441a339841cb4aabd8095ca3be9e8
+      internalID: -1741638017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_5
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 1081
+        width: 76
+        height: 102
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cdd14c161e15d034fafc133999561db9
+      internalID: 1032231447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_6
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 1089
+        width: 64
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee6b78abc7b0c57439595f3ecb72099c
+      internalID: 90921217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_7
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 1077
+        width: 84
+        height: 89
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6ff88551c1207b47986101013f505d2
+      internalID: -108380036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_8
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 762
+        width: 1031
+        height: 480
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1cf0a5dcd69d21240ae7f1d0716252d1
+      internalID: -664749033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_9
+      rect:
+        serializedVersion: 2
+        x: 1571
+        y: 1064
+        width: 181
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 973cc92883e4c6a4b873e4ba62f38baf
+      internalID: -807743380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_10
+      rect:
+        serializedVersion: 2
+        x: 1829
+        y: 1076
+        width: 89
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed82bd1da12a4124f864eb53e81df081
+      internalID: 426466761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_11
+      rect:
+        serializedVersion: 2
+        x: 2021
+        y: 241
+        width: 407
+        height: 1006
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3cc1806ad2430e439df6933b2b8e5e1
+      internalID: 1591671672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_12
+      rect:
+        serializedVersion: 2
+        x: 2460
+        y: 321
+        width: 307
+        height: 919
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e1c6ecf3f44ca942a83fbc649ca3a9c
+      internalID: 1996716491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_13
+      rect:
+        serializedVersion: 2
+        x: 2850
+        y: 50
+        width: 618
+        height: 1231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5044f91847b351d4eb832dfbfbc43510
+      internalID: 131120124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_14
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 967
+        width: 73
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07bd7ed4794c7e942a05241816bd02e2
+      internalID: -1768230940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_15
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 971
+        width: 61
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 911e47b0c1e25904e9e672948b59b47e
+      internalID: -867298969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_16
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 979
+        width: 78
+        height: 77
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d565fba2ae021ac4d992a051f48c1c0c
+      internalID: 1609057261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_17
+      rect:
+        serializedVersion: 2
+        x: 1607
+        y: 870
+        width: 256
+        height: 112
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eded4df205f436b449f348823d4284db
+      internalID: -467733807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_18
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 878
+        width: 55
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b706cdd4b36dca541b2ff195b738c058
+      internalID: -1628350790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_19
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 885
+        width: 97
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cdb94c503901034dbc368284563749a
+      internalID: 1306426365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_20
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 887
+        width: 87
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 311f5a1af420e4141ae41a265e24b895
+      internalID: 811989312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_21
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 789
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c8f4510dd9ec1141add3a5d24882043
+      internalID: -1260976779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_22
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 424
+        width: 164
+        height: 156
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0c68084fd94d114394dd38a048c16c4
+      internalID: -608467511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_23
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 443
+        width: 127
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc29cdf50d1e85548ab97b772fed5907
+      internalID: -1319101171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_24
+      rect:
+        serializedVersion: 2
+        x: 1559
+        y: 637
+        width: 376
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63026aa3e525eeb4dbf3f637f7c6b5cb
+      internalID: -98906682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_38
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 536
+        width: 166
+        height: 179
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a45e709d230a964799d50cc6c1a2961
+      internalID: -1598011274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_41
+      rect:
+        serializedVersion: 2
+        x: 733
+        y: 556
+        width: 165
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfe9b341b946a6e448683a57e7e8c2fb
+      internalID: 550762424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_42
+      rect:
+        serializedVersion: 2
+        x: 957
+        y: 537
+        width: 165
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ad183a2dcf9de84dacdabb1f7a49273
+      internalID: -2050761828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_44
+      rect:
+        serializedVersion: 2
+        x: 524
+        y: 581
+        width: 158
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9fbf94182dce3a94bba8d8e7fcab5b0f
+      internalID: 29511743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_46
+      rect:
+        serializedVersion: 2
+        x: 958
+        y: 348
+        width: 65
+        height: 99
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4098489dc9b77544b841465e1a1971b9
+      internalID: -534821626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_47
+      rect:
+        serializedVersion: 2
+        x: 1101
+        y: 328
+        width: 424
+        height: 152
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89a206bf1e4b63641bb1795d2283ad2b
+      internalID: -670907642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_48
+      rect:
+        serializedVersion: 2
+        x: 1590
+        y: 308
+        width: 347
+        height: 178
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88f154ba57c5d4e4c9ea4804f57ab67f
+      internalID: 53528190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_34
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 638
+        width: 51
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eab2091fca8eb3441b638691283876c1
+      internalID: 834311589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_31
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 639
+        width: 50
+        height: 127
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 025e6ac39ea17e445ad61e5df2415c5b
+      internalID: 494065535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_28
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 638
+        width: 51
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4c43666b415ec54e8da807e9f5d894e
+      internalID: 732533643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_25
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 633
+        width: 50
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50cbff1f4bc6ec447bf59e523def5cd1
+      internalID: 327631069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_26
+      rect:
+        serializedVersion: 2
+        x: 1367
+        y: 619
+        width: 90
+        height: 67
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 579f96aac6de6a94faf5bc93014be66f
+      internalID: 648886606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_27
+      rect:
+        serializedVersion: 2
+        x: 1101
+        y: 147
+        width: 424
+        height: 152
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 885186796dec9bf4ba2ad1c265af5457
+      internalID: -1428257109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlotMonster_29
+      rect:
+        serializedVersion: 2
+        x: 1530
+        y: 1374
+        width: 277
+        height: 346
+      alignment: 9
+      pivot: {x: 0.5, y: 0.351}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0c73a35dd3facd4480bf264b49d929d
+      internalID: -32620696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      SlotMonster_0: -1233838809
+      SlotMonster_1: 1054018960
+      SlotMonster_10: 426466761
+      SlotMonster_11: 1591671672
+      SlotMonster_12: 1996716491
+      SlotMonster_13: 131120124
+      SlotMonster_14: -1768230940
+      SlotMonster_15: -867298969
+      SlotMonster_16: 1609057261
+      SlotMonster_17: -467733807
+      SlotMonster_18: -1628350790
+      SlotMonster_19: 1306426365
+      SlotMonster_2: -1142193204
+      SlotMonster_20: 811989312
+      SlotMonster_21: -1260976779
+      SlotMonster_22: -608467511
+      SlotMonster_23: -1319101171
+      SlotMonster_24: -98906682
+      SlotMonster_25: 327631069
+      SlotMonster_26: 648886606
+      SlotMonster_27: -1428257109
+      SlotMonster_28: 732533643
+      SlotMonster_29: -32620696
+      SlotMonster_3: -1746768715
+      SlotMonster_30: -1922140075
+      SlotMonster_31: 494065535
+      SlotMonster_32: 1797885010
+      SlotMonster_33: 488212860
+      SlotMonster_34: 834311589
+      SlotMonster_35: -2063735097
+      SlotMonster_36: -1620148914
+      SlotMonster_37: 480862190
+      SlotMonster_38: -1598011274
+      SlotMonster_39: 568430859
+      SlotMonster_4: -1741638017
+      SlotMonster_40: -1459025936
+      SlotMonster_41: 550762424
+      SlotMonster_42: -2050761828
+      SlotMonster_43: -2053336971
+      SlotMonster_44: 29511743
+      SlotMonster_45: -333002251
+      SlotMonster_46: -534821626
+      SlotMonster_47: -670907642
+      SlotMonster_48: 53528190
+      SlotMonster_5: 1032231447
+      SlotMonster_6: 90921217
+      SlotMonster_7: -108380036
+      SlotMonster_8: -664749033
+      SlotMonster_9: -807743380
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: ntrslotmonster/common
+  assetBundleVariant: 

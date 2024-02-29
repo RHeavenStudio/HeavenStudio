@@ -38,6 +38,8 @@ public partial class ControllerLoaderGenerator
             false
             ))
         .ToList();
+        // sort by load order attribute (lower is first)
+        loadRunners.Sort((x, y) => x.Method.GetCustomAttribute<LoadOrder>().Order.CompareTo(y.Method.GetCustomAttribute<LoadOrder>().Order));
 
         // USG: static classes are IsAbstract is set.
         if (!context.TargetClass.IsClass)

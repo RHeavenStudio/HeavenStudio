@@ -91,7 +91,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.21",
+      "version": "2.0.22",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -164,6 +164,13 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "com.zigurous.shaders.blending": {
+      "version": "https://github.com/zigurous/unity-blend-shaders.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "4b351991a8c464adc961232425ff99f607396b9d"
     },
     "jillejr.newtonsoft.json-for-unity.converters": {
       "version": "1.5.1",

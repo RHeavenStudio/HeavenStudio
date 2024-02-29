@@ -45,4 +45,4 @@
 * [VorbisPlugin](https://github.com/khindemit/unity-wrapper-vorbis)
 
 ## Legal Info
-This software is licensed under GNU GPL-3.0. [LICENSE.MD](https://github.com/RHeavenStudio/HeavenStudio/blob/master/LICENSE.md)
+This software is licensed under the MIT License. [LICENSE.MD](https://github.com/RHeavenStudio/HeavenStudio/blob/master/LICENSE.md)

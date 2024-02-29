@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using HeavenStudio.Games.Scripts_ForkLifter;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -14,6 +15,10 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("flick", "Flick Food")
                 {
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        ForkLifter.Flick(e.beat);
+                    },
                     function = delegate {
                         var e = eventCaller.currentEntity;
                         ForkLifter.Flick(e.beat);
@@ -23,11 +28,6 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("type", ForkLifter.FlickType.Pea, "Object", "Choose the object to be flicked.")
-                    },
-                    inactiveFunction = delegate {
-                        var e = eventCaller.currentEntity;
-                        ForkLifter.Flick(e.beat);
-                        ForkLifter.queuedFlicks.Add(e);
                     },
                 },
                 new GameAction("prepare", "Prepare Hand")
@@ -41,7 +41,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("gulp", "Swallow")
                 {
-                    function = delegate { ForkLifter.playerInstance.Eat(); }
+                    function = delegate { ForkLifter.playerInstance.Eat(eventCaller.currentEntity["sfx"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("sfx", ForkLifterPlayer.EatType.Default, "SFX", "Choose the SFX to play.")
+                    }
                 },
                 new GameAction("sigh", "Sigh")
                 {
@@ -50,24 +54,24 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("color", "Background Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("start", Color.white, "Start Color", "Set the color at the start of the event."),
                         new Param("end", Color.white, "End Color", "Set the color at the end of the event."),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     },
-                    resizable = true
                 },
                 new GameAction("colorGrad", "Gradient Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColorGrad(e.beat, e.length, e["start"], e["end"], e["ease"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("start", Color.white, "Start Color", "Set the color at the start of the event."),
                         new Param("end", Color.white, "End Color", "Set the color at the end of the event."),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     },
-                    resizable = true
                 },
             },
             new List<string>() {"rvl", "normal"},
@@ -85,8 +89,6 @@ namespace HeavenStudio.Games
 
     public class ForkLifter : Minigame
     {
-        public static List<RiqEntity> queuedFlicks = new();
-
         public enum FlickType
         {
             Pea,
@@ -126,34 +128,33 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
-            base.OnPlay(beat);
             OnGameSwitch(beat);
         }
 
         public override void OnGameSwitch(double beat)
         {
-            base.OnGameSwitch(beat);
-            if (queuedFlicks.Count > 0) {
-                foreach (var flick in queuedFlicks) { FlickActive(flick.beat, flick["type"]); }
-                queuedFlicks.Clear();
+            var actions = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] == "forkLifter");
+
+            var actionsBefore = actions.FindAll(e => e.beat < beat);
+
+            var lastColor = actionsBefore.FindLast(e => e.datamodel == "forkLifter/color");
+            if (lastColor != null) {
+                BackgroundColor(lastColor.beat, lastColor.length, lastColor["start"], lastColor["end"], lastColor["ease"]);
             }
 
-            ForkLifterHand.allFlickEntities = GameManager.instance.Beatmap.Entities.FindAll(c => (c.datamodel == "forkLifter/flick") && (c.beat >= beat));
-            ForkLifterHand.CheckNextFlick();
-            PersistColor(beat);
-        }
+            var lastColorGrad = actionsBefore.FindLast(e => e.datamodel == "forkLifter/colorGrad");
+            if (lastColorGrad != null) {
+                BackgroundColorGrad(lastColorGrad.beat, lastColorGrad.length, lastColorGrad["start"], lastColorGrad["end"], lastColorGrad["ease"]);
+            }
 
-        public void Bop(double beat, double length, bool doesBop, bool autoBop)
-        {
-            // playerInstance.shouldBop = autoBop;
-            // if (doesBop)
-            // {
-            //     var actions = new List<BeatAction.Action>();
-            //     for (int i = 0; i < length; i++) {
-            //         actions.Add(new(beat + i, delegate { playerInstance.SingleBop(); }));
-            //     }
-            //     BeatAction.New(playerInstance, actions);
-            // }
+            var tempFlicks = actions.FindAll(e => e.datamodel == "forkLifter/flick");
+
+            foreach (var e in tempFlicks.FindAll(e => e.beat < beat && e.beat + 2 > beat)) {
+                FlickActive(e.beat, e["type"]);
+            }
+
+            ForkLifterHand.allFlickEntities = tempFlicks.FindAll(e => e.beat >= beat);
+            ForkLifterHand.CheckNextFlick();
         }
 
         public static void Flick(double beat)
@@ -208,9 +209,9 @@ namespace HeavenStudio.Games
 
             var funcGrad = Util.EasingFunction.GetEasingFunction(colorEaseGrad);
 
-            float newRGrad = func(colorStartGrad.r, colorEndGrad.r, normalizedBeatGrad);
-            float newGGrad = func(colorStartGrad.g, colorEndGrad.g, normalizedBeatGrad);
-            float newBGrad = func(colorStartGrad.b, colorEndGrad.b, normalizedBeatGrad);
+            float newRGrad = funcGrad(colorStartGrad.r, colorEndGrad.r, normalizedBeatGrad);
+            float newGGrad = funcGrad(colorStartGrad.g, colorEndGrad.g, normalizedBeatGrad);
+            float newBGrad = funcGrad(colorStartGrad.b, colorEndGrad.b, normalizedBeatGrad);
 
             bgGradient.color = new Color(newRGrad, newGGrad, newBGrad);
             playerShadow.color = new Color(newRGrad, newGGrad, newBGrad);
@@ -232,26 +233,6 @@ namespace HeavenStudio.Games
             colorStartGrad = colorStartSet;
             colorEndGrad = colorEndSet;
             colorEaseGrad = (Util.EasingFunction.Ease)ease;
-        }
-
-        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
-        private void PersistColor(double beat)
-        {
-            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("forkLifter", new string[] { "color" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
-            {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["start"], lastEvent["end"], lastEvent["ease"]);
-            }
-
-            var allEventsBeforeBeatGrad = EventCaller.GetAllInGameManagerList("forkLifter", new string[] { "colorGrad" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeatGrad.Count > 0)
-            {
-                allEventsBeforeBeatGrad.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEventGrad = allEventsBeforeBeatGrad[^1];
-                BackgroundColorGrad(lastEventGrad.beat, lastEventGrad.length, lastEventGrad["start"], lastEventGrad["end"], lastEventGrad["ease"]);
-            }
         }
     }
 }

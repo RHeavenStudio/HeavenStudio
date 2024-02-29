@@ -1,8 +1,8 @@
 using System;
 
 public static class AppInfo {
-    public const string Version = "0.0.1018";
-    public static readonly DateTime Date = new DateTime(2024, 01, 15, 19, 39, 36, 317, DateTimeKind.Utc);
+    public const string Version = "1.0.5";
+    public static readonly DateTime Date = new DateTime(2024, 02, 23, 20, 57, 14, 989, DateTimeKind.Utc);
 }
 
 
