@@ -17,54 +17,17 @@ MonoBehaviour:
   DenseViewWidthThreshold: 512
   _disableAutoReloadInBackground: 0
   ImportedScriptPaths:
-  - Assets/Scripts/Games/HoleInOne/HoleInOne.cs
-  - Assets/Scripts/USG.g/LoadMinigames.Minigames.MinigameLoaderGenerator.g.cs
-  - Assets/Scripts/Games/TheDazzles/TheDazzles.cs
-  - Assets/Scripts/Games/FirstContact/FirstContact.cs
-  - Assets/Scripts/SourceGenerators/ControllerLoaderGenerator.cs
-  - Assets/Scripts/InputSystem/PlayerInput.cs
-  - Assets/Scripts/JudgementManager.cs
-  - Assets/Scripts/LevelEditor/RemixPropertiesDialog/PropertyPrefabs/RatingScreenPropertyDialog.cs
-  - Assets/Scripts/GlobalGameManager.cs
-  - Assets/Scripts/Games/KarateMan/KarateMan.cs
-  - Assets/Scripts/Games/KarateMan/KarateManJoe.cs
-  - Assets/Scripts/Games/KarateMan/KarateManNoriController.cs
-  - Assets/Scripts/Util/BeatAction.cs
-  - Assets/Scripts/Games/TossBoys/TossBoys.cs
-  - Assets/Scripts/Games/DoubleDate/DoubleDate.cs
-  - Assets/Scripts/Games/AirRally/AirRally.cs
-  - Assets/Scripts/LevelEditor/Editor.cs
-  - Assets/Scripts/Common/MemRenderer.cs
-  - Assets/Scripts/Games/BoardMeeting/BoardMeeting.cs
-  - Assets/Scripts/PersistentDataManager.cs
-  - Assets/Scripts/UI/Overlays/OverlaysManager.cs
-  - Assets/Scripts/TitleManager.cs
-  - Assets/Scripts/LevelEditor/Timeline/SpecialTmeline/SectionDialog.cs
-  - Assets/Scripts/LevelEditor/Timeline/SpecialTmeline/TimelineObjs/SectionTimelineObj.cs
-  - Assets/Scripts/Games/DJSchool/Student.cs
-  - Assets/Scripts/UI/PauseMenu.cs
-  - Assets/Scripts/Util/Sound.cs
-  - Assets/Scripts/Conductor.cs
-  - Assets/Scripts/EventCaller.cs
-  - Assets/Scripts/Games/TrickClass/TrickClass.cs
-  - Assets/Scripts/GameInitializer.cs
-  - Assets/Scripts/LevelEditor/Timeline/Timeline.cs
-  - Assets/Scripts/Games/PlayerActionEvent.cs
-  - Assets/Scripts/Games/KarateMan/KarateManPot.cs
-  - Assets/Scripts/Games/DJSchool/DJSchool.cs
-  - Assets/Scripts/Games/Minigame.cs
-  - Assets/Scripts/GameManager.cs
-  - Assets/Scripts/Minigames.cs
   - Assets/Scripts/Games/FanClub/NtrIdolFan.cs
   - Assets/Scripts/LevelEditor/RemixPropertiesDialog/PropertyPrefabs/BoolChartPropertyPrefab.cs
-  - Assets/Scripts/Games/FirstContact/Translator.cs
+  - Assets/Scripts/Games/AirRally/AirRally.cs
   - Assets/Scripts/LevelEditor/RemixPropertiesDialog/PropertyPrefabs/NumberChartPropertyPrefab.cs
+  - Assets/Scripts/Games/FirstContact/Translator.cs
+  - Assets/Plugins/Starpelly/Colors.cs
   - Assets/Plugins/Starpelly/Textures.cs
-  - Assets/Plugins/Starpelly/Starpelly.cs
   - Assets/Scripts/LevelEditor/Commands/Block.cs
+  - Assets/Plugins/Starpelly/Starpelly.cs
   - Assets/Plugins/Starpelly/OS.cs
   - Assets/Plugins/Color picker/ColorPreview.cs
-  - Assets/Plugins/Starpelly/Colors.cs
   - Assets/Scripts/Games/SoundEffects.cs
   - Assets/Scripts/LevelEditor/EventSelector/PropertyPrefabs/ColorPropertyPrefab.cs
   - Assets/Scripts/LevelEditor/Tooltip.cs
@@ -76,17 +39,20 @@ MonoBehaviour:
   - Assets/Scripts/InputSystem/ControllerTypes/InputKeyboard.cs
   - Assets/Plugins/Starpelly/Random.cs
   - Assets/Plugins/Starpelly/OperatingSystem/Linux.cs
-  - Assets/Scripts/LevelEditor/EventSelector/EventParameterManager.cs
-  - Assets/Scripts/Util/SoundByte.cs
-  - Assets/Plugins/Starpelly/Utils.cs
-  - Assets/Scripts/Games/Rockers/Rockers.cs
+  - Assets/Scripts/Games/DJSchool/Student.cs
   - Assets/Scripts/LevelEditor/EventSelector/PropertyPrefabs/BoolPropertyPrefab.cs
+  - Assets/Scripts/Util/SoundByte.cs
+  - Assets/Scripts/LevelEditor/EventSelector/EventParameterManager.cs
+  - Assets/Scripts/Games/Rockers/Rockers.cs
+  - Assets/Plugins/Starpelly/Utils.cs
   - Assets/Plugins/Starpelly/Enums/Windows.cs
   - Assets/Scripts/LevelEditor/EventSelector/EventPropertyPrefab.cs
   - Assets/Scripts/Games/WorkingDough/PlayerEnterDoughBall.cs
+  - Assets/Scripts/Minigames.cs
   - Assets/Scripts/InputSystem/ControllerTypes/InputJoyshock.cs
   - Assets/Scripts/LevelEditor/EditorTheme.cs
   - Assets/Scripts/Games/MunchyMonk/MunchyMonk.cs
+  - Assets/Scripts/SourceGenerators/ControllerLoaderGenerator.cs
   - Assets/Scripts/AppInfo.cs
   - Assets/Plugins/Starpelly/OperatingSystem/Windows.cs
   - Assets/Plugins/Starpelly/Pelly.cs
@@ -97,23 +63,28 @@ MonoBehaviour:
   - Assets/Plugins/JoyShockLibrary/JoyShockLibrary.cs
   - Assets/Scripts/Games/Global/Filter.cs
   - Assets/Plugins/Starpelly/OperatingSystem/User32.cs
-  - Assets/Plugins/Starpelly/Extensions.cs
   - Assets/Scripts/Games/RhythmTweezers/Tweezers.cs
+  - Assets/Plugins/Starpelly/Extensions.cs
   - Assets/Scripts/LevelEditor/Timeline/TimelineEventObj.cs
   - Assets/Plugins/Starpelly/Math.cs
+  - Assets/Scripts/GlobalGameManager.cs
   - Assets/Scripts/Games/CheerReaders/CheerReaders.cs
   - Assets/Scripts/InputSystem/ControllerTypes/InputMouse.cs
   - Assets/Scripts/Games/WorkingDough/WorkingDough.cs
   - Assets/Scripts/UI/SettingsDialog/Tabs/EditorSettings.cs
+  - Assets/Scripts/GameManager.cs
   - Assets/Scripts/LevelEditor/EventSelector/PropertyPrefabs/StringPropertyPrefab.cs
   - Assets/Scripts/InputSystem/InputController.cs
   - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowser.cs
   - Assets/Scripts/LevelEditor/BeatGrid.cs
   - Assets/Scripts/Games/Rockers/RockersRocker.cs
+  - Assets/Scripts/Util/Sound.cs
+  - Assets/Scripts/TitleManager.cs
   - Assets/Scripts/Games/DrummingPractice/Drummer.cs
-  - Assets/Plugins/Starpelly/ScreenUtility.cs
   - Assets/Scripts/Games/SeeSaw/SeeSawGuy.cs
+  - Assets/Plugins/Starpelly/ScreenUtility.cs
   - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowserEditor.cs
+  - Assets/Scripts/Games/HoleInOne/HoleInOne.cs
   - Assets/Scripts/LevelEditor/EventSelector/GridGameSelector.cs
   - Assets/Scripts/UI/SettingsDialog/Tabs/ControllerSettings.cs
   - Assets/Scripts/Games/Tambourine/Tambourine.cs
@@ -126,14 +97,17 @@ MonoBehaviour:
   - Assets/Scripts/Games/MrUpbeat/MrUpbeat.cs
   - Assets/Scripts/Games/AirRally/IslandsManager.cs
   - Assets/Scripts/Games/CallAndResponseHandler.cs
+  - Assets/Plugins/Starpelly/Anchors.cs
   - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowserMac.cs
   - Assets/Scripts/Games/Ringside/Ringside.cs
-  - Assets/Plugins/Starpelly/Anchors.cs
+  - Assets/Scripts/PersistentDataManager.cs
+  - Assets/Scripts/LevelEditor/Timeline/Timeline.cs
   - Assets/Scripts/LevelEditor/BoxSelection.cs
   - Assets/Plugins/Starpelly/Properties/Arrays.cs
   - Assets/Scripts/Games/ForkLifter/ForkLifter.cs
   - Assets/Scripts/Games/WizardsWaltz/WizardsWaltz.cs
   - Assets/Scripts/Games/DrummingPractice/DrummingPractice.cs
+  - Assets/Scripts/USG.g/LoadMinigames.Minigames.MinigameLoaderGenerator.g.cs
   - Assets/Scripts/LevelEditor/Theme.cs
   - Assets/Plugins/Starpelly/OperatingSystem/IOperatingSystem.cs
   - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowserWindows.cs
@@ -145,11 +119,12 @@ MonoBehaviour:
   - Assets/Plugins/Starpelly/RendererExtensions.cs
   - Assets/Scripts/LevelEditor/WaveformVisual.cs
   - Assets/Plugins/Starpelly/Common.cs
+  - Assets/Scripts/Games/ClappyTrio/ClappyTrio.cs
   - Assets/Scripts/Util/StringUtils.cs
   - Assets/Plugins/Starpelly/OperatingSystem/MacOS.cs
-  - Assets/Scripts/Games/ClappyTrio/ClappyTrio.cs
   - Assets/Plugins/StandaloneFileBrowser/StandaloneFileBrowserLinux.cs
   - Assets/Plugins/StandaloneFileBrowser/IStandaloneFileBrowser.cs
   - Assets/Scripts/LevelEditor/EventSelector/PropertyPrefabs/EnumPropertyPrefab.cs
+  - Assets/Scripts/Conductor.cs
   PathsToSkipImportEvent: []
   PathsToIgnoreOverwriteSettingOnAttribute: []
