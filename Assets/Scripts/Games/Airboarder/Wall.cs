@@ -80,7 +80,8 @@ namespace HeavenStudio.Games.Scripts_Airboarder
             SoundByte.PlayOneShotGame("airboarder/jumpvox");
             double beat = caller.startBeat + caller.timer;
             BeatAction.New(this, new() {
-                new(beat+1f, ()=>game.playerCantBop = false)});
+                new(beat, ()=>game.playerCantBop = true),
+                new(beat+1.5f, ()=>game.playerCantBop = false)});
             game.wantsCrouch = false;
         }
 
@@ -95,7 +96,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         public void JumpEmpty(PlayerActionEvent caller){
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f, 0, 1);
             double beat = caller.startBeat + caller.timer;
-            game.MissSound(beat);
+//            game.MissSound(beat);
             BeatAction.New(this, new() {
                 new(beat+1.5f, ()=>game.playerCantBop = false)});
             game.wantsCrouch = false;

@@ -230,13 +230,23 @@ namespace HeavenStudio.Games
                     else 
                     {
                         Player.GetComponent<Animator>().DoScaledAnimationAsync("duck",1f, 0, 1);
+                        SoundByte.PlayOneShotGame("airboarder/crouch");
+                        BeatAction.New(this, new() {
+                            new(currentBeat, ()=>playerCantBop = true),
+                            new(currentBeat+1.5f, ()=>playerCantBop = false)});
                     }
                 }
                 if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !IsExpectingInputNow(InputAction_BasicRelease)){
-                Player.GetComponent<Animator>().DoScaledAnimationAsync("hold",1f, 0, 1);
-                playerCantBop = false;}
+                    if (wantsCrouch)
+                    {
+                        Player.GetComponent<Animator>().DoScaledAnimationAsync("hold",1f, 0, 1);
+                        playerCantBop = false;
+                    }
+                }
+                
                 if (PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease)){
-                Player.GetComponent<Animator>().DoScaledAnimationAsync("hold",1f, 0, 1);
+                Player.GetComponent<Animator>().DoScaledAnimationAsync("jump",1f, 0, 1);
+                SoundByte.PlayOneShotGame("airboarder/jump");
                 playerCantBop = false;}
             }
 
@@ -308,6 +318,7 @@ namespace HeavenStudio.Games
                 BeatAction.New(instance, new List<BeatAction.Action>(){
                     new BeatAction.Action(beat, delegate {SoundByte.PlayOneShotGame("airboarder/start1");}),
                     new BeatAction.Action(beat + 6.5, delegate {SoundByte.PlayOneShotGame("airboarder/start2");}),
+                    new BeatAction.Action(beat + 7, delegate {SoundByte.PlayOneShotGame("airboarder/start3");}),
                 });
             }
             BeatAction.New(instance, new List<BeatAction.Action>(){

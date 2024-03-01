@@ -73,13 +73,16 @@ namespace HeavenStudio.Games.Scripts_Airboarder
                 new BeatAction.Action(crouchBeat, delegate {SoundByte.PlayOneShotGame("airboarder/ready");}),
 
                 new BeatAction.Action(crouchBeat+1, delegate {game.cpu2CantBop = true;} ),  
+                new BeatAction.Action(crouchBeat + 1, delegate {SoundByte.PlayOneShotGame("airboarder/crouch");}), 
                 new BeatAction.Action(crouchBeat + 1, delegate {SoundByte.PlayOneShotGame("airboarder/crouchCharge");}),
+                new BeatAction.Action(crouchBeat + 1, delegate {SoundByte.PlayOneShotGame("airboarder/crouchvox");}),
                 new BeatAction.Action(crouchBeat+1, delegate {game.CPU1.GetComponent<Animator>().DoScaledAnimationAsync("charge", 1f, 0, 1);}),
                 new BeatAction.Action(crouchBeat+1, delegate {game.CPU2.GetComponent<Animator>().DoScaledAnimationAsync("letsgo", 1f, 0, 1);}), 
-                            
+                new BeatAction.Action(crouchBeat + 2, delegate {SoundByte.PlayOneShotGame("airboarder/crouch");}),             
                 new BeatAction.Action(crouchBeat+2, delegate {game.CPU2.GetComponent<Animator>().DoScaledAnimationAsync("charge", 1f, 0, 1);}),                
                 new BeatAction.Action(crouchBeat+2, delegate {game.Player.GetComponent<Animator>().DoScaledAnimationAsync("letsgo", 1f, 0, 1);}),                
-                new BeatAction.Action(crouchBeat + 2, delegate {SoundByte.PlayOneShotGame("airboarder/crouchCharge");})
+                new BeatAction.Action(crouchBeat + 2, delegate {SoundByte.PlayOneShotGame("airboarder/crouchCharge");}),
+                new BeatAction.Action(crouchBeat + 2, delegate {SoundByte.PlayOneShotGame("airboarder/crouchvox");})
             });
 
         }
@@ -101,12 +104,14 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         }
 
         public void DuckSuccess(PlayerActionEvent caller, float state)
-        {
+        {   
+            double beat = caller.startBeat + caller.timer;
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("duck", 1f, 0, 1);
             SoundByte.PlayOneShotGame("airboarder/crouch");
             SoundByte.PlayOneShotGame("airboarder/crouchvox");
-            double beat = caller.startBeat + caller.timer;
+            
             BeatAction.New(this, new() {
+                new(beat, ()=>game.playerCantBop = true),
                 new(beat+1.5f, ()=>game.playerCantBop = false)});
         }
 
@@ -116,6 +121,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
             anim.DoScaledAnimationAsync("shake", 1f, 0, 0);
             double beat = caller.startBeat + caller.timer;
             BeatAction.New(this, new() {
+                new(beat, ()=>game.playerCantBop = true),
                 new(beat+1.5f, ()=>game.playerCantBop = false)});
             
         }
@@ -125,8 +131,9 @@ namespace HeavenStudio.Games.Scripts_Airboarder
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f, 0, 1);
             anim.DoScaledAnimationAsync("break", 1f, 0, 0);
             double beat = caller.startBeat + caller.timer;
-            game.MissSound(beat);
+//            game.MissSound(beat);
             BeatAction.New(this, new() {
+                new(beat, ()=>game.playerCantBop = true),
                 new(beat+1.5f, ()=>game.playerCantBop = false)});
             
 
@@ -135,7 +142,9 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         public void CrouchSuccess(PlayerActionEvent caller, float state)
         {
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("charge", 1f, 0, 1);
+            SoundByte.PlayOneShotGame("airboarder/crouch");
             SoundByte.PlayOneShotGame("airboarder/crouchCharge");
+            SoundByte.PlayOneShotGame("airboarder/crouchvox");
             game.playerCantBop = true;
         }
 
@@ -148,7 +157,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f, 0, 1);
             anim.DoScaledAnimationAsync("break", 1f, 0, 0);
             double beat = caller.startBeat + caller.timer;
-            game.MissSound(beat);
+ //           game.MissSound(beat);
         }
 
 
