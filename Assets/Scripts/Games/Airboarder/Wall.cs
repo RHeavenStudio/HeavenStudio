@@ -46,13 +46,14 @@ namespace HeavenStudio.Games.Scripts_Airboarder
 
                 
                 new BeatAction.Action(jumpBeat+1, delegate {game.CPU1.GetComponent<Animator>().DoScaledAnimationAsync("jump", 1f, 0, 1);}),
-                new BeatAction.Action(jumpBeat+1, delegate {game.cpu1CantBop = false;} ),              
+                            
                 new BeatAction.Action(jumpBeat + 1, delegate {SoundByte.PlayOneShotGame("airboarder/jump");}),
                 new BeatAction.Action(jumpBeat + 1, delegate {SoundByte.PlayOneShotGame("airboarder/jumpvox");}),
                 new BeatAction.Action(jumpBeat+2, delegate {game.CPU2.GetComponent<Animator>().DoScaledAnimationAsync("jump", 1f, 0, 1);}),                
-                new BeatAction.Action(jumpBeat+2, delegate {game.cpu2CantBop = false;} ),  
+                new BeatAction.Action(jumpBeat+2, delegate {game.cpu1CantBop = false;} ),  
                 new BeatAction.Action(jumpBeat + 2, delegate {SoundByte.PlayOneShotGame("airboarder/jump");}),
                 new BeatAction.Action(jumpBeat + 2, delegate {SoundByte.PlayOneShotGame("airboarder/jumpvox");}),
+                new BeatAction.Action(jumpBeat+3, delegate {game.cpu2CantBop = false;} ),  
             });
 
         }
@@ -94,6 +95,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         public void JumpEmpty(PlayerActionEvent caller){
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f, 0, 1);
             double beat = caller.startBeat + caller.timer;
+            game.MissSound(beat);
             BeatAction.New(this, new() {
                 new(beat+1.5f, ()=>game.playerCantBop = false)});
             game.wantsCrouch = false;

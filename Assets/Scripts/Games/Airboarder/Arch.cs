@@ -95,7 +95,8 @@ namespace HeavenStudio.Games.Scripts_Airboarder
             var currentBeat = cond.songPositionInBeatsAsDouble;
             float normalizedStart = Conductor.instance.GetPositionFromBeat(appearBeat, 40f);
             float horizArch = (5*normalizedStart) - 140;
-            anim.GetComponent<Animator>().DoNormalizedAnimation("move", normalizedStart, 0);
+//            gameObject.transform.position = new Vector3(horizArch, -1, 0.8f);
+            anim.GetComponent<Animator>().DoNormalizedAnimation("move", normalizedStart, 1);
             if (normalizedStart > 1) Destroy(gameObject);
         }
 
@@ -112,7 +113,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         public void DuckMiss(PlayerActionEvent caller)
         {
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("hit1",1f, 0, 1);
-            anim.DoScaledAnimationAsync("shake", 1f, 0, 1);
+            anim.DoScaledAnimationAsync("shake", 1f, 0, 0);
             double beat = caller.startBeat + caller.timer;
             BeatAction.New(this, new() {
                 new(beat+1.5f, ()=>game.playerCantBop = false)});
@@ -122,8 +123,9 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         public void DuckEmpty(PlayerActionEvent caller)
         {
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f, 0, 1);
-            anim.DoScaledAnimationAsync("break", 1f, 0, 1);
+            anim.DoScaledAnimationAsync("break", 1f, 0, 0);
             double beat = caller.startBeat + caller.timer;
+            game.MissSound(beat);
             BeatAction.New(this, new() {
                 new(beat+1.5f, ()=>game.playerCantBop = false)});
             
@@ -139,12 +141,14 @@ namespace HeavenStudio.Games.Scripts_Airboarder
 
         public void CrouchMiss(PlayerActionEvent caller){
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("hit1",1f, 0, 1);
-            anim.DoScaledAnimationAsync("shake", 1f, 0, 1);
+            anim.DoScaledAnimationAsync("shake", 1f, 0, 0);
         }
 
         public void CrouchEmpty(PlayerActionEvent caller){
             game.Player.GetComponent<Animator>().DoScaledAnimationAsync("hit2", 1f, 0, 1);
-            anim.DoScaledAnimationAsync("break", 1f, 0, 1);
+            anim.DoScaledAnimationAsync("break", 1f, 0, 0);
+            double beat = caller.startBeat + caller.timer;
+            game.MissSound(beat);
         }
 
 

@@ -74,6 +74,13 @@ namespace HeavenStudio.Games.Loaders
                     }
                 },
 
+                new GameAction("forceCharge", "Force Charge")
+                {
+                    function = delegate {Airboarder.instance.ForceCharge(); },
+                    defaultLength = 0.5f,
+                    resizable = false,
+                },
+
 
                 new GameAction("letsGo", "YEAAAAAH LET'S GO")
                 {
@@ -140,13 +147,15 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            SetupBopRegion("airboarder", "bop", "auto");    
+            SetupBopRegion("airboarder", "bop", "auto");   
+            wantsCrouch = false; 
         }
 
         public override void OnGameSwitch(double beat)
         {
             List<BeatAction.Action> actions = new()
             {};
+            wantsCrouch = false;
 
             double switchBeat = beat;
             double startBeat = double.MaxValue;
@@ -156,56 +165,37 @@ namespace HeavenStudio.Games
             //find when the next game switch/remix end happens
             var nextGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat > beat && x.datamodel != "gameManager/switchGame/airboarder");
             double nextGameSwitchBeat = double.MaxValue;
+
+            //lists arch and wall events
+            List<RiqEntity> blockEvents = gameManager.Beatmap.Entities.FindAll(e => e.datamodel is "airboarder/duck" or "airboarder/crouch" or "airboarder/jump" && e.beat >= beat && e.beat < endBeat);
+        
+            foreach (var e in entities.FindAll(e => e.beat >= beat && e.beat < endBeat && e.datamodel is "airboarder/duck" or "airboarder/crouch" or "airboarder/jump"))
+                {
+                switch (e.datamodel) {
+                    case "airboarder/duck":
+                    // do the stuff
+                    RequestArch(e.beat-25);
+                    archBasic.CueDuck(e.beat);
+                    break;
+                    case "airboarder/crouch":
+                    // do the stuff
+                    RequestArch(e.beat-25);
+                    archBasic.CueCrouch(e.beat);
+                    break;
+                    case "airboarder/jump":
+                    RequestWall(e.beat-25);
+                    wallBasic.CueJump(e.beat);
+                    break;
+                }
+                }
             
             
-            List<RiqEntity> relevantArches = GetAllArches(beat, nextGameSwitchBeat);
-            
-            foreach (var archReg in relevantArches)
-            {
-                RequestArch(archReg.beat-25);
-                archBasic.CueDuck(archReg.beat);
-          
-              }
-            SetupCrouches(beat, nextGameSwitchBeat);
-            SetupWalls(beat, nextGameSwitchBeat);
 
 
                 
         }
 
-        public void SetupArches (double beat, double nextSwitch)
-        {
-            List<RiqEntity> relevantArches = GetAllArches(beat, nextSwitch);
-            
-            foreach (var archReg in relevantArches)
-            {
-                RequestArch(archReg.beat-25);
-                archBasic.CueDuck(archReg.beat);
-          
-              }
-        }
 
-        public void SetupCrouches (double beat, double nextSwitch)
-        {
-            List<RiqEntity> relevantCrouches = GetAllCrouches(beat, nextSwitch);
-            foreach (var archCro in relevantCrouches)
-            {
-                RequestArch(archCro.beat-25);
-                archBasic.CueCrouch(archCro.beat);
-          
-              }
-        }
-
-        public void SetupWalls (double beat, double nextSwitch)
-        {
-            List<RiqEntity> relevantWalls = GeteAllWalls(beat, nextSwitch);
-            foreach (var wallReg in relevantWalls)
-            {
-                RequestWall(wallReg.beat-25);
-                wallBasic.CueJump(wallReg.beat);
-          
-              }
-        }
         
 
         public override void OnPlay(double beat)
@@ -213,23 +203,6 @@ namespace HeavenStudio.Games
             OnGameSwitch(beat);
         }
 
-        private List<RiqEntity> GetAllArches(double beat, double endBeat)
-        {
-            //lists arch and wall events
-            return EventCaller.GetAllInGameManagerList("airboarder", new string[] { "duck"}).FindAll(x => x.beat >= beat && x.beat < endBeat);
-        }
-
-        private List<RiqEntity> GetAllCrouches(double beat, double endBeat)
-        {
-            //lists arch and wall events
-            return EventCaller.GetAllInGameManagerList("airboarder", new string[] { "crouch"}).FindAll(x => x.beat >= beat && x.beat < endBeat);
-        }
-
-        private List<RiqEntity> GeteAllWalls(double beat, double endBeat)
-        {
-            //lists arch and wall events
-            return EventCaller.GetAllInGameManagerList("airboarder", new string[] { "jump"}).FindAll(y => y.beat >= beat && y.beat < endBeat);
-        }
 
         public void Update()
         {
@@ -241,7 +214,7 @@ namespace HeavenStudio.Games
             Floor.Play("moving", 0, normalizedBeat);
             Floor.speed = 0;
             Dog.Play("run", 0, normalizedBeat*5);
-            Tail.Play("wag",0,normalizedBeat*5);
+            Tail.Play("wag",0,normalizedBeat/(3/5));
             CPU1.Play("hover",0,normalizedBeat);
             CPU2.Play("hover",0,normalizedBeat);
             Player.Play("hover",0,normalizedBeat);
@@ -267,6 +240,17 @@ namespace HeavenStudio.Games
                 playerCantBop = false;}
             }
 
+        }
+
+        public void ForceCharge()
+        {
+            CPU1.DoScaledAnimationAsync("charge", 1f, 0, 1);
+            CPU2.DoScaledAnimationAsync("charge", 1f, 0, 1);
+            Player.DoScaledAnimationAsync("charge", 1f, 0, 1);
+            cpu1CantBop = true;
+            cpu2CantBop = true;
+            playerCantBop = true;
+            wantsCrouch = true;
         }
 
         public override void OnBeatPulse(double beat)
@@ -333,6 +317,29 @@ namespace HeavenStudio.Games
             }
 
             );
+        }
+
+        public void MissSound(double beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("airboarder/miss1", beat),
+                new MultiSound.Sound("airboarder/missvox", beat),
+                new MultiSound.Sound("airboarder/miss2", beat + 0.25f),
+                new MultiSound.Sound("airboarder/miss3", beat + 0.75f),
+                new MultiSound.Sound("airboarder/miss4", beat + 0.875f),
+                new MultiSound.Sound("airboarder/miss5", beat + 1f),
+                new MultiSound.Sound("airboarder/miss6", beat + 1.125f),
+                new MultiSound.Sound("airboarder/miss7", beat + 1.25f),
+                new MultiSound.Sound("airboarder/miss8", beat + 1.5f),
+                new MultiSound.Sound("airboarder/miss9", beat + 1.75f),
+                new MultiSound.Sound("airboarder/miss10", beat + 2f),
+                new MultiSound.Sound("airboarder/miss11", beat + 2.25f),
+                new MultiSound.Sound("airboarder/miss12", beat + 2.5f),
+                new MultiSound.Sound("airboarder/miss13", beat + 2.75f),
+                new MultiSound.Sound("airboarder/miss14", beat + 3f),
+                new MultiSound.Sound("airboarder/miss15", beat + 3.25f)
+            });
         }
 
         public void RequestArch(double beat)
