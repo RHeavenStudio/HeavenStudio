@@ -71,10 +71,10 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
             if (canFall && IslandPos.localPosition.x < -0.5)
             {
                 PlatformAnim.DoScaledAnimationAsync("Fall", 0.3f); // TO DO: MAKE THIS SCALE TO TEMPO PROPERLY
-                SoundByte.PlayOneShotGame("chargingChicken/platformFall", volume: 0.5f);
+                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_PITCH150", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.30, delegate { StoneSplash(); }),
+                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.50, delegate { StoneSplash(); }),
                 });
                 canFall = false;
             }
@@ -120,7 +120,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(collapseTime, delegate { 
-                    SoundByte.PlayOneShotGame("chargingChicken/complete");
+                    SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_LAND_RESET", volume: 0.7f);
                     BigLandmass.SetActive(false);
                     SmallLandmass.SetActive(true);
                 }),
@@ -129,7 +129,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         public void CollapseUnderPlayer()
         {
-            SoundByte.PlayOneShotGame("chargingChicken/complete");
+            SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_LAND_RESET", volume: 0.7f);
             SmallLandmass.SetActive(false);
         }
 
@@ -162,7 +162,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         public void StoneSplash()
         {
-            if (IslandPos.localPosition.x > -6) SoundByte.PlayOneShotGame("chargingChicken/platformSplash", volume: 0.4f);
+            if (IslandPos.localPosition.x > -6) SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_WATER_PITCH400", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-400, 401), false), volume: 0.5f);
         }
 
         #endregion
