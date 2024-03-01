@@ -206,6 +206,7 @@ namespace HeavenStudio.Games
         bool playerSucceeded = false;
         bool fellTooFar = false;
         bool checkFallingDistance = false;
+        double successAnimationKillOnBeat = double.MaxValue;
 
         bool flowForward = true;
 
@@ -634,7 +635,7 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
         }
 
-        public void ChargeUp(double beat, double actualLength, bool forceHold, int whichDrum, bool bubble = false, int endText = 0, int textLength = 4, string successText = "", string failText = "", int destination = 1, string customDestination = "You arrived in The Backrooms!") //TO DO: make this inactive
+        public void ChargeUp(double beat, double actualLength, bool forceHold, int whichDrum, bool bubble = false, int endText = 0, int textLength = 4, string successText = "", string failText = "", int destination = 1, string customDestination = "You arrived in The Backrooms!")
         {
             //convert length to an integer, which is at least 2
             double length = Math.Ceiling(actualLength);
@@ -642,6 +643,9 @@ namespace HeavenStudio.Games
 
             //hose count animation
             nextIsland.ChargerArmCountIn(beat);
+
+            //cancel previous success animation if needed
+            successAnimationKillOnBeat = beat - 1;
 
             //input
             switch(whichDrum)
@@ -673,7 +677,7 @@ namespace HeavenStudio.Games
                 SpawnJourney(journeyBeat, yardsTextLength - 1);
             }));
 
-            //spawns the countdown bubble, allows stones to fall
+            //spawns the countdown bubble, allows stones to fall, resets the success anim killer
             actions.Add(new(beat, delegate {
                 countBubble.SetActive(bubble);
                 foreach (var a in stonePlatformJourney)
@@ -681,6 +685,7 @@ namespace HeavenStudio.Games
                     stone = a.thisPlatform;
                     stone.isBeingSet = false;
                 }
+                successAnimationKillOnBeat = double.MaxValue;
             }));
 
             length += 1;
@@ -718,7 +723,7 @@ namespace HeavenStudio.Games
         {
             //sound
             isInputting = true; //starts the drums
-            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f); //TO DO: maybe change this
+            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f);
 
             //chicken animation
             ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
@@ -734,7 +739,7 @@ namespace HeavenStudio.Games
             isInputting = true; //starts the drums
             SoundByte.PlayOneShotGame("chargingChicken/kick");
             SoundByte.PlayOneShotGame("chargingChicken/hihat");
-            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f); //TO DO: maybe change this
+            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f);
 
             //chicken animation
             ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
@@ -749,7 +754,7 @@ namespace HeavenStudio.Games
             //sound
             isInputting = true; //starts the drums
             SoundByte.PlayOneShotGame("chargingChicken/AMEN1");
-            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f); //TO DO: maybe change this
+            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f);
 
             //chicken animation
             ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
@@ -764,11 +769,11 @@ namespace HeavenStudio.Games
             //sound
             isInputting = false; //ends the drums (just in case)
 
-            //erase text TO DO: make this happen later (but for now it's fine here)
+            //erase text
             yardsTextIsEditable = false;
             yardsText.text = "";
 
-            //despawn the counting bubble TO DO: make this happen later (but for now it's fine here)
+            //despawn the counting bubble
             countBubble.SetActive(false);
         }
 
@@ -779,7 +784,7 @@ namespace HeavenStudio.Games
 
         public void EndChargingMiss(PlayerActionEvent caller)
         {
-
+            if (isInputting) ChickenAnim.DoScaledAnimationAsync("Bomb", 0.5f);
         }
 
         public void Nothing(PlayerActionEvent caller) { }
@@ -855,7 +860,7 @@ namespace HeavenStudio.Games
                         CollapseUnderPlayer();
                     }),
                     new BeatAction.Action(beat + 1, delegate { 
-                        Explode();
+                        Explode(length);
                     }),
                 });
         }
@@ -906,6 +911,9 @@ namespace HeavenStudio.Games
             currentIsland.BlastoffAnimation();
 
             //buncha math here
+            currentIsland.PositionIsland(0);
+            currentIsland.transform.localPosition = new Vector3(0, 0, 0);
+
             nextIsland.isMoving = true;
             currentIsland.isMoving = true;
 
@@ -978,7 +986,8 @@ namespace HeavenStudio.Games
 
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(journeyIntendedLength + (currentIsland.journeyLength * 2) + 1, delegate { 
+                    new BeatAction.Action(journeyIntendedLength + (currentIsland.journeyLength * 2) + 1, delegate {
+                        SuccessAnim();
                         nextIsland.isMoving = false;
                         currentIsland.isMoving = false;
                         foreach (var a in stonePlatformJourney)
@@ -988,6 +997,22 @@ namespace HeavenStudio.Games
                         }
                     }),
                 });
+            }
+        }
+
+        public void SuccessAnim()
+        {
+            if (Conductor.instance.songPositionInBeatsAsDouble < successAnimationKillOnBeat)
+            {
+                ChickenAnim.DoScaledAnimationAsync("Success", 0.5f);
+            }
+        }
+
+        public void RespawnedAnim()
+        {
+            if (Conductor.instance.songPositionInBeatsAsDouble < successAnimationKillOnBeat)
+            {
+                ChickenAnim.DoScaledAnimationAsync("Back", 0.5f);
             }
         }
 
@@ -1008,9 +1033,12 @@ namespace HeavenStudio.Games
             countBubble.SetActive(false);
         }
 
-        public void CollapseUnderPlayer() //TO DO: change this
+        public void CollapseUnderPlayer()
         {
             if (isInputting) return;
+
+            currentIsland.PositionIsland(0);
+            currentIsland.transform.localPosition = new Vector3(0, 0, 0);
             
             isInputting = false;
             nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
@@ -1033,9 +1061,12 @@ namespace HeavenStudio.Games
             ChickenFall(false);
         }
 
-        public void Explode() //TO DO: fix the hell out of this
+        public void Explode(double length)
         {
             if (!isInputting) return;
+
+            currentIsland.PositionIsland(0);
+            currentIsland.transform.localPosition = new Vector3(0, 0, 0);
 
             isInputting = false;
             nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat;
@@ -1056,7 +1087,7 @@ namespace HeavenStudio.Games
             //burn animation
             ChickenAnim.DoScaledAnimationAsync("Gone", 0.5f);
             currentIsland.FakeChickenAnim.DoScaledAnimationAsync("Burn", 0.5f);
-            ChickenRespawn();
+            ChickenRespawn(Math.Min(length / 2, 3));
         }
 
         public void ChickenFall(bool fellTooFar)
@@ -1089,21 +1120,21 @@ namespace HeavenStudio.Games
             ChickenRespawn();
         }
 
-        public void ChickenRespawn()
+        public void ChickenRespawn(double length = 0.5)
         {
             isInputting = false;
 
-            currentIsland.respawnStart = Conductor.instance.songPositionInBeatsAsDouble + 0.5;
+            currentIsland.respawnStart = Conductor.instance.songPositionInBeatsAsDouble + length;
             currentIsland.isRespawning = true;
 
-            nextIsland.respawnStart = Conductor.instance.songPositionInBeatsAsDouble + 0.5;
+            nextIsland.respawnStart = Conductor.instance.songPositionInBeatsAsDouble + length;
             nextIsland.isRespawning = true;
             nextIsland.FakeChickenAnim.DoUnscaledAnimation("Respawn");
 
             foreach (var a in stonePlatformJourney)
             {
                 stone = a.thisPlatform;
-                stone.respawnStart = Conductor.instance.songPositionInBeatsAsDouble + 0.5;
+                stone.respawnStart = Conductor.instance.songPositionInBeatsAsDouble + length;
                 stone.isRespawning = true;
             }
 
@@ -1121,6 +1152,7 @@ namespace HeavenStudio.Games
                         stone = a.thisPlatform;
                         stone.isRespawning = false;
                     }
+                    RespawnedAnim();
                 }),
             });
         }

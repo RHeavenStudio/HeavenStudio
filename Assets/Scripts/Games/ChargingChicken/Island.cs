@@ -70,7 +70,8 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
             }
             if (canFall && IslandPos.localPosition.x < -0.5)
             {
-                PlatformAnim.DoScaledAnimationAsync("Fall", 0.3f); // TO DO: MAKE THIS SCALE TO TEMPO PROPERLY
+                PlatformAnim.Play("Fall", -1, 0);
+                PlatformAnim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.3f;
                 SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_PITCH150", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
@@ -116,7 +117,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         public void SetUpCollapse(double collapseTime)
         {
-            //collapse island (successful) TO DO: MAKE THIS PER-ISLAND SO IT'S NOT A FUCKING RACE CONDITION
+            //collapse island (successful)
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(collapseTime, delegate { 
@@ -157,12 +158,13 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         public void StoneFall(int offset)
         {
-            PlatformAnim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble + ((double)offset / 16), timeScale: 0.5f);
+            PlatformAnim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble + ((double)offset / 64), 0.5f);
+            PlatformAnim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.5f;
         }
 
         public void StoneSplash()
         {
-            if (IslandPos.localPosition.x > -6) SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_WATER_PITCH400", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-400, 401), false), volume: 0.5f);
+            if (IslandPos.localPosition.x > -8) SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_WATER_PITCH400", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-400, 401), false), volume: 0.5f);
         }
 
         #endregion
