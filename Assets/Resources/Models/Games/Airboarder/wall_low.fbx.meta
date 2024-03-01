@@ -3,7 +3,17 @@ guid: cdd45697068de0942941fd70c7b8b9a2
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: block_shadow
+    second: {fileID: 2100000, guid: a8381275f858de342b6da7d85f663236, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wall_body
+    second: {fileID: 4308077249516054671, guid: f6ee36b31b2f3e849b5b8dc69738ced0, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
