@@ -1109,7 +1109,7 @@ namespace HeavenStudio.Games
             for (int i = 0; i < spriteRenderers.Length; i++)
             {
                 foreach (var renderer in spriteRenderers[i]) {
-                    renderer.color = GetNewColor(colorEases[i]);
+                    renderer.color = colorEases[i].GetColor();
                 }
             }
         }

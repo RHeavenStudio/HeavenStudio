@@ -286,8 +286,8 @@ namespace HeavenStudio.Games
         //call this in update
         private void BackgroundColorUpdate()
         {
-            backgroundGradient.color = GetNewColor(tColorEase);
-            background.color = GetNewColor(bColorEase);
+            backgroundGradient.color = tColorEase.GetColor();
+            background.color = bColorEase.GetColor();
         }
 
         public void BackgroundColor(double beat, float length, Color colorStartSetT, Color colorEndSetT, Color colorStartSetB, Color colorEndSetB, Color setStreak, int ease)

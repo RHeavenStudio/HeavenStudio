@@ -76,26 +76,9 @@ namespace HeavenStudio.Games
 
         public static CoinToss instance { get; set; }
 
-        private static Color _defaultBgColor;
-        public static Color defaultBgColor
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#F7F742", out _defaultBgColor);
-                return _defaultBgColor;
-            }
-        }
+        public static Color defaultBgColor = new Color(0.97f, 0.97f, 0.26f);
+        public static Color defaultFgColor = new Color(1f, 1f, 0.51f);
 
-
-        private static Color _defaultFgColor;
-        public static Color defaultFgColor
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#FFFF83", out _defaultFgColor);
-                return _defaultFgColor;
-            }
-        }
 
         [Header("Backgrounds")]
         public SpriteRenderer fg;
@@ -204,11 +187,11 @@ namespace HeavenStudio.Games
         private ColorEase bgColorEase = new(defaultBgColor);
         private ColorEase bgFColorEase = new(defaultBgColor);
 
-        //call this in update
+        // call this in update
         private void BackgroundColorUpdate()
         {
-            bg.color = GetNewColor(bgColorEase);
-            fg.color = GetNewColor(bgFColorEase);
+            bg.color = bgColorEase.GetColor();
+            fg.color = bgFColorEase.GetColor();
         }
 
         public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color colorStartSetF, Color colorEndSetF, int ease)
