@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                    preFunction = delegate {
   var e = eventCaller.currentEntity;
   string variation = "variation" + (new string[] { "Pan", "Pa", "Pa_n" })[e["type"]];
-  BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"],e["clapType"], e["semitone"]);
+  BonOdori.instance.PreClap(e.beat, e[variation], e["type"], e["mute"],e["clapType"], e["semitone"]);
 },
                     defaultLength = 1f,
                     parameters = new List<Param>()
@@ -172,6 +172,7 @@ namespace HeavenStudio.Games
 
     public class BonOdori : Minigame
     {
+
         string prefix;
         double beatUniversal;
         string suffix;
@@ -229,6 +230,19 @@ namespace HeavenStudio.Games
         {
             SideClap = 0,
             FrontClap = 1
+        }
+        private static List<QueuedClaps> queuedClaps = new();
+
+        private struct QueuedClaps
+        {
+            public double beat;
+            public int variation;
+            public int typeSpeak;
+            public bool muted;
+            public int clapType;
+            public int semitone;
+
+
         }
         public enum typePan
         {
@@ -375,11 +389,40 @@ namespace HeavenStudio.Games
             }
 
         }
+        public override void OnGameSwitch(double beat)
+        {
+
+            if (queuedClaps.Count > 0)
+            {
+                foreach (var clap in queuedClaps) Clap(clap.beat, clap.variation, clap.typeSpeak, clap.muted, clap.clapType, clap.semitone);
+                queuedClaps.Clear();
+            }
+
+
+        }
 
 
 
 
-
+        public void PreClap(double beat, int variation, int typeSpeak, bool muted, int clapType, int semitone)
+        {
+            if (GameManager.instance.currentGame == "bonOdori")
+            {
+                instance.Clap(beat, variation, typeSpeak, muted, clapType, semitone);
+            }
+            else
+            {
+                queuedClaps.Add(new QueuedClaps()
+                {
+                    beat = beat,
+                    variation = variation,
+                    typeSpeak = typeSpeak,
+                    muted = muted,
+                    clapType = clapType,
+                    semitone = semitone
+                });
+            }
+        }
         public void Clap(double beat, int variation, int typeSpeak, bool muted, int clapType, int semitone)
 
         {
@@ -424,7 +467,7 @@ namespace HeavenStudio.Games
                 2 or _ => "do",
 
             };
-             var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
+            var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
 
             SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
 
