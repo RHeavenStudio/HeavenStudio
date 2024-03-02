@@ -240,7 +240,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 70
   m_Sprite: {fileID: 1528129769, guid: fcfd407e5f13b65499ef59b3777db34c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -540,6 +540,8 @@ MonoBehaviour:
   _can: {fileID: 719662512238027404}
   _bat: {fileID: 954934415611220420}
   _broom: {fileID: 5920352441626343011}
+  _barrel: {fileID: 945793470800833460}
+  _book: {fileID: 827378469899036997}
 --- !u!114 &-490977370071357320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -563,6 +565,8 @@ MonoBehaviour:
   - {fileID: 2854676978937244060}
   - {fileID: 2941363410568922942}
   - {fileID: 4398076241187744673}
+  - {fileID: 8903405614003022742}
+  - {fileID: 568406762171179254}
 --- !u!1 &7082049777098498031
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         [SerializeField] private GameObject _can;
         [SerializeField] private GameObject _bat;
         [SerializeField] private GameObject _broom;
+        [SerializeField] private GameObject _barrel;
+        [SerializeField] private GameObject _book;
 
         private LBJBear _bear;
         private LBJObjectRotate _rotateObject;
@@ -31,6 +33,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _can.SetActive(false);
             _bat.SetActive(false);
             _broom.SetActive(false);
+            _barrel.SetActive(false);
+            _book.SetActive(false);
             _rotateObject = GetComponent<LBJObjectRotate>();
         }
 
@@ -54,6 +58,12 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                     break;
                 case LumBEARjack.SmallType.broom:
                     _broom.SetActive(true);
+                    break;
+                case LumBEARjack.SmallType.barrel:
+                    _barrel.SetActive(true);
+                    break;
+                case LumBEARjack.SmallType.book:
+                    _book.SetActive(true);
                     break;
                 default:
                     break;
@@ -100,6 +110,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 LumBEARjack.SmallType.can => "canCut",
                 LumBEARjack.SmallType.bat => "batCut",
                 LumBEARjack.SmallType.broom => "broomCut",
+                LumBEARjack.SmallType.barrel => "barrelCut",
+                LumBEARjack.SmallType.book => "bookCut",
                 _ => throw new System.NotImplementedException()
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
@@ -133,6 +145,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 LumBEARjack.SmallType.can => _can.GetComponent<SpriteRenderer>(),
                 LumBEARjack.SmallType.bat => _bat.GetComponent<SpriteRenderer>(),
                 LumBEARjack.SmallType.broom => _broom.GetComponent<SpriteRenderer>(),
+                LumBEARjack.SmallType.barrel => _barrel.GetComponent<SpriteRenderer>(),
+                LumBEARjack.SmallType.book => _book.GetComponent<SpriteRenderer>(),
                 _ => throw new System.NotImplementedException(),
             };
             LumBEARjack.instance.ActivateMissEffect(sr.transform, sr);

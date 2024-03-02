@@ -246,12 +246,15 @@ namespace HeavenStudio.Games
             log,
             can,
             bat,
-            broom
+            broom,
+            barrel,
+            book
         }
 
         public enum BigType
         {
-            log
+            log,
+            bigBall
         }
 
         public enum HugeType
@@ -322,8 +325,13 @@ namespace HeavenStudio.Games
         [SerializeField] private ParticleSystem _canCutParticle;
         [SerializeField] private ParticleSystem _batCutParticle;
         [SerializeField] private ParticleSystem _broomCutParticle;
+        [SerializeField] private ParticleSystem _barrelCutParticle;
+        [SerializeField] private ParticleSystem _bookCutParticle;
+
         [SerializeField] private ParticleSystem _bigLogHitParticle;
         [SerializeField] private ParticleSystem _bigLogCutParticle;
+        [SerializeField] private ParticleSystem _bigBallCutParticle;
+
         [SerializeField] private ParticleSystem _hugeLogHitParticle;
         [SerializeField] private ParticleSystem _hugeLogCutParticle;
         [SerializeField] private ParticleSystem _freezerChipParticle;
@@ -795,6 +803,7 @@ namespace HeavenStudio.Games
                 {
                     case SmallType.bat:
                     case SmallType.log:
+                    case SmallType.barrel:
                         sounds.Add(new("lumbearjack/smallLogPut", beat + (length / 3)));
                         break;
                     case SmallType.can:
@@ -802,6 +811,9 @@ namespace HeavenStudio.Games
                         break;
                     case SmallType.broom:
                         sounds.Add(new("lumbearjack/broomPut", beat + (length / 3)));
+                        break;
+                    case SmallType.book:
+                        sounds.Add(new("lumbearjack/bookPut", beat + (length / 3)));
                         break;
                     default:
                         break;
@@ -821,6 +833,9 @@ namespace HeavenStudio.Games
                 {
                     case BigType.log:
                         sounds.Add(new("lumbearjack/bigLogPut", beat + (length / 4)));
+                        break;
+                    case BigType.bigBall:
+                        sounds.Add(new("lumbearjack/bigBallPut", beat + (length / 4)));
                         break;
                     default:
                         break;
@@ -1104,6 +1119,14 @@ namespace HeavenStudio.Games
                     ParticleSystem spawnedParticle3 = Instantiate(_broomCutParticle, _particleCutPoint);
                     spawnedParticle3.PlayScaledAsyncAllChildren(0.5f);
                     break;
+                case SmallType.barrel:
+                    ParticleSystem spawnedParticle4 = Instantiate(_barrelCutParticle, _particleCutPoint);
+                    spawnedParticle4.PlayScaledAsyncAllChildren(0.5f);
+                    break;
+                case SmallType.book:
+                    ParticleSystem spawnedParticle5 = Instantiate(_bookCutParticle, _particleCutPoint);
+                    spawnedParticle5.PlayScaledAsyncAllChildren(0.5f);
+                    break;
             }
         }
 
@@ -1114,6 +1137,11 @@ namespace HeavenStudio.Games
                 case BigType.log:
                     ParticleSystem spawnedParticle = Instantiate(hit ? _bigLogHitParticle : _bigLogCutParticle, hit ? _particleHitPoint : _particleCutPoint);
                     spawnedParticle.PlayScaledAsyncAllChildren(0.5f);
+                    break;
+                case BigType.bigBall:
+                    if (hit) break;
+                    ParticleSystem spawnedParticle2 = Instantiate(_bigBallCutParticle, _particleCutPoint);
+                    spawnedParticle2.PlayScaledAsyncAllChildren(0.5f);
                     break;
             }
         }

@@ -135,6 +135,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _logSR: {fileID: 8098522755323641548}
   _logCutSprite: {fileID: 192267312, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
+  _ballSR: {fileID: 6319426971838379636}
+  _ballCutSprite: {fileID: 1488283434, guid: fcfd407e5f13b65499ef59b3777db34c, type: 3}
 --- !u!114 &-6887511602651794248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +157,7 @@ MonoBehaviour:
   _pivotSingle: {fileID: 0}
   _objectsToMove:
   - {fileID: 7773712820662594969}
+  - {fileID: 3276180286662469811}
 --- !u!1 &3051440580972758910
 GameObject:
   m_ObjectHideFlags: 0

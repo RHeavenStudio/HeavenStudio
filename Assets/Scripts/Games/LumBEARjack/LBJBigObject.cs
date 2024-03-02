@@ -11,6 +11,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         [Header("Components")]
         [SerializeField] private SpriteRenderer _logSR;
         [SerializeField] private Sprite _logCutSprite;
+        [SerializeField] private SpriteRenderer _ballSR;
+        [SerializeField] private Sprite _ballCutSprite;
 
         private LBJBear _bear;
         private LBJObjectRotate _rotateObject;
@@ -26,6 +28,8 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private void Awake()
         {
             _rotateObject = GetComponent<LBJObjectRotate>();
+            _logSR.gameObject.SetActive(false);
+            _ballSR.gameObject.SetActive(false);
         }
 
         public void Init(LBJBear bear, double beat, double length, LumBEARjack.BigType type, bool right, double startUpBeat = -1)
@@ -36,11 +40,23 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
             _rotationBeat = beat + (length / 4 * 2);
             _rotationLength = length / 4;
+
+            switch (_type)
+            {
+                case LumBEARjack.BigType.log:
+                    _logSR.gameObject.SetActive(true);
+                    break;
+                case LumBEARjack.BigType.bigBall:
+                    _ballSR.gameObject.SetActive(true);
+                    break;
+            }
+
             if (startUpBeat <= beat + (length / 4 * 2)) _hitActionEvent = LumBEARjack.instance.ScheduleInput(beat, length / 4 * 2, Minigame.InputAction_BasicPress, JustHit, Miss, Blank);
             else
             {
                 _rotationBeat = beat + (length / 4 * 3);
                 _logSR.sprite = _logCutSprite;
+                _ballSR.sprite = _ballCutSprite;
             }
             _cutActionEvent = LumBEARjack.instance.ScheduleInput(beat, length / 4 * 3, Minigame.InputAction_BasicPress, JustCut, Miss, Blank);
             Update();
@@ -79,12 +95,14 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             string hitSound = _type switch
             {
                 LumBEARjack.BigType.log => "bigLogHit",
+                LumBEARjack.BigType.bigBall => "bigBallHit",
                 _ => throw new System.NotImplementedException(),
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + hitSound);
             _bear.CutMid();
             _rotationBeat = _cutActionEvent.startBeat + _cutActionEvent.timer;
             _logSR.sprite = _logCutSprite;
+            _ballSR.sprite = _ballCutSprite;
         }
 
         private void JustCut(PlayerActionEvent caller, float state)
@@ -103,6 +121,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             string cutSound = _type switch
             {
                 LumBEARjack.BigType.log => "bigLogCut",
+                LumBEARjack.BigType.bigBall => "bigBallCut",
                 _ => throw new System.NotImplementedException(),
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
@@ -121,6 +140,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             SpriteRenderer sr = _type switch
             {
                 LumBEARjack.BigType.log => _logSR,
+                LumBEARjack.BigType.bigBall => _ballSR,
                 _ => throw new System.NotImplementedException(),
             };
             LumBEARjack.instance.ActivateMissEffect(sr.transform, sr);
