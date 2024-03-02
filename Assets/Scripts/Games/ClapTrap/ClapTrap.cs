@@ -19,9 +19,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("sword", ClapTrap.ClapType.Hand, "Object", "The object attempting to hit the doll"),
+                        new Param("sword", ClapTrap.ClapType.Hand, "Object", "The evil, giant object attempting to karate chop the doll."),
                         //new Param("sighBeat", new EntityTypes.Float(2, 100), "Sigh Beat", "The slapper attempting to hit the doll"),
-                        new Param("spotlight", true, "Spotlight", "Whether or not there's a spotlight for the cue"),
+                        new Param("spotlight", true, "Spotlight", "Toggle if the spotlight should appear."),
                     }
                 },
                 new GameAction("doll animations", "Doll Animations")
@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("animate", ClapTrap.DollAnim.Inhale, "Animation", "The animation that the doll will play"),
+                        new Param("animate", ClapTrap.DollAnim.Inhale, "Animation", "The animation that the doll will play."),
                     }
                 },
                 new GameAction("spotlight", "Force Spotlight")
@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("force", true, "Force Spotlight", "Whether or not to force the spotlight to be active"),
+                        new Param("force", true, "Force Spotlight", "Toggle if the spotlight should appear."),
                     }
                 },
                 new GameAction("background color", "Background Colors")
@@ -49,7 +49,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true, 
                     parameters = new List<Param>()
                     {
-                        new Param("bgColor", ClapTrap.defaultBgColor, "Start Color", "Set the color at the start of the event"),
+                        new Param("bgColor", ClapTrap.defaultBgColor, "Start Color", "Set the color at the start of the event."),
                         new Param("bgColorEnd", ClapTrap.defaultBgColor, "End Color", "Set the color at the end of the event."),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
 
@@ -61,11 +61,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("left", ClapTrap.defaultLeftColor, "Left Hand", "The color used on the doll's right hand."),
-                        new Param("right", ClapTrap.defaultRightColor, "Right Hand", "The color used on the doll's left hand."),
-                        new Param("spotlightBottom", ClapTrap.defaultBgColor, "Spotlight Bottom", "The color at the bottom of the spotlight"),
-                        new Param("spotlightTop", ClapTrap.glowSpotlight, "Spotlight Top", "The color at the top of the spotlight"),
-                        new Param("spotlightGlow", ClapTrap.glowSpotlight, "Spotlight Glow", "The color that glows around the spotlight")
+                        new Param("left", ClapTrap.defaultLeftColor, "Left Hand", "The color for the doll's right hand."),
+                        new Param("right", ClapTrap.defaultRightColor, "Right Hand", "The color for the doll's left hand."),
+                        new Param("spotlightBottom", ClapTrap.defaultBgColor, "Spotlight Bottom", "The color for the bottom of the spotlight."),
+                        new Param("spotlightTop", ClapTrap.glowSpotlight, "Spotlight Top", "The color for the top of the spotlight."),
+                        new Param("spotlightGlow", ClapTrap.glowSpotlight, "Spotlight Glow", "The color for the glow around the spotlight.")
                     }, 
                 },
                 
@@ -85,9 +85,9 @@ namespace HeavenStudio.Games
         {
             Hand,
             Paw,
-            GreenOnion,
-            Branch,
-            Random
+            //GreenOnion,
+            //Branch,
+            //Random
         }
 
         public enum DollAnim
@@ -219,7 +219,7 @@ namespace HeavenStudio.Games
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap = false; }),
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.2, delegate { canClap = true; })
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.6, delegate { canClap = true; })
                 });
             }
 
@@ -291,7 +291,7 @@ namespace HeavenStudio.Games
             else if (animate == 2)
             {
                 dollHead.DoScaledAnimationAsync("HeadBreatheOut", 0.5f);
-                SoundByte.PlayOneShotGame($"clapTrap/deepExhale{UnityEngine.Random.Range(1, 2)}");
+                SoundByte.PlayOneShotGame($"clapTrap/deepExhale{UnityEngine.Random.Range(1, 3)}");
             }
             else if (animate == 3)
             {

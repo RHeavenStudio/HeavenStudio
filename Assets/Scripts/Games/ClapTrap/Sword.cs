@@ -50,18 +50,21 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
         {
             if (state >= 1f || state <= -1f)
             {
-                SoundByte.PlayOneShotGame($"clapTrap/barely{UnityEngine.Random.Range(1, 2)}");
+                SoundByte.PlayOneShotGame($"clapTrap/barely{UnityEngine.Random.Range(1, 3)}");
                 dollHead.DoScaledAnimationAsync("HeadBarely", 0.5f);
-            }
-            else if (state >= -0.2 && state <= 0.2)
-            {
-                SoundByte.PlayOneShotGame($"clapTrap/aceClap{UnityEngine.Random.Range(1, 4)}");
-                dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
             }
             else
             {
-                SoundByte.PlayOneShotGame($"clapTrap/goodClap{UnityEngine.Random.Range(1, 4)}");
+                SoundByte.PlayOneShotGame($"clapTrap/goodClap{UnityEngine.Random.Range(1, 5)}");
                 dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
+                if (state >= -0.2 && state <= 0.2)
+                {
+                    SoundByte.PlayOneShotGame($"clapTrap/clapAce");
+                }
+                else
+                {
+                    SoundByte.PlayOneShotGame($"clapTrap/clapGood");
+                }
             }
 
             dollArms.DoScaledAnimationAsync("ArmsHit", 0.5f);
