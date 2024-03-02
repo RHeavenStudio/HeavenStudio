@@ -107,8 +107,11 @@ namespace HeavenStudio.Games
         public Animator handAnim;
         public GameObject flickedObject;
         public SpriteRenderer peaPreview;
-        [SerializeField] SpriteRenderer[] bgRecolorables;
-        [SerializeField] SpriteRenderer[] gradRecolorables;
+        [SerializeField] SpriteRenderer bg;
+        [SerializeField] SpriteRenderer bgGradient;
+        [SerializeField] SpriteRenderer viewerCircle;
+        [SerializeField] SpriteRenderer playerShadow;
+        [SerializeField] SpriteRenderer handShadow;
 
         public Sprite[] peaSprites;
         public Sprite[] peaHitSprites;
@@ -181,15 +184,12 @@ namespace HeavenStudio.Games
         //call this in update
         private void BackgroundColorUpdate()
         {
-            var bgColor = bgColorEase.GetColor();
-            foreach (var sr in bgRecolorables) {
-                sr.color = bgColor;
-            }
+            bg.color =
+            viewerCircle.color =
+            handShadow.color = bgColorEase.GetColor();
 
-            var gradColor = gradColorEase.GetColor();
-            foreach (var sr in gradRecolorables) {
-                sr.color = gradColor;
-            }
+            bgGradient.color =
+            playerShadow.color = gradColorEase.GetColor();
         }
 
         public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
