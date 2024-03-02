@@ -84,7 +84,7 @@ namespace HeavenStudio.Games
         public enum ClapType
         {
             Hand,
-            Paw,
+            //Paw,
             //GreenOnion,
             //Branch,
             //Random
@@ -219,7 +219,7 @@ namespace HeavenStudio.Games
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap = false; }),
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.6, delegate { canClap = true; })
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.4, delegate { canClap = true; })
                 });
             }
 
