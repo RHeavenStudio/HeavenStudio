@@ -6679,7 +6679,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1277567380038478988}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 18.823528, y: -0.29411763, z: 0}
+  m_LocalPosition: {x: 50, y: 0, z: 0}
   m_LocalScale: {x: 1.1764704, y: 1.1764705, z: 1.1764704}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6698,7 +6698,7 @@ WindZone:
   m_Radius: 20
   m_WindMain: 0
   m_WindTurbulence: 1
-  m_WindPulseMagnitude: 0.5
+  m_WindPulseMagnitude: 0.3
   m_WindPulseFrequency: 0.033333335
 --- !u!1 &1404833178906827570
 GameObject:
@@ -12919,6 +12919,7 @@ GameObject:
   - component: {fileID: 1026391380559014938}
   - component: {fileID: 8846257164105112889}
   - component: {fileID: 1095202275440968618}
+  - component: {fileID: 2409540009449314099}
   m_Layer: 0
   m_Name: leafBroken
   m_TagString: Untagged
@@ -12934,8 +12935,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3355844190426264431}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -40, y: 11.470588, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -4, y: 4, z: 0}
+  m_LocalScale: {x: 2, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6803714669671852684}
@@ -14390,7 +14391,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -8310146119116771886, guid: 3b1b81136589fd64bbfd3e586db0d9b1, type: 3}
+    - sprite: {fileID: 511124380, guid: 76432e2902ee41440bb4dcde61fac224, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -17720,6 +17721,17 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!210 &2409540009449314099
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3355844190426264431}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 6
 --- !u!1 &3413925648392711463
 GameObject:
   m_ObjectHideFlags: 0
@@ -17792,11 +17804,11 @@ MonoBehaviour:
   DebrisLeftCurve: {fileID: 681199269563884239}
   DebrisRightCurve: {fileID: 6134167994079843062}
   NgDebrisCurve: {fileID: 8755454903872010978}
-  Wind: {fileID: 0}
-  Effects: []
-  Snow: {fileID: 0}
-  Leaf: {fileID: 0}
-  leafBroken: {fileID: 0}
+  Wind: {fileID: 1332804018436716926}
+  Effects:
+  - {fileID: 5104316731581633128}
+  - {fileID: 4281379767841092066}
+  - {fileID: 8846257164105112889}
 --- !u!1 &3493038887264649151
 GameObject:
   m_ObjectHideFlags: 0
@@ -17808,6 +17820,7 @@ GameObject:
   - component: {fileID: 123453862514258918}
   - component: {fileID: 4281379767841092066}
   - component: {fileID: 2841921579701145429}
+  - component: {fileID: 1271856565047390390}
   m_Layer: 0
   m_Name: Leaf
   m_TagString: Untagged
@@ -17823,8 +17836,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3493038887264649151}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -40, y: 11.470588, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -4, y: 4, z: 0}
+  m_LocalScale: {x: 2, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6803714669671852684}
@@ -19279,7 +19292,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -5825381291038537540, guid: 3b1b81136589fd64bbfd3e586db0d9b1, type: 3}
+    - sprite: {fileID: -1086421176, guid: 76432e2902ee41440bb4dcde61fac224, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -22609,6 +22622,17 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!210 &1271856565047390390
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3493038887264649151}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 6
 --- !u!1 &3520672688215352957
 GameObject:
   m_ObjectHideFlags: 0
@@ -23372,6 +23396,7 @@ GameObject:
   - component: {fileID: 9101955400970613891}
   - component: {fileID: 5104316731581633128}
   - component: {fileID: 8938510197397077380}
+  - component: {fileID: 3593059234765228438}
   m_Layer: 0
   m_Name: Snow
   m_TagString: Untagged
@@ -23387,8 +23412,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4278191893379979525}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -40, y: 11.470588, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -4, y: 4, z: 0}
+  m_LocalScale: {x: 2, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6803714669671852684}
@@ -24839,13 +24864,14 @@ ParticleSystem:
     tilesY: 1
     animationType: 0
     rowIndex: 0
-    cycles: 1
+    cycles: 4
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -2320701839235687885, guid: 3b1b81136589fd64bbfd3e586db0d9b1, type: 3}
-    - sprite: {fileID: 2190835001878337691, guid: 3b1b81136589fd64bbfd3e586db0d9b1, type: 3}
-    - sprite: {fileID: -5088141013119983375, guid: 3b1b81136589fd64bbfd3e586db0d9b1, type: 3}
+    - sprite: {fileID: -485762012, guid: 76432e2902ee41440bb4dcde61fac224, type: 3}
+    - sprite: {fileID: -1136952213, guid: 76432e2902ee41440bb4dcde61fac224, type: 3}
+    - sprite: {fileID: 1919391621, guid: 76432e2902ee41440bb4dcde61fac224, type: 3}
+    - sprite: {fileID: -1136952213, guid: 76432e2902ee41440bb4dcde61fac224, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -28176,6 +28202,17 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!210 &3593059234765228438
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4278191893379979525}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 6
 --- !u!1 &4302608539052114858
 GameObject:
   m_ObjectHideFlags: 0

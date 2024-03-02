@@ -71,12 +71,11 @@ namespace HeavenStudio.Games.Loaders
                         SamuraiSliceNtr.instance.SetParticleEffect(e.beat, e["type"], e["instant"], e["valA"], e["valB"]);
                     },
                     defaultLength = 0.5f,
-                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("type", SamuraiSliceNtr.ParticleType.None, "Particle", "Set the type of particle effect to spawn. Using \"None\" will stop all effects."),
                         new Param("instant", false, "Instant", "Toggle if the particles should start or stop instantly."),
-                        new Param("valA", new EntityTypes.Float(0f, 64f, 1f), "Wind Strength", "Set the strength of the particle wind."),
+                        new Param("valA", new EntityTypes.Float(0f, 16f, 1f), "Wind Strength", "Set the strength of the particle wind."),
                         new Param("valB", new EntityTypes.Float(1f, 16f, 1f), "Particle Intensity", "Set the intensity of the particle effect.")
                     },
                 },
@@ -155,9 +154,6 @@ namespace HeavenStudio.Games
         // wind
         public WindZone Wind;
         public ParticleSystem[] Effects;
-        public ParticleSystem Snow;
-        public ParticleSystem Leaf;
-        public ParticleSystem leafBroken;
 
         //game scene
         public static SamuraiSliceNtr instance;
@@ -301,7 +297,7 @@ namespace HeavenStudio.Games
                 return;
             }
 
-            ParticleSystem particleSystem = Effects[type - 1];
+            ParticleSystem particleSystem = Effects[Mathf.Clamp(type - 1, 0, Effects.Length - 1)];
 
             particleSystem.gameObject.SetActive(true);
             particleSystem.Play();
