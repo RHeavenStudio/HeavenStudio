@@ -37,7 +37,17 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { HoleInOne.instance.DoMonkey(eventCaller.currentEntity.beat); },
                     defaultLength = 3.0f,
-                }
+                },
+                new GameAction("whale", "Whale")
+                {
+                    function = delegate { var e = eventCaller.currentEntity;  HoleInOne.instance.Whale(e.beat, e.length, e["ease"], e["appear"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("appear", true, "Enter", "Toggle if the whale should enter or exit the scene."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
+                    },
+                    resizable = true
+                },
             }//,
             // new List<string>() { "rvl", "normal" },
             // "rvlgolf", "en",
@@ -57,12 +67,18 @@ namespace HeavenStudio.Games
         public Animator MandrillAnim;
         public Animator GolferAnim;
 
+        double whaleStartBeat;
+        float whaleLength;
+        Util.EasingFunction.Ease lastEase;
+        bool isWhale;
+
         public static HoleInOne instance;
 
         void Awake()
         {
             HoleInOne.instance = this;
             SetupBopRegion("holeInOne", "bop", "toggle");
+            isWhale = false;
         }
 
         public override void OnBeatPulse(double beat)
@@ -74,6 +90,15 @@ namespace HeavenStudio.Games
                 GolferAnim.DoScaledAnimationAsync("GolferBop", 0.4f);            
             }
 
+        }
+
+        void Update()
+        {
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
+            {
+                SoundByte.PlayOneShotGame("holeInOne/hole1"); // temp miss sound. Should be: whiff sound
+                ScoreMiss();
+            }
         }
 
         public void ToggleBop(double beat, float length, bool shouldBop, bool autoBop)
@@ -94,6 +119,15 @@ namespace HeavenStudio.Games
                     });
                 }
             }
+        }
+    
+        public void Whale(double beat, float length, int ease, bool appear)
+        {
+            SoundByte.PlayOneShotGame("clappyTrio/sign");
+            whaleStartBeat = beat;
+            whaleLength = length;
+            lastEase = (Util.EasingFunction.Ease)ease;
+            isWhale = appear;
         }
 
         public void DoMandrill(double beat)
@@ -135,8 +169,27 @@ namespace HeavenStudio.Games
 
         public void MandrillSuccess(PlayerActionEvent caller, float state)
         {
-            SoundByte.PlayOneShotGame("holeInOne/mandrill4");
-            MonkeyAnim.Play("MonkeySpin");
+            if (state >= 1f || state <= -1f)
+            {
+                double beat = caller.startBeat + caller.timer;
+
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound("holeInOne/mandrill1", beat),// temp should be miss
+                    new MultiSound.Sound("holeInOne/hole2", beat + 1f)// temp should be splash
+                });
+                MonkeyAnim.Play("MonkeySpin");
+            }
+            else
+            {
+                double beat = caller.startBeat + caller.timer;
+                int randomSuccess = UnityEngine.Random.Range(1,5);
+
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound("holeInOne/mandrill4", beat),
+                    new MultiSound.Sound((isWhale) ? "holeInOne/whale" : ("holeInOne/hole" + randomSuccess), beat + 2f)
+                });
+                MonkeyAnim.Play("MonkeySpin");
+            }
             
         }
 
@@ -148,14 +201,27 @@ namespace HeavenStudio.Games
 
         public void MonkeySuccess(PlayerActionEvent caller, float state)
         {
-            double beat = caller.timer;
-            int randomSuccess = UnityEngine.Random.Range(1,5);
+            if (state >= 1f || state <= -1f)
+            {
+                double beat = caller.startBeat + caller.timer;
 
-            MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound("holeInOne/monkey3", beat),
-                new MultiSound.Sound("holeInOne/hole" + randomSuccess, beat + 2f)
-            });
-            MonkeyAnim.Play("MonkeySpin");
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound("holeInOne/mandrill1", beat),// temp should be miss
+                    new MultiSound.Sound("holeInOne/hole2", beat + 1f)// temp should be splash
+                });
+                MonkeyAnim.Play("MonkeySpin");
+            }
+            else
+            {
+                double beat = caller.startBeat + caller.timer;
+                int randomSuccess = UnityEngine.Random.Range(1,5);
+
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound("holeInOne/monkey3", beat),
+                    new MultiSound.Sound((isWhale) ? "holeInOne/whale" : ("holeInOne/hole" + randomSuccess), beat + 2f)
+                });
+                MonkeyAnim.Play("MonkeySpin");
+            }
         }
 
         public void MonkeyMiss(PlayerActionEvent caller)
@@ -164,9 +230,8 @@ namespace HeavenStudio.Games
             MonkeyAnim.Play("MonkeySpin");            
         }
 
-        public void Whiff(PlayerActionEvent caller)
+        public void Nothing(PlayerActionEvent caller)
         {
-            MonkeyAnim.Play("MonkeyBop");
         }
     }
 }
