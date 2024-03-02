@@ -51,16 +51,24 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("duck", "Duck")
                 {
+                    function = delegate {Airboarder.instance.PrepareJump(eventCaller.currentEntity.beat, eventCaller.currentEntity["ready"]);},
                     defaultLength = 4f,
                     resizable = false,
-                    priority = 1
+                    parameters = new List<Param>()
+                    {
+                        new Param("ready", true, "Play Ready Sound", "Toggle if the ready sound plays."),
+                    }
                 },
 
                 new GameAction("crouch", "Charged Duck")
                 {
+                    function = delegate {Airboarder.instance.PrepareJump(eventCaller.currentEntity.beat, eventCaller.currentEntity["ready"]);},
                     defaultLength = 4f,
                     resizable = false,
-                    priority = 1
+                    parameters = new List<Param>()
+                    {
+                        new Param("ready", true, "Play Ready Sound", "Toggle if the ready sound plays."),
+                    }
                 },
 
                 new GameAction("jump", "Jump")
@@ -148,7 +156,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             SetupBopRegion("airboarder", "bop", "auto");   
-            wantsCrouch = false; 
+            wantsCrouch = false;
         }
 
         public override void OnGameSwitch(double beat)
@@ -213,8 +221,8 @@ namespace HeavenStudio.Games
 
             Floor.Play("moving", 0, normalizedBeat);
             Floor.speed = 0;
-            Dog.Play("run", 0, normalizedBeat*5);
-            Tail.Play("wag",0,normalizedBeat/(3/5));
+            Dog.Play("run", 0, normalizedBeat*7.5f);
+            Dog.Play("wag",1,normalizedBeat*2.5f);
             CPU1.Play("hover",0,normalizedBeat);
             CPU2.Play("hover",0,normalizedBeat);
             Player.Play("hover",0,normalizedBeat);
@@ -224,12 +232,12 @@ namespace HeavenStudio.Games
                 if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)){
                     if (wantsCrouch)
                     {
-                        Player.GetComponent<Animator>().DoScaledAnimationAsync("charge",1f, 0, 1);
+                        Player.DoScaledAnimationAsync("charge",1f, 0, 1);
                         playerCantBop = true;
                     }
                     else 
                     {
-                        Player.GetComponent<Animator>().DoScaledAnimationAsync("duck",1f, 0, 1);
+                        Player.DoScaledAnimationAsync("duck",1f, 0, 1);
                         SoundByte.PlayOneShotGame("airboarder/crouch");
                         BeatAction.New(this, new() {
                             new(currentBeat, ()=>playerCantBop = true),
@@ -239,15 +247,19 @@ namespace HeavenStudio.Games
                 if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !IsExpectingInputNow(InputAction_BasicRelease)){
                     if (wantsCrouch)
                     {
-                        Player.GetComponent<Animator>().DoScaledAnimationAsync("hold",1f, 0, 1);
+                        Player.DoScaledAnimationAsync("hold",1f, 0, 1);
                         playerCantBop = false;
                     }
                 }
                 
-                if (PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease)){
-                Player.GetComponent<Animator>().DoScaledAnimationAsync("jump",1f, 0, 1);
-                SoundByte.PlayOneShotGame("airboarder/jump");
-                playerCantBop = false;}
+                if (PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease))
+                {
+                    if ( PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                    {
+                        Player.DoScaledAnimationAsync("jump",1f, 0, 1);
+                        SoundByte.PlayOneShotGame("airboarder/jump");
+                        playerCantBop = false;}
+                }
             }
 
         }
@@ -265,10 +277,11 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (goBop)
+            if (BeatIsInBopRegion(beat))
             {
                 Bop();
             }
+
         }
 
         public void PrepareJump(double beat, bool readySound)
@@ -280,34 +293,30 @@ namespace HeavenStudio.Games
 
         }
 
-        public void BopToggle(double beat, float length, bool shouldBop, bool autoBop)
+        public void BopToggle(double beat, float length, bool boarders, bool autoBop)
         {
-            goBop = autoBop;
-            if (shouldBop)
-            {
-                Bop();
-            }
-            if (autoBop) { return;}
-            if (shouldBop)
+            
+            if (boarders)
             {
                 List<BeatAction.Action> bops = new List<BeatAction.Action>();
                 for (int i = 0; i < length; i++)
                 {
                     bops.Add(new BeatAction.Action(beat + i, delegate { Bop(); }));
                 }
+                BeatAction.New(instance, bops);
             }
         }
 
         public void Bop()
         {
             if (!playerCantBop){
-            Player.GetComponent<Animator>().DoScaledAnimationAsync("bop",0.5f, 0, 1);
+            Player.DoScaledAnimationAsync("bop",0.5f, 0, 1);
             }
             if (!cpu1CantBop){
-            CPU1.GetComponent<Animator>().DoScaledAnimationAsync("bop",0.5f, 0, 1);
+            CPU1.DoScaledAnimationAsync("bop",0.5f, 0, 1);
             }
             if (!cpu2CantBop){
-            CPU2.GetComponent<Animator>().DoScaledAnimationAsync("bop",0.5f, 0, 1);
+            CPU2.DoScaledAnimationAsync("bop",0.5f, 0, 1);
             }
         }
 
@@ -322,9 +331,9 @@ namespace HeavenStudio.Games
                 });
             }
             BeatAction.New(instance, new List<BeatAction.Action>(){
-                new BeatAction.Action(beat, delegate {CPU1.GetComponent<Animator>().DoScaledAnimationAsync("letsgo", 1f, 0, 1);}),
-                new BeatAction.Action(beat, delegate {CPU2.GetComponent<Animator>().DoScaledAnimationAsync("letsgo", 1f, 0, 1);}),
-                new BeatAction.Action(beat, delegate {Player.GetComponent<Animator>().DoScaledAnimationAsync("letsgo", 1f, 0, 1);})
+                new BeatAction.Action(beat, delegate {CPU1.DoScaledAnimationAsync("letsgo", 1f, 0, 1);}),
+                new BeatAction.Action(beat, delegate {CPU2.DoScaledAnimationAsync("letsgo", 1f, 0, 1);}),
+                new BeatAction.Action(beat, delegate {Player.DoScaledAnimationAsync("letsgo", 1f, 0, 1);})
             }
 
             );
