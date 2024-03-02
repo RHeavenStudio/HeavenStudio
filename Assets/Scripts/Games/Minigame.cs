@@ -290,7 +290,7 @@ namespace HeavenStudio.Games
         {
         }
 
-        public virtual void OnTimelineChange(double beat)
+        public virtual void OnTimeChange(double beat)
         {
 
         }

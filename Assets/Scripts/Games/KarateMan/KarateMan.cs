@@ -306,7 +306,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("startTexture", new Color(), "Start Texture Color", "Set the color at the start of the event."),
                         new Param("endTexture", new Color(), "End Texture Color", "Set the color at the end of the event."),
                     },
-                    isVfx = true,
                 },
                 // new GameAction("set background effects", "Background Appearance (OLD)")
                 // {
@@ -726,7 +725,6 @@ namespace HeavenStudio.Games
         }
 
         public override void OnStop(double beat) => EntityPreCheck(beat);
-        public override void OnTimelineChange(double beat) => EntityPreCheck(beat);
         void EntityPreCheck(double beat)
         {
             if (gameManager == null) return;

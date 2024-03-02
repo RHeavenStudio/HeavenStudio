@@ -141,9 +141,7 @@ namespace HeavenStudio
 
         public void SetBeat(double beat)
         {
-            var gameManager = GameManager.instance;
-
-            var chart = gameManager.Beatmap;
+            var chart = GameManager.instance.Beatmap;
             double offset = chart.data.offset;
             startPos = GetSongPosFromBeat(beat);
 
@@ -154,13 +152,9 @@ namespace HeavenStudio
 
             SeekMusicToTime(startPos, offset);
 
-            var oldSongPosBeat = songPosBeat;
             songPosBeat = GetBeatFromSongPos(time);
-            if (oldSongPosBeat != songPosBeat && gameManager.minigame != null) {
-                gameManager.minigame.OnTimelineChange(songPosBeat);
-            }
 
-            gameManager.SetCurrentEventToClosest(beat);
+            GameManager.instance.SetCurrentEventToClosest(beat);
         }
 
         public void PlaySetup(double beat)

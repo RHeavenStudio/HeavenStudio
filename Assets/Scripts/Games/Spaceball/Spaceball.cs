@@ -123,7 +123,7 @@ namespace HeavenStudio.Games
                 Destroy(BallsHolder.transform.GetChild(i).gameObject);
         }
 
-        public override void OnTimelineChange(double beat)
+        public override void OnTimeChange(double beat)
         {
             UpdateCameraZoom();
         }
