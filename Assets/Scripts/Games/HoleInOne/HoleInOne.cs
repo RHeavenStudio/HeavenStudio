@@ -54,6 +54,8 @@ namespace HeavenStudio.Games
     public class HoleInOne : Minigame
     {
         public Animator MonkeyAnim;
+        public Animator MandrillAnim;
+        public Animator GolferAnim;
 
         public static HoleInOne instance;
 
@@ -65,7 +67,12 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (BeatIsInBopRegion(beat)) MonkeyAnim.DoScaledAnimationAsync("MonkeyBop", 0.4f);
+            if (BeatIsInBopRegion(beat)) 
+            {
+                MonkeyAnim.DoScaledAnimationAsync("MonkeyBop", 0.4f);
+                MandrillAnim.DoScaledAnimationAsync("MandrillBop", 0.4f);
+                GolferAnim.DoScaledAnimationAsync("GolferBop", 0.4f);            
+            }
 
         }
 
@@ -80,6 +87,8 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(beat + i, delegate
                         {
                             MonkeyAnim.DoScaledAnimationAsync("MonkeyBop", 0.4f);
+                            MandrillAnim.DoScaledAnimationAsync("MandrillBop", 0.4f);
+                            GolferAnim.DoScaledAnimationAsync("GolferBop", 0.4f);                            
                             // TODO add bops for other characters
                         })
                     });
@@ -90,7 +99,7 @@ namespace HeavenStudio.Games
         public void DoMandrill(double beat)
         {
             //Mandrill Multisound
-            ScheduleInput(beat, 3f, InputAction_BasicPress, MandrillSuccess, MandrillMiss, Whiff);
+            ScheduleInput(beat, 3f, InputAction_FlickPress, MandrillSuccess, MandrillMiss, Whiff);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("holeInOne/mandrill1", beat),
                 new MultiSound.Sound("holeInOne/mandrill2", beat + 1f),
@@ -98,19 +107,19 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("holeInOne/hole1", beat + 3f),
             });
 
-            // BeatAction.New(instance, new List<BeatAction.Action>()
-            //     {
-            //     new BeatAction.Action(beat,     delegate { FarCrane.DoScaledAnimationAsync("Drop", 0.5f);}),
-            //     new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.DoScaledAnimationAsync("Open", 0.5f);}),
-            //     new BeatAction.Action(beat + 1.5f,     delegate { FarCrane.DoScaledAnimationAsync("Lift", 0.5f);}),
-            //     });
-
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat,            delegate { MandrillAnim.Play("MandrillReady1");}),
+                new BeatAction.Action(beat + 1.0f,     delegate { MandrillAnim.Play("MandrillReady2");}),
+                new BeatAction.Action(beat + 2.0f,     delegate { MandrillAnim.Play("MandrillReady3");}),
+                new BeatAction.Action(beat + 3.0f,     delegate { MandrillAnim.Play("MandrillPitch");}),   
+            });
         }
 
         public void DoMonkey(double beat)
         {
             //Monkey Multisound
-            ScheduleInput(beat, 2f, InputAction_BasicPress, MonkeySuccess, MonkeyMiss, Whiff);
+            ScheduleInput(beat, 2f, InputAction_FlickPress, MonkeySuccess, MonkeyMiss, Whiff);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("holeInOne/monkey1", beat),
                 new MultiSound.Sound("holeInOne/monkey2", beat + 1f)
@@ -119,7 +128,7 @@ namespace HeavenStudio.Games
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat,            delegate { MonkeyAnim.Play("MonkeyPrepare");}),
-                new BeatAction.Action(beat + 1.0f,     delegate { MonkeyAnim.Play("MonkeyThrow");}),
+                new BeatAction.Action(beat + 1.0f,     delegate { MonkeyAnim.Play("MonkeyThrow");}),             
             });
 
         }
