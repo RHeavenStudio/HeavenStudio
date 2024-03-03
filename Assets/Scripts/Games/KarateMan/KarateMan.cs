@@ -712,7 +712,7 @@ namespace HeavenStudio.Games
             var entities = gameManager.Beatmap.Entities.FindAll(e => (e.datamodel is "karateman/hit" or "karateman/bulb" or "karateman/kick" or "karateman/combo") && e.beat < beat && e.beat + 1 > beat);
 
             // queued objects
-            foreach (var e in entities.FindAll(e => (e.datamodel is "karateman/hit" or "karateman/bulb" or "karateman/kick" or "karateman/combo") && e.beat < beat && e.beat + 1 > beat))
+            foreach (var e in entities)
             {
                 switch (e.datamodel) {
                     case "karateman/hit": CreateItem(e.beat, e["type"], e["type2"]); break;
