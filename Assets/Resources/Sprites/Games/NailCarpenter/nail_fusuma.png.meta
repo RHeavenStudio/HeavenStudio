@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 577e9adec6580834e9413fd7ce0516e9
+guid: ff18a2ca0dbccd044b8564459aebda17
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -42,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -103,112 +103,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: chara_0
-      rect:
-        serializedVersion: 2
-        x: 56
-        y: 1527
-        width: 1683
-        height: 2283
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 440b64382e5a2274c9642cf70b1b5bda
-      internalID: -20644694
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: chara_1
-      rect:
-        serializedVersion: 2
-        x: 1869
-        y: 2833
-        width: 798
-        height: 775
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b66b0b22a1db77e4084fdb00a30f1cf6
-      internalID: -1627942905
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: chara_2
-      rect:
-        serializedVersion: 2
-        x: 1658
-        y: 1113
-        width: 955
-        height: 1659
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 235654803f2f4c8478d91f2d910bee7e
-      internalID: 1309546147
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: chara_3
-      rect:
-        serializedVersion: 2
-        x: 2603
-        y: 795
-        width: 1237
-        height: 1138
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c306135ae17f8a34ca4046984fc584c9
-      internalID: 256191866
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: chara_4
-      rect:
-        serializedVersion: 2
-        x: 152
-        y: 227
-        width: 1389
-        height: 1336
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a8035c6eb401ae943b4287026f8483ec
-      internalID: -112953800
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -219,12 +114,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      chara_0: -20644694
-      chara_1: -1627942905
-      chara_2: 1309546147
-      chara_3: 256191866
-      chara_4: -112953800
+    nameFileIdTable: {}
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

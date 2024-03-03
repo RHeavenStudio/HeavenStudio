@@ -8,12 +8,12 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_NailCarpenter
 {
-    public class Pudding : MonoBehaviour
+    public class Sweet : MonoBehaviour
     {
         public double targetBeat;
-        public Sprite[] puddingSprites;
-        public int puddingType;
-        public SpriteRenderer puddingSprite;
+        public Sprite[] sweetSprites;
+        public int sweetType;
+        public SpriteRenderer sweetSprite;
         public Animator pudAnim;
 
         private NailCarpenter game;
@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         {
             game = NailCarpenter.instance;
 
-            puddingSprite.sprite = puddingSprites[puddingType];
+            sweetSprite.sprite = sweetSprites[sweetType];
             game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_BasicPress, HammmerJust, Empty, Empty);
             game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_AltFinish, HammmerJust, Empty, Empty);
         }
@@ -30,10 +30,10 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         private void HammmerJust(PlayerActionEvent caller, float state)
         {
             game.ScoreMiss();
-            game.HammerArm.DoScaledAnimationAsync("hammerHit", 0.5f);
+            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 0.5f);
             SoundByte.PlayOneShot("miss");
-            game.EffectShock.DoScaledAnimationAsync("ShockAppear", 0.5f);
-            puddingSprite.sprite = puddingSprites[puddingType+1];
+            game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.5f);
+            sweetSprite.sprite = sweetSprites[sweetType+1];
         }
 
         private void Empty(PlayerActionEvent caller) { }

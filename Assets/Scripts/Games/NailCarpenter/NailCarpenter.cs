@@ -14,16 +14,6 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("nailCarpenter", "Nail Carpenter", "fab96e", false, false, new List<GameAction>()
             {
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; NailCarpenter.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle2", true, "Bop", "Toggle if Boss should bop for the duration of this event."),
-                        new Param("toggle", false, "Bop (Auto)", "Toggle if the man should automatically bop until another Bop event is reached.")
-                    }
-                },
                 new GameAction("puddingNail", "Pudding Nail")
                 {
                     defaultLength = 4f,
@@ -44,6 +34,21 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     resizable = true
                 },
+                new GameAction("slideFusuma", "Slide Fusuma")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        NailCarpenter.instance.SlideFusuma(e.beat, e.length, e["fillRatio"], e["ease"], e["mute"]); 
+                    },
+                    defaultLength = 0.5f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("fillRatio", new EntityTypes.Float(0f, 1f, 0.3f), "Ratio", "Set the speed that the background should scroll."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                        new Param("mute", false, "Mute", "Toggle if the cue should be muted.")
+                    }
+                },
             },
             new List<string>() { "pco", "normal" },
             "pconail", "en",
@@ -61,16 +66,17 @@ namespace HeavenStudio.Games
     {
         public GameObject baseNail;
         public GameObject baseLongNail;
-        public GameObject basePudding;
-        [SerializeField] ParticleSystem splashEffect;
-        public Animator HammerArm;
-        public Animator EffectSweat;
-        public Animator EffectShock;
+        public GameObject baseSweet;
+        public Animator Carpenter;
+        public Animator EyeAnim;
+        public Animator EffectExclamRed;
+        public Animator EffectExclamBlue;
 
         public Transform scrollingHolder;
         public Transform nailHolder;
         public Transform boardTrans;
-        const float nailDistance = -9f;
+        public Transform fusumaTrans;
+        const float nailDistance = -8f;
         const float boardWidth = 19.2f;
         float scrollRate => nailDistance / (Conductor.instance.pitchedSecPerBeat * 2f);
 
@@ -80,7 +86,10 @@ namespace HeavenStudio.Games
         enum sweetsType
         {
             Pudding=0,
-            LayerCake=1,
+            CherryPudding=1,
+            ShortCake=2,
+            Cherry=3,
+            LayerCake=4,
         };
 
 
@@ -126,17 +135,17 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
-            SetupBopRegion("nailCarpenter", "bop", "toggle");
         }
 
-        public override void OnBeatPulse(double beat)
-        {
-            // if (BeatIsInBopRegion(beat)) SomenPlayer.DoScaledAnimationAsync("HeadBob", 0.5f);
-        }
+        double slideBeat = double.MaxValue;
+        double slideLength;
+        Util.EasingFunction.Ease slideEase;
+        float slideRatioLast = 0, slideRatioNext = 0;
 
         void Update()
         {
             var cond = Conductor.instance;
+            var currentBeat = cond.songPositionInBeatsAsDouble;
 
             if (!cond.isPlaying) return;
 
@@ -145,9 +154,15 @@ namespace HeavenStudio.Games
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
                 SoundByte.PlayOneShot("miss");
-                HammerArm.DoScaledAnimationAsync("hammerHit", 0.5f);
+                Carpenter.DoScaledAnimationAsync("carpenterHit", 0.5f);
                 hasSlurped = false;
-                EffectSweat.DoScaledAnimationAsync("BlobSweating", 0.5f);
+                // ScoreMiss();
+            }
+            if (PlayerInput.GetIsAction(InputAction_AltFinish) && !IsExpectingInputNow(InputAction_AltFinish))
+            {
+                SoundByte.PlayOneShot("miss");
+                Carpenter.DoScaledAnimationAsync("carpenterHit", 0.5f);
+                hasSlurped = false;
                 // ScoreMiss();
             }
 
@@ -161,6 +176,8 @@ namespace HeavenStudio.Games
             var newBoardX = boardPos.x + (scrollRate * Time.deltaTime);
             newBoardX %= boardWidth;
             boardTrans.localPosition = new Vector3(newBoardX, boardPos.y, boardPos.z);
+
+            UpdateFusuma(currentBeat);
         }
 
         public override void OnGameSwitch(double beat)
@@ -181,50 +198,8 @@ namespace HeavenStudio.Games
             List<RiqEntity> cklNailEvents = entities.FindAll(v => v.datamodel == "nailCarpenter/cakeLongNail");
 
             var sounds = new List<MultiSound.Sound>(){};
-            // Spawn pudding and nail.
-            for (int i = 0; i < pudNailEvents.Count; i++) {
-                var nailBeat = pudNailEvents[i].beat;
-                var nailLength = pudNailEvents[i].length;
+            var cherryTargetBeats = new List<double>(){};
 
-                // Only consider nailgie events that aren't past the start point.
-                if (startBeat <= nailBeat + nailLength) {
-                    int nailInEvent = Mathf.CeilToInt(nailLength);
-                    for (int b = 0; b < nailInEvent; b++)
-                    {
-                        var targetNailBeat = nailBeat + (1f * b);
-
-                        if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
-                        {
-                            sounds.Add(new MultiSound.Sound("nailCarpenter/one", targetNailBeat));
-                            SpawnPudding(targetNailBeat, startBeat, (int)sweetsType.Pudding);
-                            SpawnNail(targetNailBeat+0.5f, startBeat);
-                        }
-                    }
-                }
-            }
-            // Spawn cherry and nail.
-            for (int i = 0; i < chrNailEvents.Count; i++) {
-                var nailBeat = chrNailEvents[i].beat;
-                var nailLength = chrNailEvents[i].length;
-
-                // Only consider nailgie events that aren't past the start point.
-                if (startBeat <= nailBeat + nailLength) {
-                    int nailInEvent = Mathf.CeilToInt(nailLength + 1) / 2;
-
-                    for (int b = 0; b < nailInEvent; b++)
-                    {
-                        var targetNailBeat = nailBeat + (2f * b);
-                        if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
-                        {
-                            sounds.Add(new MultiSound.Sound("nailCarpenter/three", targetNailBeat));
-                            SpawnPudding(targetNailBeat, startBeat, (int)sweetsType.Pudding);
-                            SpawnNail(targetNailBeat+0.5f, startBeat);
-                            SpawnNail(targetNailBeat+1.0f, startBeat);
-                            SpawnNail(targetNailBeat+1.5f, startBeat);
-                        }
-                    }
-                }
-            }
             // Spawn cake and nail.
             for (int i = 0; i < cakeNailEvents.Count; i++) {
                 var nailBeat = cakeNailEvents[i].beat;
@@ -240,11 +215,68 @@ namespace HeavenStudio.Games
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
                             sounds.Add(new MultiSound.Sound("nailCarpenter/alarm", targetNailBeat));
-                            SpawnPudding(targetNailBeat, startBeat, (int)sweetsType.Pudding);
+                            BeatAction.New(instance, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(targetNailBeat, delegate
+                                {
+                                    EffectExclamRed.DoScaledAnimationAsync("exclamAppear", 0.5f);
+                                })
+                            });
+                            SpawnSweet(targetNailBeat, startBeat,
+                                (b==0 ? (int)sweetsType.ShortCake : (int)sweetsType.Cherry));
                             SpawnNail(targetNailBeat+0.5f, startBeat);
-                            SpawnPudding(targetNailBeat+1.0f, startBeat, (int)sweetsType.Pudding);
+                            SpawnSweet(targetNailBeat+1.0f, startBeat, (int)sweetsType.Cherry);
                             SpawnNail(targetNailBeat+1.25f, startBeat);
                             SpawnNail(targetNailBeat+1.75f, startBeat);
+                        }
+                    }
+                    cherryTargetBeats.Add(nailBeat + 2f * nailInEvent);
+                }
+            }
+            // Spawn pudding and nail.
+            for (int i = 0; i < pudNailEvents.Count; i++) {
+                var nailBeat = pudNailEvents[i].beat;
+                var nailLength = pudNailEvents[i].length;
+
+                // Only consider nailgie events that aren't past the start point.
+                if (startBeat <= nailBeat + nailLength) {
+                    int nailInEvent = Mathf.CeilToInt(nailLength);
+                    for (int b = 0; b < nailInEvent; b++)
+                    {
+                        var targetNailBeat = nailBeat + (1f * b);
+
+                        if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
+                        {
+                            sounds.Add(new MultiSound.Sound("nailCarpenter/one", targetNailBeat));
+                            SpawnSweet(targetNailBeat, startBeat,
+                                (IsInRange(cherryTargetBeats, targetNailBeat) ? (int)sweetsType.Cherry :
+                                (int)sweetsType.Pudding));
+                            SpawnNail(targetNailBeat+0.5f, startBeat);
+                        }
+                    }
+                }
+            }
+            // Spawn cherrypudding and nail.
+            for (int i = 0; i < chrNailEvents.Count; i++) {
+                var nailBeat = chrNailEvents[i].beat;
+                var nailLength = chrNailEvents[i].length;
+
+                // Only consider nailgie events that aren't past the start point.
+                if (startBeat <= nailBeat + nailLength) {
+                    int nailInEvent = Mathf.CeilToInt(nailLength + 1) / 2;
+
+                    for (int b = 0; b < nailInEvent; b++)
+                    {
+                        var targetNailBeat = nailBeat + (2f * b);
+                        if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
+                        {
+                            sounds.Add(new MultiSound.Sound("nailCarpenter/three", targetNailBeat));
+                            SpawnSweet(targetNailBeat, startBeat,
+                                (IsInRange(cherryTargetBeats, targetNailBeat) ? (int)sweetsType.Cherry :
+                                (int)sweetsType.CherryPudding));
+                            SpawnNail(targetNailBeat+0.5f, startBeat);
+                            SpawnNail(targetNailBeat+1.0f, startBeat);
+                            SpawnNail(targetNailBeat+1.5f, startBeat);
                         }
                     }
                 }
@@ -265,7 +297,20 @@ namespace HeavenStudio.Games
                         {
                             sounds.Add(new MultiSound.Sound("nailCarpenter/signal1", targetNailBeat));
                             sounds.Add(new MultiSound.Sound("nailCarpenter/signal2", targetNailBeat+1f));
-                            SpawnPudding(targetNailBeat, startBeat, (int)sweetsType.LayerCake);
+                            BeatAction.New(instance, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(targetNailBeat, delegate
+                                {
+                                    EffectExclamBlue.DoScaledAnimationAsync("exclamAppear", 0.5f);
+                                }),
+                                new BeatAction.Action(targetNailBeat+1f, delegate
+                                {
+                                    Carpenter.DoScaledAnimationAsync("carpenterArmUp", 0.5f);
+                                }),
+                            });
+                            SpawnSweet(targetNailBeat, startBeat,
+                                (IsInRange(cherryTargetBeats, targetNailBeat) ? (int)sweetsType.Cherry :
+                                (int)sweetsType.LayerCake));
                             SpawnNail(targetNailBeat+0.5f, startBeat);
                             SpawnLongNail(targetNailBeat+1f, startBeat);
                         }
@@ -283,20 +328,26 @@ namespace HeavenStudio.Games
             OnGameSwitch(beat);
         }
 
-        public void ToggleBop(double beat, float length, bool bopOrNah, bool autoBop)
+        public void SlideFusuma(double beat, double length, float fillRatio, int ease, bool mute)
         {
-            if (bopOrNah)
+            if (!mute) MultiSound.Play(new MultiSound.Sound[]{ new MultiSound.Sound("nailCarpenter/open", beat)});
+            slideBeat = beat;
+            slideLength = length;
+            slideEase = (Util.EasingFunction.Ease)ease;
+            slideRatioLast = slideRatioNext;
+            slideRatioNext = fillRatio;
+        }
+        void UpdateFusuma(double beat)
+        {
+            if (beat >= slideBeat)
             {
-                for (int i = 0; i < length; i++)
-                {
-                    BeatAction.New(instance, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + i, delegate
-                        {
-                            // SomenPlayer.DoScaledAnimationAsync("HeadBob", 0.5f);
-                        })
-                    });
-                }
+                float slideLast = 17.8f *(1-slideRatioLast);
+                float slideNext = 17.8f *(1-slideRatioNext);
+                Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(slideEase);
+                float slideProg = Conductor.instance.GetPositionFromBeat(slideBeat, slideLength, true);
+                slideProg = Mathf.Clamp01(slideProg);
+                float slide = func(slideLast, slideNext, slideProg);
+                fusumaTrans.localPosition = new Vector3(slide, 0, 0);
             }
         }
 
@@ -322,17 +373,30 @@ namespace HeavenStudio.Games
             newNail.Init();
             newNail.gameObject.SetActive(true);
         }
-        private void SpawnPudding(double beat, double startBeat, int sweetType)
+        private void SpawnSweet(double beat, double startBeat, int sweetType)
         {
-            var newPudding = Instantiate(basePudding, nailHolder).GetComponent<Pudding>();
+            var newSweet = Instantiate(baseSweet, nailHolder).GetComponent<Sweet>();
 
-            newPudding.targetBeat = beat;
-            newPudding.puddingType = 2*sweetType;
+            newSweet.targetBeat = beat;
+            newSweet.sweetType = 2*sweetType;
 
-            var puddingX = (beat - startBeat) * -nailDistance / 2f;
-            newPudding.transform.localPosition = new Vector3((float)puddingX, 0f, 0f);
-            newPudding.Init();
-            newPudding.gameObject.SetActive(true);
+            var sweetX = (beat - startBeat) * -nailDistance / 2f;
+            newSweet.transform.localPosition = new Vector3((float)sweetX, 0f, 0f);
+            newSweet.Init();
+            newSweet.gameObject.SetActive(true);
         }
+
+        bool IsInRange(List<double> list, double num)
+        {
+        foreach (double item in list)
+        {
+            if (num >= item && num <= item + 0.25f)
+            {
+                return true;
+            }
+        }
+        return false;
+        }
+
     }
 }
