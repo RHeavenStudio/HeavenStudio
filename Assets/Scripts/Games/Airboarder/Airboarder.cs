@@ -99,7 +99,24 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("sound", true, "Play Sound", "Toggle if the 'YEAAAAAH LET'S GO' voice clip plays."),
                     }
-                }
+                },
+
+                new GameAction("camera", "Camera Controls")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        // var rotation = new Vector3(0, e["valA"], 0);
+                        Airboarder.instance.ChangeCamera(eventCaller.currentEntity.beat, eventCaller.currentEntity["valA"], eventCaller.currentEntity["valB"], eventCaller.currentEntity.length, (Util.EasingFunction.Ease)eventCaller.currentEntity["type"], eventCaller.currentEntity["additive"]);
+                    },
+                    defaultLength = 4,
+                    resizable = true,
+                    parameters = new List<Param>() {
+                        new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Rotation", "Set the rotation of the camera around the pivot point."),
+                        new Param("valB", new EntityTypes.Float(0.1f, 4f, 0.5f), "Zoom", "Set the camera's level of zoom."),
+                        new Param("type", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                        new Param("additive", true, "Additive Rotation", "Toggle if the above rotation should be added to the current angle instead of setting the target angle to travel to.")
+                    }
+                },
 
 
             },
@@ -128,6 +145,11 @@ namespace HeavenStudio.Games
         public static Airboarder instance;
 
         public bool wantsCrouch;
+        
+        [Header("Camera")]
+        [SerializeField] Transform cameraPivot;
+        [SerializeField] Transform cameraPos;
+        [SerializeField] float cameraFOV;
 
         [Header("Objects")]
         [SerializeField] Arch archBasic;
@@ -150,6 +172,13 @@ namespace HeavenStudio.Games
         public double switchBeat;
 
 
+        double cameraRotateBeat = double.MaxValue;
+        double cameraRotateLength;
+        Util.EasingFunction.Ease cameraRotateEase;
+        float cameraRotateLast = 0, cameraScaleLast = 1;
+        float cameraRotateNext = 0, cameraScaleNext = 1;
+
+
         public float startFloor;
 
         private void Awake()
@@ -157,6 +186,9 @@ namespace HeavenStudio.Games
             instance = this;
             SetupBopRegion("airboarder", "bop", "auto");   
             wantsCrouch = false;
+            GameCamera.AdditionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
+            GameCamera.AdditionalFoV = cameraFOV;
         }
 
         public override void OnGameSwitch(double beat)
@@ -195,22 +227,62 @@ namespace HeavenStudio.Games
                     wallBasic.CueJump(e.beat);
                     break;
                 }
-                }
-            
-            
-
-
-                
+                }             
         }
 
+        private void Start()
+        {
+            EntityPreCheck(Conductor.instance.songPositionInBeatsAsDouble);
+        }
+
+        void EntityPreCheck(double beat)
+        {
+            cameraRotateBeat = double.MaxValue;
+            cameraRotateLength = 0;
+            cameraRotateEase = Util.EasingFunction.Ease.Linear;
+            cameraRotateLast = 0; cameraScaleLast = 1;
+            cameraRotateNext = 0; cameraScaleNext = 1;
+            
+            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat < beat && c.datamodel.Split(0) == "airboarder");
+            RiqEntity lastGameSwitch = GameManager.instance.Beatmap.Entities.FindLast(c => c.beat <= beat && c.datamodel == "gameManager/switchGame/airboarder");
+
+            if (lastGameSwitch == null) return;
+            List<RiqEntity> cameraEntities = prevEntities.FindAll(c => c.beat >= lastGameSwitch.beat && c.datamodel == "airboarder/camera");
+
+             foreach (var entity in cameraEntities)
+            {
+                ChangeCamera(entity.beat, entity["valA"], entity["valB"], entity.length, (Util.EasingFunction.Ease)entity["type"], entity["additive"]);
+            }
+
+            UpdateCamera(beat);
+        }
 
         
 
         public override void OnPlay(double beat)
         {
+            EntityPreCheck(beat);
             OnGameSwitch(beat);
         }
 
+        void UpdateCamera(double beat)
+        {
+            if (beat >= cameraRotateBeat)
+            {
+                Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(cameraRotateEase);
+                float rotProg = Conductor.instance.GetPositionFromBeat(cameraRotateBeat, cameraRotateLength, true);
+                rotProg = Mathf.Clamp01(rotProg);
+                float rot = func(cameraRotateLast, cameraRotateNext, rotProg);
+                cameraPivot.rotation = Quaternion.Euler(0, rot, 0);
+                cameraPivot.localScale = Vector3.one * func(cameraScaleLast, cameraScaleNext, rotProg);
+            }
+
+            GameCamera.AdditionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
+            GameCamera.AdditionalFoV = cameraFOV;
+        }
+
+        
 
         public void Update()
         {
@@ -262,7 +334,11 @@ namespace HeavenStudio.Games
                 }
             }
 
+            UpdateCamera(currentBeat);
+
         }
+
+
 
         public void ForceCharge()
         {
@@ -291,6 +367,24 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("airboarder/ready");
             }
 
+        }
+
+        public void ChangeCamera(double beat, float rotation, float camZoom, double length, Util.EasingFunction.Ease ease, bool additive = true)
+        {
+            cameraRotateBeat = beat;
+            cameraRotateLength = length;
+            cameraRotateEase = ease;
+            cameraRotateLast = cameraRotateNext % 360f;
+            cameraScaleLast = cameraScaleNext;
+            cameraScaleNext = camZoom;
+            if (additive)
+            {
+                cameraRotateNext = cameraRotateLast + rotation;
+            }
+            else
+            {
+                cameraRotateNext = rotation;
+            }
         }
 
         public void BopToggle(double beat, float length, bool boarders, bool autoBop)

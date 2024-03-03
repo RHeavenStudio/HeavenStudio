@@ -35,6 +35,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         private void Awake()
         {
             game = Airboarder.instance;
+            
  //           archBasic.transform.position = new Vector3(-140, -1, 0.8f);
 
         }
@@ -143,7 +144,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
         public void DuckMiss(PlayerActionEvent caller)
         {
             game.Player.DoScaledAnimationAsync("hit1",1.5f, 0, 1);
-            anim.DoScaledAnimationAsync("break", 1f, 0f, animLayer:1);
+            anim.DoScaledAnimationAsync("break", 1f, 0, animLayer:1);
             double beat = caller.startBeat + caller.timer;
             game.MissSound(beat);
             BeatAction.New(this, new() {
@@ -178,7 +179,7 @@ namespace HeavenStudio.Games.Scripts_Airboarder
 
         public void CrouchMiss(PlayerActionEvent caller){
             game.Player.DoScaledAnimationAsync("hit1",1.5f, 0, 1);
-            anim.DoScaledAnimationAsync("break", 1f, 0f, animLayer:1);
+            anim.DoScaledAnimationAsync("break", 1f, 0, animLayer:1);
             double beat = caller.startBeat + caller.timer;
             game.MissSound(beat);
             BeatAction.New(this, new() {
