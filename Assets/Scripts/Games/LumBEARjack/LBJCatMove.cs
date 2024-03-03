@@ -22,16 +22,16 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
 
         private void Awake()
         {
-            _thisPosition = transform.position;
+            _thisPosition = transform.localPosition;
             if (_usePoint)
             {
-                _otherPosition = _otherPoint.position;
+                _otherPosition = _otherPoint.localPosition;
             }
             else
             {
                 _otherPosition = _thisPosition + new Vector3(_slideOffset / 2, 0);
             }
-            if (_startAtOther) transform.position = _otherPosition;
+            if (_startAtOther) transform.localPosition = _otherPosition;
         }
 
         public void Move(double beat, double length, bool inToScene)
@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         {
             if (length <= 0)
             {
-                transform.position = inToScene ? _thisPosition : _otherPosition;
+                transform.localPosition = inToScene ? _thisPosition : _otherPosition;
                 yield break;
             }
             float normalized = Conductor.instance.GetPositionFromBeat(beat, length, false);
@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             {
                 normalized = Conductor.instance.GetPositionFromBeat(beat, length);
                 Vector3 newPos = Vector3.Lerp(inToScene ? _otherPosition : _thisPosition, inToScene ? _thisPosition : _otherPosition, normalized);
-                transform.position = newPos;
+                transform.localPosition = newPos;
                 yield return null;
             }
         }
