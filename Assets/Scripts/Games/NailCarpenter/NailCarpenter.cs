@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("fillRatio", new EntityTypes.Float(0f, 1f, 0.3f), "Ratio", "Set the speed that the background should scroll."),
+                        new Param("fillRatio", new EntityTypes.Float(0f, 1f, 0.3f), "Ratio", "Set the ratio of closing the fusuma."),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                         new Param("mute", false, "Mute", "Toggle if the cue should be muted.")
                     }
@@ -82,16 +82,6 @@ namespace HeavenStudio.Games
 
         private bool missed;
         private bool hasSlurped;
-
-        enum sweetsType
-        {
-            Pudding=0,
-            CherryPudding=1,
-            ShortCake=2,
-            Cherry=3,
-            LayerCake=4,
-        };
-
 
         const int IAAltDownCat = IAMAXCAT;
         const int IAAltUpCat = IAMAXCAT + 1;
@@ -223,9 +213,9 @@ namespace HeavenStudio.Games
                                 })
                             });
                             SpawnSweet(targetNailBeat, startBeat,
-                                (b==0 ? (int)sweetsType.ShortCake : (int)sweetsType.Cherry));
+                                (b==0 ? Sweet.sweetsType.ShortCake : Sweet.sweetsType.Cherry));
                             SpawnNail(targetNailBeat+0.5f, startBeat);
-                            SpawnSweet(targetNailBeat+1.0f, startBeat, (int)sweetsType.Cherry);
+                            SpawnSweet(targetNailBeat+1.0f, startBeat, Sweet.sweetsType.Cherry);
                             SpawnNail(targetNailBeat+1.25f, startBeat);
                             SpawnNail(targetNailBeat+1.75f, startBeat);
                         }
@@ -249,8 +239,8 @@ namespace HeavenStudio.Games
                         {
                             sounds.Add(new MultiSound.Sound("nailCarpenter/one", targetNailBeat));
                             SpawnSweet(targetNailBeat, startBeat,
-                                (IsInRange(cherryTargetBeats, targetNailBeat) ? (int)sweetsType.Cherry :
-                                (int)sweetsType.Pudding));
+                                (IsInRange(cherryTargetBeats, targetNailBeat) ? Sweet.sweetsType.Cherry :
+                                Sweet.sweetsType.Pudding));
                             SpawnNail(targetNailBeat+0.5f, startBeat);
                         }
                     }
@@ -272,8 +262,8 @@ namespace HeavenStudio.Games
                         {
                             sounds.Add(new MultiSound.Sound("nailCarpenter/three", targetNailBeat));
                             SpawnSweet(targetNailBeat, startBeat,
-                                (IsInRange(cherryTargetBeats, targetNailBeat) ? (int)sweetsType.Cherry :
-                                (int)sweetsType.CherryPudding));
+                                (IsInRange(cherryTargetBeats, targetNailBeat) ? Sweet.sweetsType.Cherry :
+                                Sweet.sweetsType.CherryPudding));
                             SpawnNail(targetNailBeat+0.5f, startBeat);
                             SpawnNail(targetNailBeat+1.0f, startBeat);
                             SpawnNail(targetNailBeat+1.5f, startBeat);
@@ -309,8 +299,8 @@ namespace HeavenStudio.Games
                                 }),
                             });
                             SpawnSweet(targetNailBeat, startBeat,
-                                (IsInRange(cherryTargetBeats, targetNailBeat) ? (int)sweetsType.Cherry :
-                                (int)sweetsType.LayerCake));
+                                (IsInRange(cherryTargetBeats, targetNailBeat) ? Sweet.sweetsType.Cherry :
+                                Sweet.sweetsType.LayerCake));
                             SpawnNail(targetNailBeat+0.5f, startBeat);
                             SpawnLongNail(targetNailBeat+1f, startBeat);
                         }
@@ -373,17 +363,17 @@ namespace HeavenStudio.Games
             newNail.Init();
             newNail.gameObject.SetActive(true);
         }
-        private void SpawnSweet(double beat, double startBeat, int sweetType)
+        private void SpawnSweet(double beat, double startBeat, Sweet.sweetsType sweetType)
         {
             var newSweet = Instantiate(baseSweet, nailHolder).GetComponent<Sweet>();
 
             newSweet.targetBeat = beat;
-            newSweet.sweetType = 2*sweetType;
+            newSweet.sweetType = sweetType;
 
             var sweetX = (beat - startBeat) * -nailDistance / 2f;
             newSweet.transform.localPosition = new Vector3((float)sweetX, 0f, 0f);
-            newSweet.Init();
             newSweet.gameObject.SetActive(true);
+            newSweet.Init();
         }
 
         bool IsInRange(List<double> list, double num)
