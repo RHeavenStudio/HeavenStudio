@@ -110,6 +110,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 4,
                     resizable = true,
+                    hidden = true,
                     parameters = new List<Param>() {
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Rotation", "Set the rotation of the camera around the pivot point."),
                         new Param("valB", new EntityTypes.Float(0.1f, 4f, 0.5f), "Zoom", "Set the camera's level of zoom."),
