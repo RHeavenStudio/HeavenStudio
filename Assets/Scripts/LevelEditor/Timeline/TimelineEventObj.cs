@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using Starpelly;
+
 using Jukebox;
 using TMPro;
 using System.Linq;
@@ -146,7 +146,7 @@ namespace HeavenStudio.Editor.Track
         public void UpdateMarker()
         {
             mouseOver = Timeline.instance.timelineState.selected && Timeline.instance.MouseInTimeline &&
-                Timeline.instance.MousePos2Beat.IsWithin((float)entity.beat, (float)entity.beat + entity.length) &&
+                HeavenStudio.Util.MathUtils.IsBetween(Timeline.instance.MousePos2Beat, (float)entity.beat, (float)entity.beat + entity.length) &&
                 Timeline.instance.MousePos2Layer == (int)entity["track"];
 
             eventLabel.overflowMode = (mouseHovering || moving || resizing || inResizeRegion) ? TextOverflowModes.Overflow : TextOverflowModes.Ellipsis;
@@ -388,20 +388,19 @@ namespace HeavenStudio.Editor.Track
             }
             else if (Input.GetMouseButton(2))
             {
-                // var mgs = EventCaller.instance.minigames;
                 string[] datamodels = entity.datamodel.Split('/');
                 Debug.Log("Selected entity's datamodel : " + entity.datamodel);
 
                 bool isSwitchGame = datamodels[1] == "switchGame";
-                // int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
-                int block = isSwitchGame ? 0 : EventCaller.instance.minigames[datamodels[isSwitchGame ? 2 : 0]].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
+                var game = EventCaller.instance.minigames[datamodels[isSwitchGame ? 2 : 0]];
+                int block = isSwitchGame ? 0 : game.actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
 
                 if (!isSwitchGame)
                 {
                     // hardcoded stuff
                     // needs to happen because hidden blocks technically change the event index
-                    if (datamodels[0] == "gameManager") block -= 2;
-                    else if (datamodels[0] is "countIn" or "vfx") block -= 1;
+                    if (game.fxOnly) block--;
+                    if (datamodels[0] == "gameManager") block --;
                 }
 
                 GridGameSelector.instance.SelectGame(datamodels[isSwitchGame ? 2 : 0], block);

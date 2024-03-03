@@ -419,7 +419,6 @@ namespace HeavenStudio.Games
 
         public void SpawnPlayerBall(double beat, bool isBig, bool hasGandw)
         {
-            Debug.Log($"Spawned player ball for beat {beat} (big: {isBig})");
             var objectToSpawn = isBig ? playerEnterBigBall : playerEnterSmallBall;
             var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
 

@@ -161,7 +161,6 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
                 Update();
                 return;
             }
-            Debug.Log($"hit at {beat}");
             currentState = State.Hit;
             if (big)
             {
