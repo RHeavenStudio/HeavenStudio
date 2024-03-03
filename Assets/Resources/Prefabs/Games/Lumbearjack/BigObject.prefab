@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 70
+  m_SortingOrder: 71
   m_Sprite: {fileID: -460624202, guid: fcfd407e5f13b65499ef59b3777db34c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -222,8 +222,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _logSR: {fileID: 8098522755323641548}
   _logCutSprite: {fileID: 192267312, guid: 8e17e4341f5f44e44b892a9c0cacc5ba, type: 3}
-  _ballSR: {fileID: 6319426971838379636}
+  _ballSR1: {fileID: 34877173387253755}
   _ballCutSprite: {fileID: 1488283434, guid: fcfd407e5f13b65499ef59b3777db34c, type: 3}
+  _ballSR2: {fileID: 6319426971838379636}
 --- !u!114 &-6887511602651794248
 MonoBehaviour:
   m_ObjectHideFlags: 0
