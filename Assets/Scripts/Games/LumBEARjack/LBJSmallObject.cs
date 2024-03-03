@@ -117,7 +117,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 _ => throw new System.NotImplementedException()
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
-            SoundByte.PlayOneShotGame("lumbearjack/bookBoom");
+            if (_type == LumBEARjack.SmallType.book) SoundByte.PlayOneShotGame("lumbearjack/bookBoom");
 
             LumBEARjack.instance.DoSmallObjectEffect(_type, _bomb, caller.startBeat + caller.timer);
 
