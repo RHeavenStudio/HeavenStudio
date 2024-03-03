@@ -75,6 +75,11 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
                 }
                 return;
             }
+            if (_type == LumBEARjack.BigType.bigBall)
+            {
+                _rotateObject.SingleMove(_rotationBeat, _rotationLength, _right);
+                return;
+            }
             _rotateObject.Move(_rotationBeat, _rotationLength, _right);
         }
 

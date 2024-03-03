@@ -45,15 +45,19 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        LumBEARjack.instance.SpawnSmallObject(e.beat, e.length, (LumBEARjack.SmallType)e["type"], (LumBEARjack.HuhChoice)e["huh"], (LumBEARjack.CatPutChoice)e["cat"]);
+                        LumBEARjack.instance.SpawnSmallObject(e.beat, e.length, (LumBEARjack.SmallType)e["type"], (LumBEARjack.HuhChoice)e["huh"], (LumBEARjack.CatPutChoice)e["cat"], e["bomb"]);
                     },
                     defaultLength = 3,
                     parameters = new()
                     {
-                        new("type", LumBEARjack.SmallType.log, "Type"),
+                        new("type", LumBEARjack.SmallType.log, "Type", "", new()
+                        {
+                            new((x, _) => (LumBEARjack.SmallType)x == LumBEARjack.SmallType.barrel, new string[] { "bomb" })
+                        }),
                         new("sound", true, "Cue Sound"),
                         new("huh", LumBEARjack.HuhChoice.ObjectSpecific, "Huh"),
-                        new("cat", LumBEARjack.CatPutChoice.Alternate, "Side")
+                        new("cat", LumBEARjack.CatPutChoice.Alternate, "Side"),
+                        new("bomb", true, "Bomb")
                     }
                 },
                 new("big", "Big Object")
@@ -159,15 +163,19 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        LumBEARjack.instance.SpawnSmallObject(e.beat, e.length, (LumBEARjack.SmallType)e["type"], (LumBEARjack.HuhChoice)e["huh"], (LumBEARjack.CatPutChoice)e["cat"]);
+                        LumBEARjack.instance.SpawnSmallObject(e.beat, e.length, (LumBEARjack.SmallType)e["type"], (LumBEARjack.HuhChoice)e["huh"], (LumBEARjack.CatPutChoice)e["cat"], e["bomb"]);
                     },
                     defaultLength = 3,
                     parameters = new()
                     {
-                        new("type", LumBEARjack.SmallType.log, "Type"),
+                        new("type", LumBEARjack.SmallType.log, "Type", "", new()
+                        {
+                            new((x, _) => (LumBEARjack.SmallType)x == LumBEARjack.SmallType.barrel, new string[] { "bomb" })
+                        }),
                         new("sound", true, "Cue Sound"),
                         new("huh", LumBEARjack.HuhChoice.ObjectSpecific, "Huh"),
-                        new("cat", LumBEARjack.CatPutChoice.Alternate, "Side")
+                        new("cat", LumBEARjack.CatPutChoice.Alternate, "Side"),
+                        new("bomb", true, "Bomb")
                     },
                     resizable = true
                 },
@@ -320,6 +328,8 @@ namespace HeavenStudio.Games
 
         [SerializeField] private LBJMissObject _missObjectRef;
 
+        [SerializeField] private LBJBomb _bombRef;
+
         [Header("Particles")]
         [SerializeField] private ParticleSystem _smallLogCutParticle;
         [SerializeField] private ParticleSystem _canCutParticle;
@@ -380,14 +390,14 @@ namespace HeavenStudio.Games
 
         #region Spawn Objects
 
-        public void SpawnSmallObject(double beat, double length, SmallType type, HuhChoice huh, CatPutChoice cat, double startUpBeat = -1)
+        public void SpawnSmallObject(double beat, double length, SmallType type, HuhChoice huh, CatPutChoice cat, bool bomb, double startUpBeat = -1)
         {
             BeatAction.New(this, new()
             {
                 new(beat + (length / 3), delegate
                 {
                     LBJSmallObject spawnedObject = Instantiate(_smallObjectPrefab, _cutObjectHolder);
-                    spawnedObject.Init(_bear, beat, length, type, huh, ShouldBeRight(beat, cat), startUpBeat);
+                    spawnedObject.Init(_bear, beat, length, type, huh, ShouldBeRight(beat, cat), bomb, startUpBeat);
                 })
             });
         }
@@ -608,7 +618,7 @@ namespace HeavenStudio.Games
                     case "small":
                     case "smallS":
                         SmallObjectSound(e.beat, e.length, (SmallType)e["type"], beat);
-                        SpawnSmallObject(e.beat, e.length, (SmallType)e["type"], (HuhChoice)e["huh"], (CatPutChoice)e["cat"], beat);
+                        SpawnSmallObject(e.beat, e.length, (SmallType)e["type"], (HuhChoice)e["huh"], (CatPutChoice)e["cat"], e["bomb"], beat);
                         break;
                     case "big":
                     case "bigS":
@@ -1099,7 +1109,7 @@ namespace HeavenStudio.Games
             _snowParticle.Play();
         }
 
-        public void DoSmallObjectEffect(SmallType type)
+        public void DoSmallObjectEffect(SmallType type, bool bomb, double beat)
         {
             switch (type)
             {
@@ -1122,6 +1132,18 @@ namespace HeavenStudio.Games
                 case SmallType.barrel:
                     ParticleSystem spawnedParticle4 = Instantiate(_barrelCutParticle, _particleCutPoint);
                     spawnedParticle4.PlayScaledAsyncAllChildren(0.5f);
+
+                    if (bomb)
+                    {
+                        LBJBomb spawnedBomb = Instantiate(_bombRef, transform);
+                        spawnedBomb.gameObject.SetActive(true);
+                        spawnedBomb.startBeat = beat;
+                        MultiSound.Play(new MultiSound.Sound[]
+                        {
+                            new("lumbearjack/bombCut", beat),
+                            new("lumbearjack/bombBreak", beat + 4, 1, 0.2f)
+                        });
+                    }
                     break;
                 case SmallType.book:
                     ParticleSystem spawnedParticle5 = Instantiate(_bookCutParticle, _particleCutPoint);

@@ -21,6 +21,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
         private LumBEARjack.SmallType _type;
         private LumBEARjack.HuhChoice _huh;
         private bool _right = true;
+        private bool _bomb = true;
 
         private double _rotationBeat;
         private double _rotationLength;
@@ -38,12 +39,13 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             _rotateObject = GetComponent<LBJObjectRotate>();
         }
 
-        public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type, LumBEARjack.HuhChoice huh, bool right, double startUpBeat = -1)
+        public void Init(LBJBear bear, double beat, double length, LumBEARjack.SmallType type, LumBEARjack.HuhChoice huh, bool right, bool bomb, double startUpBeat = -1)
         {
             _bear = bear;
             _type = type;
             _huh = huh;
             _right = right;
+            _bomb = bomb;
 
             switch (type)
             {
@@ -116,7 +118,7 @@ namespace HeavenStudio.Games.Scripts_LumBEARjack
             };
             SoundByte.PlayOneShotGame("lumbearjack/" + cutSound);
 
-            LumBEARjack.instance.DoSmallObjectEffect(_type);
+            LumBEARjack.instance.DoSmallObjectEffect(_type, _bomb, caller.startBeat + caller.timer);
 
             switch (_huh)
             {
