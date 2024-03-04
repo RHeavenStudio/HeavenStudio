@@ -22,30 +22,29 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
-                            instance.ChargeUp(e.beat, e.length, e["forceHold"], e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"]);
+                            instance.ChargeUp(e.beat, e.length, 4 /*e["forceHold"]*/, e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"]);
                         }
                         ChargingChicken.CountIn(e.beat);
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("forceHold", false, "Force Hold", "THIS DOESN'T DO SHIT YET"),
                         new Param("drumbeat", ChargingChicken.DrumLoopList.Straight, "Drum Beat", "Choose which drum beat to play while filling."),
                         new Param("bubble", false, "Countdown Bubble", "Choose whether the counting bubble will spawn for this input."),
                         //ending text
-                        new Param("endText", ChargingChicken.TextOptions.None, "Ending Text", "fill this dicsription later", new() {
+                        new Param("endText", ChargingChicken.TextOptions.None, "Ending Text", "What text will appear once the ending platform is reached.", new() {
                             new Param.CollapseParam((x, _) => (int)x != (int)0, new[] { "textLength" }),
                             new Param.CollapseParam((x, _) => (int)x == (int)1, new[] { "success", "fail" }),
                             new Param.CollapseParam((x, _) => (int)x == (int)2, new[] { "destination" }),
                         }),
-                        new Param("textLength", new EntityTypes.Integer(1, 16, 4), "Text Stay Length", "fill this dicsription later"),
+                        new Param("textLength", new EntityTypes.Integer(1, 16, 4), "Text Stay Length", "How long the text will stay after the ending platform is reached."),
                         //praise
-                        new Param("success", "Well Done!", "Success Text", "fill this dicsription later"),
-                        new Param("fail", "Too bad...", "Fail Text", "fill this dicsription later"),
+                        new Param("success", "Well Done!", "Success Text", "Text to display if the input is hit."),
+                        new Param("fail", "Too bad...", "Fail Text", "Text to display if the input is missed."),
                         //destination
-                        new Param("destination", ChargingChicken.Destinations.Seattle, "Destination", "fill this dicsription later", new() {
+                        new Param("destination", ChargingChicken.Destinations.Seattle, "Destination", "Which destination will be reached once the ending platform is reached.", new() {
                             new Param.CollapseParam((x, _) => (int)x == (int)0, new[] { "customDestination" }),
                         }),
-                        new Param("customDestination", "You arrived in The Backrooms!", "Custom Destination", "fill this dicsription later"),
+                        new Param("customDestination", "You arrived in The Backrooms!", "Custom Destination", "Custom text to display once the ending platform is reached."),
                     },
                     defaultLength = 8,
                     resizable = true,
@@ -529,8 +528,7 @@ namespace HeavenStudio.Games
             }
 
             //chicken/water movement speed
-            float newAnimScale = Util.EasingFunction.EaseOutQuad(1, 0, nextIsland.value1);
-            if (nextIsland.isMoving) ChickenAnim.SetScaledAnimationSpeed((newAnimScale * 0.8f) + 0.4f);
+            if (nextIsland.isMoving) ChickenAnim.SetScaledAnimationSpeed((nextIsland.speed1 / 60) + 0.2f);
             float waterFlowSpeed = (nextIsland.speed1 / 5.83f) + ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f);
             if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.4f) < 0) 
             {
@@ -599,6 +597,25 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             PersistThings(beat);
+
+            foreach(var entity in GameManager.instance.Beatmap.Entities)
+            {
+                if(entity.beat > beat + 4)
+                {
+                    break;
+                }
+                if((entity.datamodel != "chargingChicken/input") || entity.beat + entity.length < beat) //check for charge that happen right before the switch
+                {
+                    continue;
+                }
+
+                if(entity.datamodel == "chargingChicken/input")
+                {
+                    var e = entity;
+                    double lateness = entity.beat - beat;
+                    ChargeUp(e.beat, e.length, lateness /*e["forceHold"]*/, e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"]);
+                }
+            }
         }
 
         private void Awake()
@@ -635,46 +652,96 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
         }
 
-        public void ChargeUp(double beat, double actualLength, bool forceHold, int whichDrum, bool bubble = false, int endText = 0, int textLength = 4, string successText = "", string failText = "", int destination = 1, string customDestination = "You arrived in The Backrooms!")
+        public void ChargeUp(double beat, double actualLength, double lateness, int whichDrum, bool bubble = false, int endText = 0, int textLength = 4, string successText = "", string failText = "", int destination = 1, string customDestination = "You arrived in The Backrooms!")
         {
-            //convert length to an integer, which is at least 2
+            //convert length to an integer, which is at least 4
             double length = Math.Ceiling(actualLength);
             if (length < 4) length = 4;
 
+            yardsTextLength = length;
+            double journeyBeat = beat + yardsTextLength;
+
             //hose count animation
-            nextIsland.ChargerArmCountIn(beat);
+            nextIsland.ChargerArmCountIn(beat, lateness);
 
             //cancel previous success animation if needed
             successAnimationKillOnBeat = beat - 1;
 
+            //emergency spawnjourney so game switch inputs don't break
+            if (lateness < 1) SpawnJourney(journeyBeat, yardsTextLength - 1);
+
             //input
-            switch(whichDrum)
+            if (lateness > 0)
             {
-                case 0: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJust, StartChargingMiss, Nothing); break;
-                case 5: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustBreak, StartChargingMiss, Nothing); break;
-                default: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustMusic, StartChargingMiss, Nothing); break;
+                switch(whichDrum)
+                {
+                    case 0: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJust, StartChargingMiss, Nothing); break;
+                    case 5: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustBreak, StartChargingMiss, Nothing); break;
+                    default: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustMusic, StartChargingMiss, Nothing); break;
+                }
             }
-            ScheduleInput(beat, length, InputAction_BasicRelease, EndChargingJust, EndChargingMiss, Nothing);
+            else
+            {
+                if (PlayerInput.GetIsAction(InputAction_BasicPressing) || GameManager.instance.autoplay)
+                {
+                    //sound
+                    if (lateness == 0)
+                    {
+                        switch(whichDrum)
+                        {
+                            case 5: 
+                            {
+                                SoundByte.PlayOneShotGame("chargingChicken/AMEN1");
+                                break;
+                            }
+                            default: 
+                            {
+                                SoundByte.PlayOneShotGame("chargingChicken/kick");
+                                SoundByte.PlayOneShotGame("chargingChicken/hihat");
+                                break;
+                            }
+                        }
+                    }
+                    isInputting = true; //starts the drums
+
+                    //chicken animation
+                    ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
+
+                    //hose animation
+                    currentIsland.ChargingAnimation();
+                    if (lateness > -1) canBlastOff = false;
+                    else canBlastOff = true;
+                }
+                else
+                {
+                    currentIsland.ChargerAnim.DoScaledAnimationAsync("Idle", 0.5f);
+                }
+            }
+
+            var releaseInput = ScheduleInput(beat, length, InputAction_BasicRelease, EndChargingJust, EndChargingMiss, Nothing);
+
+            releaseInput.IsHittable = () => {
+                return isInputting;
+            };
 
             //set up the big beataction
             var actions = new List<BeatAction.Action>();
 
             //"X yards to goal" text, spawn the journey
-            yardsTextLength = length;
-            double journeyBeat = beat + yardsTextLength;
             actions.Add(new(beat - 2, delegate {
                 string yardsTextStringTemp = yardsTextString.Replace("%", $"{yardsTextLength}");
                 yardsText.text = yardsTextStringTemp;
                 yardsTextIsEditable = true;
-                SpawnStones(journeyBeat, yardsTextLength - 1);
+                SpawnStones(journeyBeat, yardsTextLength - 1, lateness < 2);
             }));
 
             //chicken ducks into the car window, and the bubble text is set up, and the platform noise plays, and next island spawns
             actions.Add(new(beat - 1, delegate {
-                ChickenAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+                if (lateness >= 1) ChickenAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+                if (lateness > 0 && lateness < 1) ChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
                 bubbleEndCount = beat + length;
-                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_SET");
-                SpawnJourney(journeyBeat, yardsTextLength - 1);
+                if (lateness >= 2) SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_SET");
+                if (lateness >= 1) SpawnJourney(journeyBeat, yardsTextLength - 1);
             }));
 
             //spawns the countdown bubble, allows stones to fall, resets the success anim killer
@@ -791,6 +858,7 @@ namespace HeavenStudio.Games
 
         public List<BeatAction.Action> PlayDrumLoop(double beat, int whichDrum, double length)
         {
+
             //create the beat action
             var actions = new List<BeatAction.Action>();
 
@@ -808,7 +876,7 @@ namespace HeavenStudio.Games
                 if (length > drumLoop.timing)
                 {
                     actions.Add(new(beat + drumLoop.timing, delegate {
-                        PlayDrum(drumTypeInterpreted, drumLoop.volume);
+                        PlayDrum(drumTypeInterpreted, drumLoop.volume, beat + drumLoop.timing);
                     }));
                 }
             }
@@ -817,9 +885,9 @@ namespace HeavenStudio.Games
             return actions;
         }
 
-        public void PlayDrum(string whichDrum, float drumVolumeThis)
+        public void PlayDrum(string whichDrum, float drumVolumeThis, double lateness)
         {
-            if (isInputting) SoundByte.PlayOneShotGame(whichDrum, volume: drumVolumeThis * drumVolume);
+            if (isInputting && (lateness == (Math.Floor(Conductor.instance.songPositionInBeatsAsDouble * 4) / 4))) SoundByte.PlayOneShotGame(whichDrum, volume: drumVolumeThis * drumVolume);
         }
 
         public void PumpBeat()
@@ -865,7 +933,7 @@ namespace HeavenStudio.Games
                 });
         }
 
-        public void SpawnStones(double beat, double length)
+        public void SpawnStones(double beat, double length, bool tooLate)
         {
             stonePlatformJourney = new StonePlatform[(int)(length * 4 - 1)];
             for ( int i = 0; i < length * 4 - 1; i++ )
@@ -879,7 +947,7 @@ namespace HeavenStudio.Games
                 stone = a.thisPlatform;
                 stone.transform.localPosition = new Vector3((float)(((a.stoneNumber + 1) * platformDistanceConstant) + (platformDistanceConstant / 2)), 0, 0);
                 stone.BecomeStonePlatform(a.stoneNumber);
-                stone.StoneFall(a.stoneNumber);
+                stone.StoneFall(a.stoneNumber, tooLate);
                 stone.isBeingSet = true;
 
                 stone.journeySave = length * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);

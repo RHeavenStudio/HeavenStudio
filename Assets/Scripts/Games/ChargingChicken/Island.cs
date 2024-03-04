@@ -89,14 +89,14 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         //island methods
         #region Island Methods
 
-        public void ChargerArmCountIn(double beat)
+        public void ChargerArmCountIn(double beat, double lateness)
         {
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat - 4, delegate { this.ChargerAnim.DoScaledAnimationAsync("Prep1", 0.5f); }),
-                new BeatAction.Action(beat - 3, delegate { this.ChargerAnim.DoScaledAnimationAsync("Prep2", 0.5f); }),
-                new BeatAction.Action(beat - 2, delegate { this.ChargerAnim.DoScaledAnimationAsync("Prep3", 0.5f); }),
-                new BeatAction.Action(beat - 1, delegate { this.ChargerAnim.DoScaledAnimationAsync("Prep4", 0.5f); }),
+                new BeatAction.Action(beat - 4, delegate { if (lateness > 3) ChargerAnim.DoScaledAnimationAsync("Prep1", 0.5f); }),
+                new BeatAction.Action(beat - 3, delegate { if (lateness > 2) ChargerAnim.DoScaledAnimationAsync("Prep2", 0.5f); }),
+                new BeatAction.Action(beat - 2, delegate { if (lateness > 1) ChargerAnim.DoScaledAnimationAsync("Prep3", 0.5f); }),
+                new BeatAction.Action(beat - 1, delegate { if (lateness > 0) ChargerAnim.DoScaledAnimationAsync("Prep4", 0.5f); }),
             });
         }
 
@@ -156,8 +156,9 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         }
 
-        public void StoneFall(int offset)
+        public void StoneFall(int offset, bool tooLate)
         {
+            if (tooLate) return;
             PlatformAnim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble + ((double)offset / 64), 0.5f);
             PlatformAnim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.5f;
         }
