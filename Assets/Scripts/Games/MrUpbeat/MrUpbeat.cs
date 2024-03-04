@@ -3,6 +3,7 @@ using UnityEngine;
 using DG.Tweening;
 
 using HeavenStudio.Util;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -10,6 +11,18 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbUpbeatLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
+            RiqEntity BackgroundUpdater(string datamodel, RiqEntity e)
+            {
+                if (datamodel == "mrUpbeat/changeBG" && e.dynamicData.ContainsKey("toggle"))
+                {
+                    e.dynamicData.Add("ease", (int)(e["toggle"] ? Util.EasingFunction.Ease.Instant : Util.EasingFunction.Ease.Linear));
+                    e.dynamicData.Remove("toggle");
+                    return e;
+                }
+                return null;
+            }
+            RiqBeatmap.OnUpdateEntity += BackgroundUpdater;
+
             return new Minigame("mrUpbeat", "Mr. Upbeat", "E0E0E0", false, false, new List<GameAction>()
             {
                 new GameAction("prepare", "Prepare")
@@ -49,14 +62,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MrUpbeat.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]);
+                        MrUpbeat.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]);
                     },
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("start", new Color(0.878f, 0.878f, 0.878f), "Start Color", "Set the color at the start of the event."),
                         new Param("end", new Color(0.878f, 0.878f, 0.878f), "End Color", "Set the color at the start of the event."),
-                        new Param("toggle", false, "Instant", "Toggle if the background should jump to it's end state.")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the background.")
                     }
                 },
                 new GameAction("upbeatColors", "Upbeat Colors")
@@ -151,12 +164,13 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer[] shadowSr;
 
         [Header("Properties")]
-        private Tween bgColorTween;
         public int stepIterate = 0;
         private static double startSteppingBeat = double.MaxValue;
         private static double startBlippingBeat = double.MaxValue;
         private bool stopStepping;
         public bool stopBlipping;
+
+        private ColorEase bgColorEase = new(new Color(0.878f, 0.878f, 0.878f));
 
         public static MrUpbeat instance;
 
@@ -209,9 +223,9 @@ namespace HeavenStudio.Games
 
         public void Update()
         {
-            var cond = Conductor.instance;
-            if (cond.isPlaying && !cond.isPaused) {
-                var songPos = cond.songPositionInBeatsAsDouble;
+            bg.color = bgColorEase.GetColor();
+            if (conductor.isPlaying && !conductor.isPaused) {
+                var songPos = conductor.songPositionInBeatsAsDouble;
 
                 if (songPos >= startSteppingBeat - 2) {
                     man.canStep = true;
@@ -273,7 +287,6 @@ namespace HeavenStudio.Games
         private void RecursiveStepping(double beat)
         {
             if (stopStepping) {
-                
                 stopStepping = false;
                 return;
             }
@@ -327,25 +340,9 @@ namespace HeavenStudio.Games
             man.Fall();
         }
 
-        public void ChangeBackgroundColor(Color color1, Color color2, float beats)
+        public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
-
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
-
-            if (seconds == 0) {
-                bg.color = color2;
-            } else {
-                bg.color = color1;
-                bgColorTween = bg.DOColor(color2, seconds);
-            }
-        }
-
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
-        {
-            ChangeBackgroundColor(start, end, 0f);
-            if (!instant) ChangeBackgroundColor(start, end, beats);
+            bgColorEase = new(beat, length, startColor, endColor, ease);
         }
 
         public void UpbeatColors(Color blipColor, bool setShadow, Color shadowColor)
