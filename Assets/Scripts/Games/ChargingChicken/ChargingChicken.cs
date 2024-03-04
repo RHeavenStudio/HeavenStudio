@@ -24,10 +24,11 @@ namespace HeavenStudio.Games.Loaders
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
                             instance.ChargeUp(e.beat, e.length, 4 /*e["forceHold"]*/, e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"]);
                         }
-                        ChargingChicken.CountIn(e.beat);
+                        ChargingChicken.CountIn(e.beat, e["cowbell"]);
                     },
                     parameters = new List<Param>()
                     {
+                        new Param("cowbell", true, "Cue Sound", "Choose whether to play the cue sound for this charge."),
                         new Param("drumbeat", ChargingChicken.DrumLoopList.Straight, "Drum Beat", "Choose which drum beat to play while filling."),
                         new Param("bubble", false, "Countdown Bubble", "Choose whether the counting bubble will spawn for this input."),
                         //ending text
@@ -135,6 +136,16 @@ namespace HeavenStudio.Games.Loaders
                             new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "lightFrom", "headLightFrom" }),
                         }),
                     }
+                },
+                new GameAction("explodehaha", "Force Explosion")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.ExplodeButFunee();
+                        }
+                    },
+                    defaultLength = 0.5f,
                 },
                 },
                 new List<string>() { "ctr", "aim" },
@@ -640,8 +651,10 @@ namespace HeavenStudio.Games
         //chicken methods
         #region Chicken Methods
 
-        public static void CountIn(double beat)
+        public static void CountIn(double beat, bool enabled = true)
         {
+            if (!enabled) return; //i trust that you can figure out what this does lol
+
             //cowbell count in
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -1145,6 +1158,9 @@ namespace HeavenStudio.Games
                 stone.journeyEnd = ((a.stoneNumber + 1) * platformDistanceConstant) + (platformDistanceConstant / 2);
             }
 
+            //boom
+            SoundByte.PlayOneShotGame("chargingChicken/SE_NTR_ROBOT_EN_BAKUHATU_PITCH100", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
+
             //erase text
             yardsTextIsEditable = false;
             yardsText.text = "";
@@ -1156,6 +1172,29 @@ namespace HeavenStudio.Games
             ChickenAnim.DoScaledAnimationAsync("Gone", 0.5f);
             currentIsland.FakeChickenAnim.DoScaledAnimationAsync("Burn", 0.5f);
             ChickenRespawn(Math.Min(length / 2, 3));
+        }
+
+        public void ExplodeButFunee()
+        {
+            if (currentIsland == null) currentIsland = nextIsland;
+
+            //just in case
+            isInputting = false;
+
+            //boom
+            SoundByte.PlayOneShotGame("chargingChicken/SE_NTR_ROBOT_EN_BAKUHATU_PITCH100", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
+
+            //erase text
+            yardsTextIsEditable = false;
+            yardsText.text = "";
+
+            //despawn the counting bubble
+            countBubble.SetActive(false);
+
+            //burn animation
+            ChickenAnim.DoScaledAnimationAsync("Gone", 0.5f);
+            currentIsland.FakeChickenAnim.DoScaledAnimationAsync("Burn", 0.5f);
+            nextIsland.FakeChickenAnim.DoScaledAnimationAsync("Burn", 0.5f);
         }
 
         public void ChickenFall(bool fellTooFar)
