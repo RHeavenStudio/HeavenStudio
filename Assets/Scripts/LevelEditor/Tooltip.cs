@@ -71,8 +71,15 @@ namespace HeavenStudio.Editor
         private void OnEnterPrivate(string tooltipText, string altTooltipText)
         {
             group.alpha = 1;
-            SetText(tooltipText);
-            Editor.instance.tooltipText.text = altTooltipText.Replace("\n","");
+
+            text.text = tooltipText;
+            text.ForceMeshUpdate();
+
+            Vector2 textSize = text.GetRenderedValues(false);
+            Vector2 paddingSize = new Vector2(8, 8);
+
+            background.sizeDelta = textSize + paddingSize;
+            Editor.instance.tooltipText.text = altTooltipText.Replace("\n", "");
             Editor.instance.tooltipText.ForceMeshUpdate();
         }
 
@@ -92,10 +99,9 @@ namespace HeavenStudio.Editor
             background.sizeDelta = textSize + paddingSize;
         }
 
-        public static void AddTooltip(GameObject g, string tooltipText, string altTooltipText = "")
+        public static void AddTooltip(GameObject g, string tooltipText, string altTooltipText = null)
         {
-            if (altTooltipText == "")
-                altTooltipText = tooltipText;
+            altTooltipText ??= tooltipText;
 
             EventTrigger et = g.AddComponent<EventTrigger>();
 

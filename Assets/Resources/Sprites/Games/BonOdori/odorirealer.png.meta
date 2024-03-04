@@ -1,0 +1,2191 @@
+fileFormatVersion: 2
+guid: 5339c582ddc705a4ca6e511daf4b3f66
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: odorirealer_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4030
+        width: 60
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d847771ba8ce634ab53fdf460992f6b
+      internalID: -1911533260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_1
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 3955
+        width: 62
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c99e5556261f59246bcd4c9d80f95fdd
+      internalID: 1317542536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_2
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 4013
+        width: 46
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a749f57f46e9f494487bafd1297dc442
+      internalID: -1344200064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_3
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 4011
+        width: 44
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 441c403cb7774154b8d7e0ecaf38846a
+      internalID: 809728210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_4
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 3941
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 025b9a1044d56f643b45aa890edc90a7
+      internalID: -1121308261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_5
+      rect:
+        serializedVersion: 2
+        x: 1533
+        y: 3941
+        width: 76
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21e571be9870d024db916727c2dd20ed
+      internalID: -1986739490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_6
+      rect:
+        serializedVersion: 2
+        x: 1957
+        y: 3955
+        width: 58
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ece48b06df951324ba1855c3be37889e
+      internalID: 243241535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_7
+      rect:
+        serializedVersion: 2
+        x: 2097
+        y: 3941
+        width: 70
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76e1cdf5da1766d43a848c7e456ae073
+      internalID: 896654669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_8
+      rect:
+        serializedVersion: 2
+        x: 3169
+        y: 3621
+        width: 512
+        height: 408
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36a8efc9c3b814845b55b3165da5349d
+      internalID: -1401906153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_9
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 3953
+        width: 68
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2fe34135de5a95459f638ceead18047
+      internalID: -1765661611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_10
+      rect:
+        serializedVersion: 2
+        x: 465
+        y: 3953
+        width: 68
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eea67fbac6d36a74fa3269c90cc31f66
+      internalID: -624222279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_11
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 3969
+        width: 64
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c87c94b64ce692f45be3effcb33290a4
+      internalID: -452829614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_12
+      rect:
+        serializedVersion: 2
+        x: 749
+        y: 3969
+        width: 66
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89ebeac8f19622d4d874499645467388
+      internalID: -1776284758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_13
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 3951
+        width: 62
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 361da70ab69f7fb46b4669e0f2f3c537
+      internalID: -382219795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_14
+      rect:
+        serializedVersion: 2
+        x: 1013
+        y: 3951
+        width: 60
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0933637819b5613429845dbb354244c2
+      internalID: -41467520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_15
+      rect:
+        serializedVersion: 2
+        x: 1169
+        y: 3951
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac15d7bf60163d74c8a770e7c1037a6e
+      internalID: 1212302980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_16
+      rect:
+        serializedVersion: 2
+        x: 1285
+        y: 3951
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f62f0f1e6b6bb0a42af30f4a65f3e378
+      internalID: -1970769215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_17
+      rect:
+        serializedVersion: 2
+        x: 1705
+        y: 3951
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f2fd9e348fb440409140a7bfa748977
+      internalID: -671188893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_18
+      rect:
+        serializedVersion: 2
+        x: 1821
+        y: 3951
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e82ae4a1c6fb7bb40ac2b61c1a0c5581
+      internalID: 1761650987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_19
+      rect:
+        serializedVersion: 2
+        x: 1975
+        y: 3941
+        width: 52
+        height: 56
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba1fbfabf0e22a24ea8d379d1f39da66
+      internalID: -368193209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_20
+      rect:
+        serializedVersion: 2
+        x: 2255
+        y: 3975
+        width: 66
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d16c4270dec302049b5830090373caf4
+      internalID: -311436759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_21
+      rect:
+        serializedVersion: 2
+        x: 2373
+        y: 3975
+        width: 64
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca6ae88ce2be5ba438f785fc96a55d86
+      internalID: 1082559804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_22
+      rect:
+        serializedVersion: 2
+        x: 2513
+        y: 3887
+        width: 256
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f29839dfc3e8fa641a47a9ee230cbb46
+      internalID: -917035784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_23
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 3921
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2826df80283b9d94ea53fb05e37c6460
+      internalID: 1637388192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_24
+      rect:
+        serializedVersion: 2
+        x: 427
+        y: 3909
+        width: 26
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05bfc1b7de018f145b4e8e85bec80c24
+      internalID: -1360156649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_25
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 3923
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45bf89bacd43a3c4983432333133b6ab
+      internalID: 766635502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_26
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 3897
+        width: 82
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cdaf2192379a75478e7658dd903976d
+      internalID: -782874547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_27
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 3929
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 445899d66f843d54db1927d651cf54cd
+      internalID: -32826770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_28
+      rect:
+        serializedVersion: 2
+        x: 1489
+        y: 3917
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4bba95e9d2a138843b11f82ba4893173
+      internalID: 24538308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_29
+      rect:
+        serializedVersion: 2
+        x: 1755
+        y: 3885
+        width: 72
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e74861af3706e654580eeaca3f6d1a9d
+      internalID: -853206793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_30
+      rect:
+        serializedVersion: 2
+        x: 1763
+        y: 3929
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb86d4bacfe698947bfc916652365a96
+      internalID: 1312300033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_31
+      rect:
+        serializedVersion: 2
+        x: 2041
+        y: 3909
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c66bb1c8b797b564baad4052e0dbea87
+      internalID: -1232513858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_32
+      rect:
+        serializedVersion: 2
+        x: 2315
+        y: 3887
+        width: 70
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7247c1b2b26b3a41a306cd454fa6100
+      internalID: -67707932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_33
+      rect:
+        serializedVersion: 2
+        x: 2323
+        y: 3931
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f3f78932b46a9b4382384a4e895b84b
+      internalID: 1144040270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_34
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 3895
+        width: 86
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6530ec357eaa98a44900ecec2c2398e3
+      internalID: -1296328193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_35
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 3885
+        width: 78
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a66418de32d7194e8b1d7c3467d7dab
+      internalID: 1611421196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_36
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 3895
+        width: 92
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef178a460687be94fa1b224e09a17b9c
+      internalID: -2067033859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_37
+      rect:
+        serializedVersion: 2
+        x: 1209
+        y: 3893
+        width: 78
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 247906f88b3abed42933e33725f176cf
+      internalID: -885974630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_38
+      rect:
+        serializedVersion: 2
+        x: 1472
+        y: 3887
+        width: 81
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59fa9a4177063764492cd23e9e88ef38
+      internalID: -1091521893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_39
+      rect:
+        serializedVersion: 2
+        x: 2021
+        y: 3881
+        width: 84
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 113fcc3e56f075d4b8a8502e27d0a4d5
+      internalID: 41202629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_40
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 3321
+        width: 230
+        height: 470
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27f4b034016ea3d4e8e4626eaa217b93
+      internalID: -1226938298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_41
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 3321
+        width: 314
+        height: 484
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a531e238ab73204aaab218b0bce1560
+      internalID: -316881057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_42
+      rect:
+        serializedVersion: 2
+        x: 793
+        y: 3313
+        width: 236
+        height: 514
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 176a941bf67fe724fa6c7fc46f3582cd
+      internalID: 1321638583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_43
+      rect:
+        serializedVersion: 2
+        x: 1113
+        y: 3321
+        width: 190
+        height: 418
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c63837c1f17ec5b4f9e9b31f81ac26b7
+      internalID: 166256416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_44
+      rect:
+        serializedVersion: 2
+        x: 1389
+        y: 3321
+        width: 254
+        height: 468
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc63458cf5478674ba0693108b6ae771
+      internalID: -1457569145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_45
+      rect:
+        serializedVersion: 2
+        x: 1717
+        y: 3349
+        width: 188
+        height: 400
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbbdd31e460844447bd654ebd736556a
+      internalID: 1646234065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_46
+      rect:
+        serializedVersion: 2
+        x: 1921
+        y: 3277
+        width: 382
+        height: 498
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63ee39a5b9eb0e645a0d7e32f7064616
+      internalID: -247762037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_47
+      rect:
+        serializedVersion: 2
+        x: 2605
+        y: 3289
+        width: 108
+        height: 112
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28061ad1299aa4f48ba23ae44cfedec1
+      internalID: 99016532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_48
+      rect:
+        serializedVersion: 2
+        x: 2775
+        y: 3277
+        width: 162
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f29055af7a76a2478acff83106068a3
+      internalID: -110895297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_49
+      rect:
+        serializedVersion: 2
+        x: 3221
+        y: 3249
+        width: 158
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53d9666104523084981153b2048d4fde
+      internalID: 641401700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_50
+      rect:
+        serializedVersion: 2
+        x: 3510
+        y: 3219
+        width: 133
+        height: 194
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84fa8b6839803e1498685daafc293f50
+      internalID: 1683455665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_51
+      rect:
+        serializedVersion: 2
+        x: 3705
+        y: 3219
+        width: 160
+        height: 260
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73ed6cf76d93c424b841b90d189d1a8a
+      internalID: 1295713739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_52
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 2369
+        width: 338
+        height: 892
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c00a312203431844a76ae66c75676bb
+      internalID: 298872923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_53
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 2425
+        width: 332
+        height: 836
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0573b261058c9c5479f55019a190209b
+      internalID: -1991869583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_54
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 2405
+        width: 350
+        height: 856
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2db11c2cbdc1b554bbea14594fb73888
+      internalID: -376430790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_55
+      rect:
+        serializedVersion: 2
+        x: 1415
+        y: 2399
+        width: 346
+        height: 868
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a85a3604b266fd94f983680c46e0d005
+      internalID: -897569306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_56
+      rect:
+        serializedVersion: 2
+        x: 1811
+        y: 2399
+        width: 372
+        height: 868
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cf6174aa34dfc14db9e1634da1f8133
+      internalID: -1987970028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_57
+      rect:
+        serializedVersion: 2
+        x: 2417
+        y: 2843
+        width: 154
+        height: 258
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b1a0c03c4a1f01448bd1226ab18355a
+      internalID: 2101681720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_58
+      rect:
+        serializedVersion: 2
+        x: 2637
+        y: 2843
+        width: 160
+        height: 260
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cd3e968cade62d44b7edb24d46d2c60
+      internalID: 26339685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_59
+      rect:
+        serializedVersion: 2
+        x: 2861
+        y: 2841
+        width: 160
+        height: 262
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d215d75d115578c4c9ef7057c7197f4e
+      internalID: 201869160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_60
+      rect:
+        serializedVersion: 2
+        x: 3233
+        y: 2953
+        width: 172
+        height: 158
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aed4ef1758759e349b70cba28c41abd3
+      internalID: -672377902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_61
+      rect:
+        serializedVersion: 2
+        x: 3475
+        y: 2975
+        width: 170
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3279883502ccb9408290f115a782c02
+      internalID: 1848113155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_62
+      rect:
+        serializedVersion: 2
+        x: 3711
+        y: 2941
+        width: 146
+        height: 188
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0955f69078534054ea4d68b2a5454537
+      internalID: -133654565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_63
+      rect:
+        serializedVersion: 2
+        x: 2653
+        y: 2545
+        width: 118
+        height: 182
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ea6bb6dac1b3ee42991b1abd54ef9af
+      internalID: -1896608834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_64
+      rect:
+        serializedVersion: 2
+        x: 2827
+        y: 2499
+        width: 218
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5874518fc644b7841ba082464f9834fb
+      internalID: 316073964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_65
+      rect:
+        serializedVersion: 2
+        x: 3253
+        y: 2645
+        width: 138
+        height: 190
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9d8d57611b6e5445b4046728726b1ec
+      internalID: 511121311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_66
+      rect:
+        serializedVersion: 2
+        x: 3473
+        y: 2649
+        width: 132
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a5ecd830186d67419a4d68d0ed915c7
+      internalID: 1131404038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_67
+      rect:
+        serializedVersion: 2
+        x: 3675
+        y: 2635
+        width: 208
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e82bb21fbbbe33747b13935692b18b83
+      internalID: -1709071441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_68
+      rect:
+        serializedVersion: 2
+        x: 2255
+        y: 2157
+        width: 418
+        height: 290
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef527369e9928894a96cad87c8778ab0
+      internalID: 900297494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_69
+      rect:
+        serializedVersion: 2
+        x: 3313
+        y: 2369
+        width: 124
+        height: 134
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f269fa5e102c8c7498b8528d715a9efb
+      internalID: 1992882368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_70
+      rect:
+        serializedVersion: 2
+        x: 3559
+        y: 2341
+        width: 282
+        height: 238
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5bcc93b15c25cb14083490f2160c05b3
+      internalID: 953668981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_71
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 1627
+        width: 406
+        height: 468
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6f58bedcec760c42863b0aa8da50a5c
+      internalID: 1622933106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_72
+      rect:
+        serializedVersion: 2
+        x: 875
+        y: 1699
+        width: 566
+        height: 358
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfaa154e15b21104bb376ba486999071
+      internalID: -175040334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_73
+      rect:
+        serializedVersion: 2
+        x: 1519
+        y: 1663
+        width: 443
+        height: 433
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec6689689328ccf4aa903245de83c0f3
+      internalID: -1932493960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_74
+      rect:
+        serializedVersion: 2
+        x: 2029
+        y: 1673
+        width: 858
+        height: 384
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb28effe673174042a574ff862a12810
+      internalID: -1370032051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_75
+      rect:
+        serializedVersion: 2
+        x: 2965
+        y: 1673
+        width: 780
+        height: 402
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f4a3df07008c9e489eb30915536bc8e
+      internalID: 1624445935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_76
+      rect:
+        serializedVersion: 2
+        x: 3713
+        y: 1539
+        width: 182
+        height: 102
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a952e73937129c4f81bcb610c418cf9
+      internalID: 744632078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_77
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 1171
+        width: 322
+        height: 354
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6b32012597c4cd4bacc19c8fce11d36
+      internalID: 190183636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_78
+      rect:
+        serializedVersion: 2
+        x: 873
+        y: 1161
+        width: 354
+        height: 364
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 856ddad7914197347859840485ffd9b6
+      internalID: -872176454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_79
+      rect:
+        serializedVersion: 2
+        x: 1741
+        y: 1393
+        width: 94
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c466682dfb2fd224ea9bd0b98291f6dd
+      internalID: 100867005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_80
+      rect:
+        serializedVersion: 2
+        x: 2261
+        y: 1229
+        width: 262
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d5021752156def4b9cec52bf84df8f5
+      internalID: 355924343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_81
+      rect:
+        serializedVersion: 2
+        x: 2827
+        y: 1305
+        width: 160
+        height: 156
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5eee7460f5d19945818be801f784eb8
+      internalID: 676511886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_82
+      rect:
+        serializedVersion: 2
+        x: 3235
+        y: 1235
+        width: 272
+        height: 230
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b58327153212e184ba2bc4f95ad625c1
+      internalID: 1140384862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_83
+      rect:
+        serializedVersion: 2
+        x: 3713
+        y: 1363
+        width: 104
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54a5420603849f24789978264880d2dd
+      internalID: 1560762038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_84
+      rect:
+        serializedVersion: 2
+        x: 1715
+        y: 1211
+        width: 160
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6cb602fcf48ecb4f974ddecb2804f5f
+      internalID: 2037831101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_85
+      rect:
+        serializedVersion: 2
+        x: 1805
+        y: 1077
+        width: 157
+        height: 112
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2aa60195638a7a2418426c53ff0f1cdc
+      internalID: -1537386746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_86
+      rect:
+        serializedVersion: 2
+        x: 2311
+        y: 1073
+        width: 128
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 103db1ef509f61c48a09c44156194198
+      internalID: 444249893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_87
+      rect:
+        serializedVersion: 2
+        x: 2815
+        y: 1059
+        width: 176
+        height: 140
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eabaa966a3b36f94685118a9dbac278b
+      internalID: -1702806385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_88
+      rect:
+        serializedVersion: 2
+        x: 3235
+        y: 1083
+        width: 110
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c53f394471baadb40814de6ad96e9307
+      internalID: 750142574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_89
+      rect:
+        serializedVersion: 2
+        x: 3397
+        y: 997
+        width: 118
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8cb745129c212c4eaec3c1afb7e7bfd
+      internalID: -1574119256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_90
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 673
+        width: 340
+        height: 354
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24d0f89438934254fafc25d28aa196a2
+      internalID: 132912266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_91
+      rect:
+        serializedVersion: 2
+        x: 877
+        y: 661
+        width: 354
+        height: 364
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f28a02d506d87804a82a463b978fec4d
+      internalID: 1447068208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_92
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 153
+        width: 368
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4081ef2cbab14724e8f6222eb96ae0c8
+      internalID: 949264994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorirealer_93
+      rect:
+        serializedVersion: 2
+        x: 869
+        y: 151
+        width: 380
+        height: 364
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78f6d62e0a7456241a5081e700d7065b
+      internalID: 725272326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      odorirealer_0: -1911533260
+      odorirealer_1: 1317542536
+      odorirealer_10: -624222279
+      odorirealer_11: -452829614
+      odorirealer_12: -1776284758
+      odorirealer_13: -382219795
+      odorirealer_14: -41467520
+      odorirealer_15: 1212302980
+      odorirealer_16: -1970769215
+      odorirealer_17: -671188893
+      odorirealer_18: 1761650987
+      odorirealer_19: -368193209
+      odorirealer_2: -1344200064
+      odorirealer_20: -311436759
+      odorirealer_21: 1082559804
+      odorirealer_22: -917035784
+      odorirealer_23: 1637388192
+      odorirealer_24: -1360156649
+      odorirealer_25: 766635502
+      odorirealer_26: -782874547
+      odorirealer_27: -32826770
+      odorirealer_28: 24538308
+      odorirealer_29: -853206793
+      odorirealer_3: 809728210
+      odorirealer_30: 1312300033
+      odorirealer_31: -1232513858
+      odorirealer_32: -67707932
+      odorirealer_33: 1144040270
+      odorirealer_34: -1296328193
+      odorirealer_35: 1611421196
+      odorirealer_36: -2067033859
+      odorirealer_37: -885974630
+      odorirealer_38: -1091521893
+      odorirealer_39: 41202629
+      odorirealer_4: -1121308261
+      odorirealer_40: -1226938298
+      odorirealer_41: -316881057
+      odorirealer_42: 1321638583
+      odorirealer_43: 166256416
+      odorirealer_44: -1457569145
+      odorirealer_45: 1646234065
+      odorirealer_46: -247762037
+      odorirealer_47: 99016532
+      odorirealer_48: -110895297
+      odorirealer_49: 641401700
+      odorirealer_5: -1986739490
+      odorirealer_50: 1683455665
+      odorirealer_51: 1295713739
+      odorirealer_52: 298872923
+      odorirealer_53: -1991869583
+      odorirealer_54: -376430790
+      odorirealer_55: -897569306
+      odorirealer_56: -1987970028
+      odorirealer_57: 2101681720
+      odorirealer_58: 26339685
+      odorirealer_59: 201869160
+      odorirealer_6: 243241535
+      odorirealer_60: -672377902
+      odorirealer_61: 1848113155
+      odorirealer_62: -133654565
+      odorirealer_63: -1896608834
+      odorirealer_64: 316073964
+      odorirealer_65: 511121311
+      odorirealer_66: 1131404038
+      odorirealer_67: -1709071441
+      odorirealer_68: 900297494
+      odorirealer_69: 1992882368
+      odorirealer_7: 896654669
+      odorirealer_70: 953668981
+      odorirealer_71: 1622933106
+      odorirealer_72: -175040334
+      odorirealer_73: -1932493960
+      odorirealer_74: -1370032051
+      odorirealer_75: 1624445935
+      odorirealer_76: 744632078
+      odorirealer_77: 190183636
+      odorirealer_78: -872176454
+      odorirealer_79: 100867005
+      odorirealer_8: -1401906153
+      odorirealer_80: 355924343
+      odorirealer_81: 676511886
+      odorirealer_82: 1140384862
+      odorirealer_83: 1560762038
+      odorirealer_84: 2037831101
+      odorirealer_85: -1537386746
+      odorirealer_86: 444249893
+      odorirealer_87: -1702806385
+      odorirealer_88: 750142574
+      odorirealer_89: -1574119256
+      odorirealer_9: -1765661611
+      odorirealer_90: 132912266
+      odorirealer_91: 1447068208
+      odorirealer_92: 949264994
+      odorirealer_93: 725272326
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

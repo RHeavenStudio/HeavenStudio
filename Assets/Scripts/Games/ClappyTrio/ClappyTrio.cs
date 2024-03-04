@@ -81,7 +81,6 @@ namespace HeavenStudio.Games
     public class ClappyTrio : Minigame
     {
         public int lionCount = 3;
-
         public List<GameObject> Lion;
 
         [SerializeField] private Sprite[] faces;

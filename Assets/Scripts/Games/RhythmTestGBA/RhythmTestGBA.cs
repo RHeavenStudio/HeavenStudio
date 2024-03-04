@@ -34,7 +34,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("rhythmTestGBA", "Rhythm Test (GBA) \n<color=#adadad>(Rhythm-kan Check)</color>", "ffffff", false, false, new List<GameAction>()
+            return new Minigame("rhythmTestGBA", "Rhythm Test (GBA) \n<color=#adadad>(Rhythm-kan Check)</color>", "2DD816", false, false, new List<GameAction>()
             {
 
                 new GameAction("countin", "Start Beeping")
@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("countdown", "Countdown")
                 {
-                    preFunction = delegate {RhythmTestGBA.instance.PreCountDown(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["val1"]);},
+                    function = delegate {RhythmTestGBA.instance.PreCountDown(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["val1"]);},
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -220,7 +220,7 @@ namespace HeavenStudio.Games
                         {
                             new BeatAction.Action(beat + i, delegate
                         {
-                            flashAnimator.Play("KTBPulse", 0, 0);
+                            PlayFlashFX();
                             SoundByte.PlayOneShotGame("rhythmTestGBA/blip");
                 
                         })
@@ -230,7 +230,12 @@ namespace HeavenStudio.Games
             }
         }
 
-
+        public void PlayFlashFX()
+        {
+            numberAnimator.Play("Idle");
+            numberBGAnimator.Play("Idle");
+            flashAnimator.Play("KTBPulse", 0 ,0);
+        }
 
 
 
@@ -269,11 +274,11 @@ namespace HeavenStudio.Games
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 
-                new BeatAction.Action(beat, delegate {flashAnimator.Play("KTBPulse");}),  
+                new BeatAction.Action(beat, delegate {PlayFlashFX();}),  
                 
-                new BeatAction.Action(beat+1, delegate {flashAnimator.Play("KTBPulse");}),                      
+                new BeatAction.Action(beat+1, delegate {PlayFlashFX();}),                      
   
-                new BeatAction.Action(beat+2, delegate {flashAnimator.Play("KTBPulse");}),  
+                new BeatAction.Action(beat+2, delegate {PlayFlashFX();}),  
 
                 new BeatAction.Action(beat+3, delegate { SoundByte.PlayOneShotGame("rhythmTestGBA/end_ding", beat: beat, forcePlay: true);})
 
@@ -294,14 +299,14 @@ namespace HeavenStudio.Games
         public void StopKeepbeatInput(double beat)
         {
             ScheduleInput(beat, 0f, InputAction_BasicPress, ButtonSuccess, ButtonFailure, ButtonEmpty);
-            flashAnimator.Play("KTBPulse");
+            PlayFlashFX();
         }
 
         public override void OnBeatPulse(double beat)
         {
             if (goBeep)
             {
-                flashAnimator.Play("KTBPulse");
+                PlayFlashFX();
                 SoundByte.PlayOneShotGame("rhythmTestGBA/blip");
             }
             
