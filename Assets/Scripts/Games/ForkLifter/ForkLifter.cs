@@ -178,61 +178,48 @@ namespace HeavenStudio.Games
             fo.SetActive(true);
         }
 
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart = Color.white; //obviously put to the default color of the game
-        private Color colorEnd = Color.white;
-        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
-
-        private double colorStartBeatGrad = -1;
-        private float colorLengthGrad = 0f;
-        private Color colorStartGrad = Color.white; //obviously put to the default color of the game
-        private Color colorEndGrad = Color.white;
-        private Util.EasingFunction.Ease colorEaseGrad; //putting Util in case this game is using jukebox
+        private ColorEase bgColorEase = new();
+        private ColorEase gradColorEase = new();
 
         //call this in update
         private void BackgroundColorUpdate()
         {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
+            bg.color =
+            viewerCircle.color =
+            handShadow.color = bgColorEase.GetColor();
 
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            bg.color = new Color(newR, newG, newB);
-            viewerCircle.color = new Color(newR, newG, newB);
-            handShadow.color = new Color(newR, newG, newB);
-
-            float normalizedBeatGrad = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeatGrad, colorLengthGrad));
-
-            var funcGrad = Util.EasingFunction.GetEasingFunction(colorEaseGrad);
-
-            float newRGrad = funcGrad(colorStartGrad.r, colorEndGrad.r, normalizedBeatGrad);
-            float newGGrad = funcGrad(colorStartGrad.g, colorEndGrad.g, normalizedBeatGrad);
-            float newBGrad = funcGrad(colorStartGrad.b, colorEndGrad.b, normalizedBeatGrad);
-
-            bgGradient.color = new Color(newRGrad, newGGrad, newBGrad);
-            playerShadow.color = new Color(newRGrad, newGGrad, newBGrad);
+            bgGradient.color =
+            playerShadow.color = gradColorEase.GetColor();
         }
 
-        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            colorStartBeat = beat;
-            colorLength = length;
-            colorStart = colorStartSet;
-            colorEnd = colorEndSet;
-            colorEase = (Util.EasingFunction.Ease)ease;
+            bgColorEase = new ColorEase(beat, length, startColor, endColor, ease);
         }
 
-        public void BackgroundColorGrad(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        public void BackgroundColorGrad(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            colorStartBeatGrad = beat;
-            colorLengthGrad = length;
-            colorStartGrad = colorStartSet;
-            colorEndGrad = colorEndSet;
-            colorEaseGrad = (Util.EasingFunction.Ease)ease;
+            gradColorEase = new ColorEase(beat, length, startColor, endColor, ease);
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("forkLifter", new string[] { "color" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["start"], lastEvent["end"], lastEvent["ease"]);
+            }
+
+            var allEventsBeforeBeatGrad = EventCaller.GetAllInGameManagerList("forkLifter", new string[] { "colorGrad" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeatGrad.Count > 0)
+            {
+                allEventsBeforeBeatGrad.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEventGrad = allEventsBeforeBeatGrad[^1];
+                BackgroundColorGrad(lastEventGrad.beat, lastEventGrad.length, lastEventGrad["start"], lastEventGrad["end"], lastEventGrad["ease"]);
+            }
         }
     }
 }

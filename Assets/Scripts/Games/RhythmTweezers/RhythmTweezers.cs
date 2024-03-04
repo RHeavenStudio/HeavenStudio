@@ -184,15 +184,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private static Color _defaultBgColor;
-        public static Color defaultBgColor
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#A14FA1", out _defaultBgColor);
-                return _defaultBgColor;
-            }
-        }
+        public static Color defaultBgColor = new(0.631f, 0.31f, 0.631f);
 
         public static RhythmTweezers instance { get; set; }
         private static CallAndResponseHandler crHandlerInstance;
@@ -241,8 +233,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            colorStart = defaultBgColor;
-            colorEnd = defaultBgColor;
             if (crHandlerInstance != null && crHandlerInstance.queuedEvents.Count > 0)
             {
                 foreach (var crEvent in crHandlerInstance.queuedEvents)
@@ -537,45 +527,22 @@ namespace HeavenStudio.Games
             VegetableDupe.color = newColor;
         }
 
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart = Color.white; //obviously put to the default color of the game
-        private Color colorEnd = Color.white;
-        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+        private ColorEase bgColorEase = new(defaultBgColor);
 
-        //call this in update
-        private void BackgroundColorUpdate()
+        public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
-
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            bg.color = new Color(newR, newG, newB);
-        }
-
-        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
-        {
-            colorStartBeat = beat;
-            colorLength = length;
-            colorStart = colorStartSet;
-            colorEnd = colorEndSet;
-            colorEase = (Util.EasingFunction.Ease)ease;
+            bgColorEase = new(beat, length, startColor, endColor, ease);
         }
 
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)
         private void PersistBlocks(double beat)
         {
             var allEventsBeforeBeat = GameManager.instance.Beatmap.Entities.FindAll(x => x.datamodel.Split('/')[0] == "rhythmTweezers" && x.beat < beat);
-            var allColorEventsBeforeBeat = allEventsBeforeBeat.FindAll(x => x.datamodel == "rhythmTweezers/fade background color");
-            if (allColorEventsBeforeBeat.Count > 0)
+            var lastColorEvent = allEventsBeforeBeat.FindLast(x => x.datamodel == "rhythmTweezers/fade background color");
+            if (lastColorEvent != null)
             {
-                allColorEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allColorEventsBeforeBeat[^1];
-                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorA"], lastEvent["colorB"], lastEvent["ease"]);
+                var e = lastColorEvent;
+                BackgroundColor(e.beat, e.length, e["colorA"], e["colorB"], e["ease"]);
             }
             var allAltFaceEventsBeforeBeat = allEventsBeforeBeat.FindAll(x => x.datamodel == "rhythmTweezers/altSmile");
             VegetableAnimator.SetBool("UseAltSmile", allAltFaceEventsBeforeBeat.Count % 2 == 1);
@@ -627,7 +594,7 @@ namespace HeavenStudio.Games
                 }
             }
 
-            BackgroundColorUpdate();
+            bg.color = bgColorEase.GetColor();
         }
 
         public override void OnGameSwitch(double beat)
