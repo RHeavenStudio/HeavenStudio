@@ -13,6 +13,16 @@ namespace HeavenStudio
 
             Minigames.Minigame game;
 
+            game = NtrAirboarderLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader NtrAirboarderLoader failed!");
+            }
+
             game = RvlBadmintonLoader.AddGame(eventCaller);
             if (game != null)
             {
