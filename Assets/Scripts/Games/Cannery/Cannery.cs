@@ -175,7 +175,7 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             List<RiqEntity> events = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] == "cannery");
-            List<RiqEntity> cans = events.FindAll(e => e.datamodel == "cannery/can" && beat > e.beat && beat < e.beat + 1);
+            List<RiqEntity> cans = events.FindAll(e => e.datamodel == "cannery/can" && beat > e.beat - 2 && beat < e.beat + 1);
             foreach (var can in cans) {
                 SendCan(can.beat);
             }
@@ -189,7 +189,7 @@ namespace HeavenStudio.Games
             }
             RiqEntity bgEvent = events.FindLast(e => e.datamodel == "cannery/backgroundModifiers" && e.beat < beat);
             if (bgEvent != null) {
-                var e = alarmEvent;
+                var e = bgEvent;
                 BackgroundModifiers(e.beat, e.length, e["startSpeed"], e["endSpeed"], e["ease"]);
             } else {
                 BackgroundModifiers(0, 0, 10, 10, (int)Util.EasingFunction.Ease.Instant);
