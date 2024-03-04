@@ -42,11 +42,12 @@ namespace HeavenStudio.Games.Scripts_Airboarder
 
         public void CueDuck(double duckBeat)
         {
-            game.wantsCrouch = false;
+            
             game.ScheduleInput(duckBeat, 3f, Minigame.InputAction_BasicPress, DuckSuccess, DuckMiss, DuckEmpty);
             BeatAction.New(game, new List<BeatAction.Action>() {
                 
                 new BeatAction.Action(duckBeat, delegate {
+                    game.wantsCrouch = false;
                     game.cpu1CantBop = true;
                     game.CPU1.DoScaledAnimationAsync("letsgo", 1f, 0, 1);
                     } ),  
@@ -73,12 +74,11 @@ namespace HeavenStudio.Games.Scripts_Airboarder
 
         public void CueCrouch(double crouchBeat)
         {
-            game.wantsCrouch = true;
-            game.ScheduleInput(crouchBeat, 3f, Minigame.InputAction_BasicPress, CrouchSuccess, CrouchMiss, CrouchEmpty);
-
             
+            game.ScheduleInput(crouchBeat, 3f, Minigame.InputAction_BasicPress, CrouchSuccess, CrouchMiss, CrouchEmpty);
             BeatAction.New(game, new List<BeatAction.Action>() {
                 new BeatAction.Action(crouchBeat, delegate {
+                    game.wantsCrouch = true;
                     game.cpu1CantBop = true;
                     game.CPU1.DoScaledAnimationAsync("letsgo", 1f, 0, 1);
                     }),

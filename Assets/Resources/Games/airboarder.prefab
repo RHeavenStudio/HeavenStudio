@@ -317,11 +317,14 @@ MonoBehaviour:
   SoundSequences: []
   scheduledInputs: []
   wantsCrouch: 0
+  bgMaterial: {fileID: 2100000, guid: d308d6053cbc091489ae82391d36d476, type: 2}
+  floorMaterial: {fileID: 2100000, guid: 5c5aa636b730eba44b9a80ea76a7bc4e, type: 2}
   cameraPivot: {fileID: 2677427256397037315}
   cameraPos: {fileID: 2677427256397037315}
   cameraFOV: 25
   archBasic: {fileID: 6590728124445756167}
   wallBasic: {fileID: 4600485667161481742}
+  floor: {fileID: 6175185380924501080}
   CPU1: {fileID: 1975474441940497211}
   CPU2: {fileID: 1643307588540728724}
   Player: {fileID: 4556547465341807253}
@@ -2264,6 +2267,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: floor_model
       objectReference: {fileID: 0}
+    - target: {fileID: 5521721997653780584, guid: ddff1c9d4886fd746bbd2b69bf51f546, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5521721997653780584, guid: ddff1c9d4886fd746bbd2b69bf51f546, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5c5aa636b730eba44b9a80ea76a7bc4e, type: 2}
+    - target: {fileID: 5521721997653780584, guid: ddff1c9d4886fd746bbd2b69bf51f546, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5c5aa636b730eba44b9a80ea76a7bc4e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ddff1c9d4886fd746bbd2b69bf51f546, type: 3}
 --- !u!1 &6175185380924501080 stripped
@@ -2290,8 +2305,7 @@ SkinnedMeshRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 189d3cb852c97e347a22ac98acecf531, type: 2}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2345,21 +2359,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2801103463188715858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6175185380924501080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 801f20123d7ca1a4ebbf7aa1d9de53f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scrollSpeedX: 1
-  scrollSpeedY: 0
-  game: {fileID: 0}
 --- !u!4 &6843636135936194274 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ddff1c9d4886fd746bbd2b69bf51f546, type: 3}

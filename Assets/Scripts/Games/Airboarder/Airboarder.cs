@@ -101,6 +101,20 @@ namespace HeavenStudio.Games.Loaders
                     }
                 },
 
+                new GameAction("fade background", "Background Color")
+                {
+                    function = delegate {Airboarder.instance.BackgroundColor(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["colorStart"], eventCaller.currentEntity["colorEnd"], eventCaller.currentEntity["ease"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorStart", Color.white, "Start Color", "Set the color at the start of the event."),
+                        new Param("colorEnd", Airboarder.defaultBGColor, "End Color", "Set the color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
+                    }
+                },
+
+
                 new GameAction("camera", "Camera Controls")
                 {
                     function = delegate {
@@ -118,6 +132,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("additive", true, "Additive Rotation", "Toggle if the above rotation should be added to the current angle instead of setting the target angle to travel to.")
                     }
                 },
+                
 
 
             },
@@ -145,7 +160,12 @@ namespace HeavenStudio.Games
 
         public static Airboarder instance;
 
+        public static Color defaultBGColor = new Color(0.9921569f, 0.7686275f, 0.9921569f);
+
         public bool wantsCrouch;
+        [Header("Materials")]
+        [SerializeField] private Material bgMaterial;
+        [SerializeField] private Material[] floorMaterial;
         
         [Header("Camera")]
         [SerializeField] Transform cameraPivot;
@@ -155,6 +175,7 @@ namespace HeavenStudio.Games
         [Header("Objects")]
         [SerializeField] Arch archBasic;
         [SerializeField] Wall wallBasic;
+        [SerializeField] GameObject floor;
 
         [Header("Animators")]
         [SerializeField] public Animator CPU1;
@@ -190,10 +211,12 @@ namespace HeavenStudio.Games
             GameCamera.AdditionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
             GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
             GameCamera.AdditionalFoV = cameraFOV;
+            
         }
 
         public override void OnGameSwitch(double beat)
         {
+            
             List<BeatAction.Action> actions = new()
             {};
             wantsCrouch = false;
@@ -228,12 +251,14 @@ namespace HeavenStudio.Games
                     wallBasic.CueJump(e.beat);
                     break;
                 }
-                }             
+                }         
+            PersistColor (beat);
         }
 
         private void Start()
         {
             EntityPreCheck(Conductor.instance.songPositionInBeatsAsDouble);
+            bgMaterial.color = defaultBGColor;
         }
 
         void EntityPreCheck(double beat)
@@ -289,6 +314,7 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
             var currentBeat = cond.songPositionInBeatsAsDouble;
+            BackgroundColorUpdate();
             
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 5f);
 
@@ -339,7 +365,30 @@ namespace HeavenStudio.Games
 
         }
 
+        private ColorEase bgColorEase = new();
 
+        //call this in update
+        private void BackgroundColorUpdate()
+        {
+            bgMaterial.color = bgColorEase.GetColor();
+        
+        }
+        public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
+        {
+            bgColorEase = new(beat, length, startColor, endColor, ease);
+        }
+        
+
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("airboarder", new string[] { "fade background" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorStart"], lastEvent["colorEnd"], lastEvent["ease"]);
+            }
+        }
 
         public void ForceCharge()
         {
