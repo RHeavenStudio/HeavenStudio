@@ -428,6 +428,67 @@ namespace HeavenStudio.Games
 
         #endregion
 
+        #region Color
+
+        // truly a moment in history. documentation in heaven studio :)
+        public class ColorEase
+        {
+            /// <summary>
+            /// Gets the eased color from the variables inside a <c>ColorEase</c>. <br/>
+            /// Use this in <c>Update()</c>.
+            /// </summary>
+            /// <returns>A new color, based on <c>startColor</c> and <c>endColor</c>.</returns>
+            public Color GetColor() => MakeNewColor(startBeat, length, startColor, endColor, easeFunc);
+            public static Color MakeNewColor(double beat, float length, Color start, Color end, Util.EasingFunction.Function func)
+            {
+                if (length != 0) {
+                    float normalizedBeat = length == 0 ? 1 : Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(beat, length));
+
+                    float newR = func(start.r, end.r, normalizedBeat);
+                    float newG = func(start.g, end.g, normalizedBeat);
+                    float newB = func(start.b, end.b, normalizedBeat);
+                    return new Color(newR, newG, newB);
+                } else {
+                    return end;
+                }
+            }
+
+            public double startBeat = 0;
+            public float length = 0;
+            public Color startColor, endColor = Color.white;
+            public Util.EasingFunction.Ease ease = Util.EasingFunction.Ease.Instant;
+            public readonly Util.EasingFunction.Function easeFunc;
+
+            /// <summary>
+            /// The constructor to use when constructing a ColorEase from a block.
+            /// </summary>
+            /// <param name="startBeat">The start beat of the ease.</param>
+            /// <param name="length">The length of the ease.</param>
+            /// <param name="startColor">The beginning color of the ease.</param>
+            /// <param name="endColor">The end color of the ease.</param>
+            /// <param name="ease">
+            /// The ease to use to transition between <paramref name="startColor"/> and <paramref name="endColor"/>.<br/>
+            /// Should be derived from <c>Util.EasingFunction.Ease</c>,
+            /// </param>
+            public ColorEase(double startBeat, float length, Color startColor, Color endColor, int ease) {
+                this.startBeat = startBeat;
+                this.length = length;
+                (this.startColor, this.endColor) = (startColor, endColor);
+                this.ease = (Util.EasingFunction.Ease)ease;
+                this.easeFunc = Util.EasingFunction.GetEasingFunction(this.ease);
+            }
+            
+            /// <summary>
+            /// The constructor to use when initializing the ColorEase variable.
+            /// </summary>
+            /// <param name="defaultColor">The default color to initialize with.</param>
+            public ColorEase(Color? defaultColor = null) {
+                startColor = endColor = defaultColor ?? Color.white;
+                easeFunc = Util.EasingFunction.Instant;
+            }
+        }
+        #endregion
+
         private void OnDestroy()
         {
             foreach (var evt in scheduledInputs)
