@@ -36,7 +36,6 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         }
         private void AwakeAnim()
         {
-            Debug.Log(sweetType);
             switch(sweetType)
             {
                 case sweetsType.Pudding:

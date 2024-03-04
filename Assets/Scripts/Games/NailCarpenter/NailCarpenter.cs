@@ -16,21 +16,25 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("puddingNail", "Pudding Nail")
                 {
+                    function = delegate {NailCarpenter.instance.PlaySound();},
                     defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("cherryNail", "Cherry Nail")
                 {
+                    function = delegate {NailCarpenter.instance.PlaySound();},
                     defaultLength = 2f,
                     resizable = true
                 },
                 new GameAction("cakeNail", "Cake Nail")
                 {
+                    function = delegate {NailCarpenter.instance.PlaySound();},
                     defaultLength = 2f,
                     resizable = true
                 },
                 new GameAction("cakeLongNail", "Cake Long Nail")
                 {
+                    function = delegate {NailCarpenter.instance.PlaySound();},
                     defaultLength = 2f,
                     resizable = true
                 },
@@ -187,7 +191,6 @@ namespace HeavenStudio.Games
             List<RiqEntity> cakeNailEvents = entities.FindAll(v => v.datamodel == "nailCarpenter/cakeNail");
             List<RiqEntity> cklNailEvents = entities.FindAll(v => v.datamodel == "nailCarpenter/cakeLongNail");
 
-            var sounds = new List<MultiSound.Sound>(){};
             var cherryTargetBeats = new List<double>(){};
 
             // Spawn cake and nail.
@@ -307,10 +310,6 @@ namespace HeavenStudio.Games
                     }
                 }
             }
-
-            if (sounds.Count > 0) {
-                MultiSound.Play(sounds.ToArray(), forcePlay: true);
-            }
         }
 
         public override void OnPlay(double beat)
@@ -386,6 +385,19 @@ namespace HeavenStudio.Games
             }
         }
         return false;
+        }
+
+        // MultiSound.Play may not work in OnPlay (OnGameSwitch?), so I play the audio using an alternative method.
+        List<MultiSound.Sound> sounds = new List<MultiSound.Sound>(){};
+        bool isPlayed = false;
+        public void PlaySound()
+        {
+            if (isPlayed) return;
+            if (sounds.Count > 0) {
+                MultiSound.Play(sounds.ToArray());
+                isPlayed = true;
+                sounds = null;
+            }
         }
 
     }
