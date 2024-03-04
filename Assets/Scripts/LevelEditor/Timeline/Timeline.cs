@@ -888,23 +888,18 @@ namespace HeavenStudio.Editor.Track
                     {
                         for (int i = 0; i < ep.Count; i++)
                         {
-                            object returnVal = ep[i].parameter;
+                            object returnVal = ep[i].parameter switch {
+                                EntityTypes.Integer intVal => intVal.val,
+                                EntityTypes.Float floatVal => floatVal.val,
+                                EntityTypes.Button buttonVal => buttonVal.defaultLabel,
+                                EntityTypes.Dropdown ddVal => new EntityTypes.DropdownObj(ddVal),
+                                _ => ep[i].parameter,
+                            };
 
-                            var propertyType = returnVal.GetType();
-                            if (propertyType == typeof(EntityTypes.Integer))
-                            {
-                                returnVal = ((EntityTypes.Integer)ep[i].parameter).val;
-                            }
-                            else if (propertyType == typeof(EntityTypes.Float))
-                            {
-                                returnVal = ((EntityTypes.Float)ep[i].parameter).val;
-                            }
-                            else if (propertyType.IsEnum)
-                            {
+                            if (returnVal.GetType().IsEnum) {
                                 returnVal = (int)ep[i].parameter;
                             }
 
-                            //tempEntity[ep[i].propertyName] = returnVal;
                             tempEntity.CreateProperty(ep[i].propertyName, returnVal);
                         }
                     }
@@ -956,7 +951,14 @@ namespace HeavenStudio.Editor.Track
 
             foreach (RiqEntity entity in original)
             {
-                CopiedEntities.Add(entity.DeepCopy());
+                var newEntity = entity.DeepCopy();
+                // there's gotta be a better way to do this. i just don't know how... -AJ
+                foreach ((var key, var value) in new Dictionary<string, dynamic>(newEntity.dynamicData)) {
+                    if (value is EntityTypes.DropdownObj dd) {
+                        newEntity[key] = new EntityTypes.DropdownObj(dd.value, dd.Values);
+                    }
+                }
+                CopiedEntities.Add(newEntity);
             }
         }
 

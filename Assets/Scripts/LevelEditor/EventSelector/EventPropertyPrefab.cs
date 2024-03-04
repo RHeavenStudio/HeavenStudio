@@ -6,8 +6,6 @@ using System;
 using System.Linq;
 using TMPro;
 
-
-using HeavenStudio.Util;
 using Jukebox;
 
 namespace HeavenStudio.Editor
@@ -17,29 +15,30 @@ namespace HeavenStudio.Editor
         public TMP_Text caption;
         protected string _captionText;
         public EventParameterManager parameterManager;
+        public RiqEntity entity;
         public string propertyName;
         public List<PropertyCollapse> propertyCollapses = new List<PropertyCollapse>();
 
-        public void SetProperties(string propertyName, object type, string caption) {}
-        public virtual void SetCollapses(object type) { }
-
-        public void InitProperties(string propertyName, string caption)
+        public virtual void SetProperties(string propertyName, object type, string caption)
         {
             this.parameterManager = EventParameterManager.instance;
+
+            entity = parameterManager.entity;
             this.propertyName = propertyName;
-
-            _captionText = caption;
-
-            this.caption.text = _captionText;
+            this.caption.text = _captionText = caption;
         }
+        public virtual void SetCollapses(object type) { }
 
         public void UpdateCollapse(object type)
         {
             foreach (var p in propertyCollapses)
             {
-                foreach (var c in p.collapseables)
-                {
-                    if (c != null) c.SetActive(p.collapseOn(type, p.entity) && gameObject.activeSelf);
+                if (p.collapseables.Count > 0) { // there could be a better way to do it, but for now this works
+                    foreach (var c in p.collapseables) {
+                        if (c != null) c.SetActive(p.collapseOn(type, p.entity) && gameObject.activeSelf);
+                    }
+                } else {
+                    _ = p.collapseOn(type, p.entity);
                 }
             }
         }
