@@ -273,7 +273,6 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader NtrBackbeatLoader failed!");
             }
 
-            Debug.Log("Running game loader CtrLumBEARjackLoader");
             game = CtrLumBEARjackLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -284,8 +283,6 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader CtrLumBEARjackLoader failed!");
             }
 
-            Debug.Log("Running game loader AgbMannequinFactoryLoader");
-          
             game = AgbMannequinFactoryLoader.AddGame(eventCaller);
             if (game != null)
             {

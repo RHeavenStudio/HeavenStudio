@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
-using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_LumBEARjack
 {
