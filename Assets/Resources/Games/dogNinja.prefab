@@ -97,17 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ac06902fd6630045a550c76211fcc63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 119991411479083905}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
+  game: {fileID: 4542966729274958099}
   startBeat: 0
   type: 0
   fromLeft: 0
@@ -115,7 +105,8 @@ MonoBehaviour:
   direction: 0
   sfxNum: 
   curve: {fileID: 0}
-  barelyCurve: {fileID: 0}
+  LeftCurve: {fileID: 2592536718110886033}
+  RightCurve: {fileID: 8538313959133990924}
   BarelyLeftCurve: {fileID: 5959598018215963193}
   BarelyRightCurve: {fileID: 4156529297438955755}
   HalvesLeftBase: {fileID: 8462363345267808632}
@@ -544,17 +535,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3ef60f47c093b45a623a707f33c877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 0}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
   startBeat: 0
   objPos: {x: 0, y: 0, z: 0}
   lefty: 0
@@ -1695,9 +1675,7 @@ MonoBehaviour:
         looping: 0
         offset: 0
         parameters: []
-  EligibleHits: []
   scheduledInputs: []
-  firstEnable: 0
   DogAnim: {fileID: 1770250701376598399}
   BirdAnim: {fileID: 4964290445827434540}
   ObjectBase: {fileID: 119991411479083905}
@@ -1728,6 +1706,8 @@ MonoBehaviour:
   - {fileID: 2196219148037962045, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
   - {fileID: -6292424158522327523, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
   - {fileID: 2053246660185171032, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  queuePrepare: 0
+  preparing: 0
 --- !u!1 &3156757135167865752
 GameObject:
   m_ObjectHideFlags: 0
@@ -4165,17 +4145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3ef60f47c093b45a623a707f33c877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 0}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
   startBeat: 0
   objPos: {x: 0, y: 0, z: 0}
   lefty: 1
@@ -4730,15 +4699,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 0
   m_isCullingEnabled: 0

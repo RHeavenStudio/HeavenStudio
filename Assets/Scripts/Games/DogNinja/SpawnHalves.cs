@@ -4,7 +4,6 @@ using System;
 using UnityEngine;
 using NaughtyBezierCurves;
 
-using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DogNinja
 {
@@ -25,11 +24,9 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         BezierCurve3D curve;
         [SerializeField] Transform halvesParent;
 
-        private DogNinja game;
         
         private void Awake()
         {
-            game = DogNinja.instance;
             bpmModifier = Conductor.instance.songBpm / 100;
             songPos = Conductor.instance.songPositionInBeatsAsDouble;
         }
@@ -41,9 +38,10 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Update()
         {
+            // holy shit
             float flyPosHalves = (Conductor.instance.GetPositionFromBeat(songPos, 3f)*(Conductor.instance.GetPositionFromBeat(songPos, 2f)))+Conductor.instance.GetPositionFromBeat(songPos, 1f);
-            flyPosHalves = (flyPosHalves*0.2f)+0.35f;
-            transform.position = curve.GetPoint(flyPosHalves)+objPos;
+            flyPosHalves = (flyPosHalves * 0.2f) + 0.35f;
+            transform.position = curve.GetPoint(flyPosHalves) + objPos;
 
             float rot = rotSpeed;
             rot *= lefty ? bpmModifier : -1 * bpmModifier;
@@ -51,12 +49,12 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
             // clean-up logic
             if (flyPosHalves > 1f) {
-                GameObject.Destroy(gameObject);
+                Destroy(gameObject);
             };
             
             if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) 
                 || GameManager.instance.currentGame != "dogNinja") {
-                GameObject.Destroy(gameObject);
+                Destroy(gameObject);
             };
         }
     }
