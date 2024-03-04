@@ -34,7 +34,7 @@ namespace HeavenStudio.Games.Scripts_Cannery
             SoundByte.PlayOneShotGame("cannery/can");
             anim.DoScaledAnimationAsync("Can", 0.5f, 0, 1);
             if (state is >= 1 or <= -1) {
-                SoundByte.PlayOneShot("nearMiss");
+                SoundByte.PlayOneShot("miss");
                 game.cannerAnim.DoScaledAnimationAsync("CanBarely", 0.5f);
                 double beat = caller.startBeat + caller.timer;
                 BeatAction.New(this, new() {

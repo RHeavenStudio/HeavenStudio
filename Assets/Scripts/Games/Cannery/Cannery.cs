@@ -47,6 +47,24 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 0.5f,
                 },
+                new GameAction("backgroundModifiers", "Background Modifiers")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out Cannery instance)) {
+                            instance.BackgroundModifiers(e.beat, e.length, e["startSpeed"], e["endSpeed"], e["ease"]);
+                        }
+                    },
+                    defaultLength = 0.5f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        // new Param("speed", new EntityTypes.Float(0, 50, 10), "Speed", "Set the speed of the background."),
+                        new Param("startSpeed", new EntityTypes.Float(0, 50, 10), "Start Speed", "Set the speed at the start of the event."),
+                        new Param("endSpeed",   new EntityTypes.Float(0, 50, 10), "End Speed",   "Set the speed at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Instant, "Ease", "Set the easing of the action.", new() { new((x, _) => (int)x == (int)Util.EasingFunction.Ease.Instant, "startSpeed") }),
+                    }
+                },
                 new GameAction("alarmColor", "Alarm Color")
                 {
                     function = delegate {
@@ -56,18 +74,18 @@ namespace HeavenStudio.Games.Loaders
                         }
                     },
                     defaultLength = 0.5f,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("startColor", Cannery.alarmColor , "Start Color", "Set the color at the start of the event.", new() { new((_, _) => true, new string[] { "startColor" }) }),
+                        new Param("startColor", Cannery.alarmColor , "Start Color", "Set the color at the start of the event."),
                         new Param("endColor",   Cannery.alarmColor, "End Color",   "Set the color at the end of the event."),
-                        new Param("ease", Util.EasingFunction.Ease.Instant, "Ease", "Set the easing of the action."),
+                        new Param("ease", Util.EasingFunction.Ease.Instant, "Ease", "Set the easing of the action.", new() { new((x, _) => (int)x == (int)Util.EasingFunction.Ease.Instant, "startColor") }),
                     }
                 },
-            }
-            // ,
-            // new List<string>() { "mob", "normal" },
-            // "mobcannery", "en",
-            // new List<string>() { }
+            },
+            new List<string>() { "pco", "normal" },
+            "pcocannery", "en",
+            new List<string>() { }
             );
         }
     }
@@ -87,17 +105,26 @@ namespace HeavenStudio.Games
 
         [Header("Animators")]
         [SerializeField] Animator conveyorBeltAnim;
+        [SerializeField] Animator[] bgAnims;
         [SerializeField] Animator alarmAnim;
         public Animator dingAnim;
         public Animator cannerAnim;
 
         // private ColorEase bgColorEase = new(Color.white);
-        public static readonly Color alarmColor = new Color(0.8627f, 0.3725f, 0.0313f);
-        public double aStartBeat;
-        public float aLength;
-        public Color aStartColor, aEndColor;
-        public Util.EasingFunction.Ease aEase = Util.EasingFunction.Ease.Instant;
-        public Util.EasingFunction.Function aEaseFunc;
+        public float bgCurrentTime;
+        public float bgCurrentSpeed;
+        [NonSerialized] public double bgStartBeat;
+        [NonSerialized] public float bgLength;
+        [NonSerialized] public float bgStartSpeed, bgEndSpeed;
+        [NonSerialized] public Util.EasingFunction.Ease bgEase = Util.EasingFunction.Ease.Instant;
+        [NonSerialized] public Util.EasingFunction.Function bgEaseFunc;
+
+        [NonSerialized] public static readonly Color alarmColor = new Color(0.8627f, 0.3725f, 0.0313f);
+        [NonSerialized] public double aStartBeat;
+        [NonSerialized] public float aLength;
+        [NonSerialized] public Color aStartColor, aEndColor;
+        [NonSerialized] public Util.EasingFunction.Ease aEase = Util.EasingFunction.Ease.Instant;
+        [NonSerialized] public Util.EasingFunction.Function aEaseFunc;
 
         private bool alarmBop = true;
 
@@ -111,19 +138,32 @@ namespace HeavenStudio.Games
         {
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)) {
                 cannerAnim.DoScaledAnimationAsync("CanEmpty", 0.5f);
-                SoundByte.PlayOneShotGame("cannery/can");
+                // SoundByte.PlayOneShotGame("cannery/can");
                 SoundByte.PlayOneShot("nearMiss");
             }
             conveyorBeltAnim.DoNormalizedAnimation("Move", (conductor.songPositionInBeats / 2) % 1);
 
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(conductor.songPositionInBeatsAsDouble, aLength));
+            // bg stuff
+            float bgNormalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(bgStartBeat, bgLength));
+            if (!double.IsNaN(bgNormalizedBeat)) {
+                bgEaseFunc ??= Util.EasingFunction.GetEasingFunction(bgEase);
+                bgCurrentSpeed = bgEaseFunc(bgStartSpeed, bgEndSpeed, bgNormalizedBeat);
+            }
+
+            bgCurrentTime = (bgCurrentTime + (Time.deltaTime * (bgCurrentSpeed / 10))) % 1;
+            foreach (var anim in bgAnims) {
+                anim.DoNormalizedAnimation("Scroll", bgCurrentTime);
+            }
+
+            // alarm color stuff
+            float aNormalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(aStartBeat, aLength));
 
             Color newColor = alarmColor;
-            if (!double.IsNaN(normalizedBeat)) {
+            if (!double.IsNaN(aNormalizedBeat)) {
                 aEaseFunc ??= Util.EasingFunction.GetEasingFunction(aEase);
-                float newR = aEaseFunc(aStartColor.r, aEndColor.r, normalizedBeat);
-                float newG = aEaseFunc(aStartColor.g, aEndColor.g, normalizedBeat);
-                float newB = aEaseFunc(aStartColor.b, aEndColor.b, normalizedBeat);
+                float newR = aEaseFunc(aStartColor.r, aEndColor.r, aNormalizedBeat);
+                float newG = aEaseFunc(aStartColor.g, aEndColor.g, aNormalizedBeat);
+                float newB = aEaseFunc(aStartColor.b, aEndColor.b, aNormalizedBeat);
                 newColor = new Color(newR, newG, newB);
             }
 
@@ -147,6 +187,13 @@ namespace HeavenStudio.Games
             } else {
                 AlarmColor(0, 0, alarmColor, alarmColor, (int)Util.EasingFunction.Ease.Instant);
             }
+            RiqEntity bgEvent = events.FindLast(e => e.datamodel == "cannery/backgroundModifiers" && e.beat < beat);
+            if (bgEvent != null) {
+                var e = alarmEvent;
+                BackgroundModifiers(e.beat, e.length, e["startSpeed"], e["endSpeed"], e["ease"]);
+            } else {
+                BackgroundModifiers(0, 0, 10, 10, (int)Util.EasingFunction.Ease.Instant);
+            }
         }
 
         public override void OnLateBeatPulse(double beat)
@@ -168,16 +215,6 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void AlarmColor(double beat, float length, Color startColor, Color endColor, int ease)
-        {
-            aStartBeat = beat;
-            aLength = length;
-            aStartColor = startColor;
-            aEndColor = endColor;
-            aEase = (Util.EasingFunction.Ease)ease;
-            aEaseFunc = Util.EasingFunction.GetEasingFunction(aEase);
-        }
-
         public void SendCan(double beat)
         {
             // do the ding animation on the beat
@@ -191,6 +228,26 @@ namespace HeavenStudio.Games
         public void Blackout()
         {
             blackout.SetActive(!blackout.activeSelf);
+        }
+
+        public void BackgroundModifiers(double beat, float length, float startSpeed, float endSpeed, int ease)
+        {
+            bgStartBeat = beat;
+            bgLength = length;
+            bgStartSpeed = startSpeed;
+            bgEndSpeed = endSpeed;
+            bgEase = (Util.EasingFunction.Ease)ease;
+            bgEaseFunc = Util.EasingFunction.GetEasingFunction(bgEase);
+        }
+
+        public void AlarmColor(double beat, float length, Color startColor, Color endColor, int ease)
+        {
+            aStartBeat = beat;
+            aLength = length;
+            aStartColor = startColor;
+            aEndColor = endColor;
+            aEase = (Util.EasingFunction.Ease)ease;
+            aEaseFunc = Util.EasingFunction.GetEasingFunction(aEase);
         }
     }
 }

@@ -725,7 +725,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8615374414734561705}
-  - component: {fileID: 2491713825135125463}
   m_Layer: 0
   m_Name: Conveyor3Angle
   m_TagString: Untagged
@@ -749,27 +748,6 @@ Transform:
   m_Father: {fileID: 5813499711186931250}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 2.15}
---- !u!95 &2491713825135125463
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2659786308152561463}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 999ca577510d16e408d34fb24be911b8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2751657772362777455
 GameObject:
   m_ObjectHideFlags: 0
@@ -1115,7 +1093,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3578108882218100712}
-  - component: {fileID: 4980712815265515627}
   m_Layer: 0
   m_Name: Conveyor1Angle
   m_TagString: Untagged
@@ -1139,27 +1116,6 @@ Transform:
   m_Father: {fileID: 5813499711186931250}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 2}
---- !u!95 &4980712815265515627
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3428754964196628754}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 999ca577510d16e408d34fb24be911b8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3504642808999640427
 GameObject:
   m_ObjectHideFlags: 0
@@ -2330,7 +2286,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7301854396171564631}
-  - component: {fileID: 4489137636915631815}
   m_Layer: 0
   m_Name: Conveyor2Angle
   m_TagString: Untagged
@@ -2354,27 +2309,6 @@ Transform:
   m_Father: {fileID: 5813499711186931250}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -4.45}
---- !u!95 &4489137636915631815
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5698069872256704531}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 999ca577510d16e408d34fb24be911b8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5813499711186931251
 GameObject:
   m_ObjectHideFlags: 0
@@ -2437,14 +2371,15 @@ MonoBehaviour:
   alarmMat: {fileID: 2100000, guid: cffd715f1564d4440881c6fe148baa9c, type: 2}
   bgPlaneSR: {fileID: 0}
   conveyorBeltAnim: {fileID: 3839135881600344077}
+  bgAnims:
+  - {fileID: 1312871934097871502}
+  - {fileID: 1330445918762147576}
+  - {fileID: 7967578891305360991}
   alarmAnim: {fileID: 3637100343128600021}
   dingAnim: {fileID: 7386547292618809648}
   cannerAnim: {fileID: 7509521705116870356}
-  aStartBeat: 0
-  aLength: 0
-  aStartColor: {r: 0, g: 0, b: 0, a: 0}
-  aEndColor: {r: 0, g: 0, b: 0, a: 0}
-  aEase: 0
+  bgCurrentTime: 0
+  bgCurrentSpeed: 0
 --- !u!1 &5862740553224149703
 GameObject:
   m_ObjectHideFlags: 0
