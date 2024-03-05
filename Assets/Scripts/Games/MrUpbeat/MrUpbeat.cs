@@ -13,9 +13,9 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             RiqEntity BackgroundUpdater(string datamodel, RiqEntity e)
             {
-                if (datamodel == "mrUpbeat/changeBG" && e.dynamicData.ContainsKey("toggle"))
+                if (datamodel == "mrUpbeat/changeBG" && e.dynamicData.ContainsKey("toggle") && !e.dynamicData.ContainsKey("ease"))
                 {
-                    e.dynamicData.Add("ease", (int)(e["toggle"] ? Util.EasingFunction.Ease.Instant : Util.EasingFunction.Ease.Linear));
+                    e.CreateProperty("ease", (int)(e["toggle"] ? Util.EasingFunction.Ease.Instant : Util.EasingFunction.Ease.Linear));
                     e.dynamicData.Remove("toggle");
                     return e;
                 }
