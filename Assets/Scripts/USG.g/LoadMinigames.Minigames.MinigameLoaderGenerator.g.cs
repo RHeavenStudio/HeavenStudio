@@ -312,7 +312,6 @@ namespace HeavenStudio
             {
                 Debug.LogWarning("Game loader AgbQuizShowLoader failed!");
             }
-
             game = NtrPingpongLoader.AddGame(eventCaller);
             if (game != null)
             {
