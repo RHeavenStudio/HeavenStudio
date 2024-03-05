@@ -212,6 +212,7 @@ namespace HeavenStudio.Games
         }
 
         bool isInputting = false;
+        bool canPressWhiff = false;
         bool canBlastOff = false;
         bool playerSucceeded = false;
         bool fellTooFar = false;
@@ -515,10 +516,15 @@ namespace HeavenStudio.Games
             //update counting bubble
             bubbleText.text = ($"{Math.Clamp(Math.Ceiling(bubbleEndCount - Conductor.instance.songPositionInBeatsAsDouble - 1), 0, bubbleEndCount)}");
 
-            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && canPressWhiff)
             //player whiffs (press)
             {
                 isInputting = false; //stops the drums (just in case)
+                currentIsland.ChargerAnim.DoScaledAnimationAsync("Bounce", 0.5f);
+                SoundByte.PlayOneShotGame("chargingChicken/somen_catch", volume: 0.5f);
+                SoundByte.PlayOneShotGame("chargingChicken/somen_catch_old", volume: 0.3f);
+                SoundByte.PlayOneShot("miss");
+                ScoreMiss(0.5f);
             }
 
             if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !IsExpectingInputNow(InputAction_BasicRelease))
@@ -764,6 +770,7 @@ namespace HeavenStudio.Games
                 bubbleEndCount = beat + length;
                 if (lateness >= 2) SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_SET");
                 if (lateness >= 1) SpawnJourney(journeyBeat, yardsTextLength - 1);
+                canPressWhiff = true;
             }));
 
             //spawns the countdown bubble, allows stones to fall, resets the success anim killer
@@ -1004,6 +1011,8 @@ namespace HeavenStudio.Games
 
         public void BlastOff(float state = 0, bool missed = true)
         {
+            canPressWhiff = false;
+
             //sound
             isInputting = false; //ends the drums
             SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_START", volume: 0.7f);
@@ -1042,6 +1051,8 @@ namespace HeavenStudio.Games
 
             if(missed)
             {
+                ScoreMiss();
+
                 fellTooFar = false;
                 checkFallingDistance = true;
 
@@ -1053,10 +1064,10 @@ namespace HeavenStudio.Games
 
                 int stoneAdder = 0;
                 //make sure the chicken can't land on the island
-                if (nextIsland.journeyEnd <= 4 && nextIsland.journeyEnd > 2)  { nextIsland.journeyEnd += 2; currentIsland.journeyEnd += 2; stoneAdder =  2;  Debug.Log("oops 2"); }
-                if (nextIsland.journeyEnd <= 2 && nextIsland.journeyEnd > 0)  { nextIsland.journeyEnd += 4; currentIsland.journeyEnd += 4; stoneAdder =  4;  Debug.Log("oops 4"); }
-                if (nextIsland.journeyEnd <= 0 && nextIsland.journeyEnd > -2) { nextIsland.journeyEnd -= 4; currentIsland.journeyEnd -= 4; stoneAdder = -4; Debug.Log("oops -4"); }
-                if (nextIsland.journeyEnd <= -2 && nextIsland.journeyEnd > 4) { nextIsland.journeyEnd -= 2; currentIsland.journeyEnd -= 2; stoneAdder = -2; Debug.Log("oops -2"); }
+                if (nextIsland.journeyEnd <= 4 && nextIsland.journeyEnd > 2)  { nextIsland.journeyEnd += 2; currentIsland.journeyEnd += 2; stoneAdder =  2; }
+                if (nextIsland.journeyEnd <= 2 && nextIsland.journeyEnd > 0)  { nextIsland.journeyEnd += 4; currentIsland.journeyEnd += 4; stoneAdder =  4; }
+                if (nextIsland.journeyEnd <= 0 && nextIsland.journeyEnd > -2) { nextIsland.journeyEnd -= 4; currentIsland.journeyEnd -= 4; stoneAdder = -4; }
+                if (nextIsland.journeyEnd <= -2 && nextIsland.journeyEnd > 4) { nextIsland.journeyEnd -= 2; currentIsland.journeyEnd -= 2; stoneAdder = -2; }
 
                 foreach (var a in stonePlatformJourney)
                 {
@@ -1115,6 +1126,8 @@ namespace HeavenStudio.Games
 
         public void Uncharge()
         {
+            canPressWhiff = false;
+
             ChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
             currentIsland.ChargerAnim.DoScaledAnimationAsync("Idle", 0.5f);
 
@@ -1134,6 +1147,8 @@ namespace HeavenStudio.Games
         public void CollapseUnderPlayer()
         {
             if (isInputting) return;
+
+            canPressWhiff = false;
 
             currentIsland.PositionIsland(0);
             currentIsland.transform.localPosition = new Vector3(0, 0, 0);
@@ -1176,7 +1191,7 @@ namespace HeavenStudio.Games
             }
 
             //boom
-            SoundByte.PlayOneShotGame("chargingChicken/SE_NTR_ROBOT_EN_BAKUHATU_PITCH100", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
+            SoundByte.PlayOneShotGame("chargingChicken/SE_NTR_ROBOT_EN_BAKUHATU_PITCH100", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false));
 
             //erase text
             yardsTextIsEditable = false;
@@ -1195,11 +1210,13 @@ namespace HeavenStudio.Games
         {
             if (currentIsland == null) currentIsland = nextIsland;
 
+            canPressWhiff = false;
+
             //just in case
             isInputting = false;
 
             //boom
-            SoundByte.PlayOneShotGame("chargingChicken/SE_NTR_ROBOT_EN_BAKUHATU_PITCH100", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
+            SoundByte.PlayOneShotGame("chargingChicken/SE_NTR_ROBOT_EN_BAKUHATU_PITCH100", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false));
 
             //erase text
             yardsTextIsEditable = false;
