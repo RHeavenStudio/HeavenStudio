@@ -19,44 +19,44 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         {
             game = NailCarpenter.instance;
             
-            game.ScheduleInput(targetBeat, 0.5f, NailCarpenter.InputAction_AltFinish, HammmerJust, HammmerMiss, Empty);
+            game.ScheduleInput(targetBeat, 1f, NailCarpenter.InputAction_AltPress, HammmerJust, HammmerMiss, Empty);
             // wrongInput
-            game.ScheduleUserInput(targetBeat, 0.5f, NailCarpenter.InputAction_BasicPress, weakHammmerJust, Empty, Empty);
+            game.ScheduleUserInput(targetBeat, 1f, NailCarpenter.InputAction_BasicPress, weakHammmerJust, Empty, Empty);
         }
 
         private void HammmerJust(PlayerActionEvent caller, float state)
         {
-            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 0.5f);
+            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 1f);
             if (state >= 1f || state <= -1f)
             {
                 nailAnim.DoScaledAnimationAsync(
-                    (state >= 1f ? "longNailBendRight" : "longNailBendLeft"), 0.5f);
+                    (state >= 1f ? "longNailBendRight" : "longNailBendLeft"), 0.25f);
                 SoundByte.PlayOneShot("miss");
                 return;
             }
             SoundByte.PlayOneShotGame("nailCarpenter/HammerStrong");
-            nailAnim.DoScaledAnimationAsync("longNailHammered", 0.5f);
-            game.EyeAnim.DoScaledAnimationAsync("eyeSmile", 0.5f);
+            nailAnim.DoScaledAnimationAsync("longNailHammered", 0.25f);
+            game.EyeAnim.DoScaledAnimationAsync("eyeSmile", 0.25f);
         }
 
         private void weakHammmerJust(PlayerActionEvent caller, float state)
         {
             game.ScoreMiss();
-            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 0.5f);
+            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 0.25f);
             if (state >= 1f || state <= -1f)
             {
                 nailAnim.DoScaledAnimationAsync(
-                    (state >= 1f ? "longNailBendRight" : "longNailBendLeft"), 0.5f);
+                    (state >= 1f ? "longNailBendRight" : "longNailBendLeft"), 0.25f);
                 SoundByte.PlayOneShot("miss");
                 return;
             }
             SoundByte.PlayOneShotGame("nailCarpenter/HammerWeak");
-            nailAnim.DoScaledAnimationAsync("longNailWeakHammered", 0.5f);
+            nailAnim.DoScaledAnimationAsync("longNailWeakHammered", 0.25f);
         }
 
         private void HammmerMiss(PlayerActionEvent caller)
         {
-            game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.5f);
+            game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.25f);
         }
 
         private void Empty(PlayerActionEvent caller) { }

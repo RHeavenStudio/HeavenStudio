@@ -60,19 +60,19 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
             switch(sweetType)
             {
                 case sweetsType.Pudding:
-                    sweetAnim.DoScaledAnimationAsync("puddingBreak", 0.5f);
+                    sweetAnim.DoScaledAnimationAsync("puddingBreak", 0.25f);
                     break;
                 case sweetsType.CherryPudding:
-                    sweetAnim.DoScaledAnimationAsync("cherryPuddingBreak", 0.5f);
+                    sweetAnim.DoScaledAnimationAsync("cherryPuddingBreak", 0.25f);
                     break;
                 case sweetsType.ShortCake:
-                    sweetAnim.DoScaledAnimationAsync("shortCakeBreak", 0.5f);
+                    sweetAnim.DoScaledAnimationAsync("shortCakeBreak", 0.25f);
                     break;
                 case sweetsType.Cherry:
-                    sweetAnim.DoScaledAnimationAsync("cherryBreak", 0.5f);
+                    sweetAnim.DoScaledAnimationAsync("cherryBreak", 0.25f);
                     break;
                 case sweetsType.LayerCake:
-                    sweetAnim.DoScaledAnimationAsync("layerCakeBreak", 0.5f);
+                    sweetAnim.DoScaledAnimationAsync("layerCakeBreak", 0.25f);
                     break;
             }
         }
@@ -81,9 +81,9 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         {
             game.ScoreMiss();
             BreakAnim();
-            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 0.5f);
+            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 0.25f);
             SoundByte.PlayOneShot("miss");
-            game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.5f);
+            game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.25f);
         }
 
         private void Empty(PlayerActionEvent caller) { }

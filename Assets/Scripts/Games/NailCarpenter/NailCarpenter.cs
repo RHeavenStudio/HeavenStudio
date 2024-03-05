@@ -17,25 +17,25 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("puddingNail", "Pudding Nail")
                 {
                     function = delegate {NailCarpenter.instance.PlaySound();},
-                    defaultLength = 4f,
+                    defaultLength = 8f,
                     resizable = true
                 },
                 new GameAction("cherryNail", "Cherry Nail")
                 {
                     function = delegate {NailCarpenter.instance.PlaySound();},
-                    defaultLength = 2f,
+                    defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("cakeNail", "Cake Nail")
                 {
                     function = delegate {NailCarpenter.instance.PlaySound();},
-                    defaultLength = 2f,
+                    defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("cakeLongNail", "Cake Long Nail")
                 {
                     function = delegate {NailCarpenter.instance.PlaySound();},
-                    defaultLength = 2f,
+                    defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("slideFusuma", "Slide Fusuma")
@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Loaders
                         var e = eventCaller.currentEntity; 
                         NailCarpenter.instance.SlideFusuma(e.beat, e.length, e["fillRatio"], e["ease"], e["mute"]); 
                     },
-                    defaultLength = 0.5f,
+                    defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -80,7 +80,7 @@ namespace HeavenStudio.Games
         public Transform nailHolder;
         public Transform boardTrans;
         public Transform fusumaTrans;
-        const float nailDistance = -8f;
+        const float nailDistance = -4f;
         const float boardWidth = 19.2f;
         float scrollRate => nailDistance / (Conductor.instance.pitchedSecPerBeat * 2f);
 
@@ -101,7 +101,7 @@ namespace HeavenStudio.Games
         protected static bool IA_TouchAltPress(out double dt)
         {
             return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && instance.IsExpectingInputNow(InputAction_AltStart);
+                && instance.IsExpectingInputNow(InputAction_AltPress);
         }
 
         protected static bool IA_PadAltRelease(out double dt)
@@ -113,7 +113,7 @@ namespace HeavenStudio.Games
             return PlayerInput.GetSqueezeUp(out dt);
         }
 
-        public static PlayerInput.InputAction InputAction_AltStart =
+        public static PlayerInput.InputAction InputAction_AltPress =
             new("PcoNailAltStart", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
             IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
         public static PlayerInput.InputAction InputAction_AltFinish =
@@ -148,14 +148,14 @@ namespace HeavenStudio.Games
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
                 SoundByte.PlayOneShot("miss");
-                Carpenter.DoScaledAnimationAsync("carpenterHit", 0.5f);
+                Carpenter.DoScaledAnimationAsync("carpenterHit", 0.25f);
                 hasSlurped = false;
                 // ScoreMiss();
             }
-            if (PlayerInput.GetIsAction(InputAction_AltFinish) && !IsExpectingInputNow(InputAction_AltFinish))
+            if (PlayerInput.GetIsAction(InputAction_AltPress) && !IsExpectingInputNow(InputAction_AltPress))
             {
                 SoundByte.PlayOneShot("miss");
-                Carpenter.DoScaledAnimationAsync("carpenterHit", 0.5f);
+                Carpenter.DoScaledAnimationAsync("carpenterHit", 0.25f);
                 hasSlurped = false;
                 // ScoreMiss();
             }
@@ -200,11 +200,11 @@ namespace HeavenStudio.Games
 
                 // Only consider nailgie events that aren't past the start point.
                 if (startBeat <= nailBeat + nailLength) {
-                    int nailInEvent = Mathf.CeilToInt(nailLength + 1) / 2;
+                    int nailInEvent = Mathf.CeilToInt(nailLength + 2) / 4;
 
                     for (int b = 0; b < nailInEvent; b++)
                     {
-                        var targetNailBeat = nailBeat + (2f * b);
+                        var targetNailBeat = nailBeat + (4f * b);
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
                             sounds.Add(new MultiSound.Sound("nailCarpenter/alarm", targetNailBeat));
@@ -212,18 +212,18 @@ namespace HeavenStudio.Games
                             {
                                 new BeatAction.Action(targetNailBeat, delegate
                                 {
-                                    EffectExclamRed.DoScaledAnimationAsync("exclamAppear", 0.5f);
+                                    EffectExclamRed.DoScaledAnimationAsync("exclamAppear", 0.25f);
                                 })
                             });
                             SpawnSweet(targetNailBeat, startBeat,
                                 (b==0 ? Sweet.sweetsType.ShortCake : Sweet.sweetsType.Cherry));
-                            SpawnNail(targetNailBeat+0.5f, startBeat);
-                            SpawnSweet(targetNailBeat+1.0f, startBeat, Sweet.sweetsType.Cherry);
-                            SpawnNail(targetNailBeat+1.25f, startBeat);
-                            SpawnNail(targetNailBeat+1.75f, startBeat);
+                            SpawnNail(targetNailBeat+1f, startBeat);
+                            SpawnSweet(targetNailBeat+2f, startBeat, Sweet.sweetsType.Cherry);
+                            SpawnNail(targetNailBeat+2.5f, startBeat);
+                            SpawnNail(targetNailBeat+3.5f, startBeat);
                         }
                     }
-                    cherryTargetBeats.Add(nailBeat + 2f * nailInEvent);
+                    cherryTargetBeats.Add(nailBeat + 4f * nailInEvent);
                 }
             }
             // Spawn pudding and nail.
@@ -233,10 +233,10 @@ namespace HeavenStudio.Games
 
                 // Only consider nailgie events that aren't past the start point.
                 if (startBeat <= nailBeat + nailLength) {
-                    int nailInEvent = Mathf.CeilToInt(nailLength);
+                    int nailInEvent = Mathf.CeilToInt(nailLength)/2;
                     for (int b = 0; b < nailInEvent; b++)
                     {
-                        var targetNailBeat = nailBeat + (1f * b);
+                        var targetNailBeat = nailBeat + (2f * b);
 
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
@@ -244,7 +244,7 @@ namespace HeavenStudio.Games
                             SpawnSweet(targetNailBeat, startBeat,
                                 (IsInRange(cherryTargetBeats, targetNailBeat) ? Sweet.sweetsType.Cherry :
                                 Sweet.sweetsType.Pudding));
-                            SpawnNail(targetNailBeat+0.5f, startBeat);
+                            SpawnNail(targetNailBeat+1f, startBeat);
                         }
                     }
                 }
@@ -256,20 +256,20 @@ namespace HeavenStudio.Games
 
                 // Only consider nailgie events that aren't past the start point.
                 if (startBeat <= nailBeat + nailLength) {
-                    int nailInEvent = Mathf.CeilToInt(nailLength + 1) / 2;
+                    int nailInEvent = Mathf.CeilToInt(nailLength + 1f) / 4;
 
                     for (int b = 0; b < nailInEvent; b++)
                     {
-                        var targetNailBeat = nailBeat + (2f * b);
+                        var targetNailBeat = nailBeat + (4f * b);
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
                             sounds.Add(new MultiSound.Sound("nailCarpenter/three", targetNailBeat));
                             SpawnSweet(targetNailBeat, startBeat,
                                 (IsInRange(cherryTargetBeats, targetNailBeat) ? Sweet.sweetsType.Cherry :
                                 Sweet.sweetsType.CherryPudding));
-                            SpawnNail(targetNailBeat+0.5f, startBeat);
-                            SpawnNail(targetNailBeat+1.0f, startBeat);
-                            SpawnNail(targetNailBeat+1.5f, startBeat);
+                            SpawnNail(targetNailBeat+1f, startBeat);
+                            SpawnNail(targetNailBeat+2f, startBeat);
+                            SpawnNail(targetNailBeat+3f, startBeat);
                         }
                     }
                 }
@@ -281,11 +281,11 @@ namespace HeavenStudio.Games
 
                 // Only consider nailgie events that aren't past the start point.
                 if (startBeat <= nailBeat + nailLength) {
-                    int nailInEvent = Mathf.CeilToInt(nailLength + 1) / 2;
+                    int nailInEvent = Mathf.CeilToInt(nailLength + 2) / 4;
 
                     for (int b = 0; b < nailInEvent; b++)
                     {
-                        var targetNailBeat = nailBeat + (2f * b);
+                        var targetNailBeat = nailBeat + (4f * b);
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
                             sounds.Add(new MultiSound.Sound("nailCarpenter/signal1", targetNailBeat));
@@ -294,18 +294,18 @@ namespace HeavenStudio.Games
                             {
                                 new BeatAction.Action(targetNailBeat, delegate
                                 {
-                                    EffectExclamBlue.DoScaledAnimationAsync("exclamAppear", 0.5f);
+                                    EffectExclamBlue.DoScaledAnimationAsync("exclamAppear", 0.25f);
                                 }),
-                                new BeatAction.Action(targetNailBeat+1f, delegate
+                                new BeatAction.Action(targetNailBeat+1.5f, delegate
                                 {
-                                    Carpenter.DoScaledAnimationAsync("carpenterArmUp", 0.5f);
+                                    Carpenter.DoScaledAnimationAsync("carpenterArmUp", 0.25f);
                                 }),
                             });
                             SpawnSweet(targetNailBeat, startBeat,
                                 (IsInRange(cherryTargetBeats, targetNailBeat) ? Sweet.sweetsType.Cherry :
                                 Sweet.sweetsType.LayerCake));
-                            SpawnNail(targetNailBeat+0.5f, startBeat);
-                            SpawnLongNail(targetNailBeat+1f, startBeat);
+                            SpawnNail(targetNailBeat+1f, startBeat);
+                            SpawnLongNail(targetNailBeat+2f, startBeat);
                         }
                     }
                 }
@@ -379,7 +379,7 @@ namespace HeavenStudio.Games
         {
         foreach (double item in list)
         {
-            if (num >= item && num <= item + 0.25f)
+            if (num >= item && num <= item + .5f)
             {
                 return true;
             }
