@@ -81,7 +81,8 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         {
                             onGoing = true;
                             fudeAnim.DoScaledAnimationAsync("fude-sweep", 0.5f);
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
+                            if (releaseSound is null) Debug.Log("!?");
                         }),
                         new BeatAction.Action(targetBeat+6f, delegate { paperAnim.Play("paper-re04-end");}),
                         new BeatAction.Action(targetBeat+7f, delegate
@@ -112,7 +113,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         {
                             onGoing = true;
                             fudeAnim.DoScaledAnimationAsync("fude-pause", 0.5f);
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1", forcePlay: true);
                         }),
                         new BeatAction.Action(targetBeat+6f, delegate { paperAnim.Play("paper-ten02-end");}),
                         new BeatAction.Action(targetBeat+7f, delegate
@@ -139,7 +140,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         new BeatAction.Action(targetBeat+4f, delegate
                         {
                             onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
                         }),
                         new BeatAction.Action(targetBeat+7f, delegate
                         { 
@@ -166,7 +167,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         new BeatAction.Action(targetBeat+4f, delegate
                         {
                             onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
                         }),
                         new BeatAction.Action(targetBeat+7f, delegate
                         { 
@@ -192,13 +193,13 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         {
                             num = 1;
                             onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
                         }),
                         new BeatAction.Action(targetBeat+5f, delegate
                         {
                             num = 2;
                             onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1", forcePlay: true);
                         }),
                         new BeatAction.Action(targetBeat+7f, delegate
                         { 
@@ -225,13 +226,13 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         {
                             num = 1;
                             onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
                         }),
                         new BeatAction.Action(targetBeat+5f, delegate
                         {
                             num = 2;
                             onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1", forcePlay: true);
                         }),
                         new BeatAction.Action(targetBeat+7f, delegate
                         { 
@@ -267,7 +268,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         new BeatAction.Action(targetBeat+8f, delegate
                         {
                             onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
                         }),
                         new BeatAction.Action(targetBeat+11f, delegate
                         { 
@@ -302,7 +303,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         new BeatAction.Action(targetBeat+8f, delegate
                         {
                             onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1");
+                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
                         }),
                         new BeatAction.Action(targetBeat+11f, delegate
                         { 
@@ -471,8 +472,10 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     break;
             }
 
+            if (releaseSound is null) Debug.Log("!");
             if (releaseSound is not null)
             {
+                Debug.Log("?");
                 releaseSound.Stop();
                 releaseSound = null;
             }
