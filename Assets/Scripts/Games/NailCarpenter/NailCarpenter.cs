@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     resizable = true
                 },
-                new GameAction("slideShoji", "Slide Shoji")
+                new GameAction("slideFusuma", "Slide Shoji")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
@@ -301,7 +301,7 @@ namespace HeavenStudio.Games
                         if (startBeat <= targetNailBeat && targetNailBeat < endBeat)
                         {
                             sounds.Add(new MultiSound.Sound("nailCarpenter/signal1", targetNailBeat));
-                            sounds.Add(new MultiSound.Sound("nailCarpenter/signal2", targetNailBeat+1f));
+                            sounds.Add(new MultiSound.Sound("nailCarpenter/signal2", targetNailBeat+2f));
                             BeatAction.New(instance, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(targetNailBeat, delegate
