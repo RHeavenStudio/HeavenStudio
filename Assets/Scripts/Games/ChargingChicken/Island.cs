@@ -62,6 +62,10 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                 float newX1 = Util.EasingFunction.EaseOutCubic((float)journeyStart, (float)journeyEnd, value1);
                 IslandPos.localPosition = new Vector3(newX1, 0, 0);
             }
+            if (value1 >= 1)
+            {
+                isMoving = false;
+            }
             if (respawnStart < Conductor.instance.songPositionInBeatsAsDouble && isRespawning)
             {
                 float value2 = (Conductor.instance.GetPositionFromBeat(respawnStart, respawnEnd - respawnStart));
@@ -76,6 +80,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.50, delegate { StoneSplash(); }),
+                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 3.00, delegate { Destroy(gameObject); }),
                 });
                 canFall = false;
             }
@@ -166,6 +171,11 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         public void StoneSplash()
         {
             if (IslandPos.localPosition.x > -8) SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_WATER_PITCH400", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-400, 401), false), volume: 0.5f);
+        }
+
+        public void ThisIsNotMoving()
+        {
+            isMoving = false;
         }
 
         #endregion

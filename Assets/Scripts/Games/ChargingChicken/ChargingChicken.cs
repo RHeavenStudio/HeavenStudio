@@ -256,6 +256,8 @@ namespace HeavenStudio.Games
         double drumFadeStart = 0;
         double drumFadeLength = 0;
         bool drumFadeIn = true;
+        Sound whirring;
+        bool isWhirringPlaying = false;
 
         Island nextIsland;
         Island currentIsland;
@@ -578,11 +580,17 @@ namespace HeavenStudio.Games
             drumVolume = Mathf.Lerp(drumFadeIn ? 0 : 1, drumFadeIn ? 1 : 0, (float)valueFade);
             Conductor.instance.SetMinigameVolume(drumFadeIn ? (float)valueFade : 1 - (float)valueFade);
 
-            //reset volume if not holding
+            //various sound loops and shizz
+            if (isInputting)
+            {
+                if (!isWhirringPlaying) { whirring = SoundByte.PlayOneShotGame("chargingChicken/chargeLoop", volume: 0.5f, looping: true); isWhirringPlaying = true; }
+            }
             if (!isInputting)
             {
                 Conductor.instance.FadeMinigameVolume(0, 0, 1);
                 drumVolume = 1;
+
+                if (isWhirringPlaying) { whirring.Stop(); isWhirringPlaying = false; }
             }
 
             //chicken fall off the right of the platform
@@ -727,6 +735,7 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
+                    //if the player didn't hold, just dump 'em in the ocean
                     currentIsland.ChargerAnim.DoScaledAnimationAsync("Idle", 0.5f);
                 }
             }
@@ -803,7 +812,7 @@ namespace HeavenStudio.Games
         {
             //sound
             isInputting = true; //starts the drums
-            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f);
+            PumpSound(state);
 
             //chicken animation
             ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
@@ -819,7 +828,7 @@ namespace HeavenStudio.Games
             isInputting = true; //starts the drums
             SoundByte.PlayOneShotGame("chargingChicken/kick");
             SoundByte.PlayOneShotGame("chargingChicken/hihat");
-            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f);
+            PumpSound(state);
 
             //chicken animation
             ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
@@ -834,7 +843,7 @@ namespace HeavenStudio.Games
             //sound
             isInputting = true; //starts the drums
             SoundByte.PlayOneShotGame("chargingChicken/AMEN1");
-            //SoundByte.PlayOneShotGame("chargingChicken/inputJust", pitch: 0.9f, volume: 0.8f);
+            PumpSound(state);
 
             //chicken animation
             ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
@@ -857,9 +866,26 @@ namespace HeavenStudio.Games
             countBubble.SetActive(false);
         }
 
+        public void PumpSound(float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                SoundByte.PlayOneShot("miss");
+            }
+            else
+            {
+                SoundByte.PlayOneShotGame("chargingChicken/PumpStart");
+            }
+        }
+
         public void EndChargingJust(PlayerActionEvent caller, float state)
         {
             BlastOff(state, false);
+
+            if (state >= 1f || state <= -1f)
+            {
+                SoundByte.PlayOneShot("miss");
+            }
         }
 
         public void EndChargingMiss(PlayerActionEvent caller)
@@ -910,9 +936,13 @@ namespace HeavenStudio.Games
 
         public void SpawnJourney(double beat, double length)
         {
+            //pass along the next island data
             staleIsland = currentIsland;
             currentIsland = nextIsland;
             nextIsland = Instantiate(IslandBase, transform).GetComponent<Island>();
+
+            //despawn old islands
+            if (staleIsland != null) Destroy(staleIsland.gameObject);
 
             nextIsland.SetUpCollapse(beat + length);
 
@@ -1039,13 +1069,6 @@ namespace HeavenStudio.Games
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + currentIsland.journeyLength, delegate { 
-                        nextIsland.isMoving = false;
-                        currentIsland.isMoving = false;
-                        foreach (var a in stonePlatformJourney)
-                        {
-                            stone = a.thisPlatform;
-                            stone.isMoving = false;
-                        }
                         ChickenFall(fellTooFar);
                         checkFallingDistance = false;
                     }),
@@ -1069,13 +1092,6 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(journeyIntendedLength + (currentIsland.journeyLength * 2) + 1, delegate {
                         SuccessAnim();
-                        nextIsland.isMoving = false;
-                        currentIsland.isMoving = false;
-                        foreach (var a in stonePlatformJourney)
-                        {
-                            stone = a.thisPlatform;
-                            stone.isMoving = false;
-                        }
                     }),
                 });
             }
@@ -1103,6 +1119,7 @@ namespace HeavenStudio.Games
             currentIsland.ChargerAnim.DoScaledAnimationAsync("Idle", 0.5f);
 
             SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CHARGE_CANCEL");
+            SoundByte.PlayOneShotGame("chargingChicken/chargeRelease", volume: 0.5f);
 
             isInputting = false;
 
