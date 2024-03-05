@@ -29,8 +29,11 @@ public static class JSL
     public const int ButtonMaskPS = 16;
     public const int ButtonMaskCapture = 17;
     public const int ButtonMaskTouchpadClick = 17;
-    public const int ButtonMaskSL = 18;
-    public const int ButtonMaskSR = 19;
+    public const int ButtonMaskMic = 18;
+    public const int ButtonMaskSL = 19;
+    public const int ButtonMaskSR = 20;
+    public const int ButtonMaskFnL = 21;
+    public const int ButtonMaskFnR = 22;
 
     public const int TypeJoyConLeft = 1;
     public const int TypeJoyConRight = 2;

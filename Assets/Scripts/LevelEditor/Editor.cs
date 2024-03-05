@@ -522,7 +522,7 @@ namespace HeavenStudio.Editor
 
         public void ToggleDebugCam()
         {
-            var game = GameManager.instance.currentGameO;
+            var game = GameManager.instance.minigameObj;
 
             if (game != null)
             {

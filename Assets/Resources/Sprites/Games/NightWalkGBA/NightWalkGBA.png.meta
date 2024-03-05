@@ -1,0 +1,1801 @@
+fileFormatVersion: 2
+guid: 425aa48453840844d9f049d7ebd849ce
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: NightWalkGBA_0
+      rect:
+        serializedVersion: 2
+        x: 1290
+        y: 1978
+        width: 407
+        height: 189
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdcfb647b0977b14586dd247f281c3ee
+      internalID: 130521762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_1
+      rect:
+        serializedVersion: 2
+        x: 1904
+        y: 2185
+        width: 219
+        height: 195
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62ca387ee5da57248b351f3ffe3b2486
+      internalID: 1507133511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_2
+      rect:
+        serializedVersion: 2
+        x: 2129
+        y: 2087
+        width: 224
+        height: 279
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1180c2c73b2ffba49a372ea2f8147f8d
+      internalID: 1594823612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_3
+      rect:
+        serializedVersion: 2
+        x: 2370
+        y: 2165
+        width: 106
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5eaeef81d1151bb40a984d7a39d94c51
+      internalID: 242634543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jumpImpact
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 1986
+        width: 320
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db3db515ea6dc7d4cb6bd236ffe3668b
+      internalID: -938550924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 132
+        width: 174
+        height: 1302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b13d846095039c841855d2e8ec2a63fe
+      internalID: 1455939149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_6
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 747
+        width: 349
+        height: 154
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e6631f963cb268409e5ef94f0849f3b
+      internalID: 572682246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: noteImpact
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 999
+        width: 220
+        height: 148
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8899cb200589a0843bb0e03dcb54e005
+      internalID: -354181421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_8
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 2597
+        width: 164
+        height: 218
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34f6b4241dd948d49b03a0a54f00ee3a
+      internalID: -918192081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_9
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 2599
+        width: 160
+        height: 215
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e736cdb99c744e0478540b1e016d41fa
+      internalID: -979178364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_10
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 2595
+        width: 152
+        height: 227
+      alignment: 9
+      pivot: {x: 0.52980405, y: 0.50000215}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fef5d858e7aa55d43af85122f28124ed
+      internalID: 379567741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fall1
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 2549
+        width: 151
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3fdc95a5adc27e64d94cd7f754177937
+      internalID: -2087613087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fall2
+      rect:
+        serializedVersion: 2
+        x: 1185
+        y: 2550
+        width: 150
+        height: 306
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc091dd0d2f35f84186c28080a6041af
+      internalID: 1736942892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fall3
+      rect:
+        serializedVersion: 2
+        x: 1434
+        y: 2553
+        width: 147
+        height: 305
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3def2ffdd6a40f4b9d0ff5f5e63e762
+      internalID: 1997566507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_14
+      rect:
+        serializedVersion: 2
+        x: 1882
+        y: 2709
+        width: 176
+        height: 152
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4a725a4809c809468bec82bc19ddec6
+      internalID: -2114634637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_15
+      rect:
+        serializedVersion: 2
+        x: 2144
+        y: 2763
+        width: 97
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d30bd7ed38ecdd94d9ea2dfd1b133d2c
+      internalID: 950189746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_16
+      rect:
+        serializedVersion: 2
+        x: 2317
+        y: 2693
+        width: 96
+        height: 175
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c0c353281ffad149b1025ba6e1baa4a
+      internalID: 1245348893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_17
+      rect:
+        serializedVersion: 2
+        x: 2511
+        y: 2473
+        width: 27
+        height: 369
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1687648b679a32c44aa5a7b3fb7f399d
+      internalID: 763458304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_18
+      rect:
+        serializedVersion: 2
+        x: 2608
+        y: 2522
+        width: 365
+        height: 313
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10b6762c33d260a4db5d143b9322a762
+      internalID: -1703310874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_19
+      rect:
+        serializedVersion: 2
+        x: 3030
+        y: 2378
+        width: 479
+        height: 462
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6ecc1ae537560a47b540a7e61f5a6bb
+      internalID: -980979782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_20
+      rect:
+        serializedVersion: 2
+        x: 1720
+        y: 2668
+        width: 58
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0744364a2b5d204458229206cd304f9a
+      internalID: -193465265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_21
+      rect:
+        serializedVersion: 2
+        x: 2143
+        y: 2628
+        width: 104
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90c64671460ae714897f2746c7bb852c
+      internalID: -1673937283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shockyan
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 2183
+        width: 268
+        height: 334
+      alignment: 9
+      pivot: {x: 0.54663676, y: 0.48396274}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f19bac7ccd022d4e89ccb7cdc4a5871
+      internalID: 1851998298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roll1
+      rect:
+        serializedVersion: 2
+        x: 1888
+        y: 2476
+        width: 116
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73742c09d87d6234cad4433f7a72ab99
+      internalID: 1372235165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roll2
+      rect:
+        serializedVersion: 2
+        x: 2055
+        y: 2475
+        width: 113
+        height: 113
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be82a3dbab5a9bb4da8866f6157ec920
+      internalID: -564146531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_25
+      rect:
+        serializedVersion: 2
+        x: 2315
+        y: 2491
+        width: 98
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 670ff7076b256504b8c6fc3c0ff54c2e
+      internalID: -1611729225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_27
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 2259
+        width: 194
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8129bf9b36107f84190dd1ae0f30a648
+      internalID: 745754822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_28
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 2260
+        width: 202
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50a65026332ade24292a7dfa8d86db13
+      internalID: 1216645664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk1
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 2257
+        width: 165
+        height: 217
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e49c3622c76d6d45820f7410277b762
+      internalID: -239389510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk2
+      rect:
+        serializedVersion: 2
+        x: 1222
+        y: 2266
+        width: 119
+        height: 218
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca8d9f73425a9b842b5407c437e04e85
+      internalID: 1010555121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk3
+      rect:
+        serializedVersion: 2
+        x: 1449
+        y: 2265
+        width: 116
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9669640c82a9e9e41bdbd935fbc2cf9c
+      internalID: 1167249015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: walk4
+      rect:
+        serializedVersion: 2
+        x: 1681
+        y: 2263
+        width: 138
+        height: 230
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b58ed61c9ef4cba4fa014b7d2de1a6ad
+      internalID: 1487079887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_33
+      rect:
+        serializedVersion: 2
+        x: 2606
+        y: 2007
+        width: 412
+        height: 450
+      alignment: 9
+      pivot: {x: 0.42683476, y: 0.49631923}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09662e843e3d78f46b2f043d0db620e1
+      internalID: -2078596099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highJump1
+      rect:
+        serializedVersion: 2
+        x: 3166
+        y: 2059
+        width: 92
+        height: 275
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f7fec447763fa24d812d3228b484025
+      internalID: -2145292818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_36
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 1526
+        width: 46
+        height: 366
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27dc11e85f552a641b86aed7d30bf7c0
+      internalID: 384230439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_37
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 1817
+        width: 161
+        height: 161
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4b0d9a7bad9ba746bd6bc7b479cde98
+      internalID: 1021962739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stem
+      rect:
+        serializedVersion: 2
+        x: 524
+        y: 1596
+        width: 94
+        height: 272
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29526d0796307924aade1a8ce3181f65
+      internalID: -124737513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Heart
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 1788
+        width: 189
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32451329f6bc08242b1eb7ee05485def
+      internalID: -291031518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_40
+      rect:
+        serializedVersion: 2
+        x: 1161
+        y: 1542
+        width: 81
+        height: 297
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38272004a37a4b4488ac66cadde03c54
+      internalID: -1838287392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_41
+      rect:
+        serializedVersion: 2
+        x: 1318
+        y: 1374
+        width: 36
+        height: 520
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e74262b5eb4de4840af28d1647f9e6b5
+      internalID: -543996660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_42
+      rect:
+        serializedVersion: 2
+        x: 1441
+        y: 1602
+        width: 296
+        height: 262
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16e7ce24766efe74f894a24c06ba6521
+      internalID: 1233041225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: by
+      rect:
+        serializedVersion: 2
+        x: 1810
+        y: 1713
+        width: 106
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c92e752e773ed441b760a739e43abf6
+      internalID: 2115022471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bb
+      rect:
+        serializedVersion: 2
+        x: 1974
+        y: 1710
+        width: 106
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ca1a862921535646beb1b2165da4323
+      internalID: 1820544703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: br
+      rect:
+        serializedVersion: 2
+        x: 2148
+        y: 1710
+        width: 105
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5e34afcef9fa04429fc582b224bcc2e
+      internalID: 592522720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_46
+      rect:
+        serializedVersion: 2
+        x: 2432
+        y: 1799
+        width: 52
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 472a501eeb1dddd49919afe324f7dacc
+      internalID: 383000653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_47
+      rect:
+        serializedVersion: 2
+        x: 2599
+        y: 1780
+        width: 100
+        height: 97
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d2af09d544855441961f46912ba79f2
+      internalID: -1579706679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_48
+      rect:
+        serializedVersion: 2
+        x: 2784
+        y: 1547
+        width: 346
+        height: 383
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88018b37a22b8564f95c1984dfff2b3f
+      internalID: -1665585156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_49
+      rect:
+        serializedVersion: 2
+        x: 988
+        y: 1610
+        width: 76
+        height: 173
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cd8edd4882b30944a58cb6301b80442
+      internalID: -1115354204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bg
+      rect:
+        serializedVersion: 2
+        x: 1810
+        y: 1484
+        width: 106
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c866e0a56746d5b4e9655b743f8f4fdb
+      internalID: 1853531967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bp
+      rect:
+        serializedVersion: 2
+        x: 1981
+        y: 1481
+        width: 105
+        height: 163
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2f482f4bc7bb304e915bb8e864adb43
+      internalID: 529839015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_52
+      rect:
+        serializedVersion: 2
+        x: 2416
+        y: 1498
+        width: 195
+        height: 201
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ee575a1ed5bcba499003f5bdef04d5f
+      internalID: -867128651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: platform
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 1381
+        width: 252
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 13, y: 15, z: 17, w: 15}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc6ae1ebe9fc7c2479e89116035693ad
+      internalID: 1193791270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jumplat2
+      rect:
+        serializedVersion: 2
+        x: 888
+        y: 0
+        width: 202
+        height: 1444
+      alignment: 9
+      pivot: {x: 0.51266176, y: 0.4999999}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 262640fb85218cb4ea156e31af4a7714
+      internalID: 2115410046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: star3
+      rect:
+        serializedVersion: 2
+        x: 2482
+        y: 1089
+        width: 360
+        height: 361
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a456430a584cf5439cafdf218d8151a
+      internalID: 185895591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_57
+      rect:
+        serializedVersion: 2
+        x: 2943
+        y: 848
+        width: 673
+        height: 682
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8ab1292b8f5fbb45b1f4ee3816c3d50
+      internalID: 1545199381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_58
+      rect:
+        serializedVersion: 2
+        x: 1454
+        y: 1281
+        width: 267
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0933901ce0e5def4d89b06abbf910da1
+      internalID: 570068404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jumpplat1
+      rect:
+        serializedVersion: 2
+        x: 1067
+        y: 0
+        width: 202
+        height: 1444
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c977138d74f20894d9c4da262d6da33d
+      internalID: 629073624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_60
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 1241
+        width: 60
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4863c2fde317c6244941ad8ede973fe8
+      internalID: -1055323021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: light2
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 1237
+        width: 68
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5718ae5f898d6594986cbc7de403f7f5
+      internalID: 2140544610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: light
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 1229
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d101da65b4db4b4499ead1e31adf842
+      internalID: -1879352647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: note
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 1042
+        width: 67
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e94a46cd8fb424c4bb58d46efdb088b4
+      internalID: -1832946202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_67
+      rect:
+        serializedVersion: 2
+        x: 2041
+        y: 684
+        width: 369
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 916c05cb4c6f8494c8283035c36892d4
+      internalID: -1454669647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_68
+      rect:
+        serializedVersion: 2
+        x: 2485
+        y: 683
+        width: 362
+        height: 362
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be2f640004c2d0942b8f5df38b566a3b
+      internalID: 1756074533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: jumplat3
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 0
+        width: 202
+        height: 1444
+      alignment: 9
+      pivot: {x: 0.5182891, y: 0.49980313}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd9616c17cc0bf14abfb0c54fc981683
+      internalID: -199434903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: star1
+      rect:
+        serializedVersion: 2
+        x: 2061
+        y: 1132
+        width: 152
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4faf11ac9a45d1741ba5051a534e49e4
+      internalID: -118935731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: star2
+      rect:
+        serializedVersion: 2
+        x: 2240
+        y: 1127
+        width: 181
+        height: 185
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01699c86573ae3740bbe10c53e6ba8e8
+      internalID: -1214346626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_11
+      rect:
+        serializedVersion: 2
+        x: 1878
+        y: 967
+        width: 84
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37b7494a01f34024f970d6c130672e3a
+      internalID: -144890441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_12
+      rect:
+        serializedVersion: 2
+        x: 1773
+        y: 966
+        width: 78
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e2cf214249519b44b1179adf0ab809a
+      internalID: 2052607314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_13
+      rect:
+        serializedVersion: 2
+        x: 1780
+        y: 687
+        width: 181
+        height: 185
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 538c4a71abb65814295f8b832d39d8cd
+      internalID: -682300885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_22
+      rect:
+        serializedVersion: 2
+        x: 1593
+        y: 691
+        width: 152
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b90182093a00414f94d745443804a21
+      internalID: -1483504733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NightWalkGBA_26
+      rect:
+        serializedVersion: 2
+        x: 1286
+        y: 953
+        width: 181
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30b51a6daab9d3744a1ccfea7ab7c7d0
+      internalID: 2057711124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: platformnorod
+      rect:
+        serializedVersion: 2
+        x: 1117
+        y: 1294
+        width: 98
+        height: 97
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5234a4cff0126f346998ec148abe5962
+      internalID: -1710010968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: norod2
+      rect:
+        serializedVersion: 2
+        x: 914
+        y: 1294
+        width: 149
+        height: 143
+      alignment: 9
+      pivot: {x: 0.49816075, y: 0.34283918}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6ef3aca290058842aa6b2a4f0fc5baf
+      internalID: 1536196528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: norod3
+      rect:
+        serializedVersion: 2
+        x: 685
+        y: 1294
+        width: 180
+        height: 138
+      alignment: 9
+      pivot: {x: 0.4929484, y: 0.34364033}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31585aaa14a38f545b84a8dbdcc98505
+      internalID: 1438410946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: smol
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 518
+        width: 230
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c0799baacd79a74cb791232255ac9b6
+      internalID: 1781156713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: long
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 287
+        width: 486
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a36ddff1dd2b1f14f968ef2ba1e9e857
+      internalID: -778396330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Heart: -291031518
+      NightWalkGBA_0: 130521762
+      NightWalkGBA_1: 1507133511
+      NightWalkGBA_10: 379567741
+      NightWalkGBA_11: -144890441
+      NightWalkGBA_12: 2052607314
+      NightWalkGBA_13: -682300885
+      NightWalkGBA_14: -2114634637
+      NightWalkGBA_15: 950189746
+      NightWalkGBA_16: 1245348893
+      NightWalkGBA_17: 763458304
+      NightWalkGBA_18: -1703310874
+      NightWalkGBA_19: -980979782
+      NightWalkGBA_2: 1594823612
+      NightWalkGBA_20: -193465265
+      NightWalkGBA_21: -1673937283
+      NightWalkGBA_22: -1483504733
+      NightWalkGBA_25: -1611729225
+      NightWalkGBA_26: 2057711124
+      NightWalkGBA_27: 745754822
+      NightWalkGBA_28: 1216645664
+      NightWalkGBA_3: 242634543
+      NightWalkGBA_33: -2078596099
+      NightWalkGBA_36: 384230439
+      NightWalkGBA_37: 1021962739
+      NightWalkGBA_40: -1838287392
+      NightWalkGBA_41: -543996660
+      NightWalkGBA_42: 1233041225
+      NightWalkGBA_46: 383000653
+      NightWalkGBA_47: -1579706679
+      NightWalkGBA_48: -1665585156
+      NightWalkGBA_49: -1115354204
+      NightWalkGBA_5: 1455939149
+      NightWalkGBA_52: -867128651
+      NightWalkGBA_55: 1321917234
+      NightWalkGBA_57: 1545199381
+      NightWalkGBA_58: 570068404
+      NightWalkGBA_6: 572682246
+      NightWalkGBA_60: -1055323021
+      NightWalkGBA_63: -405823323
+      NightWalkGBA_64: 1313748795
+      NightWalkGBA_65: 1128627772
+      NightWalkGBA_67: -1454669647
+      NightWalkGBA_68: 1756074533
+      NightWalkGBA_69: 890641523
+      NightWalkGBA_8: -918192081
+      NightWalkGBA_9: -979178364
+      bb: 1820544703
+      bg: 1853531967
+      bp: 529839015
+      br: 592522720
+      by: 2115022471
+      fall1: -2087613087
+      fall2: 1736942892
+      fall3: 1997566507
+      highJump1: -2145292818
+      highJump2: 1835935371
+      jumpImpact: -938550924
+      jumplat2: 2115410046
+      jumplat3: -199434903
+      jumpplat1: 629073624
+      light: -1879352647
+      light2: 2140544610
+      long: -778396330
+      norod2: 1536196528
+      norod3: 1438410946
+      note: -1832946202
+      noteImpact: -354181421
+      platform: 1193791270
+      platformnorod: -1710010968
+      roll1: 1372235165
+      roll2: -564146531
+      shockyan: 1851998298
+      smol: 1781156713
+      star1: -118935731
+      star2: -1214346626
+      star3: 185895591
+      stem: -124737513
+      walk1: -239389510
+      walk2: 1010555121
+      walk3: 1167249015
+      walk4: 1487079887
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -114,15 +114,7 @@ namespace HeavenStudio.Games
     // using Scripts_SpaceDance;
     public class SpaceDance : Minigame
     {
-        private static Color _defaultBGColor;
-        public static Color defaultBGColor
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#0029D6", out _defaultBGColor);
-                return _defaultBGColor;
-            }
-        }
+        public static Color defaultBGColor = new(0f, 0.161f, 0.839f);
         public enum WhoSpeaks
         {
             Dancers = 0,
@@ -223,8 +215,6 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
-            colorStart = defaultBGColor;
-            colorEnd = defaultBGColor;
             SetupBopRegion("spaceDance", "bop", "auto");
         }
 
@@ -244,7 +234,7 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            BackgroundColorUpdate();
+            bg.color = bgColorEase.GetColor();
             if (cond.isPlaying && !cond.isPaused)
             {
                 scroll.NormalizedX -= xBaseSpeed * xScrollMultiplier * Time.deltaTime;
@@ -690,33 +680,11 @@ namespace HeavenStudio.Games
             Gramps.DoScaledAnimationAsync("GrampsBop", 0.5f);
         }
 
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart; //obviously put to the default color of the game
-        private Color colorEnd;
-        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+        private ColorEase bgColorEase = new();
 
-        //call this in update
-        private void BackgroundColorUpdate()
+        public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
-
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            bg.color = new Color(newR, newG, newB);
-        }
-
-        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
-        {
-            colorStartBeat = beat;
-            colorLength = length;
-            colorStart = colorStartSet;
-            colorEnd = colorEndSet;
-            colorEase = (Util.EasingFunction.Ease)ease;
+            bgColorEase = new(beat, length, startColor, endColor, ease);
         }
 
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)

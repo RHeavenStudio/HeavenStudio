@@ -190,15 +190,8 @@ namespace HeavenStudio.Games
             Enter = 0,
             Exit = 1
         }
-        private static Color _defaultBGColor;
-        public static Color defaultBGColor
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#FF7D27", out _defaultBGColor);
-                return _defaultBGColor;
-            }
-        }
+        public static Color defaultBGColor = new(1f, 0.49f, 0.153f);
+
         [Header("Components")]
         [SerializeField] private GameObject kickerPrefab;
         [SerializeField] private GameObject ballRef;
@@ -239,8 +232,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            colorStart = defaultBGColor;
-            colorEnd = defaultBGColor;
             var allHighKickToeEvents = EventCaller.GetAllInGameManagerList("spaceSoccer", new string[] { "high kick-toe!" });
             foreach (var e in allHighKickToeEvents)
             {
@@ -262,12 +253,12 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            var cond = Conductor.instance;
-            BackgroundColorUpdate();
+            bg.color = bgColorEase.GetColor();
+            bgImage.color = dotColorEase.GetColor();
             backgroundSprite.NormalizedX -= xBaseSpeed * xScrollMultiplier * Time.deltaTime;
             backgroundSprite.NormalizedY += yBaseSpeed * yScrollMultiplier * Time.deltaTime;
 
-            float normalizedEaseBeat = cond.GetPositionFromBeat(easeBeat, easeLength);
+            float normalizedEaseBeat = conductor.GetPositionFromBeat(easeBeat, easeLength);
             if (normalizedEaseBeat <= 1 && normalizedEaseBeat > 0)
             {
                 EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
@@ -277,7 +268,7 @@ namespace HeavenStudio.Games
                 UpdateKickersPositions(newPosX, newPosY, newPosZ);
             }
 
-            float normalizedPBeat = cond.GetPositionFromBeat(easeBeatP, easeLengthP);
+            float normalizedPBeat = conductor.GetPositionFromBeat(easeBeatP, easeLengthP);
             if (normalizedPBeat <= 1 && normalizedPBeat > 0)
             {
                 EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEaseP);
@@ -567,43 +558,18 @@ namespace HeavenStudio.Games
             }
         }
 
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart; //obviously put to the default color of the game
-        private Color colorEnd;
-        private Color colorStartDot = Color.white; //obviously put to the default color of the game
-        private Color colorEndDot = Color.white;
-        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+        private ColorEase bgColorEase = new(defaultBGColor);
+        private ColorEase dotColorEase = new(Color.white);
 
         //call this in update
         private void BackgroundColorUpdate()
         {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
-
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            bg.color = new Color(newR, newG, newB);
-
-            float newRDot = func(colorStartDot.r, colorEndDot.r, normalizedBeat);
-            float newGDot = func(colorStartDot.g, colorEndDot.g, normalizedBeat);
-            float newBDot = func(colorStartDot.b, colorEndDot.b, normalizedBeat);
-
-            bgImage.color = new Color(newRDot, newGDot, newBDot);
         }
 
-        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color colorStartDotSet, Color colorEndDotSet, int ease)
+        public void BackgroundColor(double beat, float length, Color startColorBG, Color endColorBG, Color startColorDot, Color endColorDot, int ease)
         {
-            colorStartBeat = beat;
-            colorLength = length;
-            colorStart = colorStartSet;
-            colorEnd = colorEndSet;
-            colorStartDot = colorStartDotSet;
-            colorEndDot = colorEndDotSet;
-            colorEase = (Util.EasingFunction.Ease)ease;
+            bgColorEase  = new(beat, length, startColorBG, endColorBG, ease);
+            dotColorEase = new(beat, length, startColorDot, endColorDot, ease);
         }
 
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)

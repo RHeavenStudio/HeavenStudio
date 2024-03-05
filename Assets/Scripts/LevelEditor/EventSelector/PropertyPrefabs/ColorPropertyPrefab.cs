@@ -5,10 +5,6 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
-using Starpelly;
-
-using HeavenStudio.Util;
-using HeavenStudio.Editor;
 
 namespace HeavenStudio.Editor
 {
@@ -24,9 +20,9 @@ namespace HeavenStudio.Editor
 
         private Color _defaultColor;
 
-        new public void SetProperties(string propertyName, object type, string caption)
+        public override void SetProperties(string propertyName, object type, string caption)
         {
-            InitProperties(propertyName, caption);
+            base.SetProperties(propertyName, type, caption);
 
             hex.onSelect.AddListener(
                 _ =>

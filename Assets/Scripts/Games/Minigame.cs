@@ -198,42 +198,6 @@ namespace HeavenStudio.Games
             scheduledInputs.Remove(evt);
         }
 
-        //Get the scheduled input that should happen the **Soonest**
-        //Can return null if there's no scheduled inputs
-        // remark: need a check for specific button(s)
-        [Obsolete("Use GetClosestScheduledInput InputAction or InputAction category instead")]
-        public PlayerActionEvent GetClosestScheduledInput(InputType input = InputType.ANY)
-        {
-            PlayerActionEvent closest = null;
-
-            foreach (PlayerActionEvent toCompare in scheduledInputs)
-            {
-                // ignore inputs that are for sequencing in autoplay
-                if (toCompare.autoplayOnly) continue;
-
-                if (closest == null)
-                {
-                    if (input == InputType.ANY || (toCompare.inputType & input) != 0)
-                        closest = toCompare;
-                }
-                else
-                {
-                    double t1 = closest.startBeat + closest.timer;
-                    double t2 = toCompare.startBeat + toCompare.timer;
-
-                    // Debug.Log("t1=" + t1 + " -- t2=" + t2);
-
-                    if (t2 < t1)
-                    {
-                        if (input == InputType.ANY || (toCompare.inputType & input) != 0)
-                            closest = toCompare;
-                    }
-                }
-            }
-
-            return closest;
-        }
-
         public PlayerActionEvent GetClosestScheduledInput(int[] actionCats)
         {
             int catIdx = (int)PlayerInput.CurrentControlStyle;
@@ -267,22 +231,6 @@ namespace HeavenStudio.Games
             return closest;
         }
 
-        public PlayerActionEvent GetClosestScheduledInput(PlayerInput.InputAction action)
-        {
-            return GetClosestScheduledInput(action.inputLockCategory);
-        }
-
-        //Hasn't been tested yet. *Should* work.
-        //Can be used to detect if the user is expected to input something now or not
-        //Useful for strict call and responses games like Tambourine
-        [Obsolete("Use IsExpectingInputNow InputAction or InputAction category instead")]
-        public bool IsExpectingInputNow(InputType wantInput = InputType.ANY)
-        {
-            PlayerActionEvent input = GetClosestScheduledInput(wantInput);
-            if (input == null) return false;
-            return input.IsExpectingInputNow();
-        }
-
         public bool IsExpectingInputNow(int[] wantActionCategory)
         {
             PlayerActionEvent input = GetClosestScheduledInput(wantActionCategory);
@@ -299,43 +247,43 @@ namespace HeavenStudio.Games
         public static double NgEarlyTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f - ngEarlyTime;
-            return 1f - (ngEarlyTimeBase * pitch);
+                return 1 - ngEarlyTime;
+            return 1 - (ngEarlyTimeBase * pitch);
         }
 
         public static double JustEarlyTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f - justEarlyTime;
-            return 1f - (justEarlyTimeBase * pitch);
+                return 1 - justEarlyTime;
+            return 1 - (justEarlyTimeBase * pitch);
         }
 
         public static double JustLateTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f + justLateTime;
-            return 1f + (justLateTimeBase * pitch);
+                return 1 + justLateTime;
+            return 1 + (justLateTimeBase * pitch);
         }
 
         public static double NgLateTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f + ngLateTime;
-            return 1f + (ngLateTimeBase * pitch);
+                return 1 + ngLateTime;
+            return 1 + (ngLateTimeBase * pitch);
         }
 
         public static double AceEarlyTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f - aceEarlyTime;
-            return 1f - (aceEarlyTimeBase * pitch);
+                return 1 - aceEarlyTime;
+            return 1 - (aceEarlyTimeBase * pitch);
         }
 
         public static double AceLateTime(float pitch = -1)
         {
             if (pitch < 0)
-                return 1f + aceLateTime;
-            return 1f + (aceLateTimeBase * pitch);
+                return 1 + aceLateTime;
+            return 1 + (aceLateTimeBase * pitch);
         }
 
         public virtual void OnGameSwitch(double beat)
@@ -478,6 +426,67 @@ namespace HeavenStudio.Games
             bopRegion = bopRegion.OrderBy(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
+        #endregion
+
+        #region Color
+
+        // truly a moment in history. documentation in heaven studio :)
+        public class ColorEase
+        {
+            /// <summary>
+            /// Gets the eased color from the variables inside a <c>ColorEase</c>. <br/>
+            /// Use this in <c>Update()</c>.
+            /// </summary>
+            /// <returns>A new color, based on <c>startColor</c> and <c>endColor</c>.</returns>
+            public Color GetColor() => MakeNewColor(startBeat, length, startColor, endColor, easeFunc);
+            public static Color MakeNewColor(double beat, float length, Color start, Color end, Util.EasingFunction.Function func)
+            {
+                if (length != 0) {
+                    float normalizedBeat = length == 0 ? 1 : Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(beat, length));
+
+                    float newR = func(start.r, end.r, normalizedBeat);
+                    float newG = func(start.g, end.g, normalizedBeat);
+                    float newB = func(start.b, end.b, normalizedBeat);
+                    return new Color(newR, newG, newB);
+                } else {
+                    return end;
+                }
+            }
+
+            public double startBeat = 0;
+            public float length = 0;
+            public Color startColor, endColor = Color.white;
+            public Util.EasingFunction.Ease ease = Util.EasingFunction.Ease.Instant;
+            public readonly Util.EasingFunction.Function easeFunc;
+
+            /// <summary>
+            /// The constructor to use when constructing a ColorEase from a block.
+            /// </summary>
+            /// <param name="startBeat">The start beat of the ease.</param>
+            /// <param name="length">The length of the ease.</param>
+            /// <param name="startColor">The beginning color of the ease.</param>
+            /// <param name="endColor">The end color of the ease.</param>
+            /// <param name="ease">
+            /// The ease to use to transition between <paramref name="startColor"/> and <paramref name="endColor"/>.<br/>
+            /// Should be derived from <c>Util.EasingFunction.Ease</c>,
+            /// </param>
+            public ColorEase(double startBeat, float length, Color startColor, Color endColor, int ease) {
+                this.startBeat = startBeat;
+                this.length = length;
+                (this.startColor, this.endColor) = (startColor, endColor);
+                this.ease = (Util.EasingFunction.Ease)ease;
+                this.easeFunc = Util.EasingFunction.GetEasingFunction(this.ease);
+            }
+            
+            /// <summary>
+            /// The constructor to use when initializing the ColorEase variable.
+            /// </summary>
+            /// <param name="defaultColor">The default color to initialize with.</param>
+            public ColorEase(Color? defaultColor = null) {
+                startColor = endColor = defaultColor ?? Color.white;
+                easeFunc = Util.EasingFunction.Instant;
+            }
+        }
         #endregion
 
         private void OnDestroy()

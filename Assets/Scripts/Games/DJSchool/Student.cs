@@ -5,7 +5,6 @@ using UnityEngine.Audio;
 
 using DG.Tweening;
 using HeavenStudio.Util;
-using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_DJSchool
 {
@@ -169,23 +168,21 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         public void OnHitSwipe(PlayerActionEvent caller, float beat)
         {
             game.shouldBeHolding = false;
+            isHolding = false;
+            swiping = true;
+            SoundByte.PlayOneShotGame("djSchool/recordSwipe");
+            anim.Play("Swipe", 0, 0);
             if (beat >= 1f || beat <= -1f) missed = true;
             if (!missed)
             {
-                isHolding = false;
-
                 missed = false;
                 shouldBeHolding = false;
-                SoundByte.PlayOneShotGame("djSchool/recordSwipe");
                 FlashFX(false);
-                swiping = true;
 
                 BeatAction.New(this, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat, delegate { anim.Play("Swipe", 0, 0); }),
                     new BeatAction.Action(beat + 4f, delegate { swiping = false; }),
                 });
-                //anim.Play("Swipe", 0, 0);
                 game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.UpSecond);
                 game.djYellowScript.Reverse();
                 game.smileBeat = caller.timer + caller.startBeat + 1f;
@@ -199,13 +196,10 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             else
             {
                 OnMissSwipeForPlayerInput(caller.timer + caller.startBeat + 1);
-                SoundByte.PlayOneShotGame("djSchool/recordSwipe");
                 BeatAction.New(this, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat, delegate { anim.Play("Swipe", 0, 0); }),
                     new BeatAction.Action(beat + 4f, delegate { swiping = false; }),
                 });
-                //anim.Play("Swipe", 0, 0);
                 tableAnim.speed = 1;
                 tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
 
@@ -303,7 +297,6 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 anim.Play("Idle", 0, 0);
             }
         }
-
 
         //Not sure but will do?
         private void OnDestroy()

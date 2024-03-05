@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using HeavenStudio.Games.Scripts_ForkLifter;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -14,6 +15,10 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("flick", "Flick Food")
                 {
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        ForkLifter.Flick(e.beat);
+                    },
                     function = delegate {
                         var e = eventCaller.currentEntity;
                         ForkLifter.Flick(e.beat);
@@ -23,11 +28,6 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("type", ForkLifter.FlickType.Pea, "Object", "Choose the object to be flicked.")
-                    },
-                    inactiveFunction = delegate {
-                        var e = eventCaller.currentEntity;
-                        ForkLifter.Flick(e.beat);
-                        ForkLifter.queuedFlicks.Add(e);
                     },
                 },
                 new GameAction("prepare", "Prepare Hand")
@@ -41,7 +41,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("gulp", "Swallow")
                 {
-                    function = delegate { ForkLifter.playerInstance.Eat(); }
+                    function = delegate { ForkLifter.playerInstance.Eat(eventCaller.currentEntity["sfx"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("sfx", ForkLifterPlayer.EatType.Default, "SFX", "Choose the SFX to play.")
+                    }
                 },
                 new GameAction("sigh", "Sigh")
                 {
@@ -50,24 +54,24 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("color", "Background Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("start", Color.white, "Start Color", "Set the color at the start of the event."),
                         new Param("end", Color.white, "End Color", "Set the color at the end of the event."),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     },
-                    resizable = true
                 },
                 new GameAction("colorGrad", "Gradient Appearance")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColorGrad(e.beat, e.length, e["start"], e["end"], e["ease"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("start", Color.white, "Start Color", "Set the color at the start of the event."),
                         new Param("end", Color.white, "End Color", "Set the color at the end of the event."),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     },
-                    resizable = true
                 },
             },
             new List<string>() {"rvl", "normal"},
@@ -85,8 +89,6 @@ namespace HeavenStudio.Games
 
     public class ForkLifter : Minigame
     {
-        public static List<RiqEntity> queuedFlicks = new();
-
         public enum FlickType
         {
             Pea,
@@ -126,34 +128,33 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
-            base.OnPlay(beat);
             OnGameSwitch(beat);
         }
 
         public override void OnGameSwitch(double beat)
         {
-            base.OnGameSwitch(beat);
-            if (queuedFlicks.Count > 0) {
-                foreach (var flick in queuedFlicks) { FlickActive(flick.beat, flick["type"]); }
-                queuedFlicks.Clear();
+            var actions = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] == "forkLifter");
+
+            var actionsBefore = actions.FindAll(e => e.beat < beat);
+
+            var lastColor = actionsBefore.FindLast(e => e.datamodel == "forkLifter/color");
+            if (lastColor != null) {
+                BackgroundColor(lastColor.beat, lastColor.length, lastColor["start"], lastColor["end"], lastColor["ease"]);
             }
 
-            ForkLifterHand.allFlickEntities = GameManager.instance.Beatmap.Entities.FindAll(c => (c.datamodel == "forkLifter/flick") && (c.beat >= beat));
-            ForkLifterHand.CheckNextFlick();
-            PersistColor(beat);
-        }
+            var lastColorGrad = actionsBefore.FindLast(e => e.datamodel == "forkLifter/colorGrad");
+            if (lastColorGrad != null) {
+                BackgroundColorGrad(lastColorGrad.beat, lastColorGrad.length, lastColorGrad["start"], lastColorGrad["end"], lastColorGrad["ease"]);
+            }
 
-        public void Bop(double beat, double length, bool doesBop, bool autoBop)
-        {
-            // playerInstance.shouldBop = autoBop;
-            // if (doesBop)
-            // {
-            //     var actions = new List<BeatAction.Action>();
-            //     for (int i = 0; i < length; i++) {
-            //         actions.Add(new(beat + i, delegate { playerInstance.SingleBop(); }));
-            //     }
-            //     BeatAction.New(playerInstance, actions);
-            // }
+            var tempFlicks = actions.FindAll(e => e.datamodel == "forkLifter/flick");
+
+            foreach (var e in tempFlicks.FindAll(e => e.beat < beat && e.beat + 2 > beat)) {
+                FlickActive(e.beat, e["type"]);
+            }
+
+            ForkLifterHand.allFlickEntities = tempFlicks.FindAll(e => e.beat >= beat);
+            ForkLifterHand.CheckNextFlick();
         }
 
         public static void Flick(double beat)
@@ -177,61 +178,28 @@ namespace HeavenStudio.Games
             fo.SetActive(true);
         }
 
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart = Color.white; //obviously put to the default color of the game
-        private Color colorEnd = Color.white;
-        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
-
-        private double colorStartBeatGrad = -1;
-        private float colorLengthGrad = 0f;
-        private Color colorStartGrad = Color.white; //obviously put to the default color of the game
-        private Color colorEndGrad = Color.white;
-        private Util.EasingFunction.Ease colorEaseGrad; //putting Util in case this game is using jukebox
+        private ColorEase bgColorEase = new();
+        private ColorEase gradColorEase = new();
 
         //call this in update
         private void BackgroundColorUpdate()
         {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
+            bg.color =
+            viewerCircle.color =
+            handShadow.color = bgColorEase.GetColor();
 
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            bg.color = new Color(newR, newG, newB);
-            viewerCircle.color = new Color(newR, newG, newB);
-            handShadow.color = new Color(newR, newG, newB);
-
-            float normalizedBeatGrad = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeatGrad, colorLengthGrad));
-
-            var funcGrad = Util.EasingFunction.GetEasingFunction(colorEaseGrad);
-
-            float newRGrad = func(colorStartGrad.r, colorEndGrad.r, normalizedBeatGrad);
-            float newGGrad = func(colorStartGrad.g, colorEndGrad.g, normalizedBeatGrad);
-            float newBGrad = func(colorStartGrad.b, colorEndGrad.b, normalizedBeatGrad);
-
-            bgGradient.color = new Color(newRGrad, newGGrad, newBGrad);
-            playerShadow.color = new Color(newRGrad, newGGrad, newBGrad);
+            bgGradient.color =
+            playerShadow.color = gradColorEase.GetColor();
         }
 
-        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            colorStartBeat = beat;
-            colorLength = length;
-            colorStart = colorStartSet;
-            colorEnd = colorEndSet;
-            colorEase = (Util.EasingFunction.Ease)ease;
+            bgColorEase = new ColorEase(beat, length, startColor, endColor, ease);
         }
 
-        public void BackgroundColorGrad(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        public void BackgroundColorGrad(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            colorStartBeatGrad = beat;
-            colorLengthGrad = length;
-            colorStartGrad = colorStartSet;
-            colorEndGrad = colorEndSet;
-            colorEaseGrad = (Util.EasingFunction.Ease)ease;
+            gradColorEase = new ColorEase(beat, length, startColor, endColor, ease);
         }
 
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)

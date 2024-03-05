@@ -114,15 +114,7 @@ namespace HeavenStudio.Games
 
     public class TossBoys : Minigame
     {
-        private static Color _defaultBGColor;
-        public static Color defaultBGColor
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#62FDBB", out _defaultBGColor);
-                return _defaultBGColor;
-            }
-        }
+        public static Color defaultBGColor = new Color(0.38f, 0.99f, 0.73f);
         public enum KidChoice
         {
             Akachan = 0,
@@ -177,29 +169,23 @@ namespace HeavenStudio.Games
         protected static bool IA_TouchNrm(out double dt)
         {
             return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && (instance.currentReceiver is WhichTossKid.Akachan
-                    || (instance.lastReceiver is WhichTossKid.Akachan or WhichTossKid.None
-                        && instance.currentReceiver is WhichTossKid.None)
-                    || (instance.IsExpectingInputNow(InputAction_Aka)
-                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii))));
+                && ((instance.currentReceiver is WhichTossKid.Akachan or WhichTossKid.None)
+                    || instance.IsExpectingInputNow(InputAction_Aka))
+                && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii));
         }
         protected static bool IA_TouchDir(out double dt)
         {
             return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && (instance.currentReceiver is WhichTossKid.Kiiyan
-                    || (instance.lastReceiver is WhichTossKid.Kiiyan
-                        && instance.currentReceiver is WhichTossKid.None)
-                    || (instance.IsExpectingInputNow(InputAction_Kii)
-                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Aka))));
+                && ((instance.currentReceiver is WhichTossKid.Kiiyan)
+                    || instance.IsExpectingInputNow(InputAction_Kii))
+                && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Aka));
         }
         protected static bool IA_TouchAlt(out double dt)
         {
             return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && (instance.currentReceiver is WhichTossKid.Aokun
-                    || (instance.lastReceiver is WhichTossKid.Aokun
-                        && instance.currentReceiver is WhichTossKid.None)
-                    || (instance.IsExpectingInputNow(InputAction_Ao)
-                        && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii))));
+                && ((instance.currentReceiver is WhichTossKid.Aokun)
+                    || instance.IsExpectingInputNow(InputAction_Ao))
+                && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii));
         }
 
         protected static bool IA_BatonNrm(out double dt)
@@ -241,8 +227,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            colorStart = defaultBGColor;
-            colorEnd = defaultBGColor;
             SetupBopRegion("tossBoys", "bop", "auto");
             SetPassBallEvents();
         }
@@ -300,33 +284,17 @@ namespace HeavenStudio.Games
             }
         }
 
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart = Color.white; //obviously put to the default color of the game
-        private Color colorEnd = Color.white;
-        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+        private ColorEase bgColorEase = new(defaultBGColor);
 
         //call this in update
         private void BackgroundColorUpdate()
         {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
-
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            bg.color = new Color(newR, newG, newB);
+            bg.color = bgColorEase.GetColor();
         }
 
-        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            colorStartBeat = beat;
-            colorLength = length;
-            colorStart = colorStartSet;
-            colorEnd = colorEndSet;
-            colorEase = (Util.EasingFunction.Ease)ease;
+            bgColorEase = new(beat, length, startColor, endColor, ease);
         }
 
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)

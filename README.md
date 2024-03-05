@@ -21,14 +21,14 @@
 ## Prebuilt Binaries
 Full releases are published on our [itch.io page](https://rheavenstudio.itch.io/heaven-studio). GitHub Actions creates experimental builds on each commmit, but minimal support will be provided.
 
-### Release 1.0.1 alpha builds
-These builds do not include some of the features from Nightly, instead focusing on stability.
+### Alpha builds
+These builds target future patches / minor releases and thus do not include some of the features from Nightly.
 - [Windows](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/release_1_patches/StandaloneWindows64-build.zip)
 - [Linux](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/release_1_patches/StandaloneLinux64-build.zip)
 - [MacOS](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/release_1_patches/StandaloneOSX-build.zip)
 
 ### Nightly builds
-These builds include experimental new features that will not be included in Release 1
+These builds include experimental new features that target future major releases.
 - [Windows](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/master/StandaloneWindows64-build.zip)
 - [Linux](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/master/StandaloneLinux64-build.zip)
 - [MacOS](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/build/master/StandaloneOSX-build.zip)
@@ -46,4 +46,4 @@ and programmed with [Visual Studio Code](https://code.visualstudio.com/).
 Build Instructions: [BUILD.md](https://github.com/megaminerjenny/HeavenStudio/blob/master/BUILD.md) (or the more maintained [documentation page](https://rheavenstudio.github.io/docs-contributing/setup/introduction))
 
 ## Other information
-Rhythm Heaven is the intellectual property of Nintendo. This program is NOT endorsed nor sponsored in any way by Nintendo. All used properties of Nintendo (such as names, audio, graphics, etc.) in this software are not intended to maliciously infringe trademark rights. All other trademarks and assets are property of their respective owners. This is a community project and this is available for others to use according to the GPL-3.0 license, without charge.
+Rhythm Heaven is the intellectual property of Nintendo. This program is NOT endorsed nor sponsored in any way by Nintendo. All used properties of Nintendo (such as names, audio, graphics, etc.) in this software are not intended to maliciously infringe trademark rights. All other trademarks and assets are property of their respective owners. This is a free community project available for others to use and contribute to, without charge. Source code is licensed under the MIT license.

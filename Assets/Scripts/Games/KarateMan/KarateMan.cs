@@ -117,7 +117,6 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        KarateMan.QueueCue(e);
                         KarateMan.CreateItemSFX(e.beat, e["type"], e["mute"]);
                     },
                     defaultLength = 2,
@@ -137,7 +136,6 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        KarateMan.QueueCue(e);
                         if (!e["mute"]) KarateMan.CreateBulbSFX(e.beat, e["type"], e["sfx"], e["throwSfx"]);
                     },
                     defaultLength = 2,
@@ -167,7 +165,6 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        KarateMan.QueueCue(e);
                         KarateMan.KickSFX();
                     },
                     defaultLength = 4f,
@@ -196,7 +193,6 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        KarateMan.QueueCue(e);
                         KarateMan.ComboSFX();
                     },
                     defaultLength = 4,
@@ -526,7 +522,7 @@ namespace HeavenStudio.Games
         }
         #endregion
 
-        static List<RiqEntity> queuedCues = new();
+        // static List<RiqEntity> queuedCues = new();
         public static bool IsComboEnable = true; //only stops Out combo inputs, this basically makes combo contextual
         // public static bool IsKickEnable = true; //same as above, except with kick inputs
         public bool IsNoriActive { get { return Nori.MaxNori > 0; } }
@@ -567,15 +563,7 @@ namespace HeavenStudio.Games
         static double wordClearTime = double.MinValue;
 
         [Header("Backgrounds")]
-        // 0 = bg color, 1 = shadow color, 2 = filter color
-        private double[] colorStartBeats = new double[3] {
-            -1,
-            -1,
-            -1
-        };
-        private float[] colorLengths = new float[3];
-        private Color[] colorStarts, colorEnds = new Color[3];
-        private Util.EasingFunction.Ease[] colorEases = new Util.EasingFunction.Ease[3];
+        private ColorEase[] colorEases = new ColorEase[3];
 
         public int currentBgEffect = (int)BackgroundFXType.None;
 
@@ -704,11 +692,10 @@ namespace HeavenStudio.Games
             bgEffectAnimator = BGEffect.GetComponent<Animator>();
             bgEffectSpriteRenderer = BGEffect.GetComponent<SpriteRenderer>();
 
-            colorEnds =
-            colorStarts = new Color[] {
-                BackgroundColors[0],
-                TintColor(BackgroundColors[0]),
-                new Color(),
+            colorEases = new ColorEase[] {
+                new(BackgroundColors[0]),
+                new(TintColor(BackgroundColors[0])),
+                new(new Color()),
             };
         }
 
@@ -717,38 +704,31 @@ namespace HeavenStudio.Games
             Update();
         }
 
+        public override void OnPlay(double beat) => OnGameSwitch(beat);
         public override void OnGameSwitch(double beat)
         {
+            EntityPreCheck(beat);
+
+            var entities = gameManager.Beatmap.Entities.FindAll(e => (e.datamodel is "karateman/hit" or "karateman/bulb" or "karateman/kick" or "karateman/combo") && e.beat < beat && e.beat + 1 > beat);
+
             // queued objects
-            if (queuedCues.Count > 0)
+            foreach (var e in entities)
             {
-                foreach (var e in queuedCues)
-                {
-                    switch (e.datamodel)
-                    {
-                        case "karateman/hit": CreateItem(e.beat, e["type"], e["type2"]); break;
-                        case "karateman/bulb": CreateBulbSpecial(e.beat, e["type"], e["colorA"], e["type2"], e["sfx"], e["hitSfx"]); break;
-                        case "karateman/kick": Kick(e.beat, e["toggle"], e["shouldGlow"], e["type"], e["pitchVoice"], e["forcePitch"], e["cutOut"], e["disableVoice"], e["woodColor"], e["hoopColor"]); break;
-                        case "karateman/combo": Combo(e.beat, e["type"], e["pitchVoice"], e["forcePitch"], e["cutOut"], e["disableVoice"]); break;
-                        default: Debug.LogError($"Karate Man has failed to cue an object with datamodel {e.datamodel} at beat {e.beat}"); break;
-                    }
+                switch (e.datamodel) {
+                    case "karateman/hit": CreateItem(e.beat, e["type"], e["type2"]); break;
+                    case "karateman/bulb": CreateBulbSpecial(e.beat, e["type"], e["colorA"], e["type2"], e["sfx"], e["hitSfx"]); break;
+                    case "karateman/kick": Kick(e.beat, e["toggle"], e["shouldGlow"], e["type"], e["pitchVoice"], e["forcePitch"], e["cutOut"], e["disableVoice"], e["woodColor"], e["hoopColor"]); break;
+                    case "karateman/combo": Combo(e.beat, e["type"], e["pitchVoice"], e["forcePitch"], e["cutOut"], e["disableVoice"]); break;
+                    default: Debug.LogError($"Karate Man has failed to cue an object with datamodel {e.datamodel} at beat {e.beat}"); break;
                 }
-                queuedCues.Clear();
             }
-
-            EntityPreCheck(beat);
         }
 
-        public override void OnPlay(double beat)
-        {
-            queuedCues.Clear();
-            EntityPreCheck(beat);
-        }
-
+        public override void OnStop(double beat) => EntityPreCheck(beat);
         void EntityPreCheck(double beat)
         {
             if (gameManager == null) return;
-            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split(0) == "karateman");
+            List<RiqEntity> prevEntities = gameManager.Beatmap.Entities.FindAll(c => c.datamodel.Split(0) == "karateman");
 
             RiqEntity voice = prevEntities.FindLast(c => c.beat < beat && c.datamodel == "karateman/warnings");
             if (wordClearTime > beat && wordStartTime < beat && voice != null)
@@ -768,11 +748,6 @@ namespace HeavenStudio.Games
                     bg["shadowType"], bg["shadowStart"], bg["shadowEnd"],
                     bg["textureType"], bg["autoColor"], bg["startTexture"], bg["endTexture"]
                 );
-            }
-            else
-            {
-                var c = new Color();
-                BackgroundColor(0, 0, 0, 0, c, c, (int)Util.EasingFunction.Ease.Instant, 0, c, c, 0, true, c, c);
             }
 
             if (obj != null)
@@ -806,10 +781,10 @@ namespace HeavenStudio.Games
         {
             var songPos = conductor.songPositionInBeatsAsDouble;
 
-            if (conductor != null && !conductor.isPlaying)
-            {
-                EntityPreCheck(songPos);
-            }
+            // if (conductor != null && !conductor.isPlaying)
+            // {
+            //     EntityPreCheck(songPos);
+            // }
 
             switch (currentBgEffect)
             {
@@ -875,7 +850,6 @@ namespace HeavenStudio.Games
             }
             if (!Conductor.instance.NotStopped())
             {
-                if (queuedCues.Count > 0) queuedCues.Clear();
                 startCamSpecial = double.MinValue;
                 wantsReturn = double.MinValue;
                 cameraReturnLength = 0f;
@@ -929,11 +903,6 @@ namespace HeavenStudio.Games
                 wordStartTime = beat;
             }
             return $"Word0{(type < (int)HitThree.HitThreeAlt ? type : type - 1)}";
-        }
-
-        public static void QueueCue(RiqEntity entity)
-        {
-            queuedCues.Add(entity);
         }
 
         public static void CreateItemSFX(double beat, int type, bool muteSound = false)
@@ -1108,28 +1077,15 @@ namespace HeavenStudio.Games
         {
             currentBgEffect = fxType;
 
-            for (int i = 0; i < colorStarts.Length; i++)
-            {
-                colorStartBeats[i] = beat;
-                colorLengths[i] = length;
-                colorEases[i] = (Util.EasingFunction.Ease)colorEaseSet;
-            }
-
             bool preset = presetBG != (int)BackgroundType.Custom;
             bool tinted = shadowType == (int)ShadowType.Tinted;
 
             Color bgColorStart = preset ? BGPlane.color : colorStart;
-            colorStarts = new Color[] {
-                bgColorStart,
-                tinted ? TintColor(bgColorStart) : shadowStart,
-                autoColor ? TintColor(bgColorStart): filterStart,
-            };
-
             Color bgColorEnd = preset ? BackgroundColors[presetBG] : colorEnd;
-            colorEnds = new Color[] {
-                bgColorEnd,
-                tinted ? TintColor(bgColorEnd) : shadowEnd,
-                autoColor ? TintColor(bgColorEnd) : filterEnd,
+            colorEases = new ColorEase[] {
+                new(beat, length, bgColorStart, bgColorEnd, colorEaseSet),
+                new(beat, length, (tinted ? TintColor(bgColorStart) : shadowStart), (tinted ? TintColor(bgColorEnd) : shadowEnd), colorEaseSet),
+                new(beat, length, (autoColor ? TintColor(bgColorStart): filterStart), (autoColor ? TintColor(bgColorEnd) : filterEnd), colorEaseSet),
             };
 
             for (int i = 0; i < BGTextures.Length; i++)
@@ -1150,18 +1106,8 @@ namespace HeavenStudio.Games
 
             for (int i = 0; i < spriteRenderers.Length; i++)
             {
-                float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeats[i], colorLengths[i]));
-                if (double.IsNaN(normalizedBeat)) normalizedBeat = 0; // happens if the game is stopped onto the first beat
-                var func = Util.EasingFunction.GetEasingFunction(colorEases[i]);
-                float[] color = new float[3] {
-                    func(colorStarts[i].r, colorEnds[i].r, normalizedBeat),
-                    func(colorStarts[i].g, colorEnds[i].g, normalizedBeat),
-                    func(colorStarts[i].b, colorEnds[i].b, normalizedBeat),
-                };
-
-                foreach (var renderer in spriteRenderers[i])
-                {
-                    renderer.color = new Color(color[0], color[1], color[2]);
+                foreach (var renderer in spriteRenderers[i]) {
+                    renderer.color = colorEases[i].GetColor();
                 }
             }
         }

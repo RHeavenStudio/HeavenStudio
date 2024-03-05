@@ -12,6 +12,13 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
     {
         public static ForkLifterPlayer instance { get; set; }
 
+        public enum EatType
+        {
+            Default,
+            Normal,
+            Burger
+        }
+
         [Header("Objects")]
         public Sprite hitFX;
         public Sprite hitFXG;
@@ -29,6 +36,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         public int currentLatePeasOnFork;
 
         private bool isEating = false;
+        public EatType eatType = 0;
 
         // Burger shit
 
@@ -50,10 +58,11 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             }
         }
 
-        public void Eat()
+        public void Eat(int eatTypeTemp)
         {
             if (currentEarlyPeasOnFork != 0 || currentPerfectPeasOnFork != 0 || currentLatePeasOnFork != 0)
             {
+                eatType = (EatType)eatTypeTemp;
                 anim.Play("Player_Eat", 0, 0);
                 isEating = true;
             }
@@ -62,7 +71,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         // used in an animation event
         public void EatConfirm()
         {
-            if (topbun && middleburger && bottombun)
+            if (eatType != EatType.Normal && ((topbun && middleburger && bottombun) || eatType == EatType.Burger))
             {
                 SoundByte.PlayOneShotGame("forkLifter/burger");
             }
@@ -101,7 +110,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             isEating = false;
 
-            topbun = false; middleburger = false; bottombun = false;
+            topbun = middleburger = bottombun = false;
         }
 
         public void Stab(Pea p)
@@ -122,11 +131,9 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             hitFX2o.transform.localPosition = new Vector3(0.11f, -2.15f);
             hitFX2o.transform.localScale = new Vector3(5.401058f, 1.742697f);
             hitFX2o.transform.localRotation = Quaternion.Euler(0, 0, -38.402f);
+
             SpriteRenderer hfx2s = hitFX2o.AddComponent<SpriteRenderer>();
-            if (type == 2)
-                hfx2s.sprite = hitFXG;
-            else
-                hfx2s.sprite = hitFX2;
+            hfx2s.sprite = type == 2 ? hitFXG : hitFX2;
             hfx2s.sortingOrder = -5;
             hfx2s.DOColor(new Color(1, 1, 1, 0), 0.07f).OnComplete(delegate { Destroy(hitFX2o); });
         }
