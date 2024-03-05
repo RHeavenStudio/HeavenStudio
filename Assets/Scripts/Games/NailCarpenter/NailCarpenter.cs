@@ -102,9 +102,7 @@ namespace HeavenStudio.Games
 
         protected static bool IA_TouchRegularPress(out double dt)
         {
-            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && instance.IsExpectingInputNow(InputAction_RegPress)
-                && !instance.IsExpectingInputNow(InputAction_AltStart);
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt);
         }
         protected static bool IA_TouchAltPress(out double dt)
         {
