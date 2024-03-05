@@ -38,21 +38,22 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     resizable = true
                 },
-                new GameAction("slideFusuma", "Slide Fusuma")
+                new GameAction("slideShoji", "Slide Shoji")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        NailCarpenter.instance.SlideFusuma(e.beat, e.length, e["fillRatio"], e["ease"], e["mute"]); 
+                        NailCarpenter.instance.SlideShoji(e.beat, e.length, e["fillRatio"], e["ease"], e["mute"]); 
                     },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("fillRatio", new EntityTypes.Float(0f, 1f, 0.3f), "Ratio", "Set the ratio of closing the fusuma."),
+                        new Param("fillRatio", new EntityTypes.Float(0f, 1f, 0.3f), "Ratio", "Set how much of the screen the shoji covers."),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
                         new Param("mute", false, "Mute", "Toggle if the cue should be muted.")
                     }
                 },
+            
             },
             new List<string>() { "pco", "normal" },
             "pconail", "en",
@@ -79,7 +80,7 @@ namespace HeavenStudio.Games
         public Transform scrollingHolder;
         public Transform nailHolder;
         public Transform boardTrans;
-        public Transform fusumaTrans;
+        public Transform shojiTrans;
         const float nailDistance = -4f;
         const float boardWidth = 19.2f;
         float scrollRate => nailDistance / (Conductor.instance.pitchedSecPerBeat * 2f);
@@ -136,6 +137,7 @@ namespace HeavenStudio.Games
         Util.EasingFunction.Ease slideEase;
         float slideRatioLast = 0, slideRatioNext = 0;
 
+
         void Update()
         {
             var cond = Conductor.instance;
@@ -171,7 +173,7 @@ namespace HeavenStudio.Games
             newBoardX %= boardWidth;
             boardTrans.localPosition = new Vector3(newBoardX, boardPos.y, boardPos.z);
 
-            UpdateFusuma(currentBeat);
+            UpdateShoji(currentBeat);
         }
 
         public override void OnGameSwitch(double beat)
@@ -317,7 +319,7 @@ namespace HeavenStudio.Games
             OnGameSwitch(beat);
         }
 
-        public void SlideFusuma(double beat, double length, float fillRatio, int ease, bool mute)
+        public void SlideShoji(double beat, double length, float fillRatio, int ease, bool mute)
         {
             if (!mute) MultiSound.Play(new MultiSound.Sound[]{ new MultiSound.Sound("nailCarpenter/open", beat)});
             slideBeat = beat;
@@ -326,7 +328,7 @@ namespace HeavenStudio.Games
             slideRatioLast = slideRatioNext;
             slideRatioNext = fillRatio;
         }
-        void UpdateFusuma(double beat)
+        void UpdateShoji(double beat)
         {
             if (beat >= slideBeat)
             {
@@ -336,7 +338,7 @@ namespace HeavenStudio.Games
                 float slideProg = Conductor.instance.GetPositionFromBeat(slideBeat, slideLength, true);
                 slideProg = Mathf.Clamp01(slideProg);
                 float slide = func(slideLast, slideNext, slideProg);
-                fusumaTrans.localPosition = new Vector3(slide, 0, 0);
+                shojiTrans.localPosition = new Vector3(slide, 0, 0);
             }
         }
 
@@ -386,6 +388,7 @@ namespace HeavenStudio.Games
         }
         return false;
         }
+
 
         // MultiSound.Play may not work in OnPlay (OnGameSwitch?), so I play the audio using an alternative method.
         List<MultiSound.Sound> sounds = new List<MultiSound.Sound>(){};

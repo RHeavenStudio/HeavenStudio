@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
 
         private void HammmerJust(PlayerActionEvent caller, float state)
         {
-            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 1f);
+            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 0.25f);
             if (state >= 1f || state <= -1f)
             {
                 nailAnim.DoScaledAnimationAsync(
