@@ -99,10 +99,18 @@ namespace HeavenStudio.Games
         {
             return PlayerInput.GetSqueezeDown(out dt);
         }
+
+        protected static bool IA_TouchRegularPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_RegPress)
+                && !instance.IsExpectingInputNow(InputAction_AltStart);
+        }
         protected static bool IA_TouchAltPress(out double dt)
         {
             return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && instance.IsExpectingInputNow(InputAction_AltPress);
+                && instance.IsExpectingInputNow(InputAction_AltStart)
+                && !instance.IsExpectingInputNow(InputAction_RegPress);
         }
 
         protected static bool IA_PadAltRelease(out double dt)
@@ -114,7 +122,11 @@ namespace HeavenStudio.Games
             return PlayerInput.GetSqueezeUp(out dt);
         }
 
-        public static PlayerInput.InputAction InputAction_AltPress =
+
+        public static PlayerInput.InputAction InputAction_RegPress =
+            new("PcoNailRegStart", new int[] {  IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchRegularPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_AltStart =
             new("PcoNailAltStart", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
             IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
         public static PlayerInput.InputAction InputAction_AltFinish =
@@ -147,14 +159,14 @@ namespace HeavenStudio.Games
 
             // Debug.Log(newBeat);
 
-            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
+            if (PlayerInput.GetIsAction(InputAction_RegPress) && !IsExpectingInputNow(InputAction_RegPress))
             {
                 SoundByte.PlayOneShot("miss");
                 Carpenter.DoScaledAnimationAsync("carpenterHit", 0.25f);
                 hasSlurped = false;
                 // ScoreMiss();
             }
-            if (PlayerInput.GetIsAction(InputAction_AltPress) && !IsExpectingInputNow(InputAction_AltPress))
+            if (PlayerInput.GetIsAction(InputAction_AltStart) && !IsExpectingInputNow(InputAction_AltStart))
             {
                 SoundByte.PlayOneShot("miss");
                 Carpenter.DoScaledAnimationAsync("carpenterHit", 0.25f);

@@ -5,6 +5,8 @@ using NaughtyBezierCurves;
 using DG.Tweening;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
+
 
 namespace HeavenStudio.Games.Scripts_NailCarpenter
 {
@@ -19,8 +21,12 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         {
             game = NailCarpenter.instance;
             
-            game.ScheduleInput(targetBeat, 0, NailCarpenter.InputAction_BasicPress, HammmerJust, HammmerMiss, Empty);
-            game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_AltPress, strongHammmerJust, Empty, Empty);
+            game.ScheduleInput(targetBeat, 0, NailCarpenter.InputAction_RegPress, HammmerJust, HammmerMiss, Empty);
+            //wrong input
+            if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+            {
+            game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_AltStart, strongHammmerJust, Empty, Empty);
+            }
         }
 
         private void HammmerJust(PlayerActionEvent caller, float state)

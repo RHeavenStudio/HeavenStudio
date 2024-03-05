@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
             game = NailCarpenter.instance;
 
             AwakeAnim();
-            game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_BasicPress, HammmerJust, Empty, Empty);
+            game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_RegPress, HammmerJust, Empty, Empty);
             game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_AltFinish, HammmerJust, Empty, Empty);
         }
         private void AwakeAnim()
