@@ -465,7 +465,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private ColorEase bgColorEase = new();
+        private ColorEase bgColorEase = new(defaultBGColor);
 
         //call this in update
         private void BackgroundColorUpdate()
