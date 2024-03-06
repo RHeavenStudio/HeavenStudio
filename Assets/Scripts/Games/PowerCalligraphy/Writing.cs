@@ -410,6 +410,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     break;
 
                 case (int)CharacterType.chikara:
+                    fudeAnim.DoScaledAnimationAsync("fude-sweep-end", 0.5f);
                     break;
 
                 case (int)CharacterType.onore:
