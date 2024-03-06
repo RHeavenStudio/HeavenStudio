@@ -21,10 +21,11 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [SerializeField] public GameObject SmallLandmass;
         [SerializeField] public GameObject FullLandmass;
         [SerializeField] public GameObject StonePlatform;
-
         [SerializeField] public GameObject Platform1;
         [SerializeField] public GameObject Platform2;
         [SerializeField] public GameObject Platform3;
+        [SerializeField] public ParticleSystem IslandCollapse;
+        [SerializeField] public ParticleSystem StoneSplashEffect;
 
         [NonSerialized]public double journeySave = 0;
         [NonSerialized]public double journeyStart = 0;
@@ -129,6 +130,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                     SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_LAND_RESET", volume: 0.7f);
                     BigLandmass.SetActive(false);
                     SmallLandmass.SetActive(true);
+                    IslandCollapse.Play();
                 }),
             });
         }
@@ -137,6 +139,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         {
             SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_LAND_RESET", volume: 0.7f);
             SmallLandmass.SetActive(false);
+            IslandCollapse.Play();
         }
 
         #endregion
@@ -170,7 +173,11 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         public void StoneSplash()
         {
-            if (IslandPos.localPosition.x > -8) SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_WATER_PITCH400", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-400, 401), false), volume: 0.5f);
+            if (IslandPos.localPosition.x > -8) 
+            {
+                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_WATER_PITCH400", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-400, 401), false), volume: 0.5f);
+                StoneSplashEffect.Play();
+            }
         }
 
         public void ThisIsNotMoving()

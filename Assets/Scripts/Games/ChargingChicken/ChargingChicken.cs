@@ -176,6 +176,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject countBubble;
         [SerializeField] Island IslandBase;
         [SerializeField] Material chickenColors;
+        [SerializeField] Material chickenColorsWater;
         [SerializeField] SpriteRenderer headlightColor;
 
         public enum TextOptions
@@ -944,12 +945,9 @@ namespace HeavenStudio.Games
         public void SpawnJourney(double beat, double length)
         {
             //pass along the next island data
-            staleIsland = currentIsland;
+            if (currentIsland != null) Destroy(currentIsland.gameObject);
             currentIsland = nextIsland;
             nextIsland = Instantiate(IslandBase, transform).GetComponent<Island>();
-
-            //despawn old islands
-            if (staleIsland != null) Destroy(staleIsland.gameObject);
 
             nextIsland.SetUpCollapse(beat + length);
 
@@ -1102,6 +1100,8 @@ namespace HeavenStudio.Games
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(journeyIntendedLength + (currentIsland.journeyLength * 2) + 1, delegate {
+                        currentIsland.isMoving = false;
+                        nextIsland.isMoving = false;
                         SuccessAnim();
                     }),
                 });
@@ -1177,9 +1177,6 @@ namespace HeavenStudio.Games
         public void Explode(double length)
         {
             if (!isInputting) return;
-
-            currentIsland.PositionIsland(0);
-            currentIsland.transform.localPosition = new Vector3(0, 0, 0);
 
             isInputting = false;
             nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat;
@@ -1468,6 +1465,7 @@ namespace HeavenStudio.Games
             float normalizedBeatFG = Mathf.Clamp01(cond.GetPositionFromBeat(fgLightStartBeat, fgLightLength));
             float newLight = func(lightFrom, lightTo, normalizedBeatFG);
             chickenColors.color = new Color(newLight, newLight, newLight);
+            chickenColorsWater.color = new Color(newLight, newLight, newLight);
 
             newLight = func(lightFrom2, lightTo2, normalizedBeatFG);
             headlightColor.color = new Color(1, 1, 1, newLight);

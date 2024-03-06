@@ -337,7 +337,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 20
+  m_SortingOrder: 100
   m_Sprite: {fileID: -159122658, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -944,7 +944,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 19
+  m_SortingOrder: 99
   m_Sprite: {fileID: -1886541831, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1021,6 +1021,7 @@ MonoBehaviour:
   countBubble: {fileID: 1476223279408625812}
   IslandBase: {fileID: 452761269397350257, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
   chickenColors: {fileID: 2100000, guid: acc543038ca31514fa57524efa7642f9, type: 2}
+  chickenColorsWater: {fileID: 2100000, guid: 05842492ce6e9674c8e9aedb25b185e1, type: 2}
   headlightColor: {fileID: 1126427993834615640}
 --- !u!1 &3118360541996936646
 GameObject:
