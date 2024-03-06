@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
     public class Writing : MonoBehaviour
     {
         // Declaring the same enum in another class is not beautiful.
-        public enum LetterType
+        public enum CharacterType
         {
             re,
             comma,
@@ -23,16 +23,25 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
         }
 
         public double targetBeat;
-        public int type;
+        public int ctype;
         public Animator paperAnim;
         public Animator fudePosAnim;
         public Animator fudeAnim;
 
         float scrollRateX => 6f / (Conductor.instance.pitchedSecPerBeat * 2f);
         float scrollRateY => -10f / (Conductor.instance.pitchedSecPerBeat * 2f);
+        
         public bool onGoing = false;
         bool isEnd = false;
         int num;
+        enum StrokeType {
+            TOME = 0,
+            HANE,
+            HARAI,
+        }
+        StrokeType stroke;
+        public int Stroke { get { return (int)stroke; }}
+
         Sound releaseSound = null;
 
         private PowerCalligraphy game;
@@ -40,24 +49,14 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
         public void Init()
         {
             game = PowerCalligraphy.instance;
-
-            paperAnim.Play(type switch {
-                (int)LetterType.re => "paper-re00",
-                (int)LetterType.comma => "paper-comma00",
-                (int)LetterType.chikara => "paper-chikara00",
-                (int)LetterType.onore => "paper-onore00",
-                (int)LetterType.sun => "paper-sun00",
-                (int)LetterType.kokoro => "paper-kokoro00",
-                (int)LetterType.face => "paper-face00",
-                (int)LetterType.face_korean => "paper-face_kr00",
-            });
+            Anim(0);
         }
 
         public void Play()
         {
-            switch(type)
+            switch(ctype)
             {
-                case (int)LetterType.re:
+                case (int)CharacterType.re:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/reShout", targetBeat),
@@ -70,32 +69,17 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         new BeatAction.Action(targetBeat+2f, delegate
                         {
                             fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
-                            fudePosAnim.DoScaledAnimationAsync("fudePos-re01", 0.5f);
-                            paperAnim.Play("paper-re01");
+                            Anim(1);
                         }),
-                        new BeatAction.Action(targetBeat+3f, delegate {
-                            fudePosAnim.DoScaledAnimationAsync("fudePos-re02", 0.5f);
-                            paperAnim.Play("paper-re02");
-                            }),
-                        new BeatAction.Action(targetBeat+4f, delegate
-                        {
-                            onGoing = true;
-                            fudeAnim.DoScaledAnimationAsync("fude-sweep", 0.5f);
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
-                            if (releaseSound is null) Debug.Log("!?");
-                        }),
-                        new BeatAction.Action(targetBeat+6f, delegate { paperAnim.Play("paper-re04-end");}),
-                        new BeatAction.Action(targetBeat+7f, delegate
-                        { 
-                            isEnd = true;
-                            fudeAnim.Play("fude-none");
-                            paperAnim.enabled = false;
-                        }),
+                        new BeatAction.Action(targetBeat+3f, delegate { Anim(2);}),
+                        new BeatAction.Action(targetBeat+4f, delegate { Sweep(); stroke = StrokeType.HANE;}),
+                        new BeatAction.Action(targetBeat+6.5f, delegate { Anim(4, "end");}),
+                        new BeatAction.Action(targetBeat+7f, delegate { End();}),
                     });
-                    game.ScheduleInput(targetBeat+4f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
+                    game.ScheduleInput(targetBeat+4f, 2f, PowerCalligraphy.InputAction_FlickPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
                 
-                case (int)LetterType.comma:
+                case (int)CharacterType.comma:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/comma1", targetBeat),
@@ -108,25 +92,15 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         new BeatAction.Action(targetBeat, delegate { fudeAnim.DoScaledAnimationAsync("fude-prepare", 0.5f);}),
                         new BeatAction.Action(targetBeat+2f, delegate { fudeAnim.DoScaledAnimationAsync("fude-prepare", 0.5f);}),
                         new BeatAction.Action(targetBeat+3f, delegate { fudeAnim.DoScaledAnimationAsync("fude-prepare", 0.5f);}),
-                        new BeatAction.Action(targetBeat+4f, delegate { fudePosAnim.DoScaledAnimationAsync("fudePos-comma01", 0.5f);}),
-                        new BeatAction.Action(targetBeat+5f, delegate
-                        {
-                            onGoing = true;
-                            fudeAnim.DoScaledAnimationAsync("fude-pause", 0.5f);
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1", forcePlay: true);
-                        }),
-                        new BeatAction.Action(targetBeat+6f, delegate { paperAnim.Play("paper-comma02-end");}),
-                        new BeatAction.Action(targetBeat+7f, delegate
-                        { 
-                            isEnd = true;
-                            fudeAnim.Play("fude-none");
-                            paperAnim.enabled = false;
-                        }),
+                        new BeatAction.Action(targetBeat+4f, delegate { Anim(1);}),
+                        new BeatAction.Action(targetBeat+5f, delegate { Halt(); stroke = StrokeType.TOME;}),
+                        new BeatAction.Action(targetBeat+6.5f, delegate { Anim(3, "end");}),
+                        new BeatAction.Action(targetBeat+7f, delegate { End();}),
                     });
                     game.ScheduleInput(targetBeat+5f, 1f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
 
-                case (int)LetterType.chikara:
+                case (int)CharacterType.chikara:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/brushTap", targetBeat),
@@ -137,22 +111,31 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     });
                     BeatAction.New(this, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(targetBeat+4f, delegate
+                        new BeatAction.Action(targetBeat, delegate
                         {
-                            onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
+                            fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                            Anim(1);
                         }),
-                        new BeatAction.Action(targetBeat+7f, delegate
-                        { 
-                            isEnd = true;
-                            fudeAnim.Play("fude-none");
-                            paperAnim.enabled = false;
+                        new BeatAction.Action(targetBeat+0.5f, delegate { Anim(2);}),
+                        new BeatAction.Action(targetBeat+1f, delegate { Anim(3);}),
+                        new BeatAction.Action(targetBeat+2f, delegate
+                        {
+                            fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                            Anim(4);
                         }),
+                        new BeatAction.Action(targetBeat+2.5f, delegate { Anim(5);}),
+                        new BeatAction.Action(targetBeat+3f, delegate { 
+                            fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                            Anim(6);
+                        }),
+                        new BeatAction.Action(targetBeat+4f, delegate { Sweep(); stroke = StrokeType.HARAI;}),
+                        new BeatAction.Action(targetBeat+6.5f, delegate { Anim(8, "end");}),
+                        new BeatAction.Action(targetBeat+7f, delegate { End();}),
                     });
-                    game.ScheduleInput(targetBeat+4f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
+                    game.ScheduleInput(targetBeat+4f, 2f, PowerCalligraphy.InputAction_FlickPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
 
-                case (int)LetterType.onore:
+                case (int)CharacterType.onore:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/brushTap", targetBeat),
@@ -164,22 +147,27 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     });
                     BeatAction.New(this, new List<BeatAction.Action>()
                     {
+                        new BeatAction.Action(targetBeat, delegate
+                        {
+                            fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                            Anim(1);
+                        }),
+                        new BeatAction.Action(targetBeat+1f, delegate { Anim(2);}),
+                        new BeatAction.Action(targetBeat+1.5f, delegate { Anim(3);}),
+                        new BeatAction.Action(targetBeat+2f, delegate { Anim(4);}),
+                        new BeatAction.Action(targetBeat+3f, delegate { Anim(5);}),
                         new BeatAction.Action(targetBeat+4f, delegate
                         {
-                            onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
+                            Anim(6);
+                            Sweep(); stroke = StrokeType.HANE;
                         }),
-                        new BeatAction.Action(targetBeat+7f, delegate
-                        { 
-                            isEnd = true;
-                            fudeAnim.Play("fude-none");
-                            paperAnim.enabled = false;
-                        }),
+                        new BeatAction.Action(targetBeat+6.5f, delegate { Anim(8, "end");}),
+                        new BeatAction.Action(targetBeat+7f, delegate { End();}),
                     });
-                    game.ScheduleInput(targetBeat+4f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
+                    game.ScheduleInput(targetBeat+4f, 2f, PowerCalligraphy.InputAction_FlickPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
 
-                case (int)LetterType.sun:
+                case (int)CharacterType.sun:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/brushTap", targetBeat),
@@ -189,30 +177,16 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     });
                     BeatAction.New(this, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(targetBeat+2f, delegate
-                        {
-                            num = 1;
-                            onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
-                        }),
-                        new BeatAction.Action(targetBeat+5f, delegate
-                        {
-                            num = 2;
-                            onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1", forcePlay: true);
-                        }),
-                        new BeatAction.Action(targetBeat+7f, delegate
-                        { 
-                            isEnd = true;
-                            fudeAnim.Play("fude-none");
-                            paperAnim.enabled = false;
-                        }),
+                        new BeatAction.Action(targetBeat+2f, delegate { Sweep(); stroke = StrokeType.HANE; num = 1;}),
+                        new BeatAction.Action(targetBeat+5f, delegate { Halt(); stroke = StrokeType.TOME; num = 2;}),
+                        new BeatAction.Action(targetBeat+6.5f, delegate { Anim(8, "end");}),
+                        new BeatAction.Action(targetBeat+7f, delegate { End();}),
                     });
-                    game.ScheduleInput(targetBeat+2f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
+                    game.ScheduleInput(targetBeat+2f, 2f, PowerCalligraphy.InputAction_FlickPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     game.ScheduleInput(targetBeat+5f, 1f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
 
-                case (int)LetterType.kokoro:
+                case (int)CharacterType.kokoro:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/brush3", targetBeat),
@@ -222,30 +196,16 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     });
                     BeatAction.New(this, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(targetBeat+1f, delegate
-                        {
-                            num = 1;
-                            onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
-                        }),
-                        new BeatAction.Action(targetBeat+5f, delegate
-                        {
-                            num = 2;
-                            onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1", forcePlay: true);
-                        }),
-                        new BeatAction.Action(targetBeat+7f, delegate
-                        { 
-                            isEnd = true;
-                            fudeAnim.Play("fude-none");
-                            paperAnim.enabled = false;
-                        }),
+                        new BeatAction.Action(targetBeat+1f, delegate { Sweep(); stroke = StrokeType.HANE; num = 1;}),
+                        new BeatAction.Action(targetBeat+5f, delegate { Halt(); stroke = StrokeType.TOME; num = 2;}),
+                        new BeatAction.Action(targetBeat+6.5f, delegate { Anim(8, "end");}),
+                        new BeatAction.Action(targetBeat+7f, delegate { End();}),
                     });
-                    game.ScheduleInput(targetBeat+1f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
+                    game.ScheduleInput(targetBeat+1f, 2f, PowerCalligraphy.InputAction_FlickPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     game.ScheduleInput(targetBeat+5f, 1f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
 
-                case (int)LetterType.face:
+                case (int)CharacterType.face:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/brush1", targetBeat),
@@ -265,22 +225,13 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     });
                     BeatAction.New(this, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(targetBeat+8f, delegate
-                        {
-                            onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
-                        }),
-                        new BeatAction.Action(targetBeat+11f, delegate
-                        { 
-                            isEnd = true;
-                            fudeAnim.Play("fude-none");
-                            paperAnim.enabled = false;
-                        }),
+                        new BeatAction.Action(targetBeat+8f, delegate{ Sweep(); stroke = StrokeType.HARAI;}),
+                        new BeatAction.Action(targetBeat+11f, delegate { End();}),
                     });
                     game.ScheduleInput(targetBeat+8f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
 
-                case (int)LetterType.face_korean:
+                case (int)CharacterType.face_korean:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/brush1", targetBeat),
@@ -300,31 +251,44 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     });
                     BeatAction.New(this, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(targetBeat+8f, delegate
-                        {
-                            onGoing = true;
-                            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
-                        }),
-                        new BeatAction.Action(targetBeat+11f, delegate
-                        { 
-                            isEnd = true;
-                            fudeAnim.Play("fude-none");
-                            paperAnim.enabled = false;
-                        }),
+                        new BeatAction.Action(targetBeat+8f, delegate { Sweep(); stroke = StrokeType.HARAI;}),
+                        new BeatAction.Action(targetBeat+11f, delegate { End();}),
                     });
                     game.ScheduleInput(targetBeat+8f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
             }
         }
 
+        // TOME
+        private void Halt()
+        {
+            onGoing = true;
+            fudeAnim.DoScaledAnimationAsync("fude-halt", 0.5f);
+            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1", forcePlay: true);
+        }
+        // HANE HARAI
+        private void Sweep()
+        {
+            onGoing = true;
+            fudeAnim.DoScaledAnimationAsync("fude-sweep", 0.5f);
+            releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
+        }
+        private void End()
+        {
+            isEnd = true;
+            fudeAnim.Play("fude-none");
+            paperAnim.enabled = false;
+        }
+
+
         private void writeSuccess(PlayerActionEvent caller, float state)
         {
             if (state >= 1f)
-                Late();
+                ProcessInput("late");
             else if (state <= -1f)
-                Fast();
+                ProcessInput("fast");
             else
-                Just();
+                ProcessInput("just");
         }
 
         private void writeMiss(PlayerActionEvent caller)
@@ -340,177 +304,148 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
             return onGoing;
         }
 
-        public void Just()
+        public void ProcessInput(string input)
         {
             onGoing = false;
-            switch(type)
+            switch(ctype)
             {
-                case (int)LetterType.re:
+                case (int)CharacterType.re:
                     fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
-                    paperAnim.Play("paper-re03-just");
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-re03-just", 0.5f);
-                    SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
+                    Anim(3, input);
                     break;
                 
-                case (int)LetterType.comma:
+                case (int)CharacterType.comma:
+                    switch (input) {
+                        case "just":
+                            fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                            break;
+                        default:
+                            break;
+                    }
                     fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
-                    paperAnim.Play("paper-comma01-just");
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-comma02-just", 0.5f);
-                    SoundByte.PlayOneShotGame("powerCalligraphy/releaseB2");
+                    Anim(2, input);
                     break;
 
-                case (int)LetterType.chikara:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
+                case (int)CharacterType.chikara:
+                    fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                    Anim(7, input);
                     break;
 
-                case (int)LetterType.onore:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
+                case (int)CharacterType.onore:
+                    fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                    Anim(7, input);
                     break;
 
-                case (int)LetterType.sun:
+                case (int)CharacterType.sun:
                     if (num==1) {
-                        SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
                     } else {
-                        SoundByte.PlayOneShotGame("powerCalligraphy/releaseB2");
                     }
                     break;
 
-                case (int)LetterType.kokoro:
+                case (int)CharacterType.kokoro:
                     if (num==1) {
-                        SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
                     } else {
-                        SoundByte.PlayOneShotGame("powerCalligraphy/releaseB2");
                     }
                     break;
 
-                case (int)LetterType.face:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
+                case (int)CharacterType.face:
                     break;
 
-                case (int)LetterType.face_korean:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
+                case (int)CharacterType.face_korean:
                     break;
             }
-        }
-        public void Late()
-        {
-            onGoing = false;
-            switch(type)
+            
+            switch (input)
             {
-                case (int)LetterType.re:
-                    paperAnim.Play("paper-re03-late");
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-re03-late", 0.5f);
-                    SoundByte.PlayOneShotGame("powerCalligraphy/6");    // WIP  HANE-miss?
+                case "just":
+                    switch (stroke) {
+                        case StrokeType.TOME:
+                            SoundByte.PlayOneShotGame("powerCalligraphy/releaseB2");
+                            break;
+                            
+                        case StrokeType.HANE:
+                        case StrokeType.HARAI:
+                            SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
+                            break;
+                    }
                     break;
-                
-                case (int)LetterType.comma:
-                    paperAnim.Play("paper-comma01-late");
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-comma02-late", 0.5f);
-                    SoundByte.PlayOneShotGame("powerCalligraphy/8");    // WIP  TOME-miss?
+                    
+                case "late":
+                case "fast":
+                    switch (stroke) {   // WIP
+                        case StrokeType.TOME:
+                            SoundByte.PlayOneShotGame("powerCalligraphy/8");
+                            break;
+                        case StrokeType.HANE:
+                            SoundByte.PlayOneShotGame("powerCalligraphy/6");    
+                            break;
+                        case StrokeType.HARAI:
+                            SoundByte.PlayOneShotGame("powerCalligraphy/9");
+                            break;
+                    }
                     break;
-
-                case (int)LetterType.chikara:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
-                    break;
-
-                case (int)LetterType.onore:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/6");    // WIP  HANE-miss?
-                    break;
-
-                case (int)LetterType.sun:
-                    break;
-
-                case (int)LetterType.kokoro:
-                    break;
-
-                case (int)LetterType.face:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
-                    break;
-
-                case (int)LetterType.face_korean:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
-                    break;
-            }
-        }
-        public void Fast()
-        {
-            onGoing = false;
-            switch(type)
-            {
-                case (int)LetterType.re:
-                    paperAnim.Play("paper-re03-fast");
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-re03-fast", 0.5f);
-                    SoundByte.PlayOneShotGame("powerCalligraphy/6");    // WIP  HANE-miss?
-                    break;
-                
-                case (int)LetterType.comma:
-                    paperAnim.Play("paper-comma01-fast");
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-comma02-fast", 0.5f);
-                    SoundByte.PlayOneShotGame("powerCalligraphy/8");    // WIP  TOME-miss?
-                    break;
-
-                case (int)LetterType.chikara:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
-                    break;
-
-                case (int)LetterType.onore:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/6");    // WIP  HANE-miss?
-                    break;
-
-                case (int)LetterType.sun:
-                    break;
-
-                case (int)LetterType.kokoro:
-                    break;
-
-                case (int)LetterType.face:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
-                    break;
-
-                case (int)LetterType.face_korean:
-                    SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
+                default:
                     break;
             }
 
-            if (releaseSound is null) Debug.Log("!");
-            if (releaseSound is not null)
+            // not work
+            if (input == "fast" && releaseSound is not null)
             {
-                Debug.Log("?");
                 releaseSound.Stop();
                 releaseSound = null;
             }
         }
+        
         public void Miss()
         {
             onGoing = false;
             SoundByte.PlayOneShotGame("powerCalligraphy/7");    // WIP
-            switch(type)
+            switch(ctype)
             {
-                case (int)LetterType.re:
+                case (int)CharacterType.re:
                     break;
                 
-                case (int)LetterType.comma:
+                case (int)CharacterType.comma:
                     fudePosAnim.DoScaledAnimationAsync("fudePos-comma02-miss", 0.5f);
                     break;
 
-                case (int)LetterType.chikara:
+                case (int)CharacterType.chikara:
                     break;
 
-                case (int)LetterType.onore:
+                case (int)CharacterType.onore:
                     break;
 
-                case (int)LetterType.sun:
+                case (int)CharacterType.sun:
                     break;
 
-                case (int)LetterType.kokoro:
+                case (int)CharacterType.kokoro:
                     break;
 
-                case (int)LetterType.face:
+                case (int)CharacterType.face:
                     break;
 
-                case (int)LetterType.face_korean:
+                case (int)CharacterType.face_korean:
                     break;
             }
+        }
+
+        private void Anim(int num, string str = "")
+        {
+            string pattern = ctype switch {
+                (int)CharacterType.re => "re",
+                (int)CharacterType.comma => "comma",
+                (int)CharacterType.chikara => "chikara",
+                (int)CharacterType.onore => "onore",
+                (int)CharacterType.sun => "sun",
+                (int)CharacterType.kokoro => "kokoro",
+                (int)CharacterType.face => "face",
+                (int)CharacterType.face_korean => "face_kr",
+            } + num.ToString("D2") + ((str != "") ? "-" + str : str);
+
+            fudePosAnim.DoScaledAnimationAsync("fudePos-" + pattern, 0.5f);
+            paperAnim.DoScaledAnimationAsync("paper-" + pattern, 0.5f);
+            
+            
         }
 
         private void Update()
@@ -527,7 +462,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     var newPaperX = paperPos.x + (scrollRateX * Time.deltaTime);
                     var newPaperY = paperPos.y + (scrollRateY * Time.deltaTime);
                     transform.localPosition = new Vector3(newPaperX, newPaperY, paperPos.z);
-                    if (beat >= targetBeat + 13) Destroy(gameObject);
+                    if (beat >= targetBeat + 15) Destroy(gameObject);
                 }
             }
         }
