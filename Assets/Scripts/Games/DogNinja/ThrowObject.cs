@@ -78,7 +78,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Hit(PlayerActionEvent caller, float state)
         {
-            game.queuePrepare = false;
+            game.StopPrepare();
             string dir = direction switch {
                 0 => "Left",
                 1 => "Right",
@@ -112,8 +112,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             if (!game.queuePrepare) return;
             DogAnim.DoScaledAnimationAsync("Unprepare", 0.5f);
-            game.queuePrepare = false;
-            game.preparing = false;
+            game.StopPrepare();
         }
     }
 }

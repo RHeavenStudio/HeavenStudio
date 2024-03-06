@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -13,6 +14,37 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
+            RiqEntity ObjectUpdater(string datamodel, RiqEntity e)
+            {
+                if (datamodel == "dogNinja/ThrowObject" && e.version == 0)
+                {
+                    Debug.Log("entity at beat " + e.beat + " is the same? " + (e["typeL"] == e["typeR"]));
+                    bool diff = e["typeL"] == e["typeR"];
+                    Debug.Log("entity at beat " + e.beat + " is the same? " + (e["typeL"] == e["typeR"]));
+                    e.CreateProperty("type", diff ? e["typeL"] : DogNinja.ObjectType.Random);
+                    e.version = 1;
+
+                    return e;
+                }
+                return null;
+            }
+            // RiqEntity BirdUpdater(string datamodel, RiqEntity e)
+            // {
+            //     if (datamodel == "dogNinja/CutEverything" && e.version == 0)
+            //     {
+            //         RiqEntity nextBird = eventCaller.gameManager.Beatmap.Entities.Find(c => c.datamodel is "dogNinja/CutEverything" && c.beat > e.beat);
+            //         if (nextBird != null) nextBird.datamodel = "dogNinja/DELETE THIS";
+            //         e.length = nextBird != null ? (float)(nextBird.beat - e.beat) : 4;
+            //         e.version = 1;
+
+            //         return e;
+            //     }
+            //     return null;
+            // }
+
+            RiqBeatmap.OnUpdateEntity += ObjectUpdater;
+            // RiqBeatmap.OnUpdateEntity += BirdUpdater;
+
             return new Minigame("dogNinja", "Dog Ninja", "554899", false, false, new List<GameAction>()
             {
                 new GameAction("Bop", "Bop")
@@ -34,27 +66,16 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out DogNinja instance)) {
-                            instance.Prepare(eventCaller.currentEntity.beat);
+                            instance.DoPrepare(eventCaller.currentEntity.beat);
                         }
                     },
                     defaultLength = 0.5f,
                 },
                 new GameAction("ThrowObject", "Throw Object")
                 {
-                    // function = delegate {
-                    //     var e = eventCaller.currentEntity;
-                    //     (int typeL, int typeR) = e["diffObjs"] ? ((int)e["typeL"], (int)e["typeR"]) : ((int)e["type"], (int)e["type"]);
-                    //     DogNinja.QueueObject(e.beat, e["direction"], e["diffObjs"], typeL, typeR, e["shouldPrepare"], false, e);
-                    // },
-                    // inactiveFunction = delegate {
-                    //     var e = eventCaller.currentEntity;
-                    //     (int typeL, int typeR) = e["diffObjs"] ? ((int)e["typeL"], (int)e["typeR"]) : ((int)e["type"], (int)e["type"]);
-                    //     DogNinja.QueueObject(e.beat, e["direction"], e["diffObjs"], typeL, typeR, e["shouldPrepare"], e["muteThrow"], e);
-                    // },
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        (int typeL, int typeR) = e["diffObjs"] ? ((int)e["typeL"], (int)e["typeR"]) : ((int)e["type"], (int)e["type"]);
-                        DogNinja.QueueObject(e.beat, e["direction"], e["diffObjs"], e["type"], typeL, typeR, e["shouldPrepare"], e["muteThrow"], e);
+                        DogNinja.QueueObject(e.beat, e["direction"], e["diffObjs"], e["type"], e["typeL"], e["typeR"], e["shouldPrepare"], e["muteThrow"], e);
                     },
                     defaultLength = 2,
                     parameters = new List<Param>()
@@ -94,10 +115,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2,
                     preFunctionLength = 1,
                 },
-            },
-            new List<string>() { "ntr", "normal" },
-            "ntrninja", "en",
-            new List<string>() { }
+            }
+            // ,
+            // new List<string>() { "ntr", "normal" },
+            // "ntrninja", "en",
+            // new List<string>() { }
             );
         }
     }
@@ -120,7 +142,7 @@ namespace HeavenStudio.Games
         public Animator BirdAnim;   // bird flying in and out
 
         [Header("References")]
-        [SerializeField] GameObject ObjectBase;
+        [SerializeField] ThrowObject ObjectBase;
         [SerializeField] GameObject FullBird;
         [SerializeField] SpriteRenderer WhichObject;
         public SpriteRenderer WhichLeftHalf;
@@ -133,7 +155,7 @@ namespace HeavenStudio.Games
 
         [SerializeField] Sprite[] ObjectTypes;
 
-        private bool autoBop;
+        private bool autoBop = true;
         public bool queuePrepare;
         public bool preparing;
 
@@ -189,33 +211,42 @@ namespace HeavenStudio.Games
 
         public override void OnLateBeatPulse(double beat)
         {
-            if (autoBop && preparing && (DogAnim.IsAnimationNotPlaying() || DogAnim.IsPlayingAnimationNames("Idle"))) {
+            if (autoBop && !preparing && !queuePrepare && (DogAnim.IsAnimationNotPlaying() || DogAnim.IsPlayingAnimationNames("Idle"))) {
                 DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
             }
         }
 
-        public override void OnPlay(double beat) => Persist(beat, true);
-        public override void OnGameSwitch(double beat) => Persist(beat, false);
-        private void Persist(double beat, bool onPlay)
+        public override void OnPlay(double beat)
         {
-            foreach (var e in gameManager.Beatmap.Entities.FindAll(e => e.datamodel is "dogNinja/ThrowObject" && beat > (onPlay ? e.beat : e.beat - 2) && beat < e.beat + 1))
+            foreach (var e in gameManager.Beatmap.Entities.FindAll(e => e.datamodel is "dogNinja/ThrowObject" && beat > e.beat && beat < e.beat + 1))
             {
-                QueuedThrow t = new();
-                if (e.dynamicData.TryGetValue("throwData", out dynamic temp)) {
-                    t = temp;
-                } else {
-                    QueueObject(e.beat, e["direction"], e["diffObjs"], e["type"], e["typeL"], e["typeR"], e["shouldPrepare"], true, e);
-                }
-                ThrowObject(e.beat, e["direction"], e["shouldPrepare"], t.types, t.sfxNumL, t.sfxNumR);
+                DogAnim.Play("Prepare", 0, 1);
+                preparing = true;
+                QueueObject(e.beat, e["direction"], e["diffObjs"], e["type"], e["typeL"], e["typeR"], e["shouldPrepare"], true, e);
+            }
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            foreach (var e in gameManager.Beatmap.Entities.FindAll(e => e.datamodel is "dogNinja/ThrowObject" && beat > e.beat - 2 && beat < e.beat + 1))
+            {
+                // if (!e.dynamicData.ContainsKey("throwData")) {
+                //     QueueObject(e.beat, e["direction"], e["diffObjs"], e["type"], e["typeL"], e["typeR"], e["shouldPrepare"], true, e);
+                // }
+                QueuedThrow t = e["throwData"];
+                DogAnim.Play("Prepare", 0, 1);
+                preparing = true;
+                ThrowObject(e.beat, e["direction"], t.types, t.sfxNumL, t.sfxNumR);
             }
         }
 
         private void Update()
         {
             // prepare queuing stuff
-            if (queuePrepare && DogAnim.IsAnimationNotPlaying())
+            if (queuePrepare && (DogAnim.IsAnimationNotPlaying() || DogAnim.IsPlayingAnimationNames("Bop")))
             {
                 DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+                preparing = true;
                 queuePrepare = false;
             }
 
@@ -227,8 +258,7 @@ namespace HeavenStudio.Games
             }
             if (PlayerInput.GetIsAction(InputAction_TouchRelease) && (!IsExpectingInputNow(InputAction_Press)) && (!GameManager.instance.autoplay))
             {
-                queuePrepare = false;
-                preparing = false;
+                StopPrepare();
                 DogAnim.DoScaledAnimationAsync("Unprepare", 0.5f);
             }
 
@@ -240,6 +270,16 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("dogNinja/whiff");
                 queuePrepare = false;
             }
+        }
+
+        private void LateUpdate()
+        {
+            // // prepare queuing stuff
+            // if (queuePrepare && (DogAnim.IsAnimationNotPlaying() || DogAnim.IsPlayingAnimationNames("Bop", "Idle")))
+            // {
+            //     DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+            //     queuePrepare = false;
+            // }
         }
 
         public void Bop(double beat, float length, bool auto, bool bop)
@@ -274,7 +314,13 @@ namespace HeavenStudio.Games
             }
 
             if (GameManager.instance.minigameObj.TryGetComponent(out DogNinja instance)) {
-                instance.ThrowObject(beat, direction, prepare, types, sfxNums[0], sfxNums[1]);
+                instance.ThrowObject(beat, direction, types, sfxNums[0], sfxNums[1]);
+                
+                if (prepare) {
+                    BeatAction.New(instance, new() {
+                        new(beat, () => instance.queuePrepare = PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch || GameManager.instance.autoplay)
+                    });
+                }
             } else {
                 var queuedThrow = new QueuedThrow() {
                     types = types,
@@ -288,16 +334,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ThrowObject(double beat, int direction, bool prepare, int[] types, string sfxNumL, string sfxNumR)
+        public void ThrowObject(double beat, int direction, int[] types, string sfxNumL, string sfxNumR)
         {
-            BeatAction.New(this, new() {
-                new(beat, () => queuePrepare = prepare && (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch || GameManager.instance.autoplay))
-            });
             for (int i = 0; i < (direction == 2 ? 2 : 1); i++)
             {
                 bool l = direction is 2 ? i == 0 : direction == 0;
                 WhichObject.sprite = ObjectTypes[l ? types[0] : types[1]];
-                ThrowObject obj = Instantiate(ObjectBase, gameObject.transform).GetComponent<ThrowObject>();
+                ThrowObject obj = Instantiate(ObjectBase, transform);
                 obj.startBeat = beat;
                 obj.direction = direction;
                 obj.fromLeft = l;
@@ -305,31 +348,6 @@ namespace HeavenStudio.Games
                 obj.sfxNum = l ? sfxNumL : sfxNumR;
                 if (direction == 2) obj.shouldSfx = l == (types[0] == types[1]);
             }
-            // if (direction is 0 or 2)
-            // {
-            //     WhichObject.sprite = ObjectTypes[typeL];
-            //     ThrowObject ObjectL = Instantiate(ObjectBase, gameObject.transform).GetComponent<ThrowObject>();
-            //     ObjectL.startBeat = beat;
-            //     ObjectL.curve = CurveFromLeft;
-            //     ObjectL.fromLeft = true;
-            //     ObjectL.direction = direction;
-            //     ObjectL.type = typeL;
-            //     ObjectL.sfxNum = sfxNumL;
-            //     if (direction == 2) ObjectL.shouldSfx = (typeL == typeR);
-            // }
-
-            // if (direction is 1 or 2)
-            // {
-            //     WhichObject.sprite = ObjectTypes[typeR];
-            //     ThrowObject ObjectR = Instantiate(ObjectBase, gameObject.transform).GetComponent<ThrowObject>();
-            //     ObjectR.startBeat = beat;
-            //     ObjectR.curve = CurveFromRight;
-            //     ObjectR.fromLeft = false;
-            //     ObjectR.direction = direction;
-            //     ObjectR.type = typeR;
-            //     ObjectR.sfxNum = sfxNumR;
-            //     if (direction == 2) ObjectR.shouldSfx = !(typeL == typeR);
-            // }
         }
 
         public void CutEverything(double beat, float length, bool sound, string customText)
@@ -343,7 +361,13 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void Prepare(double beat)
+        public void StopPrepare()
+        {
+            preparing = false;
+            queuePrepare = false;
+        }
+
+        public void DoPrepare(double beat)
         {
             if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && PlayerInput.PlayerHasControl()) return;
             if (!queuePrepare) DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
@@ -352,11 +376,7 @@ namespace HeavenStudio.Games
 
         public static void HereWeGo(double beat)
         {
-            MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound("dogNinja/here", beat),
-                new MultiSound.Sound("dogNinja/we", beat + 0.5f),
-                new MultiSound.Sound("dogNinja/go", beat + 1f)
-            }, forcePlay: true);
+            PlaySoundSequence("dogNinja", "here_we_go", beat);
         }
     }
 }
