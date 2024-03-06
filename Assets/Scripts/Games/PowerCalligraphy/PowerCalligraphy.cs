@@ -18,17 +18,37 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("powerCalligraphy", "Power Calligraphy", "ffffff", false, false, new List<GameAction>()
             {
-                new GameAction("write", "Write")
+                new GameAction("re", "Re (レ)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, e["type"], e["prepare"]); },
-                    function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, e["type"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.LetterType.re, e["prepare"]); },
+                    function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.LetterType.re); },
                     parameters = new List<Param>() 
                     {
-                        new Param("type", PowerCalligraphy.LetterType.re, "Type", "Choose the letter to write."),
                         new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
                     },
                     defaultLength = 8f,
                 },
+                new GameAction("comma", "Comma (、)")
+                {
+                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.LetterType.comma, e["prepare"]); },
+                    function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.LetterType.comma); },
+                    parameters = new List<Param>() 
+                    {
+                        new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
+                    },
+                    defaultLength = 8f,
+                },
+                // new GameAction("write", "Write")
+                // {
+                //     preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, e["type"], e["prepare"]); },
+                //     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, e["type"]); },
+                //     parameters = new List<Param>() 
+                //     {
+                //         new Param("type", PowerCalligraphy.LetterType.re, "Type", "Choose the letter to write."),
+                //         new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
+                //     },
+                //     defaultLength = 8f,
+                // },
             },
             new List<string>() { "agb", "normal" }, "agbCalligraphy", "en", new List<string>() { }
             );
@@ -53,13 +73,13 @@ namespace HeavenStudio.Games
         public enum LetterType
         {
             re,
-            ten,
+            comma,
             chikara,
             onore,
             sun,
             kokoro,
-            tsurunihamushi,
-            tsurunihamushi_korean,
+            face,
+            face_korean,
         }
         public struct QueuedPaper
         {
@@ -139,13 +159,13 @@ namespace HeavenStudio.Games
             SpawnPaper(beat, type);
             fudePosAnim.Play(type switch {
                 (int)LetterType.re => "fudePos-re00",
-                (int)LetterType.ten => "fudePos-ten00",
+                (int)LetterType.comma => "fudePos-comma00",
                 (int)LetterType.chikara => "fudePos-chikara00",
                 (int)LetterType.onore => "fudePos-onore00",
                 (int)LetterType.sun => "fudePos-sun00",
                 (int)LetterType.kokoro => "fudePos-kokoro00",
-                (int)LetterType.tsurunihamushi => "fudePos-tsurunihamushi00",
-                (int)LetterType.tsurunihamushi_korean => "fudePos-tsurunihamushi_kr00",
+                (int)LetterType.face => "fudePos-face00",
+                (int)LetterType.face_korean => "fudePos-face_kr00",
             });
             isPrepare = true;
         }

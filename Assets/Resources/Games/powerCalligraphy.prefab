@@ -156,7 +156,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 14
   m_Sprite: {fileID: 2142888950, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -806,7 +806,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.03, y: 3.65, z: 0}
   m_LocalScale: {x: 2.1, y: 2.1, z: 2.1}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2609182281090089549}
   m_RootOrder: 0
@@ -852,12 +852,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 15
-  m_Sprite: {fileID: -1824134705, guid: 4aa84d2ffe6f85b4eb45d80e768ba5be, type: 3}
+  m_Sprite: {fileID: 1419783882, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.55, y: 2.48}
+  m_DrawMode: 1
+  m_Size: {x: 0.55, y: 2.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1409,7 +1409,7 @@ GameObject:
   - component: {fileID: 624205592674416599}
   - component: {fileID: 7730938937389451918}
   m_Layer: 0
-  m_Name: paper_ten
+  m_Name: paper_comma
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

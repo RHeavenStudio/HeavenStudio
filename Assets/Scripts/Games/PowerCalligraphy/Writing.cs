@@ -13,13 +13,13 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
         public enum LetterType
         {
             re,
-            ten,
+            comma,
             chikara,
             onore,
             sun,
             kokoro,
-            tsurunihamushi,
-            tsurunihamushi_korean,
+            face,
+            face_korean,
         }
 
         public double targetBeat;
@@ -43,13 +43,13 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
 
             paperAnim.Play(type switch {
                 (int)LetterType.re => "paper-re00",
-                (int)LetterType.ten => "paper-ten00",
+                (int)LetterType.comma => "paper-comma00",
                 (int)LetterType.chikara => "paper-chikara00",
                 (int)LetterType.onore => "paper-onore00",
                 (int)LetterType.sun => "paper-sun00",
                 (int)LetterType.kokoro => "paper-kokoro00",
-                (int)LetterType.tsurunihamushi => "paper-tsurunihamushi00",
-                (int)LetterType.tsurunihamushi_korean => "paper-tsurunihamushi_kr00",
+                (int)LetterType.face => "paper-face00",
+                (int)LetterType.face_korean => "paper-face_kr00",
             });
         }
 
@@ -95,7 +95,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     game.ScheduleInput(targetBeat+4f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
                 
-                case (int)LetterType.ten:
+                case (int)LetterType.comma:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/comma1", targetBeat),
@@ -108,14 +108,14 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         new BeatAction.Action(targetBeat, delegate { fudeAnim.DoScaledAnimationAsync("fude-prepare", 0.5f);}),
                         new BeatAction.Action(targetBeat+2f, delegate { fudeAnim.DoScaledAnimationAsync("fude-prepare", 0.5f);}),
                         new BeatAction.Action(targetBeat+3f, delegate { fudeAnim.DoScaledAnimationAsync("fude-prepare", 0.5f);}),
-                        new BeatAction.Action(targetBeat+4f, delegate { fudePosAnim.DoScaledAnimationAsync("fudePos-ten01", 0.5f);}),
+                        new BeatAction.Action(targetBeat+4f, delegate { fudePosAnim.DoScaledAnimationAsync("fudePos-comma01", 0.5f);}),
                         new BeatAction.Action(targetBeat+5f, delegate
                         {
                             onGoing = true;
                             fudeAnim.DoScaledAnimationAsync("fude-pause", 0.5f);
                             releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1", forcePlay: true);
                         }),
-                        new BeatAction.Action(targetBeat+6f, delegate { paperAnim.Play("paper-ten02-end");}),
+                        new BeatAction.Action(targetBeat+6f, delegate { paperAnim.Play("paper-comma02-end");}),
                         new BeatAction.Action(targetBeat+7f, delegate
                         { 
                             isEnd = true;
@@ -245,7 +245,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     game.ScheduleInput(targetBeat+5f, 1f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
 
-                case (int)LetterType.tsurunihamushi:
+                case (int)LetterType.face:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/brush1", targetBeat),
@@ -280,7 +280,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     game.ScheduleInput(targetBeat+8f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
 
-                case (int)LetterType.tsurunihamushi_korean:
+                case (int)LetterType.face_korean:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/brush1", targetBeat),
@@ -352,10 +352,10 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
                     break;
                 
-                case (int)LetterType.ten:
+                case (int)LetterType.comma:
                     fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
-                    paperAnim.Play("paper-ten01-just");
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-ten02-just", 0.5f);
+                    paperAnim.Play("paper-comma01-just");
+                    fudePosAnim.DoScaledAnimationAsync("fudePos-comma02-just", 0.5f);
                     SoundByte.PlayOneShotGame("powerCalligraphy/releaseB2");
                     break;
 
@@ -383,11 +383,11 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     }
                     break;
 
-                case (int)LetterType.tsurunihamushi:
+                case (int)LetterType.face:
                     SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
                     break;
 
-                case (int)LetterType.tsurunihamushi_korean:
+                case (int)LetterType.face_korean:
                     SoundByte.PlayOneShotGame("powerCalligraphy/releaseA2");
                     break;
             }
@@ -403,9 +403,9 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     SoundByte.PlayOneShotGame("powerCalligraphy/6");    // WIP  HANE-miss?
                     break;
                 
-                case (int)LetterType.ten:
-                    paperAnim.Play("paper-ten01-late");
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-ten02-late", 0.5f);
+                case (int)LetterType.comma:
+                    paperAnim.Play("paper-comma01-late");
+                    fudePosAnim.DoScaledAnimationAsync("fudePos-comma02-late", 0.5f);
                     SoundByte.PlayOneShotGame("powerCalligraphy/8");    // WIP  TOME-miss?
                     break;
 
@@ -423,11 +423,11 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                 case (int)LetterType.kokoro:
                     break;
 
-                case (int)LetterType.tsurunihamushi:
+                case (int)LetterType.face:
                     SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
                     break;
 
-                case (int)LetterType.tsurunihamushi_korean:
+                case (int)LetterType.face_korean:
                     SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
                     break;
             }
@@ -443,9 +443,9 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     SoundByte.PlayOneShotGame("powerCalligraphy/6");    // WIP  HANE-miss?
                     break;
                 
-                case (int)LetterType.ten:
-                    paperAnim.Play("paper-ten01-fast");
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-ten02-fast", 0.5f);
+                case (int)LetterType.comma:
+                    paperAnim.Play("paper-comma01-fast");
+                    fudePosAnim.DoScaledAnimationAsync("fudePos-comma02-fast", 0.5f);
                     SoundByte.PlayOneShotGame("powerCalligraphy/8");    // WIP  TOME-miss?
                     break;
 
@@ -463,11 +463,11 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                 case (int)LetterType.kokoro:
                     break;
 
-                case (int)LetterType.tsurunihamushi:
+                case (int)LetterType.face:
                     SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
                     break;
 
-                case (int)LetterType.tsurunihamushi_korean:
+                case (int)LetterType.face_korean:
                     SoundByte.PlayOneShotGame("powerCalligraphy/9");    // WIP  HARAI-miss?
                     break;
             }
@@ -489,8 +489,8 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                 case (int)LetterType.re:
                     break;
                 
-                case (int)LetterType.ten:
-                    fudePosAnim.DoScaledAnimationAsync("fudePos-ten02-miss", 0.5f);
+                case (int)LetterType.comma:
+                    fudePosAnim.DoScaledAnimationAsync("fudePos-comma02-miss", 0.5f);
                     break;
 
                 case (int)LetterType.chikara:
@@ -505,10 +505,10 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                 case (int)LetterType.kokoro:
                     break;
 
-                case (int)LetterType.tsurunihamushi:
+                case (int)LetterType.face:
                     break;
 
-                case (int)LetterType.tsurunihamushi_korean:
+                case (int)LetterType.face_korean:
                     break;
             }
         }
