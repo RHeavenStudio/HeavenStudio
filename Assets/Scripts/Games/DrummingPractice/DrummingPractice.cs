@@ -67,10 +67,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorAStart", new Color(43/255f, 207/255f, 51/255f), "Color A Start", "Set the top-most color of the background gradient at the start of the event."),
-                        new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Color A End", "Set the top-most color of the background gradient at the end of the event."),
-                        new Param("colorBStart", new Color(1, 1, 1), "Color B Start", "Set the bottom-most color of the background gradient at the start of the event."),
-                        new Param("colorB", new Color(1, 1, 1), "Color B End", "Set the bottom-most color of the background gradient at the end of the event."),
+                        new Param("colorAStart", new Color(43/255f, 207/255f, 51/255f), "Top Color Start", "Set the top-most color of the background gradient at the start of the event."),
+                        new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Top Color End", "Set the top-most color of the background gradient at the end of the event."),
+                        new Param("colorBStart", new Color(1, 1, 1), "Bottom Color Start", "Set the bottom-most color of the background gradient at the start of the event."),
+                        new Param("colorB", new Color(1, 1, 1), "Bottom Color End", "Set the bottom-most color of the background gradient at the end of the event."),
                         new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "Set the color of the streaks that appear upon a successful hit."),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.")
                     }
@@ -280,46 +280,22 @@ namespace HeavenStudio.Games
             SetFaces(0);
         }
 
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart = new Color(43 / 255f, 207 / 255f, 51 / 255f); //obviously put to the default color of the game
-        private Color colorEnd = new Color(43 / 255f, 207 / 255f, 51 / 255f);
-        private Color colorStartB = Color.white; //obviously put to the default color of the game
-        private Color colorEndB = Color.white;
-        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+        private ColorEase tColorEase = new(new Color(43 / 255f, 207 / 255f, 51 / 255f)); // top gradient color
+        private ColorEase bColorEase = new(Color.white); // bottom gradient color
 
         //call this in update
         private void BackgroundColorUpdate()
         {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
-
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            backgroundGradient.color = new Color(newR, newG, newB);
-
-            float newRB = func(colorStartB.r, colorEndB.r, normalizedBeat);
-            float newGB = func(colorStartB.g, colorEndB.g, normalizedBeat);
-            float newBB = func(colorStartB.b, colorEndB.b, normalizedBeat);
-
-            background.color = new Color(newRB, newGB, newBB);
+            backgroundGradient.color = tColorEase.GetColor();
+            background.color = bColorEase.GetColor();
         }
 
-        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color colorStartSetB, Color colorEndSetB, Color setStreak, int ease)
+        public void BackgroundColor(double beat, float length, Color colorStartSetT, Color colorEndSetT, Color colorStartSetB, Color colorEndSetB, Color setStreak, int ease)
         {
-            colorStartBeat = beat;
-            colorLength = length;
-            colorStart = colorStartSet;
-            colorEnd = colorEndSet;
-            colorStartB = colorStartSetB;
-            colorEndB = colorEndSetB;
-            colorEase = (Util.EasingFunction.Ease)ease;
+            tColorEase = new ColorEase(beat, length, colorStartSetT, colorEndSetT, ease);
+            bColorEase = new ColorEase(beat, length, colorStartSetB, colorEndSetB, ease);
 
-            foreach (SpriteRenderer streak in streaks)
-            {
+            foreach (SpriteRenderer streak in streaks) {
                 streak.color = new Color(setStreak.r, setStreak.g, setStreak.b, streak.color.a);
             }
         }

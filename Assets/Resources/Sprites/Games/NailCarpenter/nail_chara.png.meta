@@ -1,0 +1,453 @@
+fileFormatVersion: 2
+guid: 99d6a57b351ee2046b9af317c31f4a05
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: nail_chara_hair_front
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2880
+        width: 1688
+        height: 960
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dca8193b04e17dc4eb255cda187c143b
+      internalID: -1598246482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_hair_back
+      rect:
+        serializedVersion: 2
+        x: 1655
+        y: 1862
+        width: 1360
+        height: 1877
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc38fa30fa5810640b9af7e4c217c6f6
+      internalID: -474160886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_hair_left
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1509
+        width: 459
+        height: 1359
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02438c5ea6c024440b7c7cfb8c928520
+      internalID: -735496830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_hair_right
+      rect:
+        serializedVersion: 2
+        x: 1234
+        y: 1356
+        width: 346
+        height: 1449
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 936288bd66cdd914e94359a2e99ed4c5
+      internalID: 1520843771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_face
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 1879
+        width: 774
+        height: 943
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6232431086cd537459e894c44be5ad0b
+      internalID: 124978603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_body
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 39
+        width: 1213
+        height: 1254
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4dd3ca66354a59a4bbc5684a0cad393c
+      internalID: -1425772400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_eye_open
+      rect:
+        serializedVersion: 2
+        x: 1479
+        y: 517
+        width: 690
+        height: 533
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3318b37826eb958469301679a03e1cce
+      internalID: 288899377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_eye_close
+      rect:
+        serializedVersion: 2
+        x: 2180
+        y: 589
+        width: 787
+        height: 393
+      alignment: 9
+      pivot: {x: 0.5073661, y: 0.62}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9815d7dc831339b4081314463a275f8b
+      internalID: 1041909238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_eye_smile
+      rect:
+        serializedVersion: 2
+        x: 2195
+        y: 105
+        width: 742
+        height: 382
+      alignment: 9
+      pivot: {x: 0.5249007, y: 0.6451014}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2998778605bc6046b7e588b00458c30
+      internalID: 39671668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_nose_mouth
+      rect:
+        serializedVersion: 2
+        x: 1576
+        y: 112
+        width: 424
+        height: 338
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a46754f1c3100df49a3e5aa7a64deeb9
+      internalID: -1080291351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_arm_0
+      rect:
+        serializedVersion: 2
+        x: 3053
+        y: 1853
+        width: 877
+        height: 1864
+      alignment: 9
+      pivot: {x: 0.47440004, y: 0.235016}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18e84dfd1001b9e43b72d5239b803649
+      internalID: -1543273638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_arm_1
+      rect:
+        serializedVersion: 2
+        x: 4006
+        y: 1834
+        width: 999
+        height: 2006
+      alignment: 9
+      pivot: {x: 0.20077401, y: 0.21361916}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c1c16964ac57a24f85b96ba599e2cdd
+      internalID: 1352923740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_arm_2
+      rect:
+        serializedVersion: 2
+        x: 5031
+        y: 2477
+        width: 1369
+        height: 1363
+      alignment: 9
+      pivot: {x: 0.13310996, y: 0.35271138}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 235844bddb854e64a95a4ab84085de2d
+      internalID: 931314201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_arm_3
+      rect:
+        serializedVersion: 2
+        x: 4967
+        y: 1319
+        width: 1433
+        height: 1005
+      alignment: 9
+      pivot: {x: 0.16205657, y: 0.81075436}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e825bb2327fe3a44885e2888d1373b1
+      internalID: -973307119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_chara_arm_4
+      rect:
+        serializedVersion: 2
+        x: 3315
+        y: 41
+        width: 1098
+        height: 1590
+      alignment: 9
+      pivot: {x: 0.6109899, y: 0.17657909}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e05eec7785c61647bbe01368490293c
+      internalID: -1220576532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      nail_chara_arm_0: -1543273638
+      nail_chara_arm_1: 1352923740
+      nail_chara_arm_2: 931314201
+      nail_chara_arm_3: -973307119
+      nail_chara_arm_4: -1220576532
+      nail_chara_body: -1425772400
+      nail_chara_eye_close: 1041909238
+      nail_chara_eye_open: 288899377
+      nail_chara_eye_smile: 39671668
+      nail_chara_face: 124978603
+      nail_chara_hair_back: -474160886
+      nail_chara_hair_front: -1598246482
+      nail_chara_hair_left: -735496830
+      nail_chara_hair_right: 1520843771
+      nail_chara_nose_mouth: -1080291351
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

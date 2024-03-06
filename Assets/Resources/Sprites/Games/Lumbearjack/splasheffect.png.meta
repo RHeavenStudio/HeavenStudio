@@ -1,0 +1,329 @@
+fileFormatVersion: 2
+guid: 03cf8fa15fef33b4c9f08af10c655a31
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: splash4
+      rect:
+        serializedVersion: 2
+        x: 1947
+        y: 812
+        width: 539
+        height: 491
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a68779f6e11561849b12cd2ac1c52908
+      internalID: -158097427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: splash1
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 839
+        width: 439
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46ee6fb9e8efcd64c8a7210ba0588e4a
+      internalID: -394713652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: splash2
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 826
+        width: 477
+        height: 451
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 911afc2f4eeed20479959bea0a1ac82e
+      internalID: -1538354990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: splash3
+      rect:
+        serializedVersion: 2
+        x: 1340
+        y: 828
+        width: 494
+        height: 451
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88ca1810845dcf3469b43aa1af88a933
+      internalID: 772165316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: splash5
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 173
+        width: 572
+        height: 529
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d82df04e4f8385740ae7a8d48fd31d02
+      internalID: 1085725373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: splash6
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 169
+        width: 575
+        height: 531
+      alignment: 9
+      pivot: {x: 0.4886517, y: 0.4836151}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ecddaa7cacf83b44ac8a71e9ac9deef
+      internalID: 1848463333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: splash7
+      rect:
+        serializedVersion: 2
+        x: 1305
+        y: 147
+        width: 579
+        height: 570
+      alignment: 9
+      pivot: {x: 0.50734836, y: 0.4847895}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb3f50071a8419645ac109f3378c6a8c
+      internalID: 1428347636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: splash8
+      rect:
+        serializedVersion: 2
+        x: 1906
+        y: 147
+        width: 602
+        height: 581
+      alignment: 9
+      pivot: {x: 0.50361305, y: 0.48128134}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9cfff61da46a17a44be89c8e3098237e
+      internalID: -1278426984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      splash1: -394713652
+      splash2: -1538354990
+      splash3: 772165316
+      splash4: -158097427
+      splash5: 1085725373
+      splash6: 1848463333
+      splash7: 1428347636
+      splash8: -1278426984
+      splasheffect_10: -785466961
+      splasheffect_11: -227729166
+      splasheffect_12: 1159209534
+      splasheffect_13: 213530882
+      splasheffect_14: 1903721386
+      splasheffect_15: -1805443636
+      splasheffect_16: -1477791365
+      splasheffect_17: 1396727557
+      splasheffect_18: 1961395598
+      splasheffect_19: 1849749238
+      splasheffect_20: -1868976709
+      splasheffect_21: 1423226713
+      splasheffect_22: 1137826166
+      splasheffect_23: 2068654463
+      splasheffect_24: 1446829776
+      splasheffect_25: 1955536089
+      splasheffect_26: 911740296
+      splasheffect_27: 1568957215
+      splasheffect_28: -1741094274
+      splasheffect_29: 2119930153
+      splasheffect_30: -669276726
+      splasheffect_31: -850536902
+      splasheffect_32: 986124286
+      splasheffect_33: 212632670
+      splasheffect_34: 455272372
+      splasheffect_35: 2013739944
+      splasheffect_36: -572441141
+      splasheffect_37: 1715486592
+      splasheffect_6: 788691735
+      splasheffect_9: -1223630644
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
