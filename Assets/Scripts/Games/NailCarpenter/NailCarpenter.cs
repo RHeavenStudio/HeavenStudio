@@ -439,7 +439,6 @@ namespace HeavenStudio.Games
                         break;
                     case ObjectType.ForceLayerCake:
                         SoundByte.PlayOneShotGame("nailCarpenter/signal1", itemBeat, forcePlay: true);
-                        SoundByte.PlayOneShotGame("nailCarpenter/signal2", itemBeat + 1, forcePlay: true);
                         SpawnSweet(itemBeat, startbeat, Sweet.sweetsType.LayerCake);
                         break;
                     default:
