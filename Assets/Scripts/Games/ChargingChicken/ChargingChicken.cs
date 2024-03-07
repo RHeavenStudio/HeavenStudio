@@ -263,7 +263,6 @@ namespace HeavenStudio.Games
 
         Island nextIsland;
         Island currentIsland;
-        Island staleIsland;
         Island stone;
         double journeyIntendedLength;
         StonePlatform[] stonePlatformJourney;
@@ -278,6 +277,8 @@ namespace HeavenStudio.Games
         int platformsPerBeat = 4;
 
         float forgivenessConstant = 1.3f;
+
+        double nextInputReady = 0;
 
         public enum DrumLoopList
         {
@@ -549,8 +550,8 @@ namespace HeavenStudio.Games
 
             //chicken/water movement speed
             if (nextIsland.isMoving) ChickenAnim.SetScaledAnimationSpeed((nextIsland.speed1 / 60) + 0.2f);
-            float waterFlowSpeed = (nextIsland.speed1 / 5.83f) + ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f);
-            if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.4f) < 0) 
+            float waterFlowSpeed = (nextIsland.speed1 / 5.83f) + ((1f / Conductor.instance.pitchedSecPerBeat) * 0.1f);
+            if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f) < 0) 
             {
                 if (waterFlowSpeed > 0) WaterAnim.speed = waterFlowSpeed;
                 if (!flowForward)
@@ -561,10 +562,10 @@ namespace HeavenStudio.Games
             }
             else 
             { 
-                if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.4f) > 0) WaterAnim.speed = (-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.4f);
+                if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f) > 0) WaterAnim.speed = (-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f);
                 if (flowForward)
                 {
-                    WaterAnim.DoScaledAnimationAsync("AntiScroll", (-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.4f));
+                    WaterAnim.DoScaledAnimationAsync("AntiScroll", (-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f));
                     flowForward = false; 
                 }
             }
@@ -609,7 +610,10 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL", volume: 0.5f);
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.50, delegate { SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL_WATER", volume: 0.5f); }),
+                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.60, delegate { 
+                        SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL_WATER", volume: 0.5f); 
+                        nextIsland.ChickenFall();
+                    }),
                 });
                 checkFallingDistance = false;
             }
@@ -686,6 +690,11 @@ namespace HeavenStudio.Games
             double length = Math.Ceiling(actualLength);
             if (length < 4) length = 4;
 
+            //don't queue more than one input at a time
+            if (beat < nextInputReady) return;
+            nextInputReady = beat + (length * 2);
+
+            //set up some variables
             yardsTextLength = length;
             double journeyBeat = beat + yardsTextLength;
 
@@ -1070,7 +1079,7 @@ namespace HeavenStudio.Games
                 foreach (var a in stonePlatformJourney)
                 {
                     stone = a.thisPlatform;
-                    stone.journeyEnd += (stone.journeyLength - ((stone.journeyBlastOffTime - journeyIntendedLength)) * (stone.journeyLength / (stone.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
+                    stone.journeyEnd += (stone.journeyLength - ((stone.journeyBlastOffTime - journeyIntendedLength)) * (stone.journeyLength / (stone.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant + 1.5);
                     stone.journeyEnd += stoneAdder;
                     stone.journeyLength = Math.Clamp(((stone.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (stone.journeyLength / 3) - 1, 0, stone.journeyLength - 2);
                 }
@@ -1236,7 +1245,10 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL", volume: 0.5f);
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.50, delegate { SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL_WATER", volume: 0.5f); }),
+                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.60, delegate { 
+                        SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL_WATER", volume: 0.5f); 
+                        nextIsland.ChickenFall();
+                    }),
                 });
             }
 
@@ -1258,7 +1270,7 @@ namespace HeavenStudio.Games
             ChickenRespawn();
         }
 
-        public void ChickenRespawn(double length = 0.5)
+        public void ChickenRespawn(double length = 0.6)
         {
             isInputting = false;
 
@@ -1279,10 +1291,8 @@ namespace HeavenStudio.Games
             BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(nextIsland.respawnEnd, delegate { 
-                    if (staleIsland != null) staleIsland.isRespawning = false;
                     currentIsland.isRespawning = false;
                     nextIsland.isRespawning = false;
-                    if (staleIsland != null) staleIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     currentIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     nextIsland.FakeChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
                     foreach (var a in stonePlatformJourney)

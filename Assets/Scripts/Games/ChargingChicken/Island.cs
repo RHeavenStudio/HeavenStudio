@@ -25,7 +25,9 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [SerializeField] public GameObject Platform2;
         [SerializeField] public GameObject Platform3;
         [SerializeField] public ParticleSystem IslandCollapse;
+        [SerializeField] public ParticleSystem IslandCollapseNg;
         [SerializeField] public ParticleSystem StoneSplashEffect;
+        [SerializeField] public ParticleSystem ChickenSplashEffect;
 
         [NonSerialized]public double journeySave = 0;
         [NonSerialized]public double journeyStart = 0;
@@ -139,7 +141,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         {
             SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_LAND_RESET", volume: 0.7f);
             SmallLandmass.SetActive(false);
-            IslandCollapse.Play();
+            IslandCollapseNg.Play();
         }
 
         #endregion
@@ -167,7 +169,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         public void StoneFall(int offset, bool tooLate)
         {
             if (tooLate) return;
-            PlatformAnim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble + ((double)offset / 64), 0.5f);
+            PlatformAnim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble/*  + ((double)offset / 64) */, 0.5f);
             PlatformAnim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.5f;
         }
 
@@ -183,6 +185,13 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         public void ThisIsNotMoving()
         {
             isMoving = false;
+        }
+
+        public void ChickenFall()
+        {
+            var c = ChickenSplashEffect.transform.localPosition;
+            ChickenSplashEffect.transform.localPosition = new Vector3(-IslandPos.localPosition.x + 1.5f, c.y, c.z);
+            ChickenSplashEffect.Play();
         }
 
         #endregion
