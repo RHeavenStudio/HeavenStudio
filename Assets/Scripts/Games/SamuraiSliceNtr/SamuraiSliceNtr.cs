@@ -75,8 +75,8 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("type", SamuraiSliceNtr.ParticleType.None, "Particle", "Set the type of particle effect to spawn. Using \"None\" will stop all effects."),
                         new Param("instant", false, "Instant", "Toggle if the particles should start or stop instantly."),
-                        new Param("valA", new EntityTypes.Float(0f, 16f, 1f), "Wind Strength", "Set the strength of the particle wind."),
-                        new Param("valB", new EntityTypes.Float(1f, 16f, 1f), "Particle Intensity", "Set the intensity of the particle effect.")
+                        new Param("valA", new EntityTypes.Float(0f, 15f, 1f), "Wind Strength", "Set the strength of the particle wind."),
+                        new Param("valB", new EntityTypes.Float(1f, 25f, 1f), "Particle Intensity", "Set the intensity of the particle effect.")
                     },
                 },
                 //backwards compatibility
@@ -129,9 +129,10 @@ namespace HeavenStudio.Games
         public enum ParticleType
         {
             None,
-            Snow,
+            Cherry,
             Leaf,
             leafBroken,
+            Snow,
         }
 
         [Header("References")]
