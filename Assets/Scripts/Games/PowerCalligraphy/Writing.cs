@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
             sun,
             kokoro,
             face,
-            face_korean,
+            face_kr,
         }
 
         public double targetBeat;
@@ -208,9 +209,38 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     });
                     BeatAction.New(this, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(targetBeat+1f, delegate { Sweep(); stroke = StrokeType.HANE; num = 1;}),
+                        new BeatAction.Action(targetBeat, delegate
+                        {
+                            fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                            Anim(1);
+                        }),
+                        new BeatAction.Action(targetBeat+0.5f, delegate 
+                        {
+                            fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                            Anim(2);
+                        }),
+                        new BeatAction.Action(targetBeat+1f, delegate
+                        {
+                            Anim(3);
+                            Sweep(); stroke = StrokeType.HANE; num = 1;
+                        }),
+                        new BeatAction.Action(targetBeat+3.5f, delegate
+                        { 
+                            fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                            Anim(5);
+                        }),
+                        new BeatAction.Action(targetBeat+4f, delegate
+                        {
+                            fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                            Anim(6);
+                        }),
+                        new BeatAction.Action(targetBeat+4.5f, delegate
+                        {
+                            fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                            Anim(7);    
+                        }),
                         new BeatAction.Action(targetBeat+5f, delegate { Halt(); stroke = StrokeType.TOME; num = 2;}),
-                        new BeatAction.Action(targetBeat+6.5f, delegate { Anim(8, "end");}),
+                        new BeatAction.Action(targetBeat+6.5f, delegate { Anim(9, "end");}),
                         new BeatAction.Action(targetBeat+7f, delegate { End();}),
                     });
                     game.ScheduleInput(targetBeat+1f, 2f, PowerCalligraphy.InputAction_FlickPress, writeSuccess, writeMiss, Empty, CanSuccess);
@@ -243,7 +273,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     game.ScheduleInput(targetBeat+8f, 2f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                     break;
 
-                case (int)CharacterType.face_korean:
+                case (int)CharacterType.face_kr:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
                         new MultiSound.Sound("powerCalligraphy/brush1", targetBeat),
@@ -367,14 +397,25 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
 
                 case (int)CharacterType.kokoro:
                     if (num==1) {
+                        fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                        Anim(4, input);
                     } else {
+                        switch (input) {
+                            case "just":
+                                fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                                break;
+                            default:
+                                fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                                break;
+                        }
+                        Anim(8, input);
                     }
                     break;
 
                 case (int)CharacterType.face:
                     break;
 
-                case (int)CharacterType.face_korean:
+                case (int)CharacterType.face_kr:
                     break;
             }
             
@@ -452,28 +493,27 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     break;
 
                 case (int)CharacterType.kokoro:
+                    if (num==1) {
+                        fudeAnim.DoScaledAnimationAsync("fude-sweep-end", 0.5f);
+                    } else {
+                        fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                        fudePosAnim.DoScaledAnimationAsync("fudePos-kokoro08-miss", 0.5f);
+                    }
                     break;
 
                 case (int)CharacterType.face:
                     break;
 
-                case (int)CharacterType.face_korean:
+                case (int)CharacterType.face_kr:
                     break;
             }
         }
 
         private void Anim(int num, string str = "")
         {
-            string pattern = ctype switch {
-                (int)CharacterType.re => "re",
-                (int)CharacterType.comma => "comma",
-                (int)CharacterType.chikara => "chikara",
-                (int)CharacterType.onore => "onore",
-                (int)CharacterType.sun => "sun",
-                (int)CharacterType.kokoro => "kokoro",
-                (int)CharacterType.face => "face",
-                (int)CharacterType.face_korean => "face_kr",
-            } + num.ToString("D2") + ((str != "") ? "-" + str : str);
+            string pattern = 
+                ((CharacterType)Enum.ToObject(typeof(CharacterType), ctype)).ToString() 
+                + num.ToString("D2") + ((str != "") ? "-" + str : str);
 
             fudePosAnim.DoScaledAnimationAsync("fudePos-" + pattern, 0.5f);
             paperAnim.DoScaledAnimationAsync("paper-" + pattern, 0.5f);
