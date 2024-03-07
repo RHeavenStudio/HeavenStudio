@@ -435,10 +435,24 @@ namespace HeavenStudio.Games
                         break;
                     case ObjectType.ForceShortCake:
                         SoundByte.PlayOneShotGame("nailCarpenter/alarm", itemBeat, forcePlay: true);
+                        BeatAction.New(instance, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(itemBeat, delegate
+                            {
+                                EffectExclamRed.DoScaledAnimationAsync("exclamAppear", 0.25f);
+                            })
+                        });
                         SpawnSweet(itemBeat, startbeat, Sweet.sweetsType.ShortCake);
                         break;
                     case ObjectType.ForceLayerCake:
                         SoundByte.PlayOneShotGame("nailCarpenter/signal1", itemBeat, forcePlay: true);
+                        BeatAction.New(instance, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(itemBeat, delegate
+                            {
+                                EffectExclamBlue.DoScaledAnimationAsync("exclamAppear", 0.25f);
+                            }),
+                        });
                         SpawnSweet(itemBeat, startbeat, Sweet.sweetsType.LayerCake);
                         break;
                     default:
