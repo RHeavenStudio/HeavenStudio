@@ -11,17 +11,20 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
     public class Sweet : MonoBehaviour
     {
         public double targetBeat;
+        public float targetX;
+        public float metresPerSecond;
         public sweetsType sweetType;
         public Animator sweetAnim;
         // public SpriteRenderer sweetSprite;
-        
+
         public enum sweetsType
         {
-            Pudding=0,
-            CherryPudding=1,
-            ShortCake=2,
-            Cherry=3,
-            LayerCake=4,
+            None = -1,
+            Pudding = 0,
+            CherryPudding = 1,
+            ShortCake = 2,
+            Cherry = 3,
+            LayerCake = 4,
         };
 
         private NailCarpenter game;
@@ -31,12 +34,13 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
             game = NailCarpenter.instance;
 
             AwakeAnim();
-            game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_RegPress, HammmerJust, Empty, Empty);
-            game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_AltFinish, HammmerJust, Empty, Empty);
+            game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_SweetsHit, HammmerJust, null, null);
+            Update();
         }
+
         private void AwakeAnim()
         {
-            switch(sweetType)
+            switch (sweetType)
             {
                 case sweetsType.Pudding:
                     sweetAnim.Play("puddingIdle", -1, 0);
@@ -55,9 +59,10 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
                     break;
             }
         }
+
         private void BreakAnim()
         {
-            switch(sweetType)
+            switch (sweetType)
             {
                 case sweetsType.Pudding:
                     sweetAnim.DoScaledAnimationAsync("puddingBreak", 0.25f);
@@ -81,12 +86,8 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         {
             game.ScoreMiss();
             BreakAnim();
-            game.Carpenter.DoScaledAnimationAsync("carpenterHit", 0.25f);
-            SoundByte.PlayOneShot("miss");
             game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.25f);
         }
-
-        private void Empty(PlayerActionEvent caller) { }
 
         private void Update()
         {
@@ -95,7 +96,10 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
             if (cond.isPlaying && !cond.isPaused)
             {
                 double beat = cond.songPositionInBeats;
-                if (targetBeat !=  double.MinValue)
+                Vector3 pos = transform.position;
+                pos.x = targetX + (float)((beat - targetBeat) * metresPerSecond);
+                transform.position = pos;
+                if (targetBeat != double.MinValue)
                 {
                     if (beat >= targetBeat + 9) Destroy(gameObject);
                 }

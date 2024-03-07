@@ -634,6 +634,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SoundSequences: []
   scheduledInputs: []
+  puddingPattern:
+  - beat: 0
+    type: 2
+  - beat: 0.5
+    type: 0
+  - beat: 1
+    type: 8
+  cherryPattern:
+  - beat: 0
+    type: 2
+  - beat: 0.5
+    type: 0
+  - beat: 1
+    type: 0
+  - beat: 1.5
+    type: 0
+  - beat: 2
+    type: 8
+  cakePattern:
+  - beat: 0
+    type: 2
+  - beat: 0.5
+    type: 0
+  - beat: 1
+    type: 3
+  - beat: 1.25
+    type: 0
+  - beat: 1.75
+    type: 0
+  - beat: 2
+    type: 8
+  cakeLongPattern:
+  - beat: 0
+    type: 2
+  - beat: 0.5
+    type: 0
+  - beat: 1
+    type: 9
+  - beat: 1.5
+    type: 1
+  - beat: 2
+    type: 8
+  scrollMetresPerBeat: -4.5
+  boardWidth: 19.2
   baseNail: {fileID: 7504610799131467556}
   baseLongNail: {fileID: 4122843866948130824}
   baseSweet: {fileID: 7846700753925185796}
@@ -1168,6 +1212,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBeat: 0
+  targetX: 0
+  metresPerSecond: 0
   nailAnim: {fileID: 3330987451715863783}
 --- !u!1 &4314335590168154470
 GameObject:
@@ -1899,6 +1945,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBeat: 0
+  targetX: 0
+  metresPerSecond: 0
   nailAnim: {fileID: 845294389825628466}
 --- !u!1 &7846700753925185796
 GameObject:
@@ -1946,6 +1994,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBeat: 0
+  targetX: 0
+  metresPerSecond: 0
   sweetType: 0
   sweetAnim: {fileID: 4107796134930477793}
 --- !u!1 &7940810347463623349
@@ -2174,7 +2224,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8791741134951954224}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.635, y: 0, z: 0}
+  m_LocalPosition: {x: 1.9, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

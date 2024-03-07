@@ -13,6 +13,8 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
     public class Nail : MonoBehaviour
     {
         public double targetBeat;
+        public float targetX;
+        public float metresPerSecond;
         public Animator nailAnim;
 
         private NailCarpenter game;
@@ -20,13 +22,14 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         public void Init()
         {
             game = NailCarpenter.instance;
-            
-            game.ScheduleInput(targetBeat, 0, NailCarpenter.InputAction_RegPress, HammmerJust, HammmerMiss, Empty);
+
+            game.ScheduleInput(targetBeat, 0, NailCarpenter.InputAction_RegPress, HammmerJust, HammmerMiss, null);
             //wrong input
             if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
             {
-            game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_AltStart, strongHammmerJust, Empty, Empty);
+                game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_AltPress, strongHammmerJust, null, null);
             }
+            Update();
         }
 
         private void HammmerJust(PlayerActionEvent caller, float state)
@@ -62,8 +65,6 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
             game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.25f);
         }
 
-        private void Empty(PlayerActionEvent caller) { }
-
         private void Update()
         {
             var cond = Conductor.instance;
@@ -71,7 +72,10 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
             if (cond.isPlaying && !cond.isPaused)
             {
                 double beat = cond.songPositionInBeats;
-                if (targetBeat !=  double.MinValue)
+                Vector3 pos = transform.position;
+                pos.x = targetX + (float)((beat - targetBeat) * metresPerSecond);
+                transform.position = pos;
+                if (targetBeat != double.MinValue)
                 {
                     if (beat >= targetBeat + 9) Destroy(gameObject);
                 }
