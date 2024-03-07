@@ -6678,13 +6678,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1277567380038478988}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 50, y: -10, z: 0}
-  m_LocalScale: {x: 1.1764704, y: 1.1764705, z: 1.1764704}
+  m_LocalScale: {x: 1.1764702, y: 1.1764704, z: 1.1764702}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 973145912615694185}
-  m_RootOrder: 2
+  m_Father: {fileID: 6803714669671852684}
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!182 &1332804018436716926
 WindZone:
@@ -12940,7 +12940,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6803714669671852684}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &8846257164105112889
 ParticleSystem:
@@ -17772,6 +17772,7 @@ Transform:
   - {fileID: 4978538480888551255}
   - {fileID: 5461408633152363406}
   - {fileID: 973145912615694185}
+  - {fileID: 6288117418122598554}
   - {fileID: 9101955400970613891}
   - {fileID: 123453862514258918}
   - {fileID: 1026391380559014938}
@@ -17843,7 +17844,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6803714669671852684}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &4281379767841092066
 ParticleSystem:
@@ -23419,7 +23420,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6803714669671852684}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &5104316731581633128
 ParticleSystem:
@@ -28643,7 +28644,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6803714669671852684}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &8527658099814765666
 ParticleSystem:
@@ -33549,7 +33550,6 @@ Transform:
   m_Children:
   - {fileID: 5280409028265871616}
   - {fileID: 2440230565164705023}
-  - {fileID: 6288117418122598554}
   m_Father: {fileID: 6803714669671852684}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
