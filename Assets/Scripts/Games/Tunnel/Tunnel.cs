@@ -40,6 +40,16 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { Tunnel.CountIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
                     defaultLength = 4f,
                     resizable = true,
+                },
+                new GameAction("bg", "Change Background")
+                {
+                    function = delegate { Tunnel.instance?.SetBg(eventCaller.currentEntity["type"]); },
+                    defaultLength = 1f,
+                    resizable = false,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", Tunnel.BgOption.Beach, "Background", "Set the background to change to."),
+                    }
                 }
             },
             new List<string>() { "ntr", "keep" },
@@ -58,8 +68,7 @@ namespace HeavenStudio.Games
         public static Tunnel instance { get; set; }
 
         [Header("Backgrounds")]
-        [SerializeField] Transform bg;
-        [SerializeField] float bgScrollTime;
+        [SerializeField] GameObject[] bg;
 
         [SerializeField] Material tunnelLightMaterial;
         [SerializeField] Color tunnelTint;
@@ -82,9 +91,18 @@ namespace HeavenStudio.Games
         [Header("Curves")]
         [SerializeField] BezierCurve3D handCurve;
 
-        GameEvent cowbell = new GameEvent();
+        public enum BgOption
+        {
+            Beach,
+            Desert,
+            Field,
+            City,
+            Night,
+            MoaiDooWop,
+            CropStomp,
+            QuizShow
+        }
 
-        float bgStartX;
         float fadeDuration = 2f;
         double tunnelStartTime = double.MinValue;
         double tunnelEndTime = double.MinValue;
@@ -114,9 +132,9 @@ namespace HeavenStudio.Games
             {
                 evt.Disable();
             }
-            if (Conductor.instance != null && !(Conductor.instance.isPlaying || Conductor.instance.isPaused))
+            if (conductor != null && !(conductor.isPlaying || conductor.isPaused))
             {
-                Conductor.instance.FadeMinigameVolume(Conductor.instance.songPositionInBeatsAsDouble, 0, 1);
+                conductor.FadeMinigameVolume(conductor.songPositionInBeatsAsDouble, 0, 1);
                 tunnelLightMaterial.SetColor("_Color", Color.white);
                 tunnelLightMaterial.SetColor("_AddColor", Color.black);
 
@@ -139,12 +157,11 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            var cond = Conductor.instance;
             //update hand position
-            handProgress = Math.Min(Conductor.instance.songPositionInBeats - handStart, 1);
+            handProgress = Math.Min(base.conductor.songPositionInBeats - handStart, 1);
 
             frontHand.transform.position = handCurve.GetPoint(EasingFunction.EaseOutQuad(0, 1, handProgress));
-            if (!cond.isPlaying || cond.isPaused)
+            if (!conductor.isPlaying || conductor.isPaused)
             {
                 return;
             }
@@ -163,7 +180,7 @@ namespace HeavenStudio.Games
                 queuedInputs.Clear();
             }
 
-            if (lastCowbell + 1 <= cond.songPositionInBeatsAsDouble)
+            if (lastCowbell + 1 <= conductor.songPositionInBeatsAsDouble)
             {
                 lastCowbell++;
                 ScheduleInput(lastCowbell, 1, InputAction_BasicPress, CowbellSuccess, CowbellMiss, CowbellEmpty);
@@ -172,11 +189,11 @@ namespace HeavenStudio.Games
             // bg.localPosition = new Vector3(bgStartX - (2 * bgStartX * (((float)Time.realtimeSinceStartupAsDouble % bgScrollTime) / bgScrollTime)), 0, 0);
             if (tunnelWall.activeSelf)
             {
-                tunnelWall.transform.localPosition = tunnelStartPos - new Vector3(tunnelChunksPerSec * tunnelWallChunkSize * (float)(cond.songPositionAsDouble - tunnelStartTime), 0, 0);
+                tunnelWall.transform.localPosition = tunnelStartPos - new Vector3(tunnelChunksPerSec * tunnelWallChunkSize * (float)(conductor.songPositionAsDouble - tunnelStartTime), 0, 0);
             }
-            if (inTunnel && cond.songPositionAsDouble >= tunnelEndTime + PostTunnelScrnTime)
+            if (inTunnel && conductor.songPositionAsDouble >= tunnelEndTime + PostTunnelScrnTime)
             {
-                cond.FadeMinigameVolume(cond.GetBeatFromSongPos(tunnelEndTime + PostTunnelScrnTime), fadeDuration, 1);
+                conductor.FadeMinigameVolume(conductor.GetBeatFromSongPos(tunnelEndTime + PostTunnelScrnTime), fadeDuration, 1);
                 tunnelLightMaterial.SetColor("_Color", Color.white);
                 tunnelLightMaterial.SetColor("_AddColor", Color.black);
                 inTunnel = false;
@@ -187,7 +204,7 @@ namespace HeavenStudio.Games
         {
             SoundByte.PlayOneShot("count-ins/cowbell");
 
-            handStart = Conductor.instance.songPositionInBeats;
+            handStart = conductor.songPositionInBeats;
 
             cowbellAnimator.Play("Shake", -1, 0);
         }
@@ -257,14 +274,13 @@ namespace HeavenStudio.Games
 
         public void StartTunnel(double beat, double length, float volume = 0.1f, float fadeDuration = 2f)
         {
-            Conductor cond = Conductor.instance;
-            if (cond.songPositionAsDouble < tunnelEndTime + PostTunnelScrnTime)
+            if (conductor.songPositionAsDouble < tunnelEndTime + PostTunnelScrnTime)
             {
                 return;
             }
             double targetBeat = beat + length;
-            tunnelStartTime = cond.GetSongPosFromBeat(beat);
-            tunnelEndTime = cond.GetSongPosFromBeat(targetBeat);
+            tunnelStartTime = conductor.GetSongPosFromBeat(beat);
+            tunnelEndTime = conductor.GetSongPosFromBeat(targetBeat);
             // tunnel chunks can be divided into quarters
             double durationSec = Math.Ceiling((tunnelEndTime - tunnelStartTime) * 4 * tunnelChunksPerSec) * 0.25 / tunnelChunksPerSec;
 
@@ -272,7 +288,7 @@ namespace HeavenStudio.Games
             tunnelWall.transform.localPosition = tunnelStartPos;
             tunnelWall.SetActive(true);
             this.fadeDuration = fadeDuration;
-            cond.FadeMinigameVolume(beat, fadeDuration, volume);
+            conductor.FadeMinigameVolume(beat, fadeDuration, volume);
 
             tunnelSoundRight?.Stop();
             tunnelSoundMiddle?.Stop();
@@ -282,19 +298,28 @@ namespace HeavenStudio.Games
             tunnelSoundMiddle = SoundByte.PlayOneShotGame("tunnel/tunnelMiddle", beat + (6 / 48f), looping: true);
             tunnelSoundLeft = SoundByte.PlayOneShotGame("tunnel/tunnelLeft", beat + (12 / 48f), looping: true);
 
-            double tunnelEnd = cond.GetBeatFromSongPos(tunnelEndTime + PostTunnelScrnTime);
+            double tunnelEnd = conductor.GetBeatFromSongPos(tunnelEndTime + PostTunnelScrnTime);
             tunnelSoundRight.SetLoopParams(tunnelEnd, 0.1);
             tunnelSoundMiddle.SetLoopParams(tunnelEnd + (6 / 48f), 0.1);
             tunnelSoundLeft.SetLoopParams(tunnelEnd + (12 / 48f), 0.25);
 
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(cond.GetBeatFromSongPos(tunnelStartTime + 0.25), delegate {
+                new BeatAction.Action(conductor.GetBeatFromSongPos(tunnelStartTime + 0.25), delegate {
                     tunnelLightMaterial.SetColor("_Color", tunnelTint);
                     tunnelLightMaterial.SetColor("_AddColor", tunnelScreen);
                 }),
             });
             inTunnel = true;
+        }
+
+        public void SetBg(int type)
+        {
+            foreach (var b in bg)
+            {
+                b.SetActive(false);
+            }
+            bg[type].SetActive(true);
         }
     }
 }

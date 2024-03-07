@@ -8,67 +8,73 @@ namespace HeavenStudio.Games
 {
     public class SoundEffects : MonoBehaviour
     {
-
         public enum CountNumbers { One, Two, Three, Four }
-        public static string[] countNames = { "one", "two", "three", "four" };
-        public static void Count(int type, bool alt)
-        {
-            string sound = countNames[type];
-            if (!alt)
-                sound += "1";
-            else
-                sound += "2";
-            SoundByte.PlayOneShot("count-ins/" + sound);
-        }
+        // public readonly static string[] countNames = { "one", "two", "one", "two", "three", "four" };
+        public readonly static string[] countNames = { "one", "two", "one", "two", "three", "four" };
+        public readonly static float[] timings     = {  0f,    2f,    4f,    5f,    6f,      7f    };
 
         public enum CountInType { Normal, Alt, Cowbell }
-        public static string[] GetCountInSounds(string[] sounds, CountInType type)
+        public static string GetCountInSound(int type)
         {
-            for (int i = 0; i < sounds.Length; i++)
+            return (CountInType)type switch {
+                CountInType.Normal => "1",
+                CountInType.Alt    => "2",
+                CountInType.Cowbell or _ => "cowbell",
+            };
+        }
+
+        public static void PreloadCounts()
+        {
+            foreach (string load in new string[] { "one", "two", "three", "four", "cowbell", "ready1", "ready2" })
             {
-                switch (type)
-                {
-                    case CountInType.Normal:
-                        sounds[i] += "1";
-                        break;
-                    case CountInType.Alt:
-                        sounds[i] += "2";
-                        break;
-                    case CountInType.Cowbell:
-                        sounds[i] = "cowbell";
-                        break;
+                SoundByte.PreloadAudioClipAsync(load);
+            }
+        }
+
+        public static void CountIn(double beat, float length, bool alt, bool go)
+        {
+            PreloadCounts();
+            string countType = alt ? "2" : "1";
+            double startBeat = beat + length - 8;
+
+            List<MultiSound.Sound> sfx = new();
+            for (int i = 0; i < countNames.Length; i++) {
+                if (startBeat + timings[i] >= beat) {
+                    sfx.Add(new MultiSound.Sound("count-ins/" + countNames[i] + countType, startBeat + timings[i]));
                 }
             }
-            return sounds;
+            if (go) sfx[^1].name = "count-ins/go" + countType;
+            MultiSound.Play(sfx, false);
         }
+
         public static void FourBeatCountIn(double beat, float length, int type)
         {
-            string[] sounds = { "one", "two", "three", "four" };
-            sounds = GetCountInSounds(sounds, (CountInType)type);
+            PreloadCounts();
+            string countType = GetCountInSound(type);
             
-            MultiSound.Play(new MultiSound.Sound[]
-            {
-                new MultiSound.Sound("count-ins/" + sounds[0], beat),
-                new MultiSound.Sound("count-ins/" + sounds[1], beat + 1f * length),
-                new MultiSound.Sound("count-ins/" + sounds[2], beat + 2f * length),
-                new MultiSound.Sound("count-ins/" + sounds[3], beat + 3f * length)
-            }, false);
+            List<MultiSound.Sound> sfx = new();
+            for (int i = 0; i < 4; i++) {
+                sfx.Add(new MultiSound.Sound("count-ins/" + countNames[i + 2] + countType, beat + (i * length)));
+            }
+            MultiSound.Play(sfx, false);
         }
 
         public static void EightBeatCountIn(double beat, float length, int type)
         {
+            PreloadCounts();
             string[] sounds = { "one", "two", "one", "two", "three", "four" };
-            sounds = GetCountInSounds(sounds, (CountInType)type);
+            string sound = GetCountInSound(type);
             
-            MultiSound.Play(new MultiSound.Sound[]
-            {
-                new MultiSound.Sound("count-ins/" + sounds[0], beat),
-                new MultiSound.Sound("count-ins/" + sounds[1], beat + 2f * length),
-                new MultiSound.Sound("count-ins/" + sounds[2], beat + 4f * length),
-                new MultiSound.Sound("count-ins/" + sounds[3], beat + 5f * length),
-                new MultiSound.Sound("count-ins/" + sounds[4], beat + 6f * length),
-                new MultiSound.Sound("count-ins/" + sounds[5], beat + 7f * length)
-            }, false);
+            List<MultiSound.Sound> sfx = new();
+            for (int i = 0; i < sounds.Length; i++) {
+                sfx.Add(new MultiSound.Sound("count-ins/" + sounds[i] + sound, beat + (timings[i] * length)));
+            }
+            MultiSound.Play(sfx, false);
+        }
+
+        public static void Count(int type, bool alt)
+        {
+            SoundByte.PlayOneShot("count-ins/" + (CountNumbers)type + (!alt ? "1" : "2"));
         }
 
         public static void Cowbell()
@@ -78,10 +84,9 @@ namespace HeavenStudio.Games
 
         public static void Ready(double beat, float length)
         {
-            MultiSound.Play(new MultiSound.Sound[]
-            {
+            MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("count-ins/ready1", beat),
-                new MultiSound.Sound("count-ins/ready2", beat + 1f * length),
+                new MultiSound.Sound("count-ins/ready2", beat + (1f * length)),
             }, false);
         }
 
@@ -92,12 +97,7 @@ namespace HeavenStudio.Games
 
         public static void Go(bool alt)
         {
-            string sound = "count-ins/go";
-            if (!alt)
-                sound += "1";
-            else
-                sound += "2";
-            SoundByte.PlayOneShot(sound);
+            SoundByte.PlayOneShot("count-ins/go" + (!alt ? "1" : "2"));
         }
     }
 
