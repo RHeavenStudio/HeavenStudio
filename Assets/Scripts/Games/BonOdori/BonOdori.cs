@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                    function = delegate {
   var e = eventCaller.currentEntity;
   string variation = "variation" + (new string[] { "Pan", "Pa", "Pa_n" })[e["type"]];
-  BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"],e["clapType"]);
+  BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"]);
 },
                     defaultLength = 1f,
                     parameters = new List<Param>()
@@ -51,7 +51,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("variationPan", BonOdori.variationPan.PanC, "Pan Type", "Set the variation of the voice line."),
                         new Param("variationPa", BonOdori.variationPa.PaG, "Pa Type", "Set the variation of the voice line."),
                         new Param("variationPa_n", BonOdori.variationPa_n.Pa_nA , "Pa-n Type", "Set the variation of the voice line."),
-                        new Param("clapType", BonOdori.typeClap.SideClap, "Clap Type", "Set the type of clap.")
                     }
                 },
                
@@ -137,15 +136,15 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
 
                 },
-                // new GameAction("spin", "Spin")
-                // {
-                //     function = delegate {BonOdori.instance.Spin(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
-                //     defaultLength = 1f,
+                new GameAction("spin", "Spin")
+                {
+                    function = delegate {BonOdori.instance.Spin(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
+                    defaultLength = 1f,
 
-                // },
+                },
                     new GameAction("toggle bg", "Toggle Darker Background")
                 {
-                    function = delegate {BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity.length);},
+                    function = delegate {BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]);},
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
@@ -173,12 +172,9 @@ namespace HeavenStudio.Games
        string prefix;
        double beatUniversal;
         string suffix;
-        SpriteRenderer darkPlane;
         bool goBopDonpans;
         bool goBopJudge;
         bool bopDonpans;
-        int clapTypeGlobal = 0;
-        string clapTypeString = "ClapSide";
         string originalText1;
         string originalText2;
         string originalText3;
@@ -189,8 +185,6 @@ namespace HeavenStudio.Games
         Coroutine Scroll3;
         Coroutine Scroll4;
         Coroutine Scroll5;
-        Coroutine DarkerBG;
-        bool darkBgIsOn = false;
         TextMeshProUGUI Text1_GUI;
         TextMeshProUGUI Text2_GUI;
         TextMeshProUGUI Text3_GUI;
@@ -201,7 +195,6 @@ namespace HeavenStudio.Games
         TextMeshProUGUI Text8_GUI;
         TextMeshProUGUI Text9_GUI;
         TextMeshProUGUI Text10_GUI;
-
 
 
         [SerializeField] TMP_Text Text1;
@@ -215,19 +208,15 @@ namespace HeavenStudio.Games
         [SerializeField] TMP_Text Text8;
         [SerializeField] TMP_Text Text9;
         [SerializeField] TMP_Text Text10;
+        [SerializeField] Animator DarkPlane;
         [SerializeField] Animator Player;
         [SerializeField] Animator Judge;
-        [SerializeField] GameObject DarkPlane;
 
         [SerializeField] Animator CPU1;
         [SerializeField] Animator CPU2;
         [SerializeField] Animator CPU3;
         [SerializeField] Animator Face;
-        public enum typeClap
-        {
-            SideClap = 0,
-            FrontClap = 1
-        }
+
         public enum typePan
         {
             Pan = 0,
@@ -278,14 +267,6 @@ namespace HeavenStudio.Games
         public void Awake()
 
         {
-            darkPlane = DarkPlane.GetComponent<SpriteRenderer>();
-
-
-
-
-
-            
-            clapTypeGlobal = 0;
             instance = this;
             Text1_GUI = Text1.GetComponent<TextMeshProUGUI>();
             Text2_GUI = Text2.GetComponent<TextMeshProUGUI>();
@@ -302,70 +283,12 @@ namespace HeavenStudio.Games
 
 
         }
-        public void OnStop()
-        {
-            DarkPlane.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f); 
-        
-        }
+
         public void Update()
         {
-            Conductor con = new Conductor();
-            if (!con.NotStopped())
-            {
-                Text1.text = "";
-                Text2.text = "";
-                Text3.text = "";
-                Text4.text = "";
-                Text6.text = "";
-                Text7.text = "";
-                Text8.text = "";
-                Text9.text = "";
-                Text10.text = "";
-
-
-
-                StopCoroutine(Scroll1);
-                StopCoroutine(Scroll2);
-                StopCoroutine(Scroll3);
-                StopCoroutine(Scroll4);
-                StopCoroutine(Scroll5);
-                StopCoroutine(DarkerBG);
-                Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-
-
-
-            }
-    
-
-            
             if (PlayerInput.GetIsAction(BonOdori.InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)){
                 ScoreMiss();
                 SoundByte.PlayOneShotGame("bonOdori/clap");
-                if (clapTypeGlobal == 0)
-                { 
-                    clapTypeString = "ClapSide";
-                }
-                else
-                {
-                    clapTypeString = "ClapFront";
-                }
-                    
-                    Player.Play(clapTypeString);
-                    if (!goBopDonpans)
-                    {
-
-                    
-                    BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped"); goBopDonpans = true;})
-                });
-                }
-                
-                
   
             
             
@@ -373,21 +296,8 @@ namespace HeavenStudio.Games
 
         }
 
-            
-        
-
-
-        public void Clap(double beat, int variation, int typeSpeak, bool muted, int clapType)
-
+        public void Clap(double beat, int variation, int typeSpeak, bool muted)
         {  
-            if (clapType == 1)
-            {
-                clapTypeGlobal = 1;
-            }
-            else
-            {
-                clapTypeGlobal = 0;
-            }
             if (muted)
             {
                 ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
@@ -430,8 +340,7 @@ namespace HeavenStudio.Games
             
         }
                         beatUniversal = beat;
-                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);}
-            }
+                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);}}
             public void Sound(double beat, int variation, int typeSpeak )
         {  switch (typeSpeak){
                             case 0:
@@ -481,37 +390,16 @@ namespace HeavenStudio.Games
 
         public void Success(PlayerActionEvent caller, float state)
         {
-            if (clapTypeGlobal == 0)
-                { 
-                        clapTypeString = "ClapSide";
-                }
-                else
-                {
-                        clapTypeString = "ClapFront";
-                }
-                    
-                    Player.Play(clapTypeString);
-                    CPU1.Play(clapTypeString);
-                    CPU2.Play(clapTypeString);
-                    CPU3.Play(clapTypeString);
-                    if (!goBopDonpans)
-                    {
-
-                    
-                    BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
-                });
-                }
-            SoundByte.PlayOneShotGame("bonOdori/clap");
+            MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("bonOdori/clap", 0f, offset: 0.01f),
+                        });
         }
         
         public void Miss(PlayerActionEvent caller)
         {
-                    CPU1.Play(clapTypeString);
-                    CPU2.Play(clapTypeString);
-                    CPU3.Play(clapTypeString);
-                        SoundByte.PlayOneShot("miss");
+                        MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("miss", 0f, offset: 0.01f),
+                        });
                          BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beatUniversal + 1d, delegate { Face.Play("Sad");}),
@@ -523,30 +411,10 @@ namespace HeavenStudio.Games
         
         public void Empty(PlayerActionEvent caller)
         {
-            if (clapTypeGlobal == 0)
-                { 
-                    clapTypeString = "ClapSide";
-                }
-                else
-                {
-                    clapTypeString = "ClapFront";
-                }
-                    
-                    Player.Play(clapTypeString);
-                    CPU1.Play(clapTypeString);
-                    CPU2.Play(clapTypeString);
-                    CPU3.Play(clapTypeString);
-                    if (!goBopDonpans)
-                    {
+                        MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("bonOdori/nearMiss", 0f, offset: 0.01f),
+                        });
 
-                    
-                    BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
-                });
-                }
-                 
-                        SoundByte.PlayOneShot("nearMiss");
 
 
         }
@@ -788,7 +656,6 @@ namespace HeavenStudio.Games
         else
         {
             bopDonpans = false;
-            
         }
         goBopDonpans = false;
         Player.Play("Bow");
@@ -800,10 +667,10 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + length, delegate { Player.Play("NeutralBopped"); CPU1.Play("NeutralBopped");CPU2.Play("NeutralBopped"); CPU3.Play("NeutralBopped"); if (bopDonpans) {goBopDonpans = true;}})
                 });
     }
-    // public void Spin(double beat, float length)
-    // {
+    public void Spin(double beat, float length)
+    {
 
-    // }
+    }
             
         public override void OnBeatPulse(double beat)
         {
@@ -820,69 +687,19 @@ namespace HeavenStudio.Games
                 Judge.Play("Bop");
             }
         }
-public void DarkBG(double beat, bool toggle, float length)
-{
-    DarkerBG = StartCoroutine(DarkBGCoroutine(beat, toggle, length));
-
-}
-IEnumerator DarkBGCoroutine(double beat, bool toggle, float length)
+public void DarkBG(double beat, bool toggle)
 {
     if (toggle)
-    {   
-        if (darkBgIsOn)
-        {
-            yield return null;
-        }
-        else
-        {
-
-        
-        float startTime = Time.time;
-        Conductor con = new Conductor();
-        float realLength = length / con.GetBpmAtBeat(beat) * 60;
-        while (Time.time < realLength + startTime)
-        {
-
-
-    
-    
-        darkPlane.color = new Color(1f, 1f, 1f, Mathf.Lerp(0f, 0.4666f, (Time.time - startTime) / realLength)); 
-        darkBgIsOn = true;
-        yield return null;
-
-
-
-    }}}
+    {
+        DarkPlane.Play("Appear");
+    }
     else
     {
-        if (!darkBgIsOn)
-        {
-            yield return null;
-        }
-        else
-        {
-
-        
-        float startTime = Time.time;
-        Conductor con = new Conductor();
-        float realLength = length / con.GetBpmAtBeat(beat) * 60;
-        while (Time.time < realLength + startTime)
-        {
-
-
-    
-    
-        darkPlane.color = new Color(1f, 1f, 1f, Mathf.Lerp(0.4666f,0f, (Time.time - startTime) / realLength)); 
-
-        darkBgIsOn = true;
-        yield return null;
-
-
+        DarkPlane.Play("GoAway");
     }
-
 }
         
 
 
     }
-}}}
+}
