@@ -177,8 +177,20 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     });
                     BeatAction.New(this, new List<BeatAction.Action>()
                     {
+                        new BeatAction.Action(targetBeat, delegate
+                        {
+                            fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                            Anim(1);
+                        }),
+                        new BeatAction.Action(targetBeat+0.5f, delegate { Anim(2);}),
+                        new BeatAction.Action(targetBeat+1f, delegate { Anim(3);}),
+                        new BeatAction.Action(targetBeat+1.5f, delegate { Anim(4);}),
                         new BeatAction.Action(targetBeat+2f, delegate { Sweep(); stroke = StrokeType.HANE; num = 1;}),
-                        new BeatAction.Action(targetBeat+5f, delegate { Halt(); stroke = StrokeType.TOME; num = 2;}),
+                        new BeatAction.Action(targetBeat+5f, delegate
+                        {
+                            Anim(6);
+                            Halt(); stroke = StrokeType.TOME; num = 2;
+                        }),
                         new BeatAction.Action(targetBeat+6.5f, delegate { Anim(8, "end");}),
                         new BeatAction.Action(targetBeat+7f, delegate { End();}),
                     });
@@ -263,14 +275,14 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
         private void Halt()
         {
             onGoing = true;
-            fudeAnim.DoScaledAnimationAsync("fude-halt", 0.5f);
+            fudeAnim.Play("fude-halt");
             releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseB1", forcePlay: true);
         }
         // HANE HARAI
         private void Sweep()
         {
             onGoing = true;
-            fudeAnim.DoScaledAnimationAsync("fude-sweep", 0.5f);
+            fudeAnim.Play("fude-sweep");
             releaseSound = SoundByte.PlayOneShotGame("powerCalligraphy/releaseA1", forcePlay: true);
         }
         private void End()
@@ -320,9 +332,9 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                             fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
                             break;
                         default:
+                            fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
                             break;
                     }
-                    fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
                     Anim(2, input);
                     break;
 
@@ -338,7 +350,18 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
 
                 case (int)CharacterType.sun:
                     if (num==1) {
+                        fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                        Anim(5, input);
                     } else {
+                        switch (input) {
+                            case "just":
+                                fudeAnim.DoScaledAnimationAsync("fude-tap", 0.5f);
+                                break;
+                            default:
+                                fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                                break;
+                        }
+                        Anim(7, input);
                     }
                     break;
 
@@ -403,9 +426,11 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
             switch(ctype)
             {
                 case (int)CharacterType.re:
+                    fudeAnim.DoScaledAnimationAsync("fude-sweep-end", 0.5f);
                     break;
                 
                 case (int)CharacterType.comma:
+                    fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
                     fudePosAnim.DoScaledAnimationAsync("fudePos-comma02-miss", 0.5f);
                     break;
 
@@ -414,9 +439,16 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     break;
 
                 case (int)CharacterType.onore:
+                    fudeAnim.DoScaledAnimationAsync("fude-sweep-end", 0.5f);
                     break;
 
                 case (int)CharacterType.sun:
+                    if (num==1) {
+                        fudeAnim.DoScaledAnimationAsync("fude-sweep-end", 0.5f);
+                    } else {
+                        fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
+                        fudePosAnim.DoScaledAnimationAsync("fudePos-sun07-miss", 0.5f);
+                    }
                     break;
 
                 case (int)CharacterType.kokoro:
