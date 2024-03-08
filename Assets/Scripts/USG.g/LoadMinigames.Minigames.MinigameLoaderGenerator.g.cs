@@ -403,6 +403,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader CtrPillowLoader failed!");
             }
 
+            game = AgbPowerCalligraphy.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbPowerCalligraphy failed!");
+            }
+
             game = AgbQuizShowLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -412,7 +422,6 @@ namespace HeavenStudio
             {
                 Debug.LogWarning("Game loader AgbQuizShowLoader failed!");
             }
-
             game = NtrPingpongLoader.AddGame(eventCaller);
             if (game != null)
             {

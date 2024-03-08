@@ -178,8 +178,8 @@ namespace HeavenStudio.Games
             fo.SetActive(true);
         }
 
-        private ColorEase bgColorEase = new();
-        private ColorEase gradColorEase = new();
+        private ColorEase bgColorEase = new(Color.white);
+        private ColorEase gradColorEase = new(Color.white);
 
         //call this in update
         private void BackgroundColorUpdate()

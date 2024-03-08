@@ -457,7 +457,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             if (grampsTurns) grampsCanBop = false;
-            ScheduleInput(beat, 1f, InputAction_Turn, JustRight, RightMiss, Empty);
+            ScheduleInput(beat, 1f, InputAction_Turn, JustRight, RightMiss, null);
 
             BeatAction.New(instance, new List<BeatAction.Action>() 
             {
@@ -526,7 +526,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             if (grampsSits) grampsCanBop = false;
-            ScheduleInput(beat, 1f, InputAction_Down, JustSit, SitMiss, Empty);
+            ScheduleInput(beat, 1f, InputAction_Down, JustSit, SitMiss, null);
 
             BeatAction.New(instance, new List<BeatAction.Action>() 
             {
@@ -601,7 +601,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             if (grampsPunches) grampsCanBop = false;
-            ScheduleInput(beat, 1.5f, InputAction_Punch, JustPunch, PunchMiss, Empty);
+            ScheduleInput(beat, 1.5f, InputAction_Punch, JustPunch, PunchMiss, null);
 
             BeatAction.New(instance, new List<BeatAction.Action>() 
                 {
@@ -680,7 +680,7 @@ namespace HeavenStudio.Games
             Gramps.DoScaledAnimationAsync("GrampsBop", 0.5f);
         }
 
-        private ColorEase bgColorEase = new();
+        private ColorEase bgColorEase = new(defaultBGColor);
 
         public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
         {
@@ -722,10 +722,10 @@ namespace HeavenStudio.Games
         }
 
         public void RightSuccess()
-            {
+        {
             SoundByte.PlayOneShotGame("spaceDance/inputGood");
             DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
-             }
+        }
 
         public void RightMiss(PlayerActionEvent caller)
         {
@@ -774,10 +774,10 @@ namespace HeavenStudio.Games
         }
 
         public void PunchSuccess()
-            {
+        {
             SoundByte.PlayOneShotGame("spaceDance/inputGood");
             DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
-             }
+        }
 
         public void PunchMiss(PlayerActionEvent caller)
         {
@@ -786,9 +786,5 @@ namespace HeavenStudio.Games
             Hit.Play("HitPunch", -1, 0);
             Gramps.DoScaledAnimationAsync("GrampsMiss", 0.5f);
         }
-
-        public void Empty(PlayerActionEvent caller) { }
-
-
     }
 }

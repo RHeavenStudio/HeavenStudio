@@ -10452,7 +10452,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1114632065716707751
 Transform:
   m_ObjectHideFlags: 0
@@ -106943,6 +106943,7 @@ MonoBehaviour:
   BodyColor: {r: 1, g: 1, b: 1, a: 1}
   HighlightColor: {r: 0.81, g: 0.81, b: 0.81, a: 1}
   ItemColor: {r: 1, g: 1, b: 1, a: 1}
+  StarColor: {r: 1, g: 1, b: 1, a: 1}
   Word: {fileID: 8471847813194768760}
   currentBgEffect: 0
   BGPlane: {fileID: 5423016352081307686}
