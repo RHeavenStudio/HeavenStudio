@@ -226,6 +226,10 @@ namespace HeavenStudio.Games
         [SerializeField] Animator CPU2;
         [SerializeField] Animator CPU3;
         [SerializeField] Animator Face;
+        [SerializeField] Animator CPU1Face;
+        [SerializeField] Animator CPU2Face;
+        [SerializeField] Animator CPU3Face;
+        [SerializeField] Animator PlayerFace;
         public enum typeClap
         {
             SideClap = 0,
