@@ -276,7 +276,7 @@ namespace HeavenStudio.Games
                     wrestlerAnim.Play($"Pose{randomPose}", 0, 0);
                     if (canDoMissExpression()) reporterAnim.Play("FlinchReporter", 0, 0);
                     if (canDoMissExpression()) reporterHeadAnim.Play("Flinch", 0, 0);
-                    SoundByte.PlayOneShotGame($"ringside/new/badpose_{UnityEngine.Random.Range(1, 7)}");
+                    SoundByte.PlayOneShotGame($"ringside/badpose_{UnityEngine.Random.Range(1, 7)}");
                     wrestlerTransform.localScale = new Vector3(1.1f, 1.1f, 1f);
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
@@ -386,12 +386,12 @@ namespace HeavenStudio.Games
             List<MultiSound.Sound> qSounds = new List<MultiSound.Sound>();
             if (alt)
             {
-                qSounds.Add(new MultiSound.Sound($"ringside/new/wubdub_var{currentQuestion}_1", beat, 1, 1, false, 0.015));
+                qSounds.Add(new MultiSound.Sound($"ringside/en/wubdub_var{currentQuestion}_1", beat, 1, 1, false, 0.015));
             }
             else
             {
-                qSounds.Add(new MultiSound.Sound($"ringside/new/wubdub_var{currentQuestion}_1", beat, 1, 1, false, 0.015));
-                qSounds.Add(new MultiSound.Sound($"ringside/new/wubdub_var{currentQuestion}_2", beat + 0.25f, 1, 1, false, 0.002));
+                qSounds.Add(new MultiSound.Sound($"ringside/en/wubdub_var{currentQuestion}_1", beat, 1, 1, false, 0.015));
+                qSounds.Add(new MultiSound.Sound($"ringside/en/wubdub_var{currentQuestion}_2", beat + 0.25f, 1, 1, false, 0.002));
             }
             float extend = length - 3f;
             int totalExtend = 0;
@@ -399,10 +399,10 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < extend; i++)
                 {
-                    qSounds.Add(new MultiSound.Sound($"ringside/new/wubdub_var{currentQuestion}_3", beat + i + 0.5f, 1, 1, false, 0.003 ));
-                    qSounds.Add(new MultiSound.Sound($"ringside/new/wubdub_var{currentQuestion}_4", beat + i + 0.75f, 1, 1, false, 0 ));
-                    qSounds.Add(new MultiSound.Sound($"ringside/new/wubdub_var{currentQuestion}_5", beat + i + 1f, 1, 1, false, 0 ));
-                    qSounds.Add(new MultiSound.Sound($"ringside/new/wubdub_var{currentQuestion}_6", beat + i + 1.25f, 1, 1, false, 0 ));
+                    qSounds.Add(new MultiSound.Sound($"ringside/en/wubdub_var{currentQuestion}_3", beat + i + 0.5f, 1, 1, false, 0.003 ));
+                    qSounds.Add(new MultiSound.Sound($"ringside/en/wubdub_var{currentQuestion}_4", beat + i + 0.75f, 1, 1, false, 0 ));
+                    qSounds.Add(new MultiSound.Sound($"ringside/en/wubdub_var{currentQuestion}_5", beat + i + 1f, 1, 1, false, 0 ));
+                    qSounds.Add(new MultiSound.Sound($"ringside/en/wubdub_var{currentQuestion}_6", beat + i + 1.25f, 1, 1, false, 0 ));
                     totalExtend++;
                 }
             }
@@ -431,12 +431,12 @@ namespace HeavenStudio.Games
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound($"ringside/new/wubdub_var{currentQuestion}_7", beat + 0.5f, 1, 1, false, 0.025),
-                new MultiSound.Sound($"ringside/new/wubdub_konk_1", beat + 0.5f, 1, 1, false, 0),
-                new MultiSound.Sound($"ringside/new/wubdub_konk_2", beat + 0.75f, 1, 1, false, 0),
-                new MultiSound.Sound($"ringside/new/wubdub_var{currentQuestion}_8", beat + 1f, 1, 1, false, 0.018),
-                new MultiSound.Sound($"ringside/new/wubdub_konk_3", beat + 1f, 1, 1, false, 0),
-                new MultiSound.Sound($"ringside/new/mic_swoosh", beat + 1f, 1, 1, false, 0),
+                new MultiSound.Sound($"ringside/en/wubdub_var{currentQuestion}_7", beat + 0.5f, 1, 1, false, 0.025),
+                new MultiSound.Sound($"ringside/wubdub_konk_1", beat + 0.5f, 1, 1, false, 0),
+                new MultiSound.Sound($"ringside/wubdub_konk_2", beat + 0.75f, 1, 1, false, 0),
+                new MultiSound.Sound($"ringside/en/wubdub_var{currentQuestion}_8", beat + 1f, 1, 1, false, 0.018),
+                new MultiSound.Sound($"ringside/wubdub_konk_3", beat + 1f, 1, 1, false, 0),
+                new MultiSound.Sound($"ringside/mic_swoosh", beat + 1f, 1, 1, false, 0),
             }, forcePlay: true);
             ScheduleInput(beat, 2f, InputAction_BasicPress, JustQuestion, Miss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
@@ -457,12 +457,12 @@ namespace HeavenStudio.Games
             if (currentQuestion == (int)QuestionVariant.Third) youBeat = 0.027f;
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound($"ringside/new/bigguy_var{currentQuestion}_1", beat, 1, 1, false, youBeat),
-                new MultiSound.Sound($"ringside/new/bigguy_var{currentQuestion}_2", beat + 0.75f, 1, 1, false, youBeat),
-                new MultiSound.Sound($"ringside/new/bigguy_var{currentQuestion}_3", beat + 1f, 1, 1, false, 0),
-                new MultiSound.Sound($"ringside/new/bigguy_var{currentQuestion}_4", beat + 1.5f, 1, 1, false, 0.006),
-                new MultiSound.Sound($"ringside/new/bigguy_var{currentQuestion}_5", beat + 2f, 1, 1, false, 0.009),
-                new MultiSound.Sound($"ringside/new/mic_swoosh", beat + 2f, 1, 1, false, 0),
+                new MultiSound.Sound($"ringside/en/bigguy_var{currentQuestion}_1", beat, 1, 1, false, youBeat),
+                new MultiSound.Sound($"ringside/en/bigguy_var{currentQuestion}_2", beat + 0.75f, 1, 1, false, youBeat),
+                new MultiSound.Sound($"ringside/en/bigguy_var{currentQuestion}_3", beat + 1f, 1, 1, false, 0),
+                new MultiSound.Sound($"ringside/en/bigguy_var{currentQuestion}_4", beat + 1.5f, 1, 1, false, 0.006),
+                new MultiSound.Sound($"ringside/en/bigguy_var{currentQuestion}_5", beat + 2f, 1, 1, false, 0.009),
+                new MultiSound.Sound($"ringside/mic_swoosh", beat + 2f, 1, 1, false, 0),
             }, forcePlay: true);
 
             ScheduleInput(beat, 2.5f, InputAction_BasicPress, JustBigGuyFirst, MissBigGuyOne, Nothing);
@@ -481,19 +481,19 @@ namespace HeavenStudio.Games
             {
                 MultiSound.Play(new MultiSound.Sound[]
                 {
-                    new MultiSound.Sound("ringside/new/pose_and", beat - 0.5f),
+                    new MultiSound.Sound("ringside/en/pose_and", beat - 0.5f),
                 }, forcePlay: true);
             }
             int poseLine = variant;
             if (poseLine == 3) poseLine = UnityEngine.Random.Range(1, 3);
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound($"ringside/new/pose_var{poseLine}_1", beat, 1, 1, false, 0.02),
-                new MultiSound.Sound($"ringside/new/pose_var{poseLine}_2", beat + 0.3333f, 1, 1, false, 0.00),
-                new MultiSound.Sound($"ringside/new/pose_var{poseLine}_3", beat + 0.5f, 1, 1, false, 0.00),
-                new MultiSound.Sound($"ringside/new/pose_var{poseLine}_4", beat + 0.75f, 1, 1, false, 0.022),
-                new MultiSound.Sound($"ringside/new/pose_var{poseLine}_5", beat + 1f, 1, 1, false, 0.035),
-                new MultiSound.Sound($"ringside/new/pose_var{poseLine}_6", beat + 1.8f, 1, 1, false, 0.00),
+                new MultiSound.Sound($"ringside/en/pose_var{poseLine}_1", beat, 1, 1, false, 0.02),
+                new MultiSound.Sound($"ringside/en/pose_var{poseLine}_2", beat + 0.3333f, 1, 1, false, 0.00),
+                new MultiSound.Sound($"ringside/en/pose_var{poseLine}_3", beat + 0.5f, 1, 1, false, 0.00),
+                new MultiSound.Sound($"ringside/en/pose_var{poseLine}_4", beat + 0.75f, 1, 1, false, 0.022),
+                new MultiSound.Sound($"ringside/en/pose_var{poseLine}_5", beat + 1f, 1, 1, false, 0.035),
+                new MultiSound.Sound($"ringside/en/pose_var{poseLine}_6", beat + 1.8f, 1, 1, false, 0.00),
             }, forcePlay: true);
             if (GameManager.instance.currentGame == "ringside")
             {
@@ -860,7 +860,7 @@ namespace HeavenStudio.Games
                 wrestlerTransform.localScale = new Vector3(1.2f, 1.2f, 1f);
                 int randomPose = UnityEngine.Random.Range(1, 7);
                 wrestlerAnim.Play($"Pose{randomPose}", 0, 0);
-                SoundByte.PlayOneShotGame($"ringside/new/badpose_{UnityEngine.Random.Range(1, 7)}");
+                SoundByte.PlayOneShotGame($"ringside/badpose_{UnityEngine.Random.Range(1, 7)}");
                 reporterHeadAnim.Play("Late", 0, 0);
                 SoundByte.PlayOneShotGame($"ringside/huhaudience{UnityEngine.Random.Range(0, 2)}");
                 BeatAction.New(instance, new List<BeatAction.Action>()

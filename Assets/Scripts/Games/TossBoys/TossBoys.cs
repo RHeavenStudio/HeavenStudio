@@ -114,15 +114,7 @@ namespace HeavenStudio.Games
 
     public class TossBoys : Minigame
     {
-        private static Color _defaultBGColor;
-        public static Color defaultBGColor
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#62FDBB", out _defaultBGColor);
-                return _defaultBGColor;
-            }
-        }
+        public static Color defaultBGColor = new Color(0.38f, 0.99f, 0.73f);
         public enum KidChoice
         {
             Akachan = 0,
@@ -235,8 +227,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            colorStart = defaultBGColor;
-            colorEnd = defaultBGColor;
             SetupBopRegion("tossBoys", "bop", "auto");
             SetPassBallEvents();
         }
@@ -294,33 +284,17 @@ namespace HeavenStudio.Games
             }
         }
 
-        private double colorStartBeat = -1;
-        private float colorLength = 0f;
-        private Color colorStart = Color.white; //obviously put to the default color of the game
-        private Color colorEnd = Color.white;
-        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+        private ColorEase bgColorEase = new(defaultBGColor);
 
         //call this in update
         private void BackgroundColorUpdate()
         {
-            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
-
-            var func = Util.EasingFunction.GetEasingFunction(colorEase);
-
-            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
-            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
-            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
-
-            bg.color = new Color(newR, newG, newB);
+            bg.color = bgColorEase.GetColor();
         }
 
-        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
         {
-            colorStartBeat = beat;
-            colorLength = length;
-            colorStart = colorStartSet;
-            colorEnd = colorEndSet;
-            colorEase = (Util.EasingFunction.Ease)ease;
+            bgColorEase = new(beat, length, startColor, endColor, ease);
         }
 
         //call this in OnPlay(double beat) and OnGameSwitch(double beat)

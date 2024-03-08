@@ -1,0 +1,1532 @@
+fileFormatVersion: 2
+guid: 350211a952379f945877518b7bc85c0d
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: lumbearjackcharacter_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 3764
+        width: 308
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38288069ffffffff0800000000000000
+      internalID: -1777827197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_1
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 3512
+        width: 636
+        height: 556
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5735410affffffff0800000000000000
+      internalID: -1609280651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_2
+      rect:
+        serializedVersion: 2
+        x: 1068
+        y: 3512
+        width: 636
+        height: 552
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e81dd0f3000000000800000000000000
+      internalID: 1057870222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_3
+      rect:
+        serializedVersion: 2
+        x: 1724
+        y: 3676
+        width: 632
+        height: 392
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51d36888ffffffff0800000000000000
+      internalID: -2004468459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_4
+      rect:
+        serializedVersion: 2
+        x: 2392
+        y: 3680
+        width: 612
+        height: 396
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfa662f9ffffffff0800000000000000
+      internalID: -1624872196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_5
+      rect:
+        serializedVersion: 2
+        x: 3012
+        y: 3954
+        width: 248
+        height: 99
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7aec6088ffffffff0800000000000000
+      internalID: -2012819801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_6
+      rect:
+        serializedVersion: 2
+        x: 3480
+        y: 3692
+        width: 408
+        height: 364
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22062604000000000800000000000000
+      internalID: 1080188962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_7
+      rect:
+        serializedVersion: 2
+        x: 3944
+        y: 3172
+        width: 120
+        height: 848
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37a37cdaffffffff0800000000000000
+      internalID: -1379452301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_8
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 3444
+        width: 308
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2fd30302000000000800000000000000
+      internalID: 540032498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_9
+      rect:
+        serializedVersion: 2
+        x: 1788
+        y: 2896
+        width: 504
+        height: 740
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ffd37fdffffffff0800000000000000
+      internalID: -546054153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_10
+      rect:
+        serializedVersion: 2
+        x: 2392
+        y: 2896
+        width: 324
+        height: 740
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb06e806000000000800000000000000
+      internalID: 1619943614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_11
+      rect:
+        serializedVersion: 2
+        x: 2724
+        y: 3312
+        width: 384
+        height: 312
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d91836fffffffff0800000000000000
+      internalID: -164095529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_12
+      rect:
+        serializedVersion: 2
+        x: 3192
+        y: 3420
+        width: 660
+        height: 228
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c02eb6cffffffff0800000000000000
+      internalID: -960618299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_13
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 3100
+        width: 276
+        height: 304
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a343ee4bffffffff0800000000000000
+      internalID: -1259457478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_14
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 2840
+        width: 628
+        height: 656
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b45d20caffffffff0800000000000000
+      internalID: -1409100469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_15
+      rect:
+        serializedVersion: 2
+        x: 1096
+        y: 2900
+        width: 592
+        height: 572
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 795c9245000000000800000000000000
+      internalID: 1412023703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_18
+      rect:
+        serializedVersion: 2
+        x: 2884
+        y: 2584
+        width: 576
+        height: 504
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c84b440effffffff0800000000000000
+      internalID: -532368244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_19
+      rect:
+        serializedVersion: 2
+        x: 3492
+        y: 2584
+        width: 576
+        height: 488
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dd57d2effffffff0800000000000000
+      internalID: -489202221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_20
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 2479
+        width: 344
+        height: 290
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 930085bdffffffff0800000000000000
+      internalID: -614989767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_21
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 2628
+        width: 188
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: addce595000000000800000000000000
+      internalID: 1499385306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_22
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 2700
+        width: 53
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b43564d9ffffffff0800000000000000
+      internalID: -1656335541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_24
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 2612
+        width: 240
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 771d142fffffffff0800000000000000
+      internalID: -230567561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_25
+      rect:
+        serializedVersion: 2
+        x: 1220
+        y: 2636
+        width: 224
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d0719bcffffffff0800000000000000
+      internalID: -879660845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_26
+      rect:
+        serializedVersion: 2
+        x: 1452
+        y: 2632
+        width: 216
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4557545dffffffff0800000000000000
+      internalID: -716868268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_27
+      rect:
+        serializedVersion: 2
+        x: 1688
+        y: 2624
+        width: 132
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6db237a0000000000800000000000000
+      internalID: 175320022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_28
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 2609
+        width: 105
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7143f5a3000000000800000000000000
+      internalID: 979317783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_29
+      rect:
+        serializedVersion: 2
+        x: 1988
+        y: 2292
+        width: 568
+        height: 452
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57692a59ffffffff0800000000000000
+      internalID: -1784506763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_31
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 2468
+        width: 313
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8379c23fffffffff0800000000000000
+      internalID: -215181512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_32
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 2190
+        width: 227
+        height: 278
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c10c4a21000000000800000000000000
+      internalID: 312786972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_37
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 1856
+        width: 336
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c46dde6000000000800000000000000
+      internalID: 1860003013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_47
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 1524
+        width: 336
+        height: 152
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ecc4a17000000000800000000000000
+      internalID: 1906625767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_49
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 1128
+        width: 260
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5856aaebffffffff0800000000000000
+      internalID: -1096129147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_50
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 1128
+        width: 296
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5788c9ecffffffff0800000000000000
+      internalID: -828602251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_51
+      rect:
+        serializedVersion: 2
+        x: 668
+        y: 1128
+        width: 312
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c2b2b8fffffffff0800000000000000
+      internalID: -122506551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_52
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1132
+        width: 332
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9175126000000000800000000000000
+      internalID: 1645572509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_53
+      rect:
+        serializedVersion: 2
+        x: 1396
+        y: 1128
+        width: 352
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f34f48fffffffff0800000000000000
+      internalID: -129022990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_54
+      rect:
+        serializedVersion: 2
+        x: 1776
+        y: 1132
+        width: 364
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6680e4f0000000000800000000000000
+      internalID: 256772198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_55
+      rect:
+        serializedVersion: 2
+        x: 2184
+        y: 1128
+        width: 380
+        height: 184
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa648e62000000000800000000000000
+      internalID: 652756650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_56
+      rect:
+        serializedVersion: 2
+        x: 2616
+        y: 1128
+        width: 388
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cc2c057000000000800000000000000
+      internalID: 1963732164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_57
+      rect:
+        serializedVersion: 2
+        x: 3056
+        y: 1128
+        width: 404
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cd8c4ccffffffff0800000000000000
+      internalID: -867398200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_58
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 908
+        width: 420
+        height: 196
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: acb9b97dffffffff0800000000000000
+      internalID: -677667894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_59
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 908
+        width: 440
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f749c225000000000800000000000000
+      internalID: 1378653311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_60
+      rect:
+        serializedVersion: 2
+        x: 976
+        y: 908
+        width: 452
+        height: 184
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a3e51f3000000000800000000000000
+      internalID: 1058399142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_61
+      rect:
+        serializedVersion: 2
+        x: 1448
+        y: 908
+        width: 472
+        height: 184
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7f88731000000000800000000000000
+      internalID: 326668154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_62
+      rect:
+        serializedVersion: 2
+        x: 1948
+        y: 908
+        width: 480
+        height: 184
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae339a9cffffffff0800000000000000
+      internalID: -911658006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_63
+      rect:
+        serializedVersion: 2
+        x: 2464
+        y: 908
+        width: 476
+        height: 192
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 078b7f3fffffffff0800000000000000
+      internalID: -201869200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_64
+      rect:
+        serializedVersion: 2
+        x: 2988
+        y: 908
+        width: 464
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6671e158ffffffff0800000000000000
+      internalID: -2061625498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_65
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 620
+        width: 448
+        height: 224
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 957b60f7000000000800000000000000
+      internalID: 2131146585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_66
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 620
+        width: 432
+        height: 228
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c577369ffffffff0800000000000000
+      internalID: -1774750270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_67
+      rect:
+        serializedVersion: 2
+        x: 976
+        y: 620
+        width: 420
+        height: 240
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 543e6440000000000800000000000000
+      internalID: 71754565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_68
+      rect:
+        serializedVersion: 2
+        x: 1428
+        y: 620
+        width: 396
+        height: 248
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb3bbe27000000000800000000000000
+      internalID: 1928049596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_69
+      rect:
+        serializedVersion: 2
+        x: 1864
+        y: 620
+        width: 376
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3b2370dffffffff0800000000000000
+      internalID: -797758658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_70
+      rect:
+        serializedVersion: 2
+        x: 2272
+        y: 620
+        width: 360
+        height: 268
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22b18050000000000800000000000000
+      internalID: 84417314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_71
+      rect:
+        serializedVersion: 2
+        x: 2668
+        y: 620
+        width: 352
+        height: 268
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc0309edffffffff0800000000000000
+      internalID: -560975667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_72
+      rect:
+        serializedVersion: 2
+        x: 3052
+        y: 620
+        width: 336
+        height: 272
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fdd695cffffffff0800000000000000
+      internalID: -979968528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_73
+      rect:
+        serializedVersion: 2
+        x: 3432
+        y: 620
+        width: 328
+        height: 276
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd5604e0000000000800000000000000
+      internalID: 239101405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_74
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 312
+        width: 312
+        height: 280
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36d75e02000000000800000000000000
+      internalID: 551910755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_75
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 312
+        width: 296
+        height: 284
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9df92108ffffffff0800000000000000
+      internalID: -2146263079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_76
+      rect:
+        serializedVersion: 2
+        x: 760
+        y: 312
+        width: 280
+        height: 292
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15e0fa6fffffffff0800000000000000
+      internalID: -156299695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_77
+      rect:
+        serializedVersion: 2
+        x: 1084
+        y: 312
+        width: 272
+        height: 296
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70f0aee3000000000800000000000000
+      internalID: 1055526663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_78
+      rect:
+        serializedVersion: 2
+        x: 1372
+        y: 312
+        width: 260
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 681e68f3000000000800000000000000
+      internalID: 1065804166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_79
+      rect:
+        serializedVersion: 2
+        x: 1664
+        y: 312
+        width: 240
+        height: 304
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e94b3aa8ffffffff0800000000000000
+      internalID: -1968982882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lumbearjackcharacter_80
+      rect:
+        serializedVersion: 2
+        x: 1944
+        y: 312
+        width: 236
+        height: 304
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81eb0cb8ffffffff0800000000000000
+      internalID: -1950302696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      lumbearjackcharacter_0: -1777827197
+      lumbearjackcharacter_1: -1609280651
+      lumbearjackcharacter_10: 1619943614
+      lumbearjackcharacter_11: -164095529
+      lumbearjackcharacter_12: -960618299
+      lumbearjackcharacter_13: -1259457478
+      lumbearjackcharacter_14: -1409100469
+      lumbearjackcharacter_15: 1412023703
+      lumbearjackcharacter_16: 690462389
+      lumbearjackcharacter_17: -1172865434
+      lumbearjackcharacter_18: -532368244
+      lumbearjackcharacter_19: -489202221
+      lumbearjackcharacter_2: 1057870222
+      lumbearjackcharacter_20: -614989767
+      lumbearjackcharacter_21: 1499385306
+      lumbearjackcharacter_22: -1656335541
+      lumbearjackcharacter_23: 532872563
+      lumbearjackcharacter_24: -230567561
+      lumbearjackcharacter_25: -879660845
+      lumbearjackcharacter_26: -716868268
+      lumbearjackcharacter_27: 175320022
+      lumbearjackcharacter_28: 979317783
+      lumbearjackcharacter_29: -1784506763
+      lumbearjackcharacter_3: -2004468459
+      lumbearjackcharacter_30: -934195173
+      lumbearjackcharacter_31: -215181512
+      lumbearjackcharacter_32: 312786972
+      lumbearjackcharacter_33: 1079976273
+      lumbearjackcharacter_34: -1420152879
+      lumbearjackcharacter_35: 1325530239
+      lumbearjackcharacter_36: -469997042
+      lumbearjackcharacter_37: 1860003013
+      lumbearjackcharacter_38: 1099633791
+      lumbearjackcharacter_39: 958801145
+      lumbearjackcharacter_4: -1624872196
+      lumbearjackcharacter_40: 667203781
+      lumbearjackcharacter_41: 1570098764
+      lumbearjackcharacter_42: 1589461023
+      lumbearjackcharacter_43: 277743865
+      lumbearjackcharacter_44: -1143422170
+      lumbearjackcharacter_45: 2119571374
+      lumbearjackcharacter_46: -2050421836
+      lumbearjackcharacter_47: 1906625767
+      lumbearjackcharacter_48: -941127908
+      lumbearjackcharacter_49: -1096129147
+      lumbearjackcharacter_5: -2012819801
+      lumbearjackcharacter_50: -828602251
+      lumbearjackcharacter_51: -122506551
+      lumbearjackcharacter_52: 1645572509
+      lumbearjackcharacter_53: -129022990
+      lumbearjackcharacter_54: 256772198
+      lumbearjackcharacter_55: 652756650
+      lumbearjackcharacter_56: 1963732164
+      lumbearjackcharacter_57: -867398200
+      lumbearjackcharacter_58: -677667894
+      lumbearjackcharacter_59: 1378653311
+      lumbearjackcharacter_6: 1080188962
+      lumbearjackcharacter_60: 1058399142
+      lumbearjackcharacter_61: 326668154
+      lumbearjackcharacter_62: -911658006
+      lumbearjackcharacter_63: -201869200
+      lumbearjackcharacter_64: -2061625498
+      lumbearjackcharacter_65: 2131146585
+      lumbearjackcharacter_66: -1774750270
+      lumbearjackcharacter_67: 71754565
+      lumbearjackcharacter_68: 1928049596
+      lumbearjackcharacter_69: -797758658
+      lumbearjackcharacter_7: -1379452301
+      lumbearjackcharacter_70: 84417314
+      lumbearjackcharacter_71: -560975667
+      lumbearjackcharacter_72: -979968528
+      lumbearjackcharacter_73: 239101405
+      lumbearjackcharacter_74: 551910755
+      lumbearjackcharacter_75: -2146263079
+      lumbearjackcharacter_76: -156299695
+      lumbearjackcharacter_77: 1055526663
+      lumbearjackcharacter_78: 1065804166
+      lumbearjackcharacter_79: -1968982882
+      lumbearjackcharacter_8: 540032498
+      lumbearjackcharacter_80: -1950302696
+      lumbearjackcharacter_81: -1895580559
+      lumbearjackcharacter_82: -505488141
+      lumbearjackcharacter_83: 1624644552
+      lumbearjackcharacter_84: -1425013713
+      lumbearjackcharacter_85: -1990563435
+      lumbearjackcharacter_9: -546054153
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
