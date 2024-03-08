@@ -61,8 +61,6 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    using System.Diagnostics;
-    using System.Linq;
     using Scripts_NailCarpenter;
 
     public class NailCarpenter : Minigame
@@ -118,7 +116,6 @@ namespace HeavenStudio.Games
         public GameObject baseLongNail;
         public GameObject baseSweet;
         public Animator Carpenter;
-        // public Animator EyeAnim;
         public Animator EffectExclamRed;
         public Animator EffectExclamBlue;
 

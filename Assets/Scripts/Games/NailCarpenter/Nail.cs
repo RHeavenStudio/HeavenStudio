@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using NaughtyBezierCurves;
-using DG.Tweening;
 
 using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
-
 
 namespace HeavenStudio.Games.Scripts_NailCarpenter
 {
@@ -27,7 +22,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
             //wrong input
             if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
             {
-                game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_AltPress, strongHammmerJust, null, null);
+                game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_AltPress, StrongHammmerJust, null, null);
             }
             Update();
         }
@@ -45,7 +40,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
             SoundByte.PlayOneShotGame("nailCarpenter/HammerWeak");
             nailAnim.DoScaledAnimationAsync("nailHammered", 0.25f);
         }
-        private void strongHammmerJust(PlayerActionEvent caller, float state)
+        private void StrongHammmerJust(PlayerActionEvent caller, float state)
         {
             game.ScoreMiss();
             game.Carpenter.DoScaledAnimationAsync("carpenterHit", 0.25f);

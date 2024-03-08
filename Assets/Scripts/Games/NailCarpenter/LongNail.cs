@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using NaughtyBezierCurves;
-using DG.Tweening;
 
 using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
-
 
 namespace HeavenStudio.Games.Scripts_NailCarpenter
 {
