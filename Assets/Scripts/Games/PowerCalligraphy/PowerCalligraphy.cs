@@ -91,6 +91,22 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 12f,
                 },
+                new GameAction("changeScrollSpeed", "Change Scroll Speed")
+                {
+                    function = delegate {var e = eventCaller.currentEntity;
+                        PowerCalligraphy.instance.ChangeScrollSpeed(e["x"], e["y"]);},
+                    parameters = new List<Param>() 
+                    {
+                        new Param("x", new EntityTypes.Float(-20, 20, 0), "X"),
+                        new Param("y", new EntityTypes.Float(-20, 20, 0), "Y"),
+                    },
+                    defaultLength = 0.5f,
+                },
+                new GameAction("end", "The End")
+                {
+                    function = delegate {PowerCalligraphy.instance.TheEnd();},
+                    defaultLength = 0.5f,
+                },
             },
             new List<string>() { "agb", "normal" }, "agbCalligraphy", "en", new List<string>() { }
             );
@@ -103,11 +119,11 @@ namespace HeavenStudio.Games
     using Scripts_PowerCalligraphy;
     public class PowerCalligraphy : Minigame
     {
-        [Header("Prefabs")]
         [SerializeField] List<GameObject> basePapers = new List<GameObject>();
-
-        [Header("Components")]
         public Transform paperHolder;
+        public Writing endPaper;
+
+        public Vector3 scrollSpeed = new Vector3();
 
         public static Nullable<QueuedPaper> queuedPaper = null;
 
@@ -121,6 +137,7 @@ namespace HeavenStudio.Games
             kokoro,
             face,
             face_kr,
+            NONE,
         }
         public struct QueuedPaper
         {
@@ -171,11 +188,9 @@ namespace HeavenStudio.Games
         {
             nowPaper = Instantiate(basePapers[type], paperHolder).GetComponent<Writing>();
             nowPaper.targetBeat = beat;
-            nowPaper.ctype = type;
-            nowPaper.Init();
-
+            nowPaper.scrollSpeed = scrollSpeed;
             nowPaper.gameObject.SetActive(true);
-
+            nowPaper.Init();
         }
 
         public void Write(double beat, int type)
@@ -208,19 +223,15 @@ namespace HeavenStudio.Games
             isPrepare = true;
         }
 
-        private void Success(PlayerActionEvent caller, float state)
+        public void ChangeScrollSpeed(float x, float y)
         {
+            scrollSpeed = new Vector3(x, y, 0);
+            nowPaper.scrollSpeed = scrollSpeed;
         }
 
-        private void Miss(PlayerActionEvent caller)
+        public void TheEnd()
         {
-        }
-
-        private void Empty(PlayerActionEvent caller) { }
-
-        bool CanSuccess()
-        {
-            return false;
+            endPaper.TheEnd();
         }
     }
 }
