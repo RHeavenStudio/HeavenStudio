@@ -64,6 +64,21 @@ namespace HeavenStudio.Games.Loaders
                         new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "Set the amount of coins the demon spills out when sliced."),
                     }
                 },
+                new GameAction("particle effects", "Particle Effects")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        SamuraiSliceNtr.instance.SetParticleEffect(e.beat, e["type"], e["instant"], e["valA"], e["valB"]);
+                    },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", SamuraiSliceNtr.ParticleType.None, "Particle", "Set the type of particle effect to spawn. Using \"None\" will stop all effects."),
+                        new Param("instant", false, "Instant", "Toggle if the particles should start or stop instantly."),
+                        new Param("valA", new EntityTypes.Float(0f, 15f, 1f), "Wind Strength", "Set the strength of the particle wind."),
+                        new Param("valB", new EntityTypes.Float(1f, 25f, 1f), "Particle Intensity", "Set the intensity of the particle effect.")
+                    },
+                },
                 //backwards compatibility
                 new GameAction("spawn object", "Toss Object")
                 {
@@ -111,6 +126,15 @@ namespace HeavenStudio.Games
             None = 3
         }
 
+        public enum ParticleType
+        {
+            None,
+            Cherry,
+            Leaf,
+            LeafBroken,
+            Snow,
+        }
+
         [Header("References")]
         public NtrSamurai player;
         public GameObject launcher;
@@ -126,6 +150,11 @@ namespace HeavenStudio.Games
         public BezierCurve3D DebrisLeftCurve;
         public BezierCurve3D DebrisRightCurve;
         public BezierCurve3D NgDebrisCurve;
+
+        [Header("Particles")]
+        // wind
+        public WindZone Wind;
+        public ParticleSystem[] Effects;
 
         //game scene
         public static SamuraiSliceNtr instance;
@@ -259,6 +288,28 @@ namespace HeavenStudio.Games
             mobj.GetComponent<SortingGroup>().sortingOrder = 7;
 
             return mobjDat;
+        }
+
+        public void SetParticleEffect(double beat, int type, bool instant, float windStrength, float particleStrength)
+        {
+            if (type == (int)ParticleType.None)
+            {
+                foreach (var eff in Effects) eff.Stop();
+                return;
+            }
+
+            ParticleSystem particleSystem = Effects[Mathf.Clamp(type - 1, 0, Effects.Length - 1)];
+
+            particleSystem.gameObject.SetActive(true);
+            particleSystem.Play();
+
+            var emm = particleSystem.emission;
+            var main = particleSystem.main;
+
+            emm.rateOverTime = particleStrength;
+            main.prewarm = instant;
+
+            Wind.windMain = windStrength;
         }
     }
 }
