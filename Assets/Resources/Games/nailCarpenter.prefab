@@ -682,7 +682,7 @@ MonoBehaviour:
   baseLongNail: {fileID: 4122843866948130824}
   baseSweet: {fileID: 7846700753925185796}
   Carpenter: {fileID: 2757472879240741117}
-  EyeAnim: {fileID: 2857868484672891618}
+  EyeAnim: {fileID: 0}
   EffectExclamRed: {fileID: 5086085623578673087}
   EffectExclamBlue: {fileID: 7922870834249946850}
   scrollingHolder: {fileID: 5348239490659111460}
@@ -1596,7 +1596,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6501104041238814201}
   - component: {fileID: 3042055459301008586}
-  - component: {fileID: 2857868484672891618}
   m_Layer: 0
   m_Name: eye
   m_TagString: Untagged
@@ -1671,27 +1670,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &2857868484672891618
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5887142951187249997}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 512906a2493039b4b8487da89d6a68de, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6083823790040367567
 GameObject:
   m_ObjectHideFlags: 0

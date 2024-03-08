@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
 
         private void HammmerMiss(PlayerActionEvent caller)
         {
-            game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.25f);
+            game.Carpenter.DoScaledAnimationAsync("eyeBlink", 0.25f, animLayer: 1);
         }
 
         private void Update()

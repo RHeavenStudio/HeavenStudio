@@ -86,7 +86,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         {
             game.ScoreMiss();
             BreakAnim();
-            game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.25f);
+            game.Carpenter.DoScaledAnimationAsync("eyeBlink", 0.25f, animLayer: 1);
         }
 
         private void Update()

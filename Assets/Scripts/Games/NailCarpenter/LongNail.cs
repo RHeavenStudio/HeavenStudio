@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
             }
             SoundByte.PlayOneShotGame("nailCarpenter/HammerStrong");
             nailAnim.DoScaledAnimationAsync("longNailHammered", 0.25f);
-            game.EyeAnim.DoScaledAnimationAsync("eyeSmile", 0.25f);
+            game.Carpenter.DoScaledAnimationAsync("eyeSmile", 0.25f, animLayer: 1);
         }
 
         private void WeakHammmerJust(PlayerActionEvent caller, float state)
@@ -64,7 +64,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
 
         private void HammmerMiss(PlayerActionEvent caller)
         {
-            game.EyeAnim.DoScaledAnimationAsync("eyeBlink", 0.25f);
+            game.Carpenter.DoScaledAnimationAsync("eyeBlink", 0.25f, animLayer: 1);
         }
 
         private void Update()

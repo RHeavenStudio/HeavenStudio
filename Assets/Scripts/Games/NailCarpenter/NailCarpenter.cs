@@ -118,7 +118,7 @@ namespace HeavenStudio.Games
         public GameObject baseLongNail;
         public GameObject baseSweet;
         public Animator Carpenter;
-        public Animator EyeAnim;
+        // public Animator EyeAnim;
         public Animator EffectExclamRed;
         public Animator EffectExclamBlue;
 
@@ -193,7 +193,7 @@ namespace HeavenStudio.Games
         List<ScheduledPattern> scheduledPatterns = new List<ScheduledPattern>();
         double patternStartBeat, gameStartBeat;
         PatternType patternType, lastPatternType;
-        int patternIndex;
+        int patternIndex, lastPatternIndex = -1;
 
         double slideBeat = double.MaxValue;
         double slideLength;
@@ -259,20 +259,26 @@ namespace HeavenStudio.Games
             patternIndex = 0;
             foreach (var evt in events)
             {
-                var pattern = new ScheduledPattern
+                if (evt.length == 0) continue;
+                int patternDivisions = (int)Math.Ceiling(evt.length / PATTERN_SEEK_TIME);
+                PatternType patternType = evt.datamodel switch
                 {
-                    beat = evt.beat,
-                    length = evt.length,
-                    type = evt.datamodel switch
-                    {
-                        "nailCarpenter/puddingNail" => PatternType.Pudding,
-                        "nailCarpenter/cherryNail" => PatternType.Cherry,
-                        "nailCarpenter/cakeNail" => PatternType.Cake,
-                        "nailCarpenter/cakeLongNail" => PatternType.CakeLong,
-                        _ => throw new NotImplementedException()
-                    }
+                    "nailCarpenter/puddingNail" => PatternType.Pudding,
+                    "nailCarpenter/cherryNail" => PatternType.Cherry,
+                    "nailCarpenter/cakeNail" => PatternType.Cake,
+                    "nailCarpenter/cakeLongNail" => PatternType.CakeLong,
+                    _ => throw new NotImplementedException()
                 };
-                scheduledPatterns.Add(pattern);
+                for (int i = 0; i < patternDivisions; i++)
+                {
+                    var pattern = new ScheduledPattern
+                    {
+                        beat = evt.beat + (PATTERN_SEEK_TIME * i),
+                        length = Math.Min(evt.length - (PATTERN_SEEK_TIME * i), PATTERN_SEEK_TIME),
+                        type = patternType
+                    };
+                    scheduledPatterns.Add(pattern);
+                }
             }
         }
 
@@ -289,9 +295,19 @@ namespace HeavenStudio.Games
                 if (patternIndex < scheduledPatterns.Count)
                 {
                     var pattern = scheduledPatterns[patternIndex];
-                    if (pattern.beat + pattern.length < patternStartBeat) continue;
+                    if (pattern.type == PatternType.None)
+                    {
+                        patternIndex++;
+                        continue;
+                    }
+                    if (pattern.beat + pattern.length < patternStartBeat)
+                    {
+                        patternIndex++;
+                        continue;
+                    }
                     SpawnPattern(pattern.beat, pattern.length, pattern.type);
-                    patternStartBeat += pattern.length;
+                    patternStartBeat = pattern.beat + pattern.length;
+                    lastPatternIndex = patternIndex;
                     patternIndex++;
                 }
                 else
