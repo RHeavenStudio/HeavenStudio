@@ -337,7 +337,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2.85, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8897395654160567201}
   m_RootOrder: 0
@@ -682,7 +682,6 @@ MonoBehaviour:
   baseLongNail: {fileID: 4122843866948130824}
   baseSweet: {fileID: 7846700753925185796}
   Carpenter: {fileID: 2757472879240741117}
-  EyeAnim: {fileID: 0}
   EffectExclamRed: {fileID: 5086085623578673087}
   EffectExclamBlue: {fileID: 7922870834249946850}
   scrollingHolder: {fileID: 5348239490659111460}

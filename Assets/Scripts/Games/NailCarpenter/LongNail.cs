@@ -60,6 +60,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         private void HammmerMiss(PlayerActionEvent caller)
         {
             game.Carpenter.DoScaledAnimationAsync("eyeBlink", 0.25f, animLayer: 1);
+            nailAnim.DoScaledAnimationAsync("longNailMiss", 0.5f);
         }
 
         private void Update()

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
@@ -11,7 +12,8 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         public float metresPerSecond;
         public sweetsType sweetType;
         public Animator sweetAnim;
-        // public SpriteRenderer sweetSprite;
+
+        bool broken = false;
 
         public enum sweetsType
         {
@@ -28,14 +30,30 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
         public void Init()
         {
             game = NailCarpenter.instance;
+            broken = false;
 
             AwakeAnim();
             game.ScheduleUserInput(targetBeat, 0, NailCarpenter.InputAction_SweetsHit, HammmerJust, null, null);
             Update();
+
+            if (sweetType == sweetsType.Pudding)
+            {
+                BeatAction.New(this, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(targetBeat, delegate
+                    {
+                        if (!broken)
+                        {
+                            sweetAnim.Play("puddingBeat", -1, 0);
+                        }
+                    })
+                });
+            }
         }
 
         private void AwakeAnim()
         {
+            broken = true;
             switch (sweetType)
             {
                 case sweetsType.Pudding:

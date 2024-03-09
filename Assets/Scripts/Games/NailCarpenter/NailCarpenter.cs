@@ -104,7 +104,6 @@ namespace HeavenStudio.Games
             None
         }
 
-
         [SerializeField] ObjectPatternItem[] puddingPattern;
         [SerializeField] ObjectPatternItem[] cherryPattern;
         [SerializeField] ObjectPatternItem[] cakePattern;
@@ -202,6 +201,14 @@ namespace HeavenStudio.Games
         {
             if (!conductor.isPlaying) return;
             UpdatePatterns();
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (!IsExpectingInputNow(InputAction_AltPress) && UnityEngine.Random.value < 0.1f)
+            {
+                Carpenter.Play("eyeBlinkFast", 1, 0);
+            }
         }
 
         void Update()
@@ -482,8 +489,6 @@ namespace HeavenStudio.Games
             newNail.targetX = nailHolder.position.x;
             newNail.metresPerSecond = scrollMetresPerBeat;
 
-            // var nailX = (beat - startBeat) * -nailDistance;
-            // newNail.transform.localPosition = new Vector3((float)nailX, 0f, 0f);
             newNail.Init();
             newNail.gameObject.SetActive(true);
         }
@@ -495,8 +500,6 @@ namespace HeavenStudio.Games
             newNail.targetX = nailHolder.position.x;
             newNail.metresPerSecond = scrollMetresPerBeat;
 
-            // var nailX = (beat - startBeat) * -nailDistance;
-            // newNail.transform.localPosition = new Vector3((float)nailX, 0f, 0f);
             newNail.Init();
             newNail.gameObject.SetActive(true);
         }
@@ -509,8 +512,6 @@ namespace HeavenStudio.Games
             newSweet.targetX = nailHolder.position.x;
             newSweet.metresPerSecond = scrollMetresPerBeat;
 
-            // var sweetX = (beat - startBeat) * -nailDistance;
-            // newSweet.transform.localPosition = new Vector3((float)sweetX, 0f, 0f);
             newSweet.gameObject.SetActive(true);
             newSweet.Init();
         }
