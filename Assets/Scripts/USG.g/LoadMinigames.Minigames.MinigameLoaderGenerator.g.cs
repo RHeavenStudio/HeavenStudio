@@ -412,6 +412,17 @@ namespace HeavenStudio
             {
                 Debug.LogWarning("Game loader AgbQuizShowLoader failed!");
             }
+
+            game = AgbRapMenLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbRapMenLoader failed!");
+            }
+
             game = NtrPingpongLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -490,6 +501,16 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader RvlSeeSawLoader failed!");
+            }
+
+            game = AgbSickBeats.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbSickBeats failed!");
             }
 
             game = NtrSlotMonsterLoader.AddGame(eventCaller);
