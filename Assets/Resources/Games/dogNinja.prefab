@@ -1699,26 +1699,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoundSequences:
-  - name: hereWeGo
+  - name: here_we_go
     sequence:
       game: 1
       force: 1
       clips:
-      - clip: here
+      - clip: dogNinja/here
         beat: 0
         pitch: 0
         volume: 0
         looping: 0
         offset: 0
         parameters: []
-      - clip: we
+      - clip: dogNinja/we
         beat: 0.5
         pitch: 0
         volume: 0
         looping: 0
         offset: 0
         parameters: []
-      - clip: go
+      - clip: dogNinja/go
         beat: 1
         pitch: 0
         volume: 0

@@ -88,7 +88,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 DogAnim.DoScaledAnimationAsync("Slice" + dir, 0.5f);
                 if (shouldSfx) SoundByte.PlayOneShotGame(sfxNum + "2");
 
-                Debug.Log("type - 1 : " + (type - 1));
                 HalvesLeftBase.sr.sprite = objectLeftHalves[type - 1];
                 HalvesRightBase.sr.sprite = objectRightHalves[type - 1];
                 for (int i = 0; i < 2; i++) {

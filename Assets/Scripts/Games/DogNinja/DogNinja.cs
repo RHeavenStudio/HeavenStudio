@@ -65,7 +65,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out DogNinja instance)) {
-                            instance.DoPrepare(eventCaller.currentEntity.beat);
+                            instance.DoPrepare();
                         }
                     },
                     defaultLength = 0.5f,
@@ -109,16 +109,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("HereWeGo", "Here We Go!")
                 {
-                    function = delegate { DogNinja.HereWeGo(eventCaller.currentEntity.beat); },
-                    inactiveFunction = delegate { DogNinja.HereWeGo(eventCaller.currentEntity.beat); },
+                    preFunction = delegate { DogNinja.HereWeGo(eventCaller.currentEntity.beat); },
                     defaultLength = 2,
                     preFunctionLength = 1,
                 },
-            }
-            // ,
-            // new List<string>() { "ntr", "normal" },
-            // "ntrninja", "en",
-            // new List<string>() { }
+            },
+            new List<string>() { "ntr", "normal" },
+            "ntrninja", "en",
+            new List<string>() { }
             );
         }
     }
@@ -130,7 +128,7 @@ namespace HeavenStudio.Games
     using Scripts_DogNinja;
     public class DogNinja : Minigame
     {
-        struct QueuedThrow
+        private struct QueuedThrow
         {
             public int[] types;
             public string sfxNumL, sfxNumR;
@@ -223,11 +221,13 @@ namespace HeavenStudio.Games
             foreach (var e in gameManager.Beatmap.Entities.FindAll(e => e.datamodel is "dogNinja/ThrowObject" && beat >= e.beat - 2 && beat < e.beat + 1))
             {
                 QueuedThrow t = e["throwData"];
+                bool shouldPrepare = e["shouldPrepare"];
                 if (beat > e.beat) {
+                    shouldPrepare = false;
                     DogAnim.Play("Prepare", 0, 1);
                     preparing = true;
                 }
-                ThrowObject(e.beat, e["direction"], ((beat <= e.beat) && e["shouldPrepare"]), t.types, t.sfxNumL, t.sfxNumR);
+                ThrowObject(e.beat, e["direction"], shouldPrepare, t.types, t.sfxNumL, t.sfxNumR);
             }
         }
 
@@ -349,16 +349,22 @@ namespace HeavenStudio.Games
             queuePrepare = false;
         }
 
-        public void DoPrepare(double beat)
+        public void DoPrepare()
         {
             if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && PlayerInput.PlayerHasControl()) return;
-            if (!queuePrepare) DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
-            queuePrepare = true;
+            DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+            preparing = true;
         }
 
         public static void HereWeGo(double beat)
         {
-            PlaySoundSequence("dogNinja", "here_we_go", beat);
+            // // sound sequence isn't working?
+            // PlaySoundSequence("dogNinja", "here_we_go", beat);
+            MultiSound.Play(new List<MultiSound.Sound>() {
+                new("dogNinja/here", beat + 0),
+                new("dogNinja/we", beat + 0.5),
+                new("dogNinja/go",   beat + 1),
+            }, forcePlay: true);
         }
     }
 }
