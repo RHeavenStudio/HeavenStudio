@@ -18,16 +18,15 @@ namespace HeavenStudio.Games.Loaders
             {
                 if (datamodel == "dogNinja/ThrowObject" && e.version == 0)
                 {
-                    Debug.Log("entity at beat " + e.beat + " is the same? " + (e["typeL"] == e["typeR"]));
-                    bool diff = e["typeL"] == e["typeR"];
-                    Debug.Log("entity at beat " + e.beat + " is the same? " + (e["typeL"] == e["typeR"]));
-                    e.CreateProperty("type", diff ? e["typeL"] : DogNinja.ObjectType.Random);
+                    e["diffObjs"] = e["direction"] == 2 && e["typeL"] != e["typeR"];
+                    e["type"] = e["direction"] is 0 or 2 ? (int)e["typeL"] : e["typeR"];
                     e.version = 1;
 
                     return e;
                 }
                 return null;
             }
+            // // Beatmap.Entities isn't available in a riqentity updater...
             // RiqEntity BirdUpdater(string datamodel, RiqEntity e)
             // {
             //     if (datamodel == "dogNinja/CutEverything" && e.version == 0)
@@ -143,15 +142,8 @@ namespace HeavenStudio.Games
 
         [Header("References")]
         [SerializeField] ThrowObject ObjectBase;
-        [SerializeField] GameObject FullBird;
         [SerializeField] SpriteRenderer WhichObject;
-        public SpriteRenderer WhichLeftHalf;
-        public SpriteRenderer WhichRightHalf;
-        [SerializeField] TMP_Text cutEverythingText;
-
-        [Header("Curves")]
-        [SerializeField] BezierCurve3D CurveFromLeft;
-        [SerializeField] BezierCurve3D CurveFromRight;
+        [SerializeField] TMP_Text CutEverythingText;
 
         [SerializeField] Sprite[] ObjectTypes;
 
@@ -228,22 +220,21 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
-            foreach (var e in gameManager.Beatmap.Entities.FindAll(e => e.datamodel is "dogNinja/ThrowObject" && beat > e.beat - 2 && beat < e.beat + 1))
+            foreach (var e in gameManager.Beatmap.Entities.FindAll(e => e.datamodel is "dogNinja/ThrowObject" && beat >= e.beat - 2 && beat < e.beat + 1))
             {
-                // if (!e.dynamicData.ContainsKey("throwData")) {
-                //     QueueObject(e.beat, e["direction"], e["diffObjs"], e["type"], e["typeL"], e["typeR"], e["shouldPrepare"], true, e);
-                // }
                 QueuedThrow t = e["throwData"];
-                DogAnim.Play("Prepare", 0, 1);
-                preparing = true;
-                ThrowObject(e.beat, e["direction"], t.types, t.sfxNumL, t.sfxNumR);
+                if (beat > e.beat) {
+                    DogAnim.Play("Prepare", 0, 1);
+                    preparing = true;
+                }
+                ThrowObject(e.beat, e["direction"], ((beat <= e.beat) && e["shouldPrepare"]), t.types, t.sfxNumL, t.sfxNumR);
             }
         }
 
         private void Update()
         {
             // prepare queuing stuff
-            if (queuePrepare && (DogAnim.IsAnimationNotPlaying() || DogAnim.IsPlayingAnimationNames("Bop")))
+            if (queuePrepare && !preparing && (DogAnim.IsAnimationNotPlaying() || DogAnim.IsPlayingAnimationNames("Bop")))
             {
                 DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
                 preparing = true;
@@ -253,8 +244,9 @@ namespace HeavenStudio.Games
             // controls stuff
             if (PlayerInput.GetIsAction(InputAction_TouchPress) && !GameManager.instance.autoplay)
             {
-                queuePrepare = true;
+                // queuePrepare = true;
                 DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+                preparing = true;
             }
             if (PlayerInput.GetIsAction(InputAction_TouchRelease) && (!IsExpectingInputNow(InputAction_Press)) && (!GameManager.instance.autoplay))
             {
@@ -268,18 +260,8 @@ namespace HeavenStudio.Games
                 DogAnim.DoScaledAnimationAsync(slice, 0.5f);
 
                 SoundByte.PlayOneShotGame("dogNinja/whiff");
-                queuePrepare = false;
+                StopPrepare();
             }
-        }
-
-        private void LateUpdate()
-        {
-            // // prepare queuing stuff
-            // if (queuePrepare && (DogAnim.IsAnimationNotPlaying() || DogAnim.IsPlayingAnimationNames("Bop", "Idle")))
-            // {
-            //     DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
-            //     queuePrepare = false;
-            // }
         }
 
         public void Bop(double beat, float length, bool auto, bool bop)
@@ -313,14 +295,9 @@ namespace HeavenStudio.Games
                 }
             }
 
-            if (GameManager.instance.minigameObj.TryGetComponent(out DogNinja instance)) {
-                instance.ThrowObject(beat, direction, types, sfxNums[0], sfxNums[1]);
+            if (GameManager.instance.minigame is DogNinja instance) {
+                instance.ThrowObject(beat, direction, prepare, types, sfxNums[0], sfxNums[1]);
                 
-                if (prepare) {
-                    BeatAction.New(instance, new() {
-                        new(beat, () => instance.queuePrepare = PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch || GameManager.instance.autoplay)
-                    });
-                }
             } else {
                 var queuedThrow = new QueuedThrow() {
                     types = types,
@@ -334,8 +311,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ThrowObject(double beat, int direction, int[] types, string sfxNumL, string sfxNumR)
+        public void ThrowObject(double beat, int direction, bool prepare, int[] types, string sfxNumL, string sfxNumR)
         {
+            if (prepare) {
+                BeatAction.New(this, new() {
+                    new(beat, () => queuePrepare = PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch || GameManager.instance.autoplay)
+                });
+            }
             for (int i = 0; i < (direction == 2 ? 2 : 1); i++)
             {
                 bool l = direction is 2 ? i == 0 : direction == 0;
@@ -344,7 +326,7 @@ namespace HeavenStudio.Games
                 obj.startBeat = beat;
                 obj.direction = direction;
                 obj.fromLeft = l;
-                obj.type = types[i];
+                obj.type = l ? types[0] : types[1];
                 obj.sfxNum = l ? sfxNumL : sfxNumR;
                 if (direction == 2) obj.shouldSfx = l == (types[0] == types[1]);
             }
@@ -354,7 +336,7 @@ namespace HeavenStudio.Games
         {
             if (sound) SoundByte.PlayOneShotGame("dogNinja/bird_flap");
             BirdAnim.DoScaledAnimationAsync("FlyIn", 0.5f);
-            cutEverythingText.text = customText;
+            CutEverythingText.text = customText;
 
             BeatAction.New(this, new() {
                 new(beat + length, () => BirdAnim.Play("FlyOut", 0, 0))

@@ -109,9 +109,8 @@ MonoBehaviour:
   RightCurve: {fileID: 8538313959133990924}
   BarelyLeftCurve: {fileID: 5959598018215963193}
   BarelyRightCurve: {fileID: 4156529297438955755}
-  HalvesLeftBase: {fileID: 8462363345267808632}
-  HalvesRightBase: {fileID: 997672822965154321}
-  ObjectParent: {fileID: 0}
+  HalvesLeftBase: {fileID: 3507681361263350449}
+  HalvesRightBase: {fileID: 5646879835731180444}
   objectLeftHalves:
   - {fileID: -5050977528292827191, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
   - {fileID: -6734710479057769413, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
@@ -541,7 +540,7 @@ MonoBehaviour:
   rotSpeed: 140
   fallLeftCurve: {fileID: 7764367815067799206}
   fallRightCurve: {fileID: 7122240029612248645}
-  halvesParent: {fileID: 2078672318315355962}
+  sr: {fileID: 7206843505938361017}
 --- !u!1 &1203023033644261752
 GameObject:
   m_ObjectHideFlags: 0
@@ -1730,13 +1729,8 @@ MonoBehaviour:
   DogAnim: {fileID: 1770250701376598399}
   BirdAnim: {fileID: 4964290445827434540}
   ObjectBase: {fileID: 4494871422713187218}
-  FullBird: {fileID: 3439822116337821266}
   WhichObject: {fileID: 1780506401517458247}
-  WhichLeftHalf: {fileID: 8550182553065708291}
-  WhichRightHalf: {fileID: 7206843505938361017}
-  cutEverythingText: {fileID: 8405214087581042494}
-  CurveFromLeft: {fileID: 2592536718110886033}
-  CurveFromRight: {fileID: 8538313959133990924}
+  CutEverythingText: {fileID: 8405214087581042494}
   ObjectTypes:
   - {fileID: 0}
   - {fileID: -2307065246004786754, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
@@ -4202,7 +4196,7 @@ MonoBehaviour:
   rotSpeed: -140
   fallLeftCurve: {fileID: 7191847337805905266}
   fallRightCurve: {fileID: 5028931464679965393}
-  halvesParent: {fileID: 2078672318315355962}
+  sr: {fileID: 8550182553065708291}
 --- !u!1 &8691542995859896262
 GameObject:
   m_ObjectHideFlags: 0

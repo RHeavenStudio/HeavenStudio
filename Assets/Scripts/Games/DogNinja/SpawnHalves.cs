@@ -7,11 +7,11 @@ using NaughtyBezierCurves;
 
 namespace HeavenStudio.Games.Scripts_DogNinja
 {
+    // this code sucks but i don't wanna touch it. it works fine enough. sorry!
     public class SpawnHalves : MonoBehaviour
     {
         public double startBeat;
         public Vector3 objPos;
-        private Vector3 posModifier;
         public bool lefty;
         float bpmModifier;
         double songPos;
@@ -22,24 +22,18 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         [SerializeField] BezierCurve3D fallLeftCurve;
         [SerializeField] BezierCurve3D fallRightCurve;
         BezierCurve3D curve;
-        [SerializeField] Transform halvesParent;
-
-        
-        private void Awake()
-        {
-            bpmModifier = Conductor.instance.songBpm / 100;
-            songPos = Conductor.instance.songPositionInBeatsAsDouble;
-        }
+        public SpriteRenderer sr;
 
         private void Start() 
         {
+            bpmModifier = Conductor.instance.songBpm / 100;
+            songPos = Conductor.instance.songPositionInBeatsAsDouble;
             curve = lefty ? fallRightCurve : fallLeftCurve;
         }
 
         private void Update()
         {
-            // holy shit
-            float flyPosHalves = (Conductor.instance.GetPositionFromBeat(songPos, 3f)*(Conductor.instance.GetPositionFromBeat(songPos, 2f)))+Conductor.instance.GetPositionFromBeat(songPos, 1f);
+            float flyPosHalves = (Conductor.instance.GetPositionFromBeat(songPos, 3f) * Conductor.instance.GetPositionFromBeat(songPos, 2f)) + Conductor.instance.GetPositionFromBeat(songPos, 1f);
             flyPosHalves = (flyPosHalves * 0.2f) + 0.35f;
             transform.position = curve.GetPoint(flyPosHalves) + objPos;
 
@@ -50,12 +44,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             // clean-up logic
             if (flyPosHalves > 1f) {
                 Destroy(gameObject);
-            };
-            
-            if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) 
-                || GameManager.instance.currentGame != "dogNinja") {
-                Destroy(gameObject);
-            };
+            }
         }
     }
 }

@@ -33,9 +33,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private BezierCurve3D barelyCurve;
         [SerializeField] BezierCurve3D BarelyLeftCurve;
         [SerializeField] BezierCurve3D BarelyRightCurve;
-        [SerializeField] GameObject HalvesLeftBase;
-        [SerializeField] GameObject HalvesRightBase;
-        [SerializeField] Transform ObjectParent;
+        [SerializeField] SpawnHalves HalvesLeftBase;
+        [SerializeField] SpawnHalves HalvesRightBase;
         public Sprite[] objectLeftHalves;
         public Sprite[] objectRightHalves;
 
@@ -50,9 +49,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Update()
         {
-            float flyPos = game.conductor.GetPositionFromBeat(startBeat, 1f)+1.1f;
-            float flyPosBarely = game.conductor.GetPositionFromBeat(barelyTime, 1f)+1f;
             if (isActive) {
+                float flyPos = game.conductor.GetPositionFromBeat(startBeat, 1f)+1.1f;
                 flyPos *= 0.31f;
                 transform.position = curve.GetPoint(flyPos);
                 objPos = curve.GetPoint(flyPos);
@@ -61,6 +59,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                     Destroy(gameObject);
                 }
             } else {
+                float flyPosBarely = game.conductor.GetPositionFromBeat(barelyTime, 1f)+1f;
                 flyPosBarely *= 0.3f;
                 transform.position = barelyCurve.GetPoint(flyPosBarely) + objPos;
                 float rot = fromLeft ? 200f : -200f;
@@ -68,11 +67,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 if (flyPosBarely > 1f) {
                     Destroy(gameObject);
                 }
-            }
-
-            if ((!game.conductor.isPlaying && !game.conductor.isPaused) 
-                || game.gameManager.currentGame != "dogNinja") {
-                Destroy(gameObject);
             }
         }
 
@@ -89,16 +83,16 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 barelyTime = game.conductor.songPositionInBeatsAsDouble;
 
                 DogAnim.DoScaledAnimationAsync("Barely" + dir, 0.5f);
-                SoundByte.PlayOneShotGame("dogNinja/barely");
+                if (shouldSfx) SoundByte.PlayOneShotGame("dogNinja/barely");
             } else {
                 DogAnim.DoScaledAnimationAsync("Slice" + dir, 0.5f);
                 if (shouldSfx) SoundByte.PlayOneShotGame(sfxNum + "2");
 
                 Debug.Log("type - 1 : " + (type - 1));
-                game.WhichLeftHalf.sprite = objectLeftHalves[type - 1];
-                game.WhichRightHalf.sprite = objectRightHalves[type - 1];
+                HalvesLeftBase.sr.sprite = objectLeftHalves[type - 1];
+                HalvesRightBase.sr.sprite = objectRightHalves[type - 1];
                 for (int i = 0; i < 2; i++) {
-                    SpawnHalves half = Instantiate(i == 0 ? HalvesLeftBase : HalvesRightBase, game.transform).GetComponent<SpawnHalves>();
+                    SpawnHalves half = Instantiate(i == 0 ? HalvesLeftBase : HalvesRightBase, game.transform);
                     half.startBeat = startBeat;
                     half.lefty = fromLeft;
                     half.objPos = objPos;
@@ -110,7 +104,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Miss(PlayerActionEvent caller)
         {
-            if (!game.queuePrepare) return;
+            if (!game.preparing) return;
             DogAnim.DoScaledAnimationAsync("Unprepare", 0.5f);
             game.StopPrepare();
         }
