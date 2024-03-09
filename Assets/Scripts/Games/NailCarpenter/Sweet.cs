@@ -53,7 +53,6 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
 
         private void AwakeAnim()
         {
-            broken = true;
             switch (sweetType)
             {
                 case sweetsType.Pudding:
@@ -76,6 +75,7 @@ namespace HeavenStudio.Games.Scripts_NailCarpenter
 
         private void BreakAnim()
         {
+            broken = true;
             switch (sweetType)
             {
                 case sweetsType.Pudding:
