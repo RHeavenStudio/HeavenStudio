@@ -132,14 +132,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("additive", true, "Additive Rotation", "Toggle if the above rotation should be added to the current angle instead of setting the target angle to travel to.")
                     }
                 },
-                
-
-
-            },
-
-            new List<string>() {"ntr", "normal"},
-            "ntrAirboarder", "en",
-            new List<string>() { }
+            }
+            // ,
+            // new List<string>() {"ntr", "normal"},
+            // "ntrAirboarder", "en",
+            // new List<string>() { }
             );
         }
     }
@@ -233,25 +230,20 @@ namespace HeavenStudio.Games
             //lists arch and wall events
             List<RiqEntity> blockEvents = gameManager.Beatmap.Entities.FindAll(e => e.datamodel is "airboarder/duck" or "airboarder/crouch" or "airboarder/jump" && e.beat >= beat && e.beat < endBeat);
         
-            foreach (var e in entities.FindAll(e => e.beat >= beat && e.beat < endBeat && e.datamodel is "airboarder/duck" or "airboarder/crouch" or "airboarder/jump"))
-                {
+            foreach (var e in blockEvents)
+            {
                 switch (e.datamodel) {
                     case "airboarder/duck":
-                    // do the stuff
-                    RequestArch(e.beat-25);
-                    archBasic.CueDuck(e.beat);
+                    RequestArch(e.beat - 25, false);
                     break;
                     case "airboarder/crouch":
-                    // do the stuff
-                    RequestArch(e.beat-25);
-                    archBasic.CueCrouch(e.beat);
+                    RequestArch(e.beat - 25, true);
                     break;
                     case "airboarder/jump":
-                    RequestWall(e.beat-25);
-                    wallBasic.CueJump(e.beat);
+                    RequestWall(e.beat - 25);
                     break;
                 }
-                }         
+            }
             PersistColor (beat);
         }
 
@@ -275,15 +267,13 @@ namespace HeavenStudio.Games
             if (lastGameSwitch == null) return;
             List<RiqEntity> cameraEntities = prevEntities.FindAll(c => c.beat >= lastGameSwitch.beat && c.datamodel == "airboarder/camera");
 
-             foreach (var entity in cameraEntities)
+            foreach (var entity in cameraEntities)
             {
                 ChangeCamera(entity.beat, entity["valA"], entity["valB"], entity.length, (Util.EasingFunction.Ease)entity["type"], entity["additive"]);
             }
 
             UpdateCamera(beat);
         }
-
-        
 
         public override void OnPlay(double beat)
         {
@@ -307,8 +297,6 @@ namespace HeavenStudio.Games
             GameCamera.AdditionalRotEuler = cameraPos.rotation.eulerAngles;
             GameCamera.AdditionalFoV = cameraFOV;
         }
-
-        
 
         public void Update()
         {
@@ -506,11 +494,16 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void RequestArch(double beat)
+        public void RequestArch(double beat, bool crouch)
         {
             Arch newArch = Instantiate(archBasic, transform);
             newArch.appearBeat = beat;
             newArch.gameObject.SetActive(true);
+            if (crouch) {
+                archBasic.CueCrouch(beat);
+            } else {
+                newArch.CueDuck(beat);
+            }
         }
 
         public void RequestWall(double beat)
@@ -518,6 +511,7 @@ namespace HeavenStudio.Games
             Wall newWall = Instantiate(wallBasic, transform);
             newWall.appearBeat = beat;
             newWall.gameObject.SetActive(true);
+            newWall.CueJump(beat);
         }
 
 
