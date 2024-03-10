@@ -177,6 +177,27 @@ namespace HeavenStudio.Games.Loaders
                         }),
                     }
                 },
+                new GameAction("parallaxObjects", "Background Objects")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.ParallaxObjects(e.beat, e.length, e["instant"], e["stars"], e["clouds"], e["earth"], e["mars"], e["doodles"], e["birds"]);
+                        }
+                    },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("instant", false, "Instant", "Whether the objects immediately appear."),
+                        new Param("stars", false, "Stars (NYI)", "Whether the stars will be visible by the end of the block."),
+                        new Param("clouds", true, "Clouds", "Whether the clouds will be visible by the end of the block."),
+                        new Param("earth", false, "Earth (NYI)", "Whether the Earth will be visible by the end of the block."),
+                        new Param("mars", false, "Mars (NYI)", "Whether Mars will be visible by the end of the block."),
+                        new Param("doodles", false, "Doodles (NYI)", "Whether the doodles will be visible by the end of the block."),
+                        new Param("birds", false, "Birds (NYI)", "Whether the birds will be visible by the end of the block."),
+                    }
+                },
                 new GameAction("explodehaha", "Force Explosion")
                 {
                     function = delegate {
@@ -209,7 +230,8 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer bgHigh;
         [SerializeField] Animator ChickenAnim;
         [SerializeField] Animator WaterAnim;
-        [SerializeField] Transform sea;
+        [SerializeField] Animator ParallaxFade;
+        [SerializeField] Transform Clouds;
         [SerializeField] TMP_Text yardsText;
         [SerializeField] TMP_Text endingText;
         [SerializeField] TMP_Text bubbleText;
@@ -263,6 +285,7 @@ namespace HeavenStudio.Games
         double successAnimationKillOnBeat = double.MaxValue;
 
         bool flowForward = true;
+        bool cloudsVisible = true;
 
         double bgColorStartBeat = -1;
         float bgColorLength = 0;
@@ -645,6 +668,7 @@ namespace HeavenStudio.Games
 
             //chicken/water movement speed
             if (nextIsland.isMoving) ChickenAnim.SetScaledAnimationSpeed((nextIsland.speed1 / 60) + 0.2f);
+            float parallaxSpeed = nextIsland.speed1 / 10000;
             float waterFlowSpeed = (nextIsland.speed1 / 5.83f) + ((1f / Conductor.instance.pitchedSecPerBeat) * 0.1f);
             if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f) < 0) 
             {
@@ -716,6 +740,16 @@ namespace HeavenStudio.Games
                 });
                 checkFallingDistance = false;
             }
+        }
+
+        public void LateUpdate()
+        {
+            //parallax speed
+            float parallaxSpeed = nextIsland.speed1 / 10000;
+
+            //parallax movement
+            Clouds.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
+            if (Clouds.localPosition.x < -24) Clouds.localPosition += new Vector3(24, 0, 0);
         }
 
         public override void OnPlay(double beat)
@@ -1512,6 +1546,29 @@ namespace HeavenStudio.Games
             drumFadeStart = beat;
             drumFadeLength = length;
             drumFadeIn = fadeIn;
+        }
+
+        public void ParallaxObjects(double beat, double length, bool instant, bool stars, bool clouds, bool earth, bool mars, bool doodles, bool birds)
+        {
+            float animSpeed = 0.5f / (float)length;
+            //clouds
+            if (!cloudsVisible)
+            {
+                Clouds.localPosition = new Vector3(0, 0, 0);
+                if (clouds)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "CloudEnable" : "CloudIn", animSpeed);
+                    cloudsVisible = true;
+                }
+            }
+            else
+            {
+                if (!clouds)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "CloudDisable" : "CloudOut", animSpeed);
+                    cloudsVisible = false;
+                }
+            }
         }
 
         #region ColorShit

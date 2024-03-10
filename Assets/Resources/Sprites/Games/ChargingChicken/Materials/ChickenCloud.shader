@@ -5,6 +5,7 @@ Shader "Sprites/ChickenCloud"
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
 		_OutlineColor ("Outline Color", Color) = (0,0,0,0)
+		_Alpha ("Alpha", Float) = 1
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 	}
 
@@ -64,6 +65,7 @@ Shader "Sprites/ChickenCloud"
 
 			sampler2D _MainTex;
 			sampler2D _AlphaTex;
+			float _Alpha;
 			float _AlphaSplitEnabled;
 
 			fixed4 SampleSpriteTexture (float2 uv)
@@ -84,6 +86,7 @@ Shader "Sprites/ChickenCloud"
 				float grayscale = clamp((input.r + input.g + input.b) / 3, 0, 1);
 				fixed4 c = ((_Color) * grayscale) + ((_OutlineColor) * (1 - grayscale));
 				c *= input.a;
+				c *= _Alpha;
 				return c;
 			}
 		ENDCG
