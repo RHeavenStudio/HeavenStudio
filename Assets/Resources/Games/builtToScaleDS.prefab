@@ -1574,6 +1574,15 @@ MonoBehaviour:
   shooterMaterial: {fileID: 2100000, guid: 97aebf98db2a0bb4a974fbbbbf03fda8, type: 2}
   objectMaterial: {fileID: 2100000, guid: 05418807da86e2146bc9e10ad24a33aa, type: 2}
   gridPlaneMaterial: {fileID: 2100000, guid: 3df450e97190f504d9ac4f14283b2e0a, type: 2}
+  elevatorMaterial: {fileID: 2100000, guid: f8523e095c9f2194d8ae47687a42305a, type: 2}
+  beltMaterial: {fileID: 2100000, guid: eafa15cb3393da547b21d564d4e71546, type: 2}
+  firstPatternLights:
+  - {fileID: 2100000, guid: da6d7e38b05966f40b51e566d6b339a8, type: 2}
+  - {fileID: 2100000, guid: 19e1f16b6cfe97b44abbebd8638abba7, type: 2}
+  - {fileID: 2100000, guid: 9dd5968860c25854c81d2bab1f5413d6, type: 2}
+  secondPatternLights:
+  - {fileID: 2100000, guid: 30ee7eac2a3457f469ba20a22c6dede1, type: 2}
+  - {fileID: 2100000, guid: bb162603bc9317b4c99d15b50be9b8ff, type: 2}
   beltSpeed: 4.33
 --- !u!1 &8451088964468361308
 GameObject:
