@@ -137,6 +137,22 @@ namespace HeavenStudio.Games.Loaders
                         }),
                     }
                 },
+                new GameAction("unParallaxObjects", "Background Objects")
+                {
+                    function = delegate { 
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.UnParallaxObjects(e.beat, e.length, e["appearance"], e["instant"]);
+                        }
+                    },
+                    resizable = true,
+                    defaultLength = 4f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("instant", false, "Instant", "Whether the appearance immediately changes."),
+                        new Param("appearance", ChargingChicken.Backgrounds.Sky , "Appearance", "Set the appearance of the background."),
+                    }
+                },
                 new GameAction("changeCloudColor", "Midground Appearance")
                 {
                     function = delegate { 
@@ -155,6 +171,27 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new() {
                             new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "colorFrom", "colorFrom2" }),
                         }),
+                    }
+                },
+                new GameAction("parallaxObjects", "Midground Objects")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.ParallaxObjects(e.beat, e.length, e["instant"], e["stars"], e["clouds"], e["earth"], e["mars"], e["doodles"], e["birds"]);
+                        }
+                    },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("instant", false, "Instant", "Whether the objects immediately appear."),
+                        new Param("stars", false, "Stars (NYI)", "Whether the stars will be visible by the end of the block."),
+                        new Param("clouds", true, "Clouds", "Whether the clouds will be visible by the end of the block."),
+                        new Param("earth", false, "Earth", "Whether the Earth will be visible by the end of the block."),
+                        new Param("mars", false, "Mars", "Whether Mars will be visible by the end of the block."),
+                        new Param("doodles", false, "Doodles (NYI)", "Whether the doodles will be visible by the end of the block."),
+                        new Param("birds", false, "Birds (NYI)", "Whether the birds will be visible by the end of the block."),
                     }
                 },
                 new GameAction("changeFgLight", "Foreground Appearance")
@@ -177,25 +214,22 @@ namespace HeavenStudio.Games.Loaders
                         }),
                     }
                 },
-                new GameAction("parallaxObjects", "Background Objects")
+                new GameAction("parallaxProgress", "Parallax Progress")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
-                            instance.ParallaxObjects(e.beat, e.length, e["instant"], e["stars"], e["clouds"], e["earth"], e["mars"], e["doodles"], e["birds"]);
+                            instance.ParallaxProgress(e["starProgress"], e["cloudProgress"], e["planetProgress"], e["doodleProgress"], e["birdProgress"]);
                         }
                     },
-                    defaultLength = 4f,
-                    resizable = true,
+                    defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("instant", false, "Instant", "Whether the objects immediately appear."),
-                        new Param("stars", false, "Stars (NYI)", "Whether the stars will be visible by the end of the block."),
-                        new Param("clouds", true, "Clouds", "Whether the clouds will be visible by the end of the block."),
-                        new Param("earth", false, "Earth (NYI)", "Whether the Earth will be visible by the end of the block."),
-                        new Param("mars", false, "Mars (NYI)", "Whether Mars will be visible by the end of the block."),
-                        new Param("doodles", false, "Doodles (NYI)", "Whether the doodles will be visible by the end of the block."),
-                        new Param("birds", false, "Birds (NYI)", "Whether the birds will be visible by the end of the block."),
+                        new Param("starProgress", new EntityTypes.Integer(-1, 100, -1), "Star Progress (NYI)", "Instantly sets what percent through the loop the stars are. (-1 = no change)"),
+                        new Param("cloudProgress", new EntityTypes.Integer(-1, 100, -1), "Cloud Progress", "Instantly sets what percent through the loop the clouds are. (-1 = no change)"),
+                        new Param("planetProgress", new EntityTypes.Integer(-1, 100, -1), "Planet Progress", "Instantly sets what percent through the loop the Earth and Mars are. (-1 = no change)"),
+                        new Param("doodleProgress", new EntityTypes.Integer(-1, 100, -1), "Doodle Progress (NYI)", "Instantly sets what percent through the loop the doodles are. (-1 = no change)"),
+                        new Param("birdProgress", new EntityTypes.Integer(-1, 100, -1), "Bird Progress (NYI)", "Instantly sets what percent through the loop the birds are. (-1 = no change)"),
                     }
                 },
                 new GameAction("explodehaha", "Force Explosion")
@@ -231,7 +265,9 @@ namespace HeavenStudio.Games
         [SerializeField] Animator ChickenAnim;
         [SerializeField] Animator WaterAnim;
         [SerializeField] Animator ParallaxFade;
+        [SerializeField] Animator UnParallaxFade;
         [SerializeField] Transform Clouds;
+        [SerializeField] Transform Planets;
         [SerializeField] TMP_Text yardsText;
         [SerializeField] TMP_Text endingText;
         [SerializeField] TMP_Text bubbleText;
@@ -276,6 +312,13 @@ namespace HeavenStudio.Games
             TheFuture, //20
         }
 
+        public enum Backgrounds
+        {
+            Sky,
+            Galaxy,
+            Future,
+        }
+
         bool isInputting = false;
         bool canPressWhiff = false;
         bool canBlastOff = false;
@@ -285,7 +328,10 @@ namespace HeavenStudio.Games
         double successAnimationKillOnBeat = double.MaxValue;
 
         bool flowForward = true;
+        int lastBg = 0;
         bool cloudsVisible = true;
+        bool earthVisible = false;
+        bool marsVisible = false;
 
         double bgColorStartBeat = -1;
         float bgColorLength = 0;
@@ -668,7 +714,7 @@ namespace HeavenStudio.Games
 
             //chicken/water movement speed
             if (nextIsland.isMoving) ChickenAnim.SetScaledAnimationSpeed((nextIsland.speed1 / 60) + 0.2f);
-            float parallaxSpeed = nextIsland.speed1 / 10000;
+            float parallaxSpeed = nextIsland.speed1 / 20000;
             float waterFlowSpeed = (nextIsland.speed1 / 5.83f) + ((1f / Conductor.instance.pitchedSecPerBeat) * 0.1f);
             if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f) < 0) 
             {
@@ -688,6 +734,12 @@ namespace HeavenStudio.Games
                     flowForward = false; 
                 }
             }
+
+            //parallax movement
+            Clouds.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
+            if (Clouds.localPosition.x < -24) Clouds.localPosition += new Vector3(24, 0, 0);
+            Planets.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
+            if (Planets.localPosition.x < -30) Planets.localPosition += new Vector3(30, 0, 0);
 
             //bubble shrinkage
             if (bubbleSizeChangeStart < Conductor.instance.songPositionInBeatsAsDouble && Conductor.instance.songPositionInBeatsAsDouble <= bubbleSizeChangeEnd)
@@ -742,16 +794,6 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void LateUpdate()
-        {
-            //parallax speed
-            float parallaxSpeed = nextIsland.speed1 / 10000;
-
-            //parallax movement
-            Clouds.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
-            if (Clouds.localPosition.x < -24) Clouds.localPosition += new Vector3(24, 0, 0);
-        }
-
         public override void OnPlay(double beat)
         {
             PersistThings(beat);
@@ -804,6 +846,12 @@ namespace HeavenStudio.Games
 
             string textColor = ColorUtility.ToHtmlStringRGBA(defaultHighlightColor);
             yardsTextString = yardsTextString.Replace("#", $"<color=#{textColor}>%</color>");
+
+            UnParallaxFade.DoScaledAnimationAsync("GalaxyDisable", 0.5f, animLayer: 0);
+            UnParallaxFade.DoScaledAnimationAsync("FutureDisable", 0.5f, animLayer: 1);
+
+            ParallaxFade.DoScaledAnimationAsync("EarthDisable", 0.5f, animLayer: 2);
+            ParallaxFade.DoScaledAnimationAsync("MarsDisable", 0.5f, animLayer: 3);
 
             PersistThings(Conductor.instance.songPositionInBeatsAsDouble);
         }
@@ -1554,10 +1602,9 @@ namespace HeavenStudio.Games
             //clouds
             if (!cloudsVisible)
             {
-                Clouds.localPosition = new Vector3(0, 0, 0);
                 if (clouds)
                 {
-                    ParallaxFade.DoScaledAnimationAsync(instant ? "CloudEnable" : "CloudIn", animSpeed);
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "CloudEnable" : "CloudIn", animSpeed, animLayer: 1);
                     cloudsVisible = true;
                 }
             }
@@ -1565,10 +1612,81 @@ namespace HeavenStudio.Games
             {
                 if (!clouds)
                 {
-                    ParallaxFade.DoScaledAnimationAsync(instant ? "CloudDisable" : "CloudOut", animSpeed);
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "CloudDisable" : "CloudOut", animSpeed, animLayer: 1);
                     cloudsVisible = false;
                 }
             }
+            //earth
+            if (!earthVisible)
+            {
+                if (earth)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "EarthEnable" : "EarthIn", animSpeed, animLayer: 2);
+                    earthVisible = true;
+                }
+            }
+            else
+            {
+                if (!earth)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "EarthDisable" : "EarthOut", animSpeed, animLayer: 2);
+                    earthVisible = false;
+                }
+            }
+            //mars
+            if (!marsVisible)
+            {
+                if (mars)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "MarsEnable" : "MarsIn", animSpeed, animLayer: 3);
+                    marsVisible = true;
+                }
+            }
+            else
+            {
+                if (!mars)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "MarsDisable" : "MarsOut", animSpeed, animLayer: 3);
+                    marsVisible = false;
+                }
+            }
+        }
+
+        public void UnParallaxObjects(double beat, double length, int bg, bool instant)
+        {
+            if (bg == lastBg) return;
+
+            float animSpeed = 0.5f / (float)length;
+
+            switch (bg)
+            {
+                case 0: //sky
+                {
+                    if (lastBg == 1) UnParallaxFade.DoScaledAnimationAsync(instant ? "GalaxyDisable" : "GalaxyOut", animSpeed, animLayer: 0);
+                    else UnParallaxFade.DoScaledAnimationAsync(instant ? "FutureDisable" : "FutureOut", animSpeed, animLayer: 1);
+                    break;
+                }
+                case 1: //galaxy
+                {
+                    UnParallaxFade.DoScaledAnimationAsync(instant ? "GalaxyEnable" : "GalaxyIn", animSpeed, animLayer: 0);
+                    if (lastBg == 2) UnParallaxFade.DoScaledAnimationAsync(instant ? "FutureDisable" : "FutureOut", animSpeed, animLayer: 1);
+                    break;
+                }
+                case 2: //future
+                {
+                    UnParallaxFade.DoScaledAnimationAsync(instant ? "FutureEnable" : "FutureIn", animSpeed, animLayer: 1);
+                    if (lastBg == 1) UnParallaxFade.DoScaledAnimationAsync(instant ? "GalaxyDisable" : "GalaxyOut", animSpeed, animLayer: 0);
+                    break;
+                }
+            }
+
+            lastBg = bg;
+        }
+
+        public void ParallaxProgress(int starProgress, int cloudProgress, int planetProgress, int doodleProgress, int birdProgress)
+        {
+            if (cloudProgress > -1) Clouds.localPosition = new Vector3((-cloudProgress) * .24f, 0, 0);
+            if (planetProgress > -1) Planets.localPosition = new Vector3((-planetProgress) * .30f, 0, 0);
         }
 
         #region ColorShit
