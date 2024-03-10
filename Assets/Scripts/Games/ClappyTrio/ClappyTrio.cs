@@ -59,12 +59,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("valA", new EntityTypes.Integer(3, 8, 3), "Lions", "Set how many lions there will be. The player is always the rightmost lion.")
                     }
                 },
-                // This is still here for backwards-compatibility but is hidden in the editor
-                new GameAction("prepare_alt", "")
-                {
-                    function = delegate { ClappyTrio.instance.Prepare(3); }, 
-                    hidden = true
-                },
             },
             new List<string>() {"agb", "normal"},
             "agbclap", "en",

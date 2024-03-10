@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Globalization;
-using Starpelly;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+using HeavenStudio.Util;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -49,8 +50,8 @@ namespace HeavenStudio.Editor.Track
         {
             if (Editor.instance.fullscreen) return;
 
-            // var x = Mathp.Round2Nearest(contentPosX, Timeline.instance.PixelsPerBeat);
-            var x = Mathp.Round2Nearest(-scrollRect.content.anchoredPosition.x, Timeline.instance.PixelsPerBeat);
+            // var x = MathUtils.Round2Nearest(contentPosX, Timeline.instance.PixelsPerBeat);
+            var x = MathUtils.Round2Nearest(-scrollRect.content.anchoredPosition.x, Timeline.instance.PixelsPerBeat);
             var pos = new Vector3(x, transform.localPosition.y, transform.localPosition.z);
             transform.localPosition = pos;
             rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0);

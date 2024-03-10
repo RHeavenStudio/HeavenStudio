@@ -1,0 +1,1489 @@
+fileFormatVersion: 2
+guid: 3e979ecd58c1ff6448ed59c7d87b708f
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ClapTrapTrapper_0
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 3104
+        width: 326
+        height: 927
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a19cf983e3d2a9c4b8ffdbe84529eea5
+      internalID: 541726047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_1
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 3379
+        width: 200
+        height: 650
+      alignment: 9
+      pivot: {x: 0.69, y: 0.09}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02fdd3a900ddb7d4cacffe542e9e166f
+      internalID: 466030590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_2
+      rect:
+        serializedVersion: 2
+        x: 945
+        y: 3379
+        width: 200
+        height: 650
+      alignment: 9
+      pivot: {x: 0.55, y: 0.095}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 088cc9e84a50eae4db61ebb28fee97c1
+      internalID: -424248275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_3
+      rect:
+        serializedVersion: 2
+        x: 1270
+        y: 3438
+        width: 500
+        height: 550
+      alignment: 9
+      pivot: {x: 0.79, y: 0.87}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7a6f3867c2e98f4db240ddc23aa8ebb
+      internalID: -1527351341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_4
+      rect:
+        serializedVersion: 2
+        x: 1830
+        y: 3438
+        width: 500
+        height: 550
+      alignment: 9
+      pivot: {x: 0.145, y: 0.84}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d3156ed7f5d36f44bf82ffe1275187c
+      internalID: -1710095545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_5
+      rect:
+        serializedVersion: 2
+        x: 2439
+        y: 3849
+        width: 118
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d355b0fc68a49164194074b74c2fa8d6
+      internalID: 2103109726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_6
+      rect:
+        serializedVersion: 2
+        x: 2697
+        y: 3849
+        width: 116
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9744f0c58715ef54a86f85394b4c0ebb
+      internalID: -648358493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_7
+      rect:
+        serializedVersion: 2
+        x: 2939
+        y: 3947
+        width: 106
+        height: 76
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbcd1a71a01038347ac4268cc4ac7cb4
+      internalID: 1963722646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_8
+      rect:
+        serializedVersion: 2
+        x: 3161
+        y: 3947
+        width: 108
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7101af5b9077d44f8fcec13abe3f012
+      internalID: 1739044964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_9
+      rect:
+        serializedVersion: 2
+        x: 3373
+        y: 3073
+        width: 680
+        height: 960
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5d08751c9acc6c4f91d23bc67322141
+      internalID: -1525234973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_10
+      rect:
+        serializedVersion: 2
+        x: 2437
+        y: 3551
+        width: 120
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 602beca402a7e6d4ea1b003e399fa2f5
+      internalID: -73386677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_11
+      rect:
+        serializedVersion: 2
+        x: 2693
+        y: 3551
+        width: 118
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3033b3477d3df4043b06098b00bc74c9
+      internalID: -536314201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_12
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 3733
+        width: 180
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37fa0e41901ba17448ec98b3e509ad19
+      internalID: -649951996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_13
+      rect:
+        serializedVersion: 2
+        x: 3175
+        y: 3761
+        width: 116
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df84d56294fca784d9d71cf18fb4b1bf
+      internalID: -1214988655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_14
+      rect:
+        serializedVersion: 2
+        x: 2923
+        y: 3573
+        width: 78
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cdfd6ac87f72b141849f993c522b525
+      internalID: 1896064163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_15
+      rect:
+        serializedVersion: 2
+        x: 3079
+        y: 3561
+        width: 150
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08138522ffcbcb245a054500a27a495e
+      internalID: -1571854476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_16
+      rect:
+        serializedVersion: 2
+        x: 2419
+        y: 3389
+        width: 120
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e219a418564cb14a9e840db4fff21d5
+      internalID: 1155685882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_17
+      rect:
+        serializedVersion: 2
+        x: 2643
+        y: 3389
+        width: 120
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2576eeabd0e3ef4f9fdc7219a3ebd5d
+      internalID: 1915325462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_18
+      rect:
+        serializedVersion: 2
+        x: 2853
+        y: 3394
+        width: 89
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4685e9b3fc11c8b479655a293f772ca7
+      internalID: 231996571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_20
+      rect:
+        serializedVersion: 2
+        x: 3013
+        y: 3383
+        width: 89
+        height: 76
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 608464df625a29f4d8230da95e92df75
+      internalID: -794266268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_21
+      rect:
+        serializedVersion: 2
+        x: 3173
+        y: 3397
+        width: 82
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8bfeaa3ddb502a46b2a1fb6af320da3
+      internalID: 1102692816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_23
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 2948
+        width: 570
+        height: 350
+      alignment: 9
+      pivot: {x: 0.89, y: 0.215}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3df445b381edb3e439a2dabeb97395ed
+      internalID: -966923221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_24
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 2948
+        width: 570
+        height: 350
+      alignment: 9
+      pivot: {x: 0.115, y: 0.215}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 390f4cf6557db6e44913cd9b92525089
+      internalID: 351434495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_25
+      rect:
+        serializedVersion: 2
+        x: 1965
+        y: 2947
+        width: 292
+        height: 346
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79db9ff9fce4c3349bae4eb8dac8f572
+      internalID: -734828188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_26
+      rect:
+        serializedVersion: 2
+        x: 2349
+        y: 2947
+        width: 292
+        height: 346
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d51c4cafcfdd87641a17be144f2ff95a
+      internalID: 1909556052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_27
+      rect:
+        serializedVersion: 2
+        x: 2725
+        y: 3195
+        width: 80
+        height: 76
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8e125ed129acae4dbaa9c4ba98f171d
+      internalID: -2042506200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_28
+      rect:
+        serializedVersion: 2
+        x: 2883
+        y: 3187
+        width: 87
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d4fc86335fbaf24b945a62df64eb83a
+      internalID: -1038260829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_29
+      rect:
+        serializedVersion: 2
+        x: 3065
+        y: 3189
+        width: 78
+        height: 86
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75184662f8975e442b6f9fa800ed29f3
+      internalID: 1476349550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_30
+      rect:
+        serializedVersion: 2
+        x: 2745
+        y: 2933
+        width: 149
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 466ecd19df711e34b90ffaef9ba05365
+      internalID: -647882545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_32
+      rect:
+        serializedVersion: 2
+        x: 2986
+        y: 2928
+        width: 172
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 073a150062fbf9144afc7363a294b9af
+      internalID: 504510680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_34
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 865
+        width: 124
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: feceecab579666d498f78a47ebf2f032
+      internalID: -1847155627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_35
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 865
+        width: 124
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1138c738f55cb4a43baafe0343b2acea
+      internalID: -1584212959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_36
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 865
+        width: 124
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ae25ba5cd020ce4f9ddbc9e8d4bd351
+      internalID: 1869419347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_37
+      rect:
+        serializedVersion: 2
+        x: 471
+        y: 865
+        width: 124
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6357061e989cff54faceea3dcd3a3f51
+      internalID: 1579706440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_44
+      rect:
+        serializedVersion: 2
+        x: 4035
+        y: 2945
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 825a69efa90d84a4d96522192f0f2337
+      internalID: 25356025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_45
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 61
+        width: 897
+        height: 782
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9d80a05614b42440b69efce4fcc3974
+      internalID: 1017522249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_46
+      rect:
+        serializedVersion: 2
+        x: 1003
+        y: 669
+        width: 92
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d12f06a5208af774fa37cfd6627829c6
+      internalID: 1527099510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_47
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 675
+        width: 90
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9eab629c86427bf4098b5e32df7fa5ed
+      internalID: -1700129528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_48
+      rect:
+        serializedVersion: 2
+        x: 1303
+        y: 691
+        width: 82
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7646bb996ac1a4c449dba5983f3da250
+      internalID: -169484038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_49
+      rect:
+        serializedVersion: 2
+        x: 1395
+        y: 691
+        width: 74
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3404a3842e99d324b9cc198c159fb5a7
+      internalID: -1801879101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_50
+      rect:
+        serializedVersion: 2
+        x: 1597
+        y: 677
+        width: 134
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdecf416367ca7e4a82c10c7fa1acf7c
+      internalID: 2116023073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_51
+      rect:
+        serializedVersion: 2
+        x: 2019
+        y: 0
+        width: 2077
+        height: 2177
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59eaaa350da2158418b7be7489b065a8
+      internalID: -1207431484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_55
+      rect:
+        serializedVersion: 2
+        x: 3917
+        y: 2789
+        width: 134
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0d75375329df174abfe884efef8167a
+      internalID: -666006217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_56
+      rect:
+        serializedVersion: 2
+        x: 1197
+        y: 689
+        width: 100
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 472036b9b663eda4ebc395536ade5808
+      internalID: -1129542529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_57
+      rect:
+        serializedVersion: 2
+        x: 1247
+        y: 751
+        width: 46
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97b1b9dedd348c1408bdf97edce84ef9
+      internalID: -779357835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_60
+      rect:
+        serializedVersion: 2
+        x: 2412
+        y: 2711
+        width: 164
+        height: 148
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7488692cfa097343a455f45ba4206a4
+      internalID: 1825193183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_65
+      rect:
+        serializedVersion: 2
+        x: 2939
+        y: 2671
+        width: 149
+        height: 156
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e00779823cc1734695c6d925fcd3149
+      internalID: -1180233517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_68
+      rect:
+        serializedVersion: 2
+        x: 2674
+        y: 2679
+        width: 164
+        height: 147
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd7219e2d5e29be40b958eec15492e6f
+      internalID: -541023496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_73
+      rect:
+        serializedVersion: 2
+        x: 3933
+        y: 2641
+        width: 102
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df7da9642f0e0b84e9c50cfd06f93577
+      internalID: 511680797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_74
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 2275
+        width: 292
+        height: 346
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1717e535d4c5e644288c90dc2c5407d7
+      internalID: -170304696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_75
+      rect:
+        serializedVersion: 2
+        x: 1357
+        y: 2275
+        width: 290
+        height: 346
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc5d7d0b05ef8d548910c591f082efc0
+      internalID: -502560276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_76
+      rect:
+        serializedVersion: 2
+        x: 1737
+        y: 2525
+        width: 174
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 946c688d9b887c1478e0591b1a625fa0
+      internalID: 1700197630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_77
+      rect:
+        serializedVersion: 2
+        x: 2001
+        y: 2536
+        width: 156
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0a35b7f03dff9441917158642d619e1
+      internalID: -161388819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_78
+      rect:
+        serializedVersion: 2
+        x: 2237
+        y: 2543
+        width: 102
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bceecd92f8cac5e4192b5f5bf8bef34e
+      internalID: -1136175470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_79
+      rect:
+        serializedVersion: 2
+        x: 2421
+        y: 2547
+        width: 54
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b25c890ecc8df34d9f2cdc33937962f
+      internalID: 135816032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_80
+      rect:
+        serializedVersion: 2
+        x: 2569
+        y: 2595
+        width: 18
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24cbc65aa503ca346bdb2e41dbe38ed8
+      internalID: 1168501635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_87
+      rect:
+        serializedVersion: 2
+        x: 2686
+        y: 2310
+        width: 165
+        height: 257
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd6a72e643be4764887ad4063c5cb289
+      internalID: 690477880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_89
+      rect:
+        serializedVersion: 2
+        x: 3927
+        y: 2476
+        width: 112
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f659c1fbc5f94984086e1ba3c7bb639a
+      internalID: 292540715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_90
+      rect:
+        serializedVersion: 2
+        x: 2970
+        y: 2310
+        width: 165
+        height: 257
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 714d4b6066c9b624dad0796c3220473e
+      internalID: 971711575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClapTrapTrapper_92
+      rect:
+        serializedVersion: 2
+        x: 3260
+        y: 2310
+        width: 165
+        height: 257
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a1ca979ff8a414489ff52ccf64348f5
+      internalID: 1358027567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: 4ea0a1fb00846164aa3cb498bf8796b6, type: 3}
+      name: Spotlight
+    nameFileIdTable:
+      ClapTrapTrapper_0: 541726047
+      ClapTrapTrapper_1: 466030590
+      ClapTrapTrapper_10: -73386677
+      ClapTrapTrapper_100: 1309379946
+      ClapTrapTrapper_101: 1225767785
+      ClapTrapTrapper_102: -679215742
+      ClapTrapTrapper_103: -1395100783
+      ClapTrapTrapper_11: -536314201
+      ClapTrapTrapper_12: -649951996
+      ClapTrapTrapper_13: -1214988655
+      ClapTrapTrapper_14: 1896064163
+      ClapTrapTrapper_15: -1571854476
+      ClapTrapTrapper_16: 1155685882
+      ClapTrapTrapper_17: 1915325462
+      ClapTrapTrapper_18: 231996571
+      ClapTrapTrapper_19: -1169963102
+      ClapTrapTrapper_2: -424248275
+      ClapTrapTrapper_20: -794266268
+      ClapTrapTrapper_21: 1102692816
+      ClapTrapTrapper_22: 466009175
+      ClapTrapTrapper_23: -966923221
+      ClapTrapTrapper_24: 351434495
+      ClapTrapTrapper_25: -734828188
+      ClapTrapTrapper_26: 1909556052
+      ClapTrapTrapper_27: -2042506200
+      ClapTrapTrapper_28: -1038260829
+      ClapTrapTrapper_29: 1476349550
+      ClapTrapTrapper_3: -1527351341
+      ClapTrapTrapper_30: -647882545
+      ClapTrapTrapper_31: -1934826576
+      ClapTrapTrapper_32: 504510680
+      ClapTrapTrapper_33: 1115435795
+      ClapTrapTrapper_34: -1847155627
+      ClapTrapTrapper_35: -1584212959
+      ClapTrapTrapper_36: 1869419347
+      ClapTrapTrapper_37: 1579706440
+      ClapTrapTrapper_38: 1675061591
+      ClapTrapTrapper_39: -1367144162
+      ClapTrapTrapper_4: -1710095545
+      ClapTrapTrapper_40: 148390833
+      ClapTrapTrapper_41: -204917516
+      ClapTrapTrapper_42: 956686504
+      ClapTrapTrapper_43: -614697003
+      ClapTrapTrapper_44: 25356025
+      ClapTrapTrapper_45: 1017522249
+      ClapTrapTrapper_46: 1527099510
+      ClapTrapTrapper_47: -1700129528
+      ClapTrapTrapper_48: -169484038
+      ClapTrapTrapper_49: -1801879101
+      ClapTrapTrapper_5: 2103109726
+      ClapTrapTrapper_50: 2116023073
+      ClapTrapTrapper_51: -1207431484
+      ClapTrapTrapper_52: 260761128
+      ClapTrapTrapper_53: 1539357983
+      ClapTrapTrapper_54: -49050051
+      ClapTrapTrapper_55: -666006217
+      ClapTrapTrapper_56: -1129542529
+      ClapTrapTrapper_57: -779357835
+      ClapTrapTrapper_58: 932763686
+      ClapTrapTrapper_59: 1157197629
+      ClapTrapTrapper_6: -648358493
+      ClapTrapTrapper_60: 1825193183
+      ClapTrapTrapper_61: -547587902
+      ClapTrapTrapper_62: -47579733
+      ClapTrapTrapper_63: -1112309881
+      ClapTrapTrapper_64: 1928679568
+      ClapTrapTrapper_65: -1180233517
+      ClapTrapTrapper_66: 1335097301
+      ClapTrapTrapper_67: -766881271
+      ClapTrapTrapper_68: -541023496
+      ClapTrapTrapper_69: 1553659262
+      ClapTrapTrapper_7: 1963722646
+      ClapTrapTrapper_70: -1420058675
+      ClapTrapTrapper_71: 1456940296
+      ClapTrapTrapper_72: -1117334768
+      ClapTrapTrapper_73: 511680797
+      ClapTrapTrapper_74: -170304696
+      ClapTrapTrapper_75: -502560276
+      ClapTrapTrapper_76: 1700197630
+      ClapTrapTrapper_77: -161388819
+      ClapTrapTrapper_78: -1136175470
+      ClapTrapTrapper_79: 135816032
+      ClapTrapTrapper_8: 1739044964
+      ClapTrapTrapper_80: 1168501635
+      ClapTrapTrapper_81: -619974239
+      ClapTrapTrapper_82: 278416857
+      ClapTrapTrapper_83: 170312224
+      ClapTrapTrapper_84: -2110256531
+      ClapTrapTrapper_85: -704411871
+      ClapTrapTrapper_86: -774339130
+      ClapTrapTrapper_87: 690477880
+      ClapTrapTrapper_88: -434088846
+      ClapTrapTrapper_89: 292540715
+      ClapTrapTrapper_9: -1525234973
+      ClapTrapTrapper_90: 971711575
+      ClapTrapTrapper_91: -490599621
+      ClapTrapTrapper_92: 1358027567
+      ClapTrapTrapper_93: 87175395
+      ClapTrapTrapper_94: 471986813
+      ClapTrapTrapper_95: 1123854499
+      ClapTrapTrapper_96: -1504696900
+      ClapTrapTrapper_97: -910882786
+      ClapTrapTrapper_98: -1801267346
+      ClapTrapTrapper_99: -296844743
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

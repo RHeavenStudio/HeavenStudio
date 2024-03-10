@@ -23,9 +23,9 @@ namespace HeavenStudio.Editor
         [SerializeField] private TMP_Dropdown controllersDropdown;
         [SerializeField] private GameObject pairSearchItem;
         [SerializeField] private GameObject autoSearchLabel;
-        [SerializeField] private GameObject pairSearchLabel;
-        [SerializeField] private GameObject pairSearchCancelBt;
-        [SerializeField] private TMP_Text pairingLabel;
+        // [SerializeField] private GameObject pairSearchLabel;
+        // [SerializeField] private GameObject pairSearchCancelBt;
+        // [SerializeField] private TMP_Text pairingLabel;
         [SerializeField] private List<GameObject> controllerIcons;
 
         [SerializeField] private Material controllerMat;
@@ -41,8 +41,8 @@ namespace HeavenStudio.Editor
         [SerializeField] private Slider cursorSensitivitySlider;
 
         private bool isAutoSearching = false;
-        private bool isPairSearching = false;
-        private bool pairSelectLR = false;  //true = left, false = right
+        // private bool isPairSearching = false;
+        // private bool pairSelectLR = false;  //true = left, false = right
 
         private bool bindAllMode;
         private int currentBindingBt;
@@ -113,28 +113,35 @@ namespace HeavenStudio.Editor
                         }
                     }
                 }
-                else if (isPairSearching)
+                else if (currentController.GetType() == typeof(InputJoyconPair))
                 {
-                    var controllers = PlayerInput.GetInputControllers();
-                    InputController.InputFeatures lrFlag = pairSelectLR ? InputController.InputFeatures.Extra_SplitControllerLeft : InputController.InputFeatures.Extra_SplitControllerRight;
-                    foreach (var pairController in controllers)
+                    InputJoyconPair pair = (InputJoyconPair)currentController;
+                    if (!pair.HasControllers())
                     {
-                        if (pairController == currentController) continue;
-
-                        InputController.InputFeatures features = pairController.GetFeatures();
-                        if (!features.HasFlag(lrFlag)) continue;
-
-                        if (pairController.GetLastButtonDown() > 0)
+                        Debug.Log("Pair searching");
+                        List<InputJoyshock> controllers = PlayerInput.GetInputControllers()
+                                            .Select(x => x as InputJoyshock)
+                                            .Where(x => x != null && x.GetJoyshockType() is TypeJoyConLeft or TypeJoyConRight)
+                                            .ToList();
+                        foreach (var possibleController in controllers)
                         {
-                            (PlayerInput.GetInputController(1) as InputJoyshock)?.AssignOtherHalf((InputJoyshock)pairController);
-                            isPairSearching = false;
-                            pairSearchLabel.SetActive(false);
-                            currentControllerLabel.text = "Current Controller: " + pairController.GetDeviceName();
-                            pairingLabel.text = "Joy-Con Pair Selected\nPairing Successful!";
-                            ShowControllerIcon(pairController);
-
-                            currentController.OnSelected();
-                            pairController.OnSelected();
+                            if (possibleController.GetLastButtonDown(true) == ButtonMaskZL && possibleController.GetJoyshockType() == TypeJoyConLeft)
+                            {
+                                pair.SetLeftController(possibleController);
+                                pair.SetMaterialProperties(controllerMat);
+                            }
+                            else if (possibleController.GetLastButtonDown(true) == ButtonMaskZR && possibleController.GetJoyshockType() == TypeJoyConRight)
+                            {
+                                pair.SetRightController(possibleController);
+                                pair.SetMaterialProperties(controllerMat);
+                            }
+                        }
+                        if (pair.HasControllers())
+                        {
+                            pairSearchItem.SetActive(false);
+                            pair.OnSelected();
+                            pair.SetPlayer(1);
+                            pair.SetMaterialProperties(controllerMat);
                         }
                     }
                 }
@@ -193,17 +200,6 @@ namespace HeavenStudio.Editor
             lastController.SetPlayer(null);
             newController.SetPlayer(1);
 
-            if ((lastController as InputJoyshock) != null)
-            {
-                (lastController as InputJoyshock)?.UnAssignOtherHalf();
-            }
-
-            if ((newController as InputJoyshock) != null)
-            {
-                newController.OnSelected();
-                (newController as InputJoyshock)?.UnAssignOtherHalf();
-            }
-
             currentControllerLabel.text = "Current Controller: " + newController.GetDeviceName();
 
             if (!newController.GetCurrentStyleSupported())
@@ -212,32 +208,23 @@ namespace HeavenStudio.Editor
                 stylesDropdown.SetValueWithoutNotify((int)PlayerInput.CurrentControlStyle);
             }
 
-            UpdateControlStyleMapping();
-            ShowControllerBinds(newController);
-            ShowControllerIcon(newController);
+            newController.OnSelected();
 
-            InputController.InputFeatures features = newController.GetFeatures();
-            if (features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft))
+            if (newController is InputJoyconPair)
             {
-                pairingLabel.text = "Joy-Con (L) Selected\nPress any button on Joy-Con (R) to pair.";
-
-                pairSelectLR = !features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft);
+                InputJoyconPair pair = (InputJoyconPair)newController;
+                pair.SetLeftController(null);
+                pair.SetRightController(null);
                 pairSearchItem.SetActive(true);
-                StartPairSearch();
-            }
-            else if (features.HasFlag(InputController.InputFeatures.Extra_SplitControllerRight))
-            {
-                pairingLabel.text = "Joy-Con (R) Selected\nPress any button on Joy-Con (L) to pair.";
-
-                pairSelectLR = !features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft);
-                pairSearchItem.SetActive(true);
-                StartPairSearch();
             }
             else
             {
-                CancelPairSearch();
                 pairSearchItem.SetActive(false);
             }
+
+            UpdateControlStyleMapping();
+            ShowControllerBinds(newController);
+            ShowControllerIcon(newController);
         }
 
         public void ControllerDropdownChange()
@@ -253,7 +240,12 @@ namespace HeavenStudio.Editor
         public void StartBindSingle(int bt)
         {
             CancelBind();
-            if (PlayerInput.GetInputController(1).GetIsActionUnbindable(bt, PlayerInput.CurrentControlStyle))
+            InputController currentController = PlayerInput.GetInputController(1);
+            if (currentController.GetIsActionUnbindable(bt, PlayerInput.CurrentControlStyle))
+            {
+                return;
+            }
+            if (currentController is InputJoyconPair && !(currentController as InputJoyconPair).HasControllers())
             {
                 return;
             }
@@ -276,9 +268,14 @@ namespace HeavenStudio.Editor
         public void StartBindAll()
         {
             CancelBind();
+            InputController currentController = PlayerInput.GetInputController(1);
+            if (currentController is InputJoyconPair && !(currentController as InputJoyconPair).HasControllers())
+            {
+                return;
+            }
             bindAllMode = true;
             currentBindingBt = -1;
-            AdvanceAutoBind(PlayerInput.GetInputController(1));
+            AdvanceAutoBind(currentController);
         }
 
         public void CancelBind()
@@ -300,34 +297,18 @@ namespace HeavenStudio.Editor
         public void StartAutoSearch()
         {
             CancelBind();
-            if (!isPairSearching)
-            {
-                autoSearchLabel.SetActive(true);
-                isAutoSearching = true;
-            }
+            autoSearchLabel.SetActive(true);
+            isAutoSearching = true;
         }
 
         public void StartPairSearch()
         {
             CancelBind();
-            if (!isAutoSearching)
-            {
-                pairSearchLabel.SetActive(true);
-                pairSearchCancelBt.SetActive(true);
-                isPairSearching = true;
-            }
         }
 
         public void CancelPairSearch()
         {
             CancelBind();
-            if (isPairSearching)
-            {
-                pairSearchLabel.SetActive(false);
-                pairSearchCancelBt.SetActive(false);
-                isPairSearching = false;
-                pairingLabel.text = "Joy-Con Selected\nPairing was cancelled.";
-            }
         }
 
         public void SearchAndConnectControllers()

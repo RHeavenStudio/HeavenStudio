@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Starpelly;
 using Jukebox;
 using HeavenStudio.Util;
 using System.Data.Common;
@@ -179,7 +178,6 @@ namespace HeavenStudio
             {
                 AudioConfiguration config = AudioSettings.GetConfiguration();
                 dspSizeSeconds = config.dspBufferSize / (double)config.sampleRate;
-                Debug.Log($"dsp size: {dspSizeSeconds}");
                 dspMargin = 2 * dspSizeSeconds;
 
                 SetMinigameVolume(1f);
@@ -210,7 +208,6 @@ namespace HeavenStudio
                 }
                 musicSource.PlayScheduled(musicScheduledTime);
                 musicSource.pitch = timelinePitch;
-                Debug.Log($"playback scheduled for dsptime {dspStart}");
             }
 
             songPosBeat = beat;
@@ -234,7 +231,7 @@ namespace HeavenStudio
             if (deferTimeKeeping && dsp >= dspStart - dspSizeSeconds)
             {
                 deferTimeKeeping = false;
-                Debug.Log($"dsptime: {dsp}, deferred timekeeping for {DateTime.Now - startTime} seconds (delta dsp {dsp - dspStart})");
+                // Debug.Log($"dsptime: {dsp}, deferred timekeeping for {DateTime.Now - startTime} seconds (delta dsp {dsp - dspStart})");
                 startTime += TimeSpan.FromSeconds(dsp - dspStart);
                 absTimeAdjust = 0;
                 dspStart = dsp;
@@ -471,7 +468,7 @@ namespace HeavenStudio
             {
                 beat = Mathf.Max(beat, 0);
             }
-            float a = Mathp.Normalize(beat, (float)startBeat, (float)(startBeat + length));
+            float a = MathUtils.Normalize(beat, (float)startBeat, (float)(startBeat + length));
             return a;
         }
 

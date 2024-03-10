@@ -1,0 +1,497 @@
+fileFormatVersion: 2
+guid: 135c6f0d85710084799448c4874e0784
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: nail_0
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 1340
+        width: 200
+        height: 580
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d31dea5abb46194783a2e7b41c5ac9c
+      internalID: 2007520685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_1
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 1347
+        width: 280
+        height: 568
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff323fbf54f417a41bf39a3a71903f6c
+      internalID: -251074732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_crack
+      rect:
+        serializedVersion: 2
+        x: 1285
+        y: 1403
+        width: 173
+        height: 423
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 032c25287f8a36841b5dc95ac304fbe2
+      internalID: -1912995106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat0
+      rect:
+        serializedVersion: 2
+        x: 1524
+        y: 1343
+        width: 480
+        height: 460
+      alignment: 9
+      pivot: {x: 0.5, y: 0.2826087}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3033550c4351c3747a14e8296b48d3fa
+      internalID: -53022554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat0_b
+      rect:
+        serializedVersion: 2
+        x: 2030
+        y: 1336
+        width: 668
+        height: 439
+      alignment: 9
+      pivot: {x: 0.5, y: 0.6492027}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7e760aa2f1102941be1c715acebee0f
+      internalID: 1585842764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat1
+      rect:
+        serializedVersion: 2
+        x: 2694
+        y: 1356
+        width: 494
+        height: 560
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd930b1bf515bef46a644718c7e1a531
+      internalID: 2042456146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat1_b
+      rect:
+        serializedVersion: 2
+        x: 3195
+        y: 1419
+        width: 620
+        height: 438
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5936073}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fe172dec3d7277458ac6a7595df53f3
+      internalID: 1165805359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat2
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 773
+        width: 520
+        height: 531
+      alignment: 9
+      pivot: {x: 0.5, y: 0.21657251}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80457410b578c6b4592e65548c353a59
+      internalID: -594144686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat2_b
+      rect:
+        serializedVersion: 2
+        x: 556
+        y: 676
+        width: 624
+        height: 435
+      alignment: 9
+      pivot: {x: 0.5, y: 0.57471263}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0270328446be8aa47aef98811591f614
+      internalID: 2086215142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat3
+      rect:
+        serializedVersion: 2
+        x: 1204
+        y: 801
+        width: 232
+        height: 265
+      alignment: 9
+      pivot: {x: 0.5, y: 0.41509435}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2053ca07746fa2429f6d8a4042b9d56
+      internalID: 1776179193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat3_b
+      rect:
+        serializedVersion: 2
+        x: 1458
+        y: 731
+        width: 400
+        height: 299
+      alignment: 9
+      pivot: {x: 0.5, y: 0.8026756}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c06ef5169d3ab374a9ca51dd77adfd89
+      internalID: -227709912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat4
+      rect:
+        serializedVersion: 2
+        x: 1904
+        y: 700
+        width: 545
+        height: 576
+      alignment: 9
+      pivot: {x: 0.5, y: 0.20833333}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 884d850b903701543862ac8067f45436
+      internalID: 446269152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_sweat4_b
+      rect:
+        serializedVersion: 2
+        x: 2446
+        y: 652
+        width: 818
+        height: 501
+      alignment: 9
+      pivot: {x: 0.5, y: 0.56886226}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d956d3052b322654dae07e88ec68a5ee
+      internalID: 1988436020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_exclam
+      rect:
+        serializedVersion: 2
+        x: 3359
+        y: 615
+        width: 481
+        height: 740
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4be6b6ee22b8f94fbc8766ccc93ddf7
+      internalID: -472818473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: board
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 20
+        width: 3840
+        height: 560
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f21cde9f86f9bb40af9389f2ac6ee88
+      internalID: -155779656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_0_b
+      rect:
+        serializedVersion: 2
+        x: 628
+        y: 1346
+        width: 278
+        height: 528
+      alignment: 9
+      pivot: {x: 0.24460432, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5869bf3d4cd09ba42b5152612ad8f002
+      internalID: 267010933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nail_1_b
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 1352
+        width: 357
+        height: 519
+      alignment: 9
+      pivot: {x: 0.22408964, y: 0.477842}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd6b0ebcf2b45f846a126b0e905aa4c7
+      internalID: 1922842219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      board: -155779656
+      nail_0: 2007520685
+      nail_0_b: 267010933
+      nail_1: -251074732
+      nail_1_b: 1922842219
+      nail_crack: -1912995106
+      nail_exclam: -472818473
+      nail_sweat0: -53022554
+      nail_sweat0_b: 1585842764
+      nail_sweat1: 2042456146
+      nail_sweat1_b: 1165805359
+      nail_sweat2: -594144686
+      nail_sweat2_b: 2086215142
+      nail_sweat3: 1776179193
+      nail_sweat3_b: -227709912
+      nail_sweat4: 446269152
+      nail_sweat4_b: 1988436020
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

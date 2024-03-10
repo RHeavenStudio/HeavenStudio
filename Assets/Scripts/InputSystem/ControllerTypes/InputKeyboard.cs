@@ -131,6 +131,16 @@ namespace HeavenStudio.InputSystem
             currentBindings = newBinds;
         }
 
+        public override ControlBindings UpdateBindings(ControlBindings lastBinds)
+        {
+            return lastBinds;
+        }
+
+        public override int GetBindingsVersion()
+        {
+            return 0;
+        }
+
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
             return false;
@@ -195,60 +205,6 @@ namespace HeavenStudio.InputSystem
             Vector3 rawPointerPos = Input.mousePosition;
             rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
             return cam.ScreenToWorldPoint(rawPointerPos);
-        }
-
-        //todo: directionals
-        public override bool GetHatDirection(InputDirection direction)
-        {
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[0]);
-                case InputDirection.Down:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[1]);
-                case InputDirection.Left:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[2]);
-                case InputDirection.Right:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[3]);
-                default:
-                    return false;
-            }
-        }
-
-        public override bool GetHatDirectionDown(InputDirection direction, out double dt)
-        {
-            dt = 0;
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[0]);
-                case InputDirection.Down:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[1]);
-                case InputDirection.Left:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[2]);
-                case InputDirection.Right:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[3]);
-                default:
-                    return false;
-            }
-        }
-
-        public override bool GetHatDirectionUp(InputDirection direction, out double dt)
-        {
-            dt = 0;
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[0]);
-                case InputDirection.Down:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[1]);
-                case InputDirection.Left:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[2]);
-                case InputDirection.Right:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[3]);
-                default:
-                    return false;
-            }
         }
 
         public override void SetPlayer(int? playerNum)
