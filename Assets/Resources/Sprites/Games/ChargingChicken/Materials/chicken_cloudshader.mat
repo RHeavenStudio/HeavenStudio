@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: chicken_cloudshader
-  m_Shader: {fileID: 4800000, guid: b4cada49e3bbaee4b96deed8a436d7fd, type: 3}
+  m_Shader: {fileID: 4800000, guid: 05b2b41ae5e852e44a848016376434c8, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -58,6 +58,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - PixelSnap: 0
     - _BumpScale: 1
     - _ColorMask: 15
     - _Cutoff: 0.5
@@ -82,10 +83,11 @@ Material:
     - _UseUIAlphaClip: 0
     - _ZWrite: 1
     m_Colors:
-    - _AddColor: {r: 0.7843138, g: 0.94117653, b: 0.94117653, a: 1}
+    - _AddColor: {r: 0.78431374, g: 0.9411765, b: 0.9411765, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorAlpha: {r: 1, g: 0, b: 0, a: 1}
     - _ColorBravo: {r: 0, g: 1, b: 0, a: 1}
     - _ColorDelta: {r: 0, g: 0, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 1, g: 0.89447314, b: 0.8117647, a: 1}
   m_BuildTextureStacks: []

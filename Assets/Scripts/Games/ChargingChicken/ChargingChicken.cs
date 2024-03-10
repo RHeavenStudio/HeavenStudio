@@ -97,6 +97,26 @@ namespace HeavenStudio.Games.Loaders
                         new Param("fadeIn", false, "Fade In", "Fade the music back in."),
                     }
                 },
+                new GameAction("changeCarColor", "Car Appearance")
+                {
+                    function = delegate { 
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.ChangeCarColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
+                        }
+                    },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorFrom", ChargingChicken.defaultCarColor, "Idle Color Start", "Set the car's resting color at the start of the event."),
+                        new Param("colorTo", ChargingChicken.defaultCarColor, "Idle Color End", "Set the car's resting color at the end of the event."),
+                        new Param("colorFrom2", ChargingChicken.defaultCarColorCharged, "Charged Color Start", "Set the car's charged color at the start of the event."),
+                        new Param("colorTo2", ChargingChicken.defaultCarColorCharged, "Charged Color End", "Set the car's charged color at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new() {
+                            new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "colorFrom", "colorFrom2" }),
+                        }),
+                    }
+                },
                 new GameAction("changeBgColor", "Background Appearance")
                 {
                     function = delegate { 
@@ -112,6 +132,26 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorTo", ChargingChicken.defaultBGColor, "Color A End", "Set the top-most color of the background gradient at the end of the event."),
                         new Param("colorFrom2", ChargingChicken.defaultBGColorBottom, "Color B Start", "Set the bottom-most color of the background gradient at the start of the event."),
                         new Param("colorTo2", ChargingChicken.defaultBGColorBottom, "Color B End", "Set the bottom-most color of the background gradient at the end of the event."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new() {
+                            new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "colorFrom", "colorFrom2" }),
+                        }),
+                    }
+                },
+                new GameAction("changeCloudColor", "Midground Appearance")
+                {
+                    function = delegate { 
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.ChangeCloudColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
+                        }
+                    },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorFrom", ChargingChicken.defaultCloudColor, "Primary Color Start", "Set the midground's primary color at the start of the event. (Used in: Clouds, Stars, Doodles)"),
+                        new Param("colorTo", ChargingChicken.defaultCloudColor, "Primary Color End", "Set the midground's primary color at the start of the event. (Used in: Clouds, Stars, Doodles)"),
+                        new Param("colorFrom2", ChargingChicken.defaultCloudColorBottom, "Secondary Color Start", "Set the midground's secondary color at the start of the event. (Used in: Clouds)"),
+                        new Param("colorTo2", ChargingChicken.defaultCloudColorBottom, "Secondary Color End", "Set the midground's secondary color at the start of the event. (Used in: Clouds)"),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new() {
                             new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "colorFrom", "colorFrom2" }),
                         }),
@@ -176,6 +216,8 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject countBubble;
         [SerializeField] Island IslandBase;
         [SerializeField] Material chickenColors;
+        [SerializeField] Material chickenColorsCar;
+        [SerializeField] Material chickenColorsCloud;
         [SerializeField] Material chickenColorsWater;
         [SerializeField] SpriteRenderer headlightColor;
 
@@ -226,7 +268,14 @@ namespace HeavenStudio.Games
         float bgColorLength = 0;
         double fgLightStartBeat = -1;
         float fgLightLength = 0;
-        Util.EasingFunction.Ease lastEase;
+        double carColorStartBeat = -1;
+        float carColorLength = 0;
+        double cloudColorStartBeat = -1;
+        float cloudColorLength = 0;
+        Util.EasingFunction.Ease lastEase1;
+        Util.EasingFunction.Ease lastEase2;
+        Util.EasingFunction.Ease lastEase3;
+        Util.EasingFunction.Ease lastEase4;
         Color colorFrom;
         Color colorTo;
         Color colorFrom2;
@@ -235,6 +284,14 @@ namespace HeavenStudio.Games
         float lightTo = 1;
         float lightFrom2 = 0;
         float lightTo2 = 0;
+        Color carColorFrom;
+        Color carColorTo;
+        Color carColorFrom2;
+        Color carColorTo2;
+        Color cloudColorFrom;
+        Color cloudColorTo;
+        Color cloudColorFrom2;
+        Color cloudColorTo2;
 
         double bubbleEndCount = 0;
         double bubbleSizeChangeStart = 0;
@@ -306,6 +363,44 @@ namespace HeavenStudio.Games
             {
                 ColorUtility.TryParseHtmlString("#FFFFFF", out _defaultBGColorBottom);
                 return _defaultBGColorBottom;
+            }
+        }
+
+        private static Color _defaultCarColor;
+        public static Color defaultCarColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#F4DB2E", out _defaultCarColor);
+                return _defaultCarColor;
+            }
+        }
+        private static Color _defaultCarColorCharged;
+        public static Color defaultCarColorCharged
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#F42E25", out _defaultCarColorCharged);
+                return _defaultCarColorCharged;
+            }
+        }
+
+        private static Color _defaultCloudColor;
+        public static Color defaultCloudColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FFFFFF", out _defaultCloudColor);
+                return _defaultCloudColor;
+            }
+        }
+        private static Color _defaultCloudColorBottom;
+        public static Color defaultCloudColorBottom
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#C8F0F0", out _defaultCloudColorBottom);
+                return _defaultCloudColorBottom;
             }
         }
 
@@ -591,10 +686,14 @@ namespace HeavenStudio.Games
             //various sound loops and shizz
             if (isInputting)
             {
+                chickenColorsCar.SetFloat("_Progress", Conductor.instance.GetPositionFromBeat(nextInputReady - (yardsTextLength * 2), yardsTextLength));
+
                 if (!isWhirringPlaying) { whirring = SoundByte.PlayOneShotGame("chargingChicken/chargeLoop", volume: 0.5f, looping: true); isWhirringPlaying = true; }
             }
             if (!isInputting)
             {
+                chickenColorsCar.SetFloat("_Progress", 0);
+
                 Conductor.instance.FadeMinigameVolume(0, 0, 1);
                 drumVolume = 1;
 
@@ -654,6 +753,16 @@ namespace HeavenStudio.Games
             colorTo = defaultBGColor;
             colorFrom2 = defaultBGColorBottom;
             colorTo2 = defaultBGColorBottom;
+
+            carColorFrom = defaultCarColor;
+            carColorTo = defaultCarColor;
+            carColorFrom2 = defaultCarColorCharged;
+            carColorTo2 = defaultCarColorCharged;
+
+            cloudColorFrom = defaultCloudColor;
+            cloudColorTo = defaultCloudColor;
+            cloudColorFrom2 = defaultCloudColorBottom;
+            cloudColorTo2 = defaultCloudColorBottom;
 
             nextIsland = Instantiate(IslandBase, transform).GetComponent<Island>();
             nextIsland.SmallLandmass.SetActive(true);
@@ -943,7 +1052,7 @@ namespace HeavenStudio.Games
 
         public void PlayDrum(string whichDrum, float drumVolumeThis, double lateness)
         {
-            if (isInputting && (lateness == (Math.Floor(Conductor.instance.songPositionInBeatsAsDouble * 4) / 4))) SoundByte.PlayOneShotGame(whichDrum, volume: drumVolumeThis * drumVolume);
+            if (isInputting && (lateness * 48 == Math.Floor(Conductor.instance.songPositionInBeatsAsDouble * 48))) SoundByte.PlayOneShotGame(whichDrum, volume: drumVolumeThis * drumVolume);
         }
 
         public void PumpBeat()
@@ -1187,6 +1296,8 @@ namespace HeavenStudio.Games
         {
             if (!isInputting) return;
 
+            canPressWhiff = false;
+
             isInputting = false;
             nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat;
             currentIsland.journeyEnd = 0;
@@ -1413,7 +1524,7 @@ namespace HeavenStudio.Games
             colorTo = color2;
             colorFrom2 = color3;
             colorTo2 = color4;
-            lastEase = (Util.EasingFunction.Ease)ease;
+            lastEase1 = (Util.EasingFunction.Ease)ease;
         }
 
         public void ChangeLight(double beat, float length, float light1, float light2, float light3, float light4, int ease)
@@ -1424,7 +1535,29 @@ namespace HeavenStudio.Games
             lightTo = light2;
             lightFrom2 = light3;
             lightTo2 = light4;
-            lastEase = (Util.EasingFunction.Ease)ease;
+            lastEase2 = (Util.EasingFunction.Ease)ease;
+        }
+
+        public void ChangeCarColor(double beat, float length, Color color1, Color color2, Color color3, Color color4, int ease)
+        {
+            carColorStartBeat = beat;
+            carColorLength = length;
+            carColorFrom = color1;
+            carColorTo = color2;
+            carColorFrom2 = color3;
+            carColorTo2 = color4;
+            lastEase3 = (Util.EasingFunction.Ease)ease;
+        }
+
+        public void ChangeCloudColor(double beat, float length, Color color1, Color color2, Color color3, Color color4, int ease)
+        {
+            cloudColorStartBeat = beat;
+            cloudColorLength = length;
+            cloudColorFrom = color1;
+            cloudColorTo = color2;
+            cloudColorFrom2 = color3;
+            cloudColorTo2 = color4;
+            lastEase4 = (Util.EasingFunction.Ease)ease;
         }
 
         private void PersistThings(double beat)
@@ -1445,6 +1578,22 @@ namespace HeavenStudio.Games
                 ChangeLight(lastEvent.beat, lastEvent.length, lastEvent["lightFrom"], lastEvent["lightTo"], lastEvent["headLightFrom"], lastEvent["headLightTo"], lastEvent["ease"]);
             }
 
+            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCarColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                ChangeCarColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
+            }
+
+            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCloudColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                ChangeCloudColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
+            }
+
             allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "textEdit" }).FindAll(x => x.beat < beat);
             if (allEventsBeforeBeat.Count > 0)
             {
@@ -1456,9 +1605,9 @@ namespace HeavenStudio.Games
 
         private void AllColorsUpdate(Conductor cond)
         {
-            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
-
             //bg color
+            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase1);
+
             float normalizedBeatBG = Mathf.Clamp01(cond.GetPositionFromBeat(bgColorStartBeat, bgColorLength));
             float newColorR = func(colorFrom.r, colorTo.r, normalizedBeatBG);
             float newColorG = func(colorFrom.g, colorTo.g, normalizedBeatBG);
@@ -1472,13 +1621,44 @@ namespace HeavenStudio.Games
             bgLow.color = new Color(newColorR, newColorG, newColorB);
 
             //fg light
-            float normalizedBeatFG = Mathf.Clamp01(cond.GetPositionFromBeat(fgLightStartBeat, fgLightLength));
-            float newLight = func(lightFrom, lightTo, normalizedBeatFG);
-            chickenColors.color = new Color(newLight, newLight, newLight);
-            chickenColorsWater.color = new Color(newLight, newLight, newLight);
+            func = Util.EasingFunction.GetEasingFunction(lastEase2);
 
-            newLight = func(lightFrom2, lightTo2, normalizedBeatFG);
-            headlightColor.color = new Color(1, 1, 1, newLight);
+            normalizedBeatBG = Mathf.Clamp01(cond.GetPositionFromBeat(fgLightStartBeat, fgLightLength));
+            newColorR = func(lightFrom, lightTo, normalizedBeatBG);
+            chickenColors.color = new Color(newColorR, newColorR, newColorR);
+            chickenColorsCar.color = new Color(newColorR, newColorR, newColorR);
+            chickenColorsWater.color = new Color(newColorR, newColorR, newColorR);
+
+            newColorR = func(lightFrom2, lightTo2, normalizedBeatBG);
+            headlightColor.color = new Color(1, 1, 1, newColorR);
+
+            //car color
+            func = Util.EasingFunction.GetEasingFunction(lastEase3);
+            
+            normalizedBeatBG = Mathf.Clamp01(cond.GetPositionFromBeat(carColorStartBeat, carColorLength));
+            newColorR = func(carColorFrom.r, carColorTo.r, normalizedBeatBG);
+            newColorG = func(carColorFrom.g, carColorTo.g, normalizedBeatBG);
+            newColorB = func(carColorFrom.b, carColorTo.b, normalizedBeatBG);
+            chickenColorsCar.SetColor("_Color1", new Color(newColorR, newColorG, newColorB));
+
+            newColorR = func(carColorFrom2.r, carColorTo2.r, normalizedBeatBG);
+            newColorG = func(carColorFrom2.g, carColorTo2.g, normalizedBeatBG);
+            newColorB = func(carColorFrom2.b, carColorTo2.b, normalizedBeatBG);
+            chickenColorsCar.SetColor("_Color2", new Color(newColorR, newColorG, newColorB));
+
+            //cloud color
+            func = Util.EasingFunction.GetEasingFunction(lastEase4);
+            
+            normalizedBeatBG = Mathf.Clamp01(cond.GetPositionFromBeat(cloudColorStartBeat, cloudColorLength));
+            newColorR = func(cloudColorFrom.r, cloudColorTo.r, normalizedBeatBG);
+            newColorG = func(cloudColorFrom.g, cloudColorTo.g, normalizedBeatBG);
+            newColorB = func(cloudColorFrom.b, cloudColorTo.b, normalizedBeatBG);
+            chickenColorsCloud.SetColor("_Color", new Color(newColorR, newColorG, newColorB));
+
+            newColorR = func(cloudColorFrom2.r, cloudColorTo2.r, normalizedBeatBG);
+            newColorG = func(cloudColorFrom2.g, cloudColorTo2.g, normalizedBeatBG);
+            newColorB = func(cloudColorFrom2.b, cloudColorTo2.b, normalizedBeatBG);
+            chickenColorsCloud.SetColor("_OutlineColor", new Color(newColorR, newColorG, newColorB));
         }
 
         #endregion

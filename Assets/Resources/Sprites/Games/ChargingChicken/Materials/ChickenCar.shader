@@ -1,10 +1,12 @@
-Shader "Sprites/ChickenWater"
+Shader "Sprites/ChickenCar"
 {
 	Properties
 	{
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
-		_OutlineColor ("Outline Color", Color) = (0,0,0,0)
+		_Color1 ("Starting Color", Color) = (0,0,0,0)
+		_Color2 ("Ending Color", Color) = (1,1,1,1)
+		_Progress ("Fade", Float) = 0
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 	}
 
@@ -54,7 +56,7 @@ Shader "Sprites/ChickenWater"
 				v2f OUT;
 				OUT.vertex = UnityObjectToClipPos(IN.vertex);
 				OUT.texcoord = IN.texcoord;
-				OUT.color = IN.color;
+				OUT.color = IN.color * _Color;
 				#ifdef PIXELSNAP_ON
 				OUT.vertex = UnityPixelSnap (OUT.vertex);
 				#endif
@@ -64,6 +66,9 @@ Shader "Sprites/ChickenWater"
 
 			sampler2D _MainTex;
 			sampler2D _AlphaTex;
+			fixed4 _Color1;
+			fixed4 _Color2;
+			float _Progress;
 			float _AlphaSplitEnabled;
 
 			fixed4 SampleSpriteTexture (float2 uv)
@@ -80,9 +85,9 @@ Shader "Sprites/ChickenWater"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				fixed4 c = SampleSpriteTexture (IN.texcoord);
-				float3 outlinedRGB = lerp(IN.color.rgb, _OutlineColor.rgb, 1 - c.r);
-				c = fixed4(outlinedRGB.r, outlinedRGB.g, outlinedRGB.b, c.a);
+				fixed4 input = SampleSpriteTexture (IN.texcoord);
+				float progressClamp = clamp(_Progress, 0, 1);
+				fixed4 c = ((input * _Color2) * progressClamp) + ((input * _Color1) * (1 - progressClamp));
 				c *= _Color;
 				c.rgb *= c.a;
 				return c;

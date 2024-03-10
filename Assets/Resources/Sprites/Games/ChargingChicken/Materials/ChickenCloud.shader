@@ -1,4 +1,4 @@
-Shader "Sprites/ChickenWater"
+Shader "Sprites/ChickenCloud"
 {
 	Properties
 	{
@@ -80,11 +80,10 @@ Shader "Sprites/ChickenWater"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				fixed4 c = SampleSpriteTexture (IN.texcoord);
-				float3 outlinedRGB = lerp(IN.color.rgb, _OutlineColor.rgb, 1 - c.r);
-				c = fixed4(outlinedRGB.r, outlinedRGB.g, outlinedRGB.b, c.a);
-				c *= _Color;
-				c.rgb *= c.a;
+				fixed4 input = SampleSpriteTexture (IN.texcoord);
+				float grayscale = clamp((input.r + input.g + input.b) / 3, 0, 1);
+				fixed4 c = ((_Color) * grayscale) + ((_OutlineColor) * (1 - grayscale));
+				c *= input.a;
 				return c;
 			}
 		ENDCG
