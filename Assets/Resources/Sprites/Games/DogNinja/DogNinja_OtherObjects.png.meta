@@ -689,7 +689,7 @@ TextureImporter:
         width: 110
         height: 201
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -710,7 +710,7 @@ TextureImporter:
         width: 103
         height: 198
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -731,7 +731,7 @@ TextureImporter:
         width: 78
         height: 199
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -739,27 +739,6 @@ TextureImporter:
       bones: []
       spriteID: bc84dac46ff93d570800000000000000
       internalID: 8490305602720712907
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: oh it's the little guy. you found him
-      rect:
-        serializedVersion: 2
-        x: 1143
-        y: 1591
-        width: 16
-        height: 49
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4cd68dea3c30b1f48bcd6dd5ad0fffa5
-      internalID: 1314131981
       vertices: []
       indices: 
       edges: []
@@ -784,7 +763,6 @@ TextureImporter:
       Ball_Full: 8158683621920566786
       Ball_Left: -5925680740112638021
       Ball_Right: -5567381644477528568
-      DogNinja_OtherObjects_0: -1593653543
       Idol_Full: 2196219148037962045
       Idol_Left: -130797512336752496
       Idol_Right: 8490305602720712907
@@ -805,7 +783,6 @@ TextureImporter:
       WildBreath_Full: 2053246660185171032
       WildBreath_Left: -7594402133338608887
       WildBreath_Right: 3508372842914876614
-      oh it's the little guy. you found him: 1314131981
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

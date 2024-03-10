@@ -4,14 +4,15 @@ using System;
 using UnityEngine;
 using NaughtyBezierCurves;
 
+using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DogNinja
 {
-    // this code sucks but i don't wanna touch it. it works fine enough. sorry!
     public class SpawnHalves : MonoBehaviour
     {
         public double startBeat;
         public Vector3 objPos;
+        private Vector3 posModifier;
         public bool lefty;
         float bpmModifier;
         double songPos;
@@ -22,20 +23,27 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         [SerializeField] BezierCurve3D fallLeftCurve;
         [SerializeField] BezierCurve3D fallRightCurve;
         BezierCurve3D curve;
-        public SpriteRenderer sr;
+        [SerializeField] Transform halvesParent;
+
+        private DogNinja game;
+        
+        private void Awake()
+        {
+            game = DogNinja.instance;
+            bpmModifier = Conductor.instance.songBpm / 100;
+            songPos = Conductor.instance.songPositionInBeatsAsDouble;
+        }
 
         private void Start() 
         {
-            bpmModifier = Conductor.instance.songBpm / 100;
-            songPos = Conductor.instance.songPositionInBeatsAsDouble;
             curve = lefty ? fallRightCurve : fallLeftCurve;
         }
 
         private void Update()
         {
-            float flyPosHalves = (Conductor.instance.GetPositionFromBeat(songPos, 3f) * Conductor.instance.GetPositionFromBeat(songPos, 2f)) + Conductor.instance.GetPositionFromBeat(songPos, 1f);
-            flyPosHalves = (flyPosHalves * 0.2f) + 0.35f;
-            transform.position = curve.GetPoint(flyPosHalves) + objPos;
+            float flyPosHalves = (Conductor.instance.GetPositionFromBeat(songPos, 3f)*(Conductor.instance.GetPositionFromBeat(songPos, 2f)))+Conductor.instance.GetPositionFromBeat(songPos, 1f);
+            flyPosHalves = (flyPosHalves*0.2f)+0.35f;
+            transform.position = curve.GetPoint(flyPosHalves)+objPos;
 
             float rot = rotSpeed;
             rot *= lefty ? bpmModifier : -1 * bpmModifier;
@@ -43,8 +51,13 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
             // clean-up logic
             if (flyPosHalves > 1f) {
-                Destroy(gameObject);
-            }
+                GameObject.Destroy(gameObject);
+            };
+            
+            if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) 
+                || GameManager.instance.currentGame != "dogNinja") {
+                GameObject.Destroy(gameObject);
+            };
         }
     }
 }
