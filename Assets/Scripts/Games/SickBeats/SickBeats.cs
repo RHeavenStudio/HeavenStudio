@@ -25,53 +25,27 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle2", true, "Bop", "Toggle if Boss should bop for the duration of this event."),
-                        new Param("toggle", false, "Bop (Auto)", "Toggle if the man should automatically bop until another Bop event is reached.")
+                        new Param("toggle2", true, "Bop", "Toggle if the doctor should bop for the duration of this event."),
+                        new Param("toggle", false, "Bop (Auto)", "Toggle if the doctor should automatically bop until another Bop event is reached.")
                     }
                 },
-                new GameAction("virusLeft", "Virus (Right)")
+                new GameAction("virus", "Move Virus")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SickBeats.instance.PresenceVirus(e.beat, (int)SickBeats.Direction.Right, e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SickBeats.instance.MoveVirus(e.beat, e["direction"], e["type"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type"),
+                        new Param("direction", SickBeats.Direction.Right, "Direction", "Determine which direction the virus will spawn from."),
+                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type."),
                     },
-                    defaultLength = 4f,
-                },
-                new GameAction("virusUp", "Virus (Up)")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SickBeats.instance.PresenceVirus(e.beat, (int)SickBeats.Direction.Up, e["type"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type"),
-                    },
-                    defaultLength = 6f,
-                },
-                new GameAction("virusRight", "Virus (Left)")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SickBeats.instance.PresenceVirus(e.beat, (int)SickBeats.Direction.Left, e["type"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type"),
-                    },
-                    defaultLength = 6f,
-                },
-                new GameAction("virusDown", "Virus (Down)")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SickBeats.instance.PresenceVirus(e.beat, (int)SickBeats.Direction.Down, e["type"]); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type"),
-                    },
-                    defaultLength = 6f,
+                    defaultLength = 2f,
                 },
                 new GameAction("appear", "Appear")
                 {
                     function = delegate {var e = eventCaller.currentEntity; SickBeats.instance.VirusAppearMnl(e.beat, e["direction"], e["type"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("direction", SickBeats.Direction.Right, "Direction", "Determine which direction the virus will spawn from"),
-                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type"),
+                        new Param("direction", SickBeats.Direction.Right, "Direction", "Determine which direction the virus will spawn from."),
+                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type."),
                     },
                     defaultLength = 2f,
                 },
@@ -81,20 +55,20 @@ namespace HeavenStudio.Games.Loaders
                         e["direction"], e["type"], new double[]{e["param1"], e["param2"], e["param3"]}); },
                     parameters = new List<Param>()
                     {
-                        new Param("direction", SickBeats.Direction.Up, "Direction", "Determine which direction the virus will spawn from"),
-                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type"),
-                        new Param("param1", new EntityTypes.Float(0, 1, 0), "1"),
-                        new Param("param2", new EntityTypes.Float(0, 1, 0.125f), "2"),
-                        new Param("param3", new EntityTypes.Float(0, 1, 0.25f), "3"),
+                        new Param("direction", SickBeats.Direction.Up, "Direction", "Determine which direction the virus will spawn from."),
+                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type."),
+                        new Param("param1", new EntityTypes.Float(0, 1, 0), "Right Beat", "Decide the right Dash beat."),
+                        new Param("param2", new EntityTypes.Float(0, 1, 0.125f), "Up Beat", "Decide the up Dash beat."),
+                        new Param("param3", new EntityTypes.Float(0, 1, 0.25f), "Left Beat", "Decide the left Dash beat."),
                     },
                     defaultLength = 1f,
                 },
-                new GameAction("come", "Come")
+                new GameAction("summon", "Summon")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SickBeats.instance.VirusComeMnl(e.beat, e["type"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SickBeats.instance.VirusSummonMnl(e.beat, e["type"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type"),
+                        new Param("type", SickBeats.VirusType.Blue, "Type", "Determine virus type."),
                     },
                     defaultLength = 2f,
                 },
@@ -189,11 +163,7 @@ namespace HeavenStudio.Games
         {
             return PlayerInput.GetBatonDown(InputController.ActionsBaton.East, out dt);
         }
-        protected static bool IA_TouchRight(out double dt)
-        {
-            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Right, out dt)
-                && (instance.IsExpectingInputNow(InputAction_Right) || instance.IsExpectingInputNow(InputAction_Left));
-        }
+        
         protected static bool IA_PadUp(out double dt)
         {
             return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt);
@@ -202,11 +172,7 @@ namespace HeavenStudio.Games
         {
             return PlayerInput.GetBatonDown(InputController.ActionsBaton.North, out dt);
         }
-        protected static bool IA_TouchUp(out double dt)
-        {
-            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && instance.IsExpectingInputNow(InputAction_Up);
-        }
+        
         protected static bool IA_PadLeft(out double dt)
         {
             return PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt);
@@ -215,11 +181,7 @@ namespace HeavenStudio.Games
         {
             return PlayerInput.GetBatonDown(InputController.ActionsBaton.West, out dt);
         }
-        protected static bool IA_TouchLeft(out double dt)
-        {
-            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Left, out dt)
-                && (instance.IsExpectingInputNow(InputAction_Right) || instance.IsExpectingInputNow(InputAction_Left));
-        }
+        
         protected static bool IA_PadDown(out double dt)
         {
             return PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt);
@@ -228,24 +190,19 @@ namespace HeavenStudio.Games
         {
             return PlayerInput.GetBatonDown(InputController.ActionsBaton.South, out dt);
         }
-        protected static bool IA_TouchDown(out double dt)
-        {
-            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
-                && instance.IsExpectingInputNow(InputAction_Down);
-        }
 
         public static PlayerInput.InputAction InputAction_Right =
             new("AgbSickBeatsRight", new int[] { IA_RightPress, IA_RightPress, IA_RightPress },
-            IA_PadRight, IA_TouchRight, IA_BatonRight);
+            IA_PadRight, IA_TouchFlick, IA_BatonRight);
         public static PlayerInput.InputAction InputAction_Up =
             new("AgbSickBeatsUp", new int[] { IA_UpPress, IA_UpPress, IA_UpPress },
-            IA_PadUp, IA_TouchUp, IA_BatonUp);
+            IA_PadUp, IA_TouchFlick, IA_BatonUp);
         public static PlayerInput.InputAction InputAction_Left =
             new("AgbSickBeatsLeft", new int[] { IA_LeftPress, IA_LeftPress, IA_LeftPress },
-            IA_PadLeft, IA_TouchLeft, IA_BatonLeft);
+            IA_PadLeft, IA_TouchFlick, IA_BatonLeft);
         public static PlayerInput.InputAction InputAction_Down =
             new("AgbSickBeatsDown", new int[] { IA_DownPress, IA_DownPress, IA_DownPress },
-            IA_PadDown, IA_TouchDown, IA_BatonDown);
+            IA_PadDown, IA_TouchFlick, IA_BatonDown);
 
         // Start is called before the first frame update
         void Awake()
@@ -265,22 +222,52 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (!cond.isPlaying || cond.isPaused) return;
 
-            if (PlayerInput.GetIsAction(InputAction_Right) && !IsExpectingInputNow(InputAction_Right))
+            if (PlayerInput.PlayerHasControl() && PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Touch)
             {
-                if (isForkPop[0]) OutFork(0);
+                if (PlayerInput.GetIsAction(InputAction_BasicPress))
+                {
+                    keyAnim.Play("keep");
+                }
+                if (PlayerInput.GetIsAction(InputAction_BasicRelease))
+                {
+                    keyAnim.Play("up");
+                }
+
+                var rand_dir = UnityEngine.Random.Range(0, 4);
+                var InputAction = rand_dir switch {
+                    (int)Direction.Right => InputAction_Right,
+                    (int)Direction.Up => InputAction_Up,
+                    (int)Direction.Left => InputAction_Left,
+                    (int)Direction.Down => InputAction_Down,
+                };
+
+                if (PlayerInput.GetIsAction(InputAction) &&
+                    !(IsExpectingInputNow(InputAction_Right) || IsExpectingInputNow(InputAction_Up)
+                    || IsExpectingInputNow(InputAction_Left) || IsExpectingInputNow(InputAction_Down)))
+                {
+                    if (isForkPop[rand_dir]) OutFork(rand_dir);
+                }
             }
-            if (PlayerInput.GetIsAction(InputAction_Up) && !IsExpectingInputNow(InputAction_Up))
+            else
             {
-                if (isForkPop[1]) OutFork(1);
+                if (PlayerInput.GetIsAction(InputAction_Right) && !IsExpectingInputNow(InputAction_Right))
+                {
+                    if (isForkPop[(int)Direction.Right]) OutFork((int)Direction.Right);
+                }
+                if (PlayerInput.GetIsAction(InputAction_Up) && !IsExpectingInputNow(InputAction_Up))
+                {
+                    if (isForkPop[(int)Direction.Up]) OutFork((int)Direction.Up);
+                }
+                if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left))
+                {
+                    if (isForkPop[(int)Direction.Left]) OutFork((int)Direction.Left);
+                }
+                if (PlayerInput.GetIsAction(InputAction_Down) && !IsExpectingInputNow(InputAction_Down))
+                {
+                    if (isForkPop[(int)Direction.Down]) OutFork((int)Direction.Down);
+                }
             }
-            if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left))
-            {
-                if (isForkPop[2]) OutFork(2);
-            }
-            if (PlayerInput.GetIsAction(InputAction_Down) && !IsExpectingInputNow(InputAction_Down))
-            {
-                if (isForkPop[3]) OutFork(3);
-            }
+
         }
 
         private void OutFork(int dir)
@@ -290,7 +277,7 @@ namespace HeavenStudio.Games
             var actions = new List<BeatAction.Action>();
             keyAnim.Play("push");
             forkAnims[dir].Play("out");
-            SoundByte.PlayOneShotGame("sickBeats/1", pitch: UnityEngine.Random.Range(2.75f, 3.25f));
+            SoundByte.PlayOneShotGame("sickBeats/fork"+UnityEngine.Random.Range(0, 3).ToString());
             BeatAction.New(instance, new() {new BeatAction.Action(currentBeat + RefillBeat, delegate {RepopFork(dir);})});
 
             isForkPop[dir] = false;
@@ -332,14 +319,14 @@ namespace HeavenStudio.Games
             return newVirus;
         }
 
-        public void PresenceVirus(double beat, int dir, int type)
+        public void MoveVirus(double beat, int dir, int type)
         {
             var newVirus = SpawnVirus(beat, -1, type);
 
             var actions = new List<BeatAction.Action>();
             
             actions.Add(new BeatAction.Action(beat, delegate {
-                newVirus.Come();
+                newVirus.Summon();
                 newVirus.position++;
             }));
 
@@ -392,14 +379,14 @@ namespace HeavenStudio.Games
             BeatAction.New(instance, actions);
         }
 
-        public void VirusComeMnl(double beat, int type)
+        public void VirusSummonMnl(double beat, int type)
         {
             var newVirus = SpawnVirus(beat, -1, type);
 
             var actions = new List<BeatAction.Action>();
             
             actions.Add(new BeatAction.Action(beat, delegate {
-                newVirus.Come();
+                newVirus.Summon();
                 newVirus.position++;
             }));
             actions.Add(new BeatAction.Action(beat + 2, delegate {Destroy(newVirus.gameObject);}));

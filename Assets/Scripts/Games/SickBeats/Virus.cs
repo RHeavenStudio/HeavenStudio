@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Scripts_SickBeats
             
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("sickBeats/appear", startBeat, pitch: UnityEngine.Random.Range(0.9f, 1.1f)),
+                new MultiSound.Sound("sickBeats/appear"+UnityEngine.Random.Range(0, 2).ToString(), startBeat),
             });
             
             BeatAction.New(game, new() {new BeatAction.Action(startBeat, delegate {
@@ -50,12 +50,12 @@ namespace HeavenStudio.Games.Scripts_SickBeats
 
         public void Dash()
         {
-            SoundByte.PlayOneShotGame("sickBeats/whoosh");
+            SoundByte.PlayOneShotGame("sickBeats/dash");
             VirusAnim("dash");
         }
-        public void Come()
+        public void Summon()
         {
-            VirusAnim("come");
+            VirusAnim("summon");
         }
 
         public void Move()
@@ -75,36 +75,55 @@ namespace HeavenStudio.Games.Scripts_SickBeats
         public void Kill()
         {
             game.ScoreMiss();
-            BeatAction.New(game, new() {
-                new BeatAction.Action((startBeat+1) + game.RefillBeat, delegate {
+            
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("sickBeats/virusIn", startBeat + 2),
+                new MultiSound.Sound("sickBeats/miss", startBeat + 4),
+                new MultiSound.Sound("sickBeats/fadeout", startBeat + 5),
+            });
+
+            var actions = new List<BeatAction.Action>() {
+                new BeatAction.Action(startBeat + 2, delegate {
                     virusAnim.DoScaledAnimationAsync("laugh", 0.5f);
                     virusAnim.DoScaledAnimationAsync("enter", 0.5f);
                 }),
-                new BeatAction.Action((startBeat+3) + game.RefillBeat, delegate {
+                new BeatAction.Action(startBeat + 4, delegate {
                     virusAnim.DoScaledAnimationAsync("hide", 0.5f);
                     game.orgAnim.DoScaledAnimationAsync("damage", 0.5f);
                     game.orgAlive = false;
                 }),
-                new BeatAction.Action((startBeat+4) + game.RefillBeat, delegate {
+                new BeatAction.Action(startBeat + 5, delegate {
                     game.orgAnim.DoScaledAnimationAsync("vanish", 0.5f);
                 }),
-                new BeatAction.Action((startBeat+5) + game.RefillBeat, delegate {
+                new BeatAction.Action(startBeat + 6, delegate {
                     virusAnim.DoScaledAnimationAsync("laugh", 0.5f);
-                    game.docShock = true;
-                    game.doctorAnim.DoScaledAnimationAsync("shock0", 0.5f);
                 }),
-                new BeatAction.Action((startBeat+6) + game.RefillBeat, delegate {
+                new BeatAction.Action(startBeat + 7, delegate {
                     game.orgAnim.DoScaledAnimationAsync("idleAdd", 0.5f);
                     game.orgAnim.DoScaledAnimationAsync("appear", 0.5f);
                     game.orgAlive = true;
                     Destroy(gameObject);
-                    game.doctorAnim.DoScaledAnimationAsync("shock1", 0.5f);
                 }),
-                new BeatAction.Action((startBeat+8) + game.RefillBeat, delegate {
+                new BeatAction.Action(startBeat + 9, delegate {
                     game.docShock = false;
                     game.doctorAnim.DoScaledAnimationAsync("idle", 0.5f);
                 }),
-            });
+            };
+            
+            actions.Add(new BeatAction.Action(startBeat + 6, delegate {
+                game.docShock = true;
+                game.doctorAnim.DoScaledAnimationAsync("shock0", 0.5f);
+            }));
+            actions.Add(new BeatAction.Action(startBeat + 7, delegate {
+                game.doctorAnim.DoScaledAnimationAsync("shock1", 0.5f);
+            }));
+            actions.Add(new BeatAction.Action(startBeat + 9, delegate {
+                game.docShock = false;
+                game.doctorAnim.DoScaledAnimationAsync("idle", 0.5f);
+            }));
+            
+            BeatAction.New(game, actions);
         }
 
         private void Just(PlayerActionEvent caller, float state)
@@ -120,17 +139,19 @@ namespace HeavenStudio.Games.Scripts_SickBeats
             {
                 if (state >= 1f)
                 {
+                    SoundByte.PlayOneShotGame("sickBeats/bad");
                     VirusAnim("stabLate");
                     KeyAnim("stabLate");
                 }
                 else if (state <= -1f)
                 {
+                    SoundByte.PlayOneShotGame("sickBeats/bad");
                     VirusAnim("stabFast");
                     KeyAnim("stabFast");
                 }
                 else
                 {
-                    SoundByte.PlayOneShotGame("sickBeats/stab");
+                    SoundByte.PlayOneShotGame("sickBeats/hit");
                     VirusAnim("stab");
                     KeyAnim("stab");
 
@@ -186,13 +207,10 @@ namespace HeavenStudio.Games.Scripts_SickBeats
 
         void ChangeColor()
         {
-            renderers[0].material = game.RecolorMats[life];
-
-            renderers[1].material = game.RecolorMats[life];
-            
-            Color newColor = game.color[life];
-            renderers[2].color = new Color(newColor.r, newColor.g, newColor.b, renderers[2].color.a);
-
+            foreach (var renderer in renderers)
+            {
+                renderer.material = game.RecolorMats[life];
+            }
         }
     }
 }
