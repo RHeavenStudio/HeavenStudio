@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
     {
 
         public static Minigame AddGame(EventCaller eventCaller)
-        { 
+        {
             return new Minigame("bonOdori", "The☆Bon Odori \n<color=#adadad>(Za☆Bon Odori)</color>", "312B9F", false, false, new List<GameAction>()
             {                   new GameAction("bop", "Bop")
                     {   function = delegate {BonOdori.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["toggle"], eventCaller.currentEntity["auto"]);},
@@ -30,14 +30,14 @@ namespace HeavenStudio.Games.Loaders
                         },
 
                     },
-                
+
                 new GameAction("pan", "Pan")
                 {
-                    
-                   function = delegate {
+
+                   preFunction = delegate {
   var e = eventCaller.currentEntity;
   string variation = "variation" + (new string[] { "Pan", "Pa", "Pa_n" })[e["type"]];
-  BonOdori.instance.Clap(e.beat, e[variation], e["type"], e["mute"]);
+  BonOdori.instance.PreClap(e.beat, e[variation], e["type"], e["mute"],e["clapType"], e["semitone"]);
 },
                     defaultLength = 1f,
                     parameters = new List<Param>()
@@ -51,16 +51,18 @@ namespace HeavenStudio.Games.Loaders
                         new Param("variationPan", BonOdori.variationPan.PanC, "Pan Type", "Set the variation of the voice line."),
                         new Param("variationPa", BonOdori.variationPa.PaG, "Pa Type", "Set the variation of the voice line."),
                         new Param("variationPa_n", BonOdori.variationPa_n.Pa_nA , "Pa-n Type", "Set the variation of the voice line."),
+                        new Param("clapType", BonOdori.typeClap.SideClap, "Clap Type", "Set the type of clap."),
+                        new Param("semitone", new EntityTypes.Integer(-24, 24, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
-               
+
                  new GameAction("don", "Don")
                 {
-                    
+
                    function = delegate {
   var e = eventCaller.currentEntity;
   string variation = "variation" + (new string[] { "Don", "Do", "Do_n" })[e["type"]];
-  BonOdori.instance.Sound(e.beat, e[variation], e["type"]);
+  BonOdori.instance.Sound(e.beat, e[variation], e["type"], e["semitone"]);
 },
                     defaultLength = 1f,
                     parameters = new List<Param>()
@@ -73,9 +75,10 @@ namespace HeavenStudio.Games.Loaders
                         new Param("variationDon", BonOdori.variationDon.DonA, "Don Type", "Set the variation of the voice line."),
                         new Param("variationDo", BonOdori.variationDo.DoC, "Do Type", "Set the variation of the voice line."),
                         new Param("variationDo_n", BonOdori.variationDo_n.Do_nA, "Do-n Type", "Set the variation of the voice line."),
+                        new Param("semitone", new EntityTypes.Integer(-24, 24, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
-                
+
                 new GameAction("show text", "Show Text")
                 {
                     function = delegate {BonOdori.instance.ShowText(eventCaller.currentEntity["line 1"], eventCaller.currentEntity["line 2"], eventCaller.currentEntity["line 3"], eventCaller.currentEntity["line 4"], eventCaller.currentEntity["line 5"]);},
@@ -96,7 +99,7 @@ namespace HeavenStudio.Games.Loaders
 
 
 
-                        
+
                     },
                     priority = 1
                 },
@@ -136,15 +139,15 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
 
                 },
-                new GameAction("spin", "Spin")
-                {
-                    function = delegate {BonOdori.instance.Spin(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
-                    defaultLength = 1f,
+                // new GameAction("spin", "Spin")
+                // {
+                //     function = delegate {BonOdori.instance.Spin(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
+                //     defaultLength = 1f,
 
-                },
+                // },
                     new GameAction("toggle bg", "Toggle Darker Background")
                 {
-                    function = delegate {BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]);},
+                    function = delegate {BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity.length);},
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
@@ -152,13 +155,13 @@ namespace HeavenStudio.Games.Loaders
                     }
 
                 },
- 
-                    
-          
+
+
+
 
         });
-        
-    }
+
+        }
     };
 };
 namespace HeavenStudio.Games
@@ -169,12 +172,16 @@ namespace HeavenStudio.Games
 
     public class BonOdori : Minigame
     {
-       string prefix;
-       double beatUniversal;
+
+        string prefix;
+        double beatUniversal;
         string suffix;
+        SpriteRenderer darkPlane;
         bool goBopDonpans;
         bool goBopJudge;
         bool bopDonpans;
+        int clapTypeGlobal = 0;
+        string clapTypeString = "ClapSide";
         string originalText1;
         string originalText2;
         string originalText3;
@@ -185,6 +192,8 @@ namespace HeavenStudio.Games
         Coroutine Scroll3;
         Coroutine Scroll4;
         Coroutine Scroll5;
+        Coroutine DarkerBG;
+        bool darkBgIsOn = false;
         TextMeshProUGUI Text1_GUI;
         TextMeshProUGUI Text2_GUI;
         TextMeshProUGUI Text3_GUI;
@@ -197,26 +206,44 @@ namespace HeavenStudio.Games
         TextMeshProUGUI Text10_GUI;
 
 
+
         [SerializeField] TMP_Text Text1;
         [SerializeField] TMP_Text Text2;
         [SerializeField] TMP_Text Text3;
         [SerializeField] TMP_Text Text4;
         [SerializeField] TMP_Text Text5;
-        
+
         [SerializeField] TMP_Text Text6;
         [SerializeField] TMP_Text Text7;
         [SerializeField] TMP_Text Text8;
         [SerializeField] TMP_Text Text9;
         [SerializeField] TMP_Text Text10;
-        [SerializeField] Animator DarkPlane;
         [SerializeField] Animator Player;
         [SerializeField] Animator Judge;
+        [SerializeField] GameObject DarkPlane;
 
         [SerializeField] Animator CPU1;
         [SerializeField] Animator CPU2;
         [SerializeField] Animator CPU3;
         [SerializeField] Animator Face;
+        public enum typeClap
+        {
+            SideClap = 0,
+            FrontClap = 1
+        }
+        private static List<QueuedClaps> queuedClaps = new();
 
+        private struct QueuedClaps
+        {
+            public double beat;
+            public int variation;
+            public int typeSpeak;
+            public bool muted;
+            public int clapType;
+            public int semitone;
+
+
+        }
         public enum typePan
         {
             Pan = 0,
@@ -242,7 +269,7 @@ namespace HeavenStudio.Games
             Pa_nC = 1
         }
         public enum variationPa
-        {   
+        {
             PaG = 0
 
         }
@@ -250,7 +277,7 @@ namespace HeavenStudio.Games
         {
             DonA = 0,
             DonD = 1,
-            DonC = 2, 
+            DonC = 2,
             DonG = 3
         }
         public enum variationDo_n
@@ -267,6 +294,14 @@ namespace HeavenStudio.Games
         public void Awake()
 
         {
+            darkPlane = DarkPlane.GetComponent<SpriteRenderer>();
+
+
+
+
+
+
+            clapTypeGlobal = 0;
             instance = this;
             Text1_GUI = Text1.GetComponent<TextMeshProUGUI>();
             Text2_GUI = Text2.GetComponent<TextMeshProUGUI>();
@@ -279,172 +314,268 @@ namespace HeavenStudio.Games
             Text9_GUI = Text9.GetComponent<TextMeshProUGUI>();
             Text10_GUI = Text10.GetComponent<TextMeshProUGUI>();
 
-    
+
 
 
         }
+        public void OnStop()
+        {
+            DarkPlane.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f);
 
+        }
         public void Update()
         {
-            if (PlayerInput.GetIsAction(BonOdori.InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)){
+            Conductor con = new Conductor();
+            if (!con.NotStopped())
+            {
+                Text1.text = "";
+                Text2.text = "";
+                Text3.text = "";
+                Text4.text = "";
+                Text6.text = "";
+                Text7.text = "";
+                Text8.text = "";
+                Text9.text = "";
+                Text10.text = "";
+
+
+
+                StopCoroutine(Scroll1);
+                StopCoroutine(Scroll2);
+                StopCoroutine(Scroll3);
+                StopCoroutine(Scroll4);
+                StopCoroutine(Scroll5);
+                StopCoroutine(DarkerBG);
+                Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+
+
+
+            }
+
+
+
+            if (PlayerInput.GetIsAction(BonOdori.InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
+            {
                 ScoreMiss();
                 SoundByte.PlayOneShotGame("bonOdori/clap");
-  
-            
-            
+                if (clapTypeGlobal == 0)
+                {
+                    clapTypeString = "ClapSide";
+                }
+                else
+                {
+                    clapTypeString = "ClapFront";
+                }
+
+                Player.Play(clapTypeString);
+                if (!goBopDonpans)
+                {
+
+
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
+                });
+                }
+
+
+
+
+
+            }
+
         }
+        public override void OnGameSwitch(double beat)
+        {
+
+            if (queuedClaps.Count > 0)
+            {
+                foreach (var clap in queuedClaps) Clap(clap.beat, clap.variation, clap.typeSpeak, clap.muted, clap.clapType, clap.semitone);
+                queuedClaps.Clear();
+            }
+
 
         }
 
-        public void Clap(double beat, int variation, int typeSpeak, bool muted)
-        {  
+
+
+
+        public void PreClap(double beat, int variation, int typeSpeak, bool muted, int clapType, int semitone)
+        {
+            if (GameManager.instance.currentGame == "bonOdori")
+            {
+                instance.Clap(beat, variation, typeSpeak, muted, clapType, semitone);
+            }
+            else
+            {
+                queuedClaps.Add(new QueuedClaps()
+                {
+                    beat = beat,
+                    variation = variation,
+                    typeSpeak = typeSpeak,
+                    muted = muted,
+                    clapType = clapType,
+                    semitone = semitone
+                });
+            }
+        }
+        public void Clap(double beat, int variation, int typeSpeak, bool muted, int clapType, int semitone)
+
+        {
+            if (clapType == 1)
+            {
+                clapTypeGlobal = 1;
+            }
+            else
+            {
+                clapTypeGlobal = 0;
+            }
             if (muted)
             {
                 ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
-            } 
+            }
             else
             {
 
-            
-            
-            
-                switch (typeSpeak){
-                            case 0:
-                           
-                            switch (variation){
-                                case 0:
-                                SoundByte.PlayOneShotGame("bonOdori/pan1");
-                                break;
-                                case 1:
-                                SoundByte.PlayOneShotGame("bonOdori/pan2");                               break;
-                                case 2:
-                                SoundByte.PlayOneShotGame("bonOdori/pan3");
-                                break;}
-                                break;
-                            case 2:
 
-                            switch (variation){
-                                case 0:
-                              SoundByte.PlayOneShotGame("bonOdori/pa_n1");
-                                break;
-                                case 1:
-                              SoundByte.PlayOneShotGame("bonOdori/pa_n2");
-                                break;}
-                                break;
-                            case 1:
-                              SoundByte.PlayOneShotGame("bonOdori/pa1");
-                                break;
+                string clip = typeSpeak switch
+                {
+                    0 => "pan",
+                    1 => "pa",
+                    2 or _ => "pa_n",
+                };
+                var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
+                SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
 
-                            
- 
-            
+
+
+
+                beatUniversal = beat;
+                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
+            }
         }
-                        beatUniversal = beat;
-                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);}}
-            public void Sound(double beat, int variation, int typeSpeak )
-        {  switch (typeSpeak){
-                            case 0:
-                            switch (variation){
-                case 0:
-                              SoundByte.PlayOneShotGame("bonOdori/don1");
-                break;
-                case 1:
-                              SoundByte.PlayOneShotGame("bonOdori/don2");
-                break;
-                case 2:
-                              SoundByte.PlayOneShotGame("bonOdori/don3");
-                break;   
-                case 3:
-                              SoundByte.PlayOneShotGame("bonOdori/don4");
-                break;                                  
-                            }
-                            
-                            
-                            break;
-                            case 2:
+        public void Sound(double beat, int variation, int typeSpeak, int semitone)
+        {
+            string clip = typeSpeak switch
+            {
+                0 => "don",
+                1 => "do",
+                2 or _ => "do_n",
 
-            switch (variation) {
-                case 0:
-                              SoundByte.PlayOneShotGame("bonOdori/do_n1");
-                break;
-                case 1:
-                              SoundByte.PlayOneShotGame("bonOdori/do_n2");
-                break;
-            }
-            break;
-                            
-                            case 1:
-                            switch (variation){
-                                case 0:
-                              SoundByte.PlayOneShotGame("bonOdori/do1");
-                break;
-                            case 1:
-                              SoundByte.PlayOneShotGame("bonOdori/do2");
-                break;
-                            }
-                            
-              
-                            break;
-            }
-        }  
+            };
+            var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
+
+            SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
+
+        }
+
 
         public void Success(PlayerActionEvent caller, float state)
         {
-            MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/clap", 0f, offset: 0.01f),
-                        });
+            if (clapTypeGlobal == 0)
+            {
+                clapTypeString = "ClapSide";
+            }
+            else
+            {
+                clapTypeString = "ClapFront";
+            }
+
+            Player.Play(clapTypeString);
+            CPU1.Play(clapTypeString);
+            CPU2.Play(clapTypeString);
+            CPU3.Play(clapTypeString);
+            if (!goBopDonpans)
+            {
+
+
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
+                });
+            }
+            SoundByte.PlayOneShotGame("bonOdori/clap");
         }
-        
+
         public void Miss(PlayerActionEvent caller)
         {
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("miss", 0f, offset: 0.01f),
-                        });
-                         BeatAction.New(instance, new List<BeatAction.Action>()
+            CPU1.Play(clapTypeString);
+            CPU2.Play(clapTypeString);
+            CPU3.Play(clapTypeString);
+            SoundByte.PlayOneShot("miss");
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beatUniversal + 1d, delegate { Face.Play("Sad");}),
                     new BeatAction.Action(beatUniversal + 3d, delegate {Face.Play("Neutral");})
                 });
-                        
+
         }
-        
-        
+
+
         public void Empty(PlayerActionEvent caller)
         {
-                        MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("bonOdori/nearMiss", 0f, offset: 0.01f),
-                        });
-
-
-
-        }
-    string ChangeColor(string text, bool isScroll)
-    {
-            if (text.Contains("r|") | text.Contains("y|") | text.Contains("g|")){
-            if (!isScroll){
-
-            
-            return text.Replace("r|", "<color=#ff0000>")
-                   .Replace("g|", "<color=#00ff00>")
-                   .Replace("y|", "<color=#ffff00>")
-                   + "</color>";
+            if (clapTypeGlobal == 0)
+            {
+                clapTypeString = "ClapSide";
             }
             else
             {
-                            return text.Replace("r|", "<color=#ff00ff>")
-                   .Replace("g|", "<color=#00ffff>")
-                   .Replace("y|", "<color=#ffffff>")
-                   + "</color>";
+                clapTypeString = "ClapFront";
+            }
 
-            }}
+            Player.Play(clapTypeString);
+            CPU1.Play(clapTypeString);
+            CPU2.Play(clapTypeString);
+            CPU3.Play(clapTypeString);
+            if (!goBopDonpans)
+            {
+
+
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
+                });
+            }
+
+            SoundByte.PlayOneShot("nearMiss");
+
+
+        }
+        string ChangeColor(string text, bool isScroll)
+        {
+            if (text.Contains("r|") | text.Contains("y|") | text.Contains("g|"))
+            {
+                if (!isScroll)
+                {
+
+
+                    return text.Replace("r|", "<color=#ff0000>")
+                           .Replace("g|", "<color=#00ff00>")
+                           .Replace("y|", "<color=#ffff00>")
+                           + "</color>";
+                }
+                else
+                {
+                    return text.Replace("r|", "<color=#ff00ff>")
+           .Replace("g|", "<color=#00ffff>")
+           .Replace("y|", "<color=#ffffff>")
+           + "</color>";
+
+                }
+            }
             return text;
 
-    }
+        }
 
         public void ShowText(string text1, string text2, string text3, string text4, string text5)
         {
-            
-            if (text1 is not "" && text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line."){
+
+            if (text1 is not "" && text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line.")
+            {
                 if (Scroll1 is not null)
                 {
                     StopCoroutine(Scroll1);
@@ -455,12 +586,13 @@ namespace HeavenStudio.Games
                 text1 = ChangeColor(text1, false);
 
                 Text1.text = text1;
-                
- 
+
+
                 Text6.text = ChangeColor(originalText1, true);
-  
-                }
-            if (text2 is not ""){
+
+            }
+            if (text2 is not "")
+            {
                 if (Scroll2 is not null)
                 {
                     StopCoroutine(Scroll2);
@@ -471,9 +603,10 @@ namespace HeavenStudio.Games
                 text2 = ChangeColor(text2, false);
                 Text2.text = text2;
                 Text7.text = ChangeColor(originalText2, true);
-   
-                }
-            if (text3 is not ""){
+
+            }
+            if (text3 is not "")
+            {
                 if (Scroll3 is not null)
                 {
                     StopCoroutine(Scroll3);
@@ -481,14 +614,15 @@ namespace HeavenStudio.Games
                 }
                 originalText3 = text3;
                 Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                
+
                 text3 = ChangeColor(text3, false);
-                
+
                 Text3.text = text3;
                 Text8.text = ChangeColor(originalText3, true);
- 
-                }
-            if (text4 is not ""){
+
+            }
+            if (text4 is not "")
+            {
                 if (Scroll4 is not null)
                 {
                     StopCoroutine(Scroll4);
@@ -499,11 +633,12 @@ namespace HeavenStudio.Games
                 text4 = ChangeColor(text4, false);
                 Text4.text = text4;
 
-                Text9.text = text4; 
+                Text9.text = text4;
                 Text9.text = ChangeColor(originalText4, true);
 
-                }
-            if (text5 is not ""){
+            }
+            if (text5 is not "")
+            {
                 if (Scroll5 is not null)
                 {
                     StopCoroutine(Scroll5);
@@ -515,12 +650,14 @@ namespace HeavenStudio.Games
                 Text5.text = text5;
                 Text10.text = ChangeColor(originalText5, true);
 
-                }
-            
+            }
+
 
         }
-        public void DeleteText(bool text1, bool text2, bool text3, bool text4, bool text5){
-            if (text1 == true){
+        public void DeleteText(bool text1, bool text2, bool text3, bool text4, bool text5)
+        {
+            if (text1 == true)
+            {
                 if (Scroll1 is not null)
                 {
                     StopCoroutine(Scroll1);
@@ -530,7 +667,8 @@ namespace HeavenStudio.Games
                 Text1.text = "";
                 Text6.text = "";
             }
-            if (text2 == true){
+            if (text2 == true)
+            {
                 if (Scroll2 is not null)
                 {
                     StopCoroutine(Scroll2);
@@ -540,7 +678,8 @@ namespace HeavenStudio.Games
                 Text2.text = "";
                 Text7.text = "";
             }
-            if (text3 == true){
+            if (text3 == true)
+            {
                 if (Scroll3 is not null)
                 {
                     StopCoroutine(Scroll3);
@@ -550,7 +689,8 @@ namespace HeavenStudio.Games
                 Text3.text = "";
                 Text8.text = "";
             }
-            if (text4 == true){
+            if (text4 == true)
+            {
                 if (Scroll4 is not null)
                 {
                     StopCoroutine(Scroll4);
@@ -560,7 +700,8 @@ namespace HeavenStudio.Games
                 Text4.text = "";
                 Text9.text = "";
             }
-            if (text5 == true){
+            if (text5 == true)
+            {
                 if (Scroll5 is not null)
                 {
                     StopCoroutine(Scroll5);
@@ -573,49 +714,57 @@ namespace HeavenStudio.Games
 
 
         }
- IEnumerator SmoothText(TMP_Text text, float length, double beat)
-    {
-        Conductor conductor = new Conductor();
-        float startTime = Time.time;
-        float endTime = startTime + length;
-        float duration = ((length / conductor.GetBpmAtBeat(beat)) * 60);
-
-        while (Time.time < endTime)
+        IEnumerator SmoothText(TMP_Text text, float length, double beat)
         {
-            float t = ((Time.time - startTime) / duration);
-        
-            float maskValue = Mathf.Lerp(-10f, -7f, t);
+            Conductor conductor = new Conductor();
+            float startTime = Time.time;
+            float endTime = startTime + length;
+            float duration = ((length / conductor.GetBpmAtBeat(beat)) * 60);
 
-            text.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, maskValue, 10));
+            while (Time.time < endTime)
+            {
+                float t = ((Time.time - startTime) / duration);
 
-            yield return null;
-            
+                float maskValue = Mathf.Lerp(-10f, -7f, t);
+
+                text.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, maskValue, 10));
+
+                yield return null;
+
+            }
+
+
+
+        }
+        public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length, double beat)
+        {
+            if (text1)
+            {
+                Scroll1 = StartCoroutine(SmoothText(Text6, length, beat));
+            }
+            if (text2)
+            {
+                Scroll2 = StartCoroutine(SmoothText(Text7, length, beat));
+            }
+            if (text3)
+            {
+                Scroll3 = StartCoroutine(SmoothText(Text8, length, beat));
+            }
+            if (text4)
+            {
+                Scroll4 = StartCoroutine(SmoothText(Text9, length, beat));
+            }
+            if (text5)
+            {
+                Scroll5 = StartCoroutine(SmoothText(Text10, length, beat));
+            }
+
         }
 
-
-
-    }
-    public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length, double beat)
-    {
-        if (text1){
-            Scroll1 = StartCoroutine(SmoothText(Text6, length, beat));}
-        if (text2){
-            Scroll2 = StartCoroutine(SmoothText(Text7, length, beat));}
-        if (text3){
-            Scroll3 = StartCoroutine(SmoothText(Text8, length, beat));}
-        if (text4){
-            Scroll4 = StartCoroutine(SmoothText(Text9, length, beat));}
-        if (text5){
-            Scroll5 = StartCoroutine(SmoothText(Text10, length, beat));}
-            
-    }
-
-    public void Bop(double beat, float length, bool shouldBop, bool autoBop)
+        public void Bop(double beat, float length, bool shouldBop, bool autoBop)
         {
-            if (!shouldBop) { goBopDonpans = false; goBopJudge = false; return; }
-            goBopDonpans = autoBop;
-            goBopJudge = autoBop;
-            if (autoBop) { return;}
+            goBopDonpans = autoBop; goBopJudge = autoBop;
+            if (autoBop && shouldBop) { return; }
             if (shouldBop)
             {
                 for (int i = 0; i < length; i++)
@@ -642,36 +791,41 @@ namespace HeavenStudio.Games
                         })
                     });
                 }
-            
+
+
+            }
+            else
+            {
+                return;
+            }
 
         }
+        public void Bow(double beat, float length)
+        {
+            if (goBopDonpans == true)
+            {
+                bopDonpans = true;
+            }
+            else
+            {
+                bopDonpans = false;
 
-        }
-    public void Bow(double beat, float length)
-    {
-        if (goBopDonpans == true)
-        {
-            bopDonpans = true;
-        }
-        else
-        {
-            bopDonpans = false;
-        }
-        goBopDonpans = false;
-        Player.Play("Bow");
-        CPU1.Play("Bow");
-        CPU2.Play("Bow");
-        CPU3.Play("Bow");
-                        BeatAction.New(instance, new List<BeatAction.Action>()
+            }
+            goBopDonpans = false;
+            Player.Play("Bow");
+            CPU1.Play("Bow");
+            CPU2.Play("Bow");
+            CPU3.Play("Bow");
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length, delegate { Player.Play("NeutralBopped"); CPU1.Play("NeutralBopped");CPU2.Play("NeutralBopped"); CPU3.Play("NeutralBopped"); if (bopDonpans) {goBopDonpans = true;}})
                 });
-    }
-    public void Spin(double beat, float length)
-    {
+        }
+        // public void Spin(double beat, float length)
+        // {
 
-    }
-            
+        // }
+
         public override void OnBeatPulse(double beat)
         {
             if (goBopDonpans)
@@ -687,19 +841,73 @@ namespace HeavenStudio.Games
                 Judge.Play("Bop");
             }
         }
-public void DarkBG(double beat, bool toggle)
-{
-    if (toggle)
-    {
-        DarkPlane.Play("Appear");
-    }
-    else
-    {
-        DarkPlane.Play("GoAway");
-    }
-}
-        
+        public void DarkBG(double beat, bool toggle, float length)
+        {
+            DarkerBG = StartCoroutine(DarkBGCoroutine(beat, toggle, length));
+
+        }
+        IEnumerator DarkBGCoroutine(double beat, bool toggle, float length)
+        {
+            if (toggle)
+            {
+                if (darkBgIsOn)
+                {
+                    yield return null;
+                }
+                else
+                {
 
 
+                    float startTime = Time.time;
+                    Conductor con = new Conductor();
+                    float realLength = length / con.GetBpmAtBeat(beat) * 60;
+                    while (Time.time < realLength + startTime)
+                    {
+
+
+
+
+                        darkPlane.color = new Color(1f, 1f, 1f, Mathf.Lerp(0f, 0.4666f, (Time.time - startTime) / realLength));
+                        darkBgIsOn = true;
+                        yield return null;
+
+
+
+                    }
+                }
+            }
+            else
+            {
+                if (!darkBgIsOn)
+                {
+                    yield return null;
+                }
+                else
+                {
+
+
+                    float startTime = Time.time;
+                    Conductor con = new Conductor();
+                    float realLength = length / con.GetBpmAtBeat(beat) * 60;
+                    while (Time.time < realLength + startTime)
+                    {
+
+
+
+
+                        darkPlane.color = new Color(1f, 1f, 1f, Mathf.Lerp(0.4666f, 0f, (Time.time - startTime) / realLength));
+
+                        darkBgIsOn = true;
+                        yield return null;
+
+
+                    }
+
+                }
+
+
+
+            }
+        }
     }
 }
