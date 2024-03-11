@@ -131,12 +131,21 @@ namespace HeavenStudio.Games
             public int type;
         }
 
+        double gameStartBeat;
         public static PowerCalligraphy instance = null;
 
         // Start is called before the first frame update
         void Awake()
         {
             instance = this;
+        }
+        public override void OnGameSwitch(double beat)
+        {
+            gameStartBeat = beat;
+        }
+        public override void OnPlay(double beat)
+        {
+            OnGameSwitch(beat);
         }
 
         Writing nowPaper;
@@ -152,7 +161,7 @@ namespace HeavenStudio.Games
 
             if (queuedPaper is not null)
             {
-                Prepare(queuedPaper.Value.beat, queuedPaper.Value.type);
+                Prepare(queuedPaper.Value.type);
                 queuedPaper = null;
             }
 
@@ -174,10 +183,9 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void SpawnPaper(double beat, int type)
+        private void SpawnPaper(int type)
         {
             nowPaper = Instantiate(basePapers[type], paperHolder).GetComponent<Writing>();
-            nowPaper.startBeat = beat;
             nowPaper.scrollSpeed = scrollSpeed;
             nowPaper.gameObject.SetActive(true);
             nowPaper.Init();
@@ -186,7 +194,8 @@ namespace HeavenStudio.Games
 
         public void Write(double beat, int type)
         {
-            Prepare(beat, type);
+            Prepare(type);
+            nowPaper.startBeat = beat;
             nowPaper.Play();
             isPrepare=false;
         }
@@ -197,28 +206,53 @@ namespace HeavenStudio.Games
             {
                 queuedPaper = new QueuedPaper()
                 {
-                    beat = beat,
+                    beat = 0,
                     type = type,
                 };
             }
             else if(Conductor.instance.songPositionInBeats < beat)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>(){
-                    new BeatAction.Action(beat-1, delegate{ Prepare(beat, type);})
+                    new BeatAction.Action(beat-1, delegate{ Prepare(type);})
                 });
             }
         }
-        public void Prepare(double beat, int type)
+        public void Prepare(int type)
         {
             if (!isPrepare)
             {
-                SpawnPaper(beat, type);
+                SpawnPaper(type);
                 isPrepare = true;
             }
         }
         public void ForcePrepare(double beat)
         {
+            double endBeat = double.MaxValue;
+            var entities = gameManager.Beatmap.Entities;
 
+            RiqEntity firstEnd = entities.Find(c => (c.datamodel.StartsWith("gameManager/switchGame") || c.datamodel.Equals("gameManager/end")) && c.beat > gameStartBeat);
+            endBeat = firstEnd?.beat ?? endBeat;
+
+            RiqEntity nextPaper = entities.Find(v => 
+                (v.datamodel is "powerCalligraphy/re" or "powerCalligraphy/comma" or "powerCalligraphy/chikara" or "powerCalligraphy/onore" or "powerCalligraphy/sun" or "powerCalligraphy/kokoro" or "powerCalligraphy/face")
+                && v.beat >= beat && v.beat < endBeat);
+
+            if (nextPaper is not null)
+            {
+                int type = nextPaper.datamodel switch
+                {
+                    "powerCalligraphy/re" => (int)CharacterType.re,
+                    "powerCalligraphy/comma" => (int)CharacterType.comma,
+                    "powerCalligraphy/chikara" => (int)CharacterType.chikara,
+                    "powerCalligraphy/onore" => (int)CharacterType.onore,
+                    "powerCalligraphy/sun" => (int)CharacterType.sun,
+                    "powerCalligraphy/kokoro" => (int)CharacterType.kokoro,
+                    "powerCalligraphy/face" => nextPaper["korean"] ? (int)PowerCalligraphy.CharacterType.face_kr : (int)PowerCalligraphy.CharacterType.face,
+                    _ => throw new NotImplementedException()
+                };
+
+                Prepare(type);
+            }
         }
 
         public void ChangeScrollSpeed(float x, float y)
