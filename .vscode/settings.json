@@ -51,5 +51,10 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "HeavenStudio.sln"
+    "dotnet.defaultSolution": "HeavenStudio.sln",
+    "files.autoSave": "off",
+    "editor.inlineSuggest.showToolbar": "always",
+    "editor.definitionLinkOpensInPeek": true,
+    "editor.gotoLocation.multipleDefinitions": "gotoAndPeek",
+    "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.peekDefinition"
 }

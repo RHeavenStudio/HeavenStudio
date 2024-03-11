@@ -1,0 +1,1355 @@
+fileFormatVersion: 2
+guid: bf0f9fafdafb9ba488964acfe95f9fc5
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: odorireal_0
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 3867
+        width: 182
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26affdd766aee8a40a23d0b227cfd28b
+      internalID: 1924434862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_1
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 3859
+        width: 186
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1946696523ebc740a2a94899d461d69
+      internalID: 927082181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_2
+      rect:
+        serializedVersion: 2
+        x: 657
+        y: 3867
+        width: 178
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b03504c00a41a4499fe7b59fbc09f24
+      internalID: -1009383510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_3
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 3869
+        width: 178
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90c67c8270a257e4686f7c20f3ffb39a
+      internalID: -380200093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_4
+      rect:
+        serializedVersion: 2
+        x: 1191
+        y: 3867
+        width: 164
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9348f74fb29c9164c8e32e58f2f5a7ed
+      internalID: -1643968739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_5
+      rect:
+        serializedVersion: 2
+        x: 1438
+        y: 3859
+        width: 193
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e04fc0d40a724942b3cf978f77aff83
+      internalID: -1792046999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_6
+      rect:
+        serializedVersion: 2
+        x: 1727
+        y: 3857
+        width: 164
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5557a8137a515fa489f2a87c84f42388
+      internalID: -968821402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_7
+      rect:
+        serializedVersion: 2
+        x: 1979
+        y: 3853
+        width: 210
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ca0beb77a7ceaf448f63bfc198bd5ce
+      internalID: 39824204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_8
+      rect:
+        serializedVersion: 2
+        x: 2265
+        y: 3837
+        width: 196
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb6352db5d5e9c74aaaa61b04e789b48
+      internalID: 661098508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_9
+      rect:
+        serializedVersion: 2
+        x: 2535
+        y: 3861
+        width: 256
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 956b0f8dd1c7477459bfafd32eedd01b
+      internalID: 1790822571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_10
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 3267
+        width: 228
+        height: 470
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab1a587287f6f38409e1b660bac1cc49
+      internalID: 1882659393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_11
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 3267
+        width: 314
+        height: 484
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3346320181a3b54d96bfd8f39be5f4e
+      internalID: -934063561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_12
+      rect:
+        serializedVersion: 2
+        x: 809
+        y: 3259
+        width: 236
+        height: 514
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16aa5f4b132bcd6438604be2089f3a1e
+      internalID: 1001135971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_13
+      rect:
+        serializedVersion: 2
+        x: 1135
+        y: 3267
+        width: 190
+        height: 418
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 499843c00b1a8fd43ad6a76b1396494c
+      internalID: 2024992234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_14
+      rect:
+        serializedVersion: 2
+        x: 1421
+        y: 3267
+        width: 254
+        height: 468
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aaace223078bf3847abf5f3d5dc115ed
+      internalID: -1724635652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_15
+      rect:
+        serializedVersion: 2
+        x: 1765
+        y: 3297
+        width: 188
+        height: 400
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9689701de044a104ab1cabe3cd254908
+      internalID: 534455229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_16
+      rect:
+        serializedVersion: 2
+        x: 2047
+        y: 3224
+        width: 382
+        height: 497
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 951d4aef0c761094e803a8db6180cb80
+      internalID: 133196885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_17
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 2269
+        width: 338
+        height: 894
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c832a2b2b40236d41b6e756e5b620dce
+      internalID: 1755729191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_18
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 2325
+        width: 332
+        height: 836
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34a943545fbaa804cb315d27d70c613c
+      internalID: -73014493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_19
+      rect:
+        serializedVersion: 2
+        x: 1021
+        y: 2305
+        width: 350
+        height: 856
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1305cf3d2a2a19f45a9ea51f71f451e7
+      internalID: 145577321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_20
+      rect:
+        serializedVersion: 2
+        x: 1467
+        y: 2299
+        width: 344
+        height: 866
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e3becd8073e1234dabc77d1177f9a68
+      internalID: 604391425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_21
+      rect:
+        serializedVersion: 2
+        x: 1931
+        y: 2299
+        width: 372
+        height: 926
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74f55c0266ada804aa793604d9a361a6
+      internalID: -31799350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_22
+      rect:
+        serializedVersion: 2
+        x: 2629
+        y: 3261
+        width: 110
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b31b1a8136ea47040a75bb8818b07510
+      internalID: 151693789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_23
+      rect:
+        serializedVersion: 2
+        x: 2801
+        y: 3251
+        width: 162
+        height: 162
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9fa01a2df3450444cb636e2aa6f3f13e
+      internalID: 1691621500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_24
+      rect:
+        serializedVersion: 2
+        x: 2447
+        y: 2815
+        width: 154
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73bc766ed3335b94597a07b5be807d3e
+      internalID: 338017028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_25
+      rect:
+        serializedVersion: 2
+        x: 2671
+        y: 2815
+        width: 162
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08c9eec4b35ffde488d08faf33718004
+      internalID: 1074700984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_26
+      rect:
+        serializedVersion: 2
+        x: 2909
+        y: 2813
+        width: 160
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8766f79df5718994d8670275b8f0fe16
+      internalID: -2015093739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_27
+      rect:
+        serializedVersion: 2
+        x: 2661
+        y: 2521
+        width: 114
+        height: 174
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 421dc145d079a9f4b8988aa07d3eb01e
+      internalID: 344905825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_28
+      rect:
+        serializedVersion: 2
+        x: 2887
+        y: 2451
+        width: 206
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0f1e8b6196a80f41a2faf1b6b48095f
+      internalID: -234421410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_29
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 1599
+        width: 408
+        height: 468
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef68cf95503ddc64381cf94667f34ba5
+      internalID: 581706434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_30
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 1671
+        width: 567
+        height: 358
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2521f9827c61ff47a41a25da1ea07f3
+      internalID: 85769570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_31
+      rect:
+        serializedVersion: 2
+        x: 1541
+        y: 1637
+        width: 442
+        height: 432
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c826dee59398b84439b95f032ea3b719
+      internalID: 1477361064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_32
+      rect:
+        serializedVersion: 2
+        x: 2053
+        y: 1645
+        width: 856
+        height: 384
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66b94656db289534c8488b7e5fdeb55d
+      internalID: 525731146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_33
+      rect:
+        serializedVersion: 2
+        x: 467
+        y: 1147
+        width: 312
+        height: 362
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c130f18e09b5784da93f0ba4d148bd9
+      internalID: -809139381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_34
+      rect:
+        serializedVersion: 2
+        x: 875
+        y: 1147
+        width: 312
+        height: 362
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 471f59264ac66b74f8056c59143960b4
+      internalID: -2129967294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_35
+      rect:
+        serializedVersion: 2
+        x: 1281
+        y: 1147
+        width: 278
+        height: 364
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a2e5e33d1c8f504d9617a199342c104
+      internalID: -1872519632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_36
+      rect:
+        serializedVersion: 2
+        x: 1645
+        y: 1147
+        width: 312
+        height: 362
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8d596ddb6e219041ae26e3347a5e0ba
+      internalID: 2125429078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_37
+      rect:
+        serializedVersion: 2
+        x: 2105
+        y: 1331
+        width: 169
+        height: 156
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c684bef0f9036814b9ae40130d77046f
+      internalID: -379412164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_38
+      rect:
+        serializedVersion: 2
+        x: 2273
+        y: 1343
+        width: 186
+        height: 156
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a694668137501e488501edbb24285e0
+      internalID: -1646651885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_39
+      rect:
+        serializedVersion: 2
+        x: 2513
+        y: 1297
+        width: 338
+        height: 236
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4455f9b53b018ca43a2b6f1a9d3edec5
+      internalID: 8718593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_40
+      rect:
+        serializedVersion: 2
+        x: 2913
+        y: 1313
+        width: 118
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66a019dd4753ebb48ae3822cc9ec9c9e
+      internalID: -710091410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_41
+      rect:
+        serializedVersion: 2
+        x: 3097
+        y: 1315
+        width: 298
+        height: 230
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a181c7c1beb5ecf4e83305e212a39ad9
+      internalID: -95927858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_42
+      rect:
+        serializedVersion: 2
+        x: 3485
+        y: 1363
+        width: 174
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa6f766265842294f9072e88a31eefda
+      internalID: 1488532972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_43
+      rect:
+        serializedVersion: 2
+        x: 3191
+        y: 3593
+        width: 512
+        height: 410
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85c9e9ab70f02e54e896d93d22e66509
+      internalID: -623784453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_44
+      rect:
+        serializedVersion: 2
+        x: 3243
+        y: 3221
+        width: 158
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34e2e7088c098f44683bca89248dbf75
+      internalID: -369029405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_45
+      rect:
+        serializedVersion: 2
+        x: 3533
+        y: 3193
+        width: 132
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6db58cffed1e4ae4ca3e5458ef2437c9
+      internalID: -349191102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_46
+      rect:
+        serializedVersion: 2
+        x: 3727
+        y: 3191
+        width: 160
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b8c6018ffac9f64dae7470f231087f4
+      internalID: -1274331464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_47
+      rect:
+        serializedVersion: 2
+        x: 3255
+        y: 2925
+        width: 172
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d061d06c512ffe24fa02464ac58718d3
+      internalID: -634327653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_48
+      rect:
+        serializedVersion: 2
+        x: 3497
+        y: 2947
+        width: 170
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f45abd6b87254fa4bab7578c45f29966
+      internalID: -838312496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_49
+      rect:
+        serializedVersion: 2
+        x: 3733
+        y: 2913
+        width: 146
+        height: 188
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03a3ee90790953b498416b126501cb6f
+      internalID: -789593508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_50
+      rect:
+        serializedVersion: 2
+        x: 3275
+        y: 2617
+        width: 138
+        height: 190
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67118691da2ad4847b06756bb4c9e103
+      internalID: 1522066763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_51
+      rect:
+        serializedVersion: 2
+        x: 3495
+        y: 2621
+        width: 132
+        height: 180
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d290607fb3202d41884d22070236e88
+      internalID: 456630864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_52
+      rect:
+        serializedVersion: 2
+        x: 3697
+        y: 2609
+        width: 208
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 975c655f0e7d42e4d8f905b0d917bc9c
+      internalID: -505369727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_53
+      rect:
+        serializedVersion: 2
+        x: 3335
+        y: 2341
+        width: 124
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a69132b0f47ad84eb4d9377f3b52019
+      internalID: -215547917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_54
+      rect:
+        serializedVersion: 2
+        x: 3581
+        y: 2315
+        width: 282
+        height: 236
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a971e2b51a4bc7419cbc2e49e597222
+      internalID: 1788340276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: odorireal_55
+      rect:
+        serializedVersion: 2
+        x: 3005
+        y: 1645
+        width: 738
+        height: 402
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c668ed5791bfbe3448197017d53829f8
+      internalID: -1621056708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      odorireal_0: 1924434862
+      odorireal_1: 927082181
+      odorireal_10: 1882659393
+      odorireal_11: -934063561
+      odorireal_12: 1001135971
+      odorireal_13: 2024992234
+      odorireal_14: -1724635652
+      odorireal_15: 534455229
+      odorireal_16: 133196885
+      odorireal_17: 1755729191
+      odorireal_18: -73014493
+      odorireal_19: 145577321
+      odorireal_2: -1009383510
+      odorireal_20: 604391425
+      odorireal_21: -31799350
+      odorireal_22: 151693789
+      odorireal_23: 1691621500
+      odorireal_24: 338017028
+      odorireal_25: 1074700984
+      odorireal_26: -2015093739
+      odorireal_27: 344905825
+      odorireal_28: -234421410
+      odorireal_29: 581706434
+      odorireal_3: -380200093
+      odorireal_30: 85769570
+      odorireal_31: 1477361064
+      odorireal_32: 525731146
+      odorireal_33: -809139381
+      odorireal_34: -2129967294
+      odorireal_35: -1872519632
+      odorireal_36: 2125429078
+      odorireal_37: -379412164
+      odorireal_38: -1646651885
+      odorireal_39: 8718593
+      odorireal_4: -1643968739
+      odorireal_40: -710091410
+      odorireal_41: -95927858
+      odorireal_42: 1488532972
+      odorireal_43: -623784453
+      odorireal_44: -369029405
+      odorireal_45: -349191102
+      odorireal_46: -1274331464
+      odorireal_47: -634327653
+      odorireal_48: -838312496
+      odorireal_49: -789593508
+      odorireal_5: -1792046999
+      odorireal_50: 1522066763
+      odorireal_51: 456630864
+      odorireal_52: -505369727
+      odorireal_53: -215547917
+      odorireal_54: 1788340276
+      odorireal_55: -1621056708
+      odorireal_6: -968821402
+      odorireal_7: 39824204
+      odorireal_8: 661098508
+      odorireal_9: 1790822571
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

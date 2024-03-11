@@ -6,11 +6,6 @@ using System;
 using System.Linq;
 using TMPro;
 
-
-using HeavenStudio.Util;
-using HeavenStudio.Editor;
-using static HeavenStudio.EntityTypes;
-
 namespace HeavenStudio.Editor
 {
     public class NumberPropertyPrefab : EventPropertyPrefab
@@ -22,9 +17,9 @@ namespace HeavenStudio.Editor
 
         private float _defaultValue;
 
-        new public void SetProperties(string propertyName, object type, string caption)
+        public override void SetProperties(string propertyName, object type, string caption)
         {
-            InitProperties(propertyName, caption);
+            base.SetProperties(propertyName, type, caption);
 
             switch (type)
             {
@@ -141,42 +136,18 @@ namespace HeavenStudio.Editor
             switch (type)
             {
                 case EntityTypes.Integer integer:
-                    slider.onValueChanged.AddListener(
-                        _ =>
-                        {
-                            UpdateCollapse((int)slider.value);
-                        }
-                    );
-
-                    inputField.onEndEdit.AddListener(
-                        _ =>
-                        {
-                            UpdateCollapse((int)slider.value);
-                        }
-                    );
+                    slider.onValueChanged.AddListener(_ => UpdateCollapse((int)slider.value));
+                    inputField.onEndEdit.AddListener(_ => UpdateCollapse((int)slider.value));
 
                     UpdateCollapse((int)slider.value);
 
                     break;
 
                 case EntityTypes.Float fl:
-                    slider.onValueChanged.AddListener(
-                        _ =>
-                        {
-                            var newValue = (float)Math.Round(slider.value, 4);
-                            UpdateCollapse(newValue);
-                        }
-                    );
+                    slider.onValueChanged.AddListener(newVal => UpdateCollapse((float)Math.Round(newVal, 4)));
+                    inputField.onEndEdit.AddListener(_ => UpdateCollapse(slider.value));
 
-                    var newValue = (float)Math.Round(slider.value, 4);
-                    UpdateCollapse(newValue);
-
-                    inputField.onEndEdit.AddListener(
-                        _ =>
-                        {
-                            UpdateCollapse(slider.value);
-                        }
-                    );
+                    UpdateCollapse((float)Math.Round(slider.value, 4));
                     break;
 
                 default:

@@ -13,6 +13,16 @@ namespace HeavenStudio
 
             Minigames.Minigame game;
 
+            game = NtrAirboarderLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader NtrAirboarderLoader failed!");
+            }
+
             game = RvlBadmintonLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -43,6 +53,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader RvlBoardMeetingLoader failed!");
             }
 
+            game = AgbBonOdoriLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbBonOdoriLoader failed!");
+            }
+
             game = NtrFlickLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -51,6 +71,16 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader NtrFlickLoader failed!");
+            }
+
+            game = PcoCanneryLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader PcoCanneryLoader failed!");
             }
 
             game = CtrCatchLoader.AddGame(eventCaller);
@@ -91,6 +121,16 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader AgbClapLoader failed!");
+            }
+
+            game = RvlClapTrapLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader RvlClapTrapLoader failed!");
             }
 
             game = NtrCoinLoader.AddGame(eventCaller);
@@ -253,6 +293,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader NtrBackbeatLoader failed!");
             }
 
+            game = CtrLumBEARjackLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader CtrLumBEARjackLoader failed!");
+            }
+
             game = AgbMannequinFactoryLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -323,6 +373,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader ntrMunchyMonkLoader failed!");
             }
 
+            game = PcoNailLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader PcoNailLoader failed!");
+            }
+
             game = AgbNightWalkLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -353,6 +413,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader CtrPillowLoader failed!");
             }
 
+            game = AgbPowerCalligraphy.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbPowerCalligraphy failed!");
+            }
+
             game = AgbQuizShowLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -361,6 +431,16 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader AgbQuizShowLoader failed!");
+            }
+
+            game = AgbRapMenLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbRapMenLoader failed!");
             }
 
             game = NtrPingpongLoader.AddGame(eventCaller);
@@ -441,6 +521,16 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader RvlSeeSawLoader failed!");
+            }
+
+            game = AgbSickBeats.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbSickBeats failed!");
             }
 
             game = NtrSlotMonsterLoader.AddGame(eventCaller);
