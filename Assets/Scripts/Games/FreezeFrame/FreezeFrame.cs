@@ -220,8 +220,6 @@ namespace HeavenStudio.Games
     {
         /*
         BIG LIST OF TODOS
-        - use unity's random
-
         - finish sounds
         - wait for upscale
         - make particles random sprites
@@ -414,7 +412,11 @@ namespace HeavenStudio.Games
         }
         private void OnDestroy()
         {
-            if (PhotoList.Count > 0) PhotoList.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            //if (PhotoList.Count > 0) PhotoList.Clear();
         }
 
         // MINIGAME METHODS
@@ -587,7 +589,7 @@ namespace HeavenStudio.Games
         }
         public static void SlowCarSFX()
         {
-            SoundByte.PlayOneShotGame("freezeFrame/smallCarZoom1a", forcePlay: true);
+            SoundByte.PlayOneShotGame("freezeFrame/slowCarFar", forcePlay: true);
         }
         public static void FastCarCue(double beat, int photoType, bool mute = false)
         {
@@ -599,11 +601,11 @@ namespace HeavenStudio.Games
                 Instance.ScheduleInput(beat, 2f, InputAction_BasicPress, Instance.PhotoSuccess, Instance.PhotoMiss, Instance.PhotoEmpty),
                 new PhotoArgs(CarType.FastCar, (PhotoType)photoType, 0f)
             );
-            SoundByte.PlayOneShotGame("freezeFrame/fastCarZoom", beat + 2);
+            SoundByte.PlayOneShotGame("freezeFrame/fastCarNear", beat + 2);
         }
         public static void FastCarSFX()
         {
-            SoundByte.PlayOneShotGame("freezeFrame/fastCarZoom", forcePlay: true);
+            SoundByte.PlayOneShotGame("freezeFrame/fastCarFar", forcePlay: true);
         }
         public static void ShowPhotos(double beat, float length, int gradeTypeI, bool audience, bool clearCache)
         {
@@ -685,18 +687,21 @@ namespace HeavenStudio.Games
             {
                 case 2:
                     Instance.CameraMan.DoScaledAnimationAsync("Happy", 0.5f);
+                    SoundByte.PlayOneShotGame("freezeFrame/result_Hi");
                     if (audience)
-                        SoundByte.PlayOneShotGame("freezeFrame/result_Hi");
-                    else
-                        SoundByte.PlayOneShotGame("freezeFrame/successNoCrowd");
+                        break;
                     break;
                 case 1:
                     Instance.CameraMan.DoScaledAnimationAsync("Oops", 0.5f);
                     SoundByte.PlayOneShotGame("freezeFrame/result_Ok");
+                    if (audience)
+                        SoundByte.PlayOneShot("applause");
                     break;
                 case 0:
                     Instance.CameraMan.DoScaledAnimationAsync("Cry", 0.5f);
                     SoundByte.PlayOneShotGame("freezeFrame/result_Ng");
+                    if (audience)
+                        break;
                     break;
                 default:
                     break;
