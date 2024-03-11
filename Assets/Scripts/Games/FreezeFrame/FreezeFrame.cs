@@ -202,7 +202,9 @@ namespace HeavenStudio.Games.Loaders
                         }),
                     }
                 },
-            }
+            },
+            new List<string>() { "ntr", "normal" },
+            "ntrcameraman", "en"
             );
         }
     }
@@ -210,8 +212,6 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    using System.Diagnostics.Tracing;
-    using System.Runtime.CompilerServices;
     using HeavenStudio.Common;
     using Scripts_FreezeFrame;
     using UnityEngine.Rendering;
@@ -220,20 +220,13 @@ namespace HeavenStudio.Games
     {
         /*
         BIG LIST OF TODOS
-        - TODO
-        - remove ref images
+        - use unity's random
 
-        - see if there's some method to show previews in editor?
-        - find a better way to seed things
-        - seed photos
-        
         - finish sounds
         - wait for upscale
         - make particles random sprites
 
-        - tags?
-        - icon
-        - chronological sort
+        - REAL icon
         */
 
         public static FreezeFrame Instance
@@ -306,10 +299,14 @@ namespace HeavenStudio.Games
 
         public List<SpawnCarArgs> QueuedCars { get; set; } = new();
 
+        //protected static int? SuperSeed { get; set; }
+
         // UNITY BUILTIN METHODS
         void Awake()
         {
             CameraManStartPos = CameraMan.transform.localPosition;
+            //if (SuperSeed is null)
+            //    SuperSeed = new System.Random().Next();
         }
         void Update()
         {
@@ -689,15 +686,17 @@ namespace HeavenStudio.Games
                 case 2:
                     Instance.CameraMan.DoScaledAnimationAsync("Happy", 0.5f);
                     if (audience)
-                        SoundByte.PlayOneShotGame("freezeFrame/success");
+                        SoundByte.PlayOneShotGame("freezeFrame/result_Hi");
                     else
                         SoundByte.PlayOneShotGame("freezeFrame/successNoCrowd");
                     break;
                 case 1:
                     Instance.CameraMan.DoScaledAnimationAsync("Oops", 0.5f);
+                    SoundByte.PlayOneShotGame("freezeFrame/result_Ok");
                     break;
                 case 0:
                     Instance.CameraMan.DoScaledAnimationAsync("Cry", 0.5f);
+                    SoundByte.PlayOneShotGame("freezeFrame/result_Ng");
                     break;
                 default:
                     break;
@@ -1005,12 +1004,36 @@ namespace HeavenStudio.Games
         {
             Shutter.DoScaledAnimationAsync("Shut", 0.5f);
             CameraMan.DoScaledAnimationAsync("Flash", 0.5f);
-            SoundByte.PlayOneShotGame("freezeFrame/shutter");
+            SoundByte.PlayOneShotGame("freezeFrame/shutter"/*, pitch: (float)new System.Random().NextDouble() + 0.5f*/);
         }
         public void PushPhoto(PhotoArgs args)
         {
             //while (PhotoList.Count >= MAX_PHOTOS)
             //    PhotoList.RemoveAt(0);
+            if (args.PhotoType == PhotoType.Random)
+            {
+                if (UnityEngine.Random.Range(0, 8) >= 7)
+                {
+                    switch (UnityEngine.Random.Range(0, 3))
+                    {
+                        case 0:
+                            args.PhotoType = PhotoType.Ninja;
+                            break;
+                        case 1:
+                            args.PhotoType = PhotoType.Ghost;
+                            break;
+                        case 2:
+                            args.PhotoType = PhotoType.Rats;
+                            break;
+                        default:
+                            args.PhotoType = PhotoType.Default;
+                            break;
+                    }
+                }
+                else
+                    args.PhotoType = PhotoType.Default;
+            }
+
             PhotoList.Add(args);
         }
         public void HidePhotos(double beat)
@@ -1153,6 +1176,19 @@ namespace HeavenStudio.Games
             }
             return result;
         }
+        /*protected static System.Random GetSeededRandom(float? mulch = null) // i just made this term up i have no idea if it has any basis in actual programming
+        {
+            if (SuperSeed is null)
+                SuperSeed = new System.Random().Next();
+            
+            if (mulch is not null)
+            {
+                int seed = BitConverter.ToInt32(BitConverter.GetBytes(mulch.Value));
+                return new System.Random(SuperSeed.Value * seed);
+            }
+
+            return new System.Random(SuperSeed.Value);
+        }*/
 
         // ENUMS
         public enum CarType : int

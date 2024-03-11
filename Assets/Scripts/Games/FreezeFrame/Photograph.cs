@@ -63,30 +63,7 @@ namespace HeavenStudio.Games.Scripts_FreezeFrame
                     break;
             }
 
-            FreezeFrame.PhotoType photoType = args.PhotoType;
-            // like a 1 in 8 chance of a cameo approximately
-            if (photoType == FreezeFrame.PhotoType.Random)
-            {
-                if (new System.Random().Next(8) >= 7)
-                {
-                    switch (new System.Random().Next(3))
-                    {
-                        case 0:
-                            photoType = FreezeFrame.PhotoType.Ninja;
-                            break;
-                        case 1:
-                            photoType = FreezeFrame.PhotoType.Ghost;
-                            break;
-                        case 2:
-                            photoType = FreezeFrame.PhotoType.Rats;
-                            break;
-                    }
-                }
-                else
-                    photoType = FreezeFrame.PhotoType.Default;
-            }
-
-            switch(photoType)
+            switch(args.PhotoType)
             {
                 case FreezeFrame.PhotoType.Default:
                     _Animator.DoScaledAnimationAsync("Cameo_None", timeScale: 0.5f, animLayer: 1);
