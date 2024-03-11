@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face05
+  m_Name: 5
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -33,7 +33,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face02
+  m_Name: 2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -142,14 +142,11 @@ AnimatorStateMachine:
     m_State: {fileID: 493317685735488380}
     m_Position: {x: 890, y: 1280, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 2755722621842520282}
-    m_Position: {x: 925, y: 1345, z: 0}
-  - serializedVersion: 1
     m_State: {fileID: -2939514585784333615}
-    m_Position: {x: 960, y: 1410, z: 0}
+    m_Position: {x: 930, y: 1340, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4554014245356472744}
-    m_Position: {x: 995, y: 1475, z: 0}
+    m_Position: {x: 970, y: 1400, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -167,7 +164,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face14
+  m_Name: 14
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -193,7 +190,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face19
+  m_Name: 19
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -219,7 +216,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face21-fast
+  m_Name: 21fast
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -245,7 +242,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face15
+  m_Name: 15
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -271,7 +268,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face11
+  m_Name: 11
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -297,7 +294,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face01
+  m_Name: 1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -345,7 +342,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face21-just
+  m_Name: 21just
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -371,7 +368,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face08
+  m_Name: 8
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -390,32 +387,6 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &2755722621842520282
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face22-end
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 0
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: c18c94aafaddeba4fa8b5aca0c927948, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1102 &2815808817812892935
 AnimatorState:
   serializedVersion: 6
@@ -423,7 +394,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face13
+  m_Name: 13
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -449,7 +420,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face21-late
+  m_Name: 21late
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -475,7 +446,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face04
+  m_Name: 4
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -501,7 +472,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face18
+  m_Name: 18
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -527,7 +498,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face16
+  m_Name: 16
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -553,7 +524,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face17
+  m_Name: 17
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -579,7 +550,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face09
+  m_Name: 9
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -605,7 +576,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face20
+  m_Name: 20
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -631,7 +602,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: paper-face06
+  m_Name: 6
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
