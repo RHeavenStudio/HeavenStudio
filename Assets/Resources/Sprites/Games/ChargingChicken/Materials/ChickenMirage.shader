@@ -5,6 +5,7 @@ Shader "Sprites/ChickenMirage"
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
 		_Speed1 ("Wobble Speed", Float) = 1
+		_Alpha ("Alpha", Float) = 1
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 	}
 
@@ -63,6 +64,7 @@ Shader "Sprites/ChickenMirage"
 
 			sampler2D _MainTex;
 			sampler2D _AlphaTex;
+			float _Alpha;
 			float _Speed1;
 			float _AlphaSplitEnabled;
 
@@ -86,7 +88,7 @@ Shader "Sprites/ChickenMirage"
 				fixed4 input2 = SampleSpriteTexture (wobble);
 				fixed4 c = (input1 + input2) / 1.5;
 				c *= _Color;
-
+				c.a *= _Alpha;
 				return c;
 			}
 		ENDCG

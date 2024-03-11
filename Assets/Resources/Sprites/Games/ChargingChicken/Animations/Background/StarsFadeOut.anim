@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GalaxyFadeOut
+  m_Name: StarsFadeOut
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -21,56 +21,27 @@ AnimationClip:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.5
+        time: 0
         value: 1
-        inSlope: 0
-        outSlope: 0
+        inSlope: 20
+        outSlope: -2
         tangentMode: 69
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.r
-    path: Stars
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
+        value: 0
+        inSlope: -2
+        outSlope: 20
         tangentMode: 69
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Color.g
-    path: Stars
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 69
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.b
+    attribute: material._Alpha
     path: Stars
     classID: 212
     script: {fileID: 0}
@@ -98,65 +69,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Color.a
-    path: Stars
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 69
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.r
-    path: Stars/Galaxy
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 69
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.g
-    path: Stars/Galaxy
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 69
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.b
-    path: Stars/Galaxy
+    attribute: material._Alpha
+    path: Stars/StarsLow
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -183,8 +97,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Color.a
-    path: Stars/Galaxy
+    attribute: material._Alpha
+    path: Stars/StarsDuplicate
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -193,7 +107,7 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: 0
+        inSlope: 20
         outSlope: -2
         tangentMode: 69
         weightedMode: 0
@@ -203,7 +117,7 @@ AnimationClip:
         time: 0.5
         value: 0
         inSlope: -2
-        outSlope: 0
+        outSlope: 20
         tangentMode: 69
         weightedMode: 0
         inWeight: 0.33333334
@@ -211,8 +125,64 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Color.a
-    path: Stars/MoreStars
+    attribute: material._Alpha
+    path: Stars/StarsDuplicate/StarsLow
+    classID: 212
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 20
+        outSlope: -2
+        tangentMode: 69
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 0
+        inSlope: -2
+        outSlope: 20
+        tangentMode: 69
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._Alpha
+    path: Stars/StarsDuplicate1
+    classID: 212
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 20
+        outSlope: -2
+        tangentMode: 69
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 0
+        inSlope: -2
+        outSlope: 20
+        tangentMode: 69
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._Alpha
+    path: Stars/StarsDuplicate1/StarsLow
     classID: 212
     script: {fileID: 0}
   m_PPtrCurves: []
@@ -225,66 +195,45 @@ AnimationClip:
     genericBindings:
     - serializedVersion: 2
       path: 3235704616
-      attribute: 304273561
+      attribute: 2333735666
       script: {fileID: 0}
       typeID: 212
-      customType: 0
+      customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3309601562
-      attribute: 304273561
+      path: 170507843
+      attribute: 2333735666
       script: {fileID: 0}
       typeID: 212
-      customType: 0
+      customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 2052116596
-      attribute: 304273561
+      path: 692695489
+      attribute: 2333735666
       script: {fileID: 0}
       typeID: 212
-      customType: 0
+      customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3235704616
-      attribute: 2526845255
+      path: 1353415638
+      attribute: 2333735666
       script: {fileID: 0}
       typeID: 212
-      customType: 0
+      customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3235704616
-      attribute: 4215373228
+      path: 1872122912
+      attribute: 2333735666
       script: {fileID: 0}
       typeID: 212
-      customType: 0
+      customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3235704616
-      attribute: 2334886179
+      path: 844914598
+      attribute: 2333735666
       script: {fileID: 0}
       typeID: 212
-      customType: 0
-      isPPtrCurve: 0
-    - serializedVersion: 2
-      path: 3309601562
-      attribute: 2526845255
-      script: {fileID: 0}
-      typeID: 212
-      customType: 0
-      isPPtrCurve: 0
-    - serializedVersion: 2
-      path: 3309601562
-      attribute: 4215373228
-      script: {fileID: 0}
-      typeID: 212
-      customType: 0
-      isPPtrCurve: 0
-    - serializedVersion: 2
-      path: 3309601562
-      attribute: 2334886179
-      script: {fileID: 0}
-      typeID: 212
-      customType: 0
+      customType: 22
       isPPtrCurve: 0
     pptrCurveMapping: []
   m_AnimationClipSettings:
@@ -312,56 +261,27 @@ AnimationClip:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.5
+        time: 0
         value: 1
-        inSlope: 0
-        outSlope: 0
+        inSlope: 20
+        outSlope: -2
         tangentMode: 69
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.r
-    path: Stars
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
+        value: 0
+        inSlope: -2
+        outSlope: 20
         tangentMode: 69
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Color.g
-    path: Stars
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 69
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.b
+    attribute: material._Alpha
     path: Stars
     classID: 212
     script: {fileID: 0}
@@ -389,65 +309,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Color.a
-    path: Stars
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 69
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.r
-    path: Stars/Galaxy
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 69
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.g
-    path: Stars/Galaxy
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0.5
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 69
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_Color.b
-    path: Stars/Galaxy
+    attribute: material._Alpha
+    path: Stars/StarsLow
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -474,8 +337,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Color.a
-    path: Stars/Galaxy
+    attribute: material._Alpha
+    path: Stars/StarsDuplicate
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -484,7 +347,7 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: 0
+        inSlope: 20
         outSlope: -2
         tangentMode: 69
         weightedMode: 0
@@ -494,7 +357,7 @@ AnimationClip:
         time: 0.5
         value: 0
         inSlope: -2
-        outSlope: 0
+        outSlope: 20
         tangentMode: 69
         weightedMode: 0
         inWeight: 0.33333334
@@ -502,8 +365,64 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_Color.a
-    path: Stars/MoreStars
+    attribute: material._Alpha
+    path: Stars/StarsDuplicate/StarsLow
+    classID: 212
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 20
+        outSlope: -2
+        tangentMode: 69
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 0
+        inSlope: -2
+        outSlope: 20
+        tangentMode: 69
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._Alpha
+    path: Stars/StarsDuplicate1
+    classID: 212
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 20
+        outSlope: -2
+        tangentMode: 69
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 0
+        inSlope: -2
+        outSlope: 20
+        tangentMode: 69
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._Alpha
+    path: Stars/StarsDuplicate1/StarsLow
     classID: 212
     script: {fileID: 0}
   m_EulerEditorCurves: []

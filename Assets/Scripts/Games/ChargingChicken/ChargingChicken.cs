@@ -186,11 +186,11 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("instant", false, "Instant", "Whether the objects immediately appear."),
-                        new Param("stars", false, "Stars (NYI)", "Whether the stars will be visible by the end of the block."),
+                        new Param("stars", false, "Stars", "Whether the stars will be visible by the end of the block."),
                         new Param("clouds", true, "Clouds", "Whether the clouds will be visible by the end of the block."),
                         new Param("earth", false, "Earth", "Whether the Earth will be visible by the end of the block."),
                         new Param("mars", false, "Mars", "Whether Mars will be visible by the end of the block."),
-                        new Param("doodles", false, "Doodles (NYI)", "Whether the doodles will be visible by the end of the block."),
+                        new Param("doodles", false, "Doodles", "Whether the doodles will be visible by the end of the block."),
                         new Param("birds", false, "Birds (NYI)", "Whether the birds will be visible by the end of the block."),
                     }
                 },
@@ -225,10 +225,10 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("starProgress", new EntityTypes.Integer(-1, 100, -1), "Star Progress (NYI)", "Instantly sets what percent through the loop the stars are. (-1 = no change)"),
+                        new Param("starProgress", new EntityTypes.Integer(-1, 100, -1), "Star Progress", "Instantly sets what percent through the loop the stars are. (-1 = no change)"),
                         new Param("cloudProgress", new EntityTypes.Integer(-1, 100, -1), "Cloud Progress", "Instantly sets what percent through the loop the clouds are. (-1 = no change)"),
                         new Param("planetProgress", new EntityTypes.Integer(-1, 100, -1), "Planet Progress", "Instantly sets what percent through the loop the Earth and Mars are. (-1 = no change)"),
-                        new Param("doodleProgress", new EntityTypes.Integer(-1, 100, -1), "Doodle Progress (NYI)", "Instantly sets what percent through the loop the doodles are. (-1 = no change)"),
+                        new Param("doodleProgress", new EntityTypes.Integer(-1, 100, -1), "Doodle Progress", "Instantly sets what percent through the loop the doodles are. (-1 = no change)"),
                         new Param("birdProgress", new EntityTypes.Integer(-1, 100, -1), "Bird Progress (NYI)", "Instantly sets what percent through the loop the birds are. (-1 = no change)"),
                     }
                 },
@@ -266,8 +266,10 @@ namespace HeavenStudio.Games
         [SerializeField] Animator WaterAnim;
         [SerializeField] Animator ParallaxFade;
         [SerializeField] Animator UnParallaxFade;
+        [SerializeField] Transform Stars;
         [SerializeField] Transform Clouds;
         [SerializeField] Transform Planets;
+        [SerializeField] Transform Doodles;
         [SerializeField] TMP_Text yardsText;
         [SerializeField] TMP_Text endingText;
         [SerializeField] TMP_Text bubbleText;
@@ -329,9 +331,11 @@ namespace HeavenStudio.Games
 
         bool flowForward = true;
         int lastBg = 0;
+        bool starsVisible = false;
         bool cloudsVisible = true;
         bool earthVisible = false;
         bool marsVisible = false;
+        bool doodlesVisible = false;
 
         double bgColorStartBeat = -1;
         float bgColorLength = 0;
@@ -714,7 +718,6 @@ namespace HeavenStudio.Games
 
             //chicken/water movement speed
             if (nextIsland.isMoving) ChickenAnim.SetScaledAnimationSpeed((nextIsland.speed1 / 60) + 0.2f);
-            float parallaxSpeed = nextIsland.speed1 / 20000;
             float waterFlowSpeed = (nextIsland.speed1 / 5.83f) + ((1f / Conductor.instance.pitchedSecPerBeat) * 0.1f);
             if ((-waterFlowSpeed) - ((1f / Conductor.instance.pitchedSecPerBeat) * 0.2f) < 0) 
             {
@@ -736,10 +739,15 @@ namespace HeavenStudio.Games
             }
 
             //parallax movement
+            float parallaxSpeed = nextIsland.speed1 / 20000;
+            Stars.localPosition -= new Vector3((parallaxSpeed * 0.3f), 0, 0);
+            if (Stars.localPosition.x < -48) Stars.localPosition += new Vector3(32, 0, 0);
             Clouds.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
             if (Clouds.localPosition.x < -24) Clouds.localPosition += new Vector3(24, 0, 0);
             Planets.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
             if (Planets.localPosition.x < -30) Planets.localPosition += new Vector3(30, 0, 0);
+            Doodles.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
+            if (Doodles.localPosition.x < -31.5f) Doodles.localPosition += new Vector3(31.5f, 0, 0);
 
             //bubble shrinkage
             if (bubbleSizeChangeStart < Conductor.instance.songPositionInBeatsAsDouble && Conductor.instance.songPositionInBeatsAsDouble <= bubbleSizeChangeEnd)
@@ -850,8 +858,10 @@ namespace HeavenStudio.Games
             UnParallaxFade.DoScaledAnimationAsync("GalaxyDisable", 0.5f, animLayer: 0);
             UnParallaxFade.DoScaledAnimationAsync("FutureDisable", 0.5f, animLayer: 1);
 
+            ParallaxFade.DoScaledAnimationAsync("StarsDisable", 0.5f, animLayer: 0);
             ParallaxFade.DoScaledAnimationAsync("EarthDisable", 0.5f, animLayer: 2);
             ParallaxFade.DoScaledAnimationAsync("MarsDisable", 0.5f, animLayer: 3);
+            ParallaxFade.DoScaledAnimationAsync("DoodlesDisable", 0.5f, animLayer: 4);
 
             PersistThings(Conductor.instance.songPositionInBeatsAsDouble);
         }
@@ -1599,6 +1609,23 @@ namespace HeavenStudio.Games
         public void ParallaxObjects(double beat, double length, bool instant, bool stars, bool clouds, bool earth, bool mars, bool doodles, bool birds)
         {
             float animSpeed = 0.5f / (float)length;
+            //stars
+            if (!starsVisible)
+            {
+                if (stars)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "StarsEnable" : "StarsIn", animSpeed, animLayer: 0);
+                    starsVisible = true;
+                }
+            }
+            else
+            {
+                if (!stars)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "StarsDisable" : "StarsOut", animSpeed, animLayer: 0);
+                    starsVisible = false;
+                }
+            }
             //clouds
             if (!cloudsVisible)
             {
@@ -1650,6 +1677,23 @@ namespace HeavenStudio.Games
                     marsVisible = false;
                 }
             }
+            //doodles
+            if (!doodlesVisible)
+            {
+                if (doodles)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "DoodlesEnable" : "DoodlesIn", animSpeed, animLayer: 4);
+                    doodlesVisible = true;
+                }
+            }
+            else
+            {
+                if (!doodles)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "DoodlesDisable" : "DoodlesOut", animSpeed, animLayer: 4);
+                    doodlesVisible = false;
+                }
+            }
         }
 
         public void UnParallaxObjects(double beat, double length, int bg, bool instant)
@@ -1685,8 +1729,10 @@ namespace HeavenStudio.Games
 
         public void ParallaxProgress(int starProgress, int cloudProgress, int planetProgress, int doodleProgress, int birdProgress)
         {
-            if (cloudProgress > -1) Clouds.localPosition = new Vector3((-cloudProgress) * .24f, 0, 0);
-            if (planetProgress > -1) Planets.localPosition = new Vector3((-planetProgress) * .30f, 0, 0);
+            if (starProgress > -1) Stars.localPosition = new Vector3(((-starProgress - 50) * .32f), Stars.localPosition.y, Stars.localPosition.z);
+            if (cloudProgress > -1) Clouds.localPosition = new Vector3((-cloudProgress) * .24f, Clouds.localPosition.y, Clouds.localPosition.z);
+            if (planetProgress > -1) Planets.localPosition = new Vector3((-planetProgress) * .30f, Planets.localPosition.y, Planets.localPosition.z);
+            if (doodleProgress > -1) Doodles.localPosition = new Vector3(((-doodleProgress) * .315f), Doodles.localPosition.y, Doodles.localPosition.z);
         }
 
         #region ColorShit
