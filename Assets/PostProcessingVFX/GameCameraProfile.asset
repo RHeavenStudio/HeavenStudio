@@ -1,5 +1,27 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6672723021951195849
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2116fb4751a1a3046a3bae7177ecc731, type: 3}
+  m_Name: GlitchScreenJump
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  ScreenJumpDirection:
+    overrideState: 0
+    value: 1
+  ScreenJumpIndensity:
+    overrideState: 1
+    value: 0
 --- !u!114 &-4362154923023080619
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -32,6 +54,31 @@ MonoBehaviour:
     overrideState: 0
     value: 0
   scale:
+    overrideState: 0
+    value: 1
+--- !u!114 &-3842561579889000714
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824ef16946450f94186364308f3d1eaf, type: 3}
+  m_Name: GaussianBlur
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  BlurRadius:
+    overrideState: 1
+    value: 0
+  Iteration:
+    overrideState: 0
+    value: 1
+  RTDownScaling:
     overrideState: 0
     value: 1
 --- !u!114 &-3146643709030431664
@@ -1345,6 +1392,34 @@ MonoBehaviour:
       - 0.5
       - 0.5
       - 0.5
+--- !u!114 &-2800641430439692943
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29f414c45c95c4c4fab1fba6f7db9a44, type: 3}
+  m_Name: GlitchScanLineJitter
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  JitterDirection:
+    overrideState: 0
+    value: 0
+  intervalType:
+    overrideState: 0
+    value: 0
+  frequency:
+    overrideState: 0
+    value: 0
+  JitterIndensity:
+    overrideState: 1
+    value: 0
 --- !u!114 &-2309378551457945779
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1415,6 +1490,31 @@ MonoBehaviour:
   opacity:
     overrideState: 0
     value: 1
+--- !u!114 &-44530092333175149
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292a5d75bad86324881ba9dbb87cb997, type: 3}
+  m_Name: GlitchAnalogNoise
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  NoiseSpeed:
+    overrideState: 1
+    value: 0
+  NoiseFading:
+    overrideState: 1
+    value: 0
+  LuminanceJitterThreshold:
+    overrideState: 1
+    value: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1434,6 +1534,40 @@ MonoBehaviour:
   - {fileID: -4362154923023080619}
   - {fileID: 2598374393394070623}
   - {fileID: -3146643709030431664}
+  - {fileID: 190338221448500764}
+  - {fileID: -2800641430439692943}
+  - {fileID: -3842561579889000714}
+  - {fileID: -44530092333175149}
+  - {fileID: -6672723021951195849}
+  - {fileID: 6617679330616591269}
+--- !u!114 &190338221448500764
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901667e98588d4b23a60fa932445374b, type: 3}
+  m_Name: CRT
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  distort:
+    overrideState: 1
+    value: 0
+  RGBBlend:
+    overrideState: 1
+    value: 1
+  BottomCollapse:
+    overrideState: 1
+    value: 0
+  NoiseAmount:
+    overrideState: 1
+    value: 0
 --- !u!114 &2598374393394070623
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1462,6 +1596,37 @@ MonoBehaviour:
   lumContrib:
     overrideState: 1
     value: 0.8
+--- !u!114 &6617679330616591269
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efbb636e5cc391347869277957d9c319, type: 3}
+  m_Name: EdgeDetectionSobelNeonV2
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  EdgeWidth:
+    overrideState: 1
+    value: 0.05
+  EdgeNeonFade:
+    overrideState: 1
+    value: 0.1
+  BackgroundFade:
+    overrideState: 1
+    value: 1
+  Brigtness:
+    overrideState: 1
+    value: 0.2
+  BackgroundColor:
+    overrideState: 0
+    value: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &8762005197904913450
 MonoBehaviour:
   m_ObjectHideFlags: 3

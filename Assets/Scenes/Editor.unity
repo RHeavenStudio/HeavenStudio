@@ -5833,10 +5833,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ada001011e54c74b87c04d7186d5f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caption: {fileID: 44496736}
-  parameterManager: {fileID: 0}
-  propertyName: 
-  dropdown: {fileID: 9172948791891367936}
 --- !u!1 &191459085
 GameObject:
   m_ObjectHideFlags: 0
@@ -25288,6 +25284,7 @@ MonoBehaviour:
   gridGameSelector: {fileID: 1154875947}
   IntegerP: {fileID: 396879232}
   FloatP: {fileID: 345301789}
+  ButtonP: {fileID: 0}
   BooleanP: {fileID: 755586977}
   DropdownP: {fileID: 184838087}
   ColorP: {fileID: 1443721746}
@@ -26850,8 +26847,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1589389272}
   m_HandleRect: {fileID: 1589389271}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.4422289
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32707,7 +32704,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 199.00056}
+  m_AnchoredPosition: {x: 0, y: 199.06122}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1154875945
