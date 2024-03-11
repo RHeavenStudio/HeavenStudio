@@ -1097,6 +1097,54 @@ namespace HeavenStudio
                         }
                     },
 
+                    new GameAction("colorGrading", "Color Grading")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("tempStart", new EntityTypes.Float(-100f, 100f), "Start Temperature", "Set the temperature at the start of the event."),
+                            new("tempEnd", new EntityTypes.Float(-100f, 100f), "End Temperature", "Set the temperature at the end of the event."),
+
+                            new("tintStart", new EntityTypes.Float(-100f, 100f), "Start Tint", "Set the tint at the start of the event."),
+                            new("tintEnd", new EntityTypes.Float(-100f, 100f), "End Tint", "Set the tint at the end of the event."),
+
+                            new("colorStart", Color.white, "Start Color Filter", "Set the color filter at the start of the event."),
+                            new("colorEnd", Color.white, "End Color Filter", "Set the color filter at the end of the event."),
+
+                            new("hueShiftStart", new EntityTypes.Float(-180f, 180f), "Start Hue Shift", "Set the hue shift at the start of the event."),
+                            new("hueShiftEnd", new EntityTypes.Float(-180f, 180f), "End Hue Shift", "Set the hue shift at the end of the event."),
+
+                            new("satStart", new EntityTypes.Float(-100f, 100f), "Start Saturation", "Set the saturation at the start of the event."),
+                            new("satEnd", new EntityTypes.Float(-100f, 100f), "End Saturation", "Set the saturation at the end of the event."),
+
+                            new("brightStart", new EntityTypes.Float(-100f, 100f), "Start Brightness", "Set the brightness at the start of the event."),
+                            new("brightEnd", new EntityTypes.Float(-100f, 100f), "End Brightness", "Set the brightness at the end of the event."),
+
+                            new("conStart", new EntityTypes.Float(-100f, 100f), "Start Contrast", "Set the contrast at the start of the event."),
+                            new("conEnd", new EntityTypes.Float(-100f, 100f), "End Contrast", "Set the contrast at the end of the event."),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "tempStart", "tintStart", "colorStart", "hueShiftStart", "satStart", "brightStart", "conStart" })
+                            }),
+                        }
+                    },
+
+                    new GameAction("gaussBlur", "Gaussian Blur")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 5f, 0f), "Start Intensity", "Set the intensity at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 5f, 1f), "End Intensity", "Set the intensity at the end of the event."),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Linear, new string[] { "intenStart" })
+                            }),
+                        }
+                    },
+
                     new GameAction("retroTv", "Retro TV")
                     {
                         resizable = true,
@@ -1163,7 +1211,7 @@ namespace HeavenStudio
                         parameters = new()
                         {
                             new("intenStart", new EntityTypes.Float(0f, 1f, 0f), "Start Intensity", "Set the intensity at the start of the event."),
-                            new("intenEnd", new EntityTypes.Float(0f, 1f, 0.05f), "End Intensity", "Set the intensity at the end of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 0.01f), "End Intensity", "Set the intensity at the end of the event."),
 
                             new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
                             {
@@ -1198,39 +1246,6 @@ namespace HeavenStudio
                         }
                     },
 
-
-                    new GameAction("colorGrading", "Color Grading")
-                    {
-                        resizable = true,
-                        parameters = new()
-                        {
-                            new("tempStart", new EntityTypes.Float(-100f, 100f), "Start Temperature", "Set the temperature at the start of the event."),
-                            new("tempEnd", new EntityTypes.Float(-100f, 100f), "End Temperature", "Set the temperature at the end of the event."),
-
-                            new("tintStart", new EntityTypes.Float(-100f, 100f), "Start Tint", "Set the tint at the start of the event."),
-                            new("tintEnd", new EntityTypes.Float(-100f, 100f), "End Tint", "Set the tint at the end of the event."),
-
-                            new("colorStart", Color.white, "Start Color Filter", "Set the color filter at the start of the event."),
-                            new("colorEnd", Color.white, "End Color Filter", "Set the color filter at the end of the event."),
-
-                            new("hueShiftStart", new EntityTypes.Float(-180f, 180f), "Start Hue Shift", "Set the hue shift at the start of the event."),
-                            new("hueShiftEnd", new EntityTypes.Float(-180f, 180f), "End Hue Shift", "Set the hue shift at the end of the event."),
-
-                            new("satStart", new EntityTypes.Float(-100f, 100f), "Start Saturation", "Set the saturation at the start of the event."),
-                            new("satEnd", new EntityTypes.Float(-100f, 100f), "End Saturation", "Set the saturation at the end of the event."),
-
-                            new("brightStart", new EntityTypes.Float(-100f, 100f), "Start Brightness", "Set the brightness at the start of the event."),
-                            new("brightEnd", new EntityTypes.Float(-100f, 100f), "End Brightness", "Set the brightness at the end of the event."),
-
-                            new("conStart", new EntityTypes.Float(-100f, 100f), "Start Contrast", "Set the contrast at the start of the event."),
-                            new("conEnd", new EntityTypes.Float(-100f, 100f), "End Contrast", "Set the contrast at the end of the event."),
-
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
-                            {
-                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "tempStart", "tintStart", "colorStart", "hueShiftStart", "satStart", "brightStart", "conStart" })
-                            }),
-                        }
-                    },
                     
                     new GameAction("screenTiling", "Tile Screen")
                     {
@@ -1265,20 +1280,7 @@ namespace HeavenStudio
                         }
                     },
 
-                    new GameAction("gaussBlur", "Gaussian Blur")
-                    {
-                        resizable = true,
-                        parameters = new()
-                        {
-                            new("intenStart", new EntityTypes.Float(0f, 5f, 0f), "Start Intensity", "Set the intensity at the start of the event."),
-                            new("intenEnd", new EntityTypes.Float(0f, 5f, 1f), "End Intensity", "Set the intensity at the end of the event."),
 
-                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
-                            {
-                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Linear, new string[] { "intenStart" })
-                            }),
-                        }
-                    },
                 }),
 
                 new Minigame("advanced", "Advanced", "", false, true, new List<GameAction>()
