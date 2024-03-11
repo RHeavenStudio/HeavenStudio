@@ -72,6 +72,16 @@ namespace HeavenStudio
             {
                 Debug.LogWarning("Game loader RvlBookLoader failed!");
             }
+            
+            game = NtrFreezeFrameLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader NtrCameraManLoader failed!");
+            }
 
             game = AgbClapLoader.AddGame(eventCaller);
             if (game != null)
