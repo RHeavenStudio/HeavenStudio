@@ -20,74 +20,49 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("re", "Re (レ)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.re, e["prepare"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.re); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.re); },
-                    parameters = new List<Param>() 
-                    {
-                        new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
-                    },
                     defaultLength = 8f,
                 },
                 new GameAction("comma", "Comma (、)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.comma, e["prepare"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.comma); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.comma); },
-                    parameters = new List<Param>() 
-                    {
-                        new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
-                    },
                     defaultLength = 8f,
                 },
                 new GameAction("chikara", "Chikara (力)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.chikara, e["prepare"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.chikara); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.chikara); },
-                    parameters = new List<Param>() 
-                    {
-                        new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
-                    },
                     defaultLength = 8f,
                 },
                 new GameAction("onore", "Onore (己)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.onore, e["prepare"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.onore); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.onore); },
-                    parameters = new List<Param>() 
-                    {
-                        new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
-                    },
                     defaultLength = 8f,
                 },
                 new GameAction("sun", "Sun (寸)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.sun, e["prepare"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.sun); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.sun); },
-                    parameters = new List<Param>() 
-                    {
-                        new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
-                    },
                     defaultLength = 8f,
                 },
                 new GameAction("kokoro", "Kokoro (心)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.kokoro, e["prepare"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.kokoro); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.kokoro); },
-                    parameters = new List<Param>() 
-                    {
-                        new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
-                    },
                     defaultLength = 8f,
                 },
                 new GameAction("face", "Face (つるニハ○○ムし)")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat,
-                        e["korean"] ? (int)PowerCalligraphy.CharacterType.face_kr : (int)PowerCalligraphy.CharacterType.face, e["prepare"]); },
+                        e["korean"] ? (int)PowerCalligraphy.CharacterType.face_kr : (int)PowerCalligraphy.CharacterType.face); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, 
                         e["korean"] ? (int)PowerCalligraphy.CharacterType.face_kr : (int)PowerCalligraphy.CharacterType.face); },
                     parameters = new List<Param>() 
                     {
                         new Param("korean", false, "Korean Version", "Change the character to Korean version. (つ３ニハ○○ムし)"),
-                        new Param("prepare", false, "Force Prepare", "Toggle if the cue should be prepared."),
                     },
                     defaultLength = 12f,
                 },
@@ -107,6 +82,11 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {PowerCalligraphy.instance.TheEnd();},
                     defaultLength = 0.5f,
                 },
+                new GameAction("prepare", "Force Prepare")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.ForcePrepare(e.beat);},
+                    defaultLength = 0.5f,
+                },
             },
             new List<string>() { "agb", "normal" }, "agbCalligraphy", "en", new List<string>() { }
             );
@@ -119,13 +99,19 @@ namespace HeavenStudio.Games
     using Scripts_PowerCalligraphy;
     public class PowerCalligraphy : Minigame
     {
+        [Header("References")]
         [SerializeField] List<GameObject> basePapers = new List<GameObject>();
+        [SerializeField] List<RuntimeAnimatorController> fudePosCntls = new List<RuntimeAnimatorController>();
         public Transform paperHolder;
-        public Writing endPaper;
-
-        public Vector3 scrollSpeed = new Vector3();
+        public Animator endPaper;
+        
+        public Animator fudePosAnim;
+        public Animator fudeAnim;
 
         public static Nullable<QueuedPaper> queuedPaper = null;
+
+        [Header("Variables")]
+        public Vector3 scrollSpeed = new Vector3();
 
         public enum CharacterType
         {
@@ -158,7 +144,11 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            if (!cond.isPlaying || cond.isPaused) return;
+            if (!cond.isPlaying || cond.isPaused)
+            {
+                if (!cond.isPaused) queuedPaper = null;
+                return;
+            }
 
             if (queuedPaper is not null)
             {
@@ -168,7 +158,7 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
-                if (nowPaper.onGoing && nowPaper.Stroke == 0)
+                if (nowPaper.onGoing && nowPaper.Stroke == 1)
                 {
                     nowPaper.ProcessInput("fast");
                     ScoreMiss();
@@ -176,7 +166,7 @@ namespace HeavenStudio.Games
             }
             if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress))
             {
-                if (nowPaper.onGoing && nowPaper.Stroke != 0)
+                if (nowPaper.onGoing && nowPaper.Stroke != 1)
                 {
                     nowPaper.ProcessInput("fast");
                     ScoreMiss();
@@ -187,22 +177,23 @@ namespace HeavenStudio.Games
         private void SpawnPaper(double beat, int type)
         {
             nowPaper = Instantiate(basePapers[type], paperHolder).GetComponent<Writing>();
-            nowPaper.targetBeat = beat;
+            nowPaper.startBeat = beat;
             nowPaper.scrollSpeed = scrollSpeed;
             nowPaper.gameObject.SetActive(true);
             nowPaper.Init();
+            fudePosAnim.runtimeAnimatorController = fudePosCntls[type];
         }
 
         public void Write(double beat, int type)
         {
-            if (!isPrepare) Prepare(beat, type);
+            Prepare(beat, type);
             nowPaper.Play();
             isPrepare=false;
         }
 
-        public void QueuePaper(double beat, int type, bool prepare)
+        public void QueuePaper(double beat, int type)
         {
-            if (GameManager.instance.currentGame != "powerCalligraphy" || prepare)
+            if (GameManager.instance.currentGame != "powerCalligraphy")
             {
                 queuedPaper = new QueuedPaper()
                 {
@@ -219,8 +210,15 @@ namespace HeavenStudio.Games
         }
         public void Prepare(double beat, int type)
         {
-            SpawnPaper(beat, type);
-            isPrepare = true;
+            if (!isPrepare)
+            {
+                SpawnPaper(beat, type);
+                isPrepare = true;
+            }
+        }
+        public void ForcePrepare(double beat)
+        {
+
         }
 
         public void ChangeScrollSpeed(float x, float y)
@@ -231,7 +229,9 @@ namespace HeavenStudio.Games
 
         public void TheEnd()
         {
-            endPaper.TheEnd();
+            fudePosAnim.runtimeAnimatorController = fudePosCntls[(int)CharacterType.NONE];
+            fudePosAnim.Play("fudePos-end");
+            endPaper.Play("paper-end");
         }
     }
 }
