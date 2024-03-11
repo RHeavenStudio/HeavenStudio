@@ -47,6 +47,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
         }
 
         public double startBeat;
+        public double nextBeat;
         [SerializeField] PatternItem[] AnimPattern;
         
         private Animator paperAnim;
@@ -68,6 +69,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
             game = PowerCalligraphy.instance;
             paperAnim = GetComponent<Animator>();
             paperSort = GetComponent<SortingGroup>();
+            nextBeat = AnimPattern[^1].beat;
         }
 
         public void Play()
@@ -145,7 +147,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         break;
                 }
             }
-            actions.Add(new BeatAction.Action(startBeat + AnimPattern[^1].beat, delegate { Finish();}));
+            actions.Add(new BeatAction.Action(startBeat + nextBeat, delegate { Finish();}));
 
             if (sounds.Count > 0) MultiSound.Play(sounds.ToArray());
             if (actions.Count > 0) BeatAction.New(game, actions);

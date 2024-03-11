@@ -82,11 +82,6 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {PowerCalligraphy.instance.TheEnd();},
                     defaultLength = 0.5f,
                 },
-                new GameAction("prepare", "Force Prepare")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.ForcePrepare(e.beat);},
-                    defaultLength = 0.5f,
-                },
             },
             new List<string>() { "agb", "normal" }, "agbCalligraphy", "en", new List<string>() { }
             );
@@ -108,7 +103,7 @@ namespace HeavenStudio.Games
         public Animator fudePosAnim;
         public Animator fudeAnim;
 
-        public static Nullable<QueuedPaper> queuedPaper = null;
+        public static int queuedType;
 
         [Header("Variables")]
         public Vector3 scrollSpeed = new Vector3();
@@ -125,11 +120,6 @@ namespace HeavenStudio.Games
             face_kr,
             NONE,
         }
-        public struct QueuedPaper
-        {
-            public double beat;
-            public int type;
-        }
 
         double gameStartBeat;
         public static PowerCalligraphy instance = null;
@@ -142,6 +132,7 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             gameStartBeat = beat;
+            NextPrepare(beat);
         }
         public override void OnPlay(double beat)
         {
@@ -155,14 +146,14 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (!cond.isPlaying || cond.isPaused)
             {
-                if (!cond.isPaused) queuedPaper = null;
+                if (!cond.isPaused) queuedType = (int)CharacterType.NONE;
                 return;
             }
 
-            if (queuedPaper is not null)
+            if (queuedType != (int)CharacterType.NONE)
             {
-                Prepare(queuedPaper.Value.type);
-                queuedPaper = null;
+                Prepare(queuedType);
+                queuedType = (int)CharacterType.NONE;
             }
 
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
@@ -198,17 +189,17 @@ namespace HeavenStudio.Games
             nowPaper.startBeat = beat;
             nowPaper.Play();
             isPrepare=false;
+            double nextBeat = beat + nowPaper.nextBeat;
+            BeatAction.New(instance, new List<BeatAction.Action>(){
+                new BeatAction.Action(nextBeat, delegate{ NextPrepare(nextBeat);})
+            });
         }
 
         public void QueuePaper(double beat, int type)
         {
             if (GameManager.instance.currentGame != "powerCalligraphy")
             {
-                queuedPaper = new QueuedPaper()
-                {
-                    beat = 0,
-                    type = type,
-                };
+                queuedType = type;
             }
             else if(Conductor.instance.songPositionInBeats < beat)
             {
@@ -225,7 +216,7 @@ namespace HeavenStudio.Games
                 isPrepare = true;
             }
         }
-        public void ForcePrepare(double beat)
+        public void NextPrepare(double beat) // Prepare next paper
         {
             double endBeat = double.MaxValue;
             var entities = gameManager.Beatmap.Entities;
