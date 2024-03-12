@@ -574,8 +574,8 @@ TextureImporter:
         y: 3923
         width: 150
         height: 152
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.49931803, y: 0.5036926}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -595,8 +595,8 @@ TextureImporter:
         y: 3926
         width: 148
         height: 148
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.4994672, y: 0.49333727}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -616,8 +616,8 @@ TextureImporter:
         y: 3927
         width: 153
         height: 148
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.5002601, y: 0.49770212}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -630,7 +630,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_3
+      name: shoot_piece1
       rect:
         serializedVersion: 2
         x: 2885
@@ -638,7 +638,7 @@ TextureImporter:
         width: 110
         height: 119
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -651,7 +651,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_4
+      name: shoot_piece2
       rect:
         serializedVersion: 2
         x: 3048
@@ -659,7 +659,7 @@ TextureImporter:
         width: 144
         height: 148
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -672,7 +672,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_5
+      name: shoot_piece3
       rect:
         serializedVersion: 2
         x: 3071
@@ -680,7 +680,7 @@ TextureImporter:
         width: 162
         height: 179
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -693,7 +693,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_6
+      name: shoot_piece4
       rect:
         serializedVersion: 2
         x: 2869
@@ -701,7 +701,7 @@ TextureImporter:
         width: 154
         height: 246
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -714,7 +714,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_7
+      name: shoot_piece5
       rect:
         serializedVersion: 2
         x: 2588
@@ -722,7 +722,7 @@ TextureImporter:
         width: 228
         height: 252
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -735,7 +735,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_8
+      name: shoot_piece6
       rect:
         serializedVersion: 2
         x: 3076
@@ -743,7 +743,7 @@ TextureImporter:
         width: 147
         height: 118
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -756,7 +756,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_9
+      name: shoot_piece8
       rect:
         serializedVersion: 2
         x: 3006
@@ -764,7 +764,7 @@ TextureImporter:
         width: 224
         height: 230
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -777,7 +777,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_10
+      name: shoot_piece7
       rect:
         serializedVersion: 2
         x: 2692
@@ -785,7 +785,7 @@ TextureImporter:
         width: 252
         height: 233
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -798,15 +798,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_11
+      name: shoot_piece10
       rect:
         serializedVersion: 2
         x: 2733
-        y: 2740
+        y: 2742
         width: 231
         height: 216
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -819,7 +819,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_12
+      name: shoot_piece11
       rect:
         serializedVersion: 2
         x: 3000
@@ -827,7 +827,7 @@ TextureImporter:
         width: 233
         height: 271
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -840,7 +840,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_main_13
+      name: shoot_piece12
       rect:
         serializedVersion: 2
         x: 2775
@@ -848,7 +848,7 @@ TextureImporter:
         width: 143
         height: 149
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -856,6 +856,69 @@ TextureImporter:
       bones: []
       spriteID: 05dbb60c74df8424ca4375d56f2be41f
       internalID: -318107336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_ring
+      rect:
+        serializedVersion: 2
+        x: 2653
+        y: 1647
+        width: 682
+        height: 671
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28f07627132f1da46b5f7424c5a2c868
+      internalID: -742648551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_sparkle
+      rect:
+        serializedVersion: 2
+        x: 3350
+        y: 1652
+        width: 704
+        height: 685
+      alignment: 9
+      pivot: {x: 0.5005344, y: 0.5237994}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6bfd2cb5ee1a97e4eb6ead6bdd39e055
+      internalID: -1233367925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_circle
+      rect:
+        serializedVersion: 2
+        x: 3164
+        y: 618
+        width: 229
+        height: 237
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92f4361bed06fca44a3c6f892280fa7e
+      internalID: 1487568205
       vertices: []
       indices: 
       edges: []
@@ -881,6 +944,7 @@ TextureImporter:
       shoot_beam_7: 1192824803
       shoot_beam_8: -1120405300
       shoot_beam_9: 515187223
+      shoot_circle: 1487568205
       shoot_earth: 769114757
       shoot_effect_0: 433249484
       shoot_effect_1: 81652156
@@ -889,26 +953,29 @@ TextureImporter:
       shoot_enemy_2: -2103752361
       shoot_main_0: -1214197752
       shoot_main_1: 1060486047
-      shoot_main_10: 1441557008
-      shoot_main_11: 1712093670
-      shoot_main_12: 1000419382
-      shoot_main_13: -318107336
+      shoot_main_13: -1428911822
       shoot_main_14: 515187223
       shoot_main_15: 1950828263
       shoot_main_2: -137449403
-      shoot_main_3: 189055195
-      shoot_main_4: 869644854
-      shoot_main_5: 2117070926
-      shoot_main_6: 2029136914
-      shoot_main_7: 905184716
-      shoot_main_8: 1683657347
-      shoot_main_9: 276469647
       shoot_muzzle_0: -1074686852
       shoot_muzzle_1: -374466202
+      shoot_piece1: 189055195
+      shoot_piece10: 1712093670
+      shoot_piece11: 1000419382
+      shoot_piece12: -318107336
+      shoot_piece2: 869644854
+      shoot_piece3: 2117070926
+      shoot_piece4: 2029136914
+      shoot_piece5: 905184716
+      shoot_piece6: 1683657347
+      shoot_piece7: 1441557008
+      shoot_piece8: 276469647
+      shoot_ring: -742648551
       shoot_ship_0: 1620623210
       shoot_ship_1: -1038559483
       shoot_ship_face_0: -1038559483
       shoot_ship_face_1: -335952756
+      shoot_sparkle: -1233367925
       shoot_spawn: -728753420
   spritePackingTag: 
   pSDRemoveMatte: 0
