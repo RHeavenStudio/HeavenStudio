@@ -83,6 +83,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader PcoCanneryLoader failed!");
             }
 
+            game = RvlCatchOfTheDayLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader RvlCatchOfTheDayLoader failed!");
+            }
+
             game = CtrCatchLoader.AddGame(eventCaller);
             if (game != null)
             {
