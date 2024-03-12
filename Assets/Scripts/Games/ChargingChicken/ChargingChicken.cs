@@ -22,13 +22,14 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
-                            instance.ChargeUp(e.beat, e.length, 4 /*e["forceHold"]*/, e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"]);
+                            instance.ChargeUp(e.beat, e.length, 4 /*e["forceHold"]*/, e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"], e["spaceHelmet"]);
                         }
                         ChargingChicken.CountIn(e.beat, e["cowbell"]);
                     },
                     parameters = new List<Param>()
                     {
                         new Param("cowbell", true, "Cue Sound", "Choose whether to play the cue sound for this charge."),
+                        new Param("spaceHelmet", false, "Space Helmet", "Choose whether the chicken wears its trusty space helmet while driving."),
                         new Param("drumbeat", ChargingChicken.DrumLoopList.Straight, "Drum Beat", "Choose which drum beat to play while filling."),
                         new Param("bubble", false, "Countdown Bubble", "Choose whether the counting bubble will spawn for this input."),
                         //ending text
@@ -87,14 +88,17 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {
                         var e = eventCaller.currentEntity;
                         if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
-                            instance.MusicFade(e.beat, e.length, e["fadeIn"]);
+                            instance.MusicFade(e.beat, e.length, e["fadeIn"], e["instant"], e["drums"], e["reset"]);
                         }
                     },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
+                        new Param("instant", false, "Instant", "Whether the fade is instant."),
                         new Param("fadeIn", false, "Fade In", "Fade the music back in."),
+                        new Param("drums", true, "Affect Drums", "Whether to affect the volume of the charging drums."),
+                        new Param("reset", true, "Reset After Blastoff", "Whether to reset the volume of the music after a charge input is over."),
                     }
                 },
                 new GameAction("changeCarColor", "Car Appearance")
@@ -164,10 +168,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorFrom", ChargingChicken.defaultCloudColor, "Primary Color Start", "Set the midground's primary color at the start of the event. (Used in: Clouds, Stars, Doodles)"),
-                        new Param("colorTo", ChargingChicken.defaultCloudColor, "Primary Color End", "Set the midground's primary color at the start of the event. (Used in: Clouds, Stars, Doodles)"),
-                        new Param("colorFrom2", ChargingChicken.defaultCloudColorBottom, "Secondary Color Start", "Set the midground's secondary color at the start of the event. (Used in: Clouds)"),
-                        new Param("colorTo2", ChargingChicken.defaultCloudColorBottom, "Secondary Color End", "Set the midground's secondary color at the start of the event. (Used in: Clouds)"),
+                        new Param("colorFrom", ChargingChicken.defaultCloudColor, "Primary Color Start", "Set the midground's primary color at the start of the event. (Used in: Clouds, Doodles)"),
+                        new Param("colorTo", ChargingChicken.defaultCloudColor, "Primary Color End", "Set the midground's primary color at the start of the event. (Used in: Clouds, Doodles)"),
+                        new Param("colorFrom2", ChargingChicken.defaultCloudColorBottom, "Secondary Color Start", "Set the midground's secondary color at the start of the event. (Used in: Clouds, Doodles)"),
+                        new Param("colorTo2", ChargingChicken.defaultCloudColorBottom, "Secondary Color End", "Set the midground's secondary color at the start of the event. (Used in: Clouds, Doodles)"),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new() {
                             new Param.CollapseParam((x, _) => (int)x != (int)Util.EasingFunction.Ease.Instant, new[] { "colorFrom", "colorFrom2" }),
                         }),
@@ -274,10 +278,13 @@ namespace HeavenStudio.Games
         [SerializeField] TMP_Text endingText;
         [SerializeField] TMP_Text bubbleText;
         [SerializeField] GameObject countBubble;
+        [SerializeField] GameObject Helmet;
+        [SerializeField] GameObject FallingHelmet;
         [SerializeField] Island IslandBase;
         [SerializeField] Material chickenColors;
         [SerializeField] Material chickenColorsCar;
         [SerializeField] Material chickenColorsCloud;
+        [SerializeField] Material chickenColorsDoodles;
         [SerializeField] Material chickenColorsWater;
         [SerializeField] SpriteRenderer headlightColor;
 
@@ -385,9 +392,12 @@ namespace HeavenStudio.Games
         }
 
         float drumVolume = 1;
+        float drumTempVolume = 1;
         double drumFadeStart = 0;
         double drumFadeLength = 0;
         bool drumFadeIn = true;
+        bool drumReset = true;
+        bool drumLoud = false;
         Sound whirring;
         bool isWhirringPlaying = false;
 
@@ -763,14 +773,17 @@ namespace HeavenStudio.Games
             }
 
             //drum volume
-            double valueFade = Conductor.instance.GetPositionFromBeat(drumFadeStart, drumFadeLength);
-            drumVolume = Mathf.Lerp(drumFadeIn ? 0 : 1, drumFadeIn ? 1 : 0, (float)valueFade);
-            Conductor.instance.SetMinigameVolume(drumFadeIn ? (float)valueFade : 1 - (float)valueFade);
+            if (Conductor.instance.songPositionInBeatsAsDouble <= drumFadeStart + drumFadeLength + 0.5)
+            {
+                double valueFade = Conductor.instance.GetPositionFromBeat(drumFadeStart, drumFadeLength);
+                drumVolume = Mathf.Lerp(drumFadeIn ? 0 : 1, drumFadeIn ? 1 : 0, (float)valueFade);
+            }
 
             //various sound loops and shizz
             if (isInputting)
             {
                 chickenColorsCar.SetFloat("_Progress", Conductor.instance.GetPositionFromBeat(nextInputReady - (yardsTextLength * 2), yardsTextLength));
+                drumTempVolume = 0;
 
                 if (!isWhirringPlaying) { whirring = SoundByte.PlayOneShotGame("chargingChicken/chargeLoop", volume: 0.5f, looping: true); isWhirringPlaying = true; }
             }
@@ -779,10 +792,14 @@ namespace HeavenStudio.Games
                 chickenColorsCar.SetFloat("_Progress", 0);
 
                 Conductor.instance.FadeMinigameVolume(0, 0, 1);
-                drumVolume = 1;
+                drumTempVolume = 1;
 
                 if (isWhirringPlaying) { whirring.Stop(); isWhirringPlaying = false; }
             }
+
+            //make sure music volume resetting can be remembered between blastoffs
+            float drumActualVolume = (drumVolume > drumTempVolume) ? drumVolume : drumTempVolume;
+            Conductor.instance.SetMinigameVolume(drumActualVolume);
 
             //chicken fall off the right of the platform
             if (checkFallingDistance && nextIsland.transform.localPosition.x < -2f)
@@ -826,7 +843,7 @@ namespace HeavenStudio.Games
                 {
                     var e = entity;
                     double lateness = entity.beat - beat;
-                    ChargeUp(e.beat, e.length, lateness /*e["forceHold"]*/, e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"]);
+                    ChargeUp(e.beat, e.length, lateness /*e["forceHold"]*/, e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"], e["spaceHelmet"]);
                 }
             }
         }
@@ -885,7 +902,7 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
         }
 
-        public void ChargeUp(double beat, double actualLength, double lateness, int whichDrum, bool bubble = false, int endText = 0, int textLength = 4, string successText = "", string failText = "", int destination = 1, string customDestination = "You arrived in The Backrooms!")
+        public void ChargeUp(double beat, double actualLength, double lateness, int whichDrum, bool bubble = false, int endText = 0, int textLength = 4, string successText = "", string failText = "", int destination = 1, string customDestination = "You arrived in The Backrooms!", bool helmet = false)
         {
             //convert length to an integer, which is at least 4
             double length = Math.Ceiling(actualLength);
@@ -974,7 +991,7 @@ namespace HeavenStudio.Games
                 SpawnStones(journeyBeat, yardsTextLength - 1, lateness < 2);
             }));
 
-            //chicken ducks into the car window, and the bubble text is set up, and the platform noise plays, and next island spawns
+            //chicken ducks into the car window, and the bubble text is set up, and the platform noise plays, music volume is reset if needed, and next island spawns
             actions.Add(new(beat - 1, delegate {
                 if (lateness >= 1) ChickenAnim.DoScaledAnimationAsync("Prepare", 0.5f);
                 if (lateness > 0 && lateness < 1) ChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
@@ -982,6 +999,7 @@ namespace HeavenStudio.Games
                 if (lateness >= 2) SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_SET");
                 if (lateness >= 1) SpawnJourney(journeyBeat, yardsTextLength - 1);
                 canPressWhiff = true;
+                if (drumReset) drumVolume = 1;
             }));
 
             //spawns the countdown bubble, allows stones to fall, resets the success anim killer
@@ -993,6 +1011,10 @@ namespace HeavenStudio.Games
                     stone.isBeingSet = false;
                 }
                 successAnimationKillOnBeat = double.MaxValue;
+                Helmet.SetActive(helmet);
+                FallingHelmet.SetActive(helmet);
+                currentIsland.Helmet.SetActive(helmet);
+                nextIsland.Helmet.SetActive(helmet);
             }));
 
             length += 1;
@@ -1144,7 +1166,8 @@ namespace HeavenStudio.Games
 
         public void PlayDrum(string whichDrum, float drumVolumeThis, double lateness)
         {
-            if (isInputting && (lateness * 48 == Math.Floor(Conductor.instance.songPositionInBeatsAsDouble * 48))) SoundByte.PlayOneShotGame(whichDrum, volume: drumVolumeThis * drumVolume);
+            float drumActualVolume = (drumVolume > drumTempVolume) ? drumVolumeThis * drumVolume : drumVolumeThis * drumTempVolume;
+            if (isInputting && (lateness * 4 == Math.Floor(Conductor.instance.songPositionInBeatsAsDouble * 4))) SoundByte.PlayOneShotGame(whichDrum, volume: drumLoud ? drumVolumeThis : drumActualVolume);
         }
 
         public void PumpBeat()
@@ -1599,11 +1622,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void MusicFade(double beat, double length, bool fadeIn)
+        public void MusicFade(double beat, double length, bool fadeIn, bool instant, bool drums, bool reset)
         {
             drumFadeStart = beat;
-            drumFadeLength = length;
+            drumFadeLength = instant ? 0 : length;
             drumFadeIn = fadeIn;
+            drumReset = reset;
+            drumLoud = !drums;
         }
 
         public void ParallaxObjects(double beat, double length, bool instant, bool stars, bool clouds, bool earth, bool mars, bool doodles, bool birds)
@@ -1875,11 +1900,13 @@ namespace HeavenStudio.Games
             newColorG = func(cloudColorFrom.g, cloudColorTo.g, normalizedBeatBG);
             newColorB = func(cloudColorFrom.b, cloudColorTo.b, normalizedBeatBG);
             chickenColorsCloud.SetColor("_Color", new Color(newColorR, newColorG, newColorB));
+            chickenColorsDoodles.SetColor("_Color1", new Color(newColorR, newColorG, newColorB));
 
             newColorR = func(cloudColorFrom2.r, cloudColorTo2.r, normalizedBeatBG);
             newColorG = func(cloudColorFrom2.g, cloudColorTo2.g, normalizedBeatBG);
             newColorB = func(cloudColorFrom2.b, cloudColorTo2.b, normalizedBeatBG);
             chickenColorsCloud.SetColor("_OutlineColor", new Color(newColorR, newColorG, newColorB));
+            chickenColorsDoodles.SetColor("_Color", new Color(newColorR, newColorG, newColorB));
         }
 
         #endregion

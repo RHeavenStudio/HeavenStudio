@@ -24,6 +24,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [SerializeField] public GameObject Platform1;
         [SerializeField] public GameObject Platform2;
         [SerializeField] public GameObject Platform3;
+        [SerializeField] public GameObject Helmet;
         [SerializeField] public ParticleSystem IslandCollapse;
         [SerializeField] public ParticleSystem IslandCollapseNg;
         [SerializeField] public ParticleSystem StoneSplashEffect;

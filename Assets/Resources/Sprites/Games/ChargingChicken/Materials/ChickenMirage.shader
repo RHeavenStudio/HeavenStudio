@@ -3,7 +3,8 @@ Shader "Sprites/ChickenMirage"
 	Properties
 	{
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-		_Color ("Tint", Color) = (1,1,1,1)
+		_Color1 ("Top Color", Color) = (1,1,1,1)
+		_Color ("Bottom Color", Color) = (1,1,1,1)
 		_Speed1 ("Wobble Speed", Float) = 1
 		_Alpha ("Alpha", Float) = 1
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
@@ -44,9 +45,11 @@ Shader "Sprites/ChickenMirage"
 			{
 				float4 vertex   : SV_POSITION;
 				fixed4 color    : COLOR;
-				float2 texcoord  : TEXCOORD0;
+				float2 texcoord : TEXCOORD0;
+				float2 screenPos: TEXCOORD2;
 			};
 			
+			fixed4 _Color1;
 			fixed4 _Color;
 
 			v2f vert(appdata_t IN)
@@ -54,7 +57,8 @@ Shader "Sprites/ChickenMirage"
 				v2f OUT;
 				OUT.vertex = UnityObjectToClipPos(IN.vertex);
 				OUT.texcoord = IN.texcoord;
-				OUT.color = IN.color * _Color;
+				OUT.color = IN.color;
+				OUT.screenPos = ComputeScreenPos(IN.vertex);
 				#ifdef PIXELSNAP_ON
 				OUT.vertex = UnityPixelSnap (OUT.vertex);
 				#endif
@@ -86,8 +90,12 @@ Shader "Sprites/ChickenMirage"
 				fixed2 wobble = (IN.texcoord);
 				wobble.x = ((wobble.x + (sin((_Time.y * _Speed1 * 3) + wobble.y * 100) / 1000) + 1)) % 1;
 				fixed4 input2 = SampleSpriteTexture (wobble);
+				float screenPosAdjusted = clamp((IN.screenPos.y / 30) + 0.5, 0, 1);
+				fixed4 ColorAdjusted = ((_Color) * screenPosAdjusted) + ((_Color1) * (1 - screenPosAdjusted));
+				input1 *= ColorAdjusted;
+				input2 *= ColorAdjusted;
 				fixed4 c = (input1 + input2) / 1.5;
-				c *= _Color;
+				c *= ColorAdjusted;
 				c.a *= _Alpha;
 				return c;
 			}
