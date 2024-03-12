@@ -90,7 +90,7 @@ namespace HeavenStudio.Games.Loaders
                 // distractions
                 new GameAction("spawnPerson", "Spawn Walker")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FreezeFrame.SummonWalker(e.beat, e.length, e["personType"], e["direction"], e["layer"]); },
+                    function = delegate { var e = eventCaller.currentEntity; FreezeFrame.SummonWalker(e); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -297,6 +297,8 @@ namespace HeavenStudio.Games
 
         public List<SpawnCarArgs> QueuedCars { get; set; } = new();
 
+        public static Dictionary<RiqEntity, PersonDirection> WalkerDirections = new();
+
         //protected static int? SuperSeed { get; set; }
 
         // UNITY BUILTIN METHODS
@@ -446,6 +448,7 @@ namespace HeavenStudio.Games
             // calculation
             CalculateAutoShowPhotos();
             CalculateCarSpawns();
+            PreRandomizeWalkers();
             
             // setting local variables
             RiqEntity e = GetLastEntityOfType(beat, "bop");
@@ -473,7 +476,7 @@ namespace HeavenStudio.Games
             {
                 foreach (RiqEntity entity in eList)
                 {
-                    SummonWalker(entity.beat, entity.length, entity["personType"], entity["direction"], entity["layer"]);
+                    SummonWalker(entity);
                 }
             }
 
@@ -716,9 +719,15 @@ namespace HeavenStudio.Games
         {
             PhotoList.Clear();
         }
-        public static void SummonWalker(double beat, double length, int walkerType, int direction, int layer = 0)
+        public static void SummonWalker(RiqEntity e/*double beat, double length, int walkerType, int direction, int layer = 0*/)
         {
             if (Instance == null) return;
+
+            double beat = e.beat;
+            double length = e.length;
+            PersonType walkerType = (PersonType)e["personType"];
+            PersonDirection direction = (PersonDirection)e["direction"];
+            int layer = e["layer"];
 
             GameObject walker = Instantiate(Instance.WalkerPrefab, Instance.WalkerSpawn.transform);
             Animator animator = walker.GetComponent<Animator>();
@@ -726,25 +735,32 @@ namespace HeavenStudio.Games
 
             switch (walkerType)
             {
-                case (int)PersonType.Girlfriend:
+                case PersonType.Girlfriend:
                     animator.DoScaledAnimationAsync("Girlfriend", animLayer: 2);
                     break;
-                case (int)PersonType.Dude2:
+                case PersonType.Dude2:
                     animator.DoScaledAnimationAsync("Dude2", animLayer: 2);
                     break;
-                case (int)PersonType.Dude1:
+                case PersonType.Dude1:
                 default:
                     animator.DoScaledAnimationAsync("Dude1", animLayer: 2);
                     break;
             }
 
-            if (direction == (int)PersonDirection.Random)
+            /*if (direction == (int)PersonDirection.Random)
             {
                 int seed = BitConverter.ToInt32(BitConverter.GetBytes((float)beat));
                 direction = new System.Random(seed).Next(1, 3);
+            }*/
+            if (direction == PersonDirection.Random)
+            {
+                if (WalkerDirections.ContainsKey(e))
+                    direction = WalkerDirections[e];
+                else
+                    direction = PersonDirection.Right;
             }
             
-            if (direction == (int)PersonDirection.Left)
+            if (direction == PersonDirection.Left)
                 Instance.Walkers.Add(new WalkerArgs(animator, beat, length, "EnterLeft"));
             else
                 Instance.Walkers.Add(new WalkerArgs(animator, beat, length, "EnterRight"));
@@ -1140,6 +1156,36 @@ namespace HeavenStudio.Games
                     QueuedCars.Add(new SpawnCarArgs(modifiedBeat - 4, false, false));
                 }
             }
+        }
+        public void PreRandomizeWalkers()
+        {
+            IEnumerable<RiqEntity> walkers = EventCaller.GetAllInGameManagerList("freezeFrame", new string[] { "spawnPerson" }).Where(e => (PersonDirection)e["direction"] == PersonDirection.Random);
+            foreach (RiqEntity e in walkers)
+            {
+                if (!WalkerDirections.ContainsKey(e))
+                {
+                    float rand = UnityEngine.Random.Range(0.0f, 1.0f);
+                    if (rand >= 0.5)
+                    {
+                        WalkerDirections.Add(e, PersonDirection.Left);
+                    }
+                    else
+                    {
+                        WalkerDirections.Add(e, PersonDirection.Right);
+                    }
+                }
+            }
+            List<RiqEntity> keysToRemove = new();
+            foreach (RiqEntity key in WalkerDirections.Keys)
+            {
+                if (!walkers.Contains(key))
+                    keysToRemove.Add(key);
+            }
+            foreach (RiqEntity key in keysToRemove)
+            {
+                WalkerDirections.Remove(key);
+            }
+            Debug.Log($"Walker Count: {WalkerDirections.Count}");
         }
         public void CarbageCollection()
         {
