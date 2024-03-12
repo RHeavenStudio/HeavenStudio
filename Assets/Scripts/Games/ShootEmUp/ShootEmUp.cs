@@ -12,24 +12,6 @@ using Jukebox;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    /// Minigame loaders handle the setup of your minigame.
-    /// Here, you designate the game prefab, define entities, and mark what AssetBundle to load
-
-    /// Names of minigame loaders follow a specific naming convention of `PlatformcodeNameLoader`, where:
-    /// `Platformcode` is a three-leter platform code with the minigame's origin
-    /// `Name` is a short internal name
-    /// `Loader` is the string "Loader"
-
-    /// Platform codes are as follows:
-    /// Agb: Gameboy Advance    ("Advance Gameboy")
-    /// Ntr: Nintendo DS        ("Nitro")
-    /// Rvl: Nintendo Wii       ("Revolution")
-    /// Ctr: Nintendo 3DS       ("Centrair")
-    /// Mob: Mobile
-    /// Pco: PC / Other
-
-    /// Fill in the loader class label, "*prefab name*", and "*Display Name*" with the relevant information
-    /// For help, feel free to reach out to us on our discord, in the #development channel.
     public static class NtrShootEmUpLoader
     {
         public static Minigame AddGame(EventCaller eventCaller)
@@ -38,18 +20,21 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start interval", "Start Interval")
                 {
-                    preFunction = delegate { RhythmTweezers.PreInterval(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    preFunction = delegate { var e = eventCaller.currentEntity; ShootEmUp.PreInterval(e.beat, e.length, e["placement"]); }, 
                     defaultLength = 4f, 
                     resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("placement", ShootEmUp.PlacementType.PatternA, "Placement Pattern")
+                    },
                 },
                 new GameAction("spawn enemy", "Spawn Enemy")
                 {
                     defaultLength = 0.5f,
-                    function = delegate {var e = eventCaller.currentEntity; ShootEmUp.instance.SpawnEnemy(e.beat, e["x"], e["y"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("x", new EntityTypes.Integer(-3, 3, 0), "X"),
-                        new Param("y", new EntityTypes.Integer(-3, 3, 0), "Y"),
+                        new Param("x", new EntityTypes.Float(-4, 4, 0), "X"),
+                        new Param("y", new EntityTypes.Float(-3, 3, 0), "Y"),
                     },
                 },
             },
@@ -66,13 +51,31 @@ namespace HeavenStudio.Games
     {
         public GameObject baseEnemy;
         public Transform enemyHolder;
+        public Animator shipAnim;
 
-        private struct QueuedInterval
+        private List<Enemy> spawnedEnemies = new List<Enemy>();
+
+        public enum PlacementType
         {
-            public double beat;
-            public float interval;
+            PatternA = 0,
+            PatternB,
+            PatternC,
+            Manual,
         }
-        private static List<QueuedInterval> queuedIntervals = new List<QueuedInterval>();
+
+        [System.Serializable]
+        public struct PatternItem
+        {
+            public PosPatternItem[] posPattern;
+
+            [System.Serializable]
+            public struct PosPatternItem
+            {
+                public Vector2[] posData;
+            }
+        }
+
+        [SerializeField] PatternItem[] PlacementPattern;
 
         protected static bool IA_PadAnyDown(out double dt)
         {
@@ -83,10 +86,11 @@ namespace HeavenStudio.Games
                     || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
         }
         public static PlayerInput.InputAction InputAction_Press =
-            new("AgbShootPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            new("NtrShootPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
             IA_PadAnyDown, IA_TouchBasicPress, IA_BatonBasicPress);
 
         public static ShootEmUp instance;
+        private static CallAndResponseHandler crHandlerInstance;
 
         // Start is called before the first frame update
         void Awake()
@@ -94,12 +98,49 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
-        public void SpawnEnemy(double beat, int x, int y)
+        public override void OnGameSwitch(double beat)
         {
-            SoundByte.PlayOneShotGame("shootEmUp/spawn", beat);
+            if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
+            {
+                if (queuedIntervals.Count > 0)
+                {
+                    foreach (var interval in queuedIntervals)
+                    {
+                        SetIntervalStart(interval.beat, beat, interval.interval, interval.placement);
+                    }
+                    queuedIntervals.Clear();
+                }
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            crHandlerInstance = null;
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            queuedIntervals.Clear();
+        }
+
+        private void OnDestroy()
+        {
+            if (!Conductor.instance.isPlaying)
+            {
+                crHandlerInstance = null;
+            }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+        }
+
+        public void SpawnEnemy(double beat, float x, float y, bool active = true)
+        {
             var newEnemy = Instantiate(baseEnemy, enemyHolder).GetComponent<Enemy>();
-            newEnemy.targetBeat = beat;
-            newEnemy.gameObject.transform.localPosition = new Vector3(5.05f*x/3, 2.5f*y/3 + 1.25f, 0);
+            spawnedEnemies.Add(newEnemy);
+            newEnemy.createBeat = beat;
+            newEnemy.gameObject.transform.localPosition = new Vector3(5.05f/3*x, 2.5f/3*y + 1.25f, 0);
             
             Vector3 angle = new Vector3(0, 0, 0);
             if (x > 0 && y > 0) {
@@ -113,21 +154,77 @@ namespace HeavenStudio.Games
             }
             newEnemy.SpawnEffect.eulerAngles = angle;
 
-            BeatAction.New(instance, new List<BeatAction.Action>()
+            if (active)
             {
-                new BeatAction.Action(beat, delegate
+                SoundByte.PlayOneShotGame("shootEmUp/spawn", beat);
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    newEnemy.gameObject.SetActive(true);
-                    newEnemy.GetComponent<Animator>().Play("enemySpawn", 0, 0);
-                })
-            });
+                    new BeatAction.Action(beat, delegate
+                    {
+                        newEnemy.gameObject.SetActive(true);
+                        newEnemy.GetComponent<Animator>().Play("enemySpawn", 0, 0);
+                    })
+                });
+            }
+            else
+            {
+                newEnemy.gameObject.SetActive(true);
+            }
         }
 
-        public static void PreInterval(double beat, float interval = 4f, bool autoPassTurn = true)
+        private struct QueuedInterval
+        {
+            public double beat;
+            public float interval;
+            public int placement;
+        }
+        private static List<QueuedInterval> queuedIntervals = new List<QueuedInterval>();
+
+        private void SetIntervalStart(double beat, double gameSwitchBeat, float interval = 4f, int placement = -1)
+        {
+            CallAndResponseHandler newHandler = new();
+            crHandlerInstance = newHandler;
+            crHandlerInstance.StartInterval(beat, interval);
+            var relevantInputs = GetAllInputsBetweenBeat(beat, beat + interval);
+            relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
+            
+            if (placement >= 0 && placement < (int)PlacementType.Manual)
+            {
+                PatternItem plcPattern = PlacementPattern[Math.Min(placement, PlacementPattern.Length - 1)];
+
+                int relevantInputsCount = relevantInputs.Count;
+                int posPatternLength = plcPattern.posPattern.Length;
+                for (int i = 0; i < relevantInputsCount; i++)
+                {
+                    var evt = relevantInputs[i];
+                    crHandlerInstance.AddEvent(evt.beat);
+                    
+                    int relevantIndex = Math.Min(relevantInputsCount - 1, posPatternLength - 1);
+                    var posData = plcPattern.posPattern[relevantIndex].posData;
+                    int posDataIndex = Math.Min(posData.Length - 1, i);
+                    var pos = posData[posDataIndex];
+
+                    SpawnEnemy(evt.beat, pos.x, pos.y, evt.beat >= gameSwitchBeat);
+                }
+            }
+            else
+            {
+                foreach (var evt in relevantInputs)
+                {
+                    crHandlerInstance.AddEvent(evt.beat);
+                    SpawnEnemy(evt.beat, evt["x"], evt["y"], evt.beat >= gameSwitchBeat);
+                }
+            }
+
+
+            PassTurn(beat + interval, interval, newHandler);
+        }
+
+        public static void PreInterval(double beat, float interval = 4f, int placement = -1)
         {
             if (GameManager.instance.currentGame == "shootEmUp")
             {
-                // instance.SetIntervalStart(beat, beat, interval, autoPassTurn);
+                instance.SetIntervalStart(beat, beat, interval, placement);
             }
             else
             {
@@ -135,8 +232,44 @@ namespace HeavenStudio.Games
                 {
                     beat = beat,
                     interval = interval,
+                    placement = placement,
                 });
             }
+        }
+
+        private List<RiqEntity> GetAllInputsBetweenBeat(double beat, double endBeat)
+        {
+            return EventCaller.GetAllInGameManagerList("shootEmUp", new string[] { "spawn enemy" }).FindAll(x => x.beat >= beat && x.beat < endBeat);
+        }
+
+        private void PassTurnStandalone(double beat)
+        {
+            if (crHandlerInstance != null) PassTurn(beat, crHandlerInstance.intervalLength, crHandlerInstance);
+        }
+
+        private void PassTurn(double beat, double length, CallAndResponseHandler crHandler)
+        {
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - 0.25, delegate
+                {
+                    if (crHandler.queuedEvents.Count > 0)
+                    {
+                        foreach (var crEvent in crHandler.queuedEvents)
+                        {
+                            var enemyToInput = spawnedEnemies.Find(x => x.createBeat == crEvent.beat);
+                            enemyToInput.StartInput(beat, crEvent.relativeBeat);
+                        }
+                        crHandler.queuedEvents.Clear();
+                    }
+
+                }),
+            });
+        }
+
+        public void Damage()
+        {
+            shipAnim.Play("shipDamage");
         }
     }
 }

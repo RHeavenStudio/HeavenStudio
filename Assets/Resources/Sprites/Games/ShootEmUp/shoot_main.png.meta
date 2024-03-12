@@ -545,6 +545,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: shoot_effect_0
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 450
+        width: 108
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb2867b5195b2c442bf9e16a38f53bba
+      internalID: 433249484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_effect_1
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 338
+        width: 108
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0a54148d54f0f140a41e194fb56890d
+      internalID: 81652156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -567,6 +609,8 @@ TextureImporter:
       shoot_beam_8: -1120405300
       shoot_beam_9: 515187223
       shoot_earth: 769114757
+      shoot_effect_0: 433249484
+      shoot_effect_1: 81652156
       shoot_enemy_0: -2136356488
       shoot_enemy_1: -2032356040
       shoot_enemy_2: -2103752361
