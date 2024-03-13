@@ -107,13 +107,14 @@ namespace HeavenStudio.Games
         
         void Update()
         {
-            Debug.Log("?");
-            Debug.Log(GameCamera.AdditionalPosition);
-            Debug.Log(GameCamera.AdditionalFoV);
+            var cond = Conductor.instance;
+            if (!cond.isPlaying || cond.isPaused) return;
+
+            if (PlayerInput.GetIsAction(InputAction_Press) && !IsExpectingInputNow(InputAction_Press))
+            {
+                Debug.Log("?");
+            }
             GameCamera.AdditionalPosition = cameraPos.position;
-            // Debug.Log(GameCamera.AdditionalPosition);
-            // GameCamera.AdditionalPosition = new Vector3(-10,-10,10);
-            // Debug.Log(GameCamera.AdditionalPosition);
         }
 
         public override void OnGameSwitch(double beat)
