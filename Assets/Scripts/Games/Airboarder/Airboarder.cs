@@ -500,9 +500,9 @@ namespace HeavenStudio.Games
             newArch.appearBeat = beat;
             newArch.gameObject.SetActive(true);
             if (crouch) {
-                archBasic.CueCrouch(beat);
+                archBasic.CueCrouch(beat+25);
             } else {
-                newArch.CueDuck(beat);
+                newArch.CueDuck(beat+25);
             }
         }
 
@@ -511,7 +511,7 @@ namespace HeavenStudio.Games
             Wall newWall = Instantiate(wallBasic, transform);
             newWall.appearBeat = beat;
             newWall.gameObject.SetActive(true);
-            newWall.CueJump(beat);
+            newWall.CueJump(beat+25);
         }
 
 
