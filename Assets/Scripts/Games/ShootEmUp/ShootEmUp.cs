@@ -49,9 +49,14 @@ namespace HeavenStudio.Games
     using Scripts_ShootEmUp;
     public class ShootEmUp : Minigame
     {
+        [Header("Camera")]
+        [SerializeField] Transform cameraPos;
+
+        [Header("References")]
         public GameObject baseEnemy;
         public Transform enemyHolder;
         public Animator shipAnim;
+        public Animator damageAnim;
 
         private List<Enemy> spawnedEnemies = new List<Enemy>();
 
@@ -96,6 +101,18 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+        }
+
+        
+        void Update()
+        {
+            Debug.Log("?");
+            Debug.Log(GameCamera.AdditionalPosition);
+            Debug.Log(GameCamera.AdditionalFoV);
+            GameCamera.AdditionalPosition = cameraPos.position;
+            // Debug.Log(GameCamera.AdditionalPosition);
+            // GameCamera.AdditionalPosition = new Vector3(-10,-10,10);
+            // Debug.Log(GameCamera.AdditionalPosition);
         }
 
         public override void OnGameSwitch(double beat)
@@ -270,6 +287,7 @@ namespace HeavenStudio.Games
         public void Damage()
         {
             shipAnim.Play("shipDamage");
+            damageAnim.Play("damage");
         }
     }
 }

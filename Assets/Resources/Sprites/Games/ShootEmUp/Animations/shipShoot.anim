@@ -57,7 +57,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: shoot_muzzle_0
+    path: muzzle
   m_ScaleCurves: []
   m_FloatCurves:
   - curve:
@@ -65,7 +65,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -102,7 +102,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -139,7 +139,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -232,7 +232,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -261,7 +261,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._AddColor.r
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -269,7 +269,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -298,7 +298,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._AddColor.g
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -306,7 +306,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -335,7 +335,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._AddColor.b
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -363,7 +363,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._AddColor.a
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 212
     script: {fileID: 0}
   m_PPtrCurves: []
@@ -375,7 +375,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 278229184
+      path: 2649673370
       attribute: 1
       script: {fileID: 0}
       typeID: 4
@@ -417,28 +417,28 @@ AnimationClip:
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 278229184
+      path: 2649673370
       attribute: 1140649264
       script: {fileID: 0}
       typeID: 212
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 278229184
+      path: 2649673370
       attribute: 1409084720
       script: {fileID: 0}
       typeID: 212
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 278229184
+      path: 2649673370
       attribute: 1677520176
       script: {fileID: 0}
       typeID: 212
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 278229184
+      path: 2649673370
       attribute: 1945955632
       script: {fileID: 0}
       typeID: 212
@@ -509,7 +509,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -555,7 +555,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -601,7 +601,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -609,7 +609,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -646,7 +646,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -683,7 +683,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -776,7 +776,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -805,7 +805,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._AddColor.r
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -813,7 +813,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -842,7 +842,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._AddColor.g
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -850,7 +850,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 255
+        value: 1
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -879,7 +879,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._AddColor.b
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -907,7 +907,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._AddColor.a
-    path: shoot_muzzle_0
+    path: muzzle
     classID: 212
     script: {fileID: 0}
   m_EulerEditorCurves: []

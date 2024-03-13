@@ -231,7 +231,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_1
+      name: shoot_laser_1
       rect:
         serializedVersion: 2
         x: 8
@@ -252,7 +252,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_2
+      name: shoot_laser_2
       rect:
         serializedVersion: 2
         x: 264
@@ -273,7 +273,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_3
+      name: shoot_laser_3
       rect:
         serializedVersion: 2
         x: 520
@@ -294,7 +294,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_4
+      name: shoot_laser_4
       rect:
         serializedVersion: 2
         x: 776
@@ -315,7 +315,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_5
+      name: shoot_laser_5
       rect:
         serializedVersion: 2
         x: 1024
@@ -336,7 +336,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_6
+      name: shoot_laser_6
       rect:
         serializedVersion: 2
         x: 1288
@@ -357,7 +357,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_7
+      name: shoot_laser_7
       rect:
         serializedVersion: 2
         x: 1544
@@ -378,7 +378,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_8
+      name: shoot_laser_8
       rect:
         serializedVersion: 2
         x: 1800
@@ -399,7 +399,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_9
+      name: shoot_laser_9
       rect:
         serializedVersion: 2
         x: 2056
@@ -420,7 +420,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shoot_beam_
+      name: shoot_laser_10
       rect:
         serializedVersion: 2
         x: 2312
@@ -934,16 +934,6 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      shoot_beam_: 639876594
-      shoot_beam_1: -80151480
-      shoot_beam_2: -699956437
-      shoot_beam_3: -1387073146
-      shoot_beam_4: -2049787610
-      shoot_beam_5: -1035767384
-      shoot_beam_6: -1425704675
-      shoot_beam_7: 1192824803
-      shoot_beam_8: -1120405300
-      shoot_beam_9: 515187223
       shoot_circle: 1487568205
       shoot_earth: 769114757
       shoot_effect_0: 433249484
@@ -951,6 +941,16 @@ TextureImporter:
       shoot_enemy_0: -2136356488
       shoot_enemy_1: -2032356040
       shoot_enemy_2: -2103752361
+      shoot_laser_1: -80151480
+      shoot_laser_10: 639876594
+      shoot_laser_2: -699956437
+      shoot_laser_3: -1387073146
+      shoot_laser_4: -2049787610
+      shoot_laser_5: -1035767384
+      shoot_laser_6: -1425704675
+      shoot_laser_7: 1192824803
+      shoot_laser_8: -1120405300
+      shoot_laser_9: 515187223
       shoot_main_0: -1214197752
       shoot_main_1: 1060486047
       shoot_main_13: -1428911822
