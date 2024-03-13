@@ -162,6 +162,7 @@ namespace HeavenStudio.Games
         public bool wantsCrouch;
         [Header("Materials")]
         [SerializeField] private Material bgMaterial;
+        [SerializeField] private Material fadeMaterial;
         [SerializeField] private Material[] floorMaterial;
         
         [Header("Camera")]
@@ -251,6 +252,7 @@ namespace HeavenStudio.Games
         {
             EntityPreCheck(Conductor.instance.songPositionInBeatsAsDouble);
             bgMaterial.color = defaultBGColor;
+            fadeMaterial.color = defaultBGColor;
         }
 
         void EntityPreCheck(double beat)
@@ -359,6 +361,7 @@ namespace HeavenStudio.Games
         private void BackgroundColorUpdate()
         {
             bgMaterial.color = bgColorEase.GetColor();
+            fadeMaterial.color = bgColorEase.GetColor();
         
         }
         public void BackgroundColor(double beat, float length, Color startColor, Color endColor, int ease)
