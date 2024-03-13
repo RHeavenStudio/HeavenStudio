@@ -130,8 +130,11 @@ namespace HeavenStudio.Games
         [SerializeField] DashPatternItem[] DashPatterns;
 
         [System.NonSerialized] public bool[] isForkPop = {true, true, true, true};
+        [System.NonSerialized] public bool[] isMiss = {false, false, false, false};
+        [System.NonSerialized] public bool[] isPrepare = {false, false, false, false};
         [System.NonSerialized] public bool orgAlive = true;
         [System.NonSerialized] public bool docShock = false;
+        [System.NonSerialized] public double docShockBeat = Double.MinValue;
 
         public enum Direction
         {
@@ -226,7 +229,7 @@ namespace HeavenStudio.Games
 
         public override void OnBeatPulse(double beat)
         {
-            if (BeatIsInBopRegion(beat)) Bop();
+            if (BeatIsInBopRegion(beat)) Bop(beat);
         }
 
         void Update()
@@ -245,18 +248,9 @@ namespace HeavenStudio.Games
                     keyAnim.Play("up");
                 }
 
-                var rand_dir = UnityEngine.Random.Range(0, 4);
-                var InputAction = rand_dir switch {
-                    (int)Direction.Right => InputAction_Right,
-                    (int)Direction.Up => InputAction_Up,
-                    (int)Direction.Left => InputAction_Left,
-                    (int)Direction.Down => InputAction_Down,
-                };
-
-                if (PlayerInput.GetIsAction(InputAction) &&
-                    !(IsExpectingInputNow(InputAction_Right) || IsExpectingInputNow(InputAction_Up)
-                    || IsExpectingInputNow(InputAction_Left) || IsExpectingInputNow(InputAction_Down)))
+                if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress))
                 {
+                    var rand_dir = ChooseDirection(isMiss, isPrepare, isForkPop);
                     if (isForkPop[rand_dir]) OutFork(rand_dir);
                 }
             }
@@ -307,15 +301,15 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance, new() {new BeatAction.Action(beat + i, delegate {Bop();}) });
+                    BeatAction.New(instance, new() {new BeatAction.Action(beat + i, delegate {Bop(beat);}) });
                 }
             }
         }
 
-        public void Bop()
+        public void Bop(double beat)
         {
             radioAnim.DoScaledAnimationAsync("bop", 0.5f);
-            if (!docShock) doctorAnim.DoScaledAnimationAsync("bop", 0.5f);
+            if (beat < docShockBeat || beat > docShockBeat + 2) doctorAnim.DoScaledAnimationAsync("bop", 0.5f);
             if (orgAlive) orgAnim.DoScaledAnimationAsync("bop", 0.5f);
         }
 
@@ -422,6 +416,38 @@ namespace HeavenStudio.Games
                 RecolorMats[i].SetColor("_ColorBravo", color2);
                 RecolorMats[i].SetColor("_ColorDelta", color3);
             }
+        }
+
+        public static int ChooseDirection(bool[] misses, bool[] preparing, bool[] isForkPop)
+        {
+            var missedDirections = Enumerable.Range(0, 4)
+                                            .Where(i => misses[i] && isForkPop[i])
+                                            .ToList();
+            if (missedDirections.Count > 0)
+            {
+                int index = UnityEngine.Random.Range(0, missedDirections.Count);
+                return missedDirections[index];
+            }
+
+            var preparingDirections = Enumerable.Range(0, 4)
+                                                .Where(i => preparing[i] && isForkPop[i])
+                                                .ToList();
+            if (preparingDirections.Count > 0)
+            {
+                int index = UnityEngine.Random.Range(0, preparingDirections.Count);
+                return preparingDirections[index];
+            }
+
+            var remainingDirections = Enumerable.Range(0, 4)
+                                                .Where(i => isForkPop[i])
+                                                .ToList();
+            if (remainingDirections.Count > 0)
+            {
+                int index = UnityEngine.Random.Range(0, remainingDirections.Count);
+                return remainingDirections[index];
+            }
+
+            return UnityEngine.Random.Range(0, 4);
         }
     }
 }
