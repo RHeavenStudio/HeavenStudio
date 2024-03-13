@@ -19,6 +19,7 @@ namespace HeavenStudio.Editor
         public LeftClickTMP_Dropdown dropdown;
         public Scrollbar scrollbar;
 
+        public int[] values;
         private int _defaultValue;
 
         private bool openedDropdown = false;
@@ -35,6 +36,14 @@ namespace HeavenStudio.Editor
                     // entity[propertyName].ChangeValues(dropdownEntity.Values);
                     _defaultValue = dropdownEntity.defaultValue;
                     EntityTypes.DropdownObj dropdownObj = entity[propertyName];
+
+                    int size = dropdownObj.Values.Count;
+                    values = new int[size];
+
+                    for (int i = 0; i < size; i++) {
+                        values[i] = i;
+                    }
+
                     selected = dropdownObj.value;
                     dropdown.AddOptions(dropdownObj.Values);
                     dropdown.onValueChanged.AddListener(newVal => dropdownObj.value = newVal);
@@ -50,11 +59,11 @@ namespace HeavenStudio.Editor
                 case Enum enumEntity:
                     Type enumType = enumEntity.GetType();
                     _defaultValue = (int)type;
-                    int[] keys = Enum.GetValues(enumType).Cast<int>().ToArray();
-                    selected = Array.FindIndex(keys, val => val == (int)entity[propertyName]);
+                    values = Enum.GetValues(enumType).Cast<int>().ToArray();
+                    selected = Array.FindIndex(values, val => val == (int)entity[propertyName]);
 
                     dropdown.AddOptions(Enum.GetNames(enumType).ToList());
-                    dropdown.onValueChanged.AddListener(val => entity[propertyName] = keys[val]);
+                    dropdown.onValueChanged.AddListener(val => entity[propertyName] = values[val]);
                     break;
                 default:
                 break;
@@ -74,8 +83,8 @@ namespace HeavenStudio.Editor
 
         public override void SetCollapses(object type)
         {
-            dropdown.onValueChanged.AddListener(_ => UpdateCollapse(type));
-            UpdateCollapse(type);
+            dropdown.onValueChanged.AddListener(_ => UpdateCollapse(values[dropdown.value]));
+            UpdateCollapse(values[dropdown.value]);
         }
 
         private void Update()
