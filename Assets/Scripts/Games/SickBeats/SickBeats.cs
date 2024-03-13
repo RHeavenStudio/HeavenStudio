@@ -204,6 +204,18 @@ namespace HeavenStudio.Games
             new("AgbSickBeatsDown", new int[] { IA_DownPress, IA_DownPress, IA_DownPress },
             IA_PadDown, IA_TouchFlick, IA_BatonDown);
 
+        public PlayerActionEvent ScheduleMissableInput(double startBeat,
+            double timer,
+            PlayerInput.InputAction inputAction,
+            PlayerActionEvent.ActionEventCallbackState OnHit,
+            PlayerActionEvent.ActionEventCallback OnMiss,
+            PlayerActionEvent.ActionEventCallback OnBlank,
+            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null)
+        {
+            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank, HittableQuery);
+            return evt;
+        }
+
         // Start is called before the first frame update
         void Awake()
         {

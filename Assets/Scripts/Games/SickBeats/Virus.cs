@@ -45,7 +45,15 @@ namespace HeavenStudio.Games.Scripts_SickBeats
                 VirusAnim("appear");
             })});
 
-            game.ScheduleInput(startBeat, 1, InputAction, Just, Miss, Empty, CanJust);
+            // if (GameManager.instance.autoplay)
+            // {
+            //     game.ScheduleAutoplayInput(startBeat, 1, InputAction, Just, Miss, Empty);
+            // }
+            // else
+            // {
+            //     game.ScheduleUserInput(startBeat, 1, InputAction, Just, Miss, Empty, CanJust);
+            // }
+            game.ScheduleMissableInput(startBeat, 1, InputAction, Just, Miss, Empty, CanJust);
         }
 
         public void Dash()
