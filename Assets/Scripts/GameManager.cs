@@ -1243,6 +1243,17 @@ namespace HeavenStudio
             return eventCaller.GetMinigame(name);
         }
 
+        public bool TryGetMinigame<T>(out T mg) where T : Minigame
+        {
+            if (minigame is T tempMinigame) {
+                mg = tempMinigame;
+                return true;
+            } else {
+                mg = null;
+                return false;
+            }
+        }
+
         Color colMain;
         public void SetCurrentGame(string game, bool useMinigameColor = true)
         {
