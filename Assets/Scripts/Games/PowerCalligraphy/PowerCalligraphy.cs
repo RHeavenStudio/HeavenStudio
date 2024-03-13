@@ -102,6 +102,7 @@ namespace HeavenStudio.Games
         
         public Animator fudePosAnim;
         public Animator fudeAnim;
+        public Fude fude;
 
         public static int queuedType;
 

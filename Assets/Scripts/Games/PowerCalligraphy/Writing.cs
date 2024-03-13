@@ -47,6 +47,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
         }
 
         public double startBeat;
+        public double ongoingBeat = Double.MinValue;
         public double nextBeat;
         [SerializeField] PatternItem[] AnimPattern;
         
@@ -124,7 +125,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         current_anim_num_1 = anim_num;
                         actions.Add(new BeatAction.Action(itemBeat, delegate {
                             Halt(); stroke = StrokeType.TOME; process_num = current_anim_num_1;}));
-                        actions.Add(new BeatAction.Action(itemBeat, delegate { onGoing = true;}));
+                        actions.Add(new BeatAction.Action(itemBeat, delegate { onGoing = true; ongoingBeat = itemBeat;}));
                         game.ScheduleInput(itemBeat, 1f, PowerCalligraphy.InputAction_BasicPress, writeSuccess, writeMiss, Empty, CanSuccess);
                         break;
                     case StrokeType.HANE:
@@ -132,7 +133,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         current_anim_num_1 = anim_num;
                         actions.Add(new BeatAction.Action(itemBeat, delegate {
                             Sweep(); stroke = StrokeType.HANE; process_num = current_anim_num_1;}));
-                        actions.Add(new BeatAction.Action(itemBeat+1, delegate { onGoing = true;}));
+                        actions.Add(new BeatAction.Action(itemBeat+1, delegate { onGoing = true; ongoingBeat = itemBeat + 1;}));
                         game.ScheduleInput(itemBeat, 2f, PowerCalligraphy.InputAction_FlickPress, writeSuccess, writeMiss, Empty, CanSuccess);
                         break;
                     case StrokeType.HARAI:
@@ -140,7 +141,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                         current_anim_num_1 = anim_num;
                         actions.Add(new BeatAction.Action(itemBeat, delegate {
                             Sweep(); stroke = StrokeType.HARAI; process_num = current_anim_num_1;}));
-                        actions.Add(new BeatAction.Action(itemBeat+1, delegate { onGoing = true;}));
+                        actions.Add(new BeatAction.Action(itemBeat+1, delegate { onGoing = true; ongoingBeat = itemBeat + 1;}));
                         game.ScheduleInput(itemBeat, 2f, PowerCalligraphy.InputAction_FlickPress, writeSuccess, writeMiss, Empty, CanSuccess);
                         break;
                     default:
@@ -219,17 +220,15 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                     
                 case "late":
                 case "fast":
+                    game.fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
                     switch (stroke) {   // WIP
                         case StrokeType.TOME:
-                            game.fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
                             SoundByte.PlayOneShotGame("powerCalligraphy/8");
                             break;
                         case StrokeType.HANE:
-                            game.fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
                             SoundByte.PlayOneShotGame("powerCalligraphy/6");    
                             break;
                         case StrokeType.HARAI:
-                            game.fudeAnim.DoScaledAnimationAsync("fude-none", 0.5f);
                             SoundByte.PlayOneShotGame("powerCalligraphy/9");
                             break;
                     }
@@ -271,6 +270,12 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
 
             if (cond.isPlaying && !cond.isPaused)
             {
+                if (ongoingBeat > 0)
+                {
+                    float normalizedBeat = cond.GetPositionFromBeat(ongoingBeat, 1);
+                    float redRate = (normalizedBeat <= 0.5f) ? normalizedBeat/0.5f : (1.5f-normalizedBeat);
+                    if (game is not null) game.fude.redRate = redRate;
+                }
                 if (isFinish)
                 {
                     double beat = cond.songPositionInBeats;

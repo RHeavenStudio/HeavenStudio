@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: fude-halt
+  m_Name: fude-halt0
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -183,33 +183,7 @@ AnimationClip:
     path: blush/stick
     classID: 212
     script: {fileID: 0}
-  m_PPtrCurves:
-  - curve:
-    - time: 0
-      value: {fileID: 1641867280, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - time: 0.016666668
-      value: {fileID: -480801223, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - time: 0.033333335
-      value: {fileID: -649290134, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - time: 0.05
-      value: {fileID: -592982681, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    attribute: m_Sprite
-    path: blush/tip
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-    - time: 0
-      value: {fileID: -614226590, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - time: 0.016666668
-      value: {fileID: 1078653857, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - time: 0.033333335
-      value: {fileID: -2145719836, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - time: 0.05
-      value: {fileID: 2024406486, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    attribute: m_Sprite
-    path: blush/stick
-    classID: 212
-    script: {fileID: 0}
+  m_PPtrCurves: []
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -245,29 +219,7 @@ AnimationClip:
       typeID: 212
       customType: 0
       isPPtrCurve: 0
-    - serializedVersion: 2
-      path: 3337579041
-      attribute: 0
-      script: {fileID: 0}
-      typeID: 212
-      customType: 23
-      isPPtrCurve: 1
-    - serializedVersion: 2
-      path: 4147446444
-      attribute: 0
-      script: {fileID: 0}
-      typeID: 212
-      customType: 23
-      isPPtrCurve: 1
-    pptrCurveMapping:
-    - {fileID: 1641867280, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - {fileID: -480801223, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - {fileID: -649290134, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - {fileID: -592982681, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - {fileID: -614226590, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - {fileID: 1078653857, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - {fileID: -2145719836, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
-    - {fileID: 2024406486, guid: 71b160e84f751d740a27198cdf4a4771, type: 3}
+    pptrCurveMapping: []
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -653,4 +605,39 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0
+    functionName: HaltTurnRed
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.016666668
+    functionName: HaltTurnRed
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 2
+    messageOptions: 0
+  - time: 0.033333335
+    functionName: HaltTurnRed
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 3
+    messageOptions: 0
+  - time: 0.06666667
+    functionName: HaltTurnRed
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 4
+    messageOptions: 0
+  - time: 0.06666667
+    functionName: HaltTurnRed
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 4
+    messageOptions: 0
