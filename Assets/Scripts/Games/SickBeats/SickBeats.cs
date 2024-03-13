@@ -216,6 +216,7 @@ namespace HeavenStudio.Games
             PlayerActionEvent.ActionEventHittableQuery HittableQuery = null)
         {
             PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank, HittableQuery);
+            evt.missable = true;
             return evt;
         }
 
@@ -230,6 +231,20 @@ namespace HeavenStudio.Games
         public override void OnBeatPulse(double beat)
         {
             if (BeatIsInBopRegion(beat)) Bop(beat);
+        }
+
+        [NonSerialized] public double gameEndBeat = double.MaxValue;
+        public override void OnGameSwitch(double beat)
+        {
+            var entities = GameManager.instance.Beatmap.Entities;
+            // find out when the next game switch (or remix end) happens
+            RiqEntity firstEnd = entities.Find(c => (c.datamodel.StartsWith("gameManager/switchGame") || c.datamodel.Equals("gameManager/end")) && c.beat > beat);
+            gameEndBeat = firstEnd?.beat ?? double.MaxValue;
+        }
+
+        public override void OnPlay(double beat)
+        {
+            OnGameSwitch(beat);
         }
 
         void Update()

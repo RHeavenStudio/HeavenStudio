@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Scripts_SickBeats
 
         public void Appear()
         {
-            
+            if (startBeat >= game.gameEndBeat) return;
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("sickBeats/appear"+UnityEngine.Random.Range(0, 2).ToString(), startBeat),
@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Scripts_SickBeats
             })});
 
             isJust = false;
-            
+
             PlayerInput.InputAction InputAction;
             if (PlayerInput.PlayerHasControl() && PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Touch)
             {
