@@ -10784,7 +10784,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -12037,8 +12037,8 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 3
-      scalar: -13.962634
-      minScalar: -6.981317
+      scalar: -8.726646
+      minScalar: -4.712389
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -20877,7 +20877,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 13
+      scalar: 10
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -36224,7 +36224,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.7
+      scalar: 0.6
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -40900,7 +40900,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
