@@ -32,6 +32,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
         {
             SoundByte.PlayOneShotGame("shootEmUp/shoot");
             game.shipAnim.Play("shipShoot");
+            game.hitEffect.Play();
             Destroy(gameObject);
         }
 

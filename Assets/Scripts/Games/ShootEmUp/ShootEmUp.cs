@@ -57,6 +57,7 @@ namespace HeavenStudio.Games
         public Transform enemyHolder;
         public Animator shipAnim;
         public Animator damageAnim;
+        public ParticleSystem hitEffect;
 
         private List<Enemy> spawnedEnemies = new List<Enemy>();
 
