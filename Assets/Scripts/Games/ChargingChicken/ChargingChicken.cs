@@ -1167,7 +1167,7 @@ namespace HeavenStudio.Games
         public void PlayDrum(string whichDrum, float drumVolumeThis, double lateness)
         {
             float drumActualVolume = (drumVolume > drumTempVolume) ? drumVolumeThis * drumVolume : drumVolumeThis * drumTempVolume;
-            if (isInputting && (lateness * 4 == Math.Floor(Conductor.instance.songPositionInBeatsAsDouble * 4))) SoundByte.PlayOneShotGame(whichDrum, volume: drumLoud ? drumVolumeThis : drumActualVolume);
+            if (/* isInputting && (lateness * 4 == Math.Floor(Conductor.instance.songPositionInBeatsAsDouble * 4)) */ true) SoundByte.PlayOneShotGame(whichDrum, volume: drumLoud ? drumVolumeThis : drumActualVolume);
         }
 
         public void PumpBeat()
@@ -1808,6 +1808,7 @@ namespace HeavenStudio.Games
 
         private void PersistThings(double beat)
         {
+            return;
             var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeBgColor" }).FindAll(x => x.beat < beat);
             if (allEventsBeforeBeat.Count > 0)
             {
@@ -1838,6 +1839,30 @@ namespace HeavenStudio.Games
                 allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
                 var lastEvent = allEventsBeforeBeat[^1];
                 ChangeCloudColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
+            }
+
+            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCloudColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                UnParallaxObjects(lastEvent.beat, lastEvent.length, lastEvent["appearance"], true);
+            }
+
+            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCloudColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                ParallaxObjects(lastEvent.beat, lastEvent.length, true, lastEvent["stars"], lastEvent["clouds"], lastEvent["earth"], lastEvent["mars"], lastEvent["doodles"], lastEvent["birds"]);
+            }
+
+            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCloudColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                ParallaxProgress(lastEvent["starProgress"], lastEvent["cloudProgress"], lastEvent["planetProgress"], lastEvent["doodleProgress"], lastEvent["birdProgress"]);
             }
 
             allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "textEdit" }).FindAll(x => x.beat < beat);
