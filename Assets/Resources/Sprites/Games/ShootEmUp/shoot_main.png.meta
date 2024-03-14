@@ -151,7 +151,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2988
-        y: 1348
+        y: 1349
         width: 176
         height: 176
       alignment: 0
@@ -923,6 +923,405 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: shoot_monitor
+      rect:
+        serializedVersion: 2
+        x: 1313
+        y: 652
+        width: 850
+        height: 530
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e52bad0c256532f4985dd3c193d04f15
+      internalID: -453509616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_handle1
+      rect:
+        serializedVersion: 2
+        x: 1377
+        y: 338
+        width: 420
+        height: 272
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 801afcb3cac4e2741b01451e2436650d
+      internalID: 1240971331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_handle2
+      rect:
+        serializedVersion: 2
+        x: 1818
+        y: 435
+        width: 334
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4970e2892b0abce4e9a1955bc26e5537
+      internalID: 1770004620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_handle3
+      rect:
+        serializedVersion: 2
+        x: 1807
+        y: 110
+        width: 351
+        height: 288
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4527ee29e4927c429906fb2ff85a1f8
+      internalID: -765527450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_handle4
+      rect:
+        serializedVersion: 2
+        x: 1533
+        y: 10
+        width: 238
+        height: 306
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a55c402536258f64b85f775f32eb8763
+      internalID: -718440547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_cap_head
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 28
+        width: 388
+        height: 308
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d4ffef6eab36fc438bb17922706a7a2
+      internalID: -1926471300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_cap_face2
+      rect:
+        serializedVersion: 2
+        x: 761
+        y: 60
+        width: 142
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63cde3a0425c3204cb0dc7b8d3721be4
+      internalID: 1300479403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_cap_face1
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 61
+        width: 141
+        height: 137
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 703ad7b48751c4745b28da20bbd587ea
+      internalID: -338614415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_cap_body
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1156
+        width: 168
+        height: 178
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ed71d99d8980a24eaa4a3718dfecf99
+      internalID: -655777914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_cap_hair
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 1155
+        width: 178
+        height: 173
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 759d1d999091ee64da6587efa1605dc7
+      internalID: -209332879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_monitor_spring
+      rect:
+        serializedVersion: 2
+        x: 1098
+        y: 812
+        width: 172
+        height: 392
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44c4d80f70969b04faadf3b77be3810b
+      internalID: 971184687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_intro1
+      rect:
+        serializedVersion: 2
+        x: 2190
+        y: 38
+        width: 499
+        height: 380
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9609edb5560441f42b3a879256b98420
+      internalID: 550096959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_intro2
+      rect:
+        serializedVersion: 2
+        x: 2738
+        y: 35
+        width: 393
+        height: 382
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7a3183e332ef2b4f922a32c3b24e3bc
+      internalID: 19118740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_intro3
+      rect:
+        serializedVersion: 2
+        x: 3195
+        y: 216
+        width: 264
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4cac8a45872cb1344ba56fc84356e2bb
+      internalID: 1197818812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_intro4
+      rect:
+        serializedVersion: 2
+        x: 3517
+        y: 151
+        width: 195
+        height: 273
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6697faaf047d8744eacf71767717ce4f
+      internalID: -462917201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_ship_face_3
+      rect:
+        serializedVersion: 2
+        x: 3356
+        y: 1349
+        width: 167
+        height: 173
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 822e207029887b049842c9a634228a30
+      internalID: -271606436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_ship_face_4
+      rect:
+        serializedVersion: 2
+        x: 3529
+        y: 1348
+        width: 156
+        height: 173
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 835780e6e450c20499c1a5f96acac256
+      internalID: 455408765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_ship_face_5
+      rect:
+        serializedVersion: 2
+        x: 3690
+        y: 1347
+        width: 167
+        height: 173
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0569b9613f34b12428edf93d38dbf2f1
+      internalID: -1544261438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shoot_monitor_line
+      rect:
+        serializedVersion: 2
+        x: 3460
+        y: 4029
+        width: 214
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfa6b5e4a80e6474685a427598dd9ced
+      internalID: 1612141556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -934,6 +1333,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      shoot_cap_body: -655777914
+      shoot_cap_face1: -338614415
+      shoot_cap_face2: 1300479403
+      shoot_cap_hair: -209332879
+      shoot_cap_head: -1926471300
       shoot_circle: 1487568205
       shoot_earth: 769114757
       shoot_effect_0: 433249484
@@ -941,6 +1345,14 @@ TextureImporter:
       shoot_enemy_0: -2136356488
       shoot_enemy_1: -2032356040
       shoot_enemy_2: -2103752361
+      shoot_handle1: 1240971331
+      shoot_handle2: 1770004620
+      shoot_handle3: -765527450
+      shoot_handle4: -718440547
+      shoot_intro1: 550096959
+      shoot_intro2: 19118740
+      shoot_intro3: 1197818812
+      shoot_intro4: -462917201
       shoot_laser_1: -80151480
       shoot_laser_10: 639876594
       shoot_laser_2: -699956437
@@ -957,6 +1369,9 @@ TextureImporter:
       shoot_main_14: 515187223
       shoot_main_15: 1950828263
       shoot_main_2: -137449403
+      shoot_monitor: -453509616
+      shoot_monitor_line: 1612141556
+      shoot_monitor_spring: 971184687
       shoot_muzzle_0: -1074686852
       shoot_muzzle_1: -374466202
       shoot_piece1: 189055195
@@ -975,6 +1390,9 @@ TextureImporter:
       shoot_ship_1: -1038559483
       shoot_ship_face_0: -1038559483
       shoot_ship_face_1: -335952756
+      shoot_ship_face_3: -271606436
+      shoot_ship_face_4: 455408765
+      shoot_ship_face_5: -1544261438
       shoot_sparkle: -1233367925
       shoot_spawn: -728753420
   spritePackingTag: 
