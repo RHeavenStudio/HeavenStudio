@@ -59,6 +59,8 @@ namespace HeavenStudio.Games
         public Animator damageAnim;
         public ParticleSystem hitEffect;
 
+        public float scaleSpeed;
+
         private List<Enemy> spawnedEnemies = new List<Enemy>();
 
         public enum PlacementType
@@ -154,24 +156,14 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnEnemy(double beat, float x, float y, bool active = true)
+        public void SpawnEnemy(double beat, float x, float y, bool active = true, float interval = 4f)
         {
             var newEnemy = Instantiate(baseEnemy, enemyHolder).GetComponent<Enemy>();
             spawnedEnemies.Add(newEnemy);
             newEnemy.createBeat = beat;
-            newEnemy.gameObject.transform.localPosition = new Vector3(5.05f/3*x, 2.5f/3*y + 1.25f, 0);
-            
-            Vector3 angle = new Vector3(0, 0, 0);
-            if (x > 0 && y > 0) {
-                angle = new Vector3(0, 0, -70);
-            } else if (x < 0 && y > 0) {
-                angle = new Vector3(0, 0, 70);
-            } else if (x > 0 && y < 0) {
-                angle = new Vector3(0, 0, -110);
-            } else if (x < 0 && y < 0) {
-                angle = new Vector3(0, 0, 110);
-            }
-            newEnemy.SpawnEffect.eulerAngles = angle;
+            newEnemy.scaleSpeed = scaleSpeed/interval;
+            newEnemy.pos = new Vector2(x, y);
+            newEnemy.Init();
 
             if (active)
             {
@@ -181,7 +173,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat, delegate
                     {
                         newEnemy.gameObject.SetActive(true);
-                        newEnemy.GetComponent<Animator>().Play("enemySpawn", 0, 0);
+                        newEnemy.SpawnAnim();
                     })
                 });
             }
@@ -223,7 +215,7 @@ namespace HeavenStudio.Games
                     int posDataIndex = Math.Min(posData.Length - 1, i);
                     var pos = posData[posDataIndex];
 
-                    SpawnEnemy(evt.beat, pos.x, pos.y, evt.beat >= gameSwitchBeat);
+                    SpawnEnemy(evt.beat, pos.x, pos.y, evt.beat >= gameSwitchBeat, interval);
                 }
             }
             else
@@ -231,7 +223,7 @@ namespace HeavenStudio.Games
                 foreach (var evt in relevantInputs)
                 {
                     crHandlerInstance.AddEvent(evt.beat);
-                    SpawnEnemy(evt.beat, evt["x"], evt["y"], evt.beat >= gameSwitchBeat);
+                    SpawnEnemy(evt.beat, evt["x"], evt["y"], evt.beat >= gameSwitchBeat, interval);
                 }
             }
 
@@ -288,8 +280,8 @@ namespace HeavenStudio.Games
 
         public void Damage()
         {
-            shipAnim.Play("shipDamage");
-            damageAnim.Play("damage");
+            shipAnim.Play("shipDamage", 0, 0);
+            damageAnim.Play("damage", 0, 0);
         }
     }
 }
