@@ -20,12 +20,13 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start interval", "Start Interval")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; ShootEmUp.PreInterval(e.beat, e.length, e["placement"]); }, 
+                    preFunction = delegate { var e = eventCaller.currentEntity; ShootEmUp.PreInterval(e.beat, e.length, e["placement"], e["auto"]); }, 
                     defaultLength = 4f, 
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("placement", ShootEmUp.PlacementType.PatternA, "Placement Pattern")
+                        new Param("placement", ShootEmUp.PlacementType.PatternA, "Placement Pattern"),
+                        new Param("auto", true, "Auto Pass Turn", "Toggle if the turn should be passed automatically at the end of the start interval."),
                     },
                 },
                 new GameAction("spawn enemy", "Spawn Enemy")
@@ -33,9 +34,13 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("x", new EntityTypes.Float(-4, 4, 0), "X"),
-                        new Param("y", new EntityTypes.Float(-3, 3, 0), "Y"),
+                        new Param("x", new EntityTypes.Float(-5, 5, 0), "X"),
+                        new Param("y", new EntityTypes.Float(-5, 5, 0), "Y"),
                     },
+                },
+                new GameAction("passTurn", "Pass Turn")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; ShootEmUp.PrePassTurn(e.beat); },
                 },
             },
             new List<string>() { "ntr", "normal" }, "ntrShootEmUp", "en", new List<string>() { }
@@ -103,6 +108,13 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            if (crHandlerInstance != null && crHandlerInstance.queuedEvents.Count > 0)
+            {
+                foreach (var crEvent in crHandlerInstance.queuedEvents)
+                {
+                    SpawnEnemy(crEvent.beat, crEvent.DynamicData["pos"], false, crHandlerInstance.intervalLength);
+                }
+            }
         }
 
         
@@ -110,6 +122,15 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
             if (!cond.isPlaying || cond.isPaused) return;
+
+            if (passedTurns.Count > 0)
+            {
+                foreach (var pass in passedTurns)
+                {
+                    PassTurnStandalone(pass);
+                }
+                passedTurns.Clear();
+            }
 
             if (PlayerInput.GetIsAction(InputAction_Press) && !IsExpectingInputNow(InputAction_Press))
             {
@@ -130,7 +151,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var interval in queuedIntervals)
                     {
-                        SetIntervalStart(interval.beat, beat, interval.interval, interval.placement);
+                        SetIntervalStart(interval.beat, beat, interval.interval, interval.placement, interval.autoPassTurn);
                     }
                     queuedIntervals.Clear();
                 }
@@ -159,13 +180,19 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnEnemy(double beat, float x, float y, bool active = true, float interval = 4f)
+        public void SpawnEnemy(double beat, Vector2 pos, bool active = true, float interval = 4f)
         {
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
+
+            crHandlerInstance.AddEvent(beat, crParams: new(){
+                new CallAndResponseHandler.CallAndResponseEventParam("pos", pos),
+            });
+
             var newEnemy = Instantiate(baseEnemy, enemyHolder).GetComponent<Enemy>();
             spawnedEnemies.Add(newEnemy);
             newEnemy.createBeat = beat;
             newEnemy.scaleSpeed = scaleSpeed/interval;
-            newEnemy.pos = new Vector2(x, y);
+            newEnemy.pos = pos;
             newEnemy.Init();
 
             if (active)
@@ -186,15 +213,17 @@ namespace HeavenStudio.Games
             }
         }
 
+        private static List<double> passedTurns = new();
         private struct QueuedInterval
         {
             public double beat;
             public float interval;
             public int placement;
+            public bool autoPassTurn;
         }
         private static List<QueuedInterval> queuedIntervals = new List<QueuedInterval>();
 
-        private void SetIntervalStart(double beat, double gameSwitchBeat, float interval = 4f, int placement = -1)
+        private void SetIntervalStart(double beat, double gameSwitchBeat, float interval = 4f, int placement = -1, bool autoPassTurn = true)
         {
             CallAndResponseHandler newHandler = new();
             crHandlerInstance = newHandler;
@@ -211,34 +240,33 @@ namespace HeavenStudio.Games
                 for (int i = 0; i < relevantInputsCount; i++)
                 {
                     var evt = relevantInputs[i];
-                    crHandlerInstance.AddEvent(evt.beat);
                     
                     int relevantIndex = Mathf.Min(relevantInputsCount - 1, posPatternLength - 1);
                     var posData = plcPattern.posPattern[relevantIndex].posData;
                     int posDataIndex = Mathf.Min(posData.Length - 1, i);
                     var pos = posData[posDataIndex];
-
-                    SpawnEnemy(evt.beat, pos.x, pos.y, evt.beat >= gameSwitchBeat, interval);
+                    SpawnEnemy(evt.beat, pos, evt.beat >= gameSwitchBeat, interval);
                 }
             }
             else
             {
                 foreach (var evt in relevantInputs)
                 {
-                    crHandlerInstance.AddEvent(evt.beat);
-                    SpawnEnemy(evt.beat, evt["x"], evt["y"], evt.beat >= gameSwitchBeat, interval);
+                    var pos = new Vector2(evt["x"], evt["y"]);
+                    SpawnEnemy(evt.beat, pos, evt.beat >= gameSwitchBeat, interval);
                 }
             }
-
-
-            PassTurn(beat + interval, interval, newHandler);
+            if (autoPassTurn)
+            {
+                PassTurn(beat + interval, interval, newHandler);
+            }
         }
 
-        public static void PreInterval(double beat, float interval = 4f, int placement = -1)
+        public static void PreInterval(double beat, float interval = 4f, int placement = -1, bool autoPassTurn = true)
         {
             if (GameManager.instance.currentGame == "shootEmUp")
             {
-                instance.SetIntervalStart(beat, beat, interval, placement);
+                instance.SetIntervalStart(beat, beat, interval, placement, autoPassTurn);
             }
             else
             {
@@ -247,6 +275,7 @@ namespace HeavenStudio.Games
                     beat = beat,
                     interval = interval,
                     placement = placement,
+                    autoPassTurn = autoPassTurn,
                 });
             }
         }
@@ -279,6 +308,18 @@ namespace HeavenStudio.Games
 
                 }),
             });
+        }
+
+        public static void PrePassTurn(double beat)
+        {
+            if (GameManager.instance.currentGame == "tambourine")
+            {
+                instance.PassTurnStandalone(beat);
+            }
+            else
+            {
+                passedTurns.Add(beat);
+            }
         }
     }
 }
