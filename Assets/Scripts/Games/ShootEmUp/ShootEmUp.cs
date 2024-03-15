@@ -55,8 +55,7 @@ namespace HeavenStudio.Games
         [Header("References")]
         public GameObject baseEnemy;
         public Transform enemyHolder;
-        public Animator shipAnim;
-        public Animator damageAnim;
+        public Ship playerShip;
         public ParticleSystem hitEffect;
 
         public float scaleSpeed;
@@ -114,7 +113,11 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.GetIsAction(InputAction_Press) && !IsExpectingInputNow(InputAction_Press))
             {
-                Debug.Log("?");
+                if (!playerShip.isDamage)
+                {
+                    SoundByte.PlayOneShotGame("shootEmUp/16");
+                    playerShip.Shoot();
+                }
             }
             GameCamera.AdditionalPosition = cameraPos.position;
         }
@@ -201,7 +204,7 @@ namespace HeavenStudio.Games
             
             if (placement >= 0 && placement < (int)PlacementType.Manual)
             {
-                PatternItem plcPattern = PlacementPattern[Math.Min(placement, PlacementPattern.Length - 1)];
+                PatternItem plcPattern = PlacementPattern[Mathf.Min(placement, PlacementPattern.Length - 1)];
 
                 int relevantInputsCount = relevantInputs.Count;
                 int posPatternLength = plcPattern.posPattern.Length;
@@ -210,9 +213,9 @@ namespace HeavenStudio.Games
                     var evt = relevantInputs[i];
                     crHandlerInstance.AddEvent(evt.beat);
                     
-                    int relevantIndex = Math.Min(relevantInputsCount - 1, posPatternLength - 1);
+                    int relevantIndex = Mathf.Min(relevantInputsCount - 1, posPatternLength - 1);
                     var posData = plcPattern.posPattern[relevantIndex].posData;
-                    int posDataIndex = Math.Min(posData.Length - 1, i);
+                    int posDataIndex = Mathf.Min(posData.Length - 1, i);
                     var pos = posData[posDataIndex];
 
                     SpawnEnemy(evt.beat, pos.x, pos.y, evt.beat >= gameSwitchBeat, interval);
@@ -276,12 +279,6 @@ namespace HeavenStudio.Games
 
                 }),
             });
-        }
-
-        public void Damage()
-        {
-            shipAnim.Play("shipDamage", 0, 0);
-            damageAnim.Play("damage", 0, 0);
         }
     }
 }

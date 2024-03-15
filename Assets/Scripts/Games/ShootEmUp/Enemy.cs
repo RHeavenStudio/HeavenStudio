@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
         public Transform effectHolder;
         public GameObject trajectoryEffect;
         public GameObject originEffect;
-        public GameObject hitEffect;
+        public GameObject impactEffect;
 
         [NonSerialized] public float scaleSpeed;
         Vector3 scaleRate => new Vector3(scaleSpeed, scaleSpeed, scaleSpeed) / (Conductor.instance.pitchedSecPerBeat * 2f);
@@ -39,16 +39,22 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
         private void Just(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("shootEmUp/shoot");
-            game.shipAnim.Play("shipShoot", 0, 0);
+            game.playerShip.Shoot();
+            if (state <= -1f || state >= 1f)
+            {
+                
+                JudgeAnim("miss");
+                return;
+            }
             game.hitEffect.Play();
-            JustAnim();
+            JudgeAnim("just");
         }
 
         private void Miss(PlayerActionEvent caller) 
         {
-            // this is where perfect challenge breaks
-            game.Damage();
-            AttackAnim();
+            SoundByte.PlayOneShotGame("shootEmUp/15");
+            game.playerShip.Damage();
+            JudgeAnim("attack");
         }
 
         private void Empty(PlayerActionEvent caller) {}
@@ -76,62 +82,72 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
             trajectory.transform.localPosition = this.transform.localPosition;
 
             Vector3 angle = new Vector3(0, 0, 0);
-            if (pos.x > 0 && pos.y > 0) {
+            if (pos.x > 0 && pos.y >= 0) {
                 angle = new Vector3(0, 0, -70);
-            } else if (pos.x < 0 && pos.y > 0) {
+            } else if (pos.x < 0 && pos.y >= 0) {
                 angle = new Vector3(0, 0, 70);
-            } else if (pos.x > 0 && pos.y < 0) {
+            } else if (pos.x > 0 && pos.y <= 0) {
                 angle = new Vector3(0, 0, -110);
-            } else if (pos.x < 0 && pos.y < 0) {
+            } else if (pos.x < 0 && pos.y <= 0) {
                 angle = new Vector3(0, 0, 110);
             }
             trajectory.transform.eulerAngles = angle;
             trajectory.gameObject.SetActive(true);
         }
 
-        public void AttackAnim()
+        public void JudgeAnim(string type)
         {
-            var origin = Instantiate(originEffect, effectHolder);
-            origin.transform.localPosition = this.transform.localPosition;
+            Vector3 currentPos = this.transform.localPosition;
+            Vector3 nextPos = new Vector3(0, 0.29f, 0);
+
+            GameObject origin = Instantiate(originEffect, effectHolder);
+            origin.transform.localPosition = currentPos;
             origin.gameObject.SetActive(true);
 
-            this.GetComponent<Animator>().Play("enemyAttack", 0, 0);
             isScale = false;
             transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
 
-            var trajectory = Instantiate(trajectoryEffect, effectHolder);
-            var hit = Instantiate(hitEffect, effectHolder);
+            GameObject trajectory = Instantiate(trajectoryEffect, effectHolder);
+            GameObject impact;
 
-            Vector3 attackPos = new Vector3(0, 0, 0);
-            Vector3 angle = new Vector3(0, 0, 0);
-            if (pos.x > 0) {
-                attackPos = new Vector3(-5, -3, 0);
-                angle = new Vector3(0, 0, -70);
-            } else if (pos.x < 0) {
-                attackPos = new Vector3(5, -3, 0);
-                angle = new Vector3(0, 0, 70);
+            switch (type)
+            {
+                case "just":
+                    this.GetComponent<Animator>().Play("enemyAttack", 0, 0);
+                    impact = Instantiate(impactEffect, effectHolder);
+                    impact.transform.localPosition = nextPos;
+                    impact.gameObject.SetActive(true);
+                    break;
+                case "attack":
+                    this.GetComponent<Animator>().Play("enemyAttack", 0, 0);
+                    if (pos.x > 0) {
+                        nextPos = new Vector3(-5, -3, 0);
+                    } else if (pos.x < 0) {
+                        nextPos = new Vector3(5, -3, 0);
+                    } else {
+                        nextPos = new Vector3(0, -1.25f, 0);
+                    }
+                    impact = Instantiate(impactEffect, effectHolder);
+                    impact.transform.localPosition = nextPos;
+                    impact.gameObject.SetActive(true);
+                    break;
+                case "miss":
+                    this.GetComponent<Animator>().DoScaledAnimationAsync("enemyMiss", 0.5f);
+                    break;
+                default:
+                    break;
             }
 
-            transform.localPosition = attackPos;
-            trajectory.transform.localPosition = attackPos;
+            float angleDegrees = 180 - Mathf.Atan2(nextPos.x - currentPos.x, nextPos.y - currentPos.y) * Mathf.Rad2Deg;
+            Vector3 angle = new Vector3(0, 0, angleDegrees);
+            Vector3 scale = new Vector3(1, Vector3.Distance(nextPos, currentPos)*0.16f, 1);
+
+            this.transform.localPosition = nextPos;
+            trajectory.transform.localPosition = nextPos;
             trajectory.transform.eulerAngles = angle;
+            trajectory.transform.localScale = scale;
             trajectory.gameObject.SetActive(true);
-            hit.transform.localPosition = attackPos;
-            hit.gameObject.SetActive(true);
-        }
-
-        public void JustAnim()
-        {
-            this.GetComponent<Animator>().Play("enemyAttack", 0, 0);
-            isScale = false;
-            transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
-            
-            var hit = Instantiate(hitEffect, effectHolder);
-
-            Vector3 attackPos = new Vector3(0, 0.29f, 0);
-            transform.localPosition = attackPos;
-            hit.transform.localPosition = attackPos;
-            hit.gameObject.SetActive(true);
+            trajectory.GetComponent<Animator>().Play("trajectory_damage", 0, 0);
         }
 
         void End()
