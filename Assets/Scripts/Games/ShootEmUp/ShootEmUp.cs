@@ -44,8 +44,16 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("x", new EntityTypes.Float(-5, 5, 0), "X"),
-                        new Param("y", new EntityTypes.Float(-5, 5, 0), "Y"),
+                        
+                        new Param("fine", false, "Fine placement", "Change placement by decimals.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => !(bool)x, new string[] { "x_int", "y_int" }),
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "x_float", "y_float" }),
+                        }),
+                        new Param("x_int", new EntityTypes.Integer(-3, 3, 0), "X (Integer)"),
+                        new Param("y_int", new EntityTypes.Integer(-3, 3, 0), "Y (Integer)"),
+                        new Param("x_float", new EntityTypes.Float(-8, 8, 0), "X (Decimal)"),
+                        new Param("y_float", new EntityTypes.Float(-8, 8, 0), "Y (Decimal)"),
                     },
                 },
                 new GameAction("passTurn", "Pass Turn")
@@ -291,7 +299,8 @@ namespace HeavenStudio.Games
             {
                 foreach (var evt in relevantInputs)
                 {
-                    var pos = new Vector2(evt["x"], evt["y"]);
+                    Vector2 pos = new Vector2(evt["x_int"], evt["y_int"]);
+                    if (evt["fine"]) pos = new Vector2(evt["x_float"], evt["y_float"]);
                     SpawnEnemy(evt.beat, pos, evt.beat >= gameSwitchBeat, interval);
                 }
             }
