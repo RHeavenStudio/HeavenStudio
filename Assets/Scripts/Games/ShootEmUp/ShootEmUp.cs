@@ -154,7 +154,7 @@ namespace HeavenStudio.Games
             {
                 foreach (var crEvent in crHandlerInstance.queuedEvents)
                 {
-                    SpawnEnemy(crEvent.beat, crEvent.DynamicData["pos"], false, crHandlerInstance.intervalLength);
+                    SpawnEnemy(crEvent.beat, crEvent.DynamicData["pos"], false, crHandlerInstance.intervalLength, true);
                 }
             }
         }
@@ -227,13 +227,15 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnEnemy(double beat, Vector2 pos, bool active = true, float interval = 4f)
+        public void SpawnEnemy(double beat, Vector2 pos, bool active = true, float interval = 4f, bool awake = false)
         {
-            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
-
-            crHandlerInstance.AddEvent(beat, crParams: new(){
-                new CallAndResponseHandler.CallAndResponseEventParam("pos", pos),
-            });
+            if (!awake)
+            {
+                if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
+                crHandlerInstance.AddEvent(beat, crParams: new(){
+                    new CallAndResponseHandler.CallAndResponseEventParam("pos", pos),
+                });
+            }
 
             var newEnemy = Instantiate(baseEnemy, enemyHolder).GetComponent<Enemy>();
             spawnedEnemies.Add(newEnemy);

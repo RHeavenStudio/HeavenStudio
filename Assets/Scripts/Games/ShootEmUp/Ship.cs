@@ -13,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
         public Animator damageAnim;
 
         public bool isDamage = false;
+        // int life = 24;
 
         public void Shoot()
         {
@@ -22,6 +23,12 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
 
         public void Damage()
         {
+            // if (life > 0) {
+            //     life = Mathf.Max(life - 8, 0);
+            // } else {
+            //     // Gameover if you miss in next interval
+            // }
+            
             isDamage = true;
             shipAnim.Play("shipDamage", 0, 0);
             damageAnim.Play("damage", 0, 0);
