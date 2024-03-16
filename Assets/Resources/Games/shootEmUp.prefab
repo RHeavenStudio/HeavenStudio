@@ -5255,7 +5255,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6137118448434182433
 Transform:
   m_ObjectHideFlags: 0
@@ -6105,7 +6105,7 @@ Transform:
   m_GameObject: {fileID: 1658407974388752238}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.03, y: 0, z: 0}
-  m_LocalScale: {x: 1.22124, y: 1.22124, z: 1.22124}
+  m_LocalScale: {x: 1.02, y: 1.02, z: 1.02}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5436772292607555438}
@@ -6153,7 +6153,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2103752361, guid: c0445b9380dc33d44b0c690894ddec9c, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -28435,6 +28435,9 @@ MonoBehaviour:
   enemyHolder: {fileID: 3963809439886282465}
   playerShip: {fileID: 7425109218906405028}
   hitEffect: {fileID: 5161883498074052860}
+  introGate: {fileID: 6767934292219209870}
+  monitor: {fileID: 4632575707632497822}
+  captain: {fileID: 40791317368152064}
   scaleSpeed: 0.2
   PlacementPattern:
   - posPattern:

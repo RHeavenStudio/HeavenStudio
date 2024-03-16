@@ -18,6 +18,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("shootEmUp", "Shoot-'Em-Up", "ffffff", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ShootEmUp.instance.ToggleBop(e.beat, e.length, e["toggle"], e["toggle2"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Bop", "Toggle if the characters should bop for the duration of this event."),
+                        new Param("toggle2", false, "Bop (Auto)", "Toggle if the characters should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("start interval", "Start Interval")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; ShootEmUp.PreInterval(e.beat, e.length, e["placement"], e["auto"]); }, 
@@ -42,6 +52,26 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; ShootEmUp.PrePassTurn(e.beat); },
                 },
+                new GameAction("gate events", "Gate Animations")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ShootEmUp.instance.GateAnims(e.beat, e.length, e["close"]); },
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("close", false, "Close", "Toggle if the gate is closed."),
+                    }
+                },
+                new GameAction("monitor events", "Monitor Animations")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ShootEmUp.instance.MonitorAnims(e.beat, e.length, e["toggle"]); },
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", ShootEmUp.MonitorAnimation.Enter, "Animation", "Set the animation for the monitor to perform."),
+                    }
+                },
             },
             new List<string>() { "ntr", "normal" }, "ntrShootEmUp", "en", new List<string>() { }
             );
@@ -62,6 +92,9 @@ namespace HeavenStudio.Games
         public Transform enemyHolder;
         public Ship playerShip;
         public ParticleSystem hitEffect;
+        public Animator introGate;
+        public Animator monitor;
+        public Animator captain;
 
         public float scaleSpeed;
 
@@ -108,6 +141,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("shootEmUp", "bop", "toggle");
             if (crHandlerInstance != null && crHandlerInstance.queuedEvents.Count > 0)
             {
                 foreach (var crEvent in crHandlerInstance.queuedEvents)
@@ -115,6 +149,11 @@ namespace HeavenStudio.Games
                     SpawnEnemy(crEvent.beat, crEvent.DynamicData["pos"], false, crHandlerInstance.intervalLength);
                 }
             }
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat)) Bop();
         }
 
         
@@ -320,6 +359,99 @@ namespace HeavenStudio.Games
             {
                 passedTurns.Add(beat);
             }
+        }
+
+        public enum MonitorAnimation
+        {
+            Enter,
+            Exit,
+            Talk,
+            Idle,
+            Bop,
+        }
+        private bool canBop = false;
+
+        public void MonitorAnims(double beat, double length, int type)
+        {
+            canBop = false;
+            switch (type) {
+                case (int)MonitorAnimation.Enter:
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat, delegate {
+                            monitor.DoScaledAnimationAsync("monitorIn", 1f);
+                        }),
+                        new BeatAction.Action(beat + length, delegate {
+                            captain.Play("capShow");
+                        }),
+                    });
+                    break;
+                case (int)MonitorAnimation.Exit:
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat, delegate {
+                            captain.Play("capHide");
+                        }),
+                        new BeatAction.Action(beat + length, delegate {
+                            monitor.DoScaledAnimationAsync("monitorOut", 1f);
+                        }),
+                    });
+                    break;
+                case (int)MonitorAnimation.Talk:
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat, delegate {
+                            captain.SetBool("isTalk", true);
+                            captain.DoScaledAnimationAsync("capTalk", 1f);
+                        }),
+                        new BeatAction.Action(beat + length, delegate {
+                            captain.SetBool("isTalk", false);
+                        }),
+                    });
+
+                    break;
+                case (int)MonitorAnimation.Idle:
+                    captain.Play("capIdle");
+                    monitor.Play("monitorIdle");  
+                    break;
+                case (int)MonitorAnimation.Bop:
+                    canBop = true;
+                    break;
+            }
+        }
+
+        public void GateAnims(double beat, double length, bool close)
+        {
+            introGate.Play("gateShow", 0, 0);
+            if (close) return;
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate {
+                    introGate.DoScaledAnimationAsync("gateOpen1", 1f);
+                }),
+                new BeatAction.Action(beat + length, delegate {
+                    introGate.DoScaledAnimationAsync("gateOpen2", 1f);
+                }),
+                new BeatAction.Action(beat + 2*length, delegate {
+                    introGate.DoScaledAnimationAsync("gateOpen3", 1f);
+                }),
+            });
+        }
+
+        public void ToggleBop(double beat, float length, bool bopOrNah, bool autoBop)
+        {
+            if (bopOrNah)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance, new() {new BeatAction.Action(beat + i, delegate {Bop();}) });
+                }
+            }
+        }
+
+        public void Bop()
+        {
+            if (canBop) captain.DoScaledAnimationAsync("capBop", 1f);
         }
     }
 }
