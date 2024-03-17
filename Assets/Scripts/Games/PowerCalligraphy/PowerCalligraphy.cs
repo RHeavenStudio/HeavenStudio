@@ -18,6 +18,16 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("powerCalligraphy", "Power Calligraphy", "ffffff", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.ToggleBop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Toggle if the paddlers should bop for the duration of this event."),
+                        new Param("bopAuto", false, "Bop (Auto)", "Toggle if the paddlers should automatically bop until another Bop event is reached.")
+                    }
+                },
                 new GameAction("re", "Re (レ)")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.re); },
@@ -82,6 +92,15 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {PowerCalligraphy.instance.TheEnd();},
                     defaultLength = 0.5f,
                 },
+                new GameAction("chounin events", "Chounin Animations")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; PowerCalligraphy.instance.PlayChouninAnimation(e["type"], e["pos"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", PowerCalligraphy.ChouninType.Dance, "Animation", "Set the animation for Chounin to perform."),
+                        new Param("pos", new EntityTypes.Float(0, 12, 0), "Position", "Set the position of Chounin."),
+                    }
+                },
             },
             new List<string>() { "agb", "normal" }, "agbCalligraphy", "en", new List<string>() { }
             );
@@ -101,6 +120,7 @@ namespace HeavenStudio.Games
         public Transform shiftHolder;
         public Transform paperHolder;
         public Animator endPaper;
+        public GameObject[] Chounin;
         
         public Animator fudePosAnim;
         public Animator fudeAnim;
@@ -111,6 +131,8 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         public Vector3 scrollSpeed = new Vector3();
+        public float chouninSpeed;
+        float chouninRate => chouninSpeed / (Conductor.instance.pitchedSecPerBeat * 2f);
 
         public enum CharacterType
         {
@@ -132,6 +154,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            SetupBopRegion("powerCalligraphy", "bop", "bopAuto");
         }
         public override void OnGameSwitch(double beat)
         {
@@ -165,6 +188,7 @@ namespace HeavenStudio.Games
                 if (nowPaper.onGoing && nowPaper.Stroke == 1)
                 {
                     nowPaper.ProcessInput("fast");
+                    ChouninMiss();
                     ScoreMiss();
                 }
             }
@@ -173,18 +197,23 @@ namespace HeavenStudio.Games
                 if (nowPaper.onGoing && nowPaper.Stroke != 1)
                 {
                     nowPaper.ProcessInput("fast");
+                    ChouninMiss();
                     ScoreMiss();
                 }
             }
+
+            UpdateChouninPos(chouninRate * Time.deltaTime);
         }
 
         private void SpawnPaper(int type)
         {
+            if (nowPaper is not null) nowPaper.transform.SetParent(paperHolder.transform, true);
             nowPaper = Instantiate(basePapers[type], paperHolder).GetComponent<Writing>();
             nowPaper.scrollSpeed = scrollSpeed;
             nowPaper.gameObject.SetActive(true);
             nowPaper.Init();
             fudePosAnim.runtimeAnimatorController = fudePosCntls[type];
+            fudePosAnim.Play("0", 0, 0);
             shiftAnim.runtimeAnimatorController = shiftCntls[type];
             shiftHolder.transform.position = new Vector3(0, 0, 0);
         }
@@ -192,13 +221,13 @@ namespace HeavenStudio.Games
         public void Write(double beat, int type)
         {
             Prepare(type);
-            nowPaper.transform.parent = shiftHolder.transform;
+            nowPaper.transform.SetParent(shiftHolder.transform, true);
             nowPaper.startBeat = beat;
             nowPaper.Play();
-            isPrepare=false;
             double nextBeat = beat + nowPaper.nextBeat;
             BeatAction.New(instance, new List<BeatAction.Action>(){
-                new BeatAction.Action(nextBeat, delegate{ NextPrepare(nextBeat);})
+                new BeatAction.Action(beat, delegate{isPrepare = false;}),
+                new BeatAction.Action(nextBeat, delegate{NextPrepare(nextBeat);}),
             });
         }
 
@@ -264,6 +293,116 @@ namespace HeavenStudio.Games
             fudePosAnim.runtimeAnimatorController = fudePosCntls[(int)CharacterType.NONE];
             fudePosAnim.Play("fudePos-end");
             endPaper.Play("paper-end");
+        }
+
+        public override void OnBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat)) Bop();
+        }
+
+        public void ToggleBop(double beat, float length, bool bopOrNah, bool autoBop)
+        {
+            if (bopOrNah)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance, new() {new BeatAction.Action(beat + i, delegate {Bop();}) });
+                }
+            }
+        }
+
+        public void Bop()
+        {
+            if (!isChouninDance) return;
+            isChouninMove = true;
+            double beat = Conductor.instance.songPositionInBeats;
+            
+            for (int i=0; i<2; i++) {
+                int j = 0;
+                foreach (Transform child in Chounin[i].transform) {
+                    var animator = child.GetComponent<Animator>();
+                    if (animator != null) {
+                        if ((int)(beat%2) == j%2) {
+                            animator.DoScaledAnimationAsync("dance1", 0.5f);
+                        } else {
+                            animator.DoScaledAnimationAsync("dance0", 0.5f);
+                        }
+                    }
+                    j++;
+                }
+            }
+        }
+
+        public enum ChouninType {
+            Dance,
+            Bow,
+            Idle,
+        }
+        bool isChouninMove = false;
+        bool isChouninDance = false;
+        public void PlayChouninAnimation(int type, float pos)
+        {
+            isChouninMove = false;
+            isChouninDance = false;
+            switch (type) 
+            {
+                case (int)ChouninType.Dance:
+                    isChouninMove = true;
+                    isChouninDance = true;
+                    Bop();
+                    break;
+                case (int)ChouninType.Bow:
+                    ChouninAnim("bow");
+                    break;
+                default:
+                    ChouninAnim("idle");
+                    break;
+            }
+            if (pos>0) UpdateChouninPos(pos);
+        }
+
+        public void ChouninAnim(string type)
+        {
+            for (int i=0; i<2; i++) {
+                foreach (Transform child in Chounin[i].transform) {
+                    var animator = child.GetComponent<Animator>();
+                    if (animator != null) {
+                        if (i%2 == 1) {
+                            animator.DoScaledAnimationAsync($"{type}1", 0.5f);
+                        } else {
+                            animator.DoScaledAnimationAsync($"{type}0", 0.5f);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ChouninMiss()
+        {
+            isChouninMove = false;
+            isChouninDance = false;
+            double beat = Conductor.instance.songPositionInBeats;
+            BeatAction.New(instance, new() {new BeatAction.Action(beat + 1.5f, delegate {isChouninDance = true;})});
+            ChouninAnim("fall");
+        }
+
+        private void UpdateChouninPos(float pos)
+        {
+            if (!isChouninMove) return;
+            
+            foreach (Transform child in Chounin[0].transform) {
+                var childPos = child.localPosition;
+                var newChildY = childPos.y - pos;
+                newChildY = newChildY < -6 ? newChildY + 12 : newChildY;
+                child.localPosition = new Vector3(childPos.x, newChildY, childPos.z);
+            }
+
+            foreach (Transform child in Chounin[1].transform) {
+                var childPos = child.localPosition;
+                var newChildY = childPos.y + pos;
+                newChildY = newChildY > 6 ? newChildY - 12 : newChildY;
+                child.localPosition = new Vector3(childPos.x, newChildY, childPos.z);
+            }
         }
     }
 }

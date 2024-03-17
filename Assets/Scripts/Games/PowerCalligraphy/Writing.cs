@@ -169,24 +169,31 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
         {
             isFinish = true;
             paperSort.sortingOrder++;
+            transform.SetParent(game.paperHolder.transform, true);
             game.fudeAnim.Play("fude-none");
             paperAnim.enabled = false;
         }
 
         private void writeSuccess(PlayerActionEvent caller, float state)
         {
-            if (state >= 1f)
+            if (state >= 1f) {
                 ProcessInput("late");
-            else if (state <= -1f)
+                game.ChouninMiss();
+            } else if (state <= -1f) {
                 ProcessInput("fast");
-            else
+                game.ChouninMiss();
+            } else {
                 ProcessInput("just");
+            }
+                
         }
 
         private void writeMiss(PlayerActionEvent caller)
         {
-            if (onGoing)
+            if (onGoing) {
                 Miss();
+                game.ChouninMiss();
+            }
         }
 
         private void Empty(PlayerActionEvent caller) { }
