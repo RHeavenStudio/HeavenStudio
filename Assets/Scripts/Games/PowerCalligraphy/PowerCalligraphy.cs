@@ -97,12 +97,15 @@ namespace HeavenStudio.Games
         [Header("References")]
         [SerializeField] List<GameObject> basePapers = new List<GameObject>();
         [SerializeField] List<RuntimeAnimatorController> fudePosCntls = new List<RuntimeAnimatorController>();
+        [SerializeField] List<RuntimeAnimatorController> shiftCntls = new List<RuntimeAnimatorController>();
+        public Transform shiftHolder;
         public Transform paperHolder;
         public Animator endPaper;
         
         public Animator fudePosAnim;
         public Animator fudeAnim;
-        public Fude fude;
+        public Animator shiftAnim;
+        public Fude playerFude;
 
         public static int queuedType;
 
@@ -182,11 +185,14 @@ namespace HeavenStudio.Games
             nowPaper.gameObject.SetActive(true);
             nowPaper.Init();
             fudePosAnim.runtimeAnimatorController = fudePosCntls[type];
+            shiftAnim.runtimeAnimatorController = shiftCntls[type];
+            shiftHolder.transform.position = new Vector3(0, 0, 0);
         }
 
         public void Write(double beat, int type)
         {
             Prepare(type);
+            nowPaper.transform.parent = shiftHolder.transform;
             nowPaper.startBeat = beat;
             nowPaper.Play();
             isPrepare=false;

@@ -76,7 +76,6 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
         public void Play()
         {
             paperSort.sortingOrder++;
-
             var sounds = new List<MultiSound.Sound>();
             var actions = new List<BeatAction.Action>();
             
@@ -169,6 +168,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
         private void Finish()
         {
             isFinish = true;
+            paperSort.sortingOrder++;
             game.fudeAnim.Play("fude-none");
             paperAnim.enabled = false;
         }
@@ -261,6 +261,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
             string pattern = num.ToString() + str;
 
             game.fudePosAnim.DoScaledAnimationAsync(pattern, 0.5f);
+            game.shiftAnim.DoScaledAnimationAsync(pattern, 0.5f);
             paperAnim.DoScaledAnimationAsync(pattern, 0.5f);  
         }
 
@@ -274,7 +275,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
                 {
                     float normalizedBeat = cond.GetPositionFromBeat(ongoingBeat, 1);
                     float redRate = (normalizedBeat <= 0.5f) ? normalizedBeat/0.5f : (1.5f-normalizedBeat);
-                    if (game is not null) game.fude.redRate = redRate;
+                    if (game is not null) game.playerFude.redRate = redRate;
                 }
                 if (isFinish)
                 {

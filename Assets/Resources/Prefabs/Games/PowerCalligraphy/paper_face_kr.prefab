@@ -395,6 +395,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startBeat: 0
+  ongoingBeat: -1.7976931348623157e+308
+  nextBeat: 0
   AnimPattern:
   - beat: 0
     soundType: 2
@@ -426,7 +428,7 @@ MonoBehaviour:
     soundVolume: 1
     stroke: 0
     fudeAnim: 1
-  - beat: 3.5
+  - beat: 3.75
     soundType: 0
     soundVolume: 0
     stroke: 0
