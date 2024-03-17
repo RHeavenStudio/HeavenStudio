@@ -449,8 +449,8 @@ namespace HeavenStudio.Games
                 string clip = typeSpeak switch
                 {
                     0 => "pan",
-                    1 => "pa_n",
-                    2 or _ => "pa",
+                    1 => "pa",
+                    2 or _ => "pa_n",
                 };
                 var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
                 SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
@@ -467,8 +467,8 @@ namespace HeavenStudio.Games
             string clip = typeSpeak switch
             {
                 0 => "don",
-                1 => "do_n",
-                2 or _ => "do",
+                1 => "do",
+                2 or _ => "do_n",
 
             };
             var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
