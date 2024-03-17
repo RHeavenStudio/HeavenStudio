@@ -20,10 +20,6 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [SerializeField] public GameObject BigLandmass;
         [SerializeField] public GameObject SmallLandmass;
         [SerializeField] public GameObject FullLandmass;
-        [SerializeField] public GameObject StonePlatform;
-        [SerializeField] public GameObject Platform1;
-        [SerializeField] public GameObject Platform2;
-        [SerializeField] public GameObject Platform3;
         [SerializeField] public GameObject Helmet;
         [SerializeField] public ParticleSystem IslandCollapse;
         [SerializeField] public ParticleSystem IslandCollapseNg;
@@ -41,7 +37,6 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [NonSerialized]public double respawnEnd = 0;
         [NonSerialized]public bool isRespawning = false;
 
-        [NonSerialized]public bool isStonePlatform = false;
         [NonSerialized]public bool canFall = false;
         [NonSerialized]public bool isFalling = false;
 
@@ -50,6 +45,16 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [NonSerialized]public float value1 = 0f;
         [NonSerialized]public float speed1 = 0f;
         [NonSerialized]public float speed2 = 0f;
+
+        [SerializeField] GameObject PlatformBase;
+
+        StonePlatform[] stonePlatformJourney;
+
+        private struct StonePlatform
+        {
+            public int stoneNumber;
+            public GameObject thisPlatform;
+        }
 
         #endregion
 
@@ -76,18 +81,18 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                 float newX2 = Util.EasingFunction.Linear((float)journeyStart - (float)journeySave, (float)journeyEnd, 1 - value2);
                 IslandPos.localPosition = new Vector3(newX2, 0, 0);
             }
-            if (canFall && IslandPos.localPosition.x < -0.5)
-            {
-                PlatformAnim.Play("Fall", -1, 0);
-                PlatformAnim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.3f;
-                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_PITCH150", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
-                BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.50, delegate { StoneSplash(); }),
-                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 3.00, delegate { Destroy(gameObject); }),
-                });
-                canFall = false;
-            }
+            //if (canFall && IslandPos.localPosition.x < -0.5)
+            //{
+            //    PlatformAnim.Play("Fall", -1, 0);
+            //    PlatformAnim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.3f;
+            //    SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_PITCH150", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
+            //    BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
+            //    {
+            //        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.50, delegate { StoneSplash(); }),
+            //        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 3.00, delegate { Destroy(gameObject); }),
+            //    });
+            //    canFall = false;
+            //}
 
             float currentPosition = IslandPos.localPosition.x;
             speed1 = (previousPosition - currentPosition) / Time.deltaTime;
@@ -150,30 +155,6 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         //stone platform methods
         #region Stone Platform Methods
 
-        public void BecomeStonePlatform(int offset)
-        {
-            isStonePlatform = true;
-            canFall = true;
-
-            BigLandmass.SetActive(false);
-            FullLandmass.SetActive(false);
-            StonePlatform.SetActive(true);
-
-            switch (offset % 3) {
-                case 0: Platform1.SetActive(true); break;
-                case 1: Platform2.SetActive(true); break;
-                case 2: Platform3.SetActive(true); break;
-            }
-
-        }
-
-        public void StoneFall(int offset, bool tooLate)
-        {
-            if (tooLate) return;
-            PlatformAnim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble/*  + ((double)offset / 64) */, 0.5f);
-            PlatformAnim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.5f;
-        }
-
         public void StoneSplash()
         {
             if (IslandPos.localPosition.x > -8) 
@@ -193,6 +174,33 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
             var c = ChickenSplashEffect.transform.localPosition;
             ChickenSplashEffect.transform.localPosition = new Vector3(-IslandPos.localPosition.x + 1.5f, c.y, c.z);
             ChickenSplashEffect.Play();
+        }
+
+        //stone platform ported code
+
+        public void SpawnStones(double beat, double length, bool tooLate)
+        {
+            stonePlatformJourney = new StonePlatform[(int)(length * 4)];
+
+            for ( int i = 0; i < length * 4; i++ )
+            {
+                var a = stonePlatformJourney[i];
+
+                a.thisPlatform = Instantiate(PlatformBase, transform);
+                a.stoneNumber = i;
+
+                var stone = a.thisPlatform;
+                var anim = stone.GetComponent<Animator>();
+
+                stone.SetActive(true);
+                stone.transform.localPosition = new Vector3((float)(((a.stoneNumber) * ChargingChicken.platformDistanceConstant) - (ChargingChicken.platformDistanceConstant / 2)) + stone.transform.localPosition.x, stone.transform.localPosition.y, 0);
+
+                if (!tooLate)
+                {
+                    anim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble + ((double)a.stoneNumber / 64), 0.5f);
+                    anim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.5f;
+                }
+            }
         }
 
         #endregion
