@@ -17,8 +17,8 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
 
         public void Shoot()
         {
-            shipAnim.Play("shipShoot", 0, 0);
-            laserAnim.Play("laser", 0, 0);
+            shipAnim.DoScaledAnimationAsync("shipShoot", 1f);
+            laserAnim.DoScaledAnimationAsync("laser", 1f);
         }
 
         public void Damage()
@@ -30,8 +30,8 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
             // }
             
             isDamage = true;
-            shipAnim.Play("shipDamage", 0, 0);
-            damageAnim.Play("damage", 0, 0);
+            shipAnim.DoScaledAnimationAsync("shipDamage", 1f);
+            damageAnim.DoScaledAnimationAsync("damage", 1f);
         }
 
         public void DamageEnd()

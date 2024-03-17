@@ -10,13 +10,17 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
 {
     public class Enemy : MonoBehaviour
     {
-        [NonSerialized] public double createBeat;
-        [NonSerialized] public Vector2 pos;
         [Header("References")]
+        public Animator enemyAnim;
         public Transform effectHolder;
         public GameObject trajectoryEffect;
         public GameObject originEffect;
         public GameObject impactEffect;
+
+        [Header("Parameters")]
+        [NonSerialized] public double createBeat;
+        [NonSerialized] public int type;
+        [NonSerialized] public Vector2 pos;
 
         [NonSerialized] public float scaleSpeed;
         Vector3 scaleRate => new Vector3(scaleSpeed, scaleSpeed, scaleSpeed) / (Conductor.instance.pitchedSecPerBeat * 2f);
@@ -28,13 +32,15 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
         {
             game = ShootEmUp.instance;
             transform.localPosition = new Vector3(5.05f/3*pos.x, 2.5f/3*pos.y + 1.25f, 0);
+            enemyAnim = GetComponent<Animator>();
+            enemyAnim.Play(Enum.GetName(typeof(ShootEmUp.EnemyType), type));
             isScale = true;
         }
 
         public void StartInput(double beat, double length)
         {
-            game = ShootEmUp.instance;
             game.ScheduleInput(beat, length, ShootEmUp.InputAction_Press, Just, Miss, Empty);
+            // (type == (int)ShootEmUp.EnemyType.Endless ?  : )
         }
         private void Just(PlayerActionEvent caller, float state)
         {
@@ -46,7 +52,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
                 JudgeAnim("miss");
                 return;
             }
-            game.hitEffect.Play();
+            game.hitEffect.PlayScaledAsyncAllChildren(0.45f);
             JudgeAnim("just");
         }
 
@@ -76,7 +82,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
 
         public void SpawnAnim()
         {
-            this.GetComponent<Animator>().Play("enemySpawn", 0, 0);
+            enemyAnim.DoScaledAnimationAsync("enemySpawn", 1f);
             
             var trajectory = Instantiate(trajectoryEffect, effectHolder);
             trajectory.transform.localPosition = this.transform.localPosition;
@@ -93,6 +99,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
             }
             trajectory.transform.eulerAngles = angle;
             trajectory.gameObject.SetActive(true);
+            trajectory.GetComponent<Animator>().DoScaledAnimationAsync("trajectory", 1f);
         }
 
         public void JudgeAnim(string type)
@@ -103,6 +110,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
             GameObject origin = Instantiate(originEffect, effectHolder);
             origin.transform.localPosition = currentPos;
             origin.gameObject.SetActive(true);
+            origin.GetComponent<Animator>().DoScaledAnimationAsync("origin", 1f);
 
             isScale = false;
             transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
@@ -113,13 +121,14 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
             switch (type)
             {
                 case "just":
-                    this.GetComponent<Animator>().Play("enemyAttack", 0, 0);
+                    enemyAnim.DoScaledAnimationAsync("enemyAttack", 1f);
                     impact = Instantiate(impactEffect, effectHolder);
                     impact.transform.localPosition = nextPos;
                     impact.gameObject.SetActive(true);
+                    impact.GetComponent<Animator>().DoScaledAnimationAsync("impact", 1f);
                     break;
                 case "attack":
-                    this.GetComponent<Animator>().Play("enemyAttack", 0, 0);
+                    enemyAnim.DoScaledAnimationAsync("enemyAttack", 1f);
                     if (pos.x > 0) {
                         nextPos = new Vector3(-5, -3, 0);
                     } else if (pos.x < 0) {
@@ -130,9 +139,10 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
                     impact = Instantiate(impactEffect, effectHolder);
                     impact.transform.localPosition = nextPos;
                     impact.gameObject.SetActive(true);
+                    impact.GetComponent<Animator>().DoScaledAnimationAsync("impact", 1f);
                     break;
                 case "miss":
-                    this.GetComponent<Animator>().DoScaledAnimationAsync("enemyMiss", 0.5f);
+                    enemyAnim.DoScaledAnimationAsync("enemyMiss", 1f);
                     break;
                 default:
                     break;
@@ -147,7 +157,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
             trajectory.transform.eulerAngles = angle;
             trajectory.transform.localScale = scale;
             trajectory.gameObject.SetActive(true);
-            trajectory.GetComponent<Animator>().Play("trajectory_damage", 0, 0);
+            trajectory.GetComponent<Animator>().DoScaledAnimationAsync("trajectory_damage", 1f);
         }
 
         void End()

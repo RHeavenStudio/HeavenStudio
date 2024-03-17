@@ -54,6 +54,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("y_int", new EntityTypes.Integer(-3, 3, 0), "Y (Integer)"),
                         new Param("x_float", new EntityTypes.Float(-8, 8, 0), "X (Decimal)"),
                         new Param("y_float", new EntityTypes.Float(-8, 8, 0), "Y (Decimal)"),
+                        new Param("type", ShootEmUp.EnemyType.Basic, "Enemy", "Choose the enemy to spawn."),
                     },
                 },
                 new GameAction("passTurn", "Pass Turn")
@@ -116,6 +117,14 @@ namespace HeavenStudio.Games
             Manual,
         }
 
+        public enum EnemyType
+        {
+            Basic = 0,
+            Practice,
+            Endless,
+            Lockstep = 100,
+        }
+
         [System.Serializable]
         public struct PatternItem
         {
@@ -154,7 +163,7 @@ namespace HeavenStudio.Games
             {
                 foreach (var crEvent in crHandlerInstance.queuedEvents)
                 {
-                    SpawnEnemy(crEvent.beat, crEvent.DynamicData["pos"], false, crHandlerInstance.intervalLength, true);
+                    SpawnEnemy(crEvent.beat, crEvent.DynamicData["pos"], (int)Enum.Parse(typeof(EnemyType), crEvent.tag), false, crHandlerInstance.intervalLength, true);
                 }
             }
         }
@@ -227,12 +236,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnEnemy(double beat, Vector2 pos, bool active = true, float interval = 4f, bool awake = false)
+        public void SpawnEnemy(double beat, Vector2 pos, int type,
+                               bool active = true, float interval = 4f, bool awake = false)
         {
             if (!awake)
             {
                 if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
-                crHandlerInstance.AddEvent(beat, crParams: new(){
+                crHandlerInstance.AddEvent(beat, tag: Enum.GetName(typeof(EnemyType), type), crParams: new(){
                     new CallAndResponseHandler.CallAndResponseEventParam("pos", pos),
                 });
             }
@@ -240,9 +250,9 @@ namespace HeavenStudio.Games
             var newEnemy = Instantiate(baseEnemy, enemyHolder).GetComponent<Enemy>();
             spawnedEnemies.Add(newEnemy);
             newEnemy.createBeat = beat;
-            newEnemy.scaleSpeed = scaleSpeed/interval;
+            newEnemy.type = type;
             newEnemy.pos = pos;
-            newEnemy.Init();
+            newEnemy.scaleSpeed = scaleSpeed/interval;
 
             if (active)
             {
@@ -252,6 +262,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat, delegate
                     {
                         newEnemy.gameObject.SetActive(true);
+                        newEnemy.Init();
                         newEnemy.SpawnAnim();
                     })
                 });
@@ -259,6 +270,7 @@ namespace HeavenStudio.Games
             else
             {
                 newEnemy.gameObject.SetActive(true);
+                newEnemy.Init();
             }
         }
 
@@ -294,7 +306,7 @@ namespace HeavenStudio.Games
                     var posData = plcPattern.posPattern[relevantIndex].posData;
                     int posDataIndex = Mathf.Min(posData.Length - 1, i);
                     var pos = posData[posDataIndex];
-                    SpawnEnemy(evt.beat, pos, evt.beat >= gameSwitchBeat, interval);
+                    SpawnEnemy(evt.beat, pos, evt["type"], evt.beat >= gameSwitchBeat, interval);
                 }
             }
             else
@@ -303,7 +315,7 @@ namespace HeavenStudio.Games
                 {
                     Vector2 pos = new Vector2(evt["x_int"], evt["y_int"]);
                     if (evt["fine"]) pos = new Vector2(evt["x_float"], evt["y_float"]);
-                    SpawnEnemy(evt.beat, pos, evt.beat >= gameSwitchBeat, interval);
+                    SpawnEnemy(evt.beat, pos, evt["type"], evt.beat >= gameSwitchBeat, interval);
                 }
             }
             if (autoPassTurn)
@@ -362,7 +374,7 @@ namespace HeavenStudio.Games
 
         public static void PrePassTurn(double beat)
         {
-            if (GameManager.instance.currentGame == "tambourine")
+            if (GameManager.instance.currentGame == "shootEmUp")
             {
                 instance.PassTurnStandalone(beat);
             }
@@ -427,6 +439,7 @@ namespace HeavenStudio.Games
                     break;
                 case (int)MonitorAnimation.Bop:
                     canBop = true;
+                    captain.DoScaledAnimationAsync("capBop", 1f);
                     break;
             }
         }
@@ -435,6 +448,12 @@ namespace HeavenStudio.Games
         {
             introGate.Play("gateShow", 0, 0);
             if (close) return;
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("shootEmUp/gate1", beat),
+                new MultiSound.Sound("shootEmUp/gate2", beat + length),
+                new MultiSound.Sound("shootEmUp/gate3", beat + 2*length),
+            });
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate {
