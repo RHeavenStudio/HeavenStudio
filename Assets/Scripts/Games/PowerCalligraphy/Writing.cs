@@ -190,10 +190,7 @@ namespace HeavenStudio.Games.Scripts_PowerCalligraphy
 
         private void writeMiss(PlayerActionEvent caller)
         {
-            if (onGoing) {
-                Miss();
-                game.ChouninMiss();
-            }
+            if (onGoing) Miss();
         }
 
         private void Empty(PlayerActionEvent caller) { }

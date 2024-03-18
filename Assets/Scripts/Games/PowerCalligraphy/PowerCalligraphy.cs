@@ -30,44 +30,36 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("re", "Re (レ)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.re); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.re); },
                     defaultLength = 8f,
                 },
                 new GameAction("comma", "Comma (、)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.comma); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.comma); },
                     defaultLength = 8f,
                 },
                 new GameAction("chikara", "Chikara (力)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.chikara); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.chikara); },
                     defaultLength = 8f,
                 },
                 new GameAction("onore", "Onore (己)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.onore); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.onore); },
                     defaultLength = 8f,
                 },
                 new GameAction("sun", "Sun (寸)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.sun); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.sun); },
                     defaultLength = 8f,
                 },
                 new GameAction("kokoro", "Kokoro (心)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat, (int)PowerCalligraphy.CharacterType.kokoro); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, (int)PowerCalligraphy.CharacterType.kokoro); },
                     defaultLength = 8f,
                 },
                 new GameAction("face", "Face (つるニハ○○ムし)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.QueuePaper(e.beat,
-                        e["korean"] ? (int)PowerCalligraphy.CharacterType.face_kr : (int)PowerCalligraphy.CharacterType.face); },
                     function = delegate {var e = eventCaller.currentEntity; PowerCalligraphy.instance.Write(e.beat, 
                         e["korean"] ? (int)PowerCalligraphy.CharacterType.face_kr : (int)PowerCalligraphy.CharacterType.face); },
                     parameters = new List<Param>() 
@@ -87,19 +79,19 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 0.5f,
                 },
-                new GameAction("end", "The End")
-                {
-                    function = delegate {PowerCalligraphy.instance.TheEnd();},
-                    defaultLength = 0.5f,
-                },
                 new GameAction("chounin events", "Chounin Animations")
                 {
                     function = delegate { var e = eventCaller.currentEntity; PowerCalligraphy.instance.PlayChouninAnimation(e["type"], e["pos"]); },
                     parameters = new List<Param>()
                     {
                         new Param("type", PowerCalligraphy.ChouninType.Dance, "Animation", "Set the animation for Chounin to perform."),
-                        new Param("pos", new EntityTypes.Float(0, 12, 0), "Position", "Set the position of Chounin."),
+                        new Param("pos", new EntityTypes.Float(0, 14, 0), "Position", "Set the position of Chounin."),
                     }
+                },
+                new GameAction("end", "The End")
+                {
+                    function = delegate {PowerCalligraphy.instance.TheEnd();},
+                    defaultLength = 0.5f,
                 },
             },
             new List<string>() { "agb", "normal" }, "agbCalligraphy", "en", new List<string>() { }
@@ -126,8 +118,6 @@ namespace HeavenStudio.Games
         public Animator fudeAnim;
         public Animator shiftAnim;
         public Fude playerFude;
-
-        public static int queuedType;
 
         [Header("Variables")]
         public Vector3 scrollSpeed = new Vector3();
@@ -171,17 +161,7 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            if (!cond.isPlaying || cond.isPaused)
-            {
-                if (!cond.isPaused) queuedType = (int)CharacterType.NONE;
-                return;
-            }
-
-            if (queuedType != (int)CharacterType.NONE)
-            {
-                Prepare(queuedType);
-                queuedType = (int)CharacterType.NONE;
-            }
+            if (!cond.isPlaying || cond.isPaused) return;
 
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
@@ -202,7 +182,7 @@ namespace HeavenStudio.Games
                 }
             }
 
-            UpdateChouninPos(chouninRate * Time.deltaTime);
+            if (isChouninMove) UpdateChouninPos(chouninRate * Time.deltaTime);
         }
 
         private void SpawnPaper(int type)
@@ -231,25 +211,12 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void QueuePaper(double beat, int type)
-        {
-            if (GameManager.instance.currentGame != "powerCalligraphy")
-            {
-                queuedType = type;
-            }
-            else if(Conductor.instance.songPositionInBeats < beat)
-            {
-                BeatAction.New(instance, new List<BeatAction.Action>(){
-                    new BeatAction.Action(beat-1, delegate{ Prepare(type);})
-                });
-            }
-        }
         public void Prepare(int type)
         {
             if (!isPrepare)
             {
-                SpawnPaper(type);
                 isPrepare = true;
+                SpawnPaper(type);
             }
         }
         public void NextPrepare(double beat) // Prepare next paper
@@ -313,7 +280,7 @@ namespace HeavenStudio.Games
 
         public void Bop()
         {
-            if (!isChouninDance) return;
+            if (chouninType != (int)ChouninType.Dance) return;
             isChouninMove = true;
             double beat = Conductor.instance.songPositionInBeats;
             
@@ -339,16 +306,15 @@ namespace HeavenStudio.Games
             Idle,
         }
         bool isChouninMove = false;
-        bool isChouninDance = false;
+        int chouninType = -1;
         public void PlayChouninAnimation(int type, float pos)
         {
             isChouninMove = false;
-            isChouninDance = false;
+            chouninType = type;
             switch (type) 
             {
                 case (int)ChouninType.Dance:
                     isChouninMove = true;
-                    isChouninDance = true;
                     Bop();
                     break;
                 case (int)ChouninType.Bow:
@@ -380,16 +346,17 @@ namespace HeavenStudio.Games
         public void ChouninMiss()
         {
             isChouninMove = false;
-            isChouninDance = false;
             double beat = Conductor.instance.songPositionInBeats;
-            BeatAction.New(instance, new() {new BeatAction.Action(beat + 1.5f, delegate {isChouninDance = true;})});
+            var currentChouninType = chouninType;
+            BeatAction.New(instance, new() {new BeatAction.Action(beat + 1.5f, delegate {
+                if (chouninType == -1) chouninType = currentChouninType;
+            })});
+            chouninType = -1;
             ChouninAnim("fall");
         }
 
         private void UpdateChouninPos(float pos)
         {
-            if (!isChouninMove) return;
-            
             foreach (Transform child in Chounin[0].transform) {
                 var childPos = child.localPosition;
                 var newChildY = childPos.y - pos;
