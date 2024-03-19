@@ -1,0 +1,960 @@
+fileFormatVersion: 2
+guid: f77716464d1f0864fbad93cdacd39630
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: bts_widget_0
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 3494
+        width: 700
+        height: 675
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 096ebdcc9dd051b49a8d1b7090d8f633
+      internalID: 444922917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_1
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 3486
+        width: 692
+        height: 696
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7129d6f4f51e36418795d920ed69f3a
+      internalID: -2012133994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_2
+      rect:
+        serializedVersion: 2
+        x: 1831
+        y: 3482
+        width: 675
+        height: 704
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a961074b9d601344afd03b999545801
+      internalID: 356430700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_3
+      rect:
+        serializedVersion: 2
+        x: 2706
+        y: 3486
+        width: 651
+        height: 696
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1712ed487befb864aab9108fb8aa66eb
+      internalID: -1373718269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_4
+      rect:
+        serializedVersion: 2
+        x: 3577
+        y: 3486
+        width: 642
+        height: 696
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5b5cf96d6814654793165dcc265c092
+      internalID: -1667867877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_5
+      rect:
+        serializedVersion: 2
+        x: 4465
+        y: 3490
+        width: 604
+        height: 683
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 590b7b5817061714083c2c7c1f0acd23
+      internalID: -1691279343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_6
+      rect:
+        serializedVersion: 2
+        x: 5294
+        y: 3532
+        width: 684
+        height: 607
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a94ac5ed131611041948412a224d3738
+      internalID: -1625031748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_7
+      rect:
+        serializedVersion: 2
+        x: 6161
+        y: 3598
+        width: 683
+        height: 467
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b784ce40a87c24409c8a31e8304bab2
+      internalID: -1181580059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_8
+      rect:
+        serializedVersion: 2
+        x: 7024
+        y: 3632
+        width: 683
+        height: 408
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a31809ad1dee6143975457a0d70d8c2
+      internalID: 548264023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_9
+      rect:
+        serializedVersion: 2
+        x: 7932
+        y: 3886
+        width: 467
+        height: 225
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cff95ab181f45424a851dd211f5ba2b9
+      internalID: 777239047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_10
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 2644
+        width: 529
+        height: 646
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cfd32b5658de5f4db47931aa965ceeb
+      internalID: -1692917180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_11
+      rect:
+        serializedVersion: 2
+        x: 1002
+        y: 2669
+        width: 596
+        height: 587
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22bd0011246a5b54fa812b91e4ab8dd8
+      internalID: 194973701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_12
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 2698
+        width: 638
+        height: 538
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37b90f60a69d9834db220d8dd97d71a6
+      internalID: -1903993783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_13
+      rect:
+        serializedVersion: 2
+        x: 2711
+        y: 2694
+        width: 645
+        height: 546
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4dd7f2c1c90720b4c946f269a7d1aab8
+      internalID: -652921874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_14
+      rect:
+        serializedVersion: 2
+        x: 3573
+        y: 2686
+        width: 654
+        height: 558
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e5c70bddf8a23d478deb2a8dacf7ba0
+      internalID: -564868734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_15
+      rect:
+        serializedVersion: 2
+        x: 4423
+        y: 2656
+        width: 688
+        height: 621
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3cbc660a17b18943ab7c3985ac5bec0
+      internalID: -1098956612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_16
+      rect:
+        serializedVersion: 2
+        x: 5365
+        y: 2644
+        width: 529
+        height: 646
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07225f6b8b2cfaa4a8fb4d04b813a066
+      internalID: -1616201231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_17
+      rect:
+        serializedVersion: 2
+        x: 6207
+        y: 2644
+        width: 591
+        height: 646
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f178a1f4d1438e64487d4fc2c0486614
+      internalID: 1140548742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_18
+      rect:
+        serializedVersion: 2
+        x: 7036
+        y: 2648
+        width: 658
+        height: 638
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 947a56f81b2de1f42a85226f56595afe
+      internalID: -2082090629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_19
+      rect:
+        serializedVersion: 2
+        x: 7965
+        y: 2674
+        width: 209
+        height: 974
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8ec6f013395c4548a6c15fb15c46f10
+      internalID: 1926845027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_20
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 1990
+        width: 425
+        height: 421
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 372d71e88628ed94d9ed3992dec180ad
+      internalID: 390852795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_21
+      rect:
+        serializedVersion: 2
+        x: 790
+        y: 1990
+        width: 425
+        height: 421
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23947004edc30b749ad544aab0af2e4a
+      internalID: 895687298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_22
+      rect:
+        serializedVersion: 2
+        x: 1456
+        y: 1990
+        width: 425
+        height: 421
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d516ce905360cb428ca483eecf48983
+      internalID: -1416734572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_23
+      rect:
+        serializedVersion: 2
+        x: 2123
+        y: 1990
+        width: 425
+        height: 421
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8c507d9abb598143b456e4c7bfd2220
+      internalID: 1488328259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_24
+      rect:
+        serializedVersion: 2
+        x: 2790
+        y: 1990
+        width: 425
+        height: 421
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6598eb135d4ab3e49b15483eb9ecae09
+      internalID: -1204723419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_25
+      rect:
+        serializedVersion: 2
+        x: 3457
+        y: 1990
+        width: 424
+        height: 421
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e239b137c751c447ae21a2d6376da5d
+      internalID: -264112222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_26
+      rect:
+        serializedVersion: 2
+        x: 4423
+        y: 1919
+        width: 688
+        height: 371
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec15d6e964a6d5f41b6194e14b04b6d0
+      internalID: -335777287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_27
+      rect:
+        serializedVersion: 2
+        x: 5294
+        y: 1844
+        width: 679
+        height: 508
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9fc32bf43e6403f4db640e5b6e842698
+      internalID: -1747761551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_28
+      rect:
+        serializedVersion: 2
+        x: 6194
+        y: 1811
+        width: 613
+        height: 583
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df5be30abfb13e645814dcea7b245b3d
+      internalID: 1640877700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_29
+      rect:
+        serializedVersion: 2
+        x: 7036
+        y: 1861
+        width: 667
+        height: 475
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 237b5ed0406a512478829a296089922d
+      internalID: -1291899781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_30
+      rect:
+        serializedVersion: 2
+        x: 7911
+        y: 2148
+        width: 517
+        height: 242
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 289824220af44654eac9ce035f070fa4
+      internalID: 956981337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_31
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 1327
+        width: 425
+        height: 417
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f653f011a35846c4884b9e01261723b3
+      internalID: -338696181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_32
+      rect:
+        serializedVersion: 2
+        x: 790
+        y: 1327
+        width: 425
+        height: 417
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d15aa7ff6cd12634a9461a2052e76028
+      internalID: -982880592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_33
+      rect:
+        serializedVersion: 2
+        x: 1428
+        y: 1299
+        width: 481
+        height: 477
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbf21aab3da06e241af884fdff6f4892
+      internalID: 777347509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_35
+      rect:
+        serializedVersion: 2
+        x: 7894
+        y: 1606
+        width: 546
+        height: 255
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edf06906023c37d41ae7967b8630e546
+      internalID: -361290069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_36
+      rect:
+        serializedVersion: 2
+        x: 7111
+        y: 1265
+        width: 587
+        height: 274
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa5f69aaedb16934684fa98b5f4877c1
+      internalID: 119317094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_37
+      rect:
+        serializedVersion: 2
+        x: 7915
+        y: 1212
+        width: 238
+        height: 178
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c4d2617d7c820a48b4b4513b99b51ae
+      internalID: -94706311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_widget_38
+      rect:
+        serializedVersion: 2
+        x: 7478
+        y: 96
+        width: 912
+        height: 848
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4de29ecaa71fe8b4498a0639331f9dd6
+      internalID: -2012689479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      bts_widget_0: 444922917
+      bts_widget_1: -2012133994
+      bts_widget_10: -1692917180
+      bts_widget_11: 194973701
+      bts_widget_12: -1903993783
+      bts_widget_13: -652921874
+      bts_widget_14: -564868734
+      bts_widget_15: -1098956612
+      bts_widget_16: -1616201231
+      bts_widget_17: 1140548742
+      bts_widget_18: -2082090629
+      bts_widget_19: 1926845027
+      bts_widget_2: 356430700
+      bts_widget_20: 390852795
+      bts_widget_21: 895687298
+      bts_widget_22: -1416734572
+      bts_widget_23: 1488328259
+      bts_widget_24: -1204723419
+      bts_widget_25: -264112222
+      bts_widget_26: -335777287
+      bts_widget_27: -1747761551
+      bts_widget_28: 1640877700
+      bts_widget_29: -1291899781
+      bts_widget_3: -1373718269
+      bts_widget_30: 956981337
+      bts_widget_31: -338696181
+      bts_widget_32: -982880592
+      bts_widget_33: 777347509
+      bts_widget_34: -327799300
+      bts_widget_35: -361290069
+      bts_widget_36: 119317094
+      bts_widget_37: -94706311
+      bts_widget_38: -2012689479
+      bts_widget_4: -1667867877
+      bts_widget_5: -1691279343
+      bts_widget_6: -1625031748
+      bts_widget_7: -1181580059
+      bts_widget_8: 548264023
+      bts_widget_9: 777239047
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

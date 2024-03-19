@@ -73,6 +73,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader NtrFlickLoader failed!");
             }
 
+            game = RvlBuiltLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader RvlBuiltLoader failed!");
+            }
+
             game = PcoCanneryLoader.AddGame(eventCaller);
             if (game != null)
             {
