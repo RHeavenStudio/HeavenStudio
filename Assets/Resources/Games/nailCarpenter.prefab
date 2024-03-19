@@ -337,7 +337,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2.85, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8897395654160567201}
   m_RootOrder: 0
@@ -634,17 +634,60 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SoundSequences: []
   scheduledInputs: []
+  puddingPattern:
+  - beat: 0
+    type: 2
+  - beat: 0.5
+    type: 0
+  - beat: 1
+    type: 8
+  cherryPattern:
+  - beat: 0
+    type: 2
+  - beat: 0.5
+    type: 0
+  - beat: 1
+    type: 0
+  - beat: 1.5
+    type: 0
+  - beat: 2
+    type: 8
+  cakePattern:
+  - beat: 0
+    type: 2
+  - beat: 0.5
+    type: 0
+  - beat: 1
+    type: 3
+  - beat: 1.25
+    type: 0
+  - beat: 1.75
+    type: 0
+  - beat: 2
+    type: 8
+  cakeLongPattern:
+  - beat: 0
+    type: 2
+  - beat: 0.5
+    type: 0
+  - beat: 1
+    type: 9
+  - beat: 1.5
+    type: 1
+  - beat: 2
+    type: 8
+  scrollMetresPerBeat: -4.5
+  boardWidth: 19.2
   baseNail: {fileID: 7504610799131467556}
   baseLongNail: {fileID: 4122843866948130824}
   baseSweet: {fileID: 7846700753925185796}
   Carpenter: {fileID: 2757472879240741117}
-  EyeAnim: {fileID: 2857868484672891618}
   EffectExclamRed: {fileID: 5086085623578673087}
   EffectExclamBlue: {fileID: 7922870834249946850}
   scrollingHolder: {fileID: 5348239490659111460}
   nailHolder: {fileID: 7148765670405675429}
   boardTrans: {fileID: 3085823780726025195}
-  fusumaTrans: {fileID: 1196000419050048408}
+  shojiTrans: {fileID: 1196000419050048408}
 --- !u!1 &1716111394362355661
 GameObject:
   m_ObjectHideFlags: 0
@@ -1168,6 +1211,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBeat: 0
+  targetX: 0
+  metresPerSecond: 0
   nailAnim: {fileID: 3330987451715863783}
 --- !u!1 &4314335590168154470
 GameObject:
@@ -1550,7 +1595,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6501104041238814201}
   - component: {fileID: 3042055459301008586}
-  - component: {fileID: 2857868484672891618}
   m_Layer: 0
   m_Name: eye
   m_TagString: Untagged
@@ -1625,27 +1669,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &2857868484672891618
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5887142951187249997}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 512906a2493039b4b8487da89d6a68de, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6083823790040367567
 GameObject:
   m_ObjectHideFlags: 0
@@ -1899,6 +1922,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBeat: 0
+  targetX: 0
+  metresPerSecond: 0
   nailAnim: {fileID: 845294389825628466}
 --- !u!1 &7846700753925185796
 GameObject:
@@ -1946,6 +1971,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetBeat: 0
+  targetX: 0
+  metresPerSecond: 0
   sweetType: 0
   sweetAnim: {fileID: 4107796134930477793}
 --- !u!1 &7940810347463623349
@@ -2174,7 +2201,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8791741134951954224}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.635, y: 0, z: 0}
+  m_LocalPosition: {x: 1.9, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
