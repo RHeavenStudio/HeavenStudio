@@ -18,9 +18,9 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("builtToScaleRvl", "Built To Scale (Wii)", "1ad21a", false, false, new List<GameAction>()
             {
-                new GameAction("throw rod", "Throw Rod")
+                new GameAction("spawn rod", "Spawn Rod")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.ThrowRod(e.beat, e.length, e["direction"]); },
+                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.PreSpawnRod(e.beat, e.length, e["direction"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -40,8 +40,13 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Scripts_BuiltToScaleRvl;
     public class BuiltToScaleRvl : Minigame
     {
+        public Animator[] blockAnims;
+        [SerializeField] GameObject baseRod;
+        public Transform widgetHolder;
+
         public enum Direction {
             Left,
             Right,
@@ -64,45 +69,79 @@ namespace HeavenStudio.Games
             new("NtrBuiltAltFlickAltPress", new int[] { IAAltDownCat, IAFlickCat, IAAltDownCat },
             IA_PadAltPress, IA_TouchFlick, IA_BatonAltPress);
         
-
+        // 1.05(3,1)
         private void Awake()
         {
             instance = this;
         }
 
-        public void ThrowRod(double beat, double length, int direction)
+        private double endBeat = double.MaxValue;
+        private static QueuedRod queuedRod;
+
+        public struct QueuedRod
+        {
+            public double beat;
+            public double length;
+            public int direction;
+            // public int position;
+        }
+
+        public override void OnPlay(double beat)
+        {
+            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > beat);
+            endBeat = firstEnd?.beat ?? endBeat;
+        }
+        public override void OnGameSwitch(double beat)
+        {
+            OnPlay(beat);
+
+            if (queuedRod.beat >= beat && queuedRod.beat < endBeat)
+            {
+                SpawnRod(queuedRod.beat, queuedRod.length, queuedRod.direction);
+            }
+        }
+
+        public static void PreSpawnRod(double beat, double length, int direction)
         {
             if (GameManager.instance.currentGame == "builtToScaleRvl")
             {
-                SoundByte.PlayOneShotGame("builtToScaleRvl/left", beat);
+                instance.SpawnRod(beat, length, direction);
             }
-            ScheduleInput(beat, length, InputAction_BasicPress, BounceOnHit, BounceOnMiss, Empty);
+            else
+            {
+                queuedRod = new QueuedRod()
+                {
+                    beat = beat,
+                    length = length,
+                    direction= direction,
+                };
+            }
+        }
+        public void SpawnRod(double beat, double length, int direction)
+        {
+            var newRod = Instantiate(baseRod, widgetHolder).GetComponent<Rod>();
+            newRod.startBeat = beat;
+            newRod.lengthBeat = length;
+            
+            int currentPos = direction switch {
+                (int)Direction.Left => -1,
+                (int)Direction.Right => 4,
+                _ => throw new System.NotImplementedException()
+            };
+            int nextPos = direction switch {
+                (int)Direction.Left => 0,
+                (int)Direction.Right => 3,
+                _ => throw new System.NotImplementedException()
+            };
+
+            newRod.currentPos = currentPos;
+            newRod.nextPos = nextPos;
+            newRod.Init();
+            newRod.gameObject.SetActive(true);
         }
 
         public void ShootRod(double beat)
         {
-            SoundByte.PlayOneShotGame("builtToScaleRvl/prepare", beat);
-            ScheduleInput(beat, 2f, InputAction_FlickAltPress, ShootOnHit, ShootOnMiss, Empty);
         }
-
-        public void BounceOnHit(PlayerActionEvent caller, float state)
-        {
-            SoundByte.PlayOneShotGame("builtToScaleRvl/middleRight");
-        }
-        public void BounceOnMiss(PlayerActionEvent caller)
-        {
-            
-        }
-
-        public void ShootOnHit(PlayerActionEvent caller, float state)
-        {
-            SoundByte.PlayOneShotGame("builtToScaleRvl/shoot");
-        }
-        public void ShootOnMiss(PlayerActionEvent caller)
-        {
-            
-        }
-
-        public void Empty(PlayerActionEvent caller) {}
     }
 }
