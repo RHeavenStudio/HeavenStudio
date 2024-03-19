@@ -20,18 +20,31 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawn rod", "Spawn Rod")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.PreSpawnRod(e.beat, e.length, e["direction"]); },
+                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.PreSpawnRod(e.beat, e.length, e["direction"], e["id"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("direction", BuiltToScaleRvl.Direction.Left, "Direction", "Set the direction in which the stick will come out.")
+                        new Param("direction", BuiltToScaleRvl.Direction.Left, "Direction", "Set the direction in which the stick will come out."),
+                        new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
                     },
                 },
                 new GameAction("shoot rod", "Shoot Rod")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.ShootRod(e.beat); },
+                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.ShootRod(e.beat, e["id"]); },
                     defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to shoot."),
+                    },
+                },
+                new GameAction("off sides", "Bounce Off Sides")
+                {
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to out."),
+                    },
                 },
             }, new List<string>() { "rvl", "normal" }, "rvlbuilt", "en", new List<string>() { });
         }
@@ -77,13 +90,14 @@ namespace HeavenStudio.Games
 
         private double endBeat = double.MaxValue;
         private static QueuedRod queuedRod;
+        public List<Rod> spawnedRods = new List<Rod>();
 
         public struct QueuedRod
         {
             public double beat;
             public double length;
             public int direction;
-            // public int position;
+            public int id;
         }
 
         public override void OnPlay(double beat)
@@ -97,15 +111,15 @@ namespace HeavenStudio.Games
 
             if (queuedRod.beat >= beat && queuedRod.beat < endBeat)
             {
-                SpawnRod(queuedRod.beat, queuedRod.length, queuedRod.direction);
+                SpawnRod(queuedRod.beat, queuedRod.length, queuedRod.direction, queuedRod.id);
             }
         }
 
-        public static void PreSpawnRod(double beat, double length, int direction)
+        public static void PreSpawnRod(double beat, double length, int direction, int id)
         {
             if (GameManager.instance.currentGame == "builtToScaleRvl")
             {
-                instance.SpawnRod(beat, length, direction);
+                instance.SpawnRod(beat, length, direction, id);
             }
             else
             {
@@ -113,16 +127,13 @@ namespace HeavenStudio.Games
                 {
                     beat = beat,
                     length = length,
-                    direction= direction,
+                    direction = direction,
+                    id = id,
                 };
             }
         }
-        public void SpawnRod(double beat, double length, int direction)
+        public void SpawnRod(double beat, double length, int direction, int id)
         {
-            var newRod = Instantiate(baseRod, widgetHolder).GetComponent<Rod>();
-            newRod.startBeat = beat;
-            newRod.lengthBeat = length;
-            
             int currentPos = direction switch {
                 (int)Direction.Left => -1,
                 (int)Direction.Right => 4,
@@ -133,6 +144,15 @@ namespace HeavenStudio.Games
                 (int)Direction.Right => 3,
                 _ => throw new System.NotImplementedException()
             };
+            GenerateRod(beat, length, currentPos, nextPos, id);
+        }
+        public void GenerateRod(double beat, double length, int currentPos, int nextPos, int id)
+        {
+            var newRod = Instantiate(baseRod, widgetHolder).GetComponent<Rod>();
+            spawnedRods.Add(newRod);
+            newRod.startBeat = beat;
+            newRod.lengthBeat = length;
+            newRod.ID = id;
 
             newRod.currentPos = currentPos;
             newRod.nextPos = nextPos;
@@ -140,8 +160,13 @@ namespace HeavenStudio.Games
             newRod.gameObject.SetActive(true);
         }
 
-        public void ShootRod(double beat)
+        public void ShootRod(double beat, int id)
         {
+            var rod = spawnedRods.Find(x => x.ID == id);
+            if (rod is not null)
+            {
+                rod.PreShoot(beat);
+            }
         }
     }
 }

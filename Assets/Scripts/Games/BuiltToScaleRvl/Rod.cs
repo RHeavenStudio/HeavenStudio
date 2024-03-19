@@ -10,9 +10,12 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
     {
         public double startBeat, lengthBeat, currentBeat;
         public int currentPos, nextPos;
+        public int ID;
         public BezierCurve3D[] curve;
         private BezierCurve3D currentCurve;
         private Animator rodAnim;
+        private bool isPreShoot = false; 
+        private bool isMiss = false; 
 
         private BuiltToScaleRvl game;
 
@@ -22,7 +25,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             rodAnim = GetComponent<Animator>();
             currentBeat = startBeat;
             BounceRecursion(startBeat, lengthBeat, currentPos, nextPos);
-            setCurve(currentPos, nextPos);
+            setParameters(currentPos, nextPos);
         }
         void Update()
         {
@@ -31,12 +34,11 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             if (currentCurve is not null)
             {
                 float curveProg = cond.GetPositionFromBeat(currentBeat, lengthBeat);
-                if (curveProg <= 1) {
-                    if (currentPos <= nextPos) {
-                        transform.position = currentCurve.GetPoint(curveProg);
-                    } else {
-                        transform.position = currentCurve.GetPoint(1 - curveProg);
-                    }
+                if (curveProg > 1) curveProg = 1 + (curveProg-1)*0.5f;
+                if (currentPos <= nextPos || isMiss) {
+                    transform.position = currentCurve.GetPoint(curveProg);
+                } else {
+                    transform.position = currentCurve.GetPoint(1 - curveProg);
                 }
             }
         }
@@ -50,12 +52,45 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                     new BeatAction.Action(beat, delegate
                     {
                         this.currentBeat = beat;
-                        this.currentPos = currentPos;
-                        this.nextPos = nextPos;
-                        setCurve(currentPos, nextPos);
+                        setParameters(currentPos, nextPos);
                         BounceRecursion(beat + length, length, nextPos, futurePos);
                     })
                 });    
+            } else if (nextPos == 2) {
+                BeatAction.New(this, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate
+                    {
+                        SoundByte.PlayOneShotGame(currentPos switch {
+                            0 => "builtToScaleRvl/left",
+                            1 => "builtToScaleRvl/middleLeft",
+                            2 => "builtToScaleRvl/middleRight",
+                            3 => "builtToScaleRvl/right",
+                            _ => throw new System.NotImplementedException()
+                        }, beat);
+                        game.blockAnims[currentPos].Play("bounce", 0, 0);
+                        
+                        this.currentBeat = beat;
+                        setParameters(currentPos, nextPos);
+                    }),
+                    new BeatAction.Action(beat + length, delegate
+                    {
+                        game.blockAnims[currentPos].Play("idle", 0, 0);
+                    })
+                });
+                if (isPreShoot) {
+                    SoundByte.PlayOneShotGame("builtToScaleRvl/prepare");
+                    SoundByte.PlayOneShotGame("builtToScaleRvl/playerRetract", beat);
+                    BeatAction.New(this, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat, delegate
+                        {
+                            game.blockAnims[nextPos].Play("prepare", 0, 0);
+                        })
+                    });
+                    game.ScheduleInput(beat, length, BuiltToScaleRvl.InputAction_FlickAltPress, ShootOnHit, ShootOnMiss, Empty);
+                }
+                else game.ScheduleInput(beat, length, BuiltToScaleRvl.InputAction_BasicPress, BounceOnHit, BounceOnMiss, Empty);
             } else {
                 BeatAction.New(this, new List<BeatAction.Action>()
                 {
@@ -69,16 +104,9 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                             _ => throw new System.NotImplementedException()
                         }, beat);
                         game.blockAnims[currentPos].Play("bounce", 0, 0);
-                        this.currentBeat = beat;
-                        this.currentPos = currentPos;
-                        this.nextPos = nextPos;
-                        if (currentPos < nextPos) {
-                            rodAnim.SetFloat("speed", 1f);
-                        } else if (currentPos > nextPos){
-                            rodAnim.SetFloat("speed", -1f);
-                        }
                         
-                        setCurve(currentPos, nextPos);
+                        this.currentBeat = beat;
+                        setParameters(currentPos, nextPos);
                         BounceRecursion(beat + length, length, nextPos, futurePos);
                     }),
                     new BeatAction.Action(beat + length, delegate
@@ -87,8 +115,6 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                     })
                 });
             }
-
-            // game.ScheduleInput(beat, length, game.InputAction_BasicPress, BounceOnHit, BounceOnMiss, Empty);
         }
         int getFuturePos(int currentPos, int nextPos)
         {
@@ -98,8 +124,17 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             else if (currentPos > nextPos) return nextPos - 1;
             return nextPos;
         }
-        void setCurve(int currentPos, int nextPos)
+        void setParameters(int currentPos, int nextPos)
         {
+            this.currentPos = currentPos;
+            this.nextPos = nextPos;
+
+            if (currentPos < nextPos) {
+                rodAnim.SetFloat("speed", 1f);
+            } else if (currentPos > nextPos){
+                rodAnim.SetFloat("speed", -1f);
+            }
+
             if ((currentPos==-1 && nextPos==0) || (currentPos==0 && nextPos==-1)) {
                 currentCurve = curve[0];
             } else if ((currentPos==0 && nextPos==1) || (currentPos==1 && nextPos==0)) {
@@ -113,29 +148,47 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             }
         }
 
-        public void ShootRod(double beat)
-        {
-            SoundByte.PlayOneShotGame("builtToScaleRvl/prepare", beat);
-            game.ScheduleInput(beat, 2f, BuiltToScaleRvl.InputAction_FlickAltPress, ShootOnHit, ShootOnMiss, Empty);
-        }
-
         public void BounceOnHit(PlayerActionEvent caller, float state)
         {
-            SoundByte.PlayOneShotGame("builtToScaleRvl/middleRight");
-            game.blockAnims[2].Play("bounce", 0, 0);
+            int futurePos = getFuturePos(this.currentPos, this.nextPos);
+            BounceRecursion(currentBeat + lengthBeat, lengthBeat, nextPos, futurePos);
         }
         public void BounceOnMiss(PlayerActionEvent caller)
         {
-            
+            currentCurve = curve[5];
+            currentBeat = Conductor.instance.songPositionInBeats;
+            rodAnim.SetFloat("speed", -1f);
+            isMiss = true;
+            BeatAction.New(this, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(currentBeat + lengthBeat, delegate
+                {
+                    Destroy(gameObject);
+                })
+            });
+        }
+
+        public void PreShoot(double beat)
+        {
+            isPreShoot = true;
+        }
+        public void ShootRod(double beat)
+        {
+            SoundByte.PlayOneShotGame("builtToScaleRvl/prepare", beat);
         }
 
         public void ShootOnHit(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("builtToScaleRvl/shoot");
+            game.blockAnims[nextPos].Play("shoot", 0, 0);
+            game.spawnedRods.Remove(this);
+            Destroy(gameObject);
         }
         public void ShootOnMiss(PlayerActionEvent caller)
         {
-            
+            game.blockAnims[nextPos].Play("shoot", 0, 0);
+            game.spawnedRods.Remove(this);
+            Destroy(gameObject);
         }
 
         public void Empty(PlayerActionEvent caller) {}
