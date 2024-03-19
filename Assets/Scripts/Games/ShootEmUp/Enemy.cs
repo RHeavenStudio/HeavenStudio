@@ -16,6 +16,8 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
         public GameObject trajectoryEffect;
         public GameObject originEffect;
         public GameObject impactEffect;
+        public GameObject missimpactEffect;
+        public ParticleSystem smokeEffect;
 
         [Header("Parameters")]
         [NonSerialized] public double createBeat;
@@ -30,7 +32,6 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
 
         public void Init()
         {
-            game = ShootEmUp.instance;
             transform.localPosition = new Vector3(5.05f/3*pos.x, 2.5f/3*pos.y + 1.25f, 0);
             enemyAnim = GetComponent<Animator>();
             enemyAnim.Play(Enum.GetName(typeof(ShootEmUp.EnemyType), type));
@@ -39,6 +40,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
 
         public void StartInput(double beat, double length)
         {
+            game = ShootEmUp.instance;
             game.ScheduleInput(beat, length, ShootEmUp.InputAction_Press, Just, Miss, Empty);
             // (type == (int)ShootEmUp.EnemyType.Endless ?  : )
         }
@@ -48,8 +50,12 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
             game.playerShip.Shoot();
             if (state <= -1f || state >= 1f)
             {
-                
                 JudgeAnim("miss");
+
+                ParticleSystem.MainModule main = smokeEffect.main;
+                float startLifetime = main.startLifetimeMultiplier;
+                main.startLifetimeMultiplier = startLifetime * (Conductor.instance.pitchedSecPerBeat * 2f);
+                smokeEffect.Play();
                 return;
             }
             game.hitEffect.PlayScaledAsyncAllChildren(0.45f);
@@ -113,15 +119,15 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
             origin.GetComponent<Animator>().DoScaledAnimationAsync("origin", 1f);
 
             isScale = false;
-            transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
 
             GameObject trajectory = Instantiate(trajectoryEffect, effectHolder);
-            GameObject impact;
+            GameObject impact, missimpact;
 
             switch (type)
             {
                 case "just":
                     enemyAnim.DoScaledAnimationAsync("enemyAttack", 1f);
+                    transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
                     impact = Instantiate(impactEffect, effectHolder);
                     impact.transform.localPosition = nextPos;
                     impact.gameObject.SetActive(true);
@@ -129,6 +135,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
                     break;
                 case "attack":
                     enemyAnim.DoScaledAnimationAsync("enemyAttack", 1f);
+                    transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
                     if (pos.x > 0) {
                         nextPos = new Vector3(-5, -3, 0);
                     } else if (pos.x < 0) {
@@ -142,7 +149,15 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
                     impact.GetComponent<Animator>().DoScaledAnimationAsync("impact", 1f);
                     break;
                 case "miss":
-                    enemyAnim.DoScaledAnimationAsync("enemyMiss", 1f);
+                    if (pos.x <= 0) {
+                        enemyAnim.DoScaledAnimationAsync("enemyMissRight", 1f);
+                    } else {
+                        enemyAnim.DoScaledAnimationAsync("enemyMissLeft", 1f);
+                    }
+                    
+                    missimpact = Instantiate(missimpactEffect, effectHolder);
+                    missimpact.gameObject.SetActive(true);
+                    missimpact.GetComponent<Animator>().DoScaledAnimationAsync("missimpact", 1f);
                     break;
                 default:
                     break;

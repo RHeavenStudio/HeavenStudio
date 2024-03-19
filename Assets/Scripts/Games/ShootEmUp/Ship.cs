@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
             
             isDamage = true;
             shipAnim.DoScaledAnimationAsync("shipDamage", 1f);
-            damageAnim.DoScaledAnimationAsync("damage", 1f);
+            damageAnim.DoScaledAnimationAsync("damage", 0.5f);
         }
 
         public void DamageEnd()

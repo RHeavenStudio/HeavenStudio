@@ -63,22 +63,24 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("gate events", "Gate Animations")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ShootEmUp.instance.GateAnims(e.beat, e.length, e["close"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ShootEmUp.instance.GateAnims(e.beat, e.length, e["close"], e["mute"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("close", false, "Close", "Toggle if the gate is closed."),
+                        new Param("mute", false, "Mute", "Toggle if the cue should be muted."),
                     }
                 },
                 new GameAction("monitor events", "Monitor Animations")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ShootEmUp.instance.MonitorAnims(e.beat, e.length, e["toggle"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ShootEmUp.instance.MonitorAnims(e.beat, e.length, e["toggle"], e["mute"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", ShootEmUp.MonitorAnimation.Enter, "Animation", "Set the animation for the monitor to perform."),
+                        new Param("mute", false, "Mute", "Toggle if the cue should be muted."),
                     }
                 },
             },
@@ -394,31 +396,34 @@ namespace HeavenStudio.Games
         }
         private bool canBop = false;
 
-        public void MonitorAnims(double beat, double length, int type)
+        public void MonitorAnims(double beat, double length, int type, bool mute)
         {
             canBop = false;
             switch (type) {
                 case (int)MonitorAnimation.Enter:
+                    captain.Play("capHidden");
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat, delegate {
                             monitor.DoScaledAnimationAsync("monitorIn", 1f);
                         }),
                         new BeatAction.Action(beat + length, delegate {
-                            captain.Play("capShow");
+                            captain.DoScaledAnimationAsync("capShow", 1f);
                         }),
                     });
+                    // if (!mute) SoundByte.PlayOneShotGame("shootEmUp/", beat + length);
                     break;
                 case (int)MonitorAnimation.Exit:
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat, delegate {
-                            captain.Play("capHide");
+                            captain.DoScaledAnimationAsync("capHide", 1f);
                         }),
                         new BeatAction.Action(beat + length, delegate {
                             monitor.DoScaledAnimationAsync("monitorOut", 1f);
                         }),
                     });
+                    // if (!mute) SoundByte.PlayOneShotGame("shootEmUp/", beat);
                     break;
                 case (int)MonitorAnimation.Talk:
                     BeatAction.New(instance, new List<BeatAction.Action>()
@@ -434,8 +439,11 @@ namespace HeavenStudio.Games
 
                     break;
                 case (int)MonitorAnimation.Idle:
-                    captain.Play("capIdle");
-                    monitor.Play("monitorIdle");  
+                    monitor.DoScaledAnimationAsync("monitorIdle", 1f);
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat, delegate { captain.Play("capIdle");}),
+                    });
                     break;
                 case (int)MonitorAnimation.Bop:
                     canBop = true;
@@ -444,16 +452,19 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void GateAnims(double beat, double length, bool close)
+        public void GateAnims(double beat, double length, bool close, bool mute)
         {
             introGate.Play("gateShow", 0, 0);
             if (close) return;
-            MultiSound.Play(new MultiSound.Sound[]
+            if (!mute)
             {
-                new MultiSound.Sound("shootEmUp/gate1", beat),
-                new MultiSound.Sound("shootEmUp/gate2", beat + length),
-                new MultiSound.Sound("shootEmUp/gate3", beat + 2*length),
-            });
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("shootEmUp/gate1", beat),
+                    new MultiSound.Sound("shootEmUp/gate2", beat + length),
+                    new MultiSound.Sound("shootEmUp/gate3", beat + 2*length),
+                });
+            }
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate {
