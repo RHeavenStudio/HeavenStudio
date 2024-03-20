@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("shoot rod", "Shoot Rod")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.ShootRod(e.beat, e["id"]); },
+                    // function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.ShootRod(e.beat, e["id"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("out sides", "Bounce Out Sides")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.OutRod(e.beat, e["id"]); },
+                    // function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.OutRod(e.beat, e["id"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
@@ -61,6 +61,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject baseRod;
         [SerializeField] GameObject baseLeftSquare;
         [SerializeField] GameObject baseRightSquare;
+        [SerializeField] GameObject baseAssembled;
         public Transform widgetHolder;
 
         public enum Direction {
@@ -91,7 +92,8 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
-        private double endBeat = double.MaxValue;
+        private double gameStartBeat = double.MinValue;
+        private double gameEndBeat = double.MaxValue;
         public static List<QueuedRod> queuedRods = new List<QueuedRod>();
         public List<Rod> spawnedRods = new List<Rod>();
 
@@ -107,13 +109,15 @@ namespace HeavenStudio.Games
         public override void OnPlay(double beat)
         {
             queuedRods.Clear();
-            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > beat);
-            endBeat = firstEnd?.beat ?? endBeat;
+            gameStartBeat = beat;
+            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > gameStartBeat);
+            gameEndBeat = firstEnd?.beat ?? gameEndBeat;
         }
         public override void OnGameSwitch(double beat)
         {
-            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > beat);
-            endBeat = firstEnd?.beat ?? endBeat;
+            gameStartBeat = beat;
+            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > gameStartBeat);
+            gameEndBeat = firstEnd?.beat ?? gameEndBeat;
         }
         private void OnDestroy() {
             queuedRods.Clear();
@@ -180,26 +184,94 @@ namespace HeavenStudio.Games
             if (spawnedRods.Any(x => x.ID == id)) return;            
             var newRod = Instantiate(baseRod, widgetHolder).GetComponent<Rod>();
             spawnedRods.Add(newRod);
+
             newRod.startBeat = beat;
             newRod.lengthBeat = length;
-            newRod.ID = id;
-
             newRod.currentPos = currentPos;
             newRod.nextPos = nextPos;
+            newRod.ID = id;
+
+            bool isShoot;
+            double rodEndBeat = CalcRodEndBeat(beat, length, currentPos, nextPos, id, out isShoot);
+            newRod.endBeat = rodEndBeat;
+            newRod.isShoot = isShoot;
+            if (rodEndBeat != double.MaxValue)
+            {
+                newRod.Squares = SpawnSquare(beat, rodEndBeat, id);
+            }
+
             newRod.Init();
             newRod.gameObject.SetActive(true);
         }
 
-        public void ShootRod(double beat, int id)
+        private Square[] SpawnSquare(double startBeat, double endBeat, int id)
         {
             var newLeftSquare = Instantiate(baseLeftSquare, widgetHolder).GetComponent<Square>();
             var newRightSquare = Instantiate(baseRightSquare, widgetHolder).GetComponent<Square>();
-            newLeftSquare.beat = beat;
-            newRightSquare.beat = beat;
-            newLeftSquare.Init();
-            newRightSquare.Init();
+            newLeftSquare.startBeat = startBeat;
+            newRightSquare.startBeat = startBeat;
+            newLeftSquare.endBeat = endBeat;
+            newRightSquare.endBeat = endBeat;
             newLeftSquare.gameObject.SetActive(true);
             newRightSquare.gameObject.SetActive(true);
+            newLeftSquare.Init();
+            newRightSquare.Init();
+
+            return new Square[]{newLeftSquare, newRightSquare};
+        }
+
+        public void SpawnAssembled()
+        {
+            var newAssembled =Instantiate(baseAssembled, widgetHolder);
+            newAssembled.SetActive(true);
+        }
+
+        private double CalcRodEndBeat(double beat, double length, int currentPos, int nextPos, int id, out bool isShoot)
+        {
+            isShoot = false;
+            var firstShoot = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "shoot rod" }).Find(x => x.beat > beat && x["id"] == id);
+            if (firstShoot is null)
+                return double.MaxValue;
+            double shootEventBeat = firstShoot.beat;
+
+            if (EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "out sides" }).Any(x => x.beat > beat && x.beat < shootEventBeat && x["id"] == id))
+                return double.MaxValue;
+            
+            var n = (int)Math.Ceiling((shootEventBeat-beat)/length);
+            int current = currentPos, next = nextPos;
+            int shootTiming;
+            for (int i = 0; ; i++) {
+                if (current == 2 && i >= n) {
+                    shootTiming = i;
+                    break;
+                }
+                int following = getFollowingPos(current, next);
+                current = next;
+                next = following;
+            }
+            isShoot = true;
+            return beat + length * shootTiming;
+        }
+
+        int getFollowingPos(int currentPos, int nextPos)
+        {
+            if (nextPos == 0) return 1;
+            else if (nextPos == 3) return 2;
+            else if (currentPos < nextPos) return nextPos + 1;
+            else if (currentPos > nextPos) return nextPos - 1;
+            return nextPos;
+        }
+
+        public void ShootRod(double beat, int id)
+        {
+            // var newLeftSquare = Instantiate(baseLeftSquare, widgetHolder).GetComponent<Square>();
+            // var newRightSquare = Instantiate(baseRightSquare, widgetHolder).GetComponent<Square>();
+            // newLeftSquare.beat = beat;
+            // newRightSquare.beat = beat;
+            // newLeftSquare.Init();
+            // newRightSquare.Init();
+            // newLeftSquare.gameObject.SetActive(true);
+            // newRightSquare.gameObject.SetActive(true);
             var rod = spawnedRods.Find(x => x.ID == id);
             if (rod is not null)
             {

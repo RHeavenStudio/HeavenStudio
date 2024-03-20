@@ -8,12 +8,14 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
     using HeavenStudio.Util;
     public class Rod : MonoBehaviour
     {
-        public double startBeat, lengthBeat, currentBeat;
+        public double startBeat, lengthBeat, currentBeat, endBeat;
         public int currentPos, nextPos;
         public int ID;
         public BezierCurve3D[] curve;
         private BezierCurve3D currentCurve;
         private Animator rodAnim;
+        public bool isShoot = false;
+        public Square[] Squares;
         private bool isPreShoot = false; 
         private bool isPreOut = false;
         private bool isMiss = false; 
@@ -103,7 +105,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                         game.blockAnims[currentPos].Play("idle", 0, 0);
                     })
                 });
-                if (isPreShoot) {
+                if (isShoot && beat + length == endBeat) {
                     SoundByte.PlayOneShotGame("builtToScaleRvl/prepare");
                     SoundByte.PlayOneShotGame("builtToScaleRvl/playerRetract", beat);
                     BeatAction.New(this, new List<BeatAction.Action>()
@@ -211,6 +213,10 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         {
             SoundByte.PlayOneShotGame("builtToScaleRvl/shoot");
             game.blockAnims[nextPos].Play("shoot", 0, 0);
+            foreach (var square in Squares) {
+                Destroy(square.gameObject);
+            }
+            game.SpawnAssembled();
             BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(currentBeat + lengthBeat, delegate

@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using NaughtyBezierCurves;
 
 namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
@@ -9,7 +11,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
     public class Square : MonoBehaviour
     {
         public string anim;
-        public double beat;
+        public double startBeat, endBeat, lengthBeat = 1;
         public Vector3 CorrectionPos;
         private Animator squareAnim;
 
@@ -19,15 +21,19 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         {
             game = BuiltToScaleRvl.instance;
             squareAnim = GetComponent<Animator>();
-            transform.position = transform.position - (10+1)*CorrectionPos;
-            Recursion(beat, 1);
+            var n = (int)Math.Floor((endBeat - startBeat)/lengthBeat);
+            transform.position = transform.position - n*CorrectionPos;
+            double beat = endBeat - lengthBeat * n;
+            Debug.Log(beat);
+            squareAnim.Play(anim, 0, 0);
+            Recursion(beat, lengthBeat);
         }
 
         private void Recursion(double beat, double length)
         {
             BeatAction.New(this, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate
+                new BeatAction.Action(beat + length, delegate
                 {
                     transform.position = transform.position + CorrectionPos;
                     squareAnim.Play(anim, 0, 0);
@@ -36,11 +42,22 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             });
         }
 
-        void PositionCorrection() {
+        void PositionCorrection()
+        {
             var pos = transform.position;
             Debug.Log(transform.position);
             transform.position = pos + CorrectionPos;
             Debug.Log(transform.position);
+        }
+
+        void ChangeSortingOrder(int order)
+        {
+            GetComponent<SortingGroup>().sortingOrder = order;
+        }
+
+        void End()
+        {
+            Destroy(gameObject);
         }
     }
 }
