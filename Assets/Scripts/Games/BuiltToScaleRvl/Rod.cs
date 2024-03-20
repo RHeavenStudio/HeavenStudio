@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         private BezierCurve3D currentCurve;
         private Animator rodAnim;
         private bool isPreShoot = false; 
+        private bool isPreOut = false;
         private bool isMiss = false; 
 
         private BuiltToScaleRvl game;
@@ -54,6 +55,30 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                         this.currentBeat = beat;
                         setParameters(currentPos, nextPos);
                         BounceRecursion(beat + length, length, nextPos, futurePos);
+                    })
+                });    
+            } else if (nextPos < 0 || nextPos > 3) {
+                BeatAction.New(this, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate
+                    {
+                        SoundByte.PlayOneShotGame(currentPos switch {
+                            0 => "builtToScaleRvl/left",
+                            1 => "builtToScaleRvl/middleLeft",
+                            2 => "builtToScaleRvl/middleRight",
+                            3 => "builtToScaleRvl/right",
+                            _ => throw new System.NotImplementedException()
+                        }, beat);
+                        game.blockAnims[currentPos].Play("bounce", 0, 0);
+                        
+                        this.currentBeat = beat;
+                        setParameters(currentPos, nextPos);
+                    }),
+                    new BeatAction.Action(beat + length, delegate
+                    {
+                        game.blockAnims[currentPos].Play("idle", 0, 0);
+                        game.spawnedRods.Remove(this);
+                        Destroy(gameObject);
                     })
                 });    
             } else if (nextPos == 2) {
@@ -118,8 +143,8 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         }
         int getFuturePos(int currentPos, int nextPos)
         {
-            if (nextPos == 0) return 1;
-            else if (nextPos == 3) return 2;
+            if (nextPos == 0) return isPreOut ? -1 : 1;
+            else if (nextPos == 3) return isPreOut ? 4 : 2;
             else if (currentPos < nextPos) return nextPos + 1;
             else if (currentPos > nextPos) return nextPos - 1;
             return nextPos;
@@ -172,6 +197,11 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         {
             isPreShoot = true;
         }
+
+        public void PreOut(double beat)
+        {
+            isPreOut = true;
+        }
         public void ShootRod(double beat)
         {
             SoundByte.PlayOneShotGame("builtToScaleRvl/prepare", beat);
@@ -181,14 +211,27 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         {
             SoundByte.PlayOneShotGame("builtToScaleRvl/shoot");
             game.blockAnims[nextPos].Play("shoot", 0, 0);
-            game.spawnedRods.Remove(this);
-            Destroy(gameObject);
+            BeatAction.New(this, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(currentBeat + lengthBeat, delegate
+                {
+                    game.spawnedRods.Remove(this);
+                    Destroy(gameObject);
+                })
+            });
         }
         public void ShootOnMiss(PlayerActionEvent caller)
         {
             game.blockAnims[nextPos].Play("shoot", 0, 0);
             game.spawnedRods.Remove(this);
-            Destroy(gameObject);
+            BeatAction.New(this, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(currentBeat + lengthBeat, delegate
+                {
+                    game.spawnedRods.Remove(this);
+                    Destroy(gameObject);
+                })
+            });
         }
 
         public void Empty(PlayerActionEvent caller) {}

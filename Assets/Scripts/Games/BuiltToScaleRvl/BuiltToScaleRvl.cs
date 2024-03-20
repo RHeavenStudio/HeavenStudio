@@ -20,7 +20,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawn rod", "Spawn Rod")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.PreSpawnRod(e.beat, e.length, e["direction"], e["id"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.PreSpawnRodfromDirection(e.beat, e.length, e["direction"], e["id"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -38,8 +38,9 @@ namespace HeavenStudio.Games.Loaders
                         new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to shoot."),
                     },
                 },
-                new GameAction("off sides", "Bounce Off Sides")
+                new GameAction("out sides", "Bounce Out Sides")
                 {
+                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.OutRod(e.beat, e["id"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
@@ -58,6 +59,8 @@ namespace HeavenStudio.Games
     {
         public Animator[] blockAnims;
         [SerializeField] GameObject baseRod;
+        [SerializeField] GameObject baseLeftSquare;
+        [SerializeField] GameObject baseRightSquare;
         public Transform widgetHolder;
 
         public enum Direction {
@@ -89,50 +92,61 @@ namespace HeavenStudio.Games
         }
 
         private double endBeat = double.MaxValue;
-        private static QueuedRod queuedRod;
+        public static List<QueuedRod> queuedRods = new List<QueuedRod>();
         public List<Rod> spawnedRods = new List<Rod>();
 
         public struct QueuedRod
         {
             public double beat;
             public double length;
-            public int direction;
+            public int currentPos;
+            public int nextPos;
             public int id;
         }
 
         public override void OnPlay(double beat)
         {
+            queuedRods.Clear();
             var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > beat);
             endBeat = firstEnd?.beat ?? endBeat;
         }
         public override void OnGameSwitch(double beat)
         {
-            OnPlay(beat);
-
-            if (queuedRod.beat >= beat && queuedRod.beat < endBeat)
+            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > beat);
+            endBeat = firstEnd?.beat ?? endBeat;
+        }
+        private void OnDestroy() {
+            queuedRods.Clear();
+            foreach (var evt in scheduledInputs)
             {
-                SpawnRod(queuedRod.beat, queuedRod.length, queuedRod.direction, queuedRod.id);
+                evt.Disable();
             }
         }
 
-        public static void PreSpawnRod(double beat, double length, int direction, int id)
+        void Update()
         {
-            if (GameManager.instance.currentGame == "builtToScaleRvl")
+            var cond = Conductor.instance;
+            if (cond.isPlaying && !cond.isPaused)
             {
-                instance.SpawnRod(beat, length, direction, id);
+                if (queuedRods.Count != 0)
+                {
+                    foreach (QueuedRod rod in queuedRods)
+                    {
+                        SpawnRod(rod.beat, rod.length, rod.currentPos, rod.nextPos, rod.id);
+                    }
+                    queuedRods.Clear();
+                }
             }
             else
             {
-                queuedRod = new QueuedRod()
+                if ((!cond.isPaused) && queuedRods.Count != 0)
                 {
-                    beat = beat,
-                    length = length,
-                    direction = direction,
-                    id = id,
-                };
+                    queuedRods.Clear();
+                }
             }
         }
-        public void SpawnRod(double beat, double length, int direction, int id)
+
+        public static void PreSpawnRodfromDirection(double beat, double length, int direction, int id)
         {
             int currentPos = direction switch {
                 (int)Direction.Left => -1,
@@ -144,10 +158,26 @@ namespace HeavenStudio.Games
                 (int)Direction.Right => 3,
                 _ => throw new System.NotImplementedException()
             };
-            GenerateRod(beat, length, currentPos, nextPos, id);
+            if (GameManager.instance.currentGame == "builtToScaleRvl")
+            {
+                instance.SpawnRod(beat, length, currentPos, nextPos, id);
+            }
+            else
+            {
+                queuedRods.Add(new QueuedRod()
+                {
+                    beat = beat,
+                    length = length,
+                    currentPos = currentPos,
+                    nextPos = nextPos,
+                    id = id,
+                });
+            }
         }
-        public void GenerateRod(double beat, double length, int currentPos, int nextPos, int id)
+        
+        public void SpawnRod(double beat, double length, int currentPos, int nextPos, int id)
         {
+            if (spawnedRods.Any(x => x.ID == id)) return;            
             var newRod = Instantiate(baseRod, widgetHolder).GetComponent<Rod>();
             spawnedRods.Add(newRod);
             newRod.startBeat = beat;
@@ -162,10 +192,27 @@ namespace HeavenStudio.Games
 
         public void ShootRod(double beat, int id)
         {
+            var newLeftSquare = Instantiate(baseLeftSquare, widgetHolder).GetComponent<Square>();
+            var newRightSquare = Instantiate(baseRightSquare, widgetHolder).GetComponent<Square>();
+            newLeftSquare.beat = beat;
+            newRightSquare.beat = beat;
+            newLeftSquare.Init();
+            newRightSquare.Init();
+            newLeftSquare.gameObject.SetActive(true);
+            newRightSquare.gameObject.SetActive(true);
             var rod = spawnedRods.Find(x => x.ID == id);
             if (rod is not null)
             {
                 rod.PreShoot(beat);
+            }
+        }
+
+        public void OutRod(double beat, int id)
+        {
+            var rod = spawnedRods.Find(x => x.ID == id);
+            if (rod is not null)
+            {
+                rod.PreOut(beat);
             }
         }
     }
