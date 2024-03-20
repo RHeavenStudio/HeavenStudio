@@ -97,16 +97,14 @@ namespace HeavenStudio.Games
         [SerializeField] private Material shooterMaterial;
         [SerializeField] private Material objectMaterial;
         [SerializeField] private Material gridPlaneMaterial;
-        private Material elevatorMaterial;
-        private Material[] gridMaterials;
-        private Material[] firstPatternLights;
-        private Material[] secondPatternLights;
-        private Material[] elevatorObjectMats;
+        [SerializeField] private Material elevatorMaterial;
+        [SerializeField] private Material beltMaterial;
+        [SerializeField] private Material[] firstPatternLights;
+        [SerializeField] private Material[] secondPatternLights;
 
         [Header("Properties")]
         [SerializeField] float beltSpeed = 1f;
 
-        private Material beltMaterial;
         private Material[] environmentMaterials;
         private Material[] elevatorMaterials;
         private float currentBeltOffset;
@@ -132,52 +130,52 @@ namespace HeavenStudio.Games
             GameCamera.AdditionalRotEuler = camPos.eulerAngles;
             GameCamera.AdditionalFoV = cameraFoV;
 
-            environmentMaterials = environmentRenderer.materials;
-            elevatorMaterials = elevatorRenderer.materials;
-            beltMaterial = Instantiate(environmentMaterials[8]);
-            environmentMaterials[8] = beltMaterial;
-            elevatorObjectMats = new Material[]
-            {
-                Instantiate(elevatorMaterials[0]),
-                Instantiate(elevatorMaterials[1]),
-                Instantiate(elevatorMaterials[2]),
-            };
-            elevatorMaterials[0] = elevatorObjectMats[0];
-            elevatorMaterials[1] = elevatorObjectMats[1];
-            elevatorMaterials[2] = elevatorObjectMats[2];
-            elevatorMaterial = Instantiate(elevatorMaterials[3]);
-            elevatorMaterials[3] = elevatorMaterial;
-            gridMaterials = new Material[]
-            {
-                Instantiate(environmentMaterials[9]),
-                Instantiate(environmentMaterials[11]),
-                Instantiate(environmentMaterials[12]),
-                Instantiate(environmentMaterials[13]),
-                Instantiate(environmentMaterials[14]),
-            };
-            environmentMaterials[9] = gridMaterials[0];
-            environmentMaterials[11] = gridMaterials[1];
-            environmentMaterials[12] = gridMaterials[2];
-            environmentMaterials[13] = gridMaterials[3];
-            environmentMaterials[14] = gridMaterials[4];
+            // environmentMaterials = environmentRenderer.materials;
+            // elevatorMaterials = elevatorRenderer.materials;
+            // beltMaterial = Instantiate(environmentMaterials[8]);
+            // environmentMaterials[8] = beltMaterial;
+            // elevatorObjectMats = new Material[]
+            // {
+            //     Instantiate(elevatorMaterials[0]),
+            //     Instantiate(elevatorMaterials[1]),
+            //     Instantiate(elevatorMaterials[2]),
+            // };
+            // elevatorMaterials[0] = elevatorObjectMats[0];
+            // elevatorMaterials[1] = elevatorObjectMats[1];
+            // elevatorMaterials[2] = elevatorObjectMats[2];
+            // elevatorMaterial = Instantiate(elevatorMaterials[3]);
+            // elevatorMaterials[3] = elevatorMaterial;
+            // gridMaterials = new Material[]
+            // {
+            //     Instantiate(environmentMaterials[9]),
+            //     Instantiate(environmentMaterials[11]),
+            //     Instantiate(environmentMaterials[12]),
+            //     Instantiate(environmentMaterials[13]),
+            //     Instantiate(environmentMaterials[14]),
+            // };
+            // environmentMaterials[9] = gridMaterials[0];
+            // environmentMaterials[11] = gridMaterials[1];
+            // environmentMaterials[12] = gridMaterials[2];
+            // environmentMaterials[13] = gridMaterials[3];
+            // environmentMaterials[14] = gridMaterials[4];
 
-            firstPatternLights = new Material[]
-            {
-                Instantiate(environmentMaterials[1]),
-                Instantiate(environmentMaterials[2]),
-                Instantiate(environmentMaterials[4]),
-            };
-            environmentMaterials[1] = firstPatternLights[0];
-            environmentMaterials[2] = firstPatternLights[1];
-            environmentMaterials[4] = firstPatternLights[2];
+            // firstPatternLights = new Material[]
+            // {
+            //     Instantiate(environmentMaterials[1]),
+            //     Instantiate(environmentMaterials[2]),
+            //     Instantiate(environmentMaterials[4]),
+            // };
+            // environmentMaterials[1] = firstPatternLights[0];
+            // environmentMaterials[2] = firstPatternLights[1];
+            // environmentMaterials[4] = firstPatternLights[2];
 
-            secondPatternLights = new Material[]
-            {
-                Instantiate(environmentMaterials[0]),
-                Instantiate(environmentMaterials[3])
-            };
-            environmentMaterials[0] = secondPatternLights[0];
-            environmentMaterials[3] = secondPatternLights[1];
+            // secondPatternLights = new Material[]
+            // {
+            //     Instantiate(environmentMaterials[0]),
+            //     Instantiate(environmentMaterials[3])
+            // };
+            // environmentMaterials[0] = secondPatternLights[0];
+            // environmentMaterials[3] = secondPatternLights[1];
 
             elevatorAnim.Play("MakeRod", 0, 1f);
             UpdateColors();
@@ -231,14 +229,6 @@ namespace HeavenStudio.Games
             beltMaterial.SetColor("_Color", currentEnvironmentColor);
             gridPlaneMaterial.SetColor("_Color", currentEnvironmentColor);
             elevatorMaterial.SetColor("_Color", currentEnvironmentColor);
-            foreach (var mat in gridMaterials)
-            {
-                mat.SetColor("_Color", currentEnvironmentColor);
-            }
-            foreach (var mat in elevatorObjectMats)
-            {
-                mat.SetColor("_Color", currentObjectColor);
-            }
             if (!lighting)
             {
                 foreach (var mat in firstPatternLights)
@@ -298,8 +288,8 @@ namespace HeavenStudio.Games
 
             currentBeltOffset = (currentBeltOffset + Time.deltaTime * -beltSpeed) % 1f;
             beltMaterial.mainTextureOffset = new Vector2(0f, currentBeltOffset);
-            environmentRenderer.materials = environmentMaterials;
-            elevatorRenderer.materials = elevatorMaterials;
+            // environmentRenderer.materials = environmentMaterials;
+            // elevatorRenderer.materials = elevatorMaterials;
 
             if (PlayerInput.PlayerHasControl() && PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Touch)
             {

@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.4.1" xmlns="http://www.collada.org/2005/11/COLLADASchema">
+	<asset>
+		<created>2024-02-25T16:09:23.9096529-06:00</created>
+		<modified>2024-02-25T16:09:23.9096584-06:00</modified>
+	</asset>
+	<library_images>
+		<image id="airboy_board">
+			<init_from>./airboy_board.png</init_from>
+		</image>
+		<image id="airboy_body">
+			<init_from>./airboy_body.png</init_from>
+		</image>
+		<image id="airboy_face.0">
+			<init_from>./airboy_face.0.png</init_from>
+		</image>
+		<image id="airboy_face.1">
+			<init_from>./airboy_face.1.png</init_from>
+		</image>
+		<image id="airboy_face.2">
+			<init_from>./airboy_face.2.png</init_from>
+		</image>
+		<image id="airboy_shadow">
+			<init_from>./airboy_shadow.png</init_from>
+		</image>
+		<image id="block_shadow">
+			<init_from>./block_shadow.png</init_from>
+		</image>
+		<image id="dog">
+			<init_from>./dog.png</init_from>
+		</image>
+		<image id="dog_sdw">
+			<init_from>./dog_sdw.png</init_from>
+		</image>
+		<image id="floor">
+			<init_from>./floor.png</init_from>
+		</image>
+		<image id="metal_env">
+			<init_from>./metal_env.png</init_from>
+		</image>
+		<image id="mother_ship">
+			<init_from>./mother_ship.png</init_from>
+		</image>
+		<image id="wall_body">
+			<init_from>./wall_body.png</init_from>
+		</image>
+		<image id="cloud01">
+			<init_from>./cloud01.png</init_from>
+		</image>
+	</library_images>
+	<library_materials>
+		<material id="airboy_sdwMt_id" name="airboy_sdwMt">
+			<instance_effect url="#airboy_sdwMt_eff_id" />
+		</material>
+	</library_materials>
+	<library_effects>
+		<effect id="airboy_sdwMt_eff_id" name="airboy_sdwMt_eff">
+			<profile_COMMON>
+				<newparam sid="airboy_sdwMt_surf">
+					<surface type="2D">
+						<init_from>airboy_shadow</init_from>
+						<format>PNG</format>
+					</surface>
+				</newparam>
+				<newparam sid="airboy_sdwMt_samp">
+					<sampler2D>
+						<source>airboy_sdwMt_surf</source>
+						<wrap_s>WRAP</wrap_s>
+						<wrap_t>WRAP</wrap_t>
+						<minfilter>LINEAR_MIPMAP_NEAREST</minfilter>
+						<magfilter>LINEAR</magfilter>
+						<mipfilter>LINEAR</mipfilter>
+					</sampler2D>
+				</newparam>
+				<technique sid="airboy_sdwMt_tech">
+					<phong>
+						<diffuse>
+							<texture texture="airboy_sdwMt_samp" texcoord="uv" />
+						</diffuse>
+					</phong>
+				</technique>
+			</profile_COMMON>
+		</effect>
+	</library_effects>
+	<library_geometries>
+		<geometry id="_0_geo_id" name="">
+			<mesh>
+				<source id="_0_Position_id" name="_0_Position">
+					<float_array id="_0_Position_array_id" count="12">-1.194352 0 0.743173 1.838348 0 0.743173 -1.194352 0 -0.743173 1.838348 0 -0.743173</float_array>
+					<technique_common>
+						<accessor source="#_0_Position_array_id" count="4" stride="3">
+							<param name="X" type="float" />
+							<param name="Y" type="float" />
+							<param name="Z" type="float" />
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="_0_TexCoord0_id" name="_0_TexCoord0">
+					<float_array id="_0_TexCoord0_array_id" count="8">0 0 1 0 0 1 1 1</float_array>
+					<technique_common>
+						<accessor source="#_0_TexCoord0_array_id" count="4" stride="2">
+							<param name="S" type="float" />
+							<param name="T" type="float" />
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="_0_Normal_id" name="_0_Normal">
+					<float_array id="_0_Normal_array_id" count="12">0 1 0 0 1 0 0 1 0 0 1 0</float_array>
+					<technique_common>
+						<accessor source="#_0_Normal_array_id" count="4" stride="3">
+							<param name="X" type="float" />
+							<param name="Y" type="float" />
+							<param name="Z" type="float" />
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="_0_vtx_id">
+					<input semantic="POSITION" source="#_0_Position_id" />
+					<input semantic="NORMAL" source="#_0_Normal_id" />
+				</vertices>
+				<triangles material="Mdl_1_Mtl_airboy_sdwMt" count="2">
+					<input semantic="VERTEX" source="#_0_vtx_id" offset="0" />
+					<input semantic="TEXCOORD" source="#_0_TexCoord0_id" offset="0" set="0" />
+					<p>0 1 2 2 1 3</p>
+				</triangles>
+			</mesh>
+		</geometry>
+	</library_geometries>
+	<library_controllers>
+		<controller id="_0_ctrl_id" name="_0_ctrl">
+			<skin source="#_0_geo_id">
+				<bind_shape_matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</bind_shape_matrix>
+				<source id="_0_ctrl_names_id" name="_0_ctrl_names">
+					<Name_array id="_0_ctrl_names_array_id" count="1">airboy_sdwPg</Name_array>
+					<technique_common>
+						<accessor source="#_0_ctrl_names_array_id" count="1" stride="1">
+							<param name="JOINT" type="Name" />
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="_0_ctrl_poses_id" name="_0_ctrl_poses">
+					<float_array id="_0_ctrl_poses_array_id" count="16">1 -0 0 -0.321998 -0 1 -0 0 0 -0 1 0 0 0 0 1</float_array>
+					<technique_common>
+						<accessor source="#_0_ctrl_poses_array_id" count="1" stride="16">
+							<param name="TRANSFORM" type="float4x4" />
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="_0_ctrl_weights_id" name="_0_ctrl_weights">
+					<float_array id="_0_ctrl_weights_array_id" count="1">1</float_array>
+					<technique_common>
+						<accessor source="#_0_ctrl_weights_array_id" count="1" stride="1">
+							<param name="WEIGHT" type="float" />
+						</accessor>
+					</technique_common>
+				</source>
+				<joints>
+					<input semantic="JOINT" source="#_0_ctrl_names_id" />
+					<input semantic="INV_BIND_MATRIX" source="#_0_ctrl_poses_id" />
+				</joints>
+				<vertex_weights count="4">
+					<input semantic="JOINT" source="#_0_ctrl_names_id" offset="0" />
+					<input semantic="WEIGHT" source="#_0_ctrl_weights_id" offset="1" />
+					<vcount>1 1 1 1</vcount>
+					<v>0 0 0 0 0 0 0 0</v>
+				</vertex_weights>
+			</skin>
+		</controller>
+	</library_controllers>
+	<library_visual_scenes>
+		<visual_scene id="airboy_shadow_model_01_id" name="airboy_shadow_model_01">
+			<node id="airboy_sdwPg_bone_id" name="airboy_sdwPg" sid="airboy_sdwPg" type="JOINT">
+				<translate sid="translate">0.321998 0 0</translate>
+				<rotate sid="rotateZ">0 0 1 0</rotate>
+				<rotate sid="rotateY">0 1 0 0</rotate>
+				<rotate sid="rotateX">1 0 0 0</rotate>
+				<scale sid="scale">1 1 1</scale>
+			</node>
+			<node id="_id" name="" type="NODE">
+				<matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+				<instance_controller url="#_0_ctrl_id">
+					<skeleton>#airboy_sdwPg_bone_id</skeleton>
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="Mdl_1_Mtl_airboy_sdwMt" target="#airboy_sdwMt_id" />
+						</technique_common>
+					</bind_material>
+				</instance_controller>
+			</node>
+		</visual_scene>
+	</library_visual_scenes>
+	<scene>
+		<instance_visual_scene url="#airboy_shadow_model_01_id" />
+	</scene>
+</COLLADA>

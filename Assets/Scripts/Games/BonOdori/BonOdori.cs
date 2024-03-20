@@ -226,6 +226,10 @@ namespace HeavenStudio.Games
         [SerializeField] Animator CPU2;
         [SerializeField] Animator CPU3;
         [SerializeField] Animator Face;
+        [SerializeField] Animator CPU1Face;
+        [SerializeField] Animator CPU2Face;
+        [SerializeField] Animator CPU3Face;
+        [SerializeField] Animator PlayerFace;
         public enum typeClap
         {
             SideClap = 0,
@@ -371,14 +375,14 @@ namespace HeavenStudio.Games
                     clapTypeString = "ClapFront";
                 }
 
-                Player.Play(clapTypeString);
+                Player.DoScaledAnimationAsync(clapTypeString, 0.5f);
                 if (!goBopDonpans)
                 {
 
 
                     BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
+                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.DoScaledAnimationAsync("NeutralClapped", 0.5f); CPU1.DoScaledAnimationAsync("NeutralClapped", 0.5f); CPU2.DoScaledAnimationAsync("NeutralClapped", 0.5f); CPU3.DoScaledAnimationAsync("NeutralClapped", 0.5f);}),
                 });
                 }
 
@@ -485,10 +489,10 @@ namespace HeavenStudio.Games
                 clapTypeString = "ClapFront";
             }
 
-            Player.Play(clapTypeString);
-            CPU1.Play(clapTypeString);
-            CPU2.Play(clapTypeString);
-            CPU3.Play(clapTypeString);
+            Player.DoScaledAnimationAsync(clapTypeString, 0.5f);
+            CPU1.DoScaledAnimationAsync(clapTypeString, 0.5f);
+            CPU2.DoScaledAnimationAsync(clapTypeString, 0.5f);
+            CPU3.DoScaledAnimationAsync(clapTypeString, 0.5f);
             if (!goBopDonpans)
             {
 
@@ -503,9 +507,9 @@ namespace HeavenStudio.Games
 
         public void Miss(PlayerActionEvent caller)
         {
-            CPU1.Play(clapTypeString);
-            CPU2.Play(clapTypeString);
-            CPU3.Play(clapTypeString);
+            CPU1.DoScaledAnimationAsync(clapTypeString, 0.5f);
+            CPU2.DoScaledAnimationAsync(clapTypeString, 0.5f);
+            CPU3.DoScaledAnimationAsync(clapTypeString, 0.5f);
             SoundByte.PlayOneShot("miss");
             BeatAction.New(instance, new List<BeatAction.Action>()
                 {
@@ -527,10 +531,10 @@ namespace HeavenStudio.Games
                 clapTypeString = "ClapFront";
             }
 
-            Player.Play(clapTypeString);
-            CPU1.Play(clapTypeString);
-            CPU2.Play(clapTypeString);
-            CPU3.Play(clapTypeString);
+            Player.DoScaledAnimationAsync(clapTypeString, 0.5f);
+            CPU1.DoScaledAnimationAsync(clapTypeString, 0.5f);
+            CPU2.DoScaledAnimationAsync(clapTypeString, 0.5f);
+            CPU3.DoScaledAnimationAsync(clapTypeString, 0.5f);
             if (!goBopDonpans)
             {
 
@@ -773,11 +777,11 @@ namespace HeavenStudio.Games
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
-                            Player.Play("Bop");
-                            CPU1.Play("Bop");
-                            CPU2.Play("Bop");
-                            CPU3.Play("Bop");
-                            Judge.Play("Bop");
+                            Player.DoScaledAnimationAsync("Bop", 0.5f);
+                            CPU1.DoScaledAnimationAsync("Bop", 0.5f);
+                            CPU2.DoScaledAnimationAsync("Bop", 0.5f);
+                            CPU3.DoScaledAnimationAsync("Bop", 0.5f);
+                            Judge.DoScaledAnimationAsync("Bop", 0.5f);
 
                         }),
                         new BeatAction.Action(beat + length, delegate
@@ -830,15 +834,15 @@ namespace HeavenStudio.Games
         {
             if (goBopDonpans)
             {
-                Player.Play("Bop");
-                CPU1.Play("Bop");
-                CPU2.Play("Bop");
-                CPU3.Play("Bop");
+                Player.DoScaledAnimationAsync("Bop", 0.5f);
+                CPU1.DoScaledAnimationAsync("Bop", 0.5f);
+                CPU2.DoScaledAnimationAsync("Bop", 0.5f);
+                CPU3.DoScaledAnimationAsync("Bop", 0.5f);
 
             }
             if (goBopJudge)
             {
-                Judge.Play("Bop");
+                Judge.DoScaledAnimationAsync("Bop", 0.5f);
             }
         }
         public void DarkBG(double beat, bool toggle, float length)

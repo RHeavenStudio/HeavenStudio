@@ -1,0 +1,271 @@
+fileFormatVersion: 2
+guid: 333100bf553a5924d870acafacb4f53a
+ModelImporter:
+  serializedVersion: 21300
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: airboy_board
+    second: {fileID: 2100000, guid: 18236ab917d571548b689dbcdf081b2e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: airboy_body
+    second: {fileID: 2100000, guid: d173bed14b93ec9489e590a1c0b3831e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: airboy_face.0
+    second: {fileID: 2100000, guid: 87659f38f7545534ca0e91a913b69fbc, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: neo_airboy(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: airboy_model
+      parentName: neo_airboy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: airboy_model_skeleton
+      parentName: neo_airboy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: airboy
+      parentName: airboy_model_skeleton
+      position: {x: 0, y: -5.9604643e-10, z: 0.0047615133}
+      rotation: {x: 0.6252786, y: -0.18935074, z: -0.056728657, w: 0.7549536}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Skl_Root
+      parentName: airboy
+      position: {x: -0.0000143014295, y: 0.0017634439, z: -0.00065276027}
+      rotation: {x: 0, y: 0, z: -0.7071081, w: 0.7071055}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Leg_1_L
+      parentName: Skl_Root
+      position: {x: 0.00023749859, y: -0.0012651699, z: 0.00024293795}
+      rotation: {x: -0.0701334, y: 0.021923741, z: 0.5820632, w: 0.8098168}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Leg_2_L
+      parentName: Leg_1_L
+      position: {x: 0.000021828784, y: -0.00299883, z: -0.000053091644}
+      rotation: {x: 0.3738204, y: -0.15457922, z: -0.0067697144, w: 0.9145042}
+      scale: {x: 0.9999999, y: 0.99999994, z: 0.99999994}
+    - name: Ankle_L
+      parentName: Leg_2_L
+      position: {x: -0.000019310237, y: -0.0025961706, z: 0.00038391133}
+      rotation: {x: 0.44290522, y: 0.695263, z: 0.38431135, w: 0.4156309}
+      scale: {x: 1, y: 0.9999999, z: 1.0000001}
+    - name: Ankle_L_end
+      parentName: Ankle_L
+      position: {x: -0, y: 0.00006831873, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Leg_1_R
+      parentName: Skl_Root
+      position: {x: 0.0004820577, y: 0.0012244481, z: -0.00016237333}
+      rotation: {x: 0.018891929, y: 0.9935955, z: -0.11084521, w: -0.011162682}
+      scale: {x: 1, y: 0.99999994, z: 0.99999994}
+    - name: Leg_2_R
+      parentName: Leg_1_R
+      position: {x: -0.0029990696, y: -0.00000016089528, z: 0.000054637192}
+      rotation: {x: 0.84910434, y: -0.022140535, z: 0.5240824, w: -0.062203437}
+      scale: {x: 0.9999999, y: 0.9999999, z: 0.99999994}
+    - name: Ankle_R
+      parentName: Leg_2_R
+      position: {x: 0.00035560734, y: 0.00003682382, z: -0.0025999998}
+      rotation: {x: -0.41944757, y: 0.53825307, z: 0.66963845, w: 0.2931412}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: Ankle_R_end
+      parentName: Ankle_R
+      position: {x: -0, y: 0.0000683188, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Waist
+      parentName: Skl_Root
+      position: {x: -0.000011850246, y: -1.0635972e-10, z: -0.00006796107}
+      rotation: {x: -0.081661806, y: -0.025835225, z: -0.046427183, w: 0.9952429}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: Spine
+      parentName: Waist
+      position: {x: -0.00285833, y: 4.6566126e-11, z: -0.00014242729}
+      rotation: {x: -0.19188948, y: 0.3852869, z: -0.053714685, w: 0.90102565}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: Arm_1_L
+      parentName: Spine
+      position: {x: -0.0014556204, y: -0.0014599604, z: -0.00012458261}
+      rotation: {x: -0.28129122, y: -0.44526345, z: 0.59765553, w: 0.6045028}
+      scale: {x: 1.0000001, y: 1, z: 1}
+    - name: Arm_2_L
+      parentName: Arm_1_L
+      position: {x: -0.0027749697, y: 0.00000016977778, z: -0.000005434118}
+      rotation: {x: -0.009569032, y: 0.04283372, z: -0.008593103, w: 0.9989995}
+      scale: {x: 1, y: 1.0000001, z: 0.99999994}
+    - name: Wrist_L
+      parentName: Arm_2_L
+      position: {x: -0.0020982707, y: -0.00000016995705, z: 0.000005434453}
+      rotation: {x: 0.0015187274, y: -0.34756982, z: 0.57559866, w: 0.7401886}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Wrist_L_end
+      parentName: Wrist_L
+      position: {x: -0, y: 0.00006831884, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Arm_1_R
+      parentName: Spine
+      position: {x: -0.0014555797, y: 0.0014553501, z: -0.00012458238}
+      rotation: {x: -0.091404326, y: -0.2838889, z: 0.65810406, w: 0.6913403}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Arm_2_R
+      parentName: Arm_1_R
+      position: {x: 0.00279524, y: 7.4505804e-11, z: 7.4505804e-11}
+      rotation: {x: -0.021586465, y: 0.0049736337, z: 0.035006884, w: 0.9991416}
+      scale: {x: 1, y: 1, z: 0.99999994}
+    - name: Wrist_R
+      parentName: Arm_2_R
+      position: {x: 0.00200266, y: -2.4214386e-10, z: 3.9115547e-10}
+      rotation: {x: 0.0020077813, y: 0.03459511, z: -0.6778131, w: 0.73441714}
+      scale: {x: 0.99999994, y: 0.9999999, z: 1}
+    - name: Wrist_R_end
+      parentName: Wrist_R
+      position: {x: -0, y: 0.00006831884, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Head
+      parentName: Spine
+      position: {x: -0.00273719, y: -2.4214386e-10, z: -0.00019367904}
+      rotation: {x: -0.22803612, y: -0.3707989, z: -0.1509692, w: 0.88753366}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: Head_end
+      parentName: Head
+      position: {x: -0, y: 0.0000683188, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: board_model
+      parentName: airboy
+      position: {x: -0, y: -0.001552491, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: eft_fire_L
+      parentName: board_model
+      position: {x: -0.013613599, y: -0.0010463799, z: 0.0040700096}
+      rotation: {x: 0, y: -0, z: -0.0000000074505797, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: eft_fire_L_end
+      parentName: eft_fire_L
+      position: {x: -0, y: 0.00006831877, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: eft_fire_R
+      parentName: board_model
+      position: {x: -0.013613599, y: -0.0010463799, z: -0.0040804893}
+      rotation: {x: 0, y: -0, z: -0.0000000074505797, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: eft_fire_R_end
+      parentName: eft_fire_R
+      position: {x: -0, y: 0.00006831877, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

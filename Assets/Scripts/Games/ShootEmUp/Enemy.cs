@@ -58,7 +58,8 @@ namespace HeavenStudio.Games.Scripts_ShootEmUp
                 smokeEffect.Play();
                 return;
             }
-            game.hitEffect.PlayScaledAsyncAllChildren(0.45f);
+            ParticleSystem spawnedParticle = Instantiate(game.hitEffect, effectHolder);
+            spawnedParticle.PlayScaledAsyncAllChildren(0.45f);
             JudgeAnim("just");
         }
 

@@ -63,12 +63,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("gate events", "Gate Animations")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ShootEmUp.instance.GateAnims(e.beat, e.length, e["close"], e["mute"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ShootEmUp.instance.GateAnims(e.beat, e.length, e["mute"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("close", false, "Close", "Toggle if the gate is closed."),
                         new Param("mute", false, "Mute", "Toggle if the cue should be muted."),
                     }
                 },
@@ -214,6 +213,7 @@ namespace HeavenStudio.Games
                     queuedIntervals.Clear();
                 }
             }
+            GateClose(beat);
         }
 
         public override void OnPlay(double beat)
@@ -224,6 +224,7 @@ namespace HeavenStudio.Games
                 evt.Disable();
             }
             queuedIntervals.Clear();
+            GateClose(beat);
         }
 
         private void OnDestroy()
@@ -411,7 +412,7 @@ namespace HeavenStudio.Games
                             captain.DoScaledAnimationAsync("capShow", 1f);
                         }),
                     });
-                    // if (!mute) SoundByte.PlayOneShotGame("shootEmUp/", beat + length);
+                    if (!mute) SoundByte.PlayOneShotGame("shootEmUp/commStart", beat + length);
                     break;
                 case (int)MonitorAnimation.Exit:
                     BeatAction.New(instance, new List<BeatAction.Action>()
@@ -423,7 +424,7 @@ namespace HeavenStudio.Games
                             monitor.DoScaledAnimationAsync("monitorOut", 1f);
                         }),
                     });
-                    // if (!mute) SoundByte.PlayOneShotGame("shootEmUp/", beat);
+                    if (!mute) SoundByte.PlayOneShotGame("shootEmUp/commEnd", beat);
                     break;
                 case (int)MonitorAnimation.Talk:
                     BeatAction.New(instance, new List<BeatAction.Action>()
@@ -452,10 +453,8 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void GateAnims(double beat, double length, bool close, bool mute)
+        public void GateAnims(double beat, double length, bool mute)
         {
-            introGate.Play("gateShow", 0, 0);
-            if (close) return;
             if (!mute)
             {
                 MultiSound.Play(new MultiSound.Sound[]
@@ -477,6 +476,17 @@ namespace HeavenStudio.Games
                     introGate.DoScaledAnimationAsync("gateOpen3", 1f);
                 }),
             });
+        }
+
+        private void GateClose(double beat)
+        {
+            double endBeat = double.MaxValue;
+            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).Find(x => x.beat > beat);
+            endBeat = firstEnd?.beat ?? endBeat;
+            if (EventCaller.GetAllInGameManagerList("shootEmUp", new string[] { "gate events" }).Find(x => x.beat >= beat && x.beat <= endBeat) is not null)
+            {
+                introGate.Play("gateShow", 0, 0);
+            }
         }
 
         public void ToggleBop(double beat, float length, bool bopOrNah, bool autoBop)

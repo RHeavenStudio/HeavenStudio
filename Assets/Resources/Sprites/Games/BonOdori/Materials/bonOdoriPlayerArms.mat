@@ -40,6 +40,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _GradientMap:
+        m_Texture: {fileID: 2800000, guid: 21862821b8fa7a4408337c2b18aec6b3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -58,6 +62,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - PixelSnap: 0
     - _BumpScale: 1
     - _ColorMask: 15
     - _Cutoff: 0.5
@@ -85,7 +90,7 @@ Material:
     - _AddColor: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorAlpha: {r: 1, g: 0.22352941, b: 0.22352941, a: 1}
-    - _ColorBravo: {r: 0.9803922, g: 0.86274517, b: 0.8705883, a: 1}
+    - _ColorBravo: {r: 1, g: 0.19215688, b: 0.41960788, a: 1}
     - _ColorDelta: {r: 0.3882353, g: 0.12941177, b: 0, a: 0.9843137}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
