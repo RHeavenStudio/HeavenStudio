@@ -14,10 +14,8 @@ namespace HeavenStudio.Editor
         [Space(10)]
         public Slider slider;
         public TMP_InputField inputField;
-
-        public TMP_Text noteLabel;
-
-        private float _defaultValue;
+        
+        protected float _defaultValue;
 
         public override void SetProperties(string propertyName, object type, string caption)
         {
@@ -73,60 +71,6 @@ namespace HeavenStudio.Editor
                     );
                     break;
                 
-                case EntityTypes.Note note:
-                    slider.minValue = note.min;
-                    slider.maxValue = note.max;
-                    _defaultValue = note.val;
-                    
-                    slider.wholeNumbers = true;
-
-                    slider.value = Convert.ToSingle(parameterManager.entity[propertyName]);
-                    inputField.text = slider.value.ToString();
-                    noteLabel.text = GetNoteText(note, (int) slider.value);
-
-                    slider.onValueChanged.AddListener(
-                        _ =>
-                        {
-                            inputField.text = slider.value.ToString();
-                            parameterManager.entity[propertyName] = (int) slider.value;
-                            if (slider.value != _defaultValue)
-                            {
-                                this.caption.text = _captionText + "*";
-                            }
-                            else
-                            {
-                                this.caption.text = _captionText;
-                            }
-                            
-                            noteLabel.text = GetNoteText(note, (int) slider.value);
-                        }
-                    );
-
-                    inputField.onSelect.AddListener(
-                        _ =>
-                            Editor.instance.editingInputField = true
-                    );
-
-                    inputField.onEndEdit.AddListener(
-                        _ =>
-                        {
-                            slider.value = Convert.ToSingle(inputField.text);
-                            parameterManager.entity[propertyName] = (int) slider.value;
-                            Editor.instance.editingInputField = false;
-                            if (slider.value != _defaultValue)
-                            {
-                                this.caption.text = _captionText + "*";
-                            }
-                            else
-                            {
-                                this.caption.text = _captionText;
-                            }
-                            
-                            noteLabel.text = GetNoteText(note, (int) slider.value);
-                        }
-                    );
-                    break;
-
                 case EntityTypes.Float fl:
                     slider.minValue = fl.min;
                     slider.maxValue = fl.max;
@@ -174,6 +118,8 @@ namespace HeavenStudio.Editor
                         }
                     );
                     break;
+
+                case EntityTypes.Note: break;
 
                 default:
                     throw new ArgumentOutOfRangeException(

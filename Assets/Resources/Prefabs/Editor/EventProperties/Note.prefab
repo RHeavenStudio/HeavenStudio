@@ -198,7 +198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6158244585233792465}
-  - component: {fileID: 6158244585233792466}
+  - component: {fileID: 5889849442551835445}
   m_Layer: 5
   m_Name: Note
   m_TagString: Untagged
@@ -229,7 +229,7 @@ RectTransform:
   m_AnchoredPosition: {x: 459.58514, y: -25}
   m_SizeDelta: {x: 879.1703, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6158244585233792466
+--- !u!114 &5889849442551835445
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -238,7 +238,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6158244585233792464}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e9ad350a96f5644dbb1e4686a6bcaed, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d8108e287994e145a3ca0b3d19e40c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   caption: {fileID: 6158244585406534009}
@@ -1022,7 +1022,7 @@ MonoBehaviour:
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 6158244585233792466}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: HeavenStudio.Editor.NumberPropertyPrefab, Assembly-CSharp
           m_MethodName: ResetValue
           m_Mode: 1
@@ -1146,7 +1146,7 @@ MonoBehaviour:
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 6158244585233792466}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: HeavenStudio.Editor.NumberPropertyPrefab, Assembly-CSharp
           m_MethodName: ResetValue
           m_Mode: 1
