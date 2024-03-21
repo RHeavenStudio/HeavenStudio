@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using HeavenStudio;
+using HeavenStudio.Common;
 using HeavenStudio.Editor;
 using HeavenStudio.Util;
 using TMPro;
@@ -83,7 +84,7 @@ public class NotePropertyPrefab : NumberPropertyPrefab
 
     private void PlayPreview(EntityTypes.Note note, int currentSemitones)
     {
-        if (note.sampleName.Equals("")) return;
+        if (note.sampleName.Equals("") || !PersistentDataManager.gameSettings.previewNoteSounds) return;
         
         if(previewAudioSource) previewAudioSource.Stop();
         
