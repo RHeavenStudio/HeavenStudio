@@ -85,8 +85,17 @@ public class NotePropertyPrefab : NumberPropertyPrefab
     private void PlayPreview(EntityTypes.Note note, int currentSemitones)
     {
         if (note.sampleName.Equals("") || !PersistentDataManager.gameSettings.previewNoteSounds) return;
-        
-        if(previewAudioSource) previewAudioSource.Stop();
+
+        if (previewAudioSource != null)
+        {
+            if (!previewAudioSource.available)
+            {
+                GameManager.instance.SoundObjects.Release(previewAudioSource);
+            }
+            
+            previewAudioSource.Stop();
+            previewAudioSource = null;
+        }
         
         float pitch = SoundByte.GetPitchFromSemiTones(currentSemitones, true);
         previewAudioSource = SoundByte.PlayOneShotGame(note.sampleName, pitch: pitch, volume: 0.75f, forcePlay: true, ignoreConductorPause: true);

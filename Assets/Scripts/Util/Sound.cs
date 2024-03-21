@@ -117,6 +117,7 @@ namespace HeavenStudio.Util
             {
                 if (!ignoreConductorPause && !(cond.isPlaying || cond.isPaused))
                 {
+                    Debug.Log("release 1");
                     GameManager.instance.SoundObjects.Release(this);
                     return;
                 }
@@ -174,11 +175,15 @@ namespace HeavenStudio.Util
             {
                 if (!ignoreConductorPause && !(cond.isPlaying || cond.isPaused))
                 {
+                    Debug.Log("release2");
+
                     GameManager.instance.SoundObjects.Release(this);
                     return;
                 }
                 if (!(looping || paused || audioSource.isPlaying))
                 {
+                    Debug.Log("release3");
+
                     GameManager.instance.SoundObjects.Release(this);
                     return;
                 }
