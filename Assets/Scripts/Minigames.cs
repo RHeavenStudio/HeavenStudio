@@ -252,6 +252,8 @@ namespace HeavenStudio
                                     e.dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
                                 else if (type == typeof(EntityTypes.Float))
                                     e.dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
+                                else if (type == typeof(EntityTypes.Note))
+                                    e.dynamicData.Add(param.propertyName, ((EntityTypes.Note)param.parameter).val);
                                 else if (type.IsEnum)
                                     e.dynamicData.Add(param.propertyName, (int)param.parameter);
                                 else
@@ -263,7 +265,7 @@ namespace HeavenStudio
                             {
                                 try
                                 {
-                                    if (type == typeof(EntityTypes.Integer))
+                                    if (type == typeof(EntityTypes.Integer) || type == typeof(EntityTypes.Note))
                                         e.dynamicData[param.propertyName] = (int)e[param.propertyName];
                                     else if (type == typeof(EntityTypes.Float))
                                         e.dynamicData[param.propertyName] = (float)e[param.propertyName];
@@ -295,6 +297,8 @@ namespace HeavenStudio
                                     // use default value
                                     if (type == typeof(EntityTypes.Integer))
                                         e.dynamicData[param.propertyName] = ((EntityTypes.Integer)param.parameter).val;
+                                    else if (type == typeof(EntityTypes.Note))
+                                        e.dynamicData[param.propertyName] = ((EntityTypes.Note)param.parameter).val;
                                     else if (type == typeof(EntityTypes.Float))
                                         e.dynamicData[param.propertyName] = ((EntityTypes.Float)param.parameter).val;
                                     else if (type.IsEnum && param.propertyName != "ease")

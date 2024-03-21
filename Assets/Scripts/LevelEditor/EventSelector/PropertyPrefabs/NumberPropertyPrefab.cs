@@ -15,6 +15,8 @@ namespace HeavenStudio.Editor
         public Slider slider;
         public TMP_InputField inputField;
 
+        public TMP_Text noteLabel;
+
         private float _defaultValue;
 
         public override void SetProperties(string propertyName, object type, string caption)
@@ -67,6 +69,60 @@ namespace HeavenStudio.Editor
                             {
                                 this.caption.text = _captionText;
                             }
+                        }
+                    );
+                    break;
+                
+                case EntityTypes.Note note:
+                    slider.minValue = note.min;
+                    slider.maxValue = note.max;
+                    _defaultValue = note.val;
+                    
+                    slider.wholeNumbers = true;
+
+                    slider.value = Convert.ToSingle(parameterManager.entity[propertyName]);
+                    inputField.text = slider.value.ToString();
+                    noteLabel.text = GetNoteText(note, (int) slider.value);
+
+                    slider.onValueChanged.AddListener(
+                        _ =>
+                        {
+                            inputField.text = slider.value.ToString();
+                            parameterManager.entity[propertyName] = (int) slider.value;
+                            if (slider.value != _defaultValue)
+                            {
+                                this.caption.text = _captionText + "*";
+                            }
+                            else
+                            {
+                                this.caption.text = _captionText;
+                            }
+                            
+                            noteLabel.text = GetNoteText(note, (int) slider.value);
+                        }
+                    );
+
+                    inputField.onSelect.AddListener(
+                        _ =>
+                            Editor.instance.editingInputField = true
+                    );
+
+                    inputField.onEndEdit.AddListener(
+                        _ =>
+                        {
+                            slider.value = Convert.ToSingle(inputField.text);
+                            parameterManager.entity[propertyName] = (int) slider.value;
+                            Editor.instance.editingInputField = false;
+                            if (slider.value != _defaultValue)
+                            {
+                                this.caption.text = _captionText + "*";
+                            }
+                            else
+                            {
+                                this.caption.text = _captionText;
+                            }
+                            
+                            noteLabel.text = GetNoteText(note, (int) slider.value);
                         }
                     );
                     break;
@@ -135,7 +191,7 @@ namespace HeavenStudio.Editor
         {
             switch (type)
             {
-                case EntityTypes.Integer integer:
+                case EntityTypes.Integer or EntityTypes.Note:
                     slider.onValueChanged.AddListener(_ => UpdateCollapse((int)slider.value));
                     inputField.onEndEdit.AddListener(_ => UpdateCollapse((int)slider.value));
 
@@ -143,18 +199,40 @@ namespace HeavenStudio.Editor
 
                     break;
 
-                case EntityTypes.Float fl:
+                case EntityTypes.Float:
                     slider.onValueChanged.AddListener(newVal => UpdateCollapse((float)Math.Round(newVal, 4)));
                     inputField.onEndEdit.AddListener(_ => UpdateCollapse(slider.value));
 
                     UpdateCollapse((float)Math.Round(slider.value, 4));
                     break;
-
+                
                 default:
                     throw new ArgumentOutOfRangeException(
                         nameof(type), type, "I don't know how to make a property of this type!"
                     );
             }
+        }
+        
+        private static readonly string[] notes = {
+            "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"
+        };
+        
+        private static string GetNoteText(EntityTypes.Note note, int newSemitones)
+        {
+            int noteIndex = (note.sampleNote + newSemitones) % 12;
+            if (noteIndex < 0) {
+                noteIndex += 12;
+            }
+            
+            int octaveOffset = (note.sampleNote + newSemitones) / 12;
+            int octave = note.sampleOctave + octaveOffset;
+
+            if ((note.sampleNote + newSemitones) % 12 < 0)
+            {
+                octave--;
+            }
+            
+            return notes[noteIndex] + octave;
         }
 
         private void Update()

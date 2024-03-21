@@ -890,6 +890,7 @@ namespace HeavenStudio.Editor.Track
                         {
                             object returnVal = ep[i].parameter switch {
                                 EntityTypes.Integer intVal => intVal.val,
+                                EntityTypes.Note noteVal => noteVal.val,
                                 EntityTypes.Float floatVal => floatVal.val,
                                 EntityTypes.Button buttonVal => buttonVal.defaultLabel,
                                 EntityTypes.Dropdown ddVal => new EntityTypes.DropdownObj(ddVal),
