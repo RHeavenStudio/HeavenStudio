@@ -545,6 +545,7 @@ GameObject:
   - component: {fileID: 6158244586092265563}
   - component: {fileID: 6158244586092265565}
   - component: {fileID: 6158244586092265564}
+  - component: {fileID: 4416041990617176705}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -610,6 +611,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4416041990617176705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6158244586092265562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e365c37b20b7e15458fab7eef4b17449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnLeftClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5889849442551835445}
+        m_TargetAssemblyTypeName: NotePropertyPrefab, Assembly-CSharp
+        m_MethodName: OnSelectSliderHandle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6158244586323976421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,6 +1075,7 @@ GameObject:
   - component: {fileID: 6158244586633658522}
   - component: {fileID: 6158244586633658523}
   - component: {fileID: 6158244586633658524}
+  - component: {fileID: 1757629852665466133}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -1146,7 +1175,7 @@ MonoBehaviour:
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
+        - m_Target: {fileID: 5889849442551835445}
           m_TargetAssemblyTypeName: HeavenStudio.Editor.NumberPropertyPrefab, Assembly-CSharp
           m_MethodName: ResetValue
           m_Mode: 1
@@ -1160,3 +1189,18 @@ MonoBehaviour:
           m_CallState: 2
   _masterTrans: {fileID: 0}
   _dropDown: {fileID: 8384641343036272350, guid: 56a45ac5cd0da2a4ab398d1a63e18d9f, type: 3}
+--- !u!114 &1757629852665466133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6158244586633658521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e365c37b20b7e15458fab7eef4b17449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnLeftClick:
+    m_PersistentCalls:
+      m_Calls: []

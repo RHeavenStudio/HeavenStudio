@@ -13,22 +13,25 @@ public class NotePropertyPrefab : NumberPropertyPrefab
     public TMP_Text noteLabel;
     
     private Sound previewAudioSource;
+    private EntityTypes.Note note;
+    private int offsetFromC;
 
     public override void SetProperties(string propertyName, object type, string caption)
     {
         base.SetProperties(propertyName, type, caption);
 
-        EntityTypes.Note note = (EntityTypes.Note)type;
+        note = (EntityTypes.Note)type;
 
         slider.minValue = note.min;
         slider.maxValue = note.max;
-        _defaultValue = note.val;
 
         slider.wholeNumbers = true;
 
-        int offsetFromC = 3 - note.sampleNote;
+        offsetFromC = 3 - note.sampleNote;
 
         slider.value = Convert.ToSingle(parameterManager.entity[propertyName]) - offsetFromC;
+        _defaultValue = slider.value;
+        
         inputField.text = slider.value.ToString();
         noteLabel.text = GetNoteText(note, (int)slider.value + offsetFromC);
 
@@ -81,6 +84,11 @@ public class NotePropertyPrefab : NumberPropertyPrefab
             }
         );
     }
+    
+    public void OnSelectSliderHandle()
+    {
+        PlayPreview(note, (int)slider.value + offsetFromC);
+    }
 
     private void PlayPreview(EntityTypes.Note note, int currentSemitones)
     {
@@ -88,12 +96,7 @@ public class NotePropertyPrefab : NumberPropertyPrefab
 
         if (previewAudioSource != null)
         {
-            if (!previewAudioSource.available)
-            {
-                GameManager.instance.SoundObjects.Release(previewAudioSource);
-            }
-            
-            previewAudioSource.Stop();
+            previewAudioSource.Stop(true);
             previewAudioSource = null;
         }
         
