@@ -21,10 +21,12 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [SerializeField] public GameObject SmallLandmass;
         [SerializeField] public GameObject FullLandmass;
         [SerializeField] public GameObject Helmet;
+        [SerializeField] public GameObject StoneSplashEffect;
         [SerializeField] public ParticleSystem IslandCollapse;
         [SerializeField] public ParticleSystem IslandCollapseNg;
-        [SerializeField] public ParticleSystem StoneSplashEffect;
         [SerializeField] public ParticleSystem ChickenSplashEffect;
+        [SerializeField] public ParticleSystem GrassL;
+        [SerializeField] public ParticleSystem GrassR;
 
         [NonSerialized]public double journeySave = 0;
         [NonSerialized]public double journeyStart = 0;
@@ -37,14 +39,17 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [NonSerialized]public double respawnEnd = 0;
         [NonSerialized]public bool isRespawning = false;
 
-        [NonSerialized]public bool canFall = false;
-        [NonSerialized]public bool isFalling = false;
-
-        [NonSerialized]public bool isBeingSet = false;
+        [NonSerialized]public bool stonesExist = false;
+        [NonSerialized]public float platformOffsetUnderChicken = -6f;
+        [NonSerialized]public Vector3 particleOffset;
+        [NonSerialized]public float stonePlatformFallOffset = 0;
 
         [NonSerialized]public float value1 = 0f;
         [NonSerialized]public float speed1 = 0f;
         [NonSerialized]public float speed2 = 0f;
+
+        [NonSerialized]public float grassState = 0;
+        [NonSerialized]public bool grassFell = false;
 
         [SerializeField] GameObject PlatformBase;
 
@@ -54,6 +59,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         {
             public int stoneNumber;
             public GameObject thisPlatform;
+            public bool hasFallen;
         }
 
         #endregion
@@ -81,21 +87,30 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                 float newX2 = Util.EasingFunction.Linear((float)journeyStart - (float)journeySave, (float)journeyEnd, 1 - value2);
                 IslandPos.localPosition = new Vector3(newX2, 0, 0);
             }
-            //if (canFall && IslandPos.localPosition.x < -0.5)
-            //{
-            //    PlatformAnim.Play("Fall", -1, 0);
-            //    PlatformAnim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.3f;
-            //    SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_PITCH150", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
-            //    BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
-            //    {
-            //        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.50, delegate { StoneSplash(); }),
-            //        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 3.00, delegate { Destroy(gameObject); }),
-            //    });
-            //    canFall = false;
-            //}
 
             float currentPosition = IslandPos.localPosition.x;
             speed1 = (previousPosition - currentPosition) / Time.deltaTime;
+
+            if (grassState > 0.6 && IslandPos.localPosition.x < -1 && !grassFell)
+            {
+                GrassR.Play();
+                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_DOSHA", volume: 0.5f);
+                grassFell = true;
+            }
+            if (grassState < -0.6 && IslandPos.localPosition.x < 2 && !grassFell)
+            {
+                GrassL.Play();
+                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_DOSHA", volume: 0.5f);
+                grassFell = true;
+            }
+        }
+
+        public void LateUpdate()
+        {
+            if (stonesExist)
+            {
+                StoneSplashCheck();
+            }
         }
 
         #endregion
@@ -127,6 +142,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         public void PositionIsland(float state)
         {
             CollapsedLandmass.localPosition = new Vector3(state, 0, 0);
+            stonePlatformFallOffset = state;
         }
 
         public void SetUpCollapse(double collapseTime)
@@ -139,6 +155,15 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                     BigLandmass.SetActive(false);
                     SmallLandmass.SetActive(true);
                     IslandCollapse.Play();
+                    grassFell = true;
+                    IslandPos.localPosition = new Vector3(0, 0, 0);
+                    CollapsedLandmass.localPosition = new Vector3(0, 0, 0);
+                    foreach (var a in stonePlatformJourney)
+                    {
+                        var stone = a.thisPlatform;
+
+                        stone.transform.localPosition -= new Vector3(stonePlatformFallOffset, 0, 0);
+                    }
                 }),
             });
         }
@@ -155,24 +180,42 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         //stone platform methods
         #region Stone Platform Methods
 
-        public void StoneSplash()
+        public void StoneSplashCheck(double offset = 0)
         {
-            if (IslandPos.localPosition.x > -8) 
+            foreach (var a in stonePlatformJourney)
             {
-                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_WATER_PITCH400", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-400, 401), false), volume: 0.5f);
-                StoneSplashEffect.Play();
+                if (a.thisPlatform.transform.position.x < platformOffsetUnderChicken + offset && !a.hasFallen)
+                {
+                    var stone = a.thisPlatform;
+                    var anim = stone.GetComponent<Animator>();
+                    stonePlatformJourney[a.stoneNumber].hasFallen = true;
+                    anim.Play("Fall", 0, 0);
+                    anim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.3f;
+                    SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_PITCH150", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-150, 151), false), volume: 0.5f);
+                    BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.50, delegate { StoneSplash(stone); }),
+                    });
+                    break;
+                }
             }
         }
 
-        public void ThisIsNotMoving()
+        public void StoneSplash(GameObject a)
         {
-            isMoving = false;
+            if (a.transform.position.x > (-7.5 + platformOffsetUnderChicken)) 
+            {
+                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_BLOCK_FALL_WATER_PITCH400", pitch: SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-400, 401), false), volume: 0.5f);
+            }
+            GameObject splash = Instantiate(StoneSplashEffect, a.transform);
+            splash.transform.localPosition -= new Vector3(particleOffset.x, particleOffset.y, particleOffset.z);
+            splash.GetComponent<ParticleSystem>().Play();
         }
 
         public void ChickenFall()
         {
             var c = ChickenSplashEffect.transform.localPosition;
-            ChickenSplashEffect.transform.localPosition = new Vector3(-IslandPos.localPosition.x + 1.5f, c.y, c.z);
+            ChickenSplashEffect.transform.localPosition = new Vector3(-IslandPos.localPosition.x + 2.5f, c.y, c.z);
             ChickenSplashEffect.Play();
         }
 
@@ -184,23 +227,36 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
             for ( int i = 0; i < length * 4; i++ )
             {
+                stonePlatformJourney[i].thisPlatform = Instantiate(PlatformBase, transform);
+                stonePlatformJourney[i].stoneNumber = i;
+                stonePlatformJourney[i].hasFallen = false;
+
                 var a = stonePlatformJourney[i];
 
-                a.thisPlatform = Instantiate(PlatformBase, transform);
-                a.stoneNumber = i;
-
                 var stone = a.thisPlatform;
-                var anim = stone.GetComponent<Animator>();
+                var anim = a.thisPlatform.GetComponent<Animator>();
 
                 stone.SetActive(true);
-                stone.transform.localPosition = new Vector3((float)(((a.stoneNumber) * ChargingChicken.platformDistanceConstant) - (ChargingChicken.platformDistanceConstant / 2)) + stone.transform.localPosition.x, stone.transform.localPosition.y, 0);
+                particleOffset = new Vector3(stone.transform.localPosition.x, stone.transform.localPosition.y, stone.transform.localPosition.z);
+                stone.transform.localPosition = new Vector3((float)(((a.stoneNumber) * ChargingChicken.platformDistanceConstant) - (ChargingChicken.platformDistanceConstant / 2) + stonePlatformFallOffset) + stone.transform.localPosition.x, stone.transform.localPosition.y, 0);
 
+                switch (i % 3)
+                {
+                    case 1: anim.DoScaledAnimation("Plat1", 0.5f, animLayer: 1); break;
+                    case 2: anim.DoScaledAnimation("Plat2", 0.5f, animLayer: 1); break;
+                }
+                
                 if (!tooLate)
                 {
-                    anim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble + ((double)a.stoneNumber / 64), 0.5f);
+                    anim.DoScaledAnimation("Set", Conductor.instance.songPositionInBeatsAsDouble + ((double)a.stoneNumber / 64), 0.5f, animLayer: 0);
                     anim.speed = (1f / Conductor.instance.pitchedSecPerBeat) * 0.5f;
                 }
             }
+
+            BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - length - 1, delegate { stonesExist = true; }),
+            });
         }
 
         #endregion

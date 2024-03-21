@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("chargingChicken", "Charging Chicken", "FFFFFF", false, false, new List<GameAction>()
+            return new Minigame("chargingChicken", "Charging Chicken", "6ED6FF", false, false, new List<GameAction>()
             {
                 new GameAction("input", "Charge")
                 {
@@ -236,6 +236,17 @@ namespace HeavenStudio.Games.Loaders
                         new Param("birdProgress", new EntityTypes.Integer(-1, 100, -1), "Bird Progress (NYI)", "Instantly sets what percent through the loop the birds are. (-1 = no change)"),
                     }
                 },
+                new GameAction("lookhaha", "Look At Camera")
+                {
+                    preFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        if (eventCaller.gameManager.minigameObj.TryGetComponent(out ChargingChicken instance)) {
+                            instance.LookButFunee(e.beat, e.length);
+                        }
+                    },
+                    resizable = true,
+                    defaultLength = 2f,
+                },
                 new GameAction("explodehaha", "Force Explosion")
                 {
                     function = delegate {
@@ -397,12 +408,15 @@ namespace HeavenStudio.Games
         bool drumFadeIn = true;
         bool drumReset = true;
         bool drumLoud = false;
+        double drumSwitch = double.MinValue;
+
         Sound whirring;
         bool isWhirringPlaying = false;
 
         [SerializeField] Island IslandBase;
         Island nextIsland;
         Island currentIsland;
+        Island staleIsland;
         double journeyIntendedLength;
 
         public static double platformDistanceConstant = 5.35 / 2;
@@ -658,18 +672,18 @@ namespace HeavenStudio.Games
             },
 
             new DrumLoop[] { //amen
-                new(4.00, 11),
-                new(0.50, 12),
-                new(1.00, 13),
-                new(1.50, 14),
-                new(1.75, 15),
-                new(2.00, 16),
-                new(2.25, 17),
-                new(2.50, 18),
-                new(2.75, 19),
-                new(3.00, 20),
-                new(3.50, 21),
-                new(3.75, 22),
+                new(4.00, 21),
+                new(0.50, 22),
+                new(1.00, 23),
+                new(1.50, 24),
+                new(1.75, 25),
+                new(2.00, 26),
+                new(2.25, 27),
+                new(2.50, 28),
+                new(2.75, 29),
+                new(3.00, 30),
+                new(3.50, 31),
+                new(3.75, 32),
             },
         };
 
@@ -818,6 +832,8 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
+            drumSwitch = beat;
+
             PersistThings(beat);
 
             foreach(var entity in GameManager.instance.Beatmap.Entities)
@@ -898,7 +914,7 @@ namespace HeavenStudio.Games
         {
             //convert length to an integer, which is at least 4
             double length = Math.Ceiling(actualLength);
-            if (length < 4) length = 48395839743;
+            if (length < 4) length = 4;
 
             //don't queue more than one input at a time
             if (beat < nextInputReady) return;
@@ -980,7 +996,14 @@ namespace HeavenStudio.Games
                 string yardsTextStringTemp = yardsTextString.Replace("%", $"{yardsTextLength}");
                 yardsText.text = yardsTextStringTemp;
                 yardsTextIsEditable = true;
-                nextIsland.SpawnStones(journeyBeat, yardsTextLength - 1, lateness < 2);
+                if (lateness >= 1)
+                {
+                    nextIsland.SpawnStones(journeyBeat, yardsTextLength - 1, lateness < 2);
+                }
+                else
+                {
+                    currentIsland.SpawnStones(journeyBeat, yardsTextLength - 1, lateness < 2);
+                }
             }));
 
             //chicken ducks into the car window, and the bubble text is set up, and the platform noise plays, music volume is reset if needed, and next island spawns
@@ -1001,7 +1024,7 @@ namespace HeavenStudio.Games
                 Helmet.SetActive(helmet);
                 FallingHelmet.SetActive(helmet);
                 currentIsland.Helmet.SetActive(helmet);
-                nextIsland.Helmet.SetActive(helmet);
+                if (lateness >= 1) nextIsland.Helmet.SetActive(helmet);
             }));
 
             length += 1;
@@ -1109,6 +1132,8 @@ namespace HeavenStudio.Games
         {
             BlastOff(state, false);
 
+            nextIsland.grassState = state;
+
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("miss");
@@ -1137,7 +1162,7 @@ namespace HeavenStudio.Games
                     0 => "chargingChicken/kick",
                     1 => "chargingChicken/snare",
                     2 => "chargingChicken/hihat",
-                    _ => $"chargingChicken/AMEN{drumLoop.drumType - 10}"
+                    _ => $"chargingChicken/MISC{drumLoop.drumType - 20}" //1 - 12 = AMEN,
                 };
                 if (length > drumLoop.timing)
                 {
@@ -1154,7 +1179,7 @@ namespace HeavenStudio.Games
         public void PlayDrum(string whichDrum, float drumVolumeThis, double lateness)
         {
             float drumActualVolume = (drumVolume > drumTempVolume) ? drumVolumeThis * drumVolume : drumVolumeThis * drumTempVolume;
-            if (isInputting /* && (lateness * 4 == Math.Floor(Conductor.instance.songPositionInBeatsAsDouble * 4)) */) SoundByte.PlayOneShotGame(whichDrum, volume: drumLoud ? drumVolumeThis : drumActualVolume);
+            if (isInputting && lateness >= drumSwitch) SoundByte.PlayOneShotGame(whichDrum, volume: drumLoud ? drumVolumeThis : drumActualVolume);
         }
 
         public void PumpBeat()
@@ -1165,7 +1190,8 @@ namespace HeavenStudio.Games
         public void SpawnJourney(double beat, double length)
         {
             //pass along the next island data
-            if (currentIsland != null) Destroy(currentIsland.gameObject);
+            if (staleIsland != null) Destroy(staleIsland.gameObject);
+            staleIsland = currentIsland;
             currentIsland = nextIsland;
             nextIsland = Instantiate(IslandBase, transform).GetComponent<Island>();
 
@@ -1236,6 +1262,7 @@ namespace HeavenStudio.Games
 
             if(missed)
             {
+                playerSucceeded = false;
                 ScoreMiss();
 
                 fellTooFar = false;
@@ -1247,12 +1274,11 @@ namespace HeavenStudio.Games
                 currentIsland.journeyEnd += ((currentIsland.journeyLength - (currentIsland.journeyBlastOffTime - journeyIntendedLength) + 1) * (currentIsland.journeyLength / (currentIsland.journeyLength + 1))) * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
                 currentIsland.journeyLength = Math.Clamp(((currentIsland.journeyBlastOffTime - journeyIntendedLength) / 1.5) + (currentIsland.journeyLength / 3) - 1, 0, currentIsland.journeyLength - 2);
 
-                int stoneAdder = 0;
                 //make sure the chicken can't land on the island
-                if (nextIsland.journeyEnd <= 4 && nextIsland.journeyEnd > 2)  { nextIsland.journeyEnd += 2; currentIsland.journeyEnd += 2; stoneAdder =  2; }
-                if (nextIsland.journeyEnd <= 2 && nextIsland.journeyEnd > 0)  { nextIsland.journeyEnd += 4; currentIsland.journeyEnd += 4; stoneAdder =  4; }
-                if (nextIsland.journeyEnd <= 0 && nextIsland.journeyEnd > -2) { nextIsland.journeyEnd -= 4; currentIsland.journeyEnd -= 4; stoneAdder = -4; }
-                if (nextIsland.journeyEnd <= -2 && nextIsland.journeyEnd > 4) { nextIsland.journeyEnd -= 2; currentIsland.journeyEnd -= 2; stoneAdder = -2; }
+                if (nextIsland.journeyEnd <= 4 && nextIsland.journeyEnd > 2)  { nextIsland.journeyEnd += 2; currentIsland.journeyEnd += 2; }
+                if (nextIsland.journeyEnd <= 2 && nextIsland.journeyEnd > 0)  { nextIsland.journeyEnd += 4; currentIsland.journeyEnd += 4; }
+                if (nextIsland.journeyEnd <= 0 && nextIsland.journeyEnd > -2) { nextIsland.journeyEnd -= 4; currentIsland.journeyEnd -= 4; }
+                if (nextIsland.journeyEnd <= -2 && nextIsland.journeyEnd > 4) { nextIsland.journeyEnd -= 2; currentIsland.journeyEnd -= 2; }
 
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
@@ -1285,7 +1311,7 @@ namespace HeavenStudio.Games
         {
             if (Conductor.instance.songPositionInBeatsAsDouble < successAnimationKillOnBeat)
             {
-                ChickenAnim.DoScaledAnimationAsync("Success", 0.5f);
+                LookButFunee(Conductor.instance.songPositionInBeatsAsDouble, 2);
             }
         }
 
@@ -1327,7 +1353,7 @@ namespace HeavenStudio.Games
             currentIsland.transform.localPosition = new Vector3(0, 0, 0);
             
             isInputting = false;
-            nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant / 2);
+            nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant * 1.5);
             currentIsland.journeyEnd = 0;
 
             //erase text
@@ -1349,7 +1375,7 @@ namespace HeavenStudio.Games
             canPressWhiff = false;
 
             isInputting = false;
-            nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat;
+            nextIsland.journeyEnd = nextIsland.journeyLength * platformDistanceConstant * platformsPerBeat + (platformDistanceConstant * 1.5);
             currentIsland.journeyEnd = 0;
 
             //boom
@@ -1370,6 +1396,8 @@ namespace HeavenStudio.Games
 
         public void ExplodeButFunee()
         {
+            successAnimationKillOnBeat = Conductor.instance.songPositionInBeatsAsDouble;
+
             if (currentIsland == null) currentIsland = nextIsland;
 
             canPressWhiff = false;
@@ -1393,12 +1421,33 @@ namespace HeavenStudio.Games
             nextIsland.FakeChickenAnim.DoScaledAnimationAsync("Burn", 0.5f);
         }
 
+        public void LookButFunee(double beat, double length)
+        {
+            successAnimationKillOnBeat = beat;
+
+            BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { 
+                    ChickenAnim.DoScaledAnimationAsync("ChickenLookTo", 0.499f);
+                }),
+                new BeatAction.Action(beat + length, delegate { 
+                    LookBack();
+                }),
+            });
+        }
+
+        public void LookBack()
+        {
+            if (ChickenAnim.IsPlayingAnimationNames("ChickenLooking", "ChickenLookTo")) ChickenAnim.DoScaledAnimationAsync("ChickenLookFrom", 0.5f);
+        }
+
         public void ChickenFall(bool fellTooFar)
         {
             if (!fellTooFar)
             {
                 ChickenAnim.DoScaledAnimationAsync("Fall", 0.3f);
                 SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL", volume: 0.5f);
+                currentIsland.StoneSplashCheck(4);
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.60, delegate { 
@@ -1413,6 +1462,7 @@ namespace HeavenStudio.Games
 
         public void ChickenRespawn(double length = 0.6)
         {
+            playerSucceeded = false;
             isInputting = false;
 
             currentIsland.respawnStart = Conductor.instance.songPositionInBeatsAsDouble + length;
@@ -1712,68 +1762,66 @@ namespace HeavenStudio.Games
         private void PersistThings(double beat)
         {
             return;
-            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeBgColor" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+
+            var allEvents = gameManager.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] is "chargingChicken");
+            var eventsBefore = allEvents.FindAll(e => e.beat < beat);
+
+            var lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/changeBgColor");
+            if (lastColorEvent != null)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                ChangeColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
+                var e = lastColorEvent;
+                ChangeColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
             }
 
-            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeFgLight" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+            lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/changeFgLight");
+            if (lastColorEvent != null)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                ChangeLight(lastEvent.beat, lastEvent.length, lastEvent["lightFrom"], lastEvent["lightTo"], lastEvent["headLightFrom"], lastEvent["headLightTo"], lastEvent["ease"]);
+                var e = lastColorEvent;
+                ChangeLight(e.beat, e.length, e["lightFrom"], e["lightTo"], e["headLightFrom"], e["headLightTo"], e["ease"]);
             }
 
-            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCarColor" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+            lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/changeCarColor");
+            if (lastColorEvent != null)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                ChangeCarColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
+                var e = lastColorEvent;
+                ChangeCarColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
             }
 
-            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCloudColor" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+            lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/changeCloudColor");
+            if (lastColorEvent != null)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                ChangeCloudColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
+                var e = lastColorEvent;
+                ChangeCloudColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
             }
 
-            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCloudColor" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+            return;
+
+            lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/unParallaxObjects");
+            if (lastColorEvent != null)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                UnParallaxObjects(lastEvent.beat, lastEvent.length, lastEvent["appearance"], true);
+                var e = lastColorEvent;
+                UnParallaxObjects(e.beat, e.length, e["appearance"], true);
             }
 
-            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCloudColor" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+            lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/parallaxObjects");
+            if (lastColorEvent != null)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                ParallaxObjects(lastEvent.beat, lastEvent.length, true, lastEvent["stars"], lastEvent["clouds"], lastEvent["earth"], lastEvent["mars"], lastEvent["doodles"], lastEvent["birds"]);
+                var e = lastColorEvent;
+                ParallaxObjects(e.beat, e.length, true, e["stars"], e["clouds"], e["earth"], e["mars"], e["doodles"], e["birds"]);
             }
 
-            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "changeCloudColor" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+            lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/parallaxProgress");
+            if (lastColorEvent != null)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                ParallaxProgress(lastEvent["starProgress"], lastEvent["cloudProgress"], lastEvent["planetProgress"], lastEvent["doodleProgress"], lastEvent["birdProgress"]);
+                var e = lastColorEvent;
+                ParallaxProgress(e["starProgress"], e["cloudProgress"], e["planetProgress"], e["doodleProgress"], e["birdProgress"]);
             }
 
-            allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("chargingChicken", new string[] { "textEdit" }).FindAll(x => x.beat < beat);
-            if (allEventsBeforeBeat.Count > 0)
+            lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/textEdit");
+            if (lastColorEvent != null)
             {
-                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
-                var lastEvent = allEventsBeforeBeat[^1];
-                TextEdit(lastEvent.beat, lastEvent["text"], lastEvent["color"]);
+                var e = lastColorEvent;
+                TextEdit(e.beat, e["text"], e["color"]);
             }
         }
 
