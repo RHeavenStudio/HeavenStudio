@@ -25,6 +25,7 @@ namespace HeavenStudio
         
         public struct Note
         {
+            public static int maxSemitones = 36;
             public int min;
             public int val;
             public int max;

@@ -20,10 +20,10 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("offset", new EntityTypes.Float(-1, 2, -1), "Spawn Offset", "Set when the rocket should rise up."),
-                        new Param("note1", new EntityTypes.Note(-24, 24, 2, 0, 4), "1st Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note2", new EntityTypes.Note(-24, 24, 4, 0, 4), "2nd Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note3", new EntityTypes.Note(-24, 24, 5, 0, 4), "3rd Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note4", new EntityTypes.Note(-24, 24, 7, 0, 4), "4th Note", "Set the number of semitones up or down this note should be pitched.")
+                        new Param("note1", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 2, 0, 4), "1st Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 4, 0, 4), "2nd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 5, 0, 4), "3rd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 7, 0, 4), "4th Note", "Set the number of semitones up or down this note should be pitched.")
                     }
                 },
                 new GameAction("partyCracker", "Party-Popper")
@@ -33,12 +33,12 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "Set when the rocket should rise up."),
-                        new Param("note1", new EntityTypes.Note(-24, 24, 4, 0, 4), "1st Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note2", new EntityTypes.Note(-24, 24, 5, 0, 4), "2nd Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note3", new EntityTypes.Note(-24, 24, 7, 0, 4), "3rd Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note4", new EntityTypes.Note(-24, 24, 9, 0, 4), "4th Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note5", new EntityTypes.Note(-24, 24, 11, 0, 4), "5th Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note6", new EntityTypes.Note(-24, 24, 12, 0, 4), "6th Note", "Set the number of semitones up or down this note should be pitched.")
+                        new Param("note1", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 4, 0, 4), "1st Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 5, 0, 4), "2nd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 7, 0, 4), "3rd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 9, 0, 4), "4th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note5", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 11, 0, 4), "5th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note6", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 12, 0, 4), "6th Note", "Set the number of semitones up or down this note should be pitched.")
                     }
                 },
                 new GameAction("bell", "Bell")
@@ -49,15 +49,15 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "Set when the rocket should rise up."),
-                        new Param("note1", new EntityTypes.Note(-24, 24, 0, 0, 4), "1st Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note2", new EntityTypes.Note(-24, 24, 2, 0, 4), "2nd Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note3", new EntityTypes.Note(-24, 24, 4, 0, 4), "3rd Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note4", new EntityTypes.Note(-24, 24, 5, 0, 4), "4th Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note5", new EntityTypes.Note(-24, 24, 7, 0, 4), "5th Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note6", new EntityTypes.Note(-24, 24, 9, 0, 4), "6th Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note7", new EntityTypes.Note(-24, 24, 11, 0, 4), "7th Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note8", new EntityTypes.Note(-24, 24, 12, 0, 4), "8th Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note9", new EntityTypes.Note(-24, 24, 0, 0, 4), "9th Note (Launch)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note1", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 0, 4), "1st Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 2, 0, 4), "2nd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 4, 0, 4), "3rd Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 5, 0, 4), "4th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note5", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 7, 0, 4), "5th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note6", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 9, 0, 4), "6th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note7", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 11, 0, 4), "7th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note8", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 12, 0, 4), "8th Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note9", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 0, 4), "9th Note (Launch)", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
                 new GameAction("bowlingPin", "Bowling Pin")
@@ -68,21 +68,21 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "Set when the rocket should rise up."),
-                        new Param("note1", new EntityTypes.Note(-24, 24, 5, 0, 4), "1st Note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note2", new EntityTypes.Note(-24, 24, -1, 0, 4), "2nd Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note3", new EntityTypes.Note(-24, 24, 0, 0, 4), "3rd Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note4", new EntityTypes.Note(-24, 24, -1, 0, 4), "4th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note5", new EntityTypes.Note(-24, 24, 0, 0, 4), "5th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note6", new EntityTypes.Note(-24, 24, -1, 0, 4), "6th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note7", new EntityTypes.Note(-24, 24, 0, 0, 4), "7th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note8", new EntityTypes.Note(-24, 24, -1, 0, 4), "8th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note9", new EntityTypes.Note(-24, 24, 0, 0, 4), "9th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note10", new EntityTypes.Note(-24, 24, -1, 0, 4), "10th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note11", new EntityTypes.Note(-24, 24, 0, 0, 4), "11th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note12", new EntityTypes.Note(-24, 24, -1, 0, 4), "12th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note13", new EntityTypes.Note(-24, 24, 0, 0, 4), "13th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note14", new EntityTypes.Note(-24, 24, 7, 0, 4), "14th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note15", new EntityTypes.Note(-24, 24, 7, 0, 4), "15th Note", "The number of semitones up or down this note should be pitched")
+                        new Param("note1", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 5, 0, 4), "1st Note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, -1, 0, 4), "2nd Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 0, 4), "3rd Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, -1, 0, 4), "4th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note5", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 0, 4), "5th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note6", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, -1, 0, 4), "6th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note7", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 0, 4), "7th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note8", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, -1, 0, 4), "8th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note9", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 0, 4), "9th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note10", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, -1, 0, 4), "10th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note11", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 0, 4), "11th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note12", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, -1, 0, 4), "12th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note13", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 0, 4), "13th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note14", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 7, 0, 4), "14th Note (Flute)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note15", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 7, 0, 4), "15th Note", "The number of semitones up or down this note should be pitched")
                     }
                 },
                 new GameAction("posMove", "Change Launch Pad Position")

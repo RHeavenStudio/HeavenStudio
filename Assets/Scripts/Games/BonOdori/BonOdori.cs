@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("variationPa", BonOdori.variationPa.PaG, "Pa Type", "Set the variation of the voice line."),
                         new Param("variationPa_n", BonOdori.variationPa_n.Pa_nA , "Pa-n Type", "Set the variation of the voice line."),
                         new Param("clapType", BonOdori.typeClap.SideClap, "Clap Type", "Set the type of clap."),
-                        new Param("semitone", new EntityTypes.Integer(-24, 24, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semitone", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
 
@@ -75,7 +75,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("variationDon", BonOdori.variationDon.DonA, "Don Type", "Set the variation of the voice line."),
                         new Param("variationDo", BonOdori.variationDo.DoC, "Do Type", "Set the variation of the voice line."),
                         new Param("variationDo_n", BonOdori.variationDo_n.Do_nA, "Do-n Type", "Set the variation of the voice line."),
-                        new Param("semitone", new EntityTypes.Integer(-24, 24, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semitone", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
 

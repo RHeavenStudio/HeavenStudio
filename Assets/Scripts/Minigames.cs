@@ -1372,7 +1372,7 @@ namespace HeavenStudio
                                 new((x, e) => (bool)x, "semitones", "cents"),
                                 new((x, e) => !(bool)x, "pitch"),
                             }),
-                            new Param("semitones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The semitones of the sfx."),
+                            new Param("semitones", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Semitones", "The semitones of the sfx."),
                             new Param("cents", new EntityTypes.Integer(-100, 100, 0), "Cents", "The cents of the sfx."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The pitch of the sfx."),
                             new Param("volume", new EntityTypes.Float(0, 2, 1), "Volume", "The volume of the sfx."),
