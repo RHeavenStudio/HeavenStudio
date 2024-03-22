@@ -864,10 +864,10 @@ TextureImporter:
       name: fin02_01
       rect:
         serializedVersion: 2
-        x: 1
-        y: 569
-        width: 30
-        height: 38
+        x: 2
+        y: 570
+        width: 28
+        height: 36
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1616,6 +1616,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: fish03_body2
+      rect:
+        serializedVersion: 2
+        x: 798
+        y: 673
+        width: 225
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2b92a69417e35c4982992c3005f6ab1
+      internalID: -763839746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1672,6 +1693,7 @@ TextureImporter:
       fish02_rest: 1073563300
       fish02_wait: -311231375
       fish03_body: -1365920744
+      fish03_body2: -763839746
       fish03_head_bite01: 624654990
       fish03_head_blink: 247172862
       fish03_head_hook01: -1431853225

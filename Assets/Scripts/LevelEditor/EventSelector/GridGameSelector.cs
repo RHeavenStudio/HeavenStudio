@@ -11,6 +11,7 @@ using DG.Tweening;
 using HeavenStudio.Util;
 using HeavenStudio.Editor.Track;
 using System.Text;
+using System.Configuration;
 
 namespace HeavenStudio.Editor
 {
@@ -277,16 +278,26 @@ namespace HeavenStudio.Editor
 
         void SortAlphabet(List<RectTransform> mgs)
         {
-            for (int i = 0; i < mgsActive.Count; i++) {
-                mgs[i].SetSiblingIndex(i + fxActive.Count + 1);
+            var alph = mgs.OrderBy(AlphabetSortKey).ToList();
+            
+            for (int i = 0; i < alph.Count; i++) {
+                alph[i].SetSiblingIndex(i + fxActive.Count + 1);
             }
+        }
+        string AlphabetSortKey(RectTransform minigame)
+        {
+            var mg = EventCaller.instance.GetMinigame(minigame.name);
+            if (mg.displayName.StartsWith("the ", System.StringComparison.InvariantCultureIgnoreCase))
+                return mg.displayName[4..];
+            else
+                return mg.displayName;
         }
 
         // if there are no favorites, the games will sort alphabetically
         void SortFavorites(List<RectTransform> allMgs)
         {
-            var favs = allMgs.FindAll(mg => mg.GetComponent<GridGameSelectorGame>().StarActive);
-            var mgs  = allMgs.FindAll(mg => !mg.GetComponent<GridGameSelectorGame>().StarActive);
+            var favs = allMgs.FindAll(mg => mg.GetComponent<GridGameSelectorGame>().StarActive).OrderBy(AlphabetSortKey).ToList();
+            var mgs  = allMgs.FindAll(mg => !mg.GetComponent<GridGameSelectorGame>().StarActive).OrderBy(AlphabetSortKey).ToList();
 
             if (Input.GetKey(KeyCode.LeftShift)) {
                 foreach (var fav in favs)
@@ -304,7 +315,13 @@ namespace HeavenStudio.Editor
 
         void SortChronologic(List<RectTransform> mgs)
         {
-            var systems = new List<RectTransform>[] {
+            
+            var chrono = mgs.OrderBy(MainSeriesSortKey).ThenBy(ChronologicSortKey).ThenBy(AlphabetSortKey).ToList();
+            
+            for (int i = 0; i < chrono.Count; i++) {
+                chrono[i].SetSiblingIndex(i + fxActive.Count + 1);
+            }
+            /*var systems = new List<RectTransform>[] {
                 new List<RectTransform>(),
                 new List<RectTransform>(),
                 new List<RectTransform>(),
@@ -340,7 +357,46 @@ namespace HeavenStudio.Editor
                     system[i].SetSiblingIndex(j);
                     j++;
                 }
+            }*/
+        }
+        int MainSeriesSortKey(RectTransform minigame)
+        {
+            var mg = EventCaller.instance.GetMinigame(minigame.name);
+            if (mg.tags.Count > 0)
+            {
+                return mg.tags[0] switch
+                {
+                    "agb" or "ntr" or "rvl" or "ctr" => 0,
+                    _ => 1,
+                };
             }
+
+            return 1;
+        }
+        uint ChronologicSortKey(RectTransform minigame)
+        {
+            var mg = EventCaller.instance.GetMinigame(minigame.name);
+            if (mg.chronologicalSortKey is uint i)
+                return i;
+            
+            if (mg.tags.Count > 0)
+            {
+                switch (mg.tags[0])
+                {
+                    case "agb":
+                        return 0608039999;
+                    case "ntr":
+                        return 0807319999;
+                    case "rvl":
+                        return 1107219999;
+                    case "ctr":
+                        return 1506119999;
+                    default:
+                        return 2401159999;
+                }
+            }
+
+            return uint.MaxValue;
         }
 
         public void Search()
