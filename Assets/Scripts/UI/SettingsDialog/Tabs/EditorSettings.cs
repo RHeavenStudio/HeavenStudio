@@ -13,6 +13,7 @@ namespace HeavenStudio.Editor
         [SerializeField] Button editorScaleDecre, editorScaleIncre;
         [SerializeField] Toggle scaleWSS;
         [SerializeField] Toggle paramTooltipsToggle;
+        [SerializeField] Toggle previewNoteSoundsToggle;
         // [SerializeField] Toggle cornerTooltipsToggle;
 
         private void Start()
@@ -21,6 +22,7 @@ namespace HeavenStudio.Editor
             discordRPCCheckbox.isOn = PersistentDataManager.gameSettings.discordRPCEnable;
             scaleWSS.isOn = PersistentDataManager.gameSettings.scaleWScreenSize;
             paramTooltipsToggle.isOn = PersistentDataManager.gameSettings.showParamTooltips;
+            previewNoteSoundsToggle.isOn = PersistentDataManager.gameSettings.previewNoteSounds;
 
             SetDecreIncreInteractable();
         }
@@ -59,6 +61,11 @@ namespace HeavenStudio.Editor
         public void OnParamTooltipsChanged()
         {
             PersistentDataManager.gameSettings.showParamTooltips = paramTooltipsToggle.isOn;
+        }
+
+        public void OnPreviewNoteSoundsChanged()
+        {
+            PersistentDataManager.gameSettings.previewNoteSounds = previewNoteSoundsToggle.isOn;
         }
 
         // public void OnCornerTooltipsChanged()

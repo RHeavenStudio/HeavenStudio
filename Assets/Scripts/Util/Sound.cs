@@ -24,6 +24,7 @@ namespace HeavenStudio.Util
         private AudioSource audioSource;
         private Conductor cond;
 
+        public bool ignoreConductorPause = false;
 
         private double startTime;
 
@@ -114,7 +115,7 @@ namespace HeavenStudio.Util
             double dspTime = AudioSettings.dspTime;
             if (!(available || played))
             {
-                if (!(cond.isPlaying || cond.isPaused))
+                if (!ignoreConductorPause && !(cond.isPlaying || cond.isPaused))
                 {
                     GameManager.instance.SoundObjects.Release(this);
                     return;
@@ -171,7 +172,7 @@ namespace HeavenStudio.Util
 
             if (played)
             {
-                if (!(cond.isPlaying || cond.isPaused))
+                if (!ignoreConductorPause && !(cond.isPlaying || cond.isPaused))
                 {
                     GameManager.instance.SoundObjects.Release(this);
                     return;
@@ -182,7 +183,7 @@ namespace HeavenStudio.Util
                     return;
                 }
 
-                if (cond.isPaused || cond.SongPitch == 0)
+                if ((!ignoreConductorPause && cond.isPaused) || cond.SongPitch == 0)
                 {
                     if (!paused)
                     {
@@ -233,8 +234,13 @@ namespace HeavenStudio.Util
                 audioSource.UnPause();
         }
 
-        public void Stop()
+        public void Stop(bool releaseToPool = false)
         {
+            if(releaseToPool && audioSource.isPlaying)
+            {
+                GameManager.instance.SoundObjects.Release(this);
+            }
+
             available = true;
             played = false;
             paused = false;
@@ -246,6 +252,7 @@ namespace HeavenStudio.Util
             loopEndBeat = -1;
             loopDone = false;
             startTime = 0;
+            ignoreConductorPause = false;
 
             audioSource.loop = false;
             audioSource.Stop();
