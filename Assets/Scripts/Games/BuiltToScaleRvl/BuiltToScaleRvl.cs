@@ -25,13 +25,12 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("direction", BuiltToScaleRvl.Direction.Left, "Direction", "Set the direction in which the stick will come out."),
+                        new Param("direction", BuiltToScaleRvl.Direction.Left, "Direction", "Set the direction in which the rod will come out."),
                         new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
                     },
                 },
                 new GameAction("shoot rod", "Shoot Rod")
                 {
-                    // function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.ShootRod(e.beat, e["id"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
@@ -45,6 +44,15 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to out."),
+                    },
+                },
+                new GameAction("custom bounce", "Custom Bounce")
+                {
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("target", BuiltToScaleRvl.Target.First, "Target", "Set the target in which the rod will bounce."),
+                        new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to bounce."),
                     },
                 },
             }, new List<string>() { "rvl", "normal" }, "rvlbuilt", "en", new List<string>() { });
@@ -64,9 +72,19 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject baseAssembled;
         public Transform widgetHolder;
 
+        const double WIDGET_SEEK_TIME = 16.0;
+
         public enum Direction {
             Left,
             Right,
+        }
+        public enum Target {
+            OuterLeft,
+            First,
+            Second,
+            Third,
+            Fourth,
+            OuterRight,
         }
 
         public static BuiltToScaleRvl instance;
@@ -86,15 +104,14 @@ namespace HeavenStudio.Games
             new("NtrBuiltAltFlickAltPress", new int[] { IAAltDownCat, IAFlickCat, IAAltDownCat },
             IA_PadAltPress, IA_TouchFlick, IA_BatonAltPress);
         
-        // 1.05(3,1)
         private void Awake()
         {
             instance = this;
         }
 
-        private double gameStartBeat = double.MinValue;
-        private double gameEndBeat = double.MaxValue;
+        private double gameStartBeat = double.MinValue, gameEndBeat = double.MaxValue;
         public static List<QueuedRod> queuedRods = new List<QueuedRod>();
+        List<ScheduledWidget> scheduledWidgets = new List<ScheduledWidget>();
         public List<Rod> spawnedRods = new List<Rod>();
 
         public struct QueuedRod
@@ -106,18 +123,38 @@ namespace HeavenStudio.Games
             public int id;
         }
 
+        struct ScheduledWidget
+        {
+            public double beat;
+            public double length;
+            public int currentPos;
+            public int nextPos;
+            public int id;
+            public CustomBounceItem[] bounceItems;
+            public int endTime;
+            public bool isShoot;
+        }
+
+        struct ScheduledSquare
+        {
+            public double targetBeat;
+            public double lengthBeat;
+        }
+
+        public class CustomBounceItem
+        {
+            public int time = -1;
+            public int pos;
+        }
+
         public override void OnPlay(double beat)
         {
             queuedRods.Clear();
-            gameStartBeat = beat;
-            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > gameStartBeat);
-            gameEndBeat = firstEnd?.beat ?? gameEndBeat;
+            OnBeginning(beat);
         }
         public override void OnGameSwitch(double beat)
         {
-            gameStartBeat = beat;
-            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > gameStartBeat);
-            gameEndBeat = firstEnd?.beat ?? gameEndBeat;
+            OnBeginning(beat);
         }
         private void OnDestroy() {
             queuedRods.Clear();
@@ -125,6 +162,26 @@ namespace HeavenStudio.Games
             {
                 evt.Disable();
             }
+        }
+        private void OnBeginning(double beat)
+        {
+            gameStartBeat = beat;
+            var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > gameStartBeat);
+            gameEndBeat = firstEnd?.beat ?? gameEndBeat;
+
+            scheduledWidgets.Clear();
+            // foreach (var evt in events)
+            // {
+            //     if (evt.length == 0) continue;
+            //     int patternDivisions = (int)Math.Ceiling(evt.length / WIDGET_SEEK_TIME);
+            //     var pattern = new ScheduledPattern
+            //     {
+            //         beat = evt.beat + (PATTERN_SEEK_TIME * i),
+            //         length = Math.Min(evt.length - (PATTERN_SEEK_TIME * i), PATTERN_SEEK_TIME),
+            //         type = patternType
+            //     };
+            //     scheduledSquares.Add(pattern);
+            // }
         }
 
         void Update()
@@ -191,27 +248,33 @@ namespace HeavenStudio.Games
             newRod.nextPos = nextPos;
             newRod.ID = id;
 
+            List<CustomBounceItem> bounceItems = CalcRodBounce(beat, length, id);
+            AddBounceOutSides(beat, length, currentPos, nextPos, id, ref bounceItems);
+
             bool isShoot;
-            double rodEndBeat = CalcRodEndBeat(beat, length, currentPos, nextPos, id, out isShoot);
-            newRod.endBeat = rodEndBeat;
+            int rodEndTime = CalcRodEndTime(beat, length, currentPos, nextPos, id, ref bounceItems, out isShoot);
+            newRod.customBounce = bounceItems.ToArray();
+            newRod.shootTime = rodEndTime;
             newRod.isShoot = isShoot;
-            if (rodEndBeat != double.MaxValue)
+            if (isShoot)
             {
-                newRod.Squares = SpawnSquare(beat, rodEndBeat, id);
+                double rodEndBeat = beat + length * rodEndTime;
+                SoundByte.PlayOneShotGame("builtToScaleRvl/prepare", rodEndBeat - 2*length);
+                newRod.Squares = SpawnSquare(rodEndBeat, id);
             }
 
             newRod.Init();
             newRod.gameObject.SetActive(true);
         }
 
-        private Square[] SpawnSquare(double startBeat, double endBeat, int id)
+        private Square[] SpawnSquare(double targetBeat, int id)
         {
             var newLeftSquare = Instantiate(baseLeftSquare, widgetHolder).GetComponent<Square>();
             var newRightSquare = Instantiate(baseRightSquare, widgetHolder).GetComponent<Square>();
-            newLeftSquare.startBeat = startBeat;
-            newRightSquare.startBeat = startBeat;
-            newLeftSquare.endBeat = endBeat;
-            newRightSquare.endBeat = endBeat;
+            newLeftSquare.startBeat = this.gameStartBeat;
+            newRightSquare.startBeat = this.gameStartBeat;
+            newLeftSquare.targetBeat = targetBeat;
+            newRightSquare.targetBeat = targetBeat;
             newLeftSquare.gameObject.SetActive(true);
             newRightSquare.gameObject.SetActive(true);
             newLeftSquare.Init();
@@ -226,66 +289,104 @@ namespace HeavenStudio.Games
             newAssembled.SetActive(true);
         }
 
-        private double CalcRodEndBeat(double beat, double length, int currentPos, int nextPos, int id, out bool isShoot)
+        private List<CustomBounceItem> CalcRodBounce(double beat, double length, int id)
+        {
+            var bounceItems = new List<CustomBounceItem>();
+            var events = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "custom bounce" }).FindAll(x => x.beat > beat && x["id"] == id);
+            
+            foreach(var evt in events)
+            {
+                var bounceEventTime = (int)Math.Ceiling((evt.beat-beat)/length);
+                bounceItems.Add(new CustomBounceItem{
+                    time = bounceEventTime,
+                    pos = evt["target"] switch {
+                        (int)Target.OuterLeft => -1,
+                        (int)Target.First => 0,
+                        (int)Target.Second => 1,
+                        (int)Target.Third => 2,
+                        (int)Target.Fourth => 3,
+                        (int)Target.OuterRight => 4,
+                        _ => throw new System.NotImplementedException()
+                    },
+                });
+            }
+            return bounceItems;
+        }
+
+        private void AddBounceOutSides(double beat, double length, int currentPos, int nextPos, int id, ref List<CustomBounceItem> bounceItems)
+        {
+            var firstOut = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "out sides" }).Find(x => x.beat > beat && x["id"] == id);
+            if (firstOut is not null)
+            {
+                int earliestOutTime = (int)Math.Ceiling((firstOut.beat - beat)/length);
+                int current = currentPos, next = nextPos;
+                int outTime;
+                var bounceItemsArray = bounceItems.ToArray();
+                for (int time = 0; ; time++) {
+                    if (current is 0 or 3 && time >= earliestOutTime) {
+                        bounceItems.Add(new CustomBounceItem{
+                            time = time,
+                            pos = current switch {
+                                0 => -1,
+                                3 => 4,
+                                _ => throw new System.NotImplementedException()
+                            },
+                        });
+                        break;
+                    }
+                    int following = getFollowingPos(current, next, time+1, bounceItemsArray);
+                    current = next;
+                    next = following;
+                }
+            }
+        }
+
+        private int CalcRodEndTime(double beat, double length, int currentPos, int nextPos, int id, ref List<CustomBounceItem> bounceItems, out bool isShoot)
         {
             isShoot = false;
+            int earliestEndTime = int.MaxValue;
             var firstShoot = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "shoot rod" }).Find(x => x.beat > beat && x["id"] == id);
-            if (firstShoot is null)
-                return double.MaxValue;
-            double shootEventBeat = firstShoot.beat;
-
-            if (EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "out sides" }).Any(x => x.beat > beat && x.beat < shootEventBeat && x["id"] == id))
-                return double.MaxValue;
+            if (firstShoot is not null)
+            {
+                earliestEndTime = (int)Math.Ceiling((firstShoot.beat - beat)/length);
+                isShoot = true;
+            }
             
-            var n = (int)Math.Ceiling((shootEventBeat-beat)/length);
+            bounceItems = bounceItems.FindAll(x => x.time < earliestEndTime);
+            bounceItems.Sort((x, y) => x.time.CompareTo(y.time));
+            var bounceOutSide = bounceItems.Find(x => x.pos is -1 or 4);
+            if (bounceOutSide is not null)
+            {
+                earliestEndTime = bounceOutSide.time;
+                isShoot = false;
+            }
+            if (!isShoot) return earliestEndTime;
+
             int current = currentPos, next = nextPos;
-            int shootTiming;
-            for (int i = 0; ; i++) {
-                if (current == 2 && i >= n) {
-                    shootTiming = i;
+            int shootTime;
+            var bounceItemsArray = bounceItems.ToArray();
+            for (int time = 0; ; time++) {
+                if (current == 2 && time >= earliestEndTime) {
+                    shootTime = time;
                     break;
                 }
-                int following = getFollowingPos(current, next);
+                int following = getFollowingPos(current, next, time+1, bounceItemsArray);
                 current = next;
                 next = following;
             }
-            isShoot = true;
-            return beat + length * shootTiming;
+            return shootTime;
         }
 
-        int getFollowingPos(int currentPos, int nextPos)
+        public static int getFollowingPos(int currentPos, int nextPos, int nextTime, CustomBounceItem[] bounceItems)
         {
+            var bounce = Array.Find(bounceItems, x => x.time == nextTime);
+            if (bounce is not null) return bounce.pos;
+
             if (nextPos == 0) return 1;
             else if (nextPos == 3) return 2;
-            else if (currentPos < nextPos) return nextPos + 1;
+            else if (currentPos <= nextPos) return nextPos + 1;
             else if (currentPos > nextPos) return nextPos - 1;
             return nextPos;
-        }
-
-        public void ShootRod(double beat, int id)
-        {
-            // var newLeftSquare = Instantiate(baseLeftSquare, widgetHolder).GetComponent<Square>();
-            // var newRightSquare = Instantiate(baseRightSquare, widgetHolder).GetComponent<Square>();
-            // newLeftSquare.beat = beat;
-            // newRightSquare.beat = beat;
-            // newLeftSquare.Init();
-            // newRightSquare.Init();
-            // newLeftSquare.gameObject.SetActive(true);
-            // newRightSquare.gameObject.SetActive(true);
-            var rod = spawnedRods.Find(x => x.ID == id);
-            if (rod is not null)
-            {
-                rod.PreShoot(beat);
-            }
-        }
-
-        public void OutRod(double beat, int id)
-        {
-            var rod = spawnedRods.Find(x => x.ID == id);
-            if (rod is not null)
-            {
-                rod.PreOut(beat);
-            }
         }
     }
 }

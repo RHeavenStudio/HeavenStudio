@@ -11,7 +11,8 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
     public class Square : MonoBehaviour
     {
         public string anim;
-        public double startBeat, endBeat, lengthBeat = 1;
+        public double startBeat, targetBeat, lengthBeat = 1;
+        public int endTime;
         public Vector3 CorrectionPos;
         private Animator squareAnim;
 
@@ -21,11 +22,10 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         {
             game = BuiltToScaleRvl.instance;
             squareAnim = GetComponent<Animator>();
-            var n = (int)Math.Floor((endBeat - startBeat)/lengthBeat);
-            transform.position = transform.position - n*CorrectionPos;
-            double beat = endBeat - lengthBeat * n;
-            Debug.Log(beat);
-            squareAnim.Play(anim, 0, 0);
+            var endTime = (int)Math.Ceiling((targetBeat - startBeat)/lengthBeat);
+            transform.position = transform.position - endTime * CorrectionPos;
+            double beat = targetBeat - lengthBeat * endTime;
+            squareAnim.Play(anim, 0, (beat==0 ? 0 : 1));
             Recursion(beat, lengthBeat);
         }
 
