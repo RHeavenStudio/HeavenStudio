@@ -79,7 +79,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             else if (nextPos == 2)
             {
                 if (isShoot && time + 1 == endTime) {
-                    actions.Add(new BeatAction.Action(beat, () => game.PlayBlockPrepare(nextPos)));
+                    actions.Add(new BeatAction.Action(beat, () => game.PlayBlockPrepare(nextPos, beat + length)));
                     game.ScheduleInput(beat, length, BuiltToScaleRvl.InputAction_FlickAltPress, ShootOnHit, ShootOnMiss, Empty, CanShootHit);
                 }
                 else {

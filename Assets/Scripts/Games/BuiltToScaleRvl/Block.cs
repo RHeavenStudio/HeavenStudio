@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
 
         public bool isOpen = false;
         public bool isPrepare = false;
-        private double closeBeat;
+        private double closeBeat = double.MinValue, shootBeat = double.MinValue;
 
         private BuiltToScaleRvl game;
 
@@ -47,7 +47,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             blockAnim.Play("miss", 0, 0);
         }
 
-        public void Prepare()
+        public void Prepare(double beat)
         {
             SoundByte.PlayOneShotGame("builtToScaleRvl/playerRetract");
             if (PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Pad) {
@@ -57,6 +57,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             }
             isOpen = false; 
             isPrepare = true;
+            shootBeat = beat;
         }
         public void Shoot()
         {
@@ -75,6 +76,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         }
         public void ShootMiss()
         {
+            if (!isPrepare) return;
             if (PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Pad) {
                 blockAnim.Play("shoot miss B", 0, 0);
             } else {
@@ -85,13 +87,13 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         
         public void Open()
         {
+            if (isPrepare) return;
             blockAnim.Play("open", 0, 0);
             isOpen = true;
         }
         public void Idle(double beat = double.MinValue)
         {
-            Debug.Log($"Idle:{closeBeat}, {beat}");
-            if (closeBeat > beat) return;
+            if (closeBeat > beat || shootBeat >= beat) return;
             blockAnim.Play("idle", 0, 0);
             isOpen = false;
         }

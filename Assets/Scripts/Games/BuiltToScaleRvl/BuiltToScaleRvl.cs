@@ -252,17 +252,11 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
-                if (!isPlayerPrepare)
-                {
-                    PlayBlockOpen(2);
-                }
+                PlayBlockOpen(2);
             }
             if (PlayerInput.GetIsAction(InputAction_FlickAltPress) && !IsExpectingInputNow(InputAction_FlickAltPress))
             {
-                if (isPlayerPrepare)
-                {
-                    PlayBlockShootMiss(2);
-                }
+                 PlayBlockShootMiss(2);
             }
             UpdateWidgets();
         }
@@ -440,10 +434,10 @@ namespace HeavenStudio.Games
             blocks[position].BounceMiss();
         }
 
-        public void PlayBlockPrepare(int position)
+        public void PlayBlockPrepare(int position, double beat = double.MinValue)
         {
             if (!IsPositionInRange(position)) return;
-            blocks[position].Prepare();
+            blocks[position].Prepare(beat);
         }
         public void PlayBlockShoot(int position)
         {
