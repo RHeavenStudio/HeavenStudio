@@ -75,7 +75,7 @@ namespace HeavenStudio.Games
     using Scripts_BuiltToScaleRvl;
     public class BuiltToScaleRvl : Minigame
     {
-        [SerializeField] Animator[] blockAnims;
+        [SerializeField] Block[] blocks;
         [SerializeField] GameObject baseRod;
         [SerializeField] GameObject baseLeftSquare;
         [SerializeField] GameObject baseRightSquare;
@@ -126,7 +126,6 @@ namespace HeavenStudio.Games
         private double gameStartBeat = double.MinValue, gameEndBeat = double.MaxValue;
         List<ScheduledWidget> scheduledWidgets = new List<ScheduledWidget>();
         int widgetIndex;
-        public List<Rod> spawnedRods = new List<Rod>();
 
         public BezierCurve3D[] curve;
         public static readonly Dictionary<(int, int), int> curveMap = new Dictionary<(int, int), int> {
@@ -243,8 +242,8 @@ namespace HeavenStudio.Games
             OnGameSwitch(beat);
         }
 
-        public bool isPlayerOpen = false;
-        public bool isPlayerPrepare = false;
+        public bool isPlayerOpen { get { return blocks[2].isOpen; } }
+        public bool isPlayerPrepare { get { return blocks[2].isPrepare; } }
 
         void Update()
         {
@@ -287,10 +286,8 @@ namespace HeavenStudio.Games
         }
 
         public void SpawnRod(double beat, double length, int currentPos, int nextPos, int id, CustomBounceItem[] bounceItems, int endTime, bool isShoot)
-        {
-            // if (spawnedRods.Any(x => x.ID == id)) return;            
+        {            
             var newRod = Instantiate(baseRod, widgetHolder).GetComponent<Rod>();
-            spawnedRods.Add(newRod);
 
             newRod.startBeat = beat;
             newRod.lengthBeat = length;
@@ -427,79 +424,52 @@ namespace HeavenStudio.Games
             return shootTime;
         }
 
-        public void PlayBlockBounce(int position)
+        public void PlayBlockBounce(int position, double beat)
         {
             if (!IsPositionInRange(position)) return;
-            SoundByte.PlayOneShotGame(position switch {
-                0 => "builtToScaleRvl/left",
-                1 => "builtToScaleRvl/middleLeft",
-                2 => "builtToScaleRvl/middleRight",
-                3 => "builtToScaleRvl/right",
-                _ => throw new System.NotImplementedException()
-            });
-            blockAnims[position].Play("bounce", 0, 0);
+            blocks[position].Bounce(beat);
         }
         public void PlayBlockBounceNearlyMiss(int position)
         {
             if (!IsPositionInRange(position)) return;
-            blockAnims[position].Play("open", 0, 0);
+            blocks[position].BounceNearlyMiss();
         }
         public void PlayBlockBounceMiss(int position)
         {
             if (!IsPositionInRange(position)) return;
-            blockAnims[position].Play("miss", 0, 0);
+            blocks[position].BounceMiss();
         }
 
         public void PlayBlockPrepare(int position)
         {
             if (!IsPositionInRange(position)) return;
-            SoundByte.PlayOneShotGame("builtToScaleRvl/playerRetract");
-            if (PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Pad) {
-                blockAnims[position].Play("prepare B", 0, 0);
-            } else {
-                blockAnims[position].Play("prepare AB", 0, 0);
-            }
-            isPlayerOpen = false; 
-            isPlayerPrepare = true;
+            blocks[position].Prepare();
         }
         public void PlayBlockShoot(int position)
         {
             if (!IsPositionInRange(position)) return;
-            SoundByte.PlayOneShotGame("builtToScaleRvl/shoot");
-            blockAnims[position].Play("shoot", 0, 0);
-            isPlayerPrepare = false;
+            blocks[position].Shoot();
         }
         public void PlayBlockShootNearlyMiss(int position)
         {
             if (!IsPositionInRange(position)) return;
-            if (PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Pad) {
-                blockAnims[position].Play("shoot miss B", 0, 0);
-            } else {
-                blockAnims[position].Play("shoot miss AB", 0, 0);
-            }
-            isPlayerPrepare = false;
+            blocks[position].ShootNearlyMiss();
         }
         public void PlayBlockShootMiss(int position)
         {
             if (!IsPositionInRange(position)) return;
-            if (PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Pad) {
-                blockAnims[position].Play("shoot miss B", 0, 0);
-            } else {
-                blockAnims[position].Play("shoot miss AB", 0, 0);
-            }
-            isPlayerPrepare = false;
+            blocks[position].ShootMiss();
         }
         
         public void PlayBlockOpen(int position)
         {
             if (!IsPositionInRange(position)) return;
-            blockAnims[position].Play("open", 0, 0);
-            isPlayerOpen = true;
+            blocks[position].Open();
         }
-        public void PlayBlockIdle(int position)
+        public void PlayBlockIdle(int position, double beat = double.MinValue)
         {
             if (!IsPositionInRange(position)) return;
-            blockAnims[position].Play("idle", 0, 0);
+            blocks[position].Idle(beat);
         }
 
         public static int getFollowingPos(int currentPos, int nextPos, int nextTime, CustomBounceItem[] bounceItems)

@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             
             if (BuiltToScaleRvl.IsPositionInRange(currentPos) && playBounce)
             {
-                actions.Add(new BeatAction.Action(beat, () => game.PlayBlockBounce(currentPos)));
+                actions.Add(new BeatAction.Action(beat, () => game.PlayBlockBounce(currentPos, beat + length)));
             }
 
             actions.Add(new BeatAction.Action(beat, delegate
@@ -97,7 +97,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
 
             if (BuiltToScaleRvl.IsPositionInRange(currentPos))
             {
-                actions.Add(new BeatAction.Action(beat + length, () => game.PlayBlockIdle(currentPos)));
+                actions.Add(new BeatAction.Action(beat + length, () => game.PlayBlockIdle(currentPos, beat + length)));
             }
             
             BeatAction.New(game, actions);
@@ -132,20 +132,20 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                 return;
             }
 
-            game.PlayBlockBounce(this.nextPos);
+            game.PlayBlockBounce(this.nextPos, currentBeat + 2*lengthBeat);
             BounceRecursion(currentBeat + lengthBeat, lengthBeat, nextPos, followingPos, false);
         }
         private void BounceOnMiss(PlayerActionEvent caller)
         {
+            game.PlayBlockBounceMiss(this.nextPos);
+            BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + 2*lengthBeat, delegate {
+                game.PlayBlockIdle(this.nextPos, currentBeat + 2*lengthBeat);
+                RemoveAndDestroy();
+            })});
             currentCurve = game.curve[^1];       // miss
             currentBeat = Conductor.instance.songPositionInBeats;
             rodAnim.SetFloat("speed", -1f);
             isMiss = true;
-            game.PlayBlockBounceMiss(this.nextPos);
-            BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + lengthBeat, delegate {
-                game.PlayBlockIdle(this.nextPos);
-                RemoveAndDestroy();
-            })});
         }
         private bool CanBounceHit()
         {
@@ -200,7 +200,6 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
 
         void RemoveAndDestroy()
         {
-            game.spawnedRods.Remove(this);
             Destroy(gameObject);
         }
     }
