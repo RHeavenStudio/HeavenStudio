@@ -31,6 +31,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
 
         private void Recursion(double beat, double length)
         {
+            if (beat > targetBeat + 10 * lengthBeat) End();
             BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate

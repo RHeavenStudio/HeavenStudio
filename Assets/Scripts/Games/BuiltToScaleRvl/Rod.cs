@@ -74,7 +74,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
 
             if (!BuiltToScaleRvl.IsPositionInRange(nextPos))
             {
-                actions.Add(new BeatAction.Action(beat + length, () => RemoveAndDestroy()));
+                actions.Add(new BeatAction.Action(beat + length, () => End()));
             }
             else if (nextPos == 2)
             {
@@ -140,7 +140,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             game.PlayBlockBounceMiss(this.nextPos);
             BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + 2*lengthBeat, delegate {
                 game.PlayBlockIdle(this.nextPos, currentBeat + 2*lengthBeat);
-                RemoveAndDestroy();
+                End();
             })});
             currentCurve = game.curve[^1];       // miss
             currentBeat = Conductor.instance.songPositionInBeats;
@@ -161,7 +161,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                 rodAnim.SetFloat("speed", -1f);
                 isMiss = true;
                 game.PlayBlockShootNearlyMiss(this.nextPos);
-                BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + lengthBeat, () => RemoveAndDestroy())});
+                BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + lengthBeat, () => End())});
                 return;
             }
 
@@ -170,7 +170,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                 Destroy(square.gameObject);
             }
             game.SpawnAssembled();
-            RemoveAndDestroy();
+            End();
         }
         private void ShootOnMiss(PlayerActionEvent caller)
         {
@@ -179,7 +179,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                 isMissShoot = true;
                 GetComponent<SpriteRenderer>().sortingOrder = 1;
                 game.PlayBlockShootMiss(nextPos);
-                BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + 2*lengthBeat, () => RemoveAndDestroy())});
+                BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + 2*lengthBeat, () => End())});
             }
             else
             {
@@ -188,7 +188,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                 rodAnim.SetFloat("speed", -1f);
                 isMiss = true;
                 game.PlayBlockBounceMiss(this.nextPos);
-                BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + lengthBeat, () => RemoveAndDestroy())});
+                BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + lengthBeat, () => End())});
             }
         }
         private bool CanShootHit()
@@ -198,7 +198,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
 
         private void Empty(PlayerActionEvent caller) {}
 
-        void RemoveAndDestroy()
+        void End()
         {
             Destroy(gameObject);
         }
