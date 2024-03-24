@@ -382,6 +382,7 @@ namespace HeavenStudio.Games
         Color cloudColorTo;
         Color cloudColorFrom2;
         Color cloudColorTo2;
+        bool colorsCanUpdate = false;
 
         double bubbleEndCount = 0;
         double bubbleSizeChangeStart = 0;
@@ -391,6 +392,8 @@ namespace HeavenStudio.Games
         string yardsTextString = "# yards to the goal.";
         bool yardsTextIsEditable = false;
         double yardsTextLength = 0;
+        double carColorChangeReady = 0;
+        double carColorChangeLength = 0;
         private static Color _defaultHighlightColor;
         public static Color defaultHighlightColor
         {
@@ -433,7 +436,12 @@ namespace HeavenStudio.Games
             SwungSixteenth,
             SwungEighth,
             Triplet,
+            FeverDrumKit,
+            DSDrumKit,
+            GBADrumKitNYI,
             AmenBreak,
+            Remix2GBA,
+            PracticeDrumKit,
         }
 
         private static Color _defaultBGColor;
@@ -571,7 +579,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private DrumLoop[][] drumLoops = new DrumLoop[][] { 
+        private readonly DrumLoop[][] drumLoops = new DrumLoop[][] { 
 
             new DrumLoop[] {}, //silent
 
@@ -671,6 +679,32 @@ namespace HeavenStudio.Games
                 new((double)11/3, 2, 0.7f),
             },
 
+            new DrumLoop[] { //fever kit
+                new(2.00, 3, 0.8f), //kick
+                new(0.50, 5, 0.7f), //hat
+                new(1.00, 4, 1.2f), //snare
+                new(1.50, 5, 0.7f), //hat
+            },
+
+            new DrumLoop[] { //ds kit
+                //kick
+                new(4.00, 6),
+                new(2.00, 6),
+                //snare 
+                new(1.00, 7),
+                new(3.00, 7),
+                //hihat
+                new(0.50, 8),
+                new(1.50, 8),
+                new(2.50, 8),
+                new(3.50, 8),
+                //quiet drums
+                new((double)11/6, 8, 0.4f),
+                new((double)23/6, 7, 0.4f),
+            },
+
+            new DrumLoop[] {}, //gba kit
+
             new DrumLoop[] { //amen
                 new(4.00, 21),
                 new(0.50, 22),
@@ -684,6 +718,40 @@ namespace HeavenStudio.Games
                 new(3.00, 30),
                 new(3.50, 31),
                 new(3.75, 32),
+            },
+
+            new DrumLoop[] { //remix 2 gba
+                new(4.00, 41, 1.5f),
+                new(0.25, 42, 1.5f),
+                new(0.50, 43, 1.5f),
+                new(0.75, 44, 1.5f),
+                new(1.00, 45, 1.5f),
+                new(1.25, 46, 1.5f),
+                new(1.50, 47, 1.5f),
+                new(1.75, 48, 1.5f),
+                new(2.00, 49, 1.5f),
+                new(2.25, 50, 1.5f),
+                new(2.50, 51, 1.5f),
+                new(2.75, 52, 1.5f),
+                new(3.00, 53, 1.5f),
+                new(3.25, 54, 1.5f),
+                new(3.50, 55, 1.5f),
+                new(3.75, 56, 1.5f),
+            },
+
+            new DrumLoop[] { //practice drums
+                //kick
+                new(4.00, 12, 2.5f),
+                new(1.75, 12, 2.5f),
+                new(2.50, 12, 2.5f),
+                //snare
+                new(1.00, 13, 2.5f),
+                new(3.00, 13, 2.5f),
+                //hihat
+                new(0.50, 14, 2.5f),
+                new(1.50, 14, 2.5f),
+                new(2.50, 14, 2.5f),
+                new(3.50, 14, 2.5f),
             },
         };
 
@@ -754,23 +822,12 @@ namespace HeavenStudio.Games
                 }
             }
 
-            //parallax movement
-            float parallaxSpeed = nextIsland.speed1 / 20000;
-            Stars.localPosition -= new Vector3((parallaxSpeed * 0.3f), 0, 0);
-            if (Stars.localPosition.x < -48) Stars.localPosition += new Vector3(32, 0, 0);
-            Clouds.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
-            if (Clouds.localPosition.x < -24) Clouds.localPosition += new Vector3(24, 0, 0);
-            Planets.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
-            if (Planets.localPosition.x < -30) Planets.localPosition += new Vector3(30, 0, 0);
-            Doodles.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
-            if (Doodles.localPosition.x < -31.5f) Doodles.localPosition += new Vector3(31.5f, 0, 0);
-
             //bubble shrinkage
             if (bubbleSizeChangeStart < Conductor.instance.songPositionInBeatsAsDouble && Conductor.instance.songPositionInBeatsAsDouble <= bubbleSizeChangeEnd)
             {
                 float value = (Conductor.instance.GetPositionFromBeat(bubbleSizeChangeStart, bubbleSizeChangeEnd - bubbleSizeChangeStart));
-                float newScale = Util.EasingFunction.Linear(1, 0, value);
-                countBubble.transform.localScale = bubbleSizeChangeGrows ? new Vector3(1 - newScale, 1 - newScale, 1) : new Vector3(newScale, newScale, 1);
+                float newScale = Util.EasingFunction.Linear(1.038702f, 0, value);
+                countBubble.transform.localScale = bubbleSizeChangeGrows ? new Vector3(1.038702f - newScale, 1.038702f - newScale, 1) : new Vector3(newScale, newScale, 1);
                 if (bubbleSizeChangeGrows) //refresh the text to remove mipmapping
                 {
                     bubbleText.text = "";
@@ -788,7 +845,7 @@ namespace HeavenStudio.Games
             //various sound loops and shizz
             if (isInputting)
             {
-                chickenColorsCar.SetFloat("_Progress", Conductor.instance.GetPositionFromBeat(nextInputReady - (yardsTextLength * 2), yardsTextLength));
+                chickenColorsCar.SetFloat("_Progress", Conductor.instance.GetPositionFromBeat(carColorChangeReady - (carColorChangeLength * 2), carColorChangeLength));
                 drumTempVolume = 0;
 
                 if (!isWhirringPlaying) { whirring = SoundByte.PlayOneShotGame("chargingChicken/chargeLoop", volume: 0.5f, looping: true); isWhirringPlaying = true; }
@@ -825,16 +882,23 @@ namespace HeavenStudio.Games
             }
         }
 
-        public override void OnPlay(double beat)
+        public void LateUpdate()
         {
-            PersistThings(beat);
+            //parallax movement
+            float parallaxSpeed = nextIsland.speed1 / 20000;
+            Stars.localPosition -= new Vector3((parallaxSpeed * 0.3f), 0, 0);
+            if (Stars.localPosition.x < -48) Stars.localPosition += new Vector3(32, 0, 0);
+            Clouds.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
+            if (Clouds.localPosition.x < -24) Clouds.localPosition += new Vector3(24, 0, 0);
+            Planets.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
+            if (Planets.localPosition.x < -30) Planets.localPosition += new Vector3(30, 0, 0);
+            Doodles.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
+            if (Doodles.localPosition.x < -31.5f) Doodles.localPosition += new Vector3(31.5f, 0, 0);
         }
 
         public override void OnGameSwitch(double beat)
         {
             drumSwitch = beat;
-
-            PersistThings(beat);
 
             foreach(var entity in GameManager.instance.Beatmap.Entities)
             {
@@ -842,7 +906,7 @@ namespace HeavenStudio.Games
                 {
                     break;
                 }
-                if((entity.datamodel != "chargingChicken/input") || entity.beat + entity.length < beat) //check for charge that happen right before the switch
+                if((entity.datamodel != "chargingChicken/input") || entity.beat + entity.length < beat) //check for charges that happen right before the switch
                 {
                     continue;
                 }
@@ -851,44 +915,18 @@ namespace HeavenStudio.Games
                 {
                     var e = entity;
                     double lateness = entity.beat - beat;
-                    ChargeUp(e.beat, e.length, lateness /*e["forceHold"]*/, e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"], e["spaceHelmet"]);
+                    ChargeUp(e.beat, e.length, lateness, e["drumbeat"], e["bubble"], e["endText"], e["textLength"], e["success"], e["fail"], e["destination"], e["customDestination"], e["spaceHelmet"]);
                 }
             }
         }
 
         private void Awake()
         {
-            colorFrom = defaultBGColor;
-            colorTo = defaultBGColor;
-            colorFrom2 = defaultBGColorBottom;
-            colorTo2 = defaultBGColorBottom;
-
-            carColorFrom = defaultCarColor;
-            carColorTo = defaultCarColor;
-            carColorFrom2 = defaultCarColorCharged;
-            carColorTo2 = defaultCarColorCharged;
-
-            cloudColorFrom = defaultCloudColor;
-            cloudColorTo = defaultCloudColor;
-            cloudColorFrom2 = defaultCloudColorBottom;
-            cloudColorTo2 = defaultCloudColorBottom;
+            PersistThings(Conductor.instance.songPositionInBeatsAsDouble);
 
             nextIsland = Instantiate(IslandBase, transform).GetComponent<Island>();
             nextIsland.SmallLandmass.SetActive(true);
             WaterAnim.DoScaledAnimationAsync("Scroll", 0.2f);
-
-            string textColor = ColorUtility.ToHtmlStringRGBA(defaultHighlightColor);
-            yardsTextString = yardsTextString.Replace("#", $"<color=#{textColor}>%</color>");
-
-            UnParallaxFade.DoScaledAnimationAsync("GalaxyDisable", 0.5f, animLayer: 0);
-            UnParallaxFade.DoScaledAnimationAsync("FutureDisable", 0.5f, animLayer: 1);
-
-            ParallaxFade.DoScaledAnimationAsync("StarsDisable", 0.5f, animLayer: 0);
-            ParallaxFade.DoScaledAnimationAsync("EarthDisable", 0.5f, animLayer: 2);
-            ParallaxFade.DoScaledAnimationAsync("MarsDisable", 0.5f, animLayer: 3);
-            ParallaxFade.DoScaledAnimationAsync("DoodlesDisable", 0.5f, animLayer: 4);
-
-            PersistThings(Conductor.instance.songPositionInBeatsAsDouble);
         }
 
         #endregion
@@ -939,7 +977,11 @@ namespace HeavenStudio.Games
                 switch(whichDrum)
                 {
                     case 0: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJust, StartChargingMiss, Nothing); break;
-                    case 5: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustBreak, StartChargingMiss, Nothing); break;
+                    case 5: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustFever, StartChargingMiss, Nothing); break;
+                    case 6: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustDS, StartChargingMiss, Nothing); break;
+                    case 8: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustBreak, StartChargingMiss, Nothing); break;
+                    case 9: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustRemix, StartChargingMiss, Nothing); break;
+                    case 10: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustPractice, StartChargingMiss, Nothing); break;
                     default: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustMusic, StartChargingMiss, Nothing); break;
                 }
             }
@@ -952,9 +994,9 @@ namespace HeavenStudio.Games
                     {
                         switch(whichDrum)
                         {
-                            case 5: 
+                            case 8: 
                             {
-                                SoundByte.PlayOneShotGame("chargingChicken/AMEN1");
+                                SoundByte.PlayOneShotGame("chargingChicken/MISC1");
                                 break;
                             }
                             default: 
@@ -1006,7 +1048,7 @@ namespace HeavenStudio.Games
                 }
             }));
 
-            //chicken ducks into the car window, and the bubble text is set up, and the platform noise plays, music volume is reset if needed, and next island spawns
+            //chicken ducks into the car window, and the bubble text is set up, and the platform noise plays, music volume is reset if needed, next island spawns, car color is set up
             actions.Add(new(beat - 1, delegate {
                 if (lateness >= 1) ChickenAnim.DoScaledAnimationAsync("Prepare", 0.5f);
                 if (lateness > 0 && lateness < 1) ChickenAnim.DoScaledAnimationAsync("Idle", 0.5f);
@@ -1015,6 +1057,8 @@ namespace HeavenStudio.Games
                 if (lateness >= 1) SpawnJourney(journeyBeat, yardsTextLength - 1);
                 canPressWhiff = true;
                 if (drumReset) drumVolume = 1;
+                carColorChangeReady = nextInputReady;
+                carColorChangeLength = yardsTextLength;
             }));
 
             //spawns the countdown bubble, resets the success anim killer
@@ -1038,6 +1082,10 @@ namespace HeavenStudio.Games
             BeatAction.New(GameManager.instance, hoseActions);
 
             //drum loop
+            double loopLength;
+            if (drumLoops[whichDrum][0] != null) { loopLength = drumLoops[whichDrum][0].timing; }
+            else { loopLength = 4; }
+
             while ( length >= 0 )
 		    {
                 //add drums to the beataction
@@ -1045,8 +1093,8 @@ namespace HeavenStudio.Games
                 actions.AddRange(drumActions);
 
                 //start the next drum loop
-                beat += 4;
-                length -= 4;
+                beat += loopLength;
+                length -= loopLength;
             }
 
             //set ending text
@@ -1074,33 +1122,39 @@ namespace HeavenStudio.Games
 
         public void StartChargingJustMusic(PlayerActionEvent caller, float state)
         {
-            //sound
-            isInputting = true; //starts the drums
             SoundByte.PlayOneShotGame("chargingChicken/kick");
             SoundByte.PlayOneShotGame("chargingChicken/hihat");
-            PumpSound(state);
+            StartChargingJust(caller, state);
+        }
 
-            //chicken animation
-            ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
+        public void StartChargingJustFever(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("chargingChicken/feverkick", volume: 0.8f);
+            StartChargingJust(caller, state);
+        }
 
-            //hose animation
-            currentIsland.ChargingAnimation();
-            canBlastOff = false;
+        public void StartChargingJustDS(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("chargingChicken/dskick");
+            StartChargingJust(caller, state);
         }
 
         public void StartChargingJustBreak(PlayerActionEvent caller, float state)
         {
-            //sound
-            isInputting = true; //starts the drums
-            SoundByte.PlayOneShotGame("chargingChicken/AMEN1");
-            PumpSound(state);
+            SoundByte.PlayOneShotGame("chargingChicken/MISC1");
+            StartChargingJust(caller, state);
+        }
 
-            //chicken animation
-            ChickenAnim.DoScaledAnimationAsync("Charge", 0.5f);
+        public void StartChargingJustRemix(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("chargingChicken/MISC21", volume: 1.5f);
+            StartChargingJust(caller, state);
+        }
 
-            //hose animation
-            currentIsland.ChargingAnimation();
-            canBlastOff = false;
+        public void StartChargingJustPractice(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("chargingChicken/practicekick", volume: 2.5f);
+            StartChargingJust(caller, state);
         }
 
         public void StartChargingMiss(PlayerActionEvent caller)
@@ -1149,20 +1203,33 @@ namespace HeavenStudio.Games
 
         public List<BeatAction.Action> PlayDrumLoop(double beat, int whichDrum, double length)
         {
-
             //create the beat action
             var actions = new List<BeatAction.Action>();
 
             //sort drums by timing
-            Array.Sort(drumLoops[whichDrum]);
+            DrumLoop[] drumLoopsCopy = new DrumLoop[drumLoops[whichDrum].Length];
+            drumLoops[whichDrum].CopyTo(drumLoopsCopy, 0);
+            Array.Sort(drumLoopsCopy);
 
             //fill the beat action
-            foreach (var drumLoop in drumLoops[whichDrum]) {
+            foreach (var drumLoop in drumLoopsCopy) {
                 string drumTypeInterpreted = drumLoop.drumType switch {
                     0 => "chargingChicken/kick",
                     1 => "chargingChicken/snare",
                     2 => "chargingChicken/hihat",
-                    _ => $"chargingChicken/MISC{drumLoop.drumType - 20}" //1 - 12 = AMEN,
+                    3 => "chargingChicken/feverkick",
+                    4 => "chargingChicken/feversnare",
+                    5 => "chargingChicken/feverhat",
+                    6 => "chargingChicken/dskick",
+                    7 => "chargingChicken/dssnare",
+                    8 => "chargingChicken/dshat",
+                    9 => "chargingChicken/gbakick", //NYI
+                    10 => "chargingChicken/gbasnare", //NYI
+                    11 => "chargingChicken/gbahat", //NYI
+                    12 => "chargingChicken/practicekick",
+                    13 => "chargingChicken/practicesnare",
+                    14 => "chargingChicken/practicehat",
+                    _ => $"chargingChicken/MISC{drumLoop.drumType - 20}" //1 - 12 = AMEN, 21 - 36 = r2gba
                 };
                 if (length > drumLoop.timing)
                 {
@@ -1390,7 +1457,7 @@ namespace HeavenStudio.Games
 
             //burn animation
             ChickenAnim.DoScaledAnimationAsync("Gone", 0.5f);
-            currentIsland.FakeChickenAnim.DoScaledAnimationAsync("Burn", 0.5f);
+            currentIsland.FakeChickenAnim.DoUnscaledAnimation("Burn");
             ChickenRespawn(Math.Min(length / 2, 3));
         }
 
@@ -1417,8 +1484,8 @@ namespace HeavenStudio.Games
 
             //burn animation
             ChickenAnim.DoScaledAnimationAsync("Gone", 0.5f);
-            currentIsland.FakeChickenAnim.DoScaledAnimationAsync("Burn", 0.5f);
-            nextIsland.FakeChickenAnim.DoScaledAnimationAsync("Burn", 0.5f);
+            currentIsland.FakeChickenAnim.DoUnscaledAnimation("Burn");
+            nextIsland.FakeChickenAnim.DoUnscaledAnimation("Burn");
         }
 
         public void LookButFunee(double beat, double length)
@@ -1761,9 +1828,7 @@ namespace HeavenStudio.Games
 
         private void PersistThings(double beat)
         {
-            return;
-
-            var allEvents = gameManager.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] is "chargingChicken");
+            var allEvents = GameManager.instance.Beatmap.Entities.FindAll(e => e.datamodel.Split('/')[0] is "chargingChicken");
             var eventsBefore = allEvents.FindAll(e => e.beat < beat);
 
             var lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/changeBgColor");
@@ -1771,6 +1836,13 @@ namespace HeavenStudio.Games
             {
                 var e = lastColorEvent;
                 ChangeColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
+            }
+            else
+            {
+                colorFrom = defaultBGColor;
+                colorTo = defaultBGColor;
+                colorFrom2 = defaultBGColorBottom;
+                colorTo2 = defaultBGColorBottom;
             }
 
             lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/changeFgLight");
@@ -1786,6 +1858,13 @@ namespace HeavenStudio.Games
                 var e = lastColorEvent;
                 ChangeCarColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
             }
+            else
+            {
+                carColorFrom = defaultCarColor;
+                carColorTo = defaultCarColor;
+                carColorFrom2 = defaultCarColorCharged;
+                carColorTo2 = defaultCarColorCharged;
+            }
 
             lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/changeCloudColor");
             if (lastColorEvent != null)
@@ -1793,8 +1872,18 @@ namespace HeavenStudio.Games
                 var e = lastColorEvent;
                 ChangeCloudColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]);
             }
+            else
+            {
+                cloudColorFrom = defaultCloudColor;
+                cloudColorTo = defaultCloudColor;
+                cloudColorFrom2 = defaultCloudColorBottom;
+                cloudColorTo2 = defaultCloudColorBottom;
+            }
 
-            return;
+            AllColorsUpdate(Conductor.instance);
+
+            UnParallaxFade.DoScaledAnimationAsync("GalaxyDisable", 0.5f, animLayer: 0);
+            UnParallaxFade.DoScaledAnimationAsync("FutureDisable", 0.5f, animLayer: 1);
 
             lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/unParallaxObjects");
             if (lastColorEvent != null)
@@ -1802,6 +1891,11 @@ namespace HeavenStudio.Games
                 var e = lastColorEvent;
                 UnParallaxObjects(e.beat, e.length, e["appearance"], true);
             }
+
+            ParallaxFade.DoScaledAnimationAsync("StarsDisable", 0.5f, animLayer: 0);
+            ParallaxFade.DoScaledAnimationAsync("EarthDisable", 0.5f, animLayer: 2);
+            ParallaxFade.DoScaledAnimationAsync("MarsDisable", 0.5f, animLayer: 3);
+            ParallaxFade.DoScaledAnimationAsync("DoodlesDisable", 0.5f, animLayer: 4);
 
             lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/parallaxObjects");
             if (lastColorEvent != null)
@@ -1823,6 +1917,25 @@ namespace HeavenStudio.Games
                 var e = lastColorEvent;
                 TextEdit(e.beat, e["text"], e["color"]);
             }
+            else
+            {
+                string textColor = ColorUtility.ToHtmlStringRGBA(defaultHighlightColor);
+                yardsTextString = yardsTextString.Replace("#", $"<color=#{textColor}>%</color>");
+            }
+
+            lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/musicFade");
+            if (lastColorEvent != null)
+            {
+                var e = lastColorEvent;
+                if(!e["reset"] && !e["fadeIn"])
+                {
+                    drumVolume = 0;
+                    drumLoud = !e["drums"];
+                    drumReset = false;
+                }
+            }
+
+            colorsCanUpdate = true;
         }
 
         private void AllColorsUpdate(Conductor cond)

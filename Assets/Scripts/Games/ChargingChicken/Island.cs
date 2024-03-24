@@ -44,12 +44,13 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [NonSerialized]public Vector3 particleOffset;
         [NonSerialized]public float stonePlatformFallOffset = 0;
 
-        [NonSerialized]public float value1 = 0f;
         [NonSerialized]public float speed1 = 0f;
         [NonSerialized]public float speed2 = 0f;
 
         [NonSerialized]public float grassState = 0;
         [NonSerialized]public bool grassFell = false;
+
+        float previousPosition;
 
         [SerializeField] GameObject PlatformBase;
 
@@ -69,17 +70,11 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
 
         private void Update()
         {
-            float previousPosition = IslandPos.localPosition.x;
-
             if (isMoving)
             {
-                value1 = (Conductor.instance.GetPositionFromBeat(journeyBlastOffTime, journeyLength));
+                float value1 = (Conductor.instance.GetPositionFromBeat(journeyBlastOffTime, journeyLength));
                 float newX1 = Util.EasingFunction.EaseOutCubic((float)journeyStart, (float)journeyEnd, value1);
                 IslandPos.localPosition = new Vector3(newX1, 0, 0);
-            }
-            if (value1 >= 1)
-            {
-                isMoving = false;
             }
             if (respawnStart < Conductor.instance.songPositionInBeatsAsDouble && isRespawning)
             {
@@ -88,19 +83,16 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                 IslandPos.localPosition = new Vector3(newX2, 0, 0);
             }
 
-            float currentPosition = IslandPos.localPosition.x;
-            speed1 = (previousPosition - currentPosition) / Time.deltaTime;
-
             if (grassState > 0.6 && IslandPos.localPosition.x < -1 && !grassFell)
             {
                 GrassR.Play();
-                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_DOSHA", volume: 0.5f);
+                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_DOSHA", volume: 0.7f);
                 grassFell = true;
             }
             if (grassState < -0.6 && IslandPos.localPosition.x < 2 && !grassFell)
             {
                 GrassL.Play();
-                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_DOSHA", volume: 0.5f);
+                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_DOSHA", volume: 0.7f);
                 grassFell = true;
             }
         }
@@ -110,6 +102,22 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
             if (stonesExist)
             {
                 StoneSplashCheck();
+            }
+        }
+
+        public void Awake()
+        {
+            StartCoroutine(CalcVelocity());
+            previousPosition = IslandPos.localPosition.x;
+        }
+
+        IEnumerator CalcVelocity()
+        {
+            while (true)
+            {
+                yield return new WaitForEndOfFrame();
+                if (IslandPos.localPosition.x <= previousPosition) speed1 = -(IslandPos.localPosition.x - previousPosition) / Time.deltaTime;
+                previousPosition = IslandPos.localPosition.x;
             }
         }
 
@@ -158,11 +166,14 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
                     grassFell = true;
                     IslandPos.localPosition = new Vector3(0, 0, 0);
                     CollapsedLandmass.localPosition = new Vector3(0, 0, 0);
-                    foreach (var a in stonePlatformJourney)
+                    if (stonePlatformJourney != null)
                     {
-                        var stone = a.thisPlatform;
+                        foreach (var a in stonePlatformJourney)
+                        {
+                            var stone = a.thisPlatform;
 
-                        stone.transform.localPosition -= new Vector3(stonePlatformFallOffset, 0, 0);
+                            stone.transform.localPosition -= new Vector3(stonePlatformFallOffset, 0, 0);
+                        }
                     }
                 }),
             });

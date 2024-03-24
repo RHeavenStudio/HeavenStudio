@@ -828,7 +828,7 @@ RectTransform:
   m_Children:
   - {fileID: 1155075624227833492}
   m_Father: {fileID: 3661019275362709209}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1442,13 +1442,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1476223279408625812}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.3203124, y: 1.038702, z: 0}
+  m_LocalScale: {x: 1.0387019, y: 1.038702, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1720440360485531206}
-  m_Father: {fileID: 3741404894539420991}
+  m_Father: {fileID: 3661019275362709209}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1480850386324900587
@@ -1940,7 +1940,7 @@ Transform:
   - {fileID: 3423256163495674151}
   - {fileID: 537626956312802891}
   m_Father: {fileID: 3741404894539420991}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2096291403803851841
 GameObject:
@@ -2262,10 +2262,9 @@ Transform:
   - {fileID: 1147558205228425458}
   - {fileID: 8586197149551125814}
   - {fileID: 4973083106942372806}
-  - {fileID: 3999153472455551722}
   - {fileID: 4525194693114590921}
   m_Father: {fileID: 3661019275362709209}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &122590160896605966
 Animator:
@@ -2826,6 +2825,7 @@ Transform:
   - {fileID: 3330870450682001368}
   - {fileID: 2346577099309691168}
   - {fileID: 2807155189271445528}
+  - {fileID: 3999153472455551722}
   - {fileID: 3741404894539420991}
   - {fileID: 5079513360686983010}
   - {fileID: 1483015052922442540}
@@ -2863,13 +2863,13 @@ MonoBehaviour:
   countBubble: {fileID: 1476223279408625812}
   Helmet: {fileID: 7194465983669311796}
   FallingHelmet: {fileID: 8083878461408320050}
-  IslandBase: {fileID: 452761269397350257, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
   chickenColors: {fileID: 2100000, guid: acc543038ca31514fa57524efa7642f9, type: 2}
   chickenColorsCar: {fileID: 2100000, guid: 4aa5aff8032c4fc4c9eed48b94c47773, type: 2}
   chickenColorsCloud: {fileID: 2100000, guid: 7175441d8335b0b48a7c1ee600c3cc06, type: 2}
   chickenColorsDoodles: {fileID: 2100000, guid: d04b9deac089bcc46bde5eb3994b4fd9, type: 2}
   chickenColorsWater: {fileID: 2100000, guid: 05842492ce6e9674c8e9aedb25b185e1, type: 2}
   headlightColor: {fileID: 1126427993834615640}
+  IslandBase: {fileID: 452761269397350257, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
 --- !u!1 &3118360541996936646
 GameObject:
   m_ObjectHideFlags: 0
@@ -8562,7 +8562,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2904719894427165250, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2904719894427165250, guid: 9b9f56f7fd4b4ea43a550dca1b787e98, type: 3}
       propertyPath: m_LocalPosition.x
