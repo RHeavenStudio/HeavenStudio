@@ -142,7 +142,10 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             rodAnim.SetFloat("speed", -1f);
             isMiss = true;
             game.PlayBlockBounceMiss(this.nextPos);
-            BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + lengthBeat, () => RemoveAndDestroy())});
+            BeatAction.New(this, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + lengthBeat, delegate {
+                game.PlayBlockIdle(this.nextPos);
+                RemoveAndDestroy();
+            })});
         }
         private bool CanBounceHit()
         {
