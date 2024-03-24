@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyBezierCurves;
 
 using HeavenStudio.Util;
 using HeavenStudio.InputSystem;
@@ -20,13 +21,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawn rod", "Spawn Rod")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.PreSpawnRodfromDirection(e.beat, e.length, e["direction"], e["id"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("direction", BuiltToScaleRvl.Direction.Left, "Direction", "Set the direction in which the rod will come out."),
-                        new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
                     },
                 },
                 new GameAction("shoot rod", "Shoot Rod")
@@ -34,16 +34,26 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to shoot."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to shoot."),
                     },
                 },
                 new GameAction("out sides", "Bounce Out Sides")
                 {
-                    // function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.OutRod(e.beat, e["id"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to out."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to out."),
+                    },
+                },
+                new GameAction("custom spawn", "Custom Spawn Rod")
+                {
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("direction", BuiltToScaleRvl.Direction.Left, "Direction", "Set the direction in which the rod will come out."),
+                        new Param("target", BuiltToScaleRvl.TargetBox.First, "Target", "Set the target in which the rod will bounce."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
                     },
                 },
                 new GameAction("custom bounce", "Custom Bounce")
@@ -52,7 +62,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("target", BuiltToScaleRvl.Target.First, "Target", "Set the target in which the rod will bounce."),
-                        new Param("id", new EntityTypes.Integer(0, 4, 0), "Rod ID", "Set the ID of the rod to bounce."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to bounce."),
                     },
                 },
             }, new List<string>() { "rvl", "normal" }, "rvlbuilt", "en", new List<string>() { });
@@ -65,26 +75,30 @@ namespace HeavenStudio.Games
     using Scripts_BuiltToScaleRvl;
     public class BuiltToScaleRvl : Minigame
     {
-        public Animator[] blockAnims;
+        [SerializeField] Animator[] blockAnims;
         [SerializeField] GameObject baseRod;
         [SerializeField] GameObject baseLeftSquare;
         [SerializeField] GameObject baseRightSquare;
         [SerializeField] GameObject baseAssembled;
-        public Transform widgetHolder;
-
-        const double WIDGET_SEEK_TIME = 16.0;
+        [SerializeField] Transform widgetHolder;
 
         public enum Direction {
             Left,
             Right,
         }
         public enum Target {
-            OuterLeft,
+            OuterLeft = 0,
             First,
             Second,
             Third,
             Fourth,
             OuterRight,
+        }
+        public enum TargetBox {
+            First = 1,
+            Second,
+            Third,
+            Fourth,
         }
 
         public static BuiltToScaleRvl instance;
@@ -110,18 +124,42 @@ namespace HeavenStudio.Games
         }
 
         private double gameStartBeat = double.MinValue, gameEndBeat = double.MaxValue;
-        public static List<QueuedRod> queuedRods = new List<QueuedRod>();
         List<ScheduledWidget> scheduledWidgets = new List<ScheduledWidget>();
+        int widgetIndex;
         public List<Rod> spawnedRods = new List<Rod>();
 
-        public struct QueuedRod
-        {
-            public double beat;
-            public double length;
-            public int currentPos;
-            public int nextPos;
-            public int id;
-        }
+        public BezierCurve3D[] curve;
+        public static readonly Dictionary<(int, int), int> curveMap = new Dictionary<(int, int), int> {
+            {(-1, 0), 0}, {(0, -1), 0},     // 01 in
+            {(0, 1), 2}, {(1, 0), 2},       // 12
+            {(1, 2), 3}, {(2, 1), 3},       // 23
+            {(2, 3), 4}, {(3, 2), 4},       // 34
+            {(3, 4), 5}, {(4, 3), 5},       // 45 in
+            {(0, 0), 7},                    // 11
+            {(1, 1), 8},                    // 22
+            {(2, 2), 9},                    // 33
+            {(3, 3), 10},                   // 44
+            {(-1, 1), 11}, {(1, -1), 11},   // 02 in
+            {(0, 2), 13}, {(2, 0), 13},     // 13
+            {(1, 3), 14}, {(3, 1), 14},     // 24
+            {(2, 4), 15}, {(4, 2), 15},     // 35 in
+            {(-1, 2), 17}, {(2, -1), 17},   // 03 in
+            {(0, 3), 19}, {(3, 0), 19},     // 14
+            {(1, 4), 20}, {(4, 1), 20},     // 25
+            {(-1, 3), 22}, {(3, -1), 22},   // 04 in
+            {(0, 4), 24}, {(4, 0), 24},     // 15 in
+        };
+        public static readonly Dictionary<(int, int), int> curveMapOut = new Dictionary<(int, int), int> {
+            {(-1, 0), 1}, {(0, -1), 1},     // 01 out
+            {(3, 4), 6}, {(4, 3), 6},       // 45 out
+            {(-1, 1), 12}, {(1, -1), 12},   // 02 out
+            {(2, 4), 16}, {(4, 2), 16},     // 35 out
+            {(-1, 2), 18}, {(2, -1), 18},   // 03 out
+            {(-1, 3), 23}, {(3, -1), 23},   // 04 out
+            {(0, 4), 25}, {(4, 0), 25},     // 15 out
+        };
+
+        const double WIDGET_SEEK_TIME = 10.0;
 
         struct ScheduledWidget
         {
@@ -135,110 +173,122 @@ namespace HeavenStudio.Games
             public bool isShoot;
         }
 
-        struct ScheduledSquare
-        {
-            public double targetBeat;
-            public double lengthBeat;
-        }
-
         public class CustomBounceItem
         {
             public int time = -1;
             public int pos;
         }
 
-        public override void OnPlay(double beat)
-        {
-            queuedRods.Clear();
-            OnBeginning(beat);
-        }
         public override void OnGameSwitch(double beat)
-        {
-            OnBeginning(beat);
-        }
-        private void OnDestroy() {
-            queuedRods.Clear();
-            foreach (var evt in scheduledInputs)
-            {
-                evt.Disable();
-            }
-        }
-        private void OnBeginning(double beat)
         {
             gameStartBeat = beat;
             var firstEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(x => x.beat > gameStartBeat);
             gameEndBeat = firstEnd?.beat ?? gameEndBeat;
 
             scheduledWidgets.Clear();
-            // foreach (var evt in events)
-            // {
-            //     if (evt.length == 0) continue;
-            //     int patternDivisions = (int)Math.Ceiling(evt.length / WIDGET_SEEK_TIME);
-            //     var pattern = new ScheduledPattern
-            //     {
-            //         beat = evt.beat + (PATTERN_SEEK_TIME * i),
-            //         length = Math.Min(evt.length - (PATTERN_SEEK_TIME * i), PATTERN_SEEK_TIME),
-            //         type = patternType
-            //     };
-            //     scheduledSquares.Add(pattern);
-            // }
+            widgetIndex = 0;
+            var events = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "spawn rod", "custom spawn" }).FindAll(x => x.beat + x.length >= gameStartBeat && x.beat < gameEndBeat);
+            foreach (var evt in events)
+            {
+                if (evt.length == 0) continue;
+                int currentPos, nextPos;
+                currentPos = evt["direction"] switch {
+                    (int)Direction.Left => -1,
+                    (int)Direction.Right => 4,
+                    _ => throw new System.NotImplementedException()
+                };
+                switch (evt.datamodel){
+                    case "builtToScaleRvl/spawn rod":
+                        nextPos = evt["direction"] switch {
+                            (int)Direction.Left => 0,
+                            (int)Direction.Right => 3,
+                            _ => throw new System.NotImplementedException()
+                        };
+                        break;
+                    case "builtToScaleRvl/custom spawn":
+                        nextPos = evt["target"] switch {
+                            (int)TargetBox.First => 0,
+                            (int)TargetBox.Second => 1,
+                            (int)TargetBox.Third => 2,
+                            (int)TargetBox.Fourth => 3,
+                            _ => throw new System.NotImplementedException()
+                        };
+                        break;
+                    default:
+                        throw new System.NotImplementedException();
+                        break;
+                }
+
+                List<CustomBounceItem> bounceItems = CalcRodBounce(evt.beat, evt.length, evt["id"]);
+                AddBounceOutSides(evt.beat, evt.length, currentPos, nextPos, evt["id"], ref bounceItems);
+                bool isShoot;
+                int rodEndTime = CalcRodEndTime(evt.beat, evt.length, currentPos, nextPos, evt["id"], ref bounceItems, out isShoot);
+                var widget = new ScheduledWidget
+                {
+                    beat = evt.beat, 
+                    length = evt.length,
+                    currentPos = currentPos,
+                    nextPos = nextPos,
+                    id =  evt["id"],
+                    bounceItems = bounceItems.ToArray(),
+                    endTime = rodEndTime,
+                    isShoot = isShoot,
+                };
+                scheduledWidgets.Add(widget);
+            }
+            scheduledWidgets.Sort((x, y) => x.beat.CompareTo(y.beat));
         }
+        public override void OnPlay(double beat)
+        {
+            OnGameSwitch(beat);
+        }
+
+        public bool isPlayerOpen = false;
+        public bool isPlayerPrepare = false;
 
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.isPlaying && !cond.isPaused)
+            if (!cond.isPlaying || cond.isPaused) return;
+
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
-                if (queuedRods.Count != 0)
+                if (!isPlayerPrepare)
                 {
-                    foreach (QueuedRod rod in queuedRods)
-                    {
-                        SpawnRod(rod.beat, rod.length, rod.currentPos, rod.nextPos, rod.id);
-                    }
-                    queuedRods.Clear();
+                    PlayBlockOpen(2);
                 }
             }
-            else
+            if (PlayerInput.GetIsAction(InputAction_FlickAltPress) && !IsExpectingInputNow(InputAction_FlickAltPress))
             {
-                if ((!cond.isPaused) && queuedRods.Count != 0)
+                if (isPlayerPrepare)
                 {
-                    queuedRods.Clear();
+                    PlayBlockShootMiss(2);
+                }
+            }
+            UpdateWidgets();
+        }
+
+        void UpdateWidgets()
+        {
+            double beat = conductor.songPositionInBeatsAsDouble;
+            while(widgetIndex < scheduledWidgets.Count)
+            {
+                var widget = scheduledWidgets[widgetIndex];
+                if (widget.beat < beat + WIDGET_SEEK_TIME)
+                {
+                    SpawnRod(widget.beat, widget.length, widget.currentPos, widget.nextPos, widget.id, widget.bounceItems, widget.endTime, widget.isShoot);
+                    widgetIndex++;
+                }
+                else
+                {
+                    break;
                 }
             }
         }
 
-        public static void PreSpawnRodfromDirection(double beat, double length, int direction, int id)
+        public void SpawnRod(double beat, double length, int currentPos, int nextPos, int id, CustomBounceItem[] bounceItems, int endTime, bool isShoot)
         {
-            int currentPos = direction switch {
-                (int)Direction.Left => -1,
-                (int)Direction.Right => 4,
-                _ => throw new System.NotImplementedException()
-            };
-            int nextPos = direction switch {
-                (int)Direction.Left => 0,
-                (int)Direction.Right => 3,
-                _ => throw new System.NotImplementedException()
-            };
-            if (GameManager.instance.currentGame == "builtToScaleRvl")
-            {
-                instance.SpawnRod(beat, length, currentPos, nextPos, id);
-            }
-            else
-            {
-                queuedRods.Add(new QueuedRod()
-                {
-                    beat = beat,
-                    length = length,
-                    currentPos = currentPos,
-                    nextPos = nextPos,
-                    id = id,
-                });
-            }
-        }
-        
-        public void SpawnRod(double beat, double length, int currentPos, int nextPos, int id)
-        {
-            if (spawnedRods.Any(x => x.ID == id)) return;            
+            // if (spawnedRods.Any(x => x.ID == id)) return;            
             var newRod = Instantiate(baseRod, widgetHolder).GetComponent<Rod>();
             spawnedRods.Add(newRod);
 
@@ -247,26 +297,26 @@ namespace HeavenStudio.Games
             newRod.currentPos = currentPos;
             newRod.nextPos = nextPos;
             newRod.ID = id;
-
-            List<CustomBounceItem> bounceItems = CalcRodBounce(beat, length, id);
-            AddBounceOutSides(beat, length, currentPos, nextPos, id, ref bounceItems);
-
-            bool isShoot;
-            int rodEndTime = CalcRodEndTime(beat, length, currentPos, nextPos, id, ref bounceItems, out isShoot);
-            newRod.customBounce = bounceItems.ToArray();
-            newRod.shootTime = rodEndTime;
+            newRod.customBounce = bounceItems;
+            newRod.endTime = endTime;
             newRod.isShoot = isShoot;
             if (isShoot)
             {
-                double rodEndBeat = beat + length * rodEndTime;
-                SoundByte.PlayOneShotGame("builtToScaleRvl/prepare", rodEndBeat - 2*length);
-                newRod.Squares = SpawnSquare(rodEndBeat, id);
+                double endBeat = beat + length * endTime;
+                SoundByte.PlayOneShotGame("builtToScaleRvl/prepare", endBeat - 2*length);
+                newRod.Squares = SpawnSquare(endBeat, id);
             }
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    newRod.Init();
+                    newRod.gameObject.SetActive(true);
+                })
+            });
 
-            newRod.Init();
-            newRod.gameObject.SetActive(true);
         }
-
+        
         private Square[] SpawnSquare(double targetBeat, int id)
         {
             var newLeftSquare = Instantiate(baseLeftSquare, widgetHolder).GetComponent<Square>();
@@ -315,7 +365,7 @@ namespace HeavenStudio.Games
 
         private void AddBounceOutSides(double beat, double length, int currentPos, int nextPos, int id, ref List<CustomBounceItem> bounceItems)
         {
-            var firstOut = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "out sides" }).Find(x => x.beat > beat && x["id"] == id);
+            var firstOut = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "out sides" }).Find(x => x.beat >= beat + length && x["id"] == id);
             if (firstOut is not null)
             {
                 int earliestOutTime = (int)Math.Ceiling((firstOut.beat - beat)/length);
@@ -345,7 +395,7 @@ namespace HeavenStudio.Games
         {
             isShoot = false;
             int earliestEndTime = int.MaxValue;
-            var firstShoot = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "shoot rod" }).Find(x => x.beat > beat && x["id"] == id);
+            var firstShoot = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "shoot rod" }).Find(x => x.beat >= beat + length && x["id"] == id);
             if (firstShoot is not null)
             {
                 earliestEndTime = (int)Math.Ceiling((firstShoot.beat - beat)/length);
@@ -377,6 +427,81 @@ namespace HeavenStudio.Games
             return shootTime;
         }
 
+        public void PlayBlockBounce(int position)
+        {
+            if (!IsPositionInRange(position)) return;
+            SoundByte.PlayOneShotGame(position switch {
+                0 => "builtToScaleRvl/left",
+                1 => "builtToScaleRvl/middleLeft",
+                2 => "builtToScaleRvl/middleRight",
+                3 => "builtToScaleRvl/right",
+                _ => throw new System.NotImplementedException()
+            });
+            blockAnims[position].Play("bounce", 0, 0);
+        }
+        public void PlayBlockBounceNearlyMiss(int position)
+        {
+            if (!IsPositionInRange(position)) return;
+            blockAnims[position].Play("open", 0, 0);
+        }
+        public void PlayBlockBounceMiss(int position)
+        {
+            if (!IsPositionInRange(position)) return;
+            blockAnims[position].Play("miss", 0, 0);
+        }
+
+        public void PlayBlockPrepare(int position)
+        {
+            if (!IsPositionInRange(position)) return;
+            SoundByte.PlayOneShotGame("builtToScaleRvl/playerRetract");
+            if (PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Pad) {
+                blockAnims[position].Play("prepare B", 0, 0);
+            } else {
+                blockAnims[position].Play("prepare AB", 0, 0);
+            }
+            isPlayerOpen = false; 
+            isPlayerPrepare = true;
+        }
+        public void PlayBlockShoot(int position)
+        {
+            if (!IsPositionInRange(position)) return;
+            SoundByte.PlayOneShotGame("builtToScaleRvl/shoot");
+            blockAnims[position].Play("shoot", 0, 0);
+            isPlayerPrepare = false;
+        }
+        public void PlayBlockShootNearlyMiss(int position)
+        {
+            if (!IsPositionInRange(position)) return;
+            if (PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Pad) {
+                blockAnims[position].Play("shoot miss B", 0, 0);
+            } else {
+                blockAnims[position].Play("shoot miss AB", 0, 0);
+            }
+            isPlayerPrepare = false;
+        }
+        public void PlayBlockShootMiss(int position)
+        {
+            if (!IsPositionInRange(position)) return;
+            if (PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Pad) {
+                blockAnims[position].Play("shoot miss B", 0, 0);
+            } else {
+                blockAnims[position].Play("shoot miss AB", 0, 0);
+            }
+            isPlayerPrepare = false;
+        }
+        
+        public void PlayBlockOpen(int position)
+        {
+            if (!IsPositionInRange(position)) return;
+            blockAnims[position].Play("open", 0, 0);
+            isPlayerOpen = true;
+        }
+        public void PlayBlockIdle(int position)
+        {
+            if (!IsPositionInRange(position)) return;
+            blockAnims[position].Play("idle", 0, 0);
+        }
+
         public static int getFollowingPos(int currentPos, int nextPos, int nextTime, CustomBounceItem[] bounceItems)
         {
             var bounce = Array.Find(bounceItems, x => x.time == nextTime);
@@ -387,6 +512,10 @@ namespace HeavenStudio.Games
             else if (currentPos <= nextPos) return nextPos + 1;
             else if (currentPos > nextPos) return nextPos - 1;
             return nextPos;
+        }
+        public static bool IsPositionInRange(int position)
+        {
+            return position >= 0 && position <= 3;
         }
     }
 }

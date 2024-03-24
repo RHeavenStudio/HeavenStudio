@@ -174,7 +174,44 @@ AnimationClip:
       m_RotationOrder: 4
     path: sprite
   m_ScaleCurves: []
-  m_FloatCurves: []
+  m_FloatCurves:
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.033333335
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.06666667
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.1
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_IsActive
+    path: shadow
+    classID: 1
+    script: {fileID: 0}
   m_PPtrCurves:
   - curve:
     - time: 0
@@ -207,6 +244,21 @@ AnimationClip:
     path: sprite
     classID: 212
     script: {fileID: 0}
+  - curve:
+    - time: 0
+      value: {fileID: -361290069, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    - time: 0.033333335
+      value: {fileID: 956981337, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    - time: 0.13333334
+      value: {fileID: -361290069, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    - time: 0.23333333
+      value: {fileID: 119317094, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    - time: 0.33333334
+      value: {fileID: -361290069, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    attribute: m_Sprite
+    path: shadow
+    classID: 212
+    script: {fileID: 0}
   m_SampleRate: 30
   m_WrapMode: 0
   m_Bounds:
@@ -229,7 +281,21 @@ AnimationClip:
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
+      path: 1970700845
+      attribute: 2086281974
+      script: {fileID: 0}
+      typeID: 1
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
       path: 891129758
+      attribute: 0
+      script: {fileID: 0}
+      typeID: 212
+      customType: 23
+      isPPtrCurve: 1
+    - serializedVersion: 2
+      path: 1970700845
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -249,6 +315,11 @@ AnimationClip:
     - {fileID: -564868734, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
     - {fileID: -652921874, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
     - {fileID: -1903993783, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    - {fileID: -361290069, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    - {fileID: 956981337, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    - {fileID: -361290069, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    - {fileID: 119317094, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
+    - {fileID: -361290069, guid: f77716464d1f0864fbad93cdacd39630, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -671,6 +742,43 @@ AnimationClip:
     attribute: m_LocalPosition.z
     path: sprite
     classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.033333335
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.06666667
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.1
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_IsActive
+    path: shadow
+    classID: 1
     script: {fileID: 0}
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
