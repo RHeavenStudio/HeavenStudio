@@ -182,7 +182,14 @@ namespace HeavenStudio.InputSystem
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
-                currentBindings = JsonUtility.FromJson<ControlBindings>(json);
+                if (json is not null or "")
+                {
+                    currentBindings = JsonUtility.FromJson<ControlBindings>(json);
+                }
+                else
+                {
+                    ResetBindings();
+                }
             }
             else
             {

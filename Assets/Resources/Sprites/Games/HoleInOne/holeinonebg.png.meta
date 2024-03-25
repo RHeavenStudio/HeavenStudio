@@ -1,0 +1,1927 @@
+fileFormatVersion: 2
+guid: 356ee05cca5b7d5409bf9811478fcd73
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: holeinonebg_0
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 2128
+        width: 1415
+        height: 1059
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f58574f3084c0cb4e92721a8c1496361
+      internalID: 1543326217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_1
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 3217
+        width: 2222
+        height: 868
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bb5c90ae79367f49b66341f5c718740
+      internalID: -637098173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_2
+      rect:
+        serializedVersion: 2
+        x: 1454
+        y: 2122
+        width: 485
+        height: 1065
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df15a6acabb3282468203bfc7251deb9
+      internalID: 1489914154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_3
+      rect:
+        serializedVersion: 2
+        x: 1964
+        y: 2890
+        width: 264
+        height: 297
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d16524480edabfd43857216d38c86328
+      internalID: 2002107405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_4
+      rect:
+        serializedVersion: 2
+        x: 2256
+        y: 2898
+        width: 382
+        height: 287
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc469ab4375b5a0438b5cbe16ab4f4d7
+      internalID: -878553786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_5
+      rect:
+        serializedVersion: 2
+        x: 2251
+        y: 3218
+        width: 388
+        height: 289
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa0bf7083b1422849bcba82b3ffe7cd8
+      internalID: -1160614810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_6
+      rect:
+        serializedVersion: 2
+        x: 2253
+        y: 3537
+        width: 453
+        height: 259
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35ad88b2c4017374c854656dbcbd6566
+      internalID: 663780444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_7
+      rect:
+        serializedVersion: 2
+        x: 2256
+        y: 3824
+        width: 448
+        height: 261
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ac13a90e64ff7546b88c5fe7337bc90
+      internalID: -271771606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_8
+      rect:
+        serializedVersion: 2
+        x: 2736
+        y: 3793
+        width: 737
+        height: 283
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13fcdccec64cb6c41b8495802d329cb4
+      internalID: 1467181742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_9
+      rect:
+        serializedVersion: 2
+        x: 2739
+        y: 3471
+        width: 733
+        height: 290
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e954664d3353c34a83daaafcb6a0983
+      internalID: 613854994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_10
+      rect:
+        serializedVersion: 2
+        x: 2670
+        y: 3181
+        width: 644
+        height: 261
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d441593fc6926604699888fe99c90c26
+      internalID: 1512981106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_11
+      rect:
+        serializedVersion: 2
+        x: 2668
+        y: 2896
+        width: 645
+        height: 261
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b43f9cae5492814888ca8a2dc4cc03b
+      internalID: 1734147729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_12
+      rect:
+        serializedVersion: 2
+        x: 3055
+        y: 2668
+        width: 260
+        height: 199
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02402d0809559c84cbe1f7ae2b746bb0
+      internalID: 502913006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_13
+      rect:
+        serializedVersion: 2
+        x: 3340
+        y: 2603
+        width: 203
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 329e09001a8f41846980de43e01e0642
+      internalID: 521276630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_14
+      rect:
+        serializedVersion: 2
+        x: 3146
+        y: 2539
+        width: 171
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69266037f59ba1b4fbc7db00718d3c70
+      internalID: 592702813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_15
+      rect:
+        serializedVersion: 2
+        x: 3343
+        y: 2476
+        width: 196
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0f37c1aaca9d764984a20fa0d00a363
+      internalID: 1483830758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_16
+      rect:
+        serializedVersion: 2
+        x: 3564
+        y: 2283
+        width: 520
+        height: 456
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6dc30b219d46d874e97be424bc6650f5
+      internalID: 1183084490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_17
+      rect:
+        serializedVersion: 2
+        x: 3436
+        y: 2060
+        width: 650
+        height: 201
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 635f2ce4a4dfaf946a84ec42d18eb898
+      internalID: 92618695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_18
+      rect:
+        serializedVersion: 2
+        x: 3533
+        y: 1804
+        width: 295
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5b4391bbffadc74cbd8411b215b329f
+      internalID: -425666022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_19
+      rect:
+        serializedVersion: 2
+        x: 3854
+        y: 1802
+        width: 233
+        height: 233
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1555d521db328f64eb19924278240a4d
+      internalID: 1469062913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_20
+      rect:
+        serializedVersion: 2
+        x: 3722
+        y: 1614
+        width: 364
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 468f78c83abfe49488085e2e7df78ebc
+      internalID: -1119178448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_21
+      rect:
+        serializedVersion: 2
+        x: 3852
+        y: 1354
+        width: 237
+        height: 234
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3ff9b8e79fce0545aa183a01982c267
+      internalID: 799539942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_22
+      rect:
+        serializedVersion: 2
+        x: 4011
+        y: 1068
+        width: 74
+        height: 264
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11d68e45b39a0f8409c3d69b99471c5e
+      internalID: 468215359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_23
+      rect:
+        serializedVersion: 2
+        x: 3790
+        y: 754
+        width: 294
+        height: 287
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 793acf98f41e4764dbd337e1efeb9fe8
+      internalID: 1416501995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_24
+      rect:
+        serializedVersion: 2
+        x: 3788
+        y: 464
+        width: 296
+        height: 258
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a73b1ba4a94d35649a9b70ed38140e0c
+      internalID: -113341010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_25
+      rect:
+        serializedVersion: 2
+        x: 3789
+        y: 175
+        width: 294
+        height: 260
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bceeef194a09bb4aaba7e8b875b5c8e
+      internalID: -196285850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_26
+      rect:
+        serializedVersion: 2
+        x: 2956
+        y: 14
+        width: 806
+        height: 328
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6dd622ec4c9ba9845a53ab674461fc4a
+      internalID: -1547819697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_27
+      rect:
+        serializedVersion: 2
+        x: 3053
+        y: 367
+        width: 357
+        height: 294
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75d85bf6a05ea2c45aff935d63d32829
+      internalID: 250732958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_28
+      rect:
+        serializedVersion: 2
+        x: 3440
+        y: 368
+        width: 322
+        height: 291
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2af4e3b22125e642ab80bac887c8b2e
+      internalID: 895479730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_29
+      rect:
+        serializedVersion: 2
+        x: 3436
+        y: 687
+        width: 329
+        height: 197
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56fd72b3f82c9e04daa2c929e81ad4c4
+      internalID: 1771591345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_30
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 179
+        width: 514
+        height: 286
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e518014cac9a1841b9dd7bdfcc3dce2
+      internalID: -2085760483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_31
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 498
+        width: 516
+        height: 288
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 351c9289cb80c0442a636867d378a99e
+      internalID: -1399527564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_32
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 497
+        width: 197
+        height: 259
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d7af06ad4d7f784099cfc0fafaf9ba3
+      internalID: 749279936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_33
+      rect:
+        serializedVersion: 2
+        x: 789
+        y: 410
+        width: 657
+        height: 306
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1d94e875c5e5584eab30b7d26a18d89
+      internalID: -1715244200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_34
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 59
+        width: 663
+        height: 303
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ce4464829be82f40b55dbf431d786a4
+      internalID: -762298423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_35
+      rect:
+        serializedVersion: 2
+        x: 1265
+        y: 115
+        width: 158
+        height: 251
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b46f799b1b44be4aadc2b9f3b44cbc0
+      internalID: -1678047626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_36
+      rect:
+        serializedVersion: 2
+        x: 1454
+        y: 113
+        width: 163
+        height: 253
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18276cb2fd0842b41ae6d85bdcf7e746
+      internalID: 39821762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_37
+      rect:
+        serializedVersion: 2
+        x: 1646
+        y: 119
+        width: 158
+        height: 245
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f7623b6be3c92043892f2be43539c22
+      internalID: -122349452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_38
+      rect:
+        serializedVersion: 2
+        x: 1840
+        y: 181
+        width: 127
+        height: 182
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e86cd22a5ff3d50408086f6a9759ff50
+      internalID: -2034414526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_39
+      rect:
+        serializedVersion: 2
+        x: 2003
+        y: 115
+        width: 154
+        height: 249
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 922c7d42667967b4ca141098c937030f
+      internalID: -1953689053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_40
+      rect:
+        serializedVersion: 2
+        x: 2189
+        y: 114
+        width: 163
+        height: 248
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f06ddb6c3854aa54db57525b94cbbf6a
+      internalID: -1844805232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_41
+      rect:
+        serializedVersion: 2
+        x: 2383
+        y: 117
+        width: 162
+        height: 243
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b49bd2fbb0df09c40bb40783c5240d36
+      internalID: 8187816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_42
+      rect:
+        serializedVersion: 2
+        x: 2575
+        y: 181
+        width: 129
+        height: 181
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9224c33e3e19f5140a4e6356ca8a4a19
+      internalID: 1379986282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_43
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 466
+        width: 160
+        height: 257
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3e6aef645832874e9983a2d3973110e
+      internalID: -1590116584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_44
+      rect:
+        serializedVersion: 2
+        x: 1679
+        y: 471
+        width: 162
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc34fb95d7c6007419d61449b9fafa1c
+      internalID: 1012952343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_45
+      rect:
+        serializedVersion: 2
+        x: 1870
+        y: 469
+        width: 159
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb53fcf112fbbd64e91937387374d8a1
+      internalID: -563974957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_46
+      rect:
+        serializedVersion: 2
+        x: 2067
+        y: 531
+        width: 125
+        height: 188
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00036d923b5169740a3ca846f6c0d84d
+      internalID: 568838692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_47
+      rect:
+        serializedVersion: 2
+        x: 2226
+        y: 592
+        width: 94
+        height: 127
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd0a40e1346d3dc4cbb18aa381e62923
+      internalID: 700652772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_48
+      rect:
+        serializedVersion: 2
+        x: 2223
+        y: 466
+        width: 95
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 786d8f8a26d4b564ea545318821c05ea
+      internalID: 1718592743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_49
+      rect:
+        serializedVersion: 2
+        x: 2096
+        y: 401
+        width: 97
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8172cd514534dfc43b01cc5b9c3e37c4
+      internalID: -1791818550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_50
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 817
+        width: 638
+        height: 292
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3effe20e9317b9d4ba1f96b5b97aae02
+      internalID: 649162290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_51
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 793
+        width: 669
+        height: 310
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d8f961ee2d965e42ba6e52fcd8881bd
+      internalID: -978414319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_52
+      rect:
+        serializedVersion: 2
+        x: 1395
+        y: 758
+        width: 316
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e7aec69c2956b2458eb54c01b551ed6
+      internalID: 1780638472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_53
+      rect:
+        serializedVersion: 2
+        x: 1747
+        y: 760
+        width: 221
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59898df5b09101942bb4eb7480a2d66d
+      internalID: -224240024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_54
+      rect:
+        serializedVersion: 2
+        x: 2003
+        y: 755
+        width: 312
+        height: 154
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3cae70d18491f44998ceac58bd593cf
+      internalID: -770866869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_55
+      rect:
+        serializedVersion: 2
+        x: 1388
+        y: 948
+        width: 317
+        height: 156
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7d73baa406b3764f84f8a6ae1780385
+      internalID: 378603168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_56
+      rect:
+        serializedVersion: 2
+        x: 1748
+        y: 948
+        width: 215
+        height: 155
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d841358f1fa630458ec56ebb6899615
+      internalID: -567979326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_57
+      rect:
+        serializedVersion: 2
+        x: 2001
+        y: 947
+        width: 193
+        height: 155
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcead2638efebfb4a8dde96c911e5c29
+      internalID: 1577728962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_58
+      rect:
+        serializedVersion: 2
+        x: 2225
+        y: 952
+        width: 189
+        height: 150
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 104756c5b3354b44b8b286d37f6f275b
+      internalID: -1017603770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_59
+      rect:
+        serializedVersion: 2
+        x: 2448
+        y: 1106
+        width: 385
+        height: 321
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba0a43306602b6b48a82f10e85f90b20
+      internalID: 1254127137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_60
+      rect:
+        serializedVersion: 2
+        x: 2867
+        y: 1239
+        width: 185
+        height: 186
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d61aa71ec4bd334aa1919694cff3bc8
+      internalID: -1041956106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_61
+      rect:
+        serializedVersion: 2
+        x: 2897
+        y: 1455
+        width: 283
+        height: 195
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b60bb57b803e1604eb0e6d0fd41558cb
+      internalID: -562965748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_62
+      rect:
+        serializedVersion: 2
+        x: 2570
+        y: 1456
+        width: 293
+        height: 196
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a84ea533f88d944a96bb2216f7541f1
+      internalID: 601358918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_63
+      rect:
+        serializedVersion: 2
+        x: 2253
+        y: 1455
+        width: 293
+        height: 197
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b38fcd905c71f64fa4c7cbd552782a6
+      internalID: 1130324435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_64
+      rect:
+        serializedVersion: 2
+        x: 1162
+        y: 1137
+        width: 1059
+        height: 960
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4f42066ca066994a98a3d8e38cef0eb
+      internalID: 48659494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_65
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 1141
+        width: 1126
+        height: 961
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab0974097470e8f4bb71a49db80074c8
+      internalID: -1333389175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_66
+      rect:
+        serializedVersion: 2
+        x: 1969
+        y: 2252
+        width: 705
+        height: 133
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b33e3c2b134fd44c91b6a8966a95b0f
+      internalID: 1049015782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_67
+      rect:
+        serializedVersion: 2
+        x: 1967
+        y: 2415
+        width: 1090
+        height: 133
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9ff1398d1e0e5449a387037765ba306
+      internalID: 1506135961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_68
+      rect:
+        serializedVersion: 2
+        x: 1968
+        y: 2577
+        width: 1057
+        height: 129
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3089c57b6281e7e459977728ad5f57ed
+      internalID: -326010526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_69
+      rect:
+        serializedVersion: 2
+        x: 1968
+        y: 2735
+        width: 1058
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95bacc7c54e342145873f43482df17fd
+      internalID: 1183013801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_70
+      rect:
+        serializedVersion: 2
+        x: 3093
+        y: 2286
+        width: 445
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90445af70a4decb4bbb31d95d2dc5ff8
+      internalID: 972294735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_71
+      rect:
+        serializedVersion: 2
+        x: 3440
+        y: 2835
+        width: 385
+        height: 159
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61ed8ea8aa40cae468ded8089504c468
+      internalID: 1706369379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_72
+      rect:
+        serializedVersion: 2
+        x: 3858
+        y: 2776
+        width: 224
+        height: 213
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f55ad34dafae3884da0e142121b364a3
+      internalID: -1423826358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_73
+      rect:
+        serializedVersion: 2
+        x: 3439
+        y: 3030
+        width: 642
+        height: 221
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79aebcc4e2f07fe41985205d634553a6
+      internalID: -1563398618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_74
+      rect:
+        serializedVersion: 2
+        x: 3341
+        y: 3316
+        width: 131
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1cad43d50d7b394189c684d6e8688e7
+      internalID: 439899535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_75
+      rect:
+        serializedVersion: 2
+        x: 3502
+        y: 3282
+        width: 325
+        height: 318
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 559e9d55d954d744a84493bf43fbc905
+      internalID: -844916630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_76
+      rect:
+        serializedVersion: 2
+        x: 3885
+        y: 3277
+        width: 199
+        height: 197
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6fbbdbb3be647924c8464beb16be7659
+      internalID: -2066159848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_77
+      rect:
+        serializedVersion: 2
+        x: 3605
+        y: 3665
+        width: 219
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3596f5c506617ad429c66a7a9e8ba9a8
+      internalID: 288572108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_78
+      rect:
+        serializedVersion: 2
+        x: 3863
+        y: 3668
+        width: 217
+        height: 121
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 399bc6930d1fd074e82d772b8da87e72
+      internalID: 656889897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_79
+      rect:
+        serializedVersion: 2
+        x: 3859
+        y: 3507
+        width: 218
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84566de06ca06234499943c59cd32627
+      internalID: 1661966803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_80
+      rect:
+        serializedVersion: 2
+        x: 3501
+        y: 3827
+        width: 582
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: defce2d1eb5e06f428c027aa5b0e7ad1
+      internalID: -206720256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: holeinonebg_81
+      rect:
+        serializedVersion: 2
+        x: 2266
+        y: 1683
+        width: 1006
+        height: 409
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27302be7a6ba82a4cb6b259f97482e01
+      internalID: 1998798741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      holeinonebg_0: 1543326217
+      holeinonebg_1: -637098173
+      holeinonebg_10: 1512981106
+      holeinonebg_11: 1734147729
+      holeinonebg_12: 502913006
+      holeinonebg_13: 521276630
+      holeinonebg_14: 592702813
+      holeinonebg_15: 1483830758
+      holeinonebg_16: 1183084490
+      holeinonebg_17: 92618695
+      holeinonebg_18: -425666022
+      holeinonebg_19: 1469062913
+      holeinonebg_2: 1489914154
+      holeinonebg_20: -1119178448
+      holeinonebg_21: 799539942
+      holeinonebg_22: 468215359
+      holeinonebg_23: 1416501995
+      holeinonebg_24: -113341010
+      holeinonebg_25: -196285850
+      holeinonebg_26: -1547819697
+      holeinonebg_27: 250732958
+      holeinonebg_28: 895479730
+      holeinonebg_29: 1771591345
+      holeinonebg_3: 2002107405
+      holeinonebg_30: -2085760483
+      holeinonebg_31: -1399527564
+      holeinonebg_32: 749279936
+      holeinonebg_33: -1715244200
+      holeinonebg_34: -762298423
+      holeinonebg_35: -1678047626
+      holeinonebg_36: 39821762
+      holeinonebg_37: -122349452
+      holeinonebg_38: -2034414526
+      holeinonebg_39: -1953689053
+      holeinonebg_4: -878553786
+      holeinonebg_40: -1844805232
+      holeinonebg_41: 8187816
+      holeinonebg_42: 1379986282
+      holeinonebg_43: -1590116584
+      holeinonebg_44: 1012952343
+      holeinonebg_45: -563974957
+      holeinonebg_46: 568838692
+      holeinonebg_47: 700652772
+      holeinonebg_48: 1718592743
+      holeinonebg_49: -1791818550
+      holeinonebg_5: -1160614810
+      holeinonebg_50: 649162290
+      holeinonebg_51: -978414319
+      holeinonebg_52: 1780638472
+      holeinonebg_53: -224240024
+      holeinonebg_54: -770866869
+      holeinonebg_55: 378603168
+      holeinonebg_56: -567979326
+      holeinonebg_57: 1577728962
+      holeinonebg_58: -1017603770
+      holeinonebg_59: 1254127137
+      holeinonebg_6: 663780444
+      holeinonebg_60: -1041956106
+      holeinonebg_61: -562965748
+      holeinonebg_62: 601358918
+      holeinonebg_63: 1130324435
+      holeinonebg_64: 48659494
+      holeinonebg_65: -1333389175
+      holeinonebg_66: 1049015782
+      holeinonebg_67: 1506135961
+      holeinonebg_68: -326010526
+      holeinonebg_69: 1183013801
+      holeinonebg_7: -271771606
+      holeinonebg_70: 972294735
+      holeinonebg_71: 1706369379
+      holeinonebg_72: -1423826358
+      holeinonebg_73: -1563398618
+      holeinonebg_74: 439899535
+      holeinonebg_75: -844916630
+      holeinonebg_76: -2066159848
+      holeinonebg_77: 288572108
+      holeinonebg_78: 656889897
+      holeinonebg_79: 1661966803
+      holeinonebg_8: 1467181742
+      holeinonebg_80: -206720256
+      holeinonebg_81: 1998798741
+      holeinonebg_9: 613854994
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

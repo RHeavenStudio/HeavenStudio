@@ -81,6 +81,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 pullSound.Stop();
 
             pluckState = -1;
+            game.ScoreMiss();
         }
 
         private void StartJust(PlayerActionEvent caller, float state)

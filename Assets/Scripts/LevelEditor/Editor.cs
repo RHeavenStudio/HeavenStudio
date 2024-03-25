@@ -106,7 +106,7 @@ namespace HeavenStudio.Editor
 
             foreach (var minigame in EventCaller.instance.minigames.Values)
                 AddIcon(minigame);
-                
+
             UpdateEditorStatus(true);
 #if HEAVENSTUDIO_PROD
             BuildDateDisplay.text = GlobalGameManager.friendlyReleaseName;
@@ -473,7 +473,7 @@ namespace HeavenStudio.Editor
                 GameManager.instance.CursorCam.enabled = (PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch)
                     && isCursorEnabled;
                 GameManager.instance.CursorCam.targetTexture = null;
-                
+
                 GameManager.instance.CursorCam.rect = new Rect(0, 0, 1, 1);
                 fullscreen = true;
             }
@@ -507,12 +507,12 @@ namespace HeavenStudio.Editor
 
         public static bool MouseInRectTransform(RectTransform rectTransform)
         {
-            return (rectTransform.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera));
+            return rectTransform.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera);
         }
 
         public void ReturnToTitle()
         {
-            GlobalGameManager.LoadScene("Title");
+            GlobalGameManager.LoadScene("Title", callback: GameManager.instance.DestroyGame);
         }
 
         public void SetAuthoritiveMenu(bool state)
@@ -522,7 +522,7 @@ namespace HeavenStudio.Editor
 
         public void ToggleDebugCam()
         {
-            var game = GameManager.instance.currentGameO;
+            var game = GameManager.instance.minigameObj;
 
             if (game != null)
             {

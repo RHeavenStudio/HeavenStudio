@@ -229,6 +229,12 @@ namespace HeavenStudio.Games
                 evt.Disable();
             }
         }
+        public override void OnPlay(double beat)
+        {
+            queuedInputs.Clear();
+            queuedAttentions.Clear();
+            queuedFlipperRollVoiceLines.Clear();
+        }
 
         public override void OnBeatPulse(double beat)
         {
@@ -321,12 +327,6 @@ namespace HeavenStudio.Games
                         }
                     }
                 }
-            }
-            else if (!cond.isPlaying)
-            {
-                queuedInputs.Clear();
-                queuedAttentions.Clear();
-                queuedFlipperRollVoiceLines.Clear();
             }
         }
 

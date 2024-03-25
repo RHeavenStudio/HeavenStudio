@@ -389,6 +389,11 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
+            
+            if (queuedSqueezes.Count > 0) queuedSqueezes.Clear();
+            if (queuedReleases.Count > 0) queuedReleases.Clear();
+            if (queuedPops.Count > 0) queuedPops.Clear();
+            queuePrepare = double.MaxValue;
             PersistColor(beat);
         }
 

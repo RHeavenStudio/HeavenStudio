@@ -1,11 +1,9 @@
 using System.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
+
+using SatorImaging.UnitySourceGenerator.Editor;
+using HeavenStudio;
 
 public class CreateAssetBundles
 {
@@ -17,6 +15,8 @@ public class CreateAssetBundles
         {
             Directory.CreateDirectory(assetBundleDirectory);
         }
+        AssetDatabase.Refresh();
+        USGUtility.ForceGenerateByType(typeof(Minigames));
         BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
     }
 
@@ -28,6 +28,8 @@ public class CreateAssetBundles
         {
             Directory.CreateDirectory(assetBundleDirectory);
         }
+        AssetDatabase.Refresh();
+        USGUtility.ForceGenerateByType(typeof(Minigames));
         BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows);
     }
 
@@ -39,6 +41,8 @@ public class CreateAssetBundles
         {
             Directory.CreateDirectory(assetBundleDirectory);
         }
+        AssetDatabase.Refresh();
+        USGUtility.ForceGenerateByType(typeof(Minigames));
         BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneLinux64);
     }
 
@@ -50,6 +54,8 @@ public class CreateAssetBundles
         {
             Directory.CreateDirectory(assetBundleDirectory);
         }
+        AssetDatabase.Refresh();
+        USGUtility.ForceGenerateByType(typeof(Minigames));
         BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneOSX);
     }
 }

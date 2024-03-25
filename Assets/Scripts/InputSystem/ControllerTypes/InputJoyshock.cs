@@ -61,6 +61,7 @@ namespace HeavenStudio.InputSystem.Loaders
             {
                 joyshock.CleanUp();
             }
+            JslSetCallback(null);
             JslDisconnectAndDisposeAll();
         }
 

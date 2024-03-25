@@ -95,16 +95,20 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            Conductor.instance.SetMinigamePitch(1f);
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
+            }
+            if (Conductor.instance.isPlaying)
+            {
+                Conductor.instance.SetMinigamePitch(1f);
             }
         }
 
         public override void OnGameSwitch(double beat)
         {
             InitGhosts(beat);
+            Conductor.instance.SetMinigamePitch(1f);
         }
 
         private void InitGhosts(double beat)
@@ -127,7 +131,6 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
-            Conductor.instance.SetMinigamePitch(1f);
         }
 
         void Update()
@@ -164,10 +167,6 @@ namespace HeavenStudio.Games
                         isMoving = false;
                     }
                 }
-            }
-            else if (!cond.isPlaying)
-            {
-                Conductor.instance.SetMinigamePitch(1f);
             }
         }
 
@@ -347,7 +346,6 @@ namespace HeavenStudio.Games
                 slowTree.SetActive(true);
                 normalTree.SetActive(false);
                 Conductor.instance.SetMinigamePitch(0.25f);
-                Conductor.instance.SetMinigamePitch(1f, caller.startBeat + caller.timer + 1f); 
             }
 
             doorAnim.DoScaledAnimationAsync("DoorOpen", 0.5f);
@@ -355,6 +353,7 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate 
                 { 
+                    Conductor.instance.SetMinigamePitch(1f);
                     doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);
                     slowRain.SetActive(false);
                     normalRain.SetActive(true);

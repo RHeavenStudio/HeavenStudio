@@ -46,6 +46,7 @@ namespace HeavenStudio
         [SerializeField] private TMP_Text chartMapperText;
         [SerializeField] private TMP_Text chartIdolText;
         [SerializeField] private TMP_Text chartDescText;
+        [SerializeField] private GameObject flashWarning;
         [SerializeField] private TMP_Text chartStyleText;
         [SerializeField] private Image campaignOption;
         [SerializeField] private Sprite campaignOn;
@@ -56,6 +57,7 @@ namespace HeavenStudio
         [SerializeField] private RectTransform selectedDisplayRect;
         [SerializeField] private GameObject selectedDisplayIcon;
         [SerializeField] private GameObject[] otherHiddenOnMouse;
+        static bool firstBoot = true;
 
         private AudioSource musicSource;
 
@@ -68,17 +70,19 @@ namespace HeavenStudio
 
         private double lastAbsTime;
         private double startTime;
+        private float playPanelRevealTime;
 
         private bool altBop;
 
         private bool logoRevealed;
 
-        private bool menuMode, snsRevealed, playMenuRevealed, exiting, firstPress, usingMouse;
+        private bool menuMode, snsRevealed, playMenuRevealed, exiting, firstPress, usingMouse, waitingForButtonUp;
 
         private Animator menuAnim, selectedDisplayAnim;
         private Selectable currentSelectable, mouseSelectable;
         private RectTransform currentSelectableRect, lastSelectableRect;
         private float selectableLerpTimer;
+
 
         private void Start()
         {
@@ -151,15 +155,16 @@ namespace HeavenStudio
                             var nextController = newController;
                             var lastController = PlayerInput.GetInputController(1);
 
-                            if ((newController is InputMouse) && (lastController is not InputMouse))
+                            if ((newController is InputMouse) && !(lastController is InputMouse))
                             {
                                 Debug.Log("Mouse used, selecting keyboard instead");
                                 nextController = controllers[0];
                             }
                             Debug.Log("Assigning controller: " + newController.GetDeviceName());
 
-                            if (lastController != nextController)
+                            if (lastController != nextController && !firstBoot)
                             {
+                                firstBoot = false;
                                 if (nextController == null)
                                 {
                                     Debug.Log("invalid controller, using keyboard");
@@ -238,9 +243,9 @@ namespace HeavenStudio
                 targetBopBeat += 1;
             }
 
-            if (menuMode && !(exiting || GlobalGameManager.IsShowingDialog))
+            var controller = PlayerInput.GetInputController(1);
+            if (menuMode && !(exiting || GlobalGameManager.IsShowingDialog || waitingForButtonUp))
             {
-                var controller = PlayerInput.GetInputController(1);
                 if (playMenuRevealed)
                 {
                     if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
@@ -282,6 +287,16 @@ namespace HeavenStudio
                 else if (!firstPress)
                 {
                     UpdateSelectable(controller);
+                }
+            }
+            if (waitingForButtonUp)
+            {
+                if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                {
+                    if (controller.GetActionUp(PlayerInput.CurrentControlStyle, (int)InputController.ActionsPad.East, out _))
+                    {
+                        waitingForButtonUp = false;
+                    }
                 }
             }
             if (firstPress) firstPress = false;
@@ -510,18 +525,14 @@ namespace HeavenStudio
             };
 
 #if HEAVENSTUDIO_PROD && !UNITY_EDITOR
-            string lvpath = Application.dataPath;
-            if (Application.platform == RuntimePlatform.OSXPlayer)
+            string lvpath = "";
+            if (Application.platform != RuntimePlatform.OSXPlayer)
             {
-                lvpath += "/../../Levels/";
-            }
-            else 
-            {
-                lvpath += "/../Levels/";
-            }
-            if (!Directory.Exists(lvpath))
-            {
-                Directory.CreateDirectory(lvpath);
+                lvpath = Application.dataPath + "/../Levels/";
+                if (!Directory.Exists(lvpath))
+                {
+                    Directory.CreateDirectory(lvpath);
+                }
             }
             StandaloneFileBrowser.OpenFilePanelAsync("Open Remix", lvpath, extensions, false, (string[] paths) =>
 #else
@@ -547,6 +558,7 @@ namespace HeavenStudio
                     chartDescText.text = beatmap["remixdesc"];
                     chartIdolText.text = "♪ " + beatmap["idolcredit"];
                     chartStyleText.text = $"Recommended Control Style: {beatmap["playstyle"].ToString()}";
+                    flashWarning.SetActive(beatmap["accessiblewarning"]);
 
                     if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.On)
                     {
@@ -557,6 +569,8 @@ namespace HeavenStudio
                         campaignOption.sprite = campaignOff;
                     }
 
+                    // waitingForButtonUp = true;
+                    playPanelRevealTime = Time.realtimeSinceStartup + 0.2f;
                     playPanel.SetActive(true);
                     playMenuRevealed = true;
                     SoundByte.PlayOneShot("ui/UISelect");
@@ -573,6 +587,7 @@ namespace HeavenStudio
 
         public void PlayPanelAccept()
         {
+            if (playPanelRevealTime > Time.realtimeSinceStartup) return;
             if (exiting) return;
             exiting = true;
             SoundByte.PlayOneShot("ui/UIEnter");
@@ -587,6 +602,7 @@ namespace HeavenStudio
             PersistentDataManager.SaveSettings();
             playPanel.SetActive(false);
             playMenuRevealed = false;
+            waitingForButtonUp = false;
         }
 
         public void ToggleCampaign()

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MemRenderer : MonoBehaviour
 {
-    [SerializeField] private GameObject[] prefabs;
+    private GameObject[] prefabs;
     [SerializeField] private float rotationDegreesPerSecond = 15f;
     GameObject _instance;
 
@@ -12,13 +12,16 @@ public class MemRenderer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        prefabs = Resources.LoadAll<GameObject>("Sprites/UI/Mems/Prefabs");
         _instance = Instantiate(prefabs[UnityEngine.Random.Range(0, prefabs.Length)], transform);
+        _instance.layer = LayerMask.NameToLayer("Mem");
     }
 
     public void ChangeMem()
     {
         Destroy(_instance);
         _instance = Instantiate(prefabs[UnityEngine.Random.Range(0, prefabs.Length)], transform);
+        _instance.layer = LayerMask.NameToLayer("Mem");
     }
 
     void Update()

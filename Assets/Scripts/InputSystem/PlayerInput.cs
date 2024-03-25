@@ -1,15 +1,12 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using System.IO;
-using System.Collections;
+
 using System.Collections.Generic;
-using UnityEngine;
+
 using HeavenStudio.InputSystem;
 
-using static JSL;
-using HeavenStudio.Games;
-using System.Diagnostics.Contracts;
+using SatorImaging.UnitySourceGenerator;
 
 namespace HeavenStudio.InputSystem
 {
@@ -25,7 +22,8 @@ namespace HeavenStudio.InputSystem
 
 namespace HeavenStudio
 {
-    public class PlayerInput
+    [UnitySourceGenerator(typeof(ControllerLoaderGenerator), OverwriteIfFileExists = false)]
+    public partial class PlayerInput
     {
         public class InputAction
         {
@@ -57,40 +55,40 @@ namespace HeavenStudio
         public delegate InputController[] InputControllerRefresh();
         public static List<InputControllerRefresh> PlayerInputRefresh;
 
-        static List<InputControllerInitializer> loadRunners;
-        static void BuildLoadRunnerList()
-        {
-            PlayerInputRefresh = new();
-            loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(x => x.Namespace == "HeavenStudio.InputSystem.Loaders" && x.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static) != null)
-            .Select(t => (InputControllerInitializer)Delegate.CreateDelegate(
-                typeof(InputControllerInitializer),
-                null,
-                t.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static),
-                false
-                ))
-            .ToList();
+        // static List<InputControllerInitializer> loadRunners;
+        // static void BuildLoadRunnerList()
+        // {
+        //     PlayerInputRefresh = new();
+        //     loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
+        //     .GetTypes()
+        //     .Where(x => x.Namespace == "HeavenStudio.InputSystem.Loaders" && x.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static) != null)
+        //     .Select(t => (InputControllerInitializer)Delegate.CreateDelegate(
+        //         typeof(InputControllerInitializer),
+        //         null,
+        //         t.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static),
+        //         false
+        //         ))
+        //     .ToList();
 
-            loadRunners.Sort((x, y) => x.Method.GetCustomAttribute<LoadOrder>().Order.CompareTo(y.Method.GetCustomAttribute<LoadOrder>().Order));
-        }
+        //     loadRunners.Sort((x, y) => x.Method.GetCustomAttribute<LoadOrder>().Order.CompareTo(y.Method.GetCustomAttribute<LoadOrder>().Order));
+        // }
 
-        public static int InitInputControllers()
-        {
-            inputDevices = new List<InputController>();
+        // public static int InitInputControllers()
+        // {
+        //     inputDevices = new List<InputController>();
 
-            BuildLoadRunnerList();
-            foreach (InputControllerInitializer runner in loadRunners)
-            {
-                InputController[] controllers = runner();
-                if (controllers != null)
-                {
-                    inputDevices.AddRange(controllers);
-                }
-            }
+        //     BuildLoadRunnerList();
+        //     foreach (InputControllerInitializer runner in loadRunners)
+        //     {
+        //         InputController[] controllers = runner();
+        //         if (controllers != null)
+        //         {
+        //             inputDevices.AddRange(controllers);
+        //         }
+        //     }
 
-            return inputDevices.Count;
-        }
+        //     return inputDevices.Count;
+        // }
 
         public static int RefreshInputControllers()
         {

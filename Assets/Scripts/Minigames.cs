@@ -12,6 +12,8 @@ using HeavenStudio.Editor.Track;
 using HeavenStudio.Games;
 using Jukebox;
 
+using SatorImaging.UnitySourceGenerator;
+
 using System;
 using System.Linq;
 using System.Reflection;
@@ -19,8 +21,8 @@ using System.IO;
 
 namespace HeavenStudio
 {
-
-    public class Minigames
+    [UnitySourceGenerator(typeof(MinigameLoaderGenerator), OverwriteIfFileExists = true)]
+    public partial class Minigames
     {
         public enum RecommendedControlStyle
         {
@@ -52,6 +54,7 @@ namespace HeavenStudio
             {"icontype", 0},                                                                                                    // chart icon (presets, custom - future)
             {"iconres", new EntityTypes.Resource(EntityTypes.Resource.ResourceType.Image, "Images/Select/", "Icon")},           // custom icon location (future)
             {"challengetype", 0},                                                                                               // perfect challenge type
+            {"accessiblewarning", false},                                                                                       // epilepsy warning
             {"playstyle", RecommendedControlStyle.Any},                                                                         // recommended control style
 
             // chart song info
@@ -476,9 +479,7 @@ namespace HeavenStudio
             {
                 if (AssetsLoaded || !usesAssetBundle) return;
                 await UniTask.WhenAll(LoadCommonAssetBundleAsync(), LoadLocalizedAssetBundleAsync());
-                await UniTask.WhenAll(LoadGamePrefabAsync());
-                await UniTask.WhenAll(LoadCommonAudioClips());
-                await UniTask.WhenAll(LoadLocalizedAudioClips());
+                await UniTask.WhenAll(LoadGamePrefabAsync(), LoadCommonAudioClips(), LoadLocalizedAudioClips());
             }
 
             public async UniTask LoadCommonAssetBundleAsync()
@@ -496,7 +497,7 @@ namespace HeavenStudio
                 if (!usesAssetBundle) return;
                 if (bundleCommon != null) return;
 
-                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common")).ToUniTask();
+                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common")).ToUniTask(timing: PlayerLoopTiming.PreLateUpdate);
 
                 bundleCommon = bundle;
                 commonLoaded = true;
@@ -518,7 +519,7 @@ namespace HeavenStudio
                 if (!usesAssetBundle) return;
                 if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) return;
 
-                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale)).ToUniTask();
+                AssetBundle bundle = await AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale)).ToUniTask(timing: PlayerLoopTiming.PreLateUpdate);
                 if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) return;
 
                 bundleLocalized = bundle;
@@ -532,7 +533,7 @@ namespace HeavenStudio
                 if (!commonLoaded) return;
                 if (bundleCommon == null) return;
 
-                UnityEngine.Object asset = await bundleCommon.LoadAssetAsync<GameObject>(name).ToUniTask();
+                UnityEngine.Object asset = await bundleCommon.LoadAssetAsync<GameObject>(name).ToUniTask(timing: PlayerLoopTiming.PreLateUpdate);
                 loadedPrefab = asset as GameObject;
 
                 // load sound sequences here for now
@@ -544,6 +545,14 @@ namespace HeavenStudio
                 }
             }
 
+            public GameObject LoadGamePrefab()
+            {
+                if (!usesAssetBundle) return null;
+
+                loadedPrefab = GetCommonAssetBundle().LoadAsset<GameObject>(name);
+                return loadedPrefab;
+            }
+
             public async UniTask LoadCommonAudioClips()
             {
                 if (!commonLoaded) return;
@@ -553,14 +562,6 @@ namespace HeavenStudio
 
                 var assets = bundleCommon.LoadAllAssetsAsync();
                 await assets;
-
-                // await UniTask.SwitchToThreadPool();
-                // foreach (var asset in assets.allAssets)
-                // {
-                //     AudioClip clip = asset as AudioClip;
-                //     commonAudioClips.Add(clip.name, clip);
-                // }
-                // await UniTask.SwitchToMainThread();
             }
 
             public async UniTask LoadLocalizedAudioClips()
@@ -572,14 +573,6 @@ namespace HeavenStudio
 
                 var assets = bundleLocalized.LoadAllAssetsAsync();
                 await assets;
-
-                // await UniTask.SwitchToThreadPool();
-                // foreach (var asset in assets.allAssets)
-                // {
-                //     AudioClip clip = asset as AudioClip;
-                //     localeAudioClips.Add(clip.name, clip);
-                // }
-                // await UniTask.SwitchToMainThread();
             }
 
             public async UniTask UnloadAllAssets()
@@ -711,24 +704,6 @@ namespace HeavenStudio
 
         public delegate void EventCallback();
         public delegate void ParamChangeCallback(string paramName, object paramValue, RiqEntity entity);
-
-        // overengineered af but it's a modified version of
-        // https://stackoverflow.com/a/19877141
-        static List<Func<EventCaller, Minigame>> loadRunners;
-        static void BuildLoadRunnerList()
-        {
-            loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(x => x.Namespace == "HeavenStudio.Games.Loaders" && x.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static) != null)
-            .Select(t => (Func<EventCaller, Minigame>)Delegate.CreateDelegate(
-                typeof(Func<EventCaller, Minigame>),
-                null,
-                t.GetMethod("AddGame", BindingFlags.Public | BindingFlags.Static),
-                false
-                ))
-            .ToList();
-
-        }
 
         public static void Init(EventCaller eventCaller)
         {
@@ -1188,19 +1163,7 @@ namespace HeavenStudio
                 eventCaller.minigames.Add(game.name, game);
             }
 
-            BuildLoadRunnerList();
-            Debug.Log($"Running {loadRunners.Count} game loaders...");
-            foreach (var load in loadRunners)
-            {
-                Debug.Log("Running game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name);
-                Minigame game = load(eventCaller);
-                if (game == null)
-                {
-                    Debug.LogError("Game loader " + RuntimeReflectionExtensions.GetMethodInfo(load).DeclaringType.Name + " failed!");
-                    continue;
-                }
-                eventCaller.minigames.Add(game.name, game);
-            }
+            LoadMinigames(eventCaller);
         }
     }
 }
