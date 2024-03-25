@@ -35,6 +35,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to shoot."),
+                        new Param("mute", false, "Mute", "Toggle if the cue should be muted."),
                     },
                 },
                 new GameAction("out sides", "Bounce Out Sides")
@@ -170,6 +171,7 @@ namespace HeavenStudio.Games
             public CustomBounceItem[] bounceItems;
             public int endTime;
             public bool isShoot;
+            public bool mute;
         }
 
         public class CustomBounceItem
@@ -220,8 +222,8 @@ namespace HeavenStudio.Games
 
                 List<CustomBounceItem> bounceItems = CalcRodBounce(evt.beat, evt.length, evt["id"]);
                 AddBounceOutSides(evt.beat, evt.length, currentPos, nextPos, evt["id"], ref bounceItems);
-                bool isShoot;
-                int rodEndTime = CalcRodEndTime(evt.beat, evt.length, currentPos, nextPos, evt["id"], ref bounceItems, out isShoot);
+                bool isShoot, mute;
+                int rodEndTime = CalcRodEndTime(evt.beat, evt.length, currentPos, nextPos, evt["id"], ref bounceItems, out isShoot, out mute);
                 var widget = new ScheduledWidget
                 {
                     beat = evt.beat, 
@@ -232,6 +234,7 @@ namespace HeavenStudio.Games
                     bounceItems = bounceItems.ToArray(),
                     endTime = rodEndTime,
                     isShoot = isShoot,
+                    mute = mute,
                 };
                 scheduledWidgets.Add(widget);
             }
@@ -269,7 +272,7 @@ namespace HeavenStudio.Games
                 var widget = scheduledWidgets[widgetIndex];
                 if (widget.beat < beat + WIDGET_SEEK_TIME)
                 {
-                    SpawnRod(widget.beat, widget.length, widget.currentPos, widget.nextPos, widget.id, widget.bounceItems, widget.endTime, widget.isShoot);
+                    SpawnRod(widget.beat, widget.length, widget.currentPos, widget.nextPos, widget.id, widget.bounceItems, widget.endTime, widget.isShoot, widget.mute);
                     widgetIndex++;
                 }
                 else
@@ -279,7 +282,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnRod(double beat, double length, int currentPos, int nextPos, int id, CustomBounceItem[] bounceItems, int endTime, bool isShoot)
+        public void SpawnRod(double beat, double length, int currentPos, int nextPos, int id, CustomBounceItem[] bounceItems, int endTime, bool isShoot, bool mute = false)
         {            
             var newRod = Instantiate(baseRod, widgetHolder).GetComponent<Rod>();
 
@@ -294,7 +297,7 @@ namespace HeavenStudio.Games
             if (isShoot)
             {
                 double endBeat = beat + length * endTime;
-                SoundByte.PlayOneShotGame("builtToScaleRvl/prepare", endBeat - 2*length);
+                if (!mute) SoundByte.PlayOneShotGame("builtToScaleRvl/prepare", endBeat - 2*length);
                 newRod.Squares = SpawnSquare(endBeat, id);
             }
             BeatAction.New(instance, new List<BeatAction.Action>()
@@ -382,15 +385,17 @@ namespace HeavenStudio.Games
             }
         }
 
-        private int CalcRodEndTime(double beat, double length, int currentPos, int nextPos, int id, ref List<CustomBounceItem> bounceItems, out bool isShoot)
+        private int CalcRodEndTime(double beat, double length, int currentPos, int nextPos, int id, ref List<CustomBounceItem> bounceItems, out bool isShoot, out bool mute)
         {
             isShoot = false;
+            mute = false;
             int earliestEndTime = int.MaxValue;
             var firstShoot = EventCaller.GetAllInGameManagerList("builtToScaleRvl", new string[] { "shoot rod" }).Find(x => x.beat >= beat + length && x["id"] == id);
             if (firstShoot is not null)
             {
                 earliestEndTime = (int)Math.Ceiling((firstShoot.beat - beat)/length);
                 isShoot = true;
+                mute = firstShoot["mute"];
             }
             
             bounceItems = bounceItems.FindAll(x => x.time < earliestEndTime);
