@@ -68,6 +68,8 @@ namespace HeavenStudio.Games
         public Animator MandrillAnim;
         public Animator GolferAnim;
         public Animator HoleAnim;
+        public Animator GrassEffectAnim;
+        public Animator BallEffectAnim;
 
         double whaleStartBeat;
         float whaleLength;
@@ -187,6 +189,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("holeInOne/hole2", beat + 1f)// temp should be splash
                 });
                 GolferAnim.DoScaledAnimationAsync("GolferMiss", 1.0f);
+                BallEffectAnim.Play("BallEffectJust");
             }
             else
             {
@@ -200,6 +203,7 @@ namespace HeavenStudio.Games
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat,      delegate { GolferAnim.DoScaledAnimationAsync("GolferJust", 1.0f);}),
+                    new BeatAction.Action(beat,      delegate { BallEffectAnim.Play("BallEffectJust");}),
                     new BeatAction.Action(beat + 2f, delegate { HoleAnim.DoScaledAnimationAsync("ZoomBig", 2.5f);}),
                 });
             }
@@ -210,7 +214,8 @@ namespace HeavenStudio.Games
         {
             SoundByte.PlayOneShotGame("holeInOne/whale");
             MonkeyAnim.Play("MonkeySpin");
-            GolferAnim.Play("GolferThroughMandrill");          
+            BallEffectAnim.Play("BallEffectThrough");
+            GolferAnim.Play("GolferThroughMandrill");       
         }
 
         public void MonkeySuccess(PlayerActionEvent caller, float state)
