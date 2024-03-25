@@ -47,7 +47,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 11.5199995
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -108,18 +108,18 @@ TextureImporter:
       name: bts_bg_0
       rect:
         serializedVersion: 2
-        x: 65
-        y: 4440
-        width: 7233
-        height: 4101
+        x: 4
+        y: 528
+        width: 872
+        height: 491
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: dcd0d5ebe3937724abb4099f64e4ead1
+      spriteID: b5dfce83000000000800000000000000
       internalID: 955055451
       vertices: []
       indices: 
@@ -129,18 +129,18 @@ TextureImporter:
       name: bts_bg_1
       rect:
         serializedVersion: 2
-        x: 161
-        y: 2834
-        width: 4146
-        height: 1410
+        x: 4
+        y: 340
+        width: 512
+        height: 183
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8bb2e4b91b7da8848b9b9c24af248fbc
+      spriteID: 37e6e764000000000800000000000000
       internalID: 1182690931
       vertices: []
       indices: 
@@ -150,10 +150,31 @@ TextureImporter:
       name: bts_bg_2
       rect:
         serializedVersion: 2
-        x: 48
-        y: 1058
-        width: 4396
-        height: 1706
+        x: 4
+        y: 123
+        width: 528
+        height: 208
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 203bc2abffffffff0800000000000000
+      internalID: -1171475710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bts_bg_3
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 866
+        width: 25
+        height: 148
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -161,8 +182,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 066c17e970722a540a79f065d53d56cb
-      internalID: -1171475710
+      spriteID: 8b437e7229f16d44bb181bd9a8fbfe27
+      internalID: -806168657
       vertices: []
       indices: 
       edges: []
@@ -181,6 +202,8 @@ TextureImporter:
       bts_bg_0: 955055451
       bts_bg_1: 1182690931
       bts_bg_2: -1171475710
+      bts_bg_3: -806168657
+      bts_bg_4: -858343460
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
