@@ -20,12 +20,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; HoleInOne.instance.ToggleBop(e.beat, e.length, e["bop"], e["autobop"]); },
+                    function = delegate { var e = eventCaller.currentEntity; HoleInOne.instance.ToggleBop(e.beat, e.length, e["bop"], e["autoBop"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("bop", true, "Bop", "Toggle if the characters should bop for the duration of this event."),
-                        new Param("autobop", false, "Bop (Auto)", "Toggle if the characters should automatically bop until another Bop event is reached.")
+                        new Param("autoBop", false, "Bop (Auto)", "Toggle if the characters should automatically bop until another Bop event is reached.")
                     }
                 },
                 new GameAction("mandrill", "Mandrill")
@@ -79,7 +79,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             HoleInOne.instance = this;
-            SetupBopRegion("holeInOne", "bop", "toggle");
+            SetupBopRegion("holeInOne", "bop", "autoBop");
             isWhale = false;
         }
 
@@ -87,9 +87,9 @@ namespace HeavenStudio.Games
         {
             if (BeatIsInBopRegion(beat)) 
             {
-                MonkeyAnim.DoScaledAnimationAsync("MonkeyBop", 0.4f);
-                MandrillAnim.DoScaledAnimationAsync("MandrillBop", 0.4f);
-                GolferAnim.DoScaledAnimationAsync("GolferBop", 0.4f);            
+                MonkeyAnim.DoScaledAnimationAsync("MonkeyBop", 0.3f);
+                MandrillAnim.DoScaledAnimationAsync("MandrillBop", 0.3f);
+                GolferAnim.DoScaledAnimationAsync("GolferBop", 0.3f);            
             }
 
         }
@@ -114,9 +114,9 @@ namespace HeavenStudio.Games
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
-                            MonkeyAnim.DoScaledAnimationAsync("MonkeyBop", 0.4f);
-                            MandrillAnim.DoScaledAnimationAsync("MandrillBop", 0.4f);
-                            GolferAnim.DoScaledAnimationAsync("GolferBop", 0.4f);                            
+                            MonkeyAnim.DoScaledAnimationAsync("MonkeyBop", 0.3f);
+                            MandrillAnim.DoScaledAnimationAsync("MandrillBop", 0.3f);
+                            GolferAnim.DoScaledAnimationAsync("GolferBop", 0.3f);                            
                             // TODO add bops for other characters
                         })
                     });
@@ -146,11 +146,11 @@ namespace HeavenStudio.Games
 
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat,      delegate { MandrillAnim.Play("MandrillReady1");}),
-                new BeatAction.Action(beat + 1f, delegate { MandrillAnim.Play("MandrillReady2");}),
-                new BeatAction.Action(beat + 2f, delegate { MandrillAnim.Play("MandrillReady3");}),
+                new BeatAction.Action(beat,      delegate { MandrillAnim.DoScaledAnimationAsync("MandrillReady1", 0.2f);}),
+                new BeatAction.Action(beat + 1f, delegate { MandrillAnim.DoScaledAnimationAsync("MandrillReady2", 0.3f);}),
+                new BeatAction.Action(beat + 2f, delegate { MandrillAnim.DoScaledAnimationAsync("MandrillReady3", 0.3f);}),
                 new BeatAction.Action(beat + 2f, delegate { GolferAnim.DoScaledAnimationAsync("GolferPrepare", 1.0f);}),
-                new BeatAction.Action(beat + 3f, delegate { MandrillAnim.Play("MandrillPitch");}),
+                new BeatAction.Action(beat + 3f, delegate { MandrillAnim.DoScaledAnimationAsync("MandrillPitch", 0.4f);}),
                 new BeatAction.Action(beat + 3f, delegate { MonkeyAnim.Play("MonkeySpin");}),
 
             });
@@ -197,7 +197,7 @@ namespace HeavenStudio.Games
 
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat,      delegate { GolferAnim.Play("GolferJust");}),
+                    new BeatAction.Action(beat,      delegate { GolferAnim.DoScaledAnimationAsync("GolferJust", 1.0f);}),
                     new BeatAction.Action(beat + 2f, delegate { HoleAnim.Play("ZoomBig");}),
                 });
             }
