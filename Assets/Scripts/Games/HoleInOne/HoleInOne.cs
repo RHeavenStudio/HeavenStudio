@@ -150,8 +150,9 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1f, delegate { MandrillAnim.DoScaledAnimationAsync("MandrillReady2", 0.3f);}),
                 new BeatAction.Action(beat + 2f, delegate { MandrillAnim.DoScaledAnimationAsync("MandrillReady3", 0.3f);}),
                 new BeatAction.Action(beat + 2f, delegate { GolferAnim.DoScaledAnimationAsync("GolferPrepare", 1.0f);}),
+                new BeatAction.Action(beat + 3f, delegate { GolferAnim.DoScaledAnimationAsync("GolferThrough", 1.0f);}),
                 new BeatAction.Action(beat + 3f, delegate { MandrillAnim.DoScaledAnimationAsync("MandrillPitch", 0.4f);}),
-                new BeatAction.Action(beat + 3f, delegate { MonkeyAnim.Play("MonkeySpin");}),
+                new BeatAction.Action(beat + 3f, delegate { MonkeyAnim.DoScaledAnimationAsync("MonkeySpin", 2.0f);}),
 
             });
         }
@@ -170,6 +171,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat,      delegate { MonkeyAnim.Play("MonkeyPrepare");}),
                 new BeatAction.Action(beat + 1f, delegate { MonkeyAnim.Play("MonkeyThrow");}),
                 new BeatAction.Action(beat + 1f, delegate { GolferAnim.DoScaledAnimationAsync("GolferPrepare", 1.0f);}),
+                new BeatAction.Action(beat + 2f, delegate { GolferAnim.DoScaledAnimationAsync("GolferThrough", 1.0f);}),                
             });
 
         }
@@ -184,7 +186,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("holeInOne/mandrill1", beat),// temp should be miss
                     new MultiSound.Sound("holeInOne/hole2", beat + 1f)// temp should be splash
                 });
-                GolferAnim.Play("GolferMiss");
+                GolferAnim.DoScaledAnimationAsync("GolferMiss", 1.0f);
             }
             else
             {
@@ -198,7 +200,7 @@ namespace HeavenStudio.Games
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat,      delegate { GolferAnim.DoScaledAnimationAsync("GolferJust", 1.0f);}),
-                    new BeatAction.Action(beat + 2f, delegate { HoleAnim.Play("ZoomBig");}),
+                    new BeatAction.Action(beat + 2f, delegate { HoleAnim.DoScaledAnimationAsync("ZoomBig", 2.5f);}),
                 });
             }
             
@@ -221,8 +223,8 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("holeInOne/mandrill1", beat),// temp should be miss
                     new MultiSound.Sound("holeInOne/hole2", beat + 1f)// temp should be splash
                 });
-                MonkeyHeadAnim.Play("MonkeySadHead");
-                GolferAnim.Play("GolferMiss");
+                MonkeyHeadAnim.DoScaledAnimationAsync("MonkeyMissHead", 2.0f);
+                GolferAnim.DoScaledAnimationAsync("GolferMiss", 1.0f);
             }
             else
             {
@@ -236,9 +238,9 @@ namespace HeavenStudio.Games
 
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat,      delegate { MonkeyHeadAnim.Play("MonkeyJustHead");}),
-                    new BeatAction.Action(beat,      delegate { GolferAnim.Play("GolferJust");}),
-                    new BeatAction.Action(beat + 2f, delegate { HoleAnim.Play("ZoomSmall" + randomSuccess);}),
+                    new BeatAction.Action(beat,      delegate { MonkeyHeadAnim.DoScaledAnimationAsync("MonkeyJustHead", 3.5f);}),
+                    new BeatAction.Action(beat,      delegate { GolferAnim.DoScaledAnimationAsync("GolferJust", 1.0f);}),
+                    new BeatAction.Action(beat + 2f, delegate { HoleAnim.DoScaledAnimationAsync("ZoomSmall" + randomSuccess, 2.5f);}),
                 });
             }
         }
@@ -246,8 +248,7 @@ namespace HeavenStudio.Games
         public void MonkeyMiss(PlayerActionEvent caller)
         {
             SoundByte.PlayOneShotGame("holeInOne/whale");
-            MonkeyAnim.Play("MonkeyJust");
-            GolferAnim.Play("GolferThrough");
+            MonkeyHeadAnim.DoScaledAnimationAsync("MonkeySadHead", 0.2f);
         }
 
         public void Nothing(PlayerActionEvent caller)
