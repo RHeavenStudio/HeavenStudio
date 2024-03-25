@@ -195,7 +195,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("earth", false, "Earth", "Whether the Earth will be visible by the end of the block."),
                         new Param("mars", false, "Mars", "Whether Mars will be visible by the end of the block."),
                         new Param("doodles", false, "Doodles", "Whether the doodles will be visible by the end of the block."),
-                        new Param("birds", false, "Birds (NYI)", "Whether the birds will be visible by the end of the block."),
+                        new Param("birds", false, "Birds", "Whether the birds will be visible by the end of the block."),
                     }
                 },
                 new GameAction("changeFgLight", "Foreground Appearance")
@@ -233,7 +233,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("cloudProgress", new EntityTypes.Integer(-1, 100, -1), "Cloud Progress", "Instantly sets what percent through the loop the clouds are. (-1 = no change)"),
                         new Param("planetProgress", new EntityTypes.Integer(-1, 100, -1), "Planet Progress", "Instantly sets what percent through the loop the Earth and Mars are. (-1 = no change)"),
                         new Param("doodleProgress", new EntityTypes.Integer(-1, 100, -1), "Doodle Progress", "Instantly sets what percent through the loop the doodles are. (-1 = no change)"),
-                        new Param("birdProgress", new EntityTypes.Integer(-1, 100, -1), "Bird Progress (NYI)", "Instantly sets what percent through the loop the birds are. (-1 = no change)"),
+                        new Param("birdProgress", new EntityTypes.Integer(-1, 100, -1), "Bird Progress", "Instantly sets what percent through the loop the birds are. (-1 = no change)"),
                     }
                 },
                 new GameAction("lookhaha", "Look At Camera")
@@ -285,6 +285,7 @@ namespace HeavenStudio.Games
         [SerializeField] Transform Clouds;
         [SerializeField] Transform Planets;
         [SerializeField] Transform Doodles;
+        [SerializeField] Transform Birds;
         [SerializeField] TMP_Text yardsText;
         [SerializeField] TMP_Text endingText;
         [SerializeField] TMP_Text bubbleText;
@@ -353,6 +354,7 @@ namespace HeavenStudio.Games
         bool earthVisible = false;
         bool marsVisible = false;
         bool doodlesVisible = false;
+        bool birdsVisible = false;
 
         double bgColorStartBeat = -1;
         float bgColorLength = 0;
@@ -438,7 +440,7 @@ namespace HeavenStudio.Games
             Triplet,
             FeverDrumKit,
             DSDrumKit,
-            GBADrumKitNYI,
+            GBADrumKit,
             AmenBreak,
             Remix2GBA,
             PracticeDrumKit,
@@ -703,7 +705,16 @@ namespace HeavenStudio.Games
                 new((double)23/6, 7, 0.4f),
             },
 
-            new DrumLoop[] {}, //gba kit
+            new DrumLoop[] { //gba kit
+                //kick
+                new(2.00, 9),
+                new(0.75, 9),
+                //snare 
+                new(1.00, 10),
+                //hihat
+                new(0.50, 11),
+                new(1.50, 11),
+            },
 
             new DrumLoop[] { //amen
                 new(4.00, 21),
@@ -870,10 +881,10 @@ namespace HeavenStudio.Games
                 fellTooFar = true;
 
                 ChickenAnim.DoScaledAnimationAsync("TooFar", 0.3f);
-                SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL", volume: 0.5f);
                 BeatAction.New(GameManager.instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.60, delegate { 
+                        SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL", volume: 0.5f);
                         SoundByte.PlayOneShotGame("chargingChicken/SE_CHIKEN_CAR_FALL_WATER", volume: 0.5f); 
                         nextIsland.ChickenFall();
                     }),
@@ -888,12 +899,18 @@ namespace HeavenStudio.Games
             float parallaxSpeed = nextIsland.speed1 / 20000;
             Stars.localPosition -= new Vector3((parallaxSpeed * 0.3f), 0, 0);
             if (Stars.localPosition.x < -48) Stars.localPosition += new Vector3(32, 0, 0);
+
             Clouds.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
             if (Clouds.localPosition.x < -24) Clouds.localPosition += new Vector3(24, 0, 0);
             Planets.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
             if (Planets.localPosition.x < -30) Planets.localPosition += new Vector3(30, 0, 0);
             Doodles.localPosition -= new Vector3((parallaxSpeed * 0.6f), 0, 0);
             if (Doodles.localPosition.x < -31.5f) Doodles.localPosition += new Vector3(31.5f, 0, 0);
+
+            Birds.localPosition -= new Vector3((parallaxSpeed * 0.67f), 0, 0);
+            if (Birds.localPosition.x < -15) Birds.localPosition += new Vector3(25, 0, 0);
+            Birds.localPosition = new Vector3(Birds.localPosition.x, (Birds.localPosition.x / (1.65f * -3)), 0);
+            Birds.localScale = new Vector3(1 + (Birds.localPosition.x / 16.5f), 1 + (Birds.localPosition.x / 16.5f), 1);
         }
 
         public override void OnGameSwitch(double beat)
@@ -979,6 +996,7 @@ namespace HeavenStudio.Games
                     case 0: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJust, StartChargingMiss, Nothing); break;
                     case 5: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustFever, StartChargingMiss, Nothing); break;
                     case 6: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustDS, StartChargingMiss, Nothing); break;
+                    case 7: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustGBA, StartChargingMiss, Nothing); break;
                     case 8: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustBreak, StartChargingMiss, Nothing); break;
                     case 9: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustRemix, StartChargingMiss, Nothing); break;
                     case 10: ScheduleInput(beat - 1, 1, InputAction_BasicPress, StartChargingJustPractice, StartChargingMiss, Nothing); break;
@@ -1136,6 +1154,12 @@ namespace HeavenStudio.Games
         public void StartChargingJustDS(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("chargingChicken/dskick");
+            StartChargingJust(caller, state);
+        }
+
+        public void StartChargingJustGBA(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("chargingChicken/gbakick");
             StartChargingJust(caller, state);
         }
 
@@ -1739,6 +1763,24 @@ namespace HeavenStudio.Games
                     doodlesVisible = false;
                 }
             }
+            //birds
+            if (!birdsVisible)
+            {
+                if (birds)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "BirdsEnable" : "BirdsIn", animSpeed, animLayer: 5);
+                    ParallaxFade.DoScaledAnimationAsync("BirdsFly", 0.5f, animLayer: 6);
+                    birdsVisible = true;
+                }
+            }
+            else
+            {
+                if (!birds)
+                {
+                    ParallaxFade.DoScaledAnimationAsync(instant ? "BirdsDisable" : "BirdsOut", animSpeed, animLayer: 5);
+                    birdsVisible = false;
+                }
+            }
         }
 
         public void UnParallaxObjects(double beat, double length, int bg, bool instant)
@@ -1778,6 +1820,7 @@ namespace HeavenStudio.Games
             if (cloudProgress > -1) Clouds.localPosition = new Vector3((-cloudProgress) * .24f, Clouds.localPosition.y, Clouds.localPosition.z);
             if (planetProgress > -1) Planets.localPosition = new Vector3((-planetProgress) * .30f, Planets.localPosition.y, Planets.localPosition.z);
             if (doodleProgress > -1) Doodles.localPosition = new Vector3(((-doodleProgress) * .315f), Doodles.localPosition.y, Doodles.localPosition.z);
+            if (birdProgress > -1) Birds.localPosition = new Vector3(((-birdProgress) * .25f), Birds.localPosition.y, Birds.localPosition.z);
         }
 
         #region ColorShit
@@ -1896,6 +1939,7 @@ namespace HeavenStudio.Games
             ParallaxFade.DoScaledAnimationAsync("EarthDisable", 0.5f, animLayer: 2);
             ParallaxFade.DoScaledAnimationAsync("MarsDisable", 0.5f, animLayer: 3);
             ParallaxFade.DoScaledAnimationAsync("DoodlesDisable", 0.5f, animLayer: 4);
+            ParallaxFade.DoScaledAnimationAsync("BirdsDisable", 0.5f, animLayer: 5);
 
             lastColorEvent = eventsBefore.FindLast(e => e.datamodel == "chargingChicken/parallaxObjects");
             if (lastColorEvent != null)

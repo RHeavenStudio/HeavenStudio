@@ -44,6 +44,7 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         [NonSerialized]public Vector3 particleOffset;
         [NonSerialized]public float stonePlatformFallOffset = 0;
 
+        [NonSerialized]public float value1;
         [NonSerialized]public float speed1 = 0f;
         [NonSerialized]public float speed2 = 0f;
 
@@ -72,9 +73,13 @@ namespace HeavenStudio.Games.Scripts_ChargingChicken
         {
             if (isMoving)
             {
-                float value1 = (Conductor.instance.GetPositionFromBeat(journeyBlastOffTime, journeyLength));
+                value1 = (Conductor.instance.GetPositionFromBeat(journeyBlastOffTime, journeyLength));
                 float newX1 = Util.EasingFunction.EaseOutCubic((float)journeyStart, (float)journeyEnd, value1);
                 IslandPos.localPosition = new Vector3(newX1, 0, 0);
+            }
+            if (value1 >= 1)
+            {
+                isMoving = false;
             }
             if (respawnStart < Conductor.instance.songPositionInBeatsAsDouble && isRespawning)
             {
