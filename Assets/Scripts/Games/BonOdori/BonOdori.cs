@@ -61,7 +61,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {
                         var e = eventCaller.currentEntity;
                         string variation = "variation" + (new string[] { "Don", "Do", "Do_n" })[e["type"]];
-                        BonOdori.instance.Sound(e.beat, e[variation], e["type"], e["semitone"]);
+                        BonOdori.instance.PlayDon(e.beat, e[variation], e["type"], e["semitone"]);
                     },
                     defaultLength = 1f,
                     parameters = new List<Param>()
@@ -166,13 +166,13 @@ namespace HeavenStudio.Games
     {
         string prefix;
         double beatUniversal;
+        bool noBopPlayer = false;
+        bool noBopDonpans = false;
+        List<double> noBopBeatsPlayer = new ();
+        List<double> noBopBeatsDonpans = new ();
         string suffix;
         SpriteRenderer darkPlane;
-        bool goBopDonpans;
-        bool goBopJudge;
-        bool bopDonpans;
-        int clapTypeGlobal = 0;
-        string clapTypeString = "ClapSide";
+        string clapTypeString = "ClapFront";
         string[] originalTexts = new string[5];
         Coroutine[] Scrolls = new Coroutine[5];
         Coroutine DarkerBG;
@@ -254,15 +254,22 @@ namespace HeavenStudio.Games
 
         public void Awake()
         {
-            darkPlane = DarkPlane.GetComponent<SpriteRenderer>();
-
-            clapTypeGlobal = 0;
             instance = this;
+            SetupBopRegion("bonOdori", "bop", "auto");
+
+            darkPlane = DarkPlane.GetComponent<SpriteRenderer>();
         }
 
         public void OnStop()
         {
             DarkPlane.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f);
+        }
+
+        public override void OnLateBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat)) Bop(beat);
+            noBopBeatsPlayer.RemoveAll(x => x+4 < beat);
+            noBopBeatsDonpans.RemoveAll(x => x+4 < beat);
         }
 
         public void Update()
@@ -286,27 +293,23 @@ namespace HeavenStudio.Games
             {
                 ScoreMiss();
                 SoundByte.PlayOneShotGame("bonOdori/clap");
-                if (clapTypeGlobal == 0)
-                {
-                    clapTypeString = "ClapSide";
-                }
-                else
-                {
-                    clapTypeString = "ClapFront";
-                }
 
                 Donpans[0].DoScaledAnimationAsync(clapTypeString, 0.5f);
-                if (!goBopDonpans)
+
+                if (clapTypeString is "ClapFront")
                 {
+                    var currentBeat = Conductor.instance.songPositionInBeatsAsDouble;
+                    noBopBeatsPlayer.Add(currentBeat);
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beatUniversal + 1d, delegate {
-                            foreach (var chara in Donpans) {
-                                chara.DoScaledAnimationAsync("NeutralClapped", 0.5f);
-                            }
+                        new BeatAction.Action(currentBeat, delegate {
+                            noBopPlayer = true;
                         }),
-                    });
-                }
+                        new BeatAction.Action(currentBeat + 2d, delegate {
+                            if (noBopBeatsPlayer[^1] == currentBeat) noBopPlayer = false;
+                        })
+                    });      
+            }
             }
 
         }
@@ -342,14 +345,6 @@ namespace HeavenStudio.Games
 
         public void Clap(double beat, int variation, int typeSpeak, bool muted, int clapType, int semitone)
         {
-            if (clapType == 1)
-            {
-                clapTypeGlobal = 1;
-            }
-            else
-            {
-                clapTypeGlobal = 0;
-            }
             if (!muted)
             {
                 string clip = typeSpeak switch
@@ -359,14 +354,36 @@ namespace HeavenStudio.Games
                     2 or _ => "pa_n",
                 };
                 var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
-                SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
-
-                beatUniversal = beat;
+                SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);  
             }
+            SoundByte.PlayOneShotGame("bonOdori/clap2", beat, volume: 0.5f);
+
+            beatUniversal = beat;
+            noBopBeatsDonpans.Add(beatUniversal);
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - 0.1d, delegate {
+                    clapTypeString = clapType switch {
+                        0 => "ClapSide",
+                        1 or _ => "ClapFront",
+                    };
+                }),
+                new BeatAction.Action(beat, delegate {
+                    foreach (var chara in Donpans[1..Donpans.Length]) {
+                        chara.DoScaledAnimationAsync(clapTypeString, 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 0.05d, delegate {
+                    if (clapTypeString is "ClapFront") noBopDonpans = true;
+                }),
+                new BeatAction.Action(beat + 1.01d, delegate {
+                    if (clapTypeString is "ClapFront") noBopDonpans = false;
+                }),
+            });
             ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
         }
 
-        public void Sound(double beat, int variation, int typeSpeak, int semitone)
+        public void PlayDon(double beat, int variation, int typeSpeak, int semitone)
         {
             string clip = typeSpeak switch
             {
@@ -378,52 +395,47 @@ namespace HeavenStudio.Games
             var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
 
             SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
+            var firstPan = EventCaller.GetAllInGameManagerList("bonOdori", new string[] { "pan" }).Find(x => x.beat >= beat);
+            if (firstPan is not null)
+            {
+                clapTypeString = firstPan["clapType"] switch {
+                    0 => "ClapSide",
+                    1 or _ => "ClapFront",
+                };
+            }
         }
 
 
         public void Success(PlayerActionEvent caller, float state)
         {
-            if (clapTypeGlobal == 0)
+            Donpans[0].DoScaledAnimationAsync(clapTypeString, 0.5f);
+            if (state <= -1f || state >= 1f)
             {
-                clapTypeString = "ClapSide";
+                SoundByte.PlayOneShot("nearMiss");
+                return;
             }
-            else
-            {
-                clapTypeString = "ClapFront";
-            }
-            foreach (var chara in Donpans) {
-                chara.DoScaledAnimationAsync(clapTypeString, 0.5f);
-            }
-            
-            if (!goBopDonpans)
+            SoundByte.PlayOneShotGame("bonOdori/clap");
+
+            var currentBeat = Conductor.instance.songPositionInBeatsAsDouble;
+            double closest = noBopBeatsDonpans.Aggregate((x, y) => Math.Abs(x - currentBeat) < Math.Abs(y - currentBeat) ? x : y);
+            noBopBeatsPlayer.Add(closest);
+            if (clapTypeString is "ClapFront")
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beatUniversal + 1d, delegate {
-                        foreach (var chara in Donpans) {
-                            chara.DoScaledAnimationAsync("NeutralClapped", 0.5f);
-                        }
+                    new BeatAction.Action(closest + 0.05d, delegate {
+                        noBopPlayer = true;
                     }),
-                });
+                    new BeatAction.Action(closest + 1.01d, delegate {
+                        if (noBopBeatsPlayer[^1] == closest) noBopPlayer = false;
+                    })
+                });      
             }
-            SoundByte.PlayOneShotGame("bonOdori/clap");
         }
 
         public void Miss(PlayerActionEvent caller)
         {
-            if (clapTypeGlobal == 0)
-            {
-                clapTypeString = "ClapSide";
-            }
-            else
-            {
-                clapTypeString = "ClapFront";
-            }
-            foreach (var chara in Donpans) {
-                chara.DoScaledAnimationAsync(clapTypeString, 0.5f);
-            }
-
-            SoundByte.PlayOneShot("miss");
+            // SoundByte.PlayOneShot("miss");
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beatUniversal + 1d, delegate { JudgeFace.Play("Sad");}),
@@ -583,54 +595,69 @@ namespace HeavenStudio.Games
 
         public void ToggleBop(double beat, float length, bool bopOrNah, bool autoBop)
         {
-            goBopDonpans = autoBop; goBopJudge = autoBop;
             if (autoBop) return;
             if (bopOrNah)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    double bopBeat = beat + i;
+                    BeatAction.New(instance, new() {new BeatAction.Action(bopBeat, delegate { Bop(bopBeat);})});
+                }
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + length, delegate
                     {
-                        new BeatAction.Action(beat + i, delegate
-                        {
-                            foreach (var chara in Donpans) {
-                                chara.DoScaledAnimationAsync("Bop", 0.5f);
-                            }
-                            Judge.DoScaledAnimationAsync("Bop", 0.5f);
-
-                        }),
-                        new BeatAction.Action(beat + length, delegate
-                        {
+                        if (!noBopBeatsDonpans.Any(x => Math.Abs(x - (beat + length)) <= double.Epsilon)) {
                             foreach (var chara in Donpans) {
                                 chara.Play("NeutralBopped");
                             }
-                        })
-                    });
+                        }
+                    })
+                });                
+            }
+        }
+
+        private void Bop(double beat)
+        {
+            if (!noBopPlayer & !noBopBeatsPlayer.Any(x => Math.Abs(x - beat) <= double.Epsilon))
+            {
+                if (!Donpans[0].IsPlayingAnimationNames("ClapSide", "ClapFront")) {
+                    Donpans[0].DoScaledAnimationAsync("Bop", 0.5f);
                 }
             }
+            if (!noBopDonpans & !noBopBeatsDonpans.Any(x => Math.Abs(x - beat) <= double.Epsilon))
+            {
+                foreach (var chara in Donpans[1..Donpans.Length]) {
+                    if (!chara.IsPlayingAnimationNames("ClapSide", "ClapFront")) {
+                        chara.DoScaledAnimationAsync("Bop", 0.5f);
+                    }
+                }
+            }
+            Judge.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
         public void Bow(double beat, float length)
         {
-            if (goBopDonpans == true)
-            {
-                bopDonpans = true;
-            }
-            else
-            {
-                bopDonpans = false;
-
-            }
-            goBopDonpans = false;
+            noBopPlayer = true;
+            noBopDonpans = true;
             foreach (var chara in Donpans) {
                 chara.Play("Bow");
             }
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate {
-                    foreach (var chara in Donpans) {
-                        chara.Play("NeutralBopped");
-                    } 
+                    noBopPlayer = false;
+                    noBopDonpans = false;
+                    if (!noBopBeatsPlayer.Any(x => Math.Abs(x - (beat + length)) <= double.Epsilon)) {
+                        Donpans[0].Play("NeutralBopped");
+                        if (BeatIsInBopRegion(beat + length)) Bop(beat + length);
+                    }
+                    if (!noBopBeatsDonpans.Any(x => Math.Abs(x - (beat + length)) <= double.Epsilon)) {
+                        foreach (var chara in Donpans[1..Donpans.Length]) {
+                            chara.Play("NeutralBopped");
+                        }
+                        if (BeatIsInBopRegion(beat + length)) Bop(beat + length);
+                    }
                 })
             });
         }
@@ -639,20 +666,6 @@ namespace HeavenStudio.Games
         // {
 
         // }
-
-        public override void OnBeatPulse(double beat)
-        {
-            if (goBopDonpans)
-            {
-                foreach (var chara in Donpans) {
-                    chara.DoScaledAnimationAsync("Bop", 0.5f);
-                }
-            }
-            if (goBopJudge)
-            {
-                Judge.DoScaledAnimationAsync("Bop", 0.5f);
-            }
-        }
         
         public void DarkBG(double beat, bool toggle, float length)
         {
