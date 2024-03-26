@@ -44,12 +44,12 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 12
+  spritePixelsToUnits: 48
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -67,7 +67,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -108,10 +108,10 @@ TextureImporter:
       name: bts_square_0
       rect:
         serializedVersion: 2
-        x: 3.84
-        y: 412.19998
-        width: 96
-        height: 96
+        x: 15.36
+        y: 1648.7999
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,10 +129,10 @@ TextureImporter:
       name: bts_square_1
       rect:
         serializedVersion: 2
-        x: 107.52
-        y: 412.19998
-        width: 96
-        height: 96
+        x: 430.08
+        y: 1648.7999
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,10 +150,10 @@ TextureImporter:
       name: bts_square_2
       rect:
         serializedVersion: 2
-        x: 211.2
-        y: 412.19998
-        width: 96
-        height: 96
+        x: 844.8
+        y: 1648.7999
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,10 +171,10 @@ TextureImporter:
       name: bts_square_3
       rect:
         serializedVersion: 2
-        x: 314.88
-        y: 412.19998
-        width: 96
-        height: 96
+        x: 1259.52
+        y: 1648.7999
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,10 +192,10 @@ TextureImporter:
       name: bts_square_4
       rect:
         serializedVersion: 2
-        x: 418.56
-        y: 412.19998
-        width: 96
-        height: 96
+        x: 1674.24
+        y: 1648.7999
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,10 +213,10 @@ TextureImporter:
       name: bts_square_5
       rect:
         serializedVersion: 2
-        x: 522.24
-        y: 412.19998
-        width: 96
-        height: 96
+        x: 2088.96
+        y: 1648.7999
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,10 +234,10 @@ TextureImporter:
       name: bts_square_15
       rect:
         serializedVersion: 2
-        x: 625.92
-        y: 412.19998
-        width: 96
-        height: 96
+        x: 2503.68
+        y: 1648.7999
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,10 +255,10 @@ TextureImporter:
       name: bts_square_16
       rect:
         serializedVersion: 2
-        x: 729.6
-        y: 412.19998
-        width: 96
-        height: 96
+        x: 2918.4
+        y: 1648.7999
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -276,10 +276,10 @@ TextureImporter:
       name: bts_square_17
       rect:
         serializedVersion: 2
-        x: 833.27997
-        y: 412.19998
-        width: 96
-        height: 96
+        x: 3333.1199
+        y: 1648.7999
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,10 +297,10 @@ TextureImporter:
       name: bts_widget_9
       rect:
         serializedVersion: 2
-        x: 951.83997
-        y: 466.31998
-        width: 56.039997
-        height: 27
+        x: 3807.3599
+        y: 1865.2799
+        width: 224.15999
+        height: 108
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -318,10 +318,10 @@ TextureImporter:
       name: bts_square_6
       rect:
         serializedVersion: 2
-        x: 3.84
-        y: 308.52
-        width: 96
-        height: 96
+        x: 15.36
+        y: 1234.08
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -339,10 +339,10 @@ TextureImporter:
       name: bts_square_7
       rect:
         serializedVersion: 2
-        x: 107.52
-        y: 308.52
-        width: 96
-        height: 96
+        x: 430.08
+        y: 1234.08
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -360,10 +360,10 @@ TextureImporter:
       name: bts_square_8
       rect:
         serializedVersion: 2
-        x: 211.2
-        y: 308.52
-        width: 96
-        height: 96
+        x: 844.8
+        y: 1234.08
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -381,10 +381,10 @@ TextureImporter:
       name: bts_square_9
       rect:
         serializedVersion: 2
-        x: 314.88
-        y: 308.52
-        width: 96
-        height: 96
+        x: 1259.52
+        y: 1234.08
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -402,10 +402,10 @@ TextureImporter:
       name: bts_square_10
       rect:
         serializedVersion: 2
-        x: 418.56
-        y: 308.52
-        width: 96
-        height: 96
+        x: 1674.24
+        y: 1234.08
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -423,10 +423,10 @@ TextureImporter:
       name: bts_square_11
       rect:
         serializedVersion: 2
-        x: 522.24
-        y: 308.52
-        width: 96
-        height: 96
+        x: 2088.96
+        y: 1234.08
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -444,10 +444,10 @@ TextureImporter:
       name: bts_square_12
       rect:
         serializedVersion: 2
-        x: 625.92
-        y: 308.52
-        width: 96
-        height: 96
+        x: 2503.68
+        y: 1234.08
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -465,10 +465,10 @@ TextureImporter:
       name: bts_square_13
       rect:
         serializedVersion: 2
-        x: 729.6
-        y: 308.52
-        width: 96
-        height: 96
+        x: 2918.4
+        y: 1234.08
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -486,10 +486,10 @@ TextureImporter:
       name: bts_square_14
       rect:
         serializedVersion: 2
-        x: 833.27997
-        y: 308.52
-        width: 96
-        height: 96
+        x: 3333.1199
+        y: 1234.08
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -507,10 +507,10 @@ TextureImporter:
       name: bts_widget_19
       rect:
         serializedVersion: 2
-        x: 955.8
-        y: 320.88
-        width: 25.08
-        height: 116.88
+        x: 3823.2
+        y: 1283.52
+        width: 100.32
+        height: 467.52
       alignment: 9
       pivot: {x: 0.50239235, y: 0.9650924}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -528,10 +528,10 @@ TextureImporter:
       name: bts_rod_0
       rect:
         serializedVersion: 2
-        x: 14.759999
-        y: 238.79999
-        width: 51
-        height: 50.52
+        x: 59.039997
+        y: 955.19995
+        width: 204
+        height: 202.08
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -549,10 +549,10 @@ TextureImporter:
       name: bts_rod_1
       rect:
         serializedVersion: 2
-        x: 94.799995
-        y: 238.79999
-        width: 51
-        height: 50.52
+        x: 379.19998
+        y: 955.19995
+        width: 204
+        height: 202.08
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -570,10 +570,10 @@ TextureImporter:
       name: bts_rod_2
       rect:
         serializedVersion: 2
-        x: 174.72
-        y: 238.79999
-        width: 51
-        height: 50.52
+        x: 698.88
+        y: 955.19995
+        width: 204
+        height: 202.08
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -591,10 +591,10 @@ TextureImporter:
       name: bts_rod_3
       rect:
         serializedVersion: 2
-        x: 254.76
-        y: 238.79999
-        width: 51
-        height: 50.52
+        x: 1019.04
+        y: 955.19995
+        width: 204
+        height: 202.08
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -612,10 +612,10 @@ TextureImporter:
       name: bts_rod_4
       rect:
         serializedVersion: 2
-        x: 334.8
-        y: 238.79999
-        width: 51
-        height: 50.52
+        x: 1339.2
+        y: 955.19995
+        width: 204
+        height: 202.08
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -633,10 +633,10 @@ TextureImporter:
       name: bts_rod_5
       rect:
         serializedVersion: 2
-        x: 414.84
-        y: 238.79999
-        width: 50.879997
-        height: 50.52
+        x: 1659.36
+        y: 955.19995
+        width: 203.51999
+        height: 202.08
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -654,10 +654,10 @@ TextureImporter:
       name: bts_widget_30
       rect:
         serializedVersion: 2
-        x: 949.32
-        y: 257.75998
-        width: 62.039997
-        height: 29.039999
+        x: 3797.28
+        y: 1031.0399
+        width: 248.15999
+        height: 116.159996
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -675,10 +675,10 @@ TextureImporter:
       name: bts_rod_6
       rect:
         serializedVersion: 2
-        x: 14.759999
-        y: 159.23999
-        width: 51
-        height: 50.039997
+        x: 59.039997
+        y: 636.95996
+        width: 204
+        height: 200.15999
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -696,10 +696,10 @@ TextureImporter:
       name: bts_rod_7
       rect:
         serializedVersion: 2
-        x: 94.799995
-        y: 159.23999
-        width: 51
-        height: 50.039997
+        x: 379.19998
+        y: 636.95996
+        width: 204
+        height: 200.15999
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -717,10 +717,10 @@ TextureImporter:
       name: bts_rod_8
       rect:
         serializedVersion: 2
-        x: 171.36
-        y: 155.87999
-        width: 57.719997
-        height: 57.239998
+        x: 685.44
+        y: 623.51996
+        width: 230.87999
+        height: 228.95999
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -738,10 +738,10 @@ TextureImporter:
       name: bts_widget_35
       rect:
         serializedVersion: 2
-        x: 947.27997
-        y: 192.72
-        width: 65.52
-        height: 30.599998
+        x: 3789.1199
+        y: 770.88
+        width: 262.08
+        height: 122.399994
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -759,10 +759,10 @@ TextureImporter:
       name: bts_widget_36
       rect:
         serializedVersion: 2
-        x: 853.32
-        y: 151.8
-        width: 70.439995
-        height: 32.88
+        x: 3413.28
+        y: 607.2
+        width: 281.75998
+        height: 131.52
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -780,10 +780,10 @@ TextureImporter:
       name: bts_widget_37
       rect:
         serializedVersion: 2
-        x: 949.8
-        y: 145.44
-        width: 28.56
-        height: 21.359999
+        x: 3799.2
+        y: 581.76
+        width: 114.24
+        height: 85.439995
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -801,10 +801,10 @@ TextureImporter:
       name: bts_widget_38
       rect:
         serializedVersion: 2
-        x: 897.36
-        y: 11.5199995
-        width: 109.439995
-        height: 101.759995
+        x: 3589.44
+        y: 46.079998
+        width: 437.75998
+        height: 407.03998
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -822,10 +822,10 @@ TextureImporter:
       name: bts_square_18
       rect:
         serializedVersion: 2
-        x: 522.24
-        y: 204.84
-        width: 96
-        height: 96
+        x: 2088.96
+        y: 819.36
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -843,10 +843,10 @@ TextureImporter:
       name: bts_square_19
       rect:
         serializedVersion: 2
-        x: 625.92
-        y: 204.84
-        width: 96
-        height: 96
+        x: 2503.68
+        y: 819.36
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -864,10 +864,10 @@ TextureImporter:
       name: bts_square_20
       rect:
         serializedVersion: 2
-        x: 729.6
-        y: 204.84
-        width: 96
-        height: 96
+        x: 2918.4
+        y: 819.36
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -885,10 +885,10 @@ TextureImporter:
       name: bts_square_21
       rect:
         serializedVersion: 2
-        x: 833.27997
-        y: 204.84
-        width: 96
-        height: 96
+        x: 3333.1199
+        y: 819.36
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
