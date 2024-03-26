@@ -1091,7 +1091,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4.67, y: 2.25}
+  m_Size: {x: 8, y: 8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1315,7 +1315,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6137499710566233010
 Transform:
   m_ObjectHideFlags: 0
@@ -1419,7 +1419,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4.67, y: 2.25}
+  m_Size: {x: 8, y: 8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1658,7 +1658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1327125824545584460
 Transform:
   m_ObjectHideFlags: 0
@@ -2021,7 +2021,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8078835494031887749
 Transform:
   m_ObjectHideFlags: 0
@@ -3903,10 +3903,6 @@ PrefabInstance:
     - target: {fileID: 876647762485842733, guid: 7f6c0a32ae05cc9499e4e8fe2c729bbb, type: 3}
       propertyPath: m_Name
       value: whiteblock (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 876647762485842733, guid: 7f6c0a32ae05cc9499e4e8fe2c729bbb, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3636702461004627844, guid: 7f6c0a32ae05cc9499e4e8fe2c729bbb, type: 3}
       propertyPath: m_RootOrder

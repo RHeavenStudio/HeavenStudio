@@ -315,6 +315,7 @@ namespace HeavenStudio.Games
                 {
                     newRod.Init();
                     newRod.gameObject.SetActive(true);
+                    if (isPlayerOpen) PlayBlockIdle(2, beat);
                 })
             });
 

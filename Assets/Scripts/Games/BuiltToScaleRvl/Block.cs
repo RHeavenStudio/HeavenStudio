@@ -13,17 +13,52 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         public int position;
         private Animator blockAnim;
 
-        public bool isOpen = false;
-        public bool isPrepare = false;
+        [System.NonSerialized] public bool isOpen = false;
+        [System.NonSerialized] public bool isPrepare = false;
         private double closeBeat = double.MinValue, shootBeat = double.MinValue;
+
+        private Vector3 _thisPosition;
+        private Vector3 _otherPosition;
+        [SerializeField] private float _slideOffset;
+
+        private Coroutine _currentMove;
 
         private BuiltToScaleRvl game;
 
         private void Awake()
         {
+            _thisPosition = transform.localPosition;
+            _otherPosition = _thisPosition + new Vector3(_slideOffset, 0);
             game = BuiltToScaleRvl.instance;
             blockAnim = GetComponent<Animator>();
             if (!BuiltToScaleRvl.IsPositionInRange(position)) position = 0;
+        }
+
+        private void Update()
+        {
+        }
+
+        public void Move(double beat, double length, bool inToScene)
+        {
+            if (_currentMove != null) StopCoroutine(_currentMove);
+            _currentMove = StartCoroutine(MoveCo(beat, length, inToScene));
+        }
+
+        private IEnumerator MoveCo(double beat, double length, bool inToScene)
+        {
+            if (length <= 0)
+            {
+                transform.localPosition = inToScene ? _thisPosition : _otherPosition;
+                yield break;
+            }
+            float normalized = Conductor.instance.GetPositionFromBeat(beat, length, false);
+            while (normalized <= 1f)
+            {
+                normalized = Conductor.instance.GetPositionFromBeat(beat, length);
+                Vector3 newPos = Vector3.Lerp(inToScene ? _otherPosition : _thisPosition, inToScene ? _thisPosition : _otherPosition, normalized);
+                transform.localPosition = newPos;
+                yield return null;
+            }
         }
 
         public void Bounce(double beat)
@@ -44,7 +79,11 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         }
         public void BounceMiss()
         {
-            blockAnim.Play("miss", 0, 0);
+            if (isOpen) {
+                blockAnim.Play("miss_open", 0, 0);
+            } else {
+                blockAnim.Play("miss", 0, 0);
+            }
         }
 
         public void Prepare(double beat)
