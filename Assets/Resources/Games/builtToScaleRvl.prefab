@@ -644,7 +644,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3641708035931060140}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.072, y: 0.064, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1586,7 +1586,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2.894, y: 3.644, z: 0}
   m_LocalScale: {x: 0.2625, y: 0.2625, z: 0.2625}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6695021389572934899}
   m_RootOrder: 4
@@ -3390,6 +3390,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3346187518172324132}
     m_Modifications:
+    - target: {fileID: 203844698058518651, guid: 7f6c0a32ae05cc9499e4e8fe2c729bbb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1673447943, guid: 8c8670c5276d2c746be1ae29cba493ef, type: 3}
     - target: {fileID: 876647762485842733, guid: 7f6c0a32ae05cc9499e4e8fe2c729bbb, type: 3}
       propertyPath: m_Name
       value: redblock
@@ -3486,6 +3490,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 1673447943, guid: 8c8670c5276d2c746be1ae29cba493ef, type: 3}
+    - target: {fileID: 8040904021738989827, guid: 7f6c0a32ae05cc9499e4e8fe2c729bbb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8400192203380110987, guid: 7f6c0a32ae05cc9499e4e8fe2c729bbb, type: 3}
       propertyPath: m_Sprite
       value: 
