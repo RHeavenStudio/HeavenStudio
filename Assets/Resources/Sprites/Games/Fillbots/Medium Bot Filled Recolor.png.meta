@@ -1,0 +1,827 @@
+fileFormatVersion: 2
+guid: 11931d744690aa44383dd40bba84dd3b
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: lateB2
+      rect:
+        serializedVersion: 2
+        x: 4037
+        y: 969
+        width: 433
+        height: 793
+      alignment: 9
+      pivot: {x: 0.47841865, y: 0.46128246}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d431a9ffc69bfd4091ff4cc5208a5fd
+      internalID: 2043392972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lateA2
+      rect:
+        serializedVersion: 2
+        x: 3032
+        y: 937
+        width: 462
+        height: 825
+      alignment: 9
+      pivot: {x: 0.49999946, y: 0.47116625}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f5209b5dfab7bd42bd41748dd512027
+      internalID: 592479105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_2
+      rect:
+        serializedVersion: 2
+        x: 4028
+        y: 70
+        width: 446
+        height: 829
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd889f974dcbd0641afce7c3aef456fe
+      internalID: -684376324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_3
+      rect:
+        serializedVersion: 2
+        x: 3024
+        y: 46
+        width: 472
+        height: 815
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0829ce8bbc82dc74c9440bfe43b5bbb6
+      internalID: 1546081283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_4
+      rect:
+        serializedVersion: 2
+        x: 7467
+        y: 1611
+        width: 100
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b618ef6d3c9571245b700d27fc41f575
+      internalID: 1853615290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stretch2
+      rect:
+        serializedVersion: 2
+        x: 425
+        y: 944
+        width: 280
+        height: 741
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 954692a11e09604479ff1bd5390b0403
+      internalID: 674987060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stretch1
+      rect:
+        serializedVersion: 2
+        x: 829
+        y: 920
+        width: 285
+        height: 767
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab0456e99d7ec3541b5f56bf098e5a3c
+      internalID: -1884407146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: early3
+      rect:
+        serializedVersion: 2
+        x: 1286
+        y: 1062
+        width: 319
+        height: 634
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46ade23d1d07e8b408d08e93899ad7ad
+      internalID: 1221760277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: early2
+      rect:
+        serializedVersion: 2
+        x: 1737
+        y: 1037
+        width: 318
+        height: 672
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 142b4762d53b5f04e8ee46a5ed41cd84
+      internalID: -74431848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: early1
+      rect:
+        serializedVersion: 2
+        x: 2133
+        y: 1033
+        width: 308
+        height: 678
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81fa3cb6489e6974fa18ffb31448e9df
+      internalID: -702802170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lateA1
+      rect:
+        serializedVersion: 2
+        x: 2539
+        y: 1022
+        width: 419
+        height: 676
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c91d149678933b448ca7d8c3a11ae88
+      internalID: 828003793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lateB1
+      rect:
+        serializedVersion: 2
+        x: 3554
+        y: 1026
+        width: 417
+        height: 670
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fe1cf22849fa724ebdccb95ca48850f
+      internalID: -1624187910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_12
+      rect:
+        serializedVersion: 2
+        x: 4553
+        y: 1011
+        width: 352
+        height: 676
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f00abbe36acae34a8607624aa3c174d
+      internalID: -1463077447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stretch3
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 961
+        width: 306
+        height: 656
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b65300c084a73a4d9b7fa0debe89cb6
+      internalID: 1009109504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_14
+      rect:
+        serializedVersion: 2
+        x: 5040
+        y: 992
+        width: 517
+        height: 656
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f5bad57e8480d04394eb5d8f6f21fac
+      internalID: -1401419066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_15
+      rect:
+        serializedVersion: 2
+        x: 5660
+        y: 983
+        width: 517
+        height: 665
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21db5db0cae18204ab353ac82374a948
+      internalID: -1020178794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_16
+      rect:
+        serializedVersion: 2
+        x: 6281
+        y: 988
+        width: 517
+        height: 660
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 388053ed8586e1b4e81cd01aaddc7307
+      internalID: 702723587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_17
+      rect:
+        serializedVersion: 2
+        x: 6900
+        y: 992
+        width: 517
+        height: 656
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91876abfe01d4e047a0b7c7715b170bd
+      internalID: -48844519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_18
+      rect:
+        serializedVersion: 2
+        x: 1255
+        y: 181
+        width: 398
+        height: 681
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dffa60bddc7492a48986fc505603008c
+      internalID: -1002647543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_19
+      rect:
+        serializedVersion: 2
+        x: 1707
+        y: 156
+        width: 348
+        height: 693
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cee02f9333f68174e917b550be9a6f00
+      internalID: -197802350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_20
+      rect:
+        serializedVersion: 2
+        x: 7467
+        y: 731
+        width: 100
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0daf12d8a1cc8f841bb6cdcd42dfa14e
+      internalID: -1487377485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_21
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 62
+        width: 350
+        height: 743
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8019a5b9f3c0b5f4daa55308b593babc
+      internalID: -1998914347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_22
+      rect:
+        serializedVersion: 2
+        x: 798
+        y: 38
+        width: 348
+        height: 769
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a608d71259155714491cecc870aedcd4
+      internalID: -859039340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_23
+      rect:
+        serializedVersion: 2
+        x: 2115
+        y: 153
+        width: 342
+        height: 679
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 262a226e6fd6d084099ec4bb36b6f8fd
+      internalID: 193787647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_24
+      rect:
+        serializedVersion: 2
+        x: 2539
+        y: 140
+        width: 420
+        height: 685
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26009b30ac6ebec45b80b25a3fea2e55
+      internalID: -1707713934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_25
+      rect:
+        serializedVersion: 2
+        x: 3554
+        y: 144
+        width: 417
+        height: 680
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbffaa1657b88af4b8be912e149b4a6d
+      internalID: -1835378892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_26
+      rect:
+        serializedVersion: 2
+        x: 4551
+        y: 129
+        width: 354
+        height: 687
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d848b5a2cf203c34b9e0d2fcd7386815
+      internalID: -1304900417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_27
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 79
+        width: 306
+        height: 656
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 622743100cbb6e84d99167b1eca38af5
+      internalID: -991429887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_28
+      rect:
+        serializedVersion: 2
+        x: 5040
+        y: 110
+        width: 517
+        height: 656
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30b9b83eef43cea478ed041789c9c823
+      internalID: 665019394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_29
+      rect:
+        serializedVersion: 2
+        x: 5660
+        y: 101
+        width: 517
+        height: 665
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26cbc63319ea8a648b062ea416a60b17
+      internalID: 1615115914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_30
+      rect:
+        serializedVersion: 2
+        x: 6281
+        y: 108
+        width: 517
+        height: 658
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 437aa20c9ee15744988309647ebc07a2
+      internalID: -929841017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium Bot Filled Recolor_31
+      rect:
+        serializedVersion: 2
+        x: 6900
+        y: 110
+        width: 517
+        height: 656
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 597d599ea1b68694aa593b2c4ace01f0
+      internalID: 1445063237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Medium Bot Filled Recolor_12: -1463077447
+      Medium Bot Filled Recolor_14: -1401419066
+      Medium Bot Filled Recolor_15: -1020178794
+      Medium Bot Filled Recolor_16: 702723587
+      Medium Bot Filled Recolor_17: -48844519
+      Medium Bot Filled Recolor_18: -1002647543
+      Medium Bot Filled Recolor_19: -197802350
+      Medium Bot Filled Recolor_2: -684376324
+      Medium Bot Filled Recolor_20: -1487377485
+      Medium Bot Filled Recolor_21: -1998914347
+      Medium Bot Filled Recolor_22: -859039340
+      Medium Bot Filled Recolor_23: 193787647
+      Medium Bot Filled Recolor_24: -1707713934
+      Medium Bot Filled Recolor_25: -1835378892
+      Medium Bot Filled Recolor_26: -1304900417
+      Medium Bot Filled Recolor_27: -991429887
+      Medium Bot Filled Recolor_28: 665019394
+      Medium Bot Filled Recolor_29: 1615115914
+      Medium Bot Filled Recolor_3: 1546081283
+      Medium Bot Filled Recolor_30: -929841017
+      Medium Bot Filled Recolor_31: 1445063237
+      Medium Bot Filled Recolor_4: 1853615290
+      early1: -702802170
+      early2: -74431848
+      early3: 1221760277
+      lateA1: 828003793
+      lateA2: 592479105
+      lateB1: -1624187910
+      lateB2: 2043392972
+      stretch1: -1884407146
+      stretch2: 674987060
+      stretch3: 1009109504
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,827 @@
+fileFormatVersion: 2
+guid: 5dc7371021b121c4a9c5d788cb912362
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: smear
+      rect:
+        serializedVersion: 2
+        x: 5617
+        y: 1029
+        width: 384
+        height: 127
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d2d01c87e759e64e841f8364d9f05b9
+      internalID: 1409019440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_1
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 2236
+        width: 2391
+        height: 1436
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 296423e48094c3c4ba36167238c94074
+      internalID: 897682462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_2
+      rect:
+        serializedVersion: 2
+        x: 2684
+        y: 3077
+        width: 686
+        height: 595
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59df3467a26332e40a01843c9295eb55
+      internalID: -639707142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_3
+      rect:
+        serializedVersion: 2
+        x: 3655
+        y: 2157
+        width: 2599
+        height: 1515
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 276a838e1c0bb90449c06288c94a3214
+      internalID: -1189413949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_4
+      rect:
+        serializedVersion: 2
+        x: 2679
+        y: 2324
+        width: 692
+        height: 577
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 312362eeb55da4344803508674d7cb56
+      internalID: 1282162207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_5
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 1131
+        width: 1260
+        height: 909
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81d0a38e84f40204dbd49fa96209ce18
+      internalID: 1698762511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_6
+      rect:
+        serializedVersion: 2
+        x: 1956
+        y: 1543
+        width: 660
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1e8d9133d0ee314ea96672db57e0de1
+      internalID: -1428850654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_7
+      rect:
+        serializedVersion: 2
+        x: 2819
+        y: 1883
+        width: 105
+        height: 225
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 074cad96e23d9504d9df2c25a9914a8a
+      internalID: -1221241915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_8
+      rect:
+        serializedVersion: 2
+        x: 3708
+        y: 1724
+        width: 310
+        height: 301
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 836bf05fbeb54904591ea71f197d87d6
+      internalID: -1421166837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_9
+      rect:
+        serializedVersion: 2
+        x: 4037
+        y: 1719
+        width: 393
+        height: 378
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a30444cea89fcb84e870cbeab0c425e4
+      internalID: -358732395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_10
+      rect:
+        serializedVersion: 2
+        x: 4437
+        y: 1724
+        width: 294
+        height: 269
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68c471435a50ad34d8274f8f42c37105
+      internalID: -136007458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_11
+      rect:
+        serializedVersion: 2
+        x: 4825
+        y: 1729
+        width: 310
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b3ad95274ee5524ba68efeb61cabf15
+      internalID: -1560793396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_12
+      rect:
+        serializedVersion: 2
+        x: 5140
+        y: 1729
+        width: 393
+        height: 380
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e63090e9d5fde88449933f996fe6d724
+      internalID: 1300671721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_13
+      rect:
+        serializedVersion: 2
+        x: 5536
+        y: 1719
+        width: 294
+        height: 269
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48fc0e73428b8d14097bfc4b10036de5
+      internalID: 1994576577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_14
+      rect:
+        serializedVersion: 2
+        x: 3665
+        y: 1517
+        width: 147
+        height: 147
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1670d0429db20704c97fa9eeee15298f
+      internalID: -1544113482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_15
+      rect:
+        serializedVersion: 2
+        x: 3861
+        y: 1530
+        width: 99
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b558b461ba52b19489d97713257a651a
+      internalID: -1529764386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_16
+      rect:
+        serializedVersion: 2
+        x: 4048
+        y: 1549
+        width: 67
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f708eb442828dc418e30d8280475700
+      internalID: 2093524978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_17
+      rect:
+        serializedVersion: 2
+        x: 4240
+        y: 1561
+        width: 44
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d782e413f5bb3684aa06364337fcab78
+      internalID: 1448021863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_18
+      rect:
+        serializedVersion: 2
+        x: 2492
+        y: 1033
+        width: 382
+        height: 329
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b767aeecf7c290c4d8114ebe9fe9948b
+      internalID: -1691606640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_19
+      rect:
+        serializedVersion: 2
+        x: 3680
+        y: 1382
+        width: 2744
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a92aa1071eb07174b8ee74759403d233
+      internalID: 1865038245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_20
+      rect:
+        serializedVersion: 2
+        x: 3732
+        y: 1084
+        width: 1271
+        height: 187
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 397837b8520c6c0409bcb1bdd34cdabc
+      internalID: -283017777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_21
+      rect:
+        serializedVersion: 2
+        x: 5089
+        y: 1189
+        width: 1011
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e2a58c448af8a8478e1a9289936418b
+      internalID: 173218995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_22
+      rect:
+        serializedVersion: 2
+        x: 6156
+        y: 1164
+        width: 101
+        height: 134
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b68a9619ef5edb4badea35b042295be
+      internalID: -823700055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_23
+      rect:
+        serializedVersion: 2
+        x: 5082
+        y: 640
+        width: 509
+        height: 510
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f152e9e7d7f4df4ba737c42c0b39265
+      internalID: -2061601267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_24
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 698
+        width: 203
+        height: 310
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b569a1714e2e8e4a8214f347d767032
+      internalID: -1382868650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_25
+      rect:
+        serializedVersion: 2
+        x: 525
+        y: 698
+        width: 267
+        height: 279
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69514c47a801aef429385038961ffefb
+      internalID: -1637448969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_26
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 698
+        width: 315
+        height: 248
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e0ca957371bc9449be5e239857ec43e
+      internalID: -1214650107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_27
+      rect:
+        serializedVersion: 2
+        x: 1337
+        y: 698
+        width: 384
+        height: 214
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9eab676930a87a4eb911fbc0d91881b
+      internalID: 925444480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_28
+      rect:
+        serializedVersion: 2
+        x: 2562
+        y: 733
+        width: 198
+        height: 148
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 107254c3fb3e0c94885c43bcb2bd828b
+      internalID: 1792065329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_29
+      rect:
+        serializedVersion: 2
+        x: 6005
+        y: 157
+        width: 154
+        height: 794
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 171db44187091464ca5ec9037310aa55
+      internalID: -470591618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_30
+      rect:
+        serializedVersion: 2
+        x: 3665
+        y: 437
+        width: 904
+        height: 171
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a5be7678f077b4478c3c5399a5794a7
+      internalID: -584889630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG and Stuff Recolor_31
+      rect:
+        serializedVersion: 2
+        x: 4636
+        y: 20
+        width: 949
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0f1190dd16f13740bfc075024a03de1
+      internalID: -420608048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      BG and Stuff Recolor_1: 897682462
+      BG and Stuff Recolor_10: -136007458
+      BG and Stuff Recolor_11: -1560793396
+      BG and Stuff Recolor_12: 1300671721
+      BG and Stuff Recolor_13: 1994576577
+      BG and Stuff Recolor_14: -1544113482
+      BG and Stuff Recolor_15: -1529764386
+      BG and Stuff Recolor_16: 2093524978
+      BG and Stuff Recolor_17: 1448021863
+      BG and Stuff Recolor_18: -1691606640
+      BG and Stuff Recolor_19: 1865038245
+      BG and Stuff Recolor_2: -639707142
+      BG and Stuff Recolor_20: -283017777
+      BG and Stuff Recolor_21: 173218995
+      BG and Stuff Recolor_22: -823700055
+      BG and Stuff Recolor_23: -2061601267
+      BG and Stuff Recolor_24: -1382868650
+      BG and Stuff Recolor_25: -1637448969
+      BG and Stuff Recolor_26: -1214650107
+      BG and Stuff Recolor_27: 925444480
+      BG and Stuff Recolor_28: 1792065329
+      BG and Stuff Recolor_29: -470591618
+      BG and Stuff Recolor_3: -1189413949
+      BG and Stuff Recolor_30: -584889630
+      BG and Stuff Recolor_31: -420608048
+      BG and Stuff Recolor_4: 1282162207
+      BG and Stuff Recolor_5: 1698762511
+      BG and Stuff Recolor_6: -1428850654
+      BG and Stuff Recolor_7: -1221241915
+      BG and Stuff Recolor_8: -1421166837
+      BG and Stuff Recolor_9: -358732395
+      smear: 1409019440
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
