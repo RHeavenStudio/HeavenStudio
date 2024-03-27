@@ -28,23 +28,19 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         private void Awake()
         {
             _thisPosition = transform.localPosition;
-            _otherPosition = _thisPosition + new Vector3(_slideOffset, 0);
+            _otherPosition = _thisPosition + new Vector3(0, _slideOffset);
             game = BuiltToScaleRvl.instance;
             blockAnim = GetComponent<Animator>();
             if (!BuiltToScaleRvl.IsPositionInRange(position)) position = 0;
         }
 
-        private void Update()
-        {
-        }
-
-        public void Move(double beat, double length, bool inToScene)
+        public void Move(double beat, double length, bool inToScene, int ease)
         {
             if (_currentMove != null) StopCoroutine(_currentMove);
-            _currentMove = StartCoroutine(MoveCo(beat, length, inToScene));
+            _currentMove = StartCoroutine(MoveCo(beat, length, inToScene, ease));
         }
 
-        private IEnumerator MoveCo(double beat, double length, bool inToScene)
+        private IEnumerator MoveCo(double beat, double length, bool inToScene, int ease)
         {
             if (length <= 0)
             {
@@ -52,11 +48,12 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
                 yield break;
             }
             float normalized = Conductor.instance.GetPositionFromBeat(beat, length, false);
+            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease)ease);
             while (normalized <= 1f)
             {
                 normalized = Conductor.instance.GetPositionFromBeat(beat, length);
-                Vector3 newPos = Vector3.Lerp(inToScene ? _otherPosition : _thisPosition, inToScene ? _thisPosition : _otherPosition, normalized);
-                transform.localPosition = newPos;
+                float newPosY = func(inToScene ? _otherPosition.y : _thisPosition.y, inToScene ? _thisPosition.y : _otherPosition.y, normalized);
+                transform.localPosition = new Vector3(_thisPosition.x, newPosY, _thisPosition.z);
                 yield return null;
             }
         }

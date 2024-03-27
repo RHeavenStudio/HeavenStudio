@@ -53,7 +53,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("direction", BuiltToScaleRvl.Direction.Left, "Direction", "Set the direction in which the rod will come out."),
-                        new Param("target", BuiltToScaleRvl.TargetBox.First, "Target", "Set the target in which the rod will bounce."),
+                        new Param("target", BuiltToScaleRvl.TargetBlock.First, "Target", "Set the target in which the rod will bounce."),
                         new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
                     },
                 },
@@ -65,6 +65,21 @@ namespace HeavenStudio.Games.Loaders
                         new Param("target", BuiltToScaleRvl.Target.First, "Target", "Set the target in which the rod will bounce."),
                         new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to bounce."),
                     },
+                },
+                new GameAction("presence", "Toggle Blocks")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleRvl.instance.ToggleBlocksPresence(e.beat, e.length, e["in"], e["ease"], e["first"], e["second"], e["third"], e["fourth"]); },
+                    defaultLength = 2f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("first", false, "First Block", "Toggle if this block should be animated."),
+                        new Param("second", false, "Second Block", "Toggle if this block should be animated."),
+                        new Param("third", false, "Third Block", "Toggle if this block should be animated."),
+                        new Param("fourth", false, "Fourth Block", "Toggle if this block should be animated."),
+                        new Param("in", false, "In / Out", "Toggle if blocks should be present."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action."),
+                    }
                 },
             }, new List<string>() { "rvl", "normal" }, "rvlbuilt", "en", new List<string>() { });
         }
@@ -95,7 +110,7 @@ namespace HeavenStudio.Games
             Fourth,
             OuterRight,
         }
-        public enum TargetBox {
+        public enum TargetBlock {
             First = 1,
             Second,
             Third,
@@ -129,6 +144,7 @@ namespace HeavenStudio.Games
         int widgetIndex;
 
         public BezierCurve3D[] curve;
+        public BezierCurve3D[] missCurve;
         public static readonly Dictionary<(int, int), int> curveMap = new Dictionary<(int, int), int> {
             {(-1, 0), 0},                   // 01 in
             {(0, 1), 2}, {(1, 0), 2},       // 12
@@ -217,10 +233,10 @@ namespace HeavenStudio.Games
                         break;
                     case "builtToScaleRvl/custom spawn":
                         nextPos = evt["target"] switch {
-                            (int)TargetBox.First => 0,
-                            (int)TargetBox.Second => 1,
-                            (int)TargetBox.Third => 2,
-                            (int)TargetBox.Fourth => 3,
+                            (int)TargetBlock.First => 0,
+                            (int)TargetBlock.Second => 1,
+                            (int)TargetBlock.Third => 2,
+                            (int)TargetBlock.Fourth => 3,
                             _ => throw new System.NotImplementedException()
                         };
                         break;
@@ -479,6 +495,20 @@ namespace HeavenStudio.Games
         {
             if (!IsPositionInRange(position)) return;
             blocks[position].Idle(beat);
+        }
+
+        public void ToggleBlocksPresence(double beat, double length, bool inToScene, int ease, bool first, bool second, bool third, bool fourth)
+        {
+            var blocks = new bool[] {first, second, third, fourth};
+            for (int i = 0; i < blocks.Length; i++) {
+                if (blocks[i]) ActivateBlockVisualPresence(beat, length, i, inToScene, ease);
+            }
+        }
+
+        private void ActivateBlockVisualPresence(double beat, double length, int position, bool inToScene, int ease)
+        {
+            if (!IsPositionInRange(position)) return;
+            blocks[position].Move(beat, length, inToScene, ease);
         }
 
         public static int getFollowingPos(int currentPos, int nextPos, int nextTime, CustomBounceItem[] bounceItems)

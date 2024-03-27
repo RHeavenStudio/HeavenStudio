@@ -32,6 +32,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             time = 0;
             BounceRecursion(startBeat, lengthBeat, currentPos, nextPos);
             setParameters(currentPos, nextPos);
+            fallingAngle = fallingAngle * UnityEngine.Random.Range(-1f, 1f);
         }
         void Update()
         {
@@ -139,31 +140,37 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
         }
         private void BounceOnMiss(PlayerActionEvent caller)
         {
-            game.PlayBlockBounceMiss(nextPos);
-            BeatAction.New(game, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + 2*lengthBeat, delegate {
-                game.PlayBlockIdle(nextPos, currentBeat + 2*lengthBeat);
-                End();
-            })});
-            currentCurve = game.curve[^1];       // miss
-            currentBeat = Conductor.instance.songPositionInBeats;
-            rodAnim.SetFloat("speed", -1f);
-            isMiss = true;
+            Falling();
         }
         private bool CanBounceHit()
         {
             return !game.isPlayerOpen;
+        }
+        private void Falling()
+        {
+            int missCurveIndex = (currentPos > nextPos) ? 0 : 1;
+            currentCurve = game.missCurve[missCurveIndex];
+
+            currentBeat = Conductor.instance.songPositionInBeats;
+            rodAnim.SetFloat("speed", -1f);
+            isMiss = true;
+            game.PlayBlockBounceMiss(nextPos);
+            BeatAction.New(game, new List<BeatAction.Action>() {
+                new BeatAction.Action(currentBeat + lengthBeat*0.2f, delegate {
+                    GetComponent<SpriteRenderer>().sortingOrder = 1;
+                }),
+                new BeatAction.Action(currentBeat + lengthBeat, delegate {
+                    game.PlayBlockIdle(nextPos, currentBeat + lengthBeat);
+                    End();
+                })
+            });
         }
 
         private void ShootOnHit(PlayerActionEvent caller, float state)
         {
             if (state >= 1f || state <= -1f)
             {
-                currentCurve = game.curve[^1];       // miss
-                currentBeat = Conductor.instance.songPositionInBeats;
-                rodAnim.SetFloat("speed", -1f);
-                isMiss = true;
-                game.PlayBlockShootNearlyMiss(nextPos);
-                BeatAction.New(game, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + lengthBeat, () => End())});
+                Falling();
                 return;
             }
 
@@ -184,12 +191,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleRvl
             }
             else
             {
-                currentCurve = game.curve[^1];       // miss
-                currentBeat = Conductor.instance.songPositionInBeats;
-                rodAnim.SetFloat("speed", -1f);
-                isMiss = true;
-                game.PlayBlockBounceMiss(nextPos);
-                BeatAction.New(game, new List<BeatAction.Action>() {new BeatAction.Action(currentBeat + lengthBeat, () => End())});
+                Falling();
             }
         }
         private bool CanShootHit()
