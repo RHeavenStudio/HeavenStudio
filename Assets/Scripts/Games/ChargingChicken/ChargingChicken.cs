@@ -281,6 +281,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator WaterAnim;
         [SerializeField] Animator ParallaxFade;
         [SerializeField] Animator UnParallaxFade;
+        [SerializeField] Animator BirdsAnim;
         [SerializeField] Transform Stars;
         [SerializeField] Transform Clouds;
         [SerializeField] Transform Planets;
@@ -1769,7 +1770,7 @@ namespace HeavenStudio.Games
                 if (birds)
                 {
                     ParallaxFade.DoScaledAnimationAsync(instant ? "BirdsEnable" : "BirdsIn", animSpeed, animLayer: 5);
-                    ParallaxFade.DoScaledAnimationAsync("BirdsFly", 0.5f, animLayer: 6);
+                    BirdsAnim.DoScaledAnimationAsync("BirdsFly", 0.5f, animLayer: 0);
                     birdsVisible = true;
                 }
             }

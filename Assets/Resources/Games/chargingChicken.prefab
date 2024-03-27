@@ -3021,6 +3021,7 @@ MonoBehaviour:
   WaterAnim: {fileID: 7426045041154988916}
   ParallaxFade: {fileID: 642681919847024019}
   UnParallaxFade: {fileID: 2668482943177125686}
+  BirdsAnim: {fileID: 6992692985366689469}
   Stars: {fileID: 1274207032989425207}
   Clouds: {fileID: 1240886168920030221}
   Planets: {fileID: 4265729515764145622}
@@ -5321,6 +5322,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 292652847062233330}
+  - component: {fileID: 6992692985366689469}
   m_Layer: 0
   m_Name: Birds
   m_TagString: Untagged
@@ -5347,6 +5349,27 @@ Transform:
   m_Father: {fileID: 3330870450682001368}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &6992692985366689469
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5013253854801317906}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 99d27391aa232684694641e732035ff7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5031536182200580241
 GameObject:
   m_ObjectHideFlags: 0

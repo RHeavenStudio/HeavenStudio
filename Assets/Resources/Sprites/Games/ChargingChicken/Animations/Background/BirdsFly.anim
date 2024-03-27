@@ -66,7 +66,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Birds/Bird1
+    path: Bird1
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -109,7 +109,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Birds/Bird2
+    path: Bird2
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -152,7 +152,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Birds/Bird3
+    path: Bird3
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -195,7 +195,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Birds/Bird4
+    path: Bird4
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
@@ -209,7 +209,7 @@ AnimationClip:
     - time: 0.6
       value: {fileID: 1136026738, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
     attribute: m_Sprite
-    path: Birds/Bird1
+    path: Bird1
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -222,7 +222,7 @@ AnimationClip:
     - time: 0.6
       value: {fileID: -912266815, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
     attribute: m_Sprite
-    path: Birds/Bird2
+    path: Bird2
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -235,7 +235,7 @@ AnimationClip:
     - time: 0.6
       value: {fileID: 1136026738, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
     attribute: m_Sprite
-    path: Birds/Bird3
+    path: Bird3
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -248,7 +248,7 @@ AnimationClip:
     - time: 0.6
       value: {fileID: -1996153986, guid: 3ac0eae7763e7cc4ab4d8c48e0be1115, type: 3}
     attribute: m_Sprite
-    path: Birds/Bird4
+    path: Bird4
     classID: 212
     script: {fileID: 0}
   m_SampleRate: 60
@@ -259,56 +259,56 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 184067896
+      path: 2768590362
       attribute: 1
       script: {fileID: 0}
       typeID: 4
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 2482108034
+      path: 1007421344
       attribute: 1
       script: {fileID: 0}
       typeID: 4
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3841377812
+      path: 1259026230
       attribute: 1
       script: {fileID: 0}
       typeID: 4
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 2056410039
+      path: 3580863125
       attribute: 1
       script: {fileID: 0}
       typeID: 4
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 184067896
+      path: 2768590362
       attribute: 0
       script: {fileID: 0}
       typeID: 212
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 2482108034
+      path: 1007421344
       attribute: 0
       script: {fileID: 0}
       typeID: 212
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 3841377812
+      path: 1259026230
       attribute: 0
       script: {fileID: 0}
       typeID: 212
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 2056410039
+      path: 3580863125
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -404,7 +404,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Birds/Bird1
+    path: Bird1
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -459,7 +459,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Birds/Bird1
+    path: Bird1
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -514,7 +514,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Birds/Bird1
+    path: Bird1
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -560,7 +560,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Birds/Bird2
+    path: Bird2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -606,7 +606,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Birds/Bird2
+    path: Bird2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -652,7 +652,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Birds/Bird2
+    path: Bird2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -698,7 +698,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Birds/Bird3
+    path: Bird3
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -744,7 +744,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Birds/Bird3
+    path: Bird3
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -790,7 +790,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Birds/Bird3
+    path: Bird3
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -836,7 +836,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Birds/Bird4
+    path: Bird4
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -882,7 +882,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Birds/Bird4
+    path: Bird4
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -928,7 +928,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Birds/Bird4
+    path: Bird4
     classID: 4
     script: {fileID: 0}
   m_EulerEditorCurves: []
