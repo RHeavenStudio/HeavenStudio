@@ -1,0 +1,828 @@
+fileFormatVersion: 2
+guid: 16ccc1d1798887245967b2650efe77fd
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: chounin_0_head_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 947
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f3198c5db64b664f81d827dc4fd1759
+      internalID: -757439612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_head_1
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 947
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ed5f9f7699e5924d9e7c7a04aed1621
+      internalID: 1450165790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_head_2
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 947
+        width: 74
+        height: 74
+      alignment: 9
+      pivot: {x: 0.6756757, y: 0.5405405}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0666440166b4b254bbfd59892b7f2a3f
+      internalID: 670491587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_head_3
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 947
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2dcb26a31c56c74d9a7ee00f528cd02
+      internalID: 1053449218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_head_0
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 947
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db811d17e55ffb942a082b9121eb2194
+      internalID: -1616862473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_head_1
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 947
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ce9da6e7b1e3994c8f35bb2abef6cc9
+      internalID: 1659501872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_head_2
+      rect:
+        serializedVersion: 2
+        x: 483
+        y: 947
+        width: 74
+        height: 74
+      alignment: 9
+      pivot: {x: 0.6756757, y: 0.5405405}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a2600770538bf6498bb1ebbff7ef785
+      internalID: 1995947205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_head_3
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 947
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a9f5f8421c4cd64fb7ad519ac18ea1d
+      internalID: 1660432579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_arm_0
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 947
+        width: 42
+        height: 74
+      alignment: 9
+      pivot: {x: 0.5714286, y: 0.3108108}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d34f6b6a5ad1d44fa26f2e55cb18158
+      internalID: 1200446345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_body_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 859
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 349f612e21f2e0548b04990188fc6558
+      internalID: 272254141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_body_1
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 859
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbb4d8291ab33904498d5740fb87c398
+      internalID: -1083953949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_body_2
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 859
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1866415474da074c849ca57997dc54f
+      internalID: -386812578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_body_3
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 859
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d132bc1acbb903c4882a9be671bc5379
+      internalID: 1890876002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_body_4
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 859
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 710eef0c5f20fd94fbb9abab4891259d
+      internalID: -1111595743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_body_5
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 859
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: def0bc16c7d4c9e47a7136657ecc599e
+      internalID: -820025671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_body_6
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 859
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fd854fa6f5ae9a40851e009d86dcda1
+      internalID: 1090449928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_body_7
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 859
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d80274e1b542f2944a72de230230be73
+      internalID: -1948073930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_body_8
+      rect:
+        serializedVersion: 2
+        x: 707
+        y: 859
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c24852883a14191419086efaedfe281d
+      internalID: 2054475204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_body_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 771
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0e50faebe6a96548ba526ce816de6b0
+      internalID: -1718974494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_body_1
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 771
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b243bf7853f543641a03af8893ad9dc4
+      internalID: 1798136686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_body_2
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 771
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 028957cf2f2621446a70e76dc7b1763b
+      internalID: 513398112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_body_3
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 771
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce87c22ef36d26f42a478e076d47dc72
+      internalID: -1512474025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_body_4
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 771
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e2fc8dfc89444b41ac2ef1d1dfd2292
+      internalID: 851729300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_body_5
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 771
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 363f8bd6b3ec54141b28d253fbb1e952
+      internalID: -656624090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_body_6
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 771
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bde1580aae6fc24693588f03f0655e3
+      internalID: -775484318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_body_7
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 771
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f21e11b30453cb64585b81ce6676d698
+      internalID: -2086470596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_body_8
+      rect:
+        serializedVersion: 2
+        x: 707
+        y: 771
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: baef47dc4e9bbbd4d9586c003802820e
+      internalID: -945661783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_arm_1
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 947
+        width: 42
+        height: 74
+      alignment: 9
+      pivot: {x: 0.3809524, y: 0.32432434}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7dec536b93fd4714793e8a70a11ac511
+      internalID: -1461900285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_arm_0
+      rect:
+        serializedVersion: 2
+        x: 739
+        y: 947
+        width: 42
+        height: 74
+      alignment: 9
+      pivot: {x: 0.5714286, y: 0.3108108}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 733f6284ea41c6e4ea4e470a8e8477d6
+      internalID: -123275221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_arm_1
+      rect:
+        serializedVersion: 2
+        x: 787
+        y: 947
+        width: 42
+        height: 74
+      alignment: 9
+      pivot: {x: 0.3809524, y: 0.32432434}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fb7f177d20678f4997a6a0a94a20be6
+      internalID: 1411312883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_0_arm_2
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 987
+        width: 50
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9309ecbdafcf89043ba35a92fba3911c
+      internalID: 246156063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chounin_1_arm_2
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 947
+        width: 50
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e030499e743b69246832162d1fc889e1
+      internalID: 251344526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      chounin_0_arm_0: 1200446345
+      chounin_0_arm_1: -1461900285
+      chounin_0_arm_2: 246156063
+      chounin_0_body_0: 272254141
+      chounin_0_body_1: -1083953949
+      chounin_0_body_2: -386812578
+      chounin_0_body_3: 1890876002
+      chounin_0_body_4: -1111595743
+      chounin_0_body_5: -820025671
+      chounin_0_body_6: 1090449928
+      chounin_0_body_7: -1948073930
+      chounin_0_body_8: 2054475204
+      chounin_0_head_0: -757439612
+      chounin_0_head_1: 1450165790
+      chounin_0_head_2: 670491587
+      chounin_0_head_3: 1053449218
+      chounin_1_arm_0: -123275221
+      chounin_1_arm_1: 1411312883
+      chounin_1_arm_2: 251344526
+      chounin_1_body_0: -1718974494
+      chounin_1_body_1: 1798136686
+      chounin_1_body_2: 513398112
+      chounin_1_body_3: -1512474025
+      chounin_1_body_4: 851729300
+      chounin_1_body_5: -656624090
+      chounin_1_body_6: -775484318
+      chounin_1_body_7: -2086470596
+      chounin_1_body_8: -945661783
+      chounin_1_head_0: -1616862473
+      chounin_1_head_1: 1659501872
+      chounin_1_head_2: 1995947205
+      chounin_1_head_3: 1660432579
+      chounin_4: 1564883611
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

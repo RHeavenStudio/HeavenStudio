@@ -132,7 +132,8 @@ namespace HeavenStudio.Common
                 bool letterboxFxEnable = true,
                 int editorScale = 0,
                 bool scaleWScreenSize = false,
-                bool showParamTooltips = true
+                bool showParamTooltips = true,
+                bool previewNoteSounds = true
                 )
             {
                 this.showSplash = showSplash;
@@ -154,6 +155,7 @@ namespace HeavenStudio.Common
                 this.editorScale = editorScale;
                 this.scaleWScreenSize = scaleWScreenSize;
                 this.showParamTooltips = showParamTooltips;
+                this.previewNoteSounds = previewNoteSounds;
 
                 this.perfectChallengeType = perfectChallengeType;
                 this.isMedalOn = isMedalOn;
@@ -194,6 +196,7 @@ namespace HeavenStudio.Common
             public int editorScale;
             public bool scaleWScreenSize;
             public bool showParamTooltips;
+            public bool previewNoteSounds;
             // public bool showCornerTooltips;
 
             // Gameplay Settings

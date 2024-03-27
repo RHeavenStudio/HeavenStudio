@@ -22,7 +22,29 @@ namespace HeavenStudio
                 this.max = max;
             }
         }
+        
+        public struct Note
+        {
+            public static int maxSemitones = 36;
+            public int min;
+            public int val;
+            public int max;
+            
+            public int sampleNote;
+            public int sampleOctave;
+            public string sampleName;
 
+            public Note(int min, int max, int val = 0, int sampleNote = 0, int sampleOctave = 0, string sampleName = "")
+            {
+                this.min = min;
+                this.val = val;
+                this.max = max;
+                this.sampleNote = sampleNote;
+                this.sampleOctave = sampleOctave;
+                this.sampleName = sampleName;
+            }
+        }
+        
         public struct Float
         {
             public float min;

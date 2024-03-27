@@ -26,17 +26,17 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("semiTones", new EntityTypes.Integer(-24, 24, -5), "Semitones", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("semiTones1", new EntityTypes.Integer(-24, 24, -1), "Semitones (Next)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 2), "Semitones (Player)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTones", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, -5, 4, 5, "gleeClub/WailPreview"), "Semitones", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTones1", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, -1, 4, 5, "gleeClub/WailPreview"), "Semitones (Next)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTonesPlayer", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 2, 4, 5, "gleeClub/WailPreview"), "Semitones (Player)", "Set the number of semitones up or down this note should be pitched."),
                         new Param("close", GleeClub.MouthOpenClose.Both, "Close/Open Mouth", "Choose if the chorus kids should close or open their mouth."),
                         new Param("repeat", false, "Repeating", "Toggle if the left and middle chorus kid should repeat this singing cue.", new List<Param.CollapseParam>()
                         {
                             new Param.CollapseParam((x, _) => (bool)x, new string[] { "semiTonesLeft2", "semiTonesLeft3", "semiTonesMiddle2" })
                         }),
-                        new Param("semiTonesLeft2", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Left First)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("semiTonesLeft3", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Left Last)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("semiTonesMiddle2", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Middle)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTonesLeft2", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 4, 5, "gleeClub/WailPreview"), "Semitones (Repeat Left First)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTonesLeft3", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 4, 5, "gleeClub/WailPreview"), "Semitones (Repeat Left Last)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTonesMiddle2", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 4, 5, "gleeClub/WailPreview"), "Semitones (Repeat Middle)", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
                 new GameAction("baton", "Baton")
@@ -50,9 +50,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("semiTones", new EntityTypes.Integer(-24, 24, -1), "Semitones", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("semiTones1", new EntityTypes.Integer(-24, 24, 4), "Semitones (Next)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 10), "Semitones (Player)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTones", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, -1, 4, 5, "gleeClub/WailPreview"), "Semitones", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTones1", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 4, 4, 5, "gleeClub/WailPreview"), "Semitones (Next)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTonesPlayer", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 10, 4, 5, "gleeClub/WailPreview"), "Semitones (Player)", "Set the number of semitones up or down this note should be pitched."),
                         new Param("pitch", new EntityTypes.Float(0f, 5f, 1f), "Conductor Voice Pitch", "Choose the pitch of the conductor's voice. 1 is normal pitch.")
                     }
                 },
@@ -62,9 +62,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("semiTones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("semiTones1", new EntityTypes.Integer(-24, 24, 0), "Semitones (Next)", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 0), "Semitones (Player)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTones", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 4, 5, "gleeClub/WailPreview"), "Semitones", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTones1", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 4, 5, "gleeClub/WailPreview"), "Semitones (Next)", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("semiTonesPlayer", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 4, 5, "gleeClub/WailPreview"), "Semitones (Player)", "Set the number of semitones up or down this note should be pitched."),
                     }
                 },
                 new GameAction("presence", "Toggle Chorus Kids")

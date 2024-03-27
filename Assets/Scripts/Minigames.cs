@@ -252,6 +252,8 @@ namespace HeavenStudio
                                     e.dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
                                 else if (type == typeof(EntityTypes.Float))
                                     e.dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
+                                else if (type == typeof(EntityTypes.Note))
+                                    e.dynamicData.Add(param.propertyName, ((EntityTypes.Note)param.parameter).val);
                                 else if (type.IsEnum)
                                     e.dynamicData.Add(param.propertyName, (int)param.parameter);
                                 else
@@ -263,7 +265,7 @@ namespace HeavenStudio
                             {
                                 try
                                 {
-                                    if (type == typeof(EntityTypes.Integer))
+                                    if (type == typeof(EntityTypes.Integer) || type == typeof(EntityTypes.Note))
                                         e.dynamicData[param.propertyName] = (int)e[param.propertyName];
                                     else if (type == typeof(EntityTypes.Float))
                                         e.dynamicData[param.propertyName] = (float)e[param.propertyName];
@@ -295,6 +297,8 @@ namespace HeavenStudio
                                     // use default value
                                     if (type == typeof(EntityTypes.Integer))
                                         e.dynamicData[param.propertyName] = ((EntityTypes.Integer)param.parameter).val;
+                                    else if (type == typeof(EntityTypes.Note))
+                                        e.dynamicData[param.propertyName] = ((EntityTypes.Note)param.parameter).val;
                                     else if (type == typeof(EntityTypes.Float))
                                         e.dynamicData[param.propertyName] = ((EntityTypes.Float)param.parameter).val;
                                     else if (type.IsEnum && param.propertyName != "ease")
@@ -1368,7 +1372,7 @@ namespace HeavenStudio
                                 new((x, e) => (bool)x, "semitones", "cents"),
                                 new((x, e) => !(bool)x, "pitch"),
                             }),
-                            new Param("semitones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The semitones of the sfx."),
+                            new Param("semitones", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Semitones", "The semitones of the sfx."),
                             new Param("cents", new EntityTypes.Integer(-100, 100, 0), "Cents", "The cents of the sfx."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The pitch of the sfx."),
                             new Param("volume", new EntityTypes.Float(0, 2, 1), "Volume", "The volume of the sfx."),

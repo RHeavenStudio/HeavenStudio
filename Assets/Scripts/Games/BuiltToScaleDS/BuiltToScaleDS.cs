@@ -26,12 +26,12 @@ namespace HeavenStudio.Games.Loaders
                         {
                             new Param.CollapseParam((x, _) => !(bool)x, new string[] { "note1", "note2", "note3", "note4", "note5", "note6"})
                         }),
-                        new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note3", new EntityTypes.Integer(-24, 24, 4), "3rd note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note4", new EntityTypes.Integer(-24, 24, 5), "4th note", "Set the number of semitones up or down this note should be pitched."),
-                        new Param("note5", new EntityTypes.Integer(-24, 24, 7), "5th note", "Set the number of semitones up or down this note should be pitched. This note plays together with the 6th note."),
-                        new Param("note6", new EntityTypes.Integer(-24, 24, 12), "6th note", "Set the number of semitones up or down this note should be pitched. This note plays together with the 5th note."),
+                        new Param("note1", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 3, 4, "builtToScaleDS/PianoPreview"), "1st note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note2", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 2, 3, 4, "builtToScaleDS/PianoPreview"), "2nd note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note3", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 4, 3, 4, "builtToScaleDS/PianoPreview"), "3rd note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note4", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 5, 3, 4, "builtToScaleDS/PianoPreview"), "4th note", "Set the number of semitones up or down this note should be pitched."),
+                        new Param("note5", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 7, 3, 4, "builtToScaleDS/PianoPreview"), "5th note", "Set the number of semitones up or down this note should be pitched. This note plays together with the 6th note."),
+                        new Param("note6", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 12, 3, 4, "builtToScaleDS/PianoPreview"), "6th note", "Set the number of semitones up or down this note should be pitched. This note plays together with the 5th note."),
                     }
                 },
                 new GameAction("play piano", "Play Note")
@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("type", new EntityTypes.Integer(-24, 24, 0), "Semitones", "Set the number of semitones up or down this note should be pitched.")
+                        new Param("type", new EntityTypes.Note(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0, 3, 4, "builtToScaleDS/PianoPreview"), "Semitones", "Set the number of semitones up or down this note should be pitched.")
                     },
                 },
                 new GameAction("color", "Color Palette")
