@@ -103,6 +103,16 @@ namespace HeavenStudio
                 Debug.LogWarning("Game loader CtrCatchLoader failed!");
             }
 
+            game = CtrChargingChickenLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader CtrChargingChickenLoader failed!");
+            }
+
             game = RvlBookLoader.AddGame(eventCaller);
             if (game != null)
             {
