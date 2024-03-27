@@ -16,96 +16,94 @@ namespace HeavenStudio.Games.Loaders
 
     public static class AgbBonOdoriLoader
     {
-
         public static Minigame AddGame(EventCaller eventCaller)
         {
             return new Minigame("bonOdori", "The☆Bon Odori \n<color=#adadad>(Za☆Bon Odori)</color>", "312B9F", false, false, new List<GameAction>()
-            {                   new GameAction("bop", "Bop")
-                    {   function = delegate {BonOdori.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["toggle"], eventCaller.currentEntity["auto"]);},
-                        resizable = true,
-                        parameters = new List<Param>()
-                        {
-                            new Param("toggle", true, "Bop", "Toggle if the Donpans and Yagura-chan should bop for the duration of this event."),
-                            new Param("auto", false, "Bop (Auto)", "Toggle if the Donpans and Yagura-chan should automatically bop until another Bop event is reached."),
-                        },
-
+            {                   
+                new GameAction("bop", "Bop")
+                {   
+                    function = delegate { var e = eventCaller.currentEntity; BonOdori.instance.ToggleBop(e.beat, e.length, e["toggle"], e["auto"]);},
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Bop", "Toggle if the Donpans and Yagura-chan should bop for the duration of this event."),
+                        new Param("auto", false, "Bop (Auto)", "Toggle if the Donpans and Yagura-chan should automatically bop until another Bop event is reached."),
                     },
+                },
 
                 new GameAction("pan", "Pan")
                 {
-
-                   preFunction = delegate {
-  var e = eventCaller.currentEntity;
-  string variation = "variation" + (new string[] { "Pan", "Pa", "Pa_n" })[e["type"]];
-  BonOdori.instance.PreClap(e.beat, e[variation], e["type"], e["mute"],e["clapType"], e["semitone"]);
-},
+                    preFunction = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        string variation = "variation" + (new string[] { "Pan", "Pa", "Pa_n" })[e["type"]];
+                        BonOdori.instance.PreClap(e.beat, e[variation], e["type"], e["mute"],e["clapType"], e["semitone"]);
+                    },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
                         new Param("mute", false, "Mute Sound", "Mute the voice line."),
                         new Param("type",BonOdori.typePan.Pan, "Type", "Set the type of voice line.", new(){
-                        new((x, _) => (int)x == 0, new string[] { "variationPan"}),
-                        new((x, _) => (int)x == 1, new string[] { "variationPa"}),
-                        new((x, _) => (int)x == 2, new string[] { "variationPa_n"}),
-                     }),
+                            new((x, _) => (int)x == 0, new string[] { "variationPan"}),
+                            new((x, _) => (int)x == 1, new string[] { "variationPa"}),
+                            new((x, _) => (int)x == 2, new string[] { "variationPa_n"}),
+                        }),
                         new Param("variationPan", BonOdori.variationPan.PanC, "Pan Type", "Set the variation of the voice line."),
                         new Param("variationPa", BonOdori.variationPa.PaG, "Pa Type", "Set the variation of the voice line."),
                         new Param("variationPa_n", BonOdori.variationPa_n.Pa_nA , "Pa-n Type", "Set the variation of the voice line."),
                         new Param("clapType", BonOdori.typeClap.SideClap, "Clap Type", "Set the type of clap."),
-                        new Param("semitone", new EntityTypes.Integer(-24, 24, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
-                    }
+                        new Param("semitone", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
+                    },
                 },
 
-                 new GameAction("don", "Don")
+                new GameAction("don", "Don")
                 {
-
-                   function = delegate {
-  var e = eventCaller.currentEntity;
-  string variation = "variation" + (new string[] { "Don", "Do", "Do_n" })[e["type"]];
-  BonOdori.instance.Sound(e.beat, e[variation], e["type"], e["semitone"]);
-},
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        string variation = "variation" + (new string[] { "Don", "Do", "Do_n" })[e["type"]];
+                        BonOdori.instance.PlayDon(e.beat, e[variation], e["type"], e["semitone"]);
+                    },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
                         new Param("type",BonOdori.typeDon.Don, "Type", "Set the type of voiceline", new(){
-                        new((x, _) => (int)x == 0, new string[] { "variationDon"}),
-                        new((x, _) => (int)x == 1, new string[] { "variationDo"}),
-                        new((x, _) => (int)x == 2, new string[] { "variationDo_n"}),
-                     }),
+                            new((x, _) => (int)x == 0, new string[] { "variationDon"}),
+                            new((x, _) => (int)x == 1, new string[] { "variationDo"}),
+                            new((x, _) => (int)x == 2, new string[] { "variationDo_n"}),
+                        }),
                         new Param("variationDon", BonOdori.variationDon.DonA, "Don Type", "Set the variation of the voice line."),
                         new Param("variationDo", BonOdori.variationDo.DoC, "Do Type", "Set the variation of the voice line."),
                         new Param("variationDo_n", BonOdori.variationDo_n.Do_nA, "Do-n Type", "Set the variation of the voice line."),
-                        new Param("semitone", new EntityTypes.Integer(-24, 24, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
-                    }
+                        new Param("semitone", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Semitone", "Set the number of semitones up or down this note should be pitched."),
+                    },
                 },
 
                 new GameAction("show text", "Show Text")
                 {
-                    function = delegate {BonOdori.instance.ShowText(eventCaller.currentEntity["line 1"], eventCaller.currentEntity["line 2"], eventCaller.currentEntity["line 3"], eventCaller.currentEntity["line 4"], eventCaller.currentEntity["line 5"]);},
+                    function = delegate { var e = eventCaller.currentEntity; BonOdori.instance.ShowText(e["line 1"], e["line 2"], e["line 3"], e["line 4"], e["line 5"]);},
                     defaultLength = 1f,
                     parameters = new List<Param>()
-                    {   new Param("whichLine", new EntityTypes.Integer(1,5,1), "Line", "Which line to modify.", new(){
-                        new((x, _) => (int)x == 1, new string[] { "line 1"}),
-                        new((x, _) => (int)x == 2, new string[] { "line 2"}),
-                        new((x, _) => (int)x == 3, new string[] { "line 3"}),
-                        new((x, _) => (int)x == 4, new string[] { "line 4"}),
-                        new((x, _) => (int)x == 5, new string[] { "line 5"}),
-                    }),
+                    {   
+                        new Param("whichLine", new EntityTypes.Integer(1,5,1), "Line", "Which line to modify.", new()
+                        {
+                            new((x, _) => (int)x == 1, new string[] { "line 1"}),
+                            new((x, _) => (int)x == 2, new string[] { "line 2"}),
+                            new((x, _) => (int)x == 3, new string[] { "line 3"}),
+                            new((x, _) => (int)x == 4, new string[] { "line 4"}),
+                            new((x, _) => (int)x == 5, new string[] { "line 5"}),
+                        }),
                         new Param("line 1", "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line.", "Line 1", "Set the text for line 1."),
                         new Param("line 2", "", "Line 2", "Set the text for line 2."),
-                        new Param("line 3", "", "Line 3", "Set the text for line 3.y"),
+                        new Param("line 3", "", "Line 3", "Set the text for line 3."),
                         new Param("line 4", "", "Line 4", "Set the text for line 4."),
                         new Param("line 5", "", "Line 5", "Set the text for line 5."),
-
-
-
-
                     },
                     priority = 1
                 },
-                    new GameAction("delete text", "Delete Text")
+                
+                new GameAction("delete text", "Delete Text")
                 {
-                    function = delegate {BonOdori.instance.DeleteText(eventCaller.currentEntity["line 1"],eventCaller.currentEntity["line 2"],eventCaller.currentEntity["line 3"],eventCaller.currentEntity["line 4"],eventCaller.currentEntity["line 5"]);},
+                    function = delegate { var e = eventCaller.currentEntity; BonOdori.instance.DeleteText(e["line 1"], e["line 2"], e["line 3"], e["line 4"], e["line 5"]);},
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
@@ -115,11 +113,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("line 4", false, "Line 4", "Delete the contents of line 4."),
                         new Param("line 5", false, "Line 5", "Delete the contents of line 5."),
                     },
-
                 },
-                    new GameAction("scroll text", "Scroll Text")
+                
+                new GameAction("scroll text", "Scroll Text")
                 {
-                    function = delegate {BonOdori.instance.ScrollText(eventCaller.currentEntity["line 1"],eventCaller.currentEntity["line 2"],eventCaller.currentEntity["line 3"],eventCaller.currentEntity["line 4"],eventCaller.currentEntity["line 5"], eventCaller.currentEntity.length, eventCaller.currentEntity.beat);},
+                    function = delegate { var e = eventCaller.currentEntity; BonOdori.instance.ScrollText(e.beat, e.length, e["line 1"], e["line 2"], e["line 3"], e["line 4"], e["line 5"]);},
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -132,100 +130,62 @@ namespace HeavenStudio.Games.Loaders
                     },
 
                 },
-                    new GameAction("bow", "Bow")
+                
+                new GameAction("bow", "Bow")
                 {
-                    function = delegate {BonOdori.instance.Bow(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
+                    function = delegate { BonOdori.instance.Bow(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
                     defaultLength = 2f,
                     resizable = true,
 
                 },
+
                 // new GameAction("spin", "Spin")
                 // {
-                //     function = delegate {BonOdori.instance.Spin(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
+                //     function = delegate { BonOdori.instance.Spin(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);},
                 //     defaultLength = 1f,
-
                 // },
-                    new GameAction("toggle bg", "Toggle Darker Background")
+
+                new GameAction("toggle bg", "Toggle Darker Background")
                 {
-                    function = delegate {BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity.length);},
+                    function = delegate { BonOdori.instance.DarkBG(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity.length);},
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Darken Background", "Darkens the background"),
                     }
-
                 },
-
-
-
-
-        });
-
+            },
+            new List<string>() { "agb", "normal" }, "agbBonOdori", "en", new List<string>() { }
+            );
         }
     };
 };
 namespace HeavenStudio.Games
 {
-
-
-
-
     public class BonOdori : Minigame
     {
-
         string prefix;
         double beatUniversal;
+        bool noBopPlayer = false;
+        bool noBopDonpans = false;
+        List<double> noBopBeatsPlayer = new ();
+        List<double> noBopBeatsDonpans = new ();
         string suffix;
         SpriteRenderer darkPlane;
-        bool goBopDonpans;
-        bool goBopJudge;
-        bool bopDonpans;
-        int clapTypeGlobal = 0;
-        string clapTypeString = "ClapSide";
-        string originalText1;
-        string originalText2;
-        string originalText3;
-        string originalText4;
-        string originalText5;
-        Coroutine Scroll1;
-        Coroutine Scroll2;
-        Coroutine Scroll3;
-        Coroutine Scroll4;
-        Coroutine Scroll5;
+        string clapTypeString = "ClapFront";
+        string[] originalTexts = new string[5];
+        Coroutine[] Scrolls = new Coroutine[5];
         Coroutine DarkerBG;
         bool darkBgIsOn = false;
-        TextMeshProUGUI Text1_GUI;
-        TextMeshProUGUI Text2_GUI;
-        TextMeshProUGUI Text3_GUI;
-        TextMeshProUGUI Text4_GUI;
-        TextMeshProUGUI Text5_GUI;
-        TextMeshProUGUI Text6_GUI;
-        TextMeshProUGUI Text7_GUI;
-        TextMeshProUGUI Text8_GUI;
-        TextMeshProUGUI Text9_GUI;
-        TextMeshProUGUI Text10_GUI;
 
-
-
-        [SerializeField] TMP_Text Text1;
-        [SerializeField] TMP_Text Text2;
-        [SerializeField] TMP_Text Text3;
-        [SerializeField] TMP_Text Text4;
-        [SerializeField] TMP_Text Text5;
-
-        [SerializeField] TMP_Text Text6;
-        [SerializeField] TMP_Text Text7;
-        [SerializeField] TMP_Text Text8;
-        [SerializeField] TMP_Text Text9;
-        [SerializeField] TMP_Text Text10;
-        [SerializeField] Animator Player;
+        [SerializeField] TMP_Text[] Texts;
+        [SerializeField] TMP_Text[] TextsBlue;
+        [SerializeField] Animator[] Donpans;
+        [SerializeField] Animator[] DonpansFace;
         [SerializeField] Animator Judge;
+        [SerializeField] Animator JudgeFace;
         [SerializeField] GameObject DarkPlane;
 
-        [SerializeField] Animator CPU1;
-        [SerializeField] Animator CPU2;
-        [SerializeField] Animator CPU3;
-        [SerializeField] Animator Face;
         public enum typeClap
         {
             SideClap = 0,
@@ -241,9 +201,8 @@ namespace HeavenStudio.Games
             public bool muted;
             public int clapType;
             public int semitone;
-
-
         }
+
         public enum typePan
         {
             Pan = 0,
@@ -290,119 +249,79 @@ namespace HeavenStudio.Games
             DoC = 0,
             DoG = 1
         }
+
         public static BonOdori instance { get; set; }
+
         public void Awake()
-
         {
-            darkPlane = DarkPlane.GetComponent<SpriteRenderer>();
-
-
-
-
-
-
-            clapTypeGlobal = 0;
             instance = this;
-            Text1_GUI = Text1.GetComponent<TextMeshProUGUI>();
-            Text2_GUI = Text2.GetComponent<TextMeshProUGUI>();
-            Text3_GUI = Text3.GetComponent<TextMeshProUGUI>();
-            Text4_GUI = Text4.GetComponent<TextMeshProUGUI>();
-            Text5_GUI = Text5.GetComponent<TextMeshProUGUI>();
-            Text6_GUI = Text6.GetComponent<TextMeshProUGUI>();
-            Text7_GUI = Text7.GetComponent<TextMeshProUGUI>();
-            Text8_GUI = Text8.GetComponent<TextMeshProUGUI>();
-            Text9_GUI = Text9.GetComponent<TextMeshProUGUI>();
-            Text10_GUI = Text10.GetComponent<TextMeshProUGUI>();
+            SetupBopRegion("bonOdori", "bop", "auto");
 
-
-
-
+            darkPlane = DarkPlane.GetComponent<SpriteRenderer>();
         }
+
         public void OnStop()
         {
             DarkPlane.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f);
-
         }
+
+        public override void OnLateBeatPulse(double beat)
+        {
+            if (BeatIsInBopRegion(beat)) Bop(beat);
+            noBopBeatsPlayer.RemoveAll(x => x+4 < beat);
+            noBopBeatsDonpans.RemoveAll(x => x+4 < beat);
+        }
+
         public void Update()
         {
-            Conductor con = new Conductor();
-            if (!con.NotStopped())
+            var cond = Conductor.instance;
+            if (!cond.isPlaying || cond.isPaused) return;
+            
+            if (!cond.NotStopped())
             {
-                Text1.text = "";
-                Text2.text = "";
-                Text3.text = "";
-                Text4.text = "";
-                Text6.text = "";
-                Text7.text = "";
-                Text8.text = "";
-                Text9.text = "";
-                Text10.text = "";
-
-
-
-                StopCoroutine(Scroll1);
-                StopCoroutine(Scroll2);
-                StopCoroutine(Scroll3);
-                StopCoroutine(Scroll4);
-                StopCoroutine(Scroll5);
+                for (int i = 0; i < Scrolls.Length; i++)
+                {
+                    StopCoroutine(Scrolls[i]);
+                    Texts[i].text = "";
+                    TextsBlue[i].text = "";
+                    TextsBlue[i].GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+                }
                 StopCoroutine(DarkerBG);
-                Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-
-
-
             }
-
-
 
             if (PlayerInput.GetIsAction(BonOdori.InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
                 ScoreMiss();
                 SoundByte.PlayOneShotGame("bonOdori/clap");
-                if (clapTypeGlobal == 0)
-                {
-                    clapTypeString = "ClapSide";
-                }
-                else
-                {
-                    clapTypeString = "ClapFront";
-                }
 
-                Player.Play(clapTypeString);
-                if (!goBopDonpans)
+                Donpans[0].DoScaledAnimationAsync(clapTypeString, 0.5f);
+
+                if (clapTypeString is "ClapFront")
                 {
-
-
+                    var currentBeat = Conductor.instance.songPositionInBeatsAsDouble;
+                    noBopBeatsPlayer.Add(currentBeat);
                     BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
-                });
-                }
-
-
-
-
-
+                    {
+                        new BeatAction.Action(currentBeat, delegate {
+                            noBopPlayer = true;
+                        }),
+                        new BeatAction.Action(currentBeat + 2d, delegate {
+                            if (noBopBeatsPlayer[^1] == currentBeat) noBopPlayer = false;
+                        })
+                    });      
+            }
             }
 
         }
+        
         public override void OnGameSwitch(double beat)
         {
-
             if (queuedClaps.Count > 0)
             {
                 foreach (var clap in queuedClaps) Clap(clap.beat, clap.variation, clap.typeSpeak, clap.muted, clap.clapType, clap.semitone);
                 queuedClaps.Clear();
             }
-
-
         }
-
-
-
 
         public void PreClap(double beat, int variation, int typeSpeak, bool muted, int clapType, int semitone)
         {
@@ -423,429 +342,336 @@ namespace HeavenStudio.Games
                 });
             }
         }
+
         public void Clap(double beat, int variation, int typeSpeak, bool muted, int clapType, int semitone)
-
         {
-            if (clapType == 1)
+            if (!muted)
             {
-                clapTypeGlobal = 1;
-            }
-            else
-            {
-                clapTypeGlobal = 0;
-            }
-            if (muted)
-            {
-                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
-            }
-            else
-            {
-
-
                 string clip = typeSpeak switch
                 {
                     0 => "pan",
-                    1 => "pa_n",
-                    2 or _ => "pa",
+                    1 => "pa",
+                    2 or _ => "pa_n",
                 };
                 var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
-                SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
-
-
-
-
-                beatUniversal = beat;
-                ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
+                SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);  
             }
+            SoundByte.PlayOneShotGame("bonOdori/clap2", beat, volume: 0.5f);
+
+            beatUniversal = beat;
+            noBopBeatsDonpans.Add(beatUniversal);
+            BeatAction.New(instance, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - 0.1d, delegate {
+                    clapTypeString = clapType switch {
+                        0 => "ClapSide",
+                        1 or _ => "ClapFront",
+                    };
+                }),
+                new BeatAction.Action(beat, delegate {
+                    foreach (var chara in Donpans[1..Donpans.Length]) {
+                        chara.DoScaledAnimationAsync(clapTypeString, 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 0.05d, delegate {
+                    if (clapTypeString is "ClapFront") noBopDonpans = true;
+                }),
+                new BeatAction.Action(beat + 1.01d, delegate {
+                    if (clapTypeString is "ClapFront") noBopDonpans = false;
+                }),
+            });
+            ScheduleInput(beat, 0f, InputAction_BasicPress, Success, Miss, Empty);
         }
-        public void Sound(double beat, int variation, int typeSpeak, int semitone)
+
+        public void PlayDon(double beat, int variation, int typeSpeak, int semitone)
         {
             string clip = typeSpeak switch
             {
                 0 => "don",
-                1 => "do_n",
-                2 or _ => "do",
+                1 => "do",
+                2 or _ => "do_n",
 
             };
             var pitch = SoundByte.GetPitchFromSemiTones(semitone, true);
 
             SoundByte.PlayOneShotGame($"bonOdori/" + clip + (variation + 1), beat, pitch);
-
+            var firstPan = EventCaller.GetAllInGameManagerList("bonOdori", new string[] { "pan" }).Find(x => x.beat >= beat);
+            if (firstPan is not null)
+            {
+                clapTypeString = firstPan["clapType"] switch {
+                    0 => "ClapSide",
+                    1 or _ => "ClapFront",
+                };
+            }
         }
 
 
         public void Success(PlayerActionEvent caller, float state)
         {
-            if (clapTypeGlobal == 0)
+            Donpans[0].DoScaledAnimationAsync(clapTypeString, 0.5f);
+            if (state <= -1f || state >= 1f)
             {
-                clapTypeString = "ClapSide";
-            }
-            else
-            {
-                clapTypeString = "ClapFront";
-            }
-
-            Player.Play(clapTypeString);
-            CPU1.Play(clapTypeString);
-            CPU2.Play(clapTypeString);
-            CPU3.Play(clapTypeString);
-            if (!goBopDonpans)
-            {
-
-
-                BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
-                });
+                SoundByte.PlayOneShot("nearMiss");
+                return;
             }
             SoundByte.PlayOneShotGame("bonOdori/clap");
+
+            var currentBeat = Conductor.instance.songPositionInBeatsAsDouble;
+            double closest = noBopBeatsDonpans.Aggregate((x, y) => Math.Abs(x - currentBeat) < Math.Abs(y - currentBeat) ? x : y);
+            noBopBeatsPlayer.Add(closest);
+            if (clapTypeString is "ClapFront")
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(closest + 0.05d, delegate {
+                        noBopPlayer = true;
+                    }),
+                    new BeatAction.Action(closest + 1.01d, delegate {
+                        if (noBopBeatsPlayer[^1] == closest) noBopPlayer = false;
+                    })
+                });      
+            }
         }
 
         public void Miss(PlayerActionEvent caller)
         {
-            CPU1.Play(clapTypeString);
-            CPU2.Play(clapTypeString);
-            CPU3.Play(clapTypeString);
-            SoundByte.PlayOneShot("miss");
+            // SoundByte.PlayOneShot("miss");
             BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beatUniversal + 1d, delegate { Face.Play("Sad");}),
-                    new BeatAction.Action(beatUniversal + 3d, delegate {Face.Play("Neutral");})
-                });
+            {
+                new BeatAction.Action(beatUniversal + 1d, delegate { JudgeFace.Play("Sad");}),
+                new BeatAction.Action(beatUniversal + 3d, delegate { JudgeFace.Play("Neutral");})
+            });
 
         }
 
+        public void Empty(PlayerActionEvent caller) { }
 
-        public void Empty(PlayerActionEvent caller)
+        string ConvertText(string text, bool isScroll = false)
         {
-            if (clapTypeGlobal == 0)
-            {
-                clapTypeString = "ClapSide";
-            }
-            else
-            {
-                clapTypeString = "ClapFront";
-            }
-
-            Player.Play(clapTypeString);
-            CPU1.Play(clapTypeString);
-            CPU2.Play(clapTypeString);
-            CPU3.Play(clapTypeString);
-            if (!goBopDonpans)
-            {
-
-
-                BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beatUniversal + 1d, delegate { Player.Play("NeutralClapped"); CPU1.Play("NeutralClapped"); CPU2.Play("NeutralClapped"); CPU3.Play("NeutralClapped");}),
-                });
-            }
-
-            SoundByte.PlayOneShot("nearMiss");
-
-
-        }
-        string ChangeColor(string text, bool isScroll)
-        {
-            if (text.Contains("r|") | text.Contains("y|") | text.Contains("g|"))
+            if (text.Contains("r|") | text.Contains("y|") | text.Contains("g|") | text.Contains("s|") | text.Contains("d|"))
             {
                 if (!isScroll)
                 {
-
-
                     return text.Replace("r|", "<color=#ff0000>")
-                           .Replace("g|", "<color=#00ff00>")
-                           .Replace("y|", "<color=#ffff00>")
-                           + "</color>";
+                                .Replace("g|", "<color=#00ff00>")
+                                .Replace("y|", "<color=#ffff00>")
+                                .Replace("s|", "<size=0.9375>")
+                                .Replace("|s", "</size>")
+                                .Replace("d|", "")
+                                + "</color>";
                 }
                 else
                 {
                     return text.Replace("r|", "<color=#ff00ff>")
-           .Replace("g|", "<color=#00ffff>")
-           .Replace("y|", "<color=#ffffff>")
-           + "</color>";
-
+                                .Replace("g|", "<color=#00ffff>")
+                                .Replace("y|", "<color=#ffffff>")
+                                .Replace("s|", "<size=0.9375>")
+                                .Replace("|s", "</size>")
+                                .Replace("d|", "")
+                                + "</color>";
                 }
             }
             return text;
+        }
 
+        int[] GetTextPositions(string text)
+        {
+            string preSplitedText =  text.Replace("r|", "")
+                                        .Replace("g|", "")
+                                        .Replace("y|", "")
+                                        .Replace("s|", "")
+                                        .Replace("|s", "");
+            string[] parts = preSplitedText.Split(new string[] { "d|" }, StringSplitOptions.None);
+
+            List<int> positions = new List<int>();
+            int currentPosition = 0;
+            foreach (var part in parts)
+            {
+                positions.Add(currentPosition);
+                currentPosition += part.Length;
+            }
+
+            return positions.ToArray();
         }
 
         public void ShowText(string text1, string text2, string text3, string text4, string text5)
         {
+            var texts = new string[]{text1, text2, text3, text4, text5};
 
-            if (text1 is not "" && text1 is not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line.")
+            for (int i = 0; i < texts.Length; i++)
             {
-                if (Scroll1 is not null)
+                var text = texts[i];
+                if (text is not "" and not "Type r| for red text, g| for green text and y| for yellow text. These can be used multiple times in a single line.")
                 {
-                    StopCoroutine(Scroll1);
-                    Scroll1 = null;
+                    var scroll = Scrolls[i];
+                    var textTMP = Texts[i];
+                    var textBlueTMP = TextsBlue[i];
+
+                    if (scroll is not null)
+                    {
+                        StopCoroutine(scroll);
+                        scroll = null;
+                    }
+                    textBlueTMP.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
+
+                    originalTexts[i] = text;
+                    text = ConvertText(originalTexts[i], false);
+
+                    textTMP.text = text;
+                    textBlueTMP.text = ConvertText(originalTexts[i], true);
                 }
-                Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                originalText1 = text1;
-                text1 = ChangeColor(text1, false);
-
-                Text1.text = text1;
-
-
-                Text6.text = ChangeColor(originalText1, true);
-
             }
-            if (text2 is not "")
-            {
-                if (Scroll2 is not null)
-                {
-                    StopCoroutine(Scroll2);
-                    Scroll2 = null;
-                }
-                Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                originalText2 = text2;
-                text2 = ChangeColor(text2, false);
-                Text2.text = text2;
-                Text7.text = ChangeColor(originalText2, true);
-
-            }
-            if (text3 is not "")
-            {
-                if (Scroll3 is not null)
-                {
-                    StopCoroutine(Scroll3);
-                    Scroll3 = null;
-                }
-                originalText3 = text3;
-                Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-
-                text3 = ChangeColor(text3, false);
-
-                Text3.text = text3;
-                Text8.text = ChangeColor(originalText3, true);
-
-            }
-            if (text4 is not "")
-            {
-                if (Scroll4 is not null)
-                {
-                    StopCoroutine(Scroll4);
-                    Scroll4 = null;
-                }
-                Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                originalText4 = text4;
-                text4 = ChangeColor(text4, false);
-                Text4.text = text4;
-
-                Text9.text = text4;
-                Text9.text = ChangeColor(originalText4, true);
-
-            }
-            if (text5 is not "")
-            {
-                if (Scroll5 is not null)
-                {
-                    StopCoroutine(Scroll5);
-                    Scroll5 = null;
-                }
-                Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10f, -10f, -10f, 10));
-                originalText5 = text5;
-                text5 = ChangeColor(text5, false);
-                Text5.text = text5;
-                Text10.text = ChangeColor(originalText5, true);
-
-            }
-
-
         }
+
         public void DeleteText(bool text1, bool text2, bool text3, bool text4, bool text5)
         {
-            if (text1 == true)
-            {
-                if (Scroll1 is not null)
-                {
-                    StopCoroutine(Scroll1);
-                    Scroll1 = null;
-                }
-                Text6.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
-                Text1.text = "";
-                Text6.text = "";
-            }
-            if (text2 == true)
-            {
-                if (Scroll2 is not null)
-                {
-                    StopCoroutine(Scroll2);
-                    Scroll2 = null;
-                }
-                Text7.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
-                Text2.text = "";
-                Text7.text = "";
-            }
-            if (text3 == true)
-            {
-                if (Scroll3 is not null)
-                {
-                    StopCoroutine(Scroll3);
-                    Scroll3 = null;
-                }
-                Text8.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
-                Text3.text = "";
-                Text8.text = "";
-            }
-            if (text4 == true)
-            {
-                if (Scroll4 is not null)
-                {
-                    StopCoroutine(Scroll4);
-                    Scroll4 = null;
-                }
-                Text9.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
-                Text4.text = "";
-                Text9.text = "";
-            }
-            if (text5 == true)
-            {
-                if (Scroll5 is not null)
-                {
-                    StopCoroutine(Scroll5);
-                    Scroll5 = null;
-                }
-                Text10.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
-                Text5.text = "";
-                Text10.text = "";
-            }
+            var texts = new bool[]{text1, text2, text3, text4, text5};
 
+            for (int i = 0; i < texts.Length; i++)
+            {
+                if (texts[i] == true)
+                {
+                    var scroll = Scrolls[i];
+                    var textTMP = Texts[i];
+                    var textBlueTMP = TextsBlue[i];
 
+                    if (scroll is not null)
+                    {
+                        StopCoroutine(scroll);
+                        scroll = null;
+                    }
+                    textBlueTMP.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, -10, 10));
+                    textTMP.text = "";
+                    textBlueTMP.text = "";
+                }
+            }
         }
-        IEnumerator SmoothText(TMP_Text text, float length, double beat)
+
+        IEnumerator SmoothText(double beat, float length, TextMeshPro textTMP, float[] maskEdges)
         {
-            Conductor conductor = new Conductor();
+            var cond = Conductor.instance;
             float startTime = Time.time;
             float endTime = startTime + length;
-            float duration = ((length / conductor.GetBpmAtBeat(beat)) * 60);
+            float duration = ((length / cond.GetBpmAtBeat(beat)) * 60);
+
+            int len = maskEdges.Length;
 
             while (Time.time < endTime)
             {
                 float t = ((Time.time - startTime) / duration);
-
-                float maskValue = Mathf.Lerp(-10f, -7f, t);
-
-                text.GetComponent<TextMeshPro>().SetMask(0, new Vector4(-10, -10, maskValue, 10));
+                
+                int index = Math.Max(0, Math.Min((int)Math.Floor(t * (len-1)), len-2));
+                t = t * (len-1) - index;
+                float maskValue = Mathf.Lerp(maskEdges[index], maskEdges[index+1], t);
+                textTMP.SetMask(0, new Vector4(-10, -10, maskValue, 10));
 
                 yield return null;
-
             }
-
-
-
-        }
-        public void ScrollText(bool text1, bool text2, bool text3, bool text4, bool text5, float length, double beat)
-        {
-            if (text1)
-            {
-                Scroll1 = StartCoroutine(SmoothText(Text6, length, beat));
-            }
-            if (text2)
-            {
-                Scroll2 = StartCoroutine(SmoothText(Text7, length, beat));
-            }
-            if (text3)
-            {
-                Scroll3 = StartCoroutine(SmoothText(Text8, length, beat));
-            }
-            if (text4)
-            {
-                Scroll4 = StartCoroutine(SmoothText(Text9, length, beat));
-            }
-            if (text5)
-            {
-                Scroll5 = StartCoroutine(SmoothText(Text10, length, beat));
-            }
-
         }
 
-        public void Bop(double beat, float length, bool shouldBop, bool autoBop)
+        public void ScrollText(double beat, float length, bool text1, bool text2, bool text3, bool text4, bool text5)
         {
-            goBopDonpans = autoBop; goBopJudge = autoBop;
-            if (autoBop && shouldBop) { return; }
-            if (shouldBop)
+            var texts = new bool[]{text1, text2, text3, text4, text5};
+
+            for (int i = 0; i < texts.Length; i++)
+            {
+                if (texts[i])
+                {
+                    var textTMP = TextsBlue[i].GetComponent<TextMeshPro>();
+
+                    int[] positions = GetTextPositions(originalTexts[i]);
+                    var maskEdges = new List<float>();
+                    foreach (var pos in positions)
+                    {
+                        maskEdges.Add(textTMP.textInfo.characterInfo[pos].topLeft.x);
+                    }
+                    maskEdges[0] = -textTMP.rectTransform.sizeDelta.x/2;
+                    maskEdges.Add(maskEdges[0] + textTMP.preferredWidth);
+
+                    Scrolls[i] = StartCoroutine(SmoothText(beat, length, textTMP, maskEdges.ToArray()));
+                }
+            }
+        }
+
+        public void ToggleBop(double beat, float length, bool bopOrNah, bool autoBop)
+        {
+            if (autoBop) return;
+            if (bopOrNah)
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + i, delegate
-                        {
-                            Player.Play("Bop");
-                            CPU1.Play("Bop");
-                            CPU2.Play("Bop");
-                            CPU3.Play("Bop");
-                            Judge.Play("Bop");
-
-                        }),
-                        new BeatAction.Action(beat + length, delegate
-                        {
-                            Player.Play("NeutralBopped");
-                            CPU1.Play("NeutralBopped");
-                            CPU2.Play("NeutralBopped");
-                            CPU3.Play("NeutralBopped");
-
-
-                        })
-                    });
+                    double bopBeat = beat + i;
+                    BeatAction.New(instance, new() {new BeatAction.Action(bopBeat, delegate { Bop(bopBeat);})});
                 }
-
-
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + length, delegate
+                    {
+                        if (!noBopBeatsDonpans.Any(x => Math.Abs(x - (beat + length)) <= double.Epsilon)) {
+                            foreach (var chara in Donpans) {
+                                chara.Play("NeutralBopped");
+                            }
+                        }
+                    })
+                });                
             }
-            else
-            {
-                return;
-            }
-
         }
+
+        private void Bop(double beat)
+        {
+            if (!noBopPlayer & !noBopBeatsPlayer.Any(x => Math.Abs(x - beat) <= double.Epsilon))
+            {
+                if (!Donpans[0].IsPlayingAnimationNames("ClapSide", "ClapFront")) {
+                    Donpans[0].DoScaledAnimationAsync("Bop", 0.5f);
+                }
+            }
+            if (!noBopDonpans & !noBopBeatsDonpans.Any(x => Math.Abs(x - beat) <= double.Epsilon))
+            {
+                foreach (var chara in Donpans[1..Donpans.Length]) {
+                    if (!chara.IsPlayingAnimationNames("ClapSide", "ClapFront")) {
+                        chara.DoScaledAnimationAsync("Bop", 0.5f);
+                    }
+                }
+            }
+            Judge.DoScaledAnimationAsync("Bop", 0.5f);
+        }
+
         public void Bow(double beat, float length)
         {
-            if (goBopDonpans == true)
-            {
-                bopDonpans = true;
+            noBopPlayer = true;
+            noBopDonpans = true;
+            foreach (var chara in Donpans) {
+                chara.Play("Bow");
             }
-            else
-            {
-                bopDonpans = false;
-
-            }
-            goBopDonpans = false;
-            Player.Play("Bow");
-            CPU1.Play("Bow");
-            CPU2.Play("Bow");
-            CPU3.Play("Bow");
             BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + length, delegate { Player.Play("NeutralBopped"); CPU1.Play("NeutralBopped");CPU2.Play("NeutralBopped"); CPU3.Play("NeutralBopped"); if (bopDonpans) {goBopDonpans = true;}})
-                });
+            {
+                new BeatAction.Action(beat + length, delegate {
+                    noBopPlayer = false;
+                    noBopDonpans = false;
+                    if (!noBopBeatsPlayer.Any(x => Math.Abs(x - (beat + length)) <= double.Epsilon)) {
+                        Donpans[0].Play("NeutralBopped");
+                        if (BeatIsInBopRegion(beat + length)) Bop(beat + length);
+                    }
+                    if (!noBopBeatsDonpans.Any(x => Math.Abs(x - (beat + length)) <= double.Epsilon)) {
+                        foreach (var chara in Donpans[1..Donpans.Length]) {
+                            chara.Play("NeutralBopped");
+                        }
+                        if (BeatIsInBopRegion(beat + length)) Bop(beat + length);
+                    }
+                })
+            });
         }
+
         // public void Spin(double beat, float length)
         // {
 
         // }
-
-        public override void OnBeatPulse(double beat)
-        {
-            if (goBopDonpans)
-            {
-                Player.Play("Bop");
-                CPU1.Play("Bop");
-                CPU2.Play("Bop");
-                CPU3.Play("Bop");
-
-            }
-            if (goBopJudge)
-            {
-                Judge.Play("Bop");
-            }
-        }
+        
         public void DarkBG(double beat, bool toggle, float length)
         {
             DarkerBG = StartCoroutine(DarkBGCoroutine(beat, toggle, length));
-
         }
+
         IEnumerator DarkBGCoroutine(double beat, bool toggle, float length)
         {
             if (toggle)
@@ -856,23 +682,14 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-
-
                     float startTime = Time.time;
-                    Conductor con = new Conductor();
-                    float realLength = length / con.GetBpmAtBeat(beat) * 60;
+                    var cond = Conductor.instance;
+                    float realLength = length / cond.GetBpmAtBeat(beat) * 60;
                     while (Time.time < realLength + startTime)
                     {
-
-
-
-
                         darkPlane.color = new Color(1f, 1f, 1f, Mathf.Lerp(0f, 0.4666f, (Time.time - startTime) / realLength));
                         darkBgIsOn = true;
                         yield return null;
-
-
-
                     }
                 }
             }
@@ -884,29 +701,16 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-
-
                     float startTime = Time.time;
-                    Conductor con = new Conductor();
-                    float realLength = length / con.GetBpmAtBeat(beat) * 60;
+                    var cond = Conductor.instance;
+                    float realLength = length / cond.GetBpmAtBeat(beat) * 60;
                     while (Time.time < realLength + startTime)
                     {
-
-
-
-
                         darkPlane.color = new Color(1f, 1f, 1f, Mathf.Lerp(0.4666f, 0f, (Time.time - startTime) / realLength));
-
                         darkBgIsOn = true;
                         yield return null;
-
-
                     }
-
                 }
-
-
-
             }
         }
     }

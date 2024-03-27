@@ -13,6 +13,16 @@ namespace HeavenStudio
 
             Minigames.Minigame game;
 
+            game = NtrAirboarderLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader NtrAirboarderLoader failed!");
+            }
+
             game = RvlBadmintonLoader.AddGame(eventCaller);
             if (game != null)
             {
@@ -61,6 +71,16 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader NtrFlickLoader failed!");
+            }
+
+            game = RvlBuiltLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader RvlBuiltLoader failed!");
             }
 
             game = PcoCanneryLoader.AddGame(eventCaller);
@@ -231,6 +251,16 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader RvlForkLoader failed!");
+            }
+
+            game = NtrFreezeFrameLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader NtrFreezeFrameLoader failed!");
             }
 
             game = NtrGleeClubLoader.AddGame(eventCaller);
@@ -511,6 +541,26 @@ namespace HeavenStudio
             else
             {
                 Debug.LogWarning("Game loader RvlSeeSawLoader failed!");
+            }
+
+            game = NtrShootEmUpLoader.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader NtrShootEmUpLoader failed!");
+            }
+
+            game = AgbSickBeats.AddGame(eventCaller);
+            if (game != null)
+            {
+                eventCaller.minigames.Add(game.name, game);
+            }
+            else
+            {
+                Debug.LogWarning("Game loader AgbSickBeats failed!");
             }
 
             game = NtrSlotMonsterLoader.AddGame(eventCaller);

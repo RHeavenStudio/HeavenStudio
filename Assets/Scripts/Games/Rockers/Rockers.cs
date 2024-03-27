@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("5JJ", new EntityTypes.Integer(-1, 24, 0), "B3 String (JJ)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("6JJ", new EntityTypes.Integer(-1, 24, 0), "E4 String (JJ)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("sampleJJ", Rockers.PremadeSamples.None, "Premade Sample (JJ)", "Set if this riff should use a premade sample."),
-                        new Param("pitchSampleJJ", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pitchSampleJJ", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("gcJJ", false, "Glee Club Guitar (JJ)", "Toggle if JJ should use the same guitar as in the Glee Club guitar lessons in DS."),
                         new Param("1S", new EntityTypes.Integer(-1, 24, 0), "E2 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("2S", new EntityTypes.Integer(-1, 24, 0), "A2 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
@@ -51,7 +51,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("5S", new EntityTypes.Integer(-1, 24, 0), "B3 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("6S", new EntityTypes.Integer(-1, 24, 0), "E4 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("sampleS", Rockers.PremadeSamples.None, "Premade Sample (Soshi)", "Set if this riff should use a premade sample."),
-                        new Param("pitchSampleS", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pitchSampleS", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("gcS", false, "Glee Club Guitar (Soshi)", "Toggle if Soshi should use the same guitar as in the Glee Club guitar lessons in DS.")
                     },
                 },
@@ -62,8 +62,8 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("respond", true, "Respond", "Toggle if this guitar bend will have to be responded to by Soshi (the player)."),
-                        new Param("1JJ", new EntityTypes.Integer(-24, 24, 1), "Pitch Bend (JJ)", "Set how many semitones up the current riff will be pitchbent."),
-                        new Param("1S", new EntityTypes.Integer(-24, 24, 1), "Pitch Bend (Soshi)", "Set how many semitones up the current riff will be pitchbent."),
+                        new Param("1JJ", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 1), "Pitch Bend (JJ)", "Set how many semitones up the current riff will be pitchbent."),
+                        new Param("1S", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 1), "Pitch Bend (Soshi)", "Set how many semitones up the current riff will be pitchbent."),
                     },
                 },
                 new GameAction("prepare", "Prepare")
@@ -126,21 +126,21 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("moveCamera", true, "Move Camera", "Toggle if the camera should move to the middle."),
                         new Param("JJ1", Rockers.PremadeSamples.ChordG5, "Premade Sample 1 (JJ)", "Set the sample to use for the 1st riff."),
-                        new Param("pJJ1", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 1 (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pJJ1", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 1 (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("JJ2", Rockers.PremadeSamples.ChordG5, "Premade Sample 2 (JJ)", "Set the sample to use for the 2nd riff."),
-                        new Param("pJJ2", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 2 (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pJJ2", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 2 (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("JJ3", Rockers.PremadeSamples.ChordG5, "Premade Sample 3 (JJ)", "Set the sample to use for the 3rd riff."),
-                        new Param("pJJ3", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 3 (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pJJ3", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 3 (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("JJ4", Rockers.PremadeSamples.ChordA, "Premade Sample 4 (JJ)", "Set the sample to use for the final riff."),
-                        new Param("pJJ4", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 4 (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pJJ4", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 4 (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("S1", Rockers.PremadeSamples.ChordG, "Premade Sample 1 (Soshi)", "Set the sample to use for the 1st riff."),
-                        new Param("pS1", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 1 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pS1", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 1 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("S2", Rockers.PremadeSamples.ChordG, "Premade Sample 2 (Soshi)", "Set the sample to use for the 2nd riff."),
-                        new Param("pS2", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 2 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pS2", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 2 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("S3", Rockers.PremadeSamples.ChordG, "Premade Sample 3 (Soshi)", "Set the sample to use for the 3rd riff."),
-                        new Param("pS3", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 3 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pS3", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 3 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("S4", Rockers.PremadeSamples.ChordA, "Premade Sample 4 (Soshi)", "Set the sample to use for the final riff."),
-                        new Param("pS4", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 4 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pS4", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 4 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                     }
                 },
                 new GameAction("lastOne", "Last One!")
@@ -172,17 +172,17 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("moveCamera", true, "Move Camera", "Toggle if the camera should move to the middle."),
                         new Param("JJ1", Rockers.PremadeSamples.ChordAsus4, "Premade Sample 1 (JJ)", "Set the sample to use for the 1st riff."),
-                        new Param("pJJ1", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 1 (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pJJ1", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 1 (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("JJ2", Rockers.PremadeSamples.ChordAsus4, "Premade Sample 2 (JJ)", "Set the sample to use for the 2nd riff."),
-                        new Param("pJJ2", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 2 (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pJJ2", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 2 (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("JJ3", Rockers.PremadeSamples.ChordAsus4, "Premade Sample 3 (JJ)", "Set the sample to use for the final riff."),
-                        new Param("pJJ3", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 3 (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pJJ3", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 3 (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("S1", Rockers.PremadeSamples.ChordDmaj9, "Premade Sample 1 (Soshi)", "Set the sample to use for the 1st riff."),
-                        new Param("pS1", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 1 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pS1", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 1 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("S2", Rockers.PremadeSamples.ChordDmaj9, "Premade Sample 2 (Soshi)", "Set the sample to use for the 2nd riff."),
-                        new Param("pS2", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 2 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pS2", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 2 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("S3", Rockers.PremadeSamples.ChordDmaj9, "Premade Sample 3 (Soshi)", "Set the sample to use for the final riff."),
-                        new Param("pS3", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones 3 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pS3", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones 3 (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                     }
                 },
                 new GameAction("count", "Count")
@@ -247,7 +247,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("5JJ", new EntityTypes.Integer(-1, 24, 0), "B3 String (JJ)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("6JJ", new EntityTypes.Integer(-1, 24, 0), "E4 String (JJ)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("sampleJJ", Rockers.PremadeSamples.None, "Premade Sample (JJ)", "Set if this riff should use a premade sample."),
-                        new Param("pitchSampleJJ", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pitchSampleJJ", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("gcJJ", false, "Glee Club Guitar (JJ)", "Toggle if JJ should use the same guitar as in the Glee Club guitar lessons in DS."),
                         new Param("1S", new EntityTypes.Integer(-1, 24, 0), "E2 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("2S", new EntityTypes.Integer(-1, 24, 0), "A2 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
@@ -256,7 +256,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("5S", new EntityTypes.Integer(-1, 24, 0), "B3 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("6S", new EntityTypes.Integer(-1, 24, 0), "E4 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("sampleS", Rockers.PremadeSamples.None, "Premade Sample (Soshi)", "Set if this riff should use a premade sample."),
-                        new Param("pitchSampleS", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pitchSampleS", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("gcS", false, "Glee Club Guitar (Soshi)", "Toggle if Soshi should use the same guitar as in the Glee Club guitar lessons in DS.")
                     }
                 },
@@ -272,7 +272,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("5JJ", new EntityTypes.Integer(-1, 24, 0), "B3 String (JJ)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("6JJ", new EntityTypes.Integer(-1, 24, 0), "E4 String (JJ)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("sampleJJ", Rockers.PremadeSamples.None, "Premade Sample (JJ)", "Set if this riff should use a premade sample."),
-                        new Param("pitchSampleJJ", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones (JJ)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pitchSampleJJ", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones (JJ)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("gcJJ", false, "Glee Club Guitar (JJ)", "Toggle if JJ should use the same guitar as in the Glee Club guitar lessons in DS."),
                         new Param("1S", new EntityTypes.Integer(-1, 24, 0), "E2 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("2S", new EntityTypes.Integer(-1, 24, 0), "A2 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
@@ -281,7 +281,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("5S", new EntityTypes.Integer(-1, 24, 0), "B3 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("6S", new EntityTypes.Integer(-1, 24, 0), "E4 String (Soshi)", "Set how many semitones up the current string will be pitched. If this is left at -1, this string will not play."),
                         new Param("sampleS", Rockers.PremadeSamples.None, "Premade Sample (Soshi)", "Set if this riff should use a premade sample."),
-                        new Param("pitchSampleS", new EntityTypes.Integer(-24, 24, 0), "Sample Semitones (Soshi)", "Set how many semitones the premade sample should be pitched up."),
+                        new Param("pitchSampleS", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Sample Semitones (Soshi)", "Set how many semitones the premade sample should be pitched up."),
                         new Param("gcS", false, "Glee Club Guitar (Soshi)", "Toggle if Soshi should use the same guitar as in the Glee Club guitar lessons in DS.")
                     }
                 },

@@ -220,9 +220,8 @@ namespace HeavenStudio.Games.Scripts_Rockers
             if (bending || !strumming) return;
             bending = true;
             lastBendPitch = pitch;
-            if (chordSound != null)
-            {
-                chordSound.BendUp(0.05f, SoundByte.GetPitchFromSemiTones(SoundByte.GetSemitonesFromPitch(chordSound.pitch, true) + pitch, true));
+            if (chordSound != null) {
+                chordSound.BendUp(0.05f, GetBentPitch(chordSound.pitch, pitch));
             }
             else
             {
@@ -230,7 +229,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 {
                     if (stringSounds[i] != null)
                     {
-                        stringSounds[i].BendUp(0.05f, SoundByte.GetPitchFromSemiTones(SoundByte.GetSemitonesFromPitch(stringSounds[i].pitch, true) + pitch, true));
+                        stringSounds[i].BendUp(0.05f, GetBentPitch(stringSounds[i].pitch, pitch));
                     }
                 }
             }
@@ -298,6 +297,14 @@ namespace HeavenStudio.Games.Scripts_Rockers
         private void DoScaledAnimationAsync(string name, float time)
         {
             anim.DoScaledAnimationAsync((JJ ? "JJ" : "") + name, time);
+        }
+        
+        private float GetBentPitch(float pitch, int bend)
+        {
+            float unscaledPitch = chordSound.pitch / Conductor.instance.musicSource.pitch;
+            float bendPitch = SoundByte.GetPitchFromSemiTones(bend, false);
+            
+            return (unscaledPitch * bendPitch) * Conductor.instance.musicSource.pitch;
         }
     }
 }

@@ -252,6 +252,8 @@ namespace HeavenStudio
                                     e.dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
                                 else if (type == typeof(EntityTypes.Float))
                                     e.dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
+                                else if (type == typeof(EntityTypes.Note))
+                                    e.dynamicData.Add(param.propertyName, ((EntityTypes.Note)param.parameter).val);
                                 else if (type.IsEnum)
                                     e.dynamicData.Add(param.propertyName, (int)param.parameter);
                                 else
@@ -263,7 +265,7 @@ namespace HeavenStudio
                             {
                                 try
                                 {
-                                    if (type == typeof(EntityTypes.Integer))
+                                    if (type == typeof(EntityTypes.Integer) || type == typeof(EntityTypes.Note))
                                         e.dynamicData[param.propertyName] = (int)e[param.propertyName];
                                     else if (type == typeof(EntityTypes.Float))
                                         e.dynamicData[param.propertyName] = (float)e[param.propertyName];
@@ -295,6 +297,8 @@ namespace HeavenStudio
                                     // use default value
                                     if (type == typeof(EntityTypes.Integer))
                                         e.dynamicData[param.propertyName] = ((EntityTypes.Integer)param.parameter).val;
+                                    else if (type == typeof(EntityTypes.Note))
+                                        e.dynamicData[param.propertyName] = ((EntityTypes.Note)param.parameter).val;
                                     else if (type == typeof(EntityTypes.Float))
                                         e.dynamicData[param.propertyName] = ((EntityTypes.Float)param.parameter).val;
                                     else if (type.IsEnum && param.propertyName != "ease")
@@ -1096,6 +1100,7 @@ namespace HeavenStudio
                             }),
                         }
                     },
+
                     new GameAction("colorGrading", "Color Grading")
                     {
                         resizable = true,
@@ -1128,6 +1133,124 @@ namespace HeavenStudio
                             }),
                         }
                     },
+
+                    new GameAction("gaussBlur", "Gaussian Blur")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 5f, 0f), "Start Intensity", "Set the intensity at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 5f, 1f), "End Intensity", "Set the intensity at the end of the event."),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Linear, new string[] { "intenStart" })
+                            }),
+                        }
+                    },
+
+                    new GameAction("retroTv", "Retro TV")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 1f, 0f), "Start Distortion", "Set the distortion at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 0.2f), "End Distortion", "Set the distortion at the end of the event."),
+
+                            new("rgbStart", new EntityTypes.Float(0f, 1f, 1f), "Start RGB Blend", "Set the RGB blend at the start of the event."),
+                            new("rgbEnd", new EntityTypes.Float(0f, 1f, 1f), "End RGB Blend", "Set the RGB blend at the end of the event."),
+
+                            new("bottomStart", new EntityTypes.Float(0f, 1f, 0f), "Start Bottom Collapse", "Set the bottom collapse at the start of the event."),
+                            new("bottomEnd", new EntityTypes.Float(0f, 1f, 0.02f), "End Bottom Collapse", "Set the bottom collapse at the end of the event."),
+
+                            new("noiseStart", new EntityTypes.Float(0f, 1f, 0f), "Start Noise", "Set the noise at the start of the event."),
+                            new("noiseEnd", new EntityTypes.Float(0f, 1f, 0.3f), "End Noise", "Set the noise knee at the end of the event."),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "rgbStart", "bottomStart", "noiseStart"})
+                            }),
+                        }
+                    },
+
+                    new GameAction("scanJitter", "Scan Line Jitter")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 1f, 0f), "Start Intensity", "Set the intensity at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 0.1f), "End Intensity", "Set the intensity at the end of the event."),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart" })
+                            }),
+                        }
+                    },
+
+                    new GameAction("analogNoise", "Analog Noise")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 1f, 0f), "Start Speed", "Set the speed at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 0.5f), "End Speed", "Set the speed at the end of the event."),
+
+                            new("fadingStart", new EntityTypes.Float(0f, 1f, 0f), "Start Fading", "Set the fading at the start of the event."),
+                            new("fadingEnd", new EntityTypes.Float(0f, 1f, 0.1f), "End Fading", "Set the fading at the end of the event."),
+
+                            new("thresholdStart", new EntityTypes.Float(0f, 1f, 0f), "Start Threshold", "Set the threshold at the start of the event."),
+                            new("thresholdEnd", new EntityTypes.Float(0f, 1f, 0.8f), "End Threshold", "Set the threshold at the end of the event."),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "fadingStart", "thresholdStart"})
+                            }),
+                        }
+                    },
+
+                    new GameAction("screenJump", "Screen Jump")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0f, 1f, 0f), "Start Intensity", "Set the intensity at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0f, 1f, 0.01f), "End Intensity", "Set the intensity at the end of the event."),
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart" })
+                            }),
+                        }
+                    },
+
+                    new GameAction("sobelNeon", "Neon")
+                    {
+                        resizable = true,
+                        parameters = new()
+                        {
+                            new("intenStart", new EntityTypes.Float(0.1f, 1f, 0.1f), "Start Intensity", "Set the edge fade at the start of the event."),
+                            new("intenEnd", new EntityTypes.Float(0.1f, 1f, 1f), "End Intensity", "Set the edge fade at the end of the event."),
+
+                            new("edgeWidthStart", new EntityTypes.Float(0.05f, 5f, 0.05f), "Start Edge Width", "Set the edge width at the start of the event."),
+                            new("edgeWidthEnd", new EntityTypes.Float(0.05f, 5f, 2f), "End Edge Width", "Set the edge width at the end of the event."),
+
+                            new("bgFadeStart", new EntityTypes.Float(0f, 1f, 0f), "Start Background Presence", "Set the background presence at the start of the event."),
+                            new("bgFadeEnd", new EntityTypes.Float(0f, 1f, 0f), "End Background Presence", "Set the background presence at the end of the event."),
+
+
+                            new("brightnessStart", new EntityTypes.Float(0f, 2f, 0f), "Start Brightness", "Set the brightness at the start of the event."),
+                            new("brightnessEnd", new EntityTypes.Float(0f, 2f, 1f), "End Brightness", "Set the brightness at the end of the event."),
+
+
+                            new("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the action.", new()
+                            {
+                                new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "intenStart", "edgeWidthStart", "bgFadeStart", "brightnessStart" })
+                            }),
+                        }
+                    },
+
+                    
                     new GameAction("screenTiling", "Tile Screen")
                     {
                         resizable = true,
@@ -1159,7 +1282,9 @@ namespace HeavenStudio
                                 new((x, y) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "xScrollStart", "yScrollStart" })
                             }),
                         }
-                    }
+                    },
+
+
                 }),
 
                 new Minigame("advanced", "Advanced", "", false, true, new List<GameAction>()
@@ -1247,7 +1372,7 @@ namespace HeavenStudio
                                 new((x, e) => (bool)x, "semitones", "cents"),
                                 new((x, e) => !(bool)x, "pitch"),
                             }),
-                            new Param("semitones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The semitones of the sfx."),
+                            new Param("semitones", new EntityTypes.Integer(-EntityTypes.Note.maxSemitones, EntityTypes.Note.maxSemitones, 0), "Semitones", "The semitones of the sfx."),
                             new Param("cents", new EntityTypes.Integer(-100, 100, 0), "Cents", "The cents of the sfx."),
                             new Param("pitch", new EntityTypes.Float(0, 5, 1), "Pitch", "The pitch of the sfx."),
                             new Param("volume", new EntityTypes.Float(0, 2, 1), "Volume", "The volume of the sfx."),

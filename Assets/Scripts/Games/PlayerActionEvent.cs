@@ -46,6 +46,8 @@ namespace HeavenStudio.Games
 
         public bool countsForAccuracy = true; //Indicates if the input counts for the accuracy or not. If set to false, it'll not be counted in the accuracy calculation
 
+        public bool missable = false; //Indicates if the miss input counts for the accuracy or not. If set to true, it'll not be counted in the accuracy calculation
+
         public void setHitCallback(ActionEventCallbackState OnHit)
         {
             this.OnHit = OnHit;
@@ -332,7 +334,7 @@ namespace HeavenStudio.Games
                 OnMiss(this);
             }
 
-            if (countsForAccuracy && gm.canInput && !(noAutoplay || autoplayOnly))
+            if (countsForAccuracy && !missable && gm.canInput && !(noAutoplay || autoplayOnly))
             {
                 gm.ScoreInputAccuracy(startBeat + timer, 0, true, 2.0, weight, false);
                 GoForAPerfect.instance.Miss();

@@ -19,6 +19,7 @@ namespace HeavenStudio.Editor
         [Header("Property Prefabs")]
         [SerializeField] private GameObject IntegerP;
         [SerializeField] private GameObject FloatP;
+        [SerializeField] private GameObject NoteP;
         [SerializeField] private GameObject ButtonP;
         [SerializeField] private GameObject BooleanP;
         [SerializeField] private GameObject DropdownP;
@@ -44,6 +45,7 @@ namespace HeavenStudio.Editor
                 PropertyPrefabs = new() {
                     { typeof(Integer), IntegerP },
                     { typeof(Float), FloatP },
+                    { typeof(Note), NoteP },
                     { typeof(Dropdown), DropdownP },
                     { typeof(Button), ButtonP },
                     { typeof(Color), ColorP },
