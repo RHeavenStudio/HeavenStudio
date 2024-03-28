@@ -10,37 +10,23 @@ using HeavenStudio.InputSystem;
 using Jukebox;
 using System.Runtime.CompilerServices;
 
+using HeavenStudio.Games.Scripts_CatchOfTheDay;
+using UnityEngine.AI;
+
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    /// Minigame loaders handle the setup of your minigame.
-    /// Here, you designate the game prefab, define entities, and mark what AssetBundle to load
 
-    /// Names of minigame loaders follow a specific naming convention of `PlatformcodeNameLoader`, where:
-    /// `Platformcode` is a three-leter platform code with the minigame's origin
-    /// `Name` is a short internal name
-    /// `Loader` is the string "Loader"
-
-    /// Platform codes are as follows:
-    /// Agb: Gameboy Advance    ("Advance Gameboy")
-    /// Ntr: Nintendo DS        ("Nitro")
-    /// Rvl: Nintendo Wii       ("Revolution")
-    /// Ctr: Nintendo 3DS       ("Centrair")
-    /// Mob: Mobile
-    /// Pco: PC / Other
-
-    /// Fill in the loader class label, "*prefab name*", and "*Display Name*" with the relevant information
-    /// For help, feel free to reach out to us on our discord, in the #development channel.
     public static class RvlCatchOfTheDayLoader
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("catchOfTheDay", "Catch of the Day", "ffffff", false, false, new List<GameAction>()
+            return new Minigame("catchOfTheDay", "Catch of the Day", "b5dede", false, false, new List<GameAction>()
             {
                 new GameAction("fish1", "Quicknibble")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish01(e.beat); CatchOfTheDay.Instance.NewLake(e); },
-                    inactiveFunction = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish01(e.beat); },
+                    function = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish01(e); CatchOfTheDay.Instance.NewLake(e); },
+                    inactiveFunction = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish01(e); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -52,12 +38,19 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorTop",    new Color(0.7098039f, 0.8705882f, 0.8705882f), "Top Color",    "The color for the top part of the background."),
                         new Param("colorBottom", new Color(0.4666667f, 0.7372549f, 0.8196079f), "Bottom Color", "The color for the bottom part of the background."),
                         new Param("sceneDelay", new EntityTypes.Float(0f, 32f, 1f), "Scene Change Delay", "Amount of beats to wait before changing to the next scene."),
+                        new Param("fgManta", false, "Foreground Stingray", "Spawn a stingray in the foreground of the scene."),
+                        new Param("bgManta", false, "Background Stingray", "Spawn a stingray in the background of the scene."),
+                        new Param("schoolFish", false, "School of Fish", "Spawn a school of fish to as a distraction.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "fishDensity" })
+                        }),
+                        new Param("fishDensity", new EntityTypes.Float(0f, 1f, 1f), "Fish Density", "Set the density for the fish in the school."),
                     },
                 },
                 new GameAction("fish2", "Pausegill")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish02(e.beat, e["countIn"]); CatchOfTheDay.Instance.NewLake(e); },
-                    inactiveFunction = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish02(e.beat, e["countIn"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish02(e); CatchOfTheDay.Instance.NewLake(e); },
+                    inactiveFunction = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish02(e); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -70,16 +63,24 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorTop",    new Color(0.7098039f, 0.8705882f, 0.8705882f), "Top Color",    "The color for the top part of the background."),
                         new Param("colorBottom", new Color(0.4666667f, 0.7372549f, 0.8196079f), "Bottom Color", "The color for the bottom part of the background."),
                         new Param("sceneDelay", new EntityTypes.Float(0f, 32f, 1f), "Scene Change Delay", "Amount of beats to wait before changing to the next scene."),
+                        new Param("fgManta", false, "Foreground Stingray", "Spawn a stingray in the foreground of the scene."),
+                        new Param("bgManta", false, "Background Stingray", "Spawn a stingray in the background of the scene."),
+                        new Param("schoolFish", false, "School of Fish", "Spawn a school of fish to as a distraction.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "fishDensity" })
+                        }),
+                        new Param("fishDensity", new EntityTypes.Float(0f, 1f, 1f), "Fish Density", "Set the density for the fish in the school."),
                     },
                 },
                 new GameAction("fish3", "Threefish")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish03(e.beat, e["countIn"]); CatchOfTheDay.Instance.NewLake(e); },
-                    inactiveFunction = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish03(e.beat, e["countIn"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish03(e); CatchOfTheDay.Instance.NewLake(e); },
+                    inactiveFunction = delegate {var e = eventCaller.currentEntity; CatchOfTheDay.Cue_Fish03(e); },
                     defaultLength = 5.5f,
                     parameters = new List<Param>()
                     {
                         new Param("countIn", false, "Count-In", "Play the \"One Two Three Go!\" sound effect as a count in to the cue."),
+                        new Param("fakeOut", false, "Fake-Out", "If enabled, a quicknibble will be shown initially, before being chased away by the threefish."),
                         new Param("layout", CatchOfTheDay.FishLayout.Random, "Layout", "Set the layout for the scene."),
                         new Param("useCustomColor", false, "Custom Color", "Set whether or not to use a custom color.", new List<Param.CollapseParam>()
                         {
@@ -88,33 +89,19 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorTop",    new Color(0.7098039f, 0.8705882f, 0.8705882f), "Top Color",    "The color for the top part of the background."),
                         new Param("colorBottom", new Color(0.4666667f, 0.7372549f, 0.8196079f), "Bottom Color", "The color for the bottom part of the background."),
                         new Param("sceneDelay", new EntityTypes.Float(0f, 32f, 1f), "Scene Change Delay", "Amount of beats to wait before changing to the next scene."),
-                    },
-                },
-                /*new GameAction("setBGColor", "Set Background Colors")
-                {
-                    defaultLength = 1f,
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("startColorTop",    new Color(0.7098039f, 0.8705882f, 0.8705882f), "Start Top Color",    "The color for the top part of the background at which to start."),
-                        new Param("startColorBottom", new Color(0.4666667f, 0.7372549f, 0.8196079f), "Start Bottom Color", "The color for the bottom part of the background at which to start."),
-                        new Param("endColorTop",      new Color(0.7098039f, 0.8705882f, 0.8705882f), "End Top Color",      "The color for the top part of the background at which to end."),
-                        new Param("endColorBottom",   new Color(0.4666667f, 0.7372549f, 0.8196079f), "End Bottom Color",   "The color for the bottom part of the background at which to end."),
-                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Set the easing of the function.", new List<Param.CollapseParam>()
+                        new Param("fgManta", false, "Foreground Stingray", "Spawn a stingray in the foreground of the scene."),
+                        new Param("bgManta", false, "Background Stingray", "Spawn a stingray in the background of the scene."),
+                        new Param("schoolFish", false, "School of Fish", "Spawn a school of fish to as a distraction.", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam((x, _) => (Util.EasingFunction.Ease)x != Util.EasingFunction.Ease.Instant, new string[] { "startColorTop", "startColorBottom" })
-                        })
+                            new Param.CollapseParam((x, _) => (bool)x, new string[] { "fishDensity" })
+                        }),
+                        new Param("fishDensity", new EntityTypes.Float(0f, 1f, 1f), "Fish Density", "Set the density for the fish in the school."),
                     },
                 },
-                new GameAction("sceneTransition", "Scene Transition")
-                {
-                    defaultLength = 0.5f
-                },*/
-                
             },
             new List<string>() {"rvl", "normal"},
             "rvlfishing", "en"
-            //, chronologicalSortKey: 1107210021
+            //, chronologicalSortIndex: 21
             );
         }
     }
@@ -122,21 +109,14 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    /// This class handles the minigame logic.
-    /// Minigame inherits directly from MonoBehaviour, and adds Heaven Studio specific methods to override.
     public class CatchOfTheDay : Minigame
     {
         /*
         BIG LIST OF TODOS
-        - implement inputs
-        - bubble particles
         - ping @hexiedecimal
-        - custom layouts/colors
         - scene transitions
-        - transition block
-        - make stuff update in editor
-        - color stuff white
-        - removec omments
+        - wait for upscale
+        - make ann movable
         */
         public static CatchOfTheDay Instance
         {
@@ -148,20 +128,25 @@ namespace HeavenStudio.Games
             }
         }
 
+        [SerializeField] Animator Angler;
         [SerializeField] GameObject LakeScenePrefab;
         [SerializeField] Transform LakeSceneHolder;
 
         public int? LastLayout;
         public Dictionary<RiqEntity, LakeScene> ActiveLakes = new();
 
-        public static void Dummy()
-        {
-            // TODO REMOVE ME BEFORE PUBLISH I AM JUST A PLACEHOLDER
-        }
+        public static Dictionary<RiqEntity, MultiSound> FishSounds = new();
 
         private void Update()
         {
-            //SetDesiredColorAtBeat(Conductor.instance.songPositionInBeats);
+            if (!conductor.isPlaying && !conductor.isPaused && ActiveLakes.Count <= 0)
+            {
+                List<RiqEntity> activeFishes = GetActiveFishes(conductor.songPositionInBeatsAsDouble);
+                if (activeFishes.Count > 0)
+                    NewLake(activeFishes[0]);
+                else
+                    SpawnNextFish(conductor.songPositionInBeatsAsDouble);
+            }
         }
         public override void OnPlay(double beat)
         {
@@ -170,6 +155,7 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             DestroyOrphanedLakes();
+            CleanupFishSounds();
             // get active fishes
             foreach (RiqEntity e in GetActiveFishes(beat))
             {
@@ -177,26 +163,36 @@ namespace HeavenStudio.Games
             }
             if (ActiveLakes.Count <= 0)
             {
-                RiqEntity nextFish = GetNextFish(beat);
-                if (nextFish is not null)
-                    NewLake(nextFish);
+                SpawnNextFish(beat);
             }
         }
 
-        public static void Cue_Fish01(double beat)
+        public static void Cue_Fish01(RiqEntity e)
         {
-            MultiSound.Play(new MultiSound.Sound[]{
+            CleanupFishSounds();
+
+            double beat = e.beat;
+
+            FishSounds.Add(e, MultiSound.Play(new MultiSound.Sound[]{
                 new MultiSound.Sound("catchOfTheDay/quick1", beat),
                 new MultiSound.Sound("catchOfTheDay/quick2", beat + 1),
-            }, forcePlay: true);
+            }, forcePlay: true));
+
+            if (Instance != null && Instance.ActiveLakes.ContainsKey(e))
+                Instance.ActiveLakes[e]._MultiSound = FishSounds[e];
         }
-        public static void Cue_Fish02(double beat, bool countIn)
+        public static void Cue_Fish02(RiqEntity e)
         {
-            MultiSound.Play(new MultiSound.Sound[]{
+            CleanupFishSounds();
+
+            double beat = e.beat;
+            bool countIn = e["countIn"];
+
+            FishSounds.Add(e, MultiSound.Play(new MultiSound.Sound[]{
                 new MultiSound.Sound("catchOfTheDay/pausegill1", beat),
                 new MultiSound.Sound("catchOfTheDay/pausegill2", beat + 0.5),
                 new MultiSound.Sound("catchOfTheDay/pausegill3", beat + 1),
-            }, forcePlay: true);
+            }, forcePlay: true));
 
             if (countIn)
             {
@@ -205,15 +201,23 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound(UnityEngine.Random.Range(0.0f, 1.0f) > 0.5 ? "count-ins/go1" : "count-ins/go2", beat + 2),
                 }, forcePlay: true, game: false);
             }
+
+            if (Instance != null && Instance.ActiveLakes.ContainsKey(e))
+                Instance.ActiveLakes[e]._MultiSound = FishSounds[e];
         }
-        public static void Cue_Fish03(double beat, bool countIn)
+        public static void Cue_Fish03(RiqEntity e)
         {
-            MultiSound.Play(new MultiSound.Sound[]{
+            CleanupFishSounds();
+
+            double beat = e.beat;
+            bool countIn = e["countIn"];
+
+            FishSounds.Add(e, MultiSound.Play(new MultiSound.Sound[]{
                 new MultiSound.Sound("catchOfTheDay/threefish1", beat),
                 new MultiSound.Sound("catchOfTheDay/threefish2", beat + 0.25),
                 new MultiSound.Sound("catchOfTheDay/threefish3", beat + 0.5),
                 new MultiSound.Sound("catchOfTheDay/threefish4", beat + 1)
-            }, forcePlay: true);
+            }, forcePlay: true));
             if (countIn)
             {
                 MultiSound.Play(new MultiSound.Sound[]{
@@ -223,6 +227,30 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound(UnityEngine.Random.Range(0.0f, 1.0f) > 0.5 ? "count-ins/go1" : "count-ins/go2", beat + 4.5),
                 }, forcePlay: true, game: false);
             }
+            
+            if (Instance != null && Instance.ActiveLakes.ContainsKey(e))
+                Instance.ActiveLakes[e]._MultiSound = FishSounds[e];
+        }
+
+        public void DoPickAnim()
+        {
+            Angler.DoScaledAnimationAsync("Pick", 0.5f);
+        }
+        public void DoJustAnim()
+        {
+            Angler.DoScaledAnimationAsync("Just", 0.5f);
+        }
+        public void DoMissAnim()
+        {
+            Angler.DoScaledAnimationAsync("Miss", 0.5f);
+        }
+        public void DoThroughAnim()
+        {
+            Angler.DoScaledAnimationAsync("Through", 0.5f);
+        }
+        public void DoOutAnim()
+        {
+            Angler.DoScaledAnimationAsync("Through", 0.5f);
         }
 
         public void DestroyOrphanedLakes()
@@ -238,29 +266,70 @@ namespace HeavenStudio.Games
             {
                 Destroy(obj);
             }
-            Debug.Log("Lakes cleared.");
+        }
+        public static void CleanupFishSounds()
+        {
+            List<RiqEntity> expiredKeys = new();
+            foreach (KeyValuePair<RiqEntity, MultiSound> kv in FishSounds)
+            {
+                if (kv.Value == null)
+                    expiredKeys.Add(kv.Key);
+            }
+            foreach (RiqEntity key in expiredKeys)
+                FishSounds.Remove(key);
         }
         public List<RiqEntity> GetActiveFishes(double beat)
         {
-            Debug.Log("Getting active fishes.");
             return EventCaller.GetAllInGameManagerList("catchOfTheDay", new string[] { "fish1", "fish2", "fish3" }).FindAll(e => e.beat <= beat && e.beat + e.length - 1 + e["sceneDelay"] >= beat);
         }
         public RiqEntity GetNextFish(double beat)
         {
-            Debug.Log("Seeking next fish...");
-            return EventCaller.GetAllInGameManagerList("catchOfTheDay", new string[] { "fish1", "fish2", "fish3" }).OrderBy(e => e.beat).FirstOrDefault(e => e.beat >= beat);
+            RiqEntity gameSwitch = GetNextGameSwitch(beat);
+            return EventCaller.GetAllInGameManagerList("catchOfTheDay", new string[] { "fish1", "fish2", "fish3" }).OrderBy(e => e.beat).FirstOrDefault(e => e.beat >= beat && (gameSwitch is null || e.beat < gameSwitch.beat));
+        }
+        public RiqEntity GetNextGameSwitch(double beat)
+        {
+            return EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).OrderBy(e => e.beat).FirstOrDefault(e => e.beat > beat && e.datamodel != "gameManager/switchGame/catchOfTheDay");
         }
         public LakeScene NewLake(RiqEntity e)
         {
             if (ActiveLakes.ContainsKey(e))
                 return null;
             
-            Debug.Log("Adding new lake...");
+            int sort = EventCaller.GetAllInGameManagerList("catchOfTheDay", new string[] { "fish1", "fish2", "fish3" }).FindIndex(x => e == x);
+            if (sort < 0)
+                return null;
+            
+            CleanupFishSounds();
+
             LakeScene lake = Instantiate(LakeScenePrefab, LakeSceneHolder).GetComponent<LakeScene>();
-            LastLayout = lake.Setup(e, this, LastLayout);
+            LastLayout = lake.Setup(e, this, LastLayout, int.MaxValue - sort);
             ActiveLakes.Add(e, lake);
-            Debug.Log("New lake added.");
+            if (FishSounds.ContainsKey(e))
+                lake._MultiSound = FishSounds[e];
             return lake;
+        }
+        public bool SpawnNextFish(double beat)
+        {
+            RiqEntity nextFish = GetNextFish(beat);
+            if (nextFish is not null)
+            {
+                NewLake(nextFish);
+                return true;
+            }
+            return false;
+        }
+        public void DisposeLake(LakeScene lake)
+        {
+            ActiveLakes.Remove(lake.Entity);
+
+            if (ActiveLakes.Count <= 0)
+            {
+                if (SpawnNextFish(conductor.songPositionInBeatsAsDouble))
+                    Destroy(lake.gameObject);
+            }
+            else
+                Destroy(lake.gameObject);
         }
 
         public enum FishLayout : int
@@ -272,3 +341,5 @@ namespace HeavenStudio.Games
         }
     }
 }
+
+// This minigame ported by playinful. ☆
