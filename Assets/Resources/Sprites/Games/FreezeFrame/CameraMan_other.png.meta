@@ -1,0 +1,1381 @@
+fileFormatVersion: 2
+guid: 9326ee16356c9d24dafb2641e615c517
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: freezeFrame_overlay
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 312
+        width: 493
+        height: 271
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c9f318ff67a2dc41842ea6b80383faa
+      internalID: -631038606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_playerBox
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 776
+        width: 111
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d10fd0f99dbbcf488caadf91a9246f3
+      internalID: -2109308074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_playerTorso
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 888
+        width: 47
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ac84d7a15858dd499dcf0b71ca11da6
+      internalID: 1482626733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_playerIdle
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 960
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2b780279cc63324fa6209d69a61fb8d
+      internalID: -1242169489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_playerSad
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 960
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50343572123aff74a8f1a1c94fb5c69a
+      internalID: 790909462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_playerOops
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 960
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4780e5815a2f2134d9829cc881521851
+      internalID: -363496440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_playerHappy
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 960
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3551505e21a31dd48ae80df145c022ed
+      internalID: -1491722911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_playerSquint
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 960
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54c7974c11535754fae0358971e55f2b
+      internalID: 378736356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_playerLegs01
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 960
+        width: 62
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f07b9b1ba05a92349bd932d3373df3e5
+      internalID: 1854203247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_playerLegs02
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 960
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2b9c7c44eb3d3d4687e08fca7e58974
+      internalID: -2070367421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_cameraFlash01
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 960
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5978341ab4ff694face099151e2b5a3
+      internalID: 1536648942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_cameraFlash02
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 960
+        width: 47
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbf92e4ffb4806748a4423d67c8c14b7
+      internalID: -525950775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_cameraFlash03
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 960
+        width: 55
+        height: 55
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa07cd7f6586dce4386c47a29139c230
+      internalID: -352894957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_cameraFlash04
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 960
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53b2e2b81af2ccc48ad2ffe5cbd73d1a
+      internalID: 1829225764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_shortCar
+      rect:
+        serializedVersion: 2
+        x: 417
+        y: 776
+        width: 134
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6073bd242ed4c4e4bb746b1921177a70
+      internalID: -299858999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_longCar
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 776
+        width: 415
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb2712981fbb3fe4a96a28f06b02c2b1
+      internalID: 2093622923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_photoBorder
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 129
+        width: 223
+        height: 174
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7fa644bf0ee7d243993df794f536433
+      internalID: 832552208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_PhotoTrackEdge
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 81
+        width: 223
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba22de4802a7ef14e94bfc6a76a10dbb
+      internalID: -1029839650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_photoTrack
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 73
+        width: 62
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c3f2b18c1bf5be4f866ff4539e30af1
+      internalID: 1594896761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_photoGrass
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 185
+        width: 62
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cce9aab88f29e794ebf5efdbadb8d32b
+      internalID: -2068509640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_peaceSign
+      rect:
+        serializedVersion: 2
+        x: 736
+        y: 593
+        width: 71
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a90b6877edf839468e4fbb94d36a94c
+      internalID: 1067254330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_ladyFace
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 80
+        width: 126
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb9ca48ade273424aa128a9825e1e2a2
+      internalID: 268902830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_ladyLook
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 80
+        width: 127
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7eaec358fe2c6c646b65628b652da606
+      internalID: -249442660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_ladyBlink
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 80
+        width: 127
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6fae7aa5bb5151d4f808e32b1a26453f
+      internalID: -1945301481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_ladyBosom
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 193
+        width: 111
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d079dc1aef9a30747bca9a751d59c28d
+      internalID: 315876861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_ladyWaist
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 33
+        width: 111
+        height: 158
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 049fa4e6d03e40f4a82713b24de3959c
+      internalID: 433216211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_ladyArm
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 569
+        width: 62
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 264f5c5c5e6d6354eb04156e92165453
+      internalID: 1834455136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_coachHead01
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 537
+        width: 158
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bf3055b041dd034eb848a8f5924337e
+      internalID: 8396014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_coachHead02
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 681
+        width: 158
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71e471e9a70dc894797ec36acbadeafb
+      internalID: 391481022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_coachTorso01
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 305
+        width: 207
+        height: 230
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54815fbecdb96cb4aa71f82900ad79fa
+      internalID: 2139379831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_coachTorso02
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 305
+        width: 206
+        height: 230
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58a1d7fa17db63f45aa2864e9ecb06cd
+      internalID: -1413667912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_photoCameo_ghost
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 217
+        width: 87
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 762643874cb881d42b7dfdee8300a5ff
+      internalID: -1782248971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_photoCameo_rats
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 233
+        width: 151
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39ba0fcb43320334d8361f56414b2e24
+      internalID: -1099585802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_photoCameo_ninjaWhite
+      rect:
+        serializedVersion: 2
+        x: 912
+        y: 441
+        width: 111
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84c77a35dbf160e46b19bcf0055bcca7
+      internalID: -314316757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_photoCameo_ninjaBlack
+      rect:
+        serializedVersion: 2
+        x: 912
+        y: 345
+        width: 111
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 262c6ba9d32764e45bc760d44457e558
+      internalID: -2123024622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_maru
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 584
+        width: 190
+        height: 191
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ce0b66777e65fd47aa44328d5da81bd
+      internalID: -647017332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_batsu
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 584
+        width: 191
+        height: 191
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5ea6fe013ba7b34c8216fb33aef461b
+      internalID: 782137592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_sankaku
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 584
+        width: 199
+        height: 191
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcca318f76cfafe4bbe6ed198e6be2fe
+      internalID: 180920831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_overlayCrosshair
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 776
+        width: 47
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 415b88e87fde81e469c7aa77470da3ee
+      internalID: -1979073095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_billboard01
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 824
+        width: 151
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92837e3c47ead7b4eabc2c449162003f
+      internalID: 811814910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_billboard02
+      rect:
+        serializedVersion: 2
+        x: 816
+        y: 824
+        width: 151
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e07017be98f75248892c7c9fcc87c00
+      internalID: 233320279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_wheel
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 888
+        width: 54
+        height: 55
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c23549952eb10d4d905fefbcee66eb0
+      internalID: 2042807485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_longCarFar
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 888
+        width: 95
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1fe83d7cdf43f9c46a7c017f9078b937
+      internalID: 818276007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_shortCarFar01
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 888
+        width: 39
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78eab99d50e892a4c8bedf4b1e604724
+      internalID: -49849053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_shortCarFar02
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 888
+        width: 39
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c84b11a3cf008f14497fc2d641587c6b
+      internalID: -988158864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_wheelFar01
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 937
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93bf0ec6b7b37034ba98638751a3d4a7
+      internalID: 1492055772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_wheelFar02
+      rect:
+        serializedVersion: 2
+        x: 481
+        y: 937
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58e605def8e53444bad8f2a6579b09a5
+      internalID: -1950327860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_camera01
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 888
+        width: 88
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ba1c86c58715314a8d479ddb9a05b99
+      internalID: 514287739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_camera02
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 888
+        width: 87
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc34c92d49c19b249b6dd980292c0f69
+      internalID: 1450439676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_camera03
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 888
+        width: 87
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5592c1b8989ac5641a71a6f8ac9f45f2
+      internalID: -1696152753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_cameraDown
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 888
+        width: 87
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80431c23b711b6f48ad6ab9c1c615ec1
+      internalID: 2131247634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_crowd01
+      rect:
+        serializedVersion: 2
+        x: 656
+        y: 960
+        width: 207
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54009ef80a0298449856935f514414aa
+      internalID: -1715518271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_crowd02a
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 137
+        width: 122
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09f2bb0e132df244387ce7377100b663
+      internalID: 2029395457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_crowd02b
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 137
+        width: 115
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ca7203b718ab57448ffe6575849b294
+      internalID: 195559496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_crowd02c
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 57
+        width: 122
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea36998a9486b704eaf566adf9337e97
+      internalID: 1911284742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: freezeFrame_crowd02d
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 57
+        width: 115
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 216a0c4a9a66e174785ca9f08072a1ae
+      internalID: -1284001560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CameraMan_shutterFill
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 994
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6a5817a2dcf0244cac0a6cc6047568b
+      internalID: -974970060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      CameraMan_shutterFill: -974970060
+      freezeFrame_PhotoTrackEdge: -1029839650
+      freezeFrame_batsu: 782137592
+      freezeFrame_billboard01: 811814910
+      freezeFrame_billboard02: 233320279
+      freezeFrame_camera01: 514287739
+      freezeFrame_camera02: 1450439676
+      freezeFrame_camera03: -1696152753
+      freezeFrame_cameraDown: 2131247634
+      freezeFrame_cameraFlash01: 1536648942
+      freezeFrame_cameraFlash02: -525950775
+      freezeFrame_cameraFlash03: -352894957
+      freezeFrame_cameraFlash04: 1829225764
+      freezeFrame_coachHead01: 8396014
+      freezeFrame_coachHead02: 391481022
+      freezeFrame_coachTorso01: 2139379831
+      freezeFrame_coachTorso02: -1413667912
+      freezeFrame_crowd01: -1715518271
+      freezeFrame_crowd02a: 2029395457
+      freezeFrame_crowd02b: 195559496
+      freezeFrame_crowd02c: 1911284742
+      freezeFrame_crowd02d: -1284001560
+      freezeFrame_ladyArm: 1834455136
+      freezeFrame_ladyBlink: -1945301481
+      freezeFrame_ladyBosom: 315876861
+      freezeFrame_ladyFace: 268902830
+      freezeFrame_ladyLook: -249442660
+      freezeFrame_ladyWaist: 433216211
+      freezeFrame_longCar: 2093622923
+      freezeFrame_longCarFar: 818276007
+      freezeFrame_maru: -647017332
+      freezeFrame_overlay: -631038606
+      freezeFrame_overlayCrosshair: -1979073095
+      freezeFrame_peaceSign: 1067254330
+      freezeFrame_photoBorder: 832552208
+      freezeFrame_photoCameo_ghost: -1782248971
+      freezeFrame_photoCameo_ninjaBlack: -2123024622
+      freezeFrame_photoCameo_ninjaWhite: -314316757
+      freezeFrame_photoCameo_rats: -1099585802
+      freezeFrame_photoGrass: -2068509640
+      freezeFrame_photoTrack: 1594896761
+      freezeFrame_photograph: 2026589508
+      freezeFrame_playerBox: -2109308074
+      freezeFrame_playerHappy: -1491722911
+      freezeFrame_playerIdle: -1242169489
+      freezeFrame_playerLegs01: 1854203247
+      freezeFrame_playerLegs02: -2070367421
+      freezeFrame_playerOops: -363496440
+      freezeFrame_playerSad: 790909462
+      freezeFrame_playerSquint: 378736356
+      freezeFrame_playerTorso: 1482626733
+      freezeFrame_sankaku: 180920831
+      freezeFrame_shortCar: -299858999
+      freezeFrame_shortCarFar01: -49849053
+      freezeFrame_shortCarFar02: -988158864
+      freezeFrame_thumbsDown: -282595921
+      freezeFrame_thumbsSide: 850559141
+      freezeFrame_thumbsUp: 1894570421
+      freezeFrame_wheel: 2042807485
+      freezeFrame_wheelFar01: 1492055772
+      freezeFrame_wheelFar02: -1950327860
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: ntrfreezeframe/common
+  assetBundleVariant: 
