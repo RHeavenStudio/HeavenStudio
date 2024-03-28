@@ -368,8 +368,6 @@ namespace HeavenStudio
             public bool fxOnly;
             public List<GameAction> actions = new List<GameAction>();
 
-            public uint? chronologicalSortKey;
-
             public List<string> tags;
             public string defaultLocale = "en";
             public string wantAssetBundle = null;
@@ -403,7 +401,7 @@ namespace HeavenStudio
                 set => soundSequences = value;
             }
 
-            public Minigame(string name, string displayName, string color, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string wantAssetBundle = null, string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false, uint? chronologicalSortKey = null)
+            public Minigame(string name, string displayName, string color, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string wantAssetBundle = null, string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
             {
                 this.name = name;
                 this.displayName = displayName;
@@ -420,8 +418,6 @@ namespace HeavenStudio
 
                 this.splitColorL = null;
                 this.splitColorR = null;
-
-                this.chronologicalSortKey = chronologicalSortKey;
             }
 
             public Minigame(string name, string displayName, string color, string splitColorL, string splitColorR, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string wantAssetBundle = null, string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
