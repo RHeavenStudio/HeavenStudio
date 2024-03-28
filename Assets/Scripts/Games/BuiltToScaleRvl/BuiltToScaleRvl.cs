@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("direction", BuiltToScaleRvl.Direction.Left, "Direction", "Set the direction in which the rod will come out."),
-                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 1), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
                     },
                 },
                 new GameAction("shoot rod", "Shoot Rod")
@@ -34,7 +34,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to shoot."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 1), "Rod ID", "Set the ID of the rod to shoot."),
                         new Param("mute", false, "Mute", "Toggle if the cue should be muted."),
                     },
                 },
@@ -43,7 +43,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to out."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 1), "Rod ID", "Set the ID of the rod to out."),
                     },
                 },
                 new GameAction("custom spawn", "Custom Spawn Rod")
@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("direction", BuiltToScaleRvl.Direction.Left, "Direction", "Set the direction in which the rod will come out."),
                         new Param("target", BuiltToScaleRvl.TargetBlock.First, "Target", "Set the target in which the rod will bounce."),
-                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 1), "Rod ID", "Set the ID of the rod to spawn. Rods with the same ID cannot spawn at the same time."),
                     },
                 },
                 new GameAction("custom bounce", "Custom Bounce")
@@ -63,7 +63,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("target", BuiltToScaleRvl.Target.First, "Target", "Set the target in which the rod will bounce."),
-                        new Param("id", new EntityTypes.Integer(1, 4, 0), "Rod ID", "Set the ID of the rod to bounce."),
+                        new Param("id", new EntityTypes.Integer(1, 4, 1), "Rod ID", "Set the ID of the rod to bounce."),
                     },
                 },
                 new GameAction("presence", "Toggle Blocks")
